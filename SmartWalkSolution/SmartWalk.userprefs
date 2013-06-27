@@ -1,20 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone.6.1" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="SmartWalk.iOS/Setup.cs">
+  <MonoDevelop.Ide.Workbench>
     <Files>
       <File FileName="SmartWalk.iOS/AppDelegate.cs" Line="1" Column="1" />
       <File FileName="SmartWalk.iOS/Setup.cs" Line="17" Column="20" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="SmartWalk.Core" expanded="True">
-            <Node name="References" expanded="True" />
-          </Node>
+        <State expanded="True" selected="True">
           <Node name="SmartWalk.iOS" expanded="True" />
-          <Node name="TestLib" expanded="True" selected="True">
-            <Node name="References" expanded="True" />
-          </Node>
         </State>
       </Pad>
     </Pads>
