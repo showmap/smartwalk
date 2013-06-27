@@ -2,7 +2,6 @@ using System;
 using Cirrious.MvvmCross.ViewModels;
 using Cirrious.CrossCore;
 using SmartWalk.Core.ViewModels;
-using SmartWalk.Core.Services;
 
 namespace SmartWalk.Core
 {
@@ -11,7 +10,7 @@ namespace SmartWalk.Core
 		public SmartWalkApplication()
 		{
 			Mvx.RegisterType<IHomeViewModel, HomeViewModel>();
-            Mvx.RegisterSingleton<IMvxAppStart>(new MvxAppStart<HomeViewModel>());
+			Mvx.RegisterSingleton<IMvxAppStart>(new MvxAppStart<IHomeViewModel>());
 		}
 	}
 }

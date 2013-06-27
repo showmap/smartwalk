@@ -1,9 +1,13 @@
 using System;
+using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Core;
+using SmartWalk.Core.Services;
+using SmartWalk.iOS.Services;
 
-namespace SmartWalki.OS
+namespace SmartWalk.iOS
 {
 	public class Setup : MvxTouchSetup
 	{
@@ -14,7 +18,9 @@ namespace SmartWalki.OS
 
 		protected override IMvxApplication CreateApp ()
 		{
-			return new Smart();
+            Mvx.RegisterType<IOrganizationService, OrganizationService>();
+
+			return new SmartWalkApplication();
 		}
 	}
 }
