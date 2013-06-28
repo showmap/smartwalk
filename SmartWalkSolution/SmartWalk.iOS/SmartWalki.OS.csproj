@@ -101,11 +101,29 @@
     <Reference Include="Cirrious.MvvmCross">
       <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
+      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache">
+      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.File.Touch">
+      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.File">
+      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Views\" />
     <Folder Include="Services\" />
+    <Folder Include="TempXML\" />
+    <Folder Include="TempXML\Local\" />
+    <Folder Include="TempXML\Local\mapp\" />
+    <Folder Include="TempXML\Local\nbff\" />
+    <Folder Include="Views\Cells\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -118,7 +136,11 @@
     <Compile Include="Views\HomeView.designer.cs">
       <DependentUpon>HomeView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Services\OrganizationService.cs" />
+    <Compile Include="Services\SmartWalkDataService.cs" />
+    <Compile Include="Views\Cells\OrgCell.cs" />
+    <Compile Include="Views\Cells\OrgCell.designer.cs">
+      <DependentUpon>OrgCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -132,5 +154,30 @@
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\HomeView.xib" />
+    <InterfaceDefinition Include="Views\Cells\OrgCell.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">
+      <Link>TempXML\Local\mapp\mapp-2013-06-01.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\nbff\events\nbff-2013-06-07.xml">
+      <Link>TempXML\Local\nbff\nbff-2013-06-07.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\index.xml">
+      <Link>TempXML\Local\mapp\index.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\nbff\index.xml">
+      <Link>TempXML\Local\nbff\index.xml</Link>
+    </Content>
+    <Content Include="TempXML\Local\index.json" />
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\index.xml">
+      <Link>TempXML\Local\index.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\logo.jpg">
+      <Link>TempXML\Local\mapp\logo.jpg</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\nbff\logo.png">
+      <Link>TempXML\Local\nbff\logo.png</Link>
+    </Content>
   </ItemGroup>
 </Project>

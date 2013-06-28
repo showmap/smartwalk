@@ -1,40 +1,21 @@
 using System;
-using SmartWalk.Core.Services;
 using System.Collections.Generic;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Core.Model;
+using SmartWalk.Core.Services;
 
 namespace SmartWalk.Core.ViewModels
 {
     public class HomeViewModel : MvxViewModel, IHomeViewModel
 	{
-		private readonly IOrganizationService _organizationService;
+		private readonly ISmartWalkDataService _organizationService;
 
 		private IEnumerable<Organization> _organizations;
 
-		public HomeViewModel(IOrganizationService organizationService)
+		public HomeViewModel(ISmartWalkDataService organizationService)
 		{
 			_organizationService = organizationService;
 		}
-
-        string _testDateLabel;
-
-        public string TestDateLabel
-        {
-            get
-            {
-                return _testDateLabel;
-            }
-            set
-            {
-                _testDateLabel = value;
-                RaisePropertyChanged(() => TestDateLabel);
-            }
-        }
-
-        public void UpdateLabel()
-        {
-            TestDateLabel = DateTime.Now.ToLongTimeString();
-        }
 
 		public IEnumerable<Organization> Organizations 
 		{
@@ -57,7 +38,7 @@ namespace SmartWalk.Core.ViewModels
 
 		private void UpdateOrganizations()
 		{
-			_organizationService.GetOrganizations((orgs, ex) => 
+			_organizationService.GetOrgs((orgs, ex) => 
           		{
 					if (ex == null) 
 					{

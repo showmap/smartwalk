@@ -1,0 +1,14 @@
+{
+  "organizations": {
+    "organization": [
+      {
+        "-id": "mapp",
+        "-name": "Mission Arts & Performance Project"
+      },
+      {
+        "-id": "nbff",
+        "-name": "North Beach First Fridays"
+      }
+    ]
+  }
+}

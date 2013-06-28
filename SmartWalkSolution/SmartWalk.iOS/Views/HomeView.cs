@@ -8,6 +8,8 @@ using Cirrious.MvvmCross.Binding.Bindings;
 using Cirrious.MvvmCross.Binding;
 using Cirrious.MvvmCross.Binding.Binders;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using Cirrious.MvvmCross.Binding.Touch.Views;
+using SmartWalk.iOS.Views.Cells;
 
 namespace SmartWalk.iOS.Views
 {
@@ -35,16 +37,30 @@ namespace SmartWalk.iOS.Views
         {
             base.ViewDidLoad();
 
-            var bindingSet = this.CreateBindingSet<HomeView, IHomeViewModel>();
+            var tableSource = new OrgTableSource(OrgTableView);
 
-            bindingSet.Bind(HelloWorldsLabel).For(p => p.Text).To(p => p.TestDateLabel);
+            this.CreateBinding(tableSource).To((IHomeViewModel vm) => vm.Organizations).Apply();
 
-            bindingSet.Apply();
+            OrgTableView.Source = tableSource;
+            OrgTableView.ReloadData();
+        }
+    }
+
+    public class OrgTableSource : MvxTableViewSource
+    {
+        public OrgTableSource(UITableView tableView)
+            : base(tableView)
+        {
+            UseAnimations = true;
+            AddAnimation = UITableViewRowAnimation.Top;
+            RemoveAnimation = UITableViewRowAnimation.Middle;
+
+            tableView.RegisterNibForCellReuse(OrgCell.Nib, OrgCell.Key);
         }
 
-        partial void OnPushMeButtonClick(UIButton sender, UIEvent @event)
+        protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)
         {
-            ViewModel.UpdateLabel();
+            return (UITableViewCell)tableView.DequeueReusableCell(OrgCell.Key, indexPath);
         }
     }
 }

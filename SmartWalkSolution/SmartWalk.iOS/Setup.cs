@@ -1,5 +1,6 @@
 using System;
 using Cirrious.CrossCore;
+using Cirrious.CrossCore.Plugins;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
@@ -18,9 +19,25 @@ namespace SmartWalk.iOS
 
 		protected override IMvxApplication CreateApp ()
 		{
-            Mvx.RegisterType<IOrganizationService, OrganizationService>();
+            Mvx.RegisterType<ISmartWalkDataService, SmartWalkDataService>();
 
 			return new SmartWalkApplication();
 		}
+
+        protected override void AddPluginsLoaders(MvxLoaderPluginRegistry registry)
+        {
+            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.DownloadCache.Touch.Plugin>();
+            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.File.Touch.Plugin>();
+
+            base.AddPluginsLoaders(registry);
+        }
+
+        protected override void InitializeLastChance ()
+        {
+            Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
+            Cirrious.MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();
+
+            base.InitializeLastChance ();
+        }
 	}
 }

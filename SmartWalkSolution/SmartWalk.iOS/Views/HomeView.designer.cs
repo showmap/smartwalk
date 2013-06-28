@@ -12,24 +12,13 @@ namespace SmartWalk.iOS.Views
 	partial class HomeView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UILabel HelloWorldsLabel { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIButton PushMeButton { get; set; }
-
-		[Action ("OnPushMeButtonClick:forEvent:")]
-		partial void OnPushMeButtonClick (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
+		MonoTouch.UIKit.UITableView OrgTableView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (HelloWorldsLabel != null) {
-				HelloWorldsLabel.Dispose ();
-				HelloWorldsLabel = null;
-			}
-
-			if (PushMeButton != null) {
-				PushMeButton.Dispose ();
-				PushMeButton = null;
+			if (OrgTableView != null) {
+				OrgTableView.Dispose ();
+				OrgTableView = null;
 			}
 		}
 	}
