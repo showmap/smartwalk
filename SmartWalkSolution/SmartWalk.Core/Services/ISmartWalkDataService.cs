@@ -6,8 +6,10 @@ namespace SmartWalk.Core.Services
 {
 	public interface ISmartWalkDataService
 	{
-		void GetOrgs(Action<IEnumerable<Organization>, Exception> resultHandler);
+		void GetOrgInfos(Action<IEnumerable<OrgInfo>, Exception> resultHandler);
 
-        void GetOrgEvents(string orgId, Action<IEnumerable<OrgEvent>, Exception> resultHandler);
+        void GetOrg(string orgId, Action<Org, Exception> resultHandler);
+
+        void GetOrgEvent(OrgEventInfo eventInfo, Action<OrgEvent, Exception> resultHandler);
 	}
 }

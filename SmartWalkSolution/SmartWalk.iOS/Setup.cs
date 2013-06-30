@@ -1,12 +1,8 @@
-using System;
-using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core;
-using SmartWalk.Core.Services;
-using SmartWalk.iOS.Services;
 
 namespace SmartWalk.iOS
 {
@@ -19,8 +15,6 @@ namespace SmartWalk.iOS
 
 		protected override IMvxApplication CreateApp ()
 		{
-            Mvx.RegisterType<ISmartWalkDataService, SmartWalkDataService>();
-
 			return new SmartWalkApplication();
 		}
 

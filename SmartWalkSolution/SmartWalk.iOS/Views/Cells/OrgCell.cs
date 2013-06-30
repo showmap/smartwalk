@@ -1,8 +1,7 @@
 using System;
-using System.Drawing;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 
 namespace SmartWalk.iOS.Views.Cells
 {
@@ -34,8 +33,8 @@ ImageUrl Logo";
         }
 
         public string NameText {
-            get { return this.OrgNameLabel.Text; }
-            set { this.OrgNameLabel.Text = value; }
+            get { return OrgNameLabel.Text; }
+            set { OrgNameLabel.Text = value; }
         }
 
         /*public string ImageUrl {

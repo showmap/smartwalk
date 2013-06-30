@@ -39,18 +39,18 @@
     <Reference Include="Cirrious.MvvmCross">
       <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Model\" />
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Model\Organization.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
-    <Compile Include="ViewModels\IHomeViewModel.cs" />
     <Compile Include="SmartWalkApplication.cs" />
     <Compile Include="Model\Venue.cs" />
     <Compile Include="Model\VenueShow.cs" />
@@ -59,5 +59,14 @@
     <Compile Include="Model\OrgEvent.cs" />
     <Compile Include="Model\ContactEmailInfo.cs" />
     <Compile Include="Model\ContactPhoneInfo.cs" />
+    <Compile Include="ViewModels\OrgViewModel.cs" />
+    <Compile Include="Model\OrgEventInfo.cs" />
+    <Compile Include="ViewModels\EventViewModel.cs" />
+    <Compile Include="Services\SmartWalkDataService.cs" />
+    <Compile Include="Utils\ServiceCacheStore.cs" />
+    <Compile Include="Model\OrgInfo.cs" />
+    <Compile Include="Model\Org.cs" />
+    <Compile Include="Services\IExceptionPolicy.cs" />
+    <Compile Include="Services\ExceptionPolicy.cs" />
   </ItemGroup>
 </Project>

@@ -1,14 +1,9 @@
-using System;
 using System.Collections.Generic;
 
 namespace SmartWalk.Core.Model
 {
     public class ContactInfo
     {
-        public ContactInfo()
-        {
-        }
-
         public IEnumerable<ContactPhoneInfo> Phones { get; set; }
 
         public IEnumerable<ContactEmailInfo> Emails { get; set; }
@@ -18,4 +13,3 @@ namespace SmartWalk.Core.Model
         public string Facebook { get; set; }
     }
 }
-

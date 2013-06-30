@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalki.OS", "SmartWalk.iOS\SmartWalki.OS.csproj", "{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.iOS", "SmartWalk.iOS\SmartWalk.iOS.csproj", "{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Core", "SmartWalk.Core\SmartWalk.Core.csproj", "{A9012546-5146-407B-BDDB-B6A4FCABCB4A}"
 EndProject
@@ -41,7 +41,7 @@ Global
 		{A9012546-5146-407B-BDDB-B6A4FCABCB4A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SmartWalk.iOS\SmartWalki.OS.csproj
+		StartupItem = SmartWalk.iOS\SmartWalk.iOS.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical

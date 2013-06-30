@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
@@ -10,7 +7,7 @@ using MonoTouch.UIKit;
 
 namespace SmartWalk.iOS
 {
-	[Register ("AppDelegate")]
+	[Register("AppDelegate")]
 	public partial class AppDelegate : MvxApplicationDelegate
 	{
 		private UIWindow _window;

@@ -1,48 +1,58 @@
-using System;
 using System.Collections.Generic;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
+using System.Windows.Input;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class HomeViewModel : MvxViewModel, IHomeViewModel
+    public class HomeViewModel : MvxViewModel
 	{
-		private readonly ISmartWalkDataService _organizationService;
+		private readonly ISmartWalkDataService _dataService;
 
-		private IEnumerable<Organization> _organizations;
+		private IEnumerable<OrgInfo> _orgInfos;
 
-		public HomeViewModel(ISmartWalkDataService organizationService)
+		public HomeViewModel(ISmartWalkDataService dataService)
 		{
-			_organizationService = organizationService;
+			_dataService = dataService;
 		}
 
-		public IEnumerable<Organization> Organizations 
+		public IEnumerable<OrgInfo> OrgInfos 
 		{
 			get
 			{
-				return _organizations;
+				return _orgInfos;
 			}
-			set
+			private set
 			{
-				_organizations = value;
-				RaisePropertyChanged(() => Organizations);
+				_orgInfos = value;
+				RaisePropertyChanged(() => OrgInfos);
 			}
 		}
+
+        public ICommand ShowOrgViewCommand
+        {
+            get
+            {
+                return new MvxCommand<OrgInfo>(orgInfo => ShowViewModel<OrgViewModel>(
+                    new OrgViewModel.Parameters { OrgId = orgInfo.Id }));
+            }
+        }
 
 		public override void Start()
 		{
-			UpdateOrganizations();
+			UpdateOrgInfos();
+
 			base.Start();
 		}
 
-		private void UpdateOrganizations()
+		private void UpdateOrgInfos()
 		{
-			_organizationService.GetOrgs((orgs, ex) => 
+			_dataService.GetOrgInfos((orgInfos, ex) => 
           		{
 					if (ex == null) 
 					{
-						Organizations = orgs;
+						OrgInfos = orgInfos;
 					}
 					else 
 					{

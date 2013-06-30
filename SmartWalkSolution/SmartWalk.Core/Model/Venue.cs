@@ -5,10 +5,6 @@ namespace SmartWalk.Core.Model
 {
     public class Venue
     {
-        public Venue()
-        {
-        }
-
         public int Number { get; set; }
 
         public string Name { get; set; }

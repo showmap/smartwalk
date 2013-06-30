@@ -1,45 +1,29 @@
-using System;
-using System.Drawing;
+using Cirrious.MvvmCross.Binding.BindingContext;
+using Cirrious.MvvmCross.Binding.Touch.Views;
+using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.ViewModels;
-using Cirrious.MvvmCross.Touch.Views;
-using Cirrious.MvvmCross.Binding.Bindings;
-using Cirrious.MvvmCross.Binding;
-using Cirrious.MvvmCross.Binding.Binders;
-using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using SmartWalk.iOS.Views.Cells;
+using SmartWalk.Core.Model;
 
 namespace SmartWalk.iOS.Views
 {
     public partial class HomeView : MvxViewController
     {
-        public HomeView() : base ("HomeView", null)
+        public new HomeViewModel ViewModel
         {
-        }
-
-        public new IHomeViewModel ViewModel
-        {
-            get { return (IHomeViewModel) base.ViewModel; }
+            get { return (HomeViewModel) base.ViewModel; }
             set { base.ViewModel = value; }
-        }
-
-        public override void DidReceiveMemoryWarning()
-        {
-            // Releases the view if it doesn't have a superview.
-            base.DidReceiveMemoryWarning();
-            
-            // Release any cached data, images, etc that aren't in use.
         }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            var tableSource = new OrgTableSource(OrgTableView);
+            var tableSource = new OrgTableSource(OrgTableView, ViewModel);
 
-            this.CreateBinding(tableSource).To((IHomeViewModel vm) => vm.Organizations).Apply();
+            this.CreateBinding(tableSource).To((HomeViewModel vm) => vm.OrgInfos).Apply();
 
             OrgTableView.Source = tableSource;
             OrgTableView.ReloadData();
@@ -48,9 +32,13 @@ namespace SmartWalk.iOS.Views
 
     public class OrgTableSource : MvxTableViewSource
     {
-        public OrgTableSource(UITableView tableView)
+        private HomeViewModel _homeViewModel;
+
+        public OrgTableSource(UITableView tableView, HomeViewModel homeViewModel)
             : base(tableView)
         {
+            _homeViewModel = homeViewModel;
+
             UseAnimations = true;
             AddAnimation = UITableViewRowAnimation.Top;
             RemoveAnimation = UITableViewRowAnimation.Middle;
@@ -58,9 +46,18 @@ namespace SmartWalk.iOS.Views
             tableView.RegisterNibForCellReuse(OrgCell.Nib, OrgCell.Key);
         }
 
-        protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            return (UITableViewCell)tableView.DequeueReusableCell(OrgCell.Key, indexPath);
+            var org = (OrgInfo)GetItemAt(indexPath);
+            if (_homeViewModel.ShowOrgViewCommand.CanExecute(org))
+            {
+                _homeViewModel.ShowOrgViewCommand.Execute(org);
+            }
+        }
+
+        protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
+        {
+            return tableView.DequeueReusableCell(OrgCell.Key, indexPath);
         }
     }
 }
