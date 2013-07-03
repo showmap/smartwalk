@@ -12,34 +12,10 @@ namespace SmartWalk.iOS.Views
 	partial class OrgView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UILabel NameLabel { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UITableView OrgEventsTableView { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIImageView OrgImageView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (NameLabel != null) {
-				NameLabel.Dispose ();
-				NameLabel = null;
-			}
-
-			if (DescriptionLabel != null) {
-				DescriptionLabel.Dispose ();
-				DescriptionLabel = null;
-			}
-
-			if (OrgImageView != null) {
-				OrgImageView.Dispose ();
-				OrgImageView = null;
-			}
-
 			if (OrgEventsTableView != null) {
 				OrgEventsTableView.Dispose ();
 				OrgEventsTableView = null;

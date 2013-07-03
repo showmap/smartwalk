@@ -8,12 +8,9 @@ using MonoTouch.Foundation;
 
 namespace SmartWalk.iOS.Views.Cells
 {
-	[Register ("OrgCell")]
-	partial class OrgCell
+	[Register ("OrgInfoCell")]
+	partial class OrgInfoCell
 	{
-		[Outlet]
-		MonoTouch.UIKit.UILabel OrgDescriptionLabel { get; set; }
-
 		[Outlet]
 		MonoTouch.UIKit.UIImageView OrgImageView { get; set; }
 
@@ -22,11 +19,6 @@ namespace SmartWalk.iOS.Views.Cells
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (OrgDescriptionLabel != null) {
-				OrgDescriptionLabel.Dispose ();
-				OrgDescriptionLabel = null;
-			}
-
 			if (OrgImageView != null) {
 				OrgImageView.Dispose ();
 				OrgImageView = null;

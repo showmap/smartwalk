@@ -1,46 +1,41 @@
 using System;
+using System.Drawing;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 
 namespace SmartWalk.iOS.Views.Cells
 {
-    public partial class OrgCell : MvxTableViewCell
+    public partial class OrgInfoCell : MvxTableViewCell
     {
-        public static readonly UINib Nib = UINib.FromName("OrgCell",
+        public static readonly UINib Nib = UINib.FromName("OrgInfoCell",
             NSBundle.MainBundle);
-        public static readonly NSString Key = new NSString("OrgCell");
+        public static readonly NSString Key = new NSString("OrgInfoCell");
 
         public const string BindingText = @"
-OrgNameText Info.Name;
-OrgDescriptionText Info.Description;
-ImageUrl Info.Logo";
+NameText Name;
+ImageUrl Logo";
 
         private MvxImageViewLoader _imageHelper;
 
-        public OrgCell() : base(BindingText)
+        public OrgInfoCell() : base(BindingText)
         {
             InitialiseImageHelper();      
         }
 
-        public OrgCell(IntPtr handle) : base (BindingText, handle)
+        public OrgInfoCell(IntPtr handle) : base (BindingText, handle)
         {
             InitialiseImageHelper();
         }
 
-        public static OrgCell Create()
+        public static OrgInfoCell Create()
         {
-            return (OrgCell)Nib.Instantiate(null, null)[0];
+            return (OrgInfoCell)Nib.Instantiate(null, null)[0];
         }
 
-        public string OrgNameText {
+        public string NameText {
             get { return OrgNameLabel.Text; }
             set { OrgNameLabel.Text = value; }
-        }
-
-        public string OrgDescriptionText {
-            get { return OrgDescriptionLabel.Text; }
-            set { OrgDescriptionLabel.Text = value; }
         }
 
         /*public string ImageUrl {
@@ -60,3 +55,4 @@ ImageUrl Info.Logo";
         }
     }
 }
+

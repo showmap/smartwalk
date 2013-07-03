@@ -1,6 +1,7 @@
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
+using System.Collections.Generic;
 
 namespace SmartWalk.Core.ViewModels
 {

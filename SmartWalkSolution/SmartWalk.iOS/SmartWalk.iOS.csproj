@@ -148,6 +148,10 @@
     <Compile Include="Views\Cells\OrgEventCell.designer.cs">
       <DependentUpon>OrgEventCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Cells\OrgInfoCell.cs" />
+    <Compile Include="Views\Cells\OrgInfoCell.designer.cs">
+      <DependentUpon>OrgInfoCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -164,6 +168,7 @@
     <InterfaceDefinition Include="Views\Cells\OrgCell.xib" />
     <InterfaceDefinition Include="Views\OrgView.xib" />
     <InterfaceDefinition Include="Views\Cells\OrgEventCell.xib" />
+    <InterfaceDefinition Include="Views\Cells\OrgInfoCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">

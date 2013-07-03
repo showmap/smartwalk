@@ -43,7 +43,7 @@ namespace SmartWalk.iOS.Views
             AddAnimation = UITableViewRowAnimation.Top;
             RemoveAnimation = UITableViewRowAnimation.Middle;
 
-            tableView.RegisterNibForCellReuse(OrgCell.Nib, OrgCell.Key);
+            tableView.RegisterNibForCellReuse(OrgInfoCell.Nib, OrgInfoCell.Key);
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
@@ -57,7 +57,7 @@ namespace SmartWalk.iOS.Views
 
         protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
         {
-            return tableView.DequeueReusableCell(OrgCell.Key, indexPath);
+            return tableView.DequeueReusableCell(OrgInfoCell.Key, indexPath);
         }
     }
 }
