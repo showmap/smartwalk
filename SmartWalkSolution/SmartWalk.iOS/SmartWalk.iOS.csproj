@@ -124,6 +124,7 @@
     <Folder Include="TempXML\Local\mapp\" />
     <Folder Include="TempXML\Local\nbff\" />
     <Folder Include="Views\Cells\" />
+    <Folder Include="Views\Converters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -152,6 +153,8 @@
     <Compile Include="Views\Cells\OrgInfoCell.designer.cs">
       <DependentUpon>OrgInfoCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Converters\OrgTableSourceConverter.cs" />
+    <Compile Include="Views\Converters\GroupContainer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

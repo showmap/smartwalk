@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using Cirrious.CrossCore.Converters;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using Cirrious.MvvmCross.Touch.Views;
@@ -12,6 +8,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Cells;
+using SmartWalk.iOS.Views.Converters;
 
 namespace SmartWalk.iOS.Views
 {
@@ -27,15 +24,6 @@ namespace SmartWalk.iOS.Views
         {
             base.ViewDidLoad();
 
-            /*var set = this.CreateBindingSet<OrgView, OrgViewModel>();
-
-            set.Bind(NameLabel).To(p => p.Org.Info.Name);
-            set.Bind(DescriptionLabel).To(p => p.Org.Description);
-            set.Bind(OrgImageView).To(p => p.Org.Info.Logo).WithConversion(new LogoImageConverter(), null);
-
-            set.Apply();*/
-
-            
             var tableSource = new OrgEventTableSource(OrgEventsTableView);
 
             this.CreateBinding(tableSource).To((OrgViewModel vm) => vm.Org)
@@ -119,7 +107,7 @@ namespace SmartWalk.iOS.Views
         }
     }
 
-    public class LogoImageConverter : IMvxValueConverter
+    /*public class LogoImageConverter : IMvxValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -130,78 +118,5 @@ namespace SmartWalk.iOS.Views
         {
             throw new System.NotImplementedException();
         }
-    }
-
-    public class OrgTableSourceConverter : IMvxValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var org = value as Org;
-            if (org != null)
-            {
-                var result = new List<GroupContainer>();
-
-                result.Add(
-                    new GroupContainer(new [] { org }) 
-                        {
-                            Key = "Info"
-                        });
-
-                var pastEvents = org.EventInfos
-                    .Where(ei => ei.Date < DateTime.Now.AddDays(-2))
-                    .ToArray();
-                if (pastEvents.Length > 0)
-                {
-                    result.Add(
-                        new GroupContainer(pastEvents) 
-                            {
-                                Key = "Past Events"
-                            });
-                }
-
-                var currentEvents = org.EventInfos
-                    .Where(ei => DateTime.Now.AddDays(-2) <= ei.Date && ei.Date <= DateTime.Now.AddDays(2))
-                    .ToArray();
-                if (currentEvents.Length > 0)
-                {
-                    result.Add(
-                        new GroupContainer(currentEvents) 
-                            {
-                                Key = "Current Events"
-                            });
-                }
-
-                var futureEvents = org.EventInfos
-                    .Where(ei => ei.Date > DateTime.Now.AddDays(2))
-                    .ToArray();
-                if (futureEvents.Length > 0)
-                {
-                    result.Add(
-                        new GroupContainer(futureEvents) 
-                            {
-                                Key = "Future Events"
-                            });
-                }
-
-                return result.ToArray();
-            }
-
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    public class GroupContainer : List<object>
-    {
-        public GroupContainer(IEnumerable<object> items)
-        {
-            this.AddRange(items);
-        }
-
-        public string Key { get; set; }
-    }
+    }*/
 }
