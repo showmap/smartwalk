@@ -59,6 +59,11 @@ namespace SmartWalk.iOS.Views
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
         }
 
+        public GroupContainer[] GroupItemsSource
+        {
+            get { return ItemsSource as GroupContainer[];}
+        }
+
         public override float GetHeightForRow (UITableView tableView, NSIndexPath indexPath)
         {
             var item = GetItemAt(indexPath);
@@ -76,6 +81,21 @@ namespace SmartWalk.iOS.Views
             throw new Exception("There is an unsupported type in the list.");
         }
 
+        public override int NumberOfSections(UITableView tableView)
+        {
+            return GroupItemsSource.Count();
+        }
+
+        public override int RowsInSection(UITableView tableview, int section)
+        {
+            return GroupItemsSource[section].Count;
+        }
+
+        public override string TitleForHeader(UITableView tableView, int section)
+        {
+            return GroupItemsSource[section].Key;
+        }
+
         protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)
         {
             var key = default(NSString);
@@ -91,6 +111,11 @@ namespace SmartWalk.iOS.Views
             }
 
             return tableView.DequeueReusableCell(key, indexPath);
+        }
+
+        protected override object GetItemAt(NSIndexPath indexPath)
+        {
+            return GroupItemsSource[indexPath.Section][indexPath.Row];
         }
     }
 
@@ -114,10 +139,49 @@ namespace SmartWalk.iOS.Views
             var org = value as Org;
             if (org != null)
             {
-                var result = new List<object>();
+                var result = new List<GroupContainer>();
 
-                result.Add(org);
-                result.AddRange(org.EventInfos.ToArray());
+                result.Add(
+                    new GroupContainer(new [] { org }) 
+                        {
+                            Key = "Info"
+                        });
+
+                var pastEvents = org.EventInfos
+                    .Where(ei => ei.Date < DateTime.Now.AddDays(-2))
+                    .ToArray();
+                if (pastEvents.Length > 0)
+                {
+                    result.Add(
+                        new GroupContainer(pastEvents) 
+                            {
+                                Key = "Past Events"
+                            });
+                }
+
+                var currentEvents = org.EventInfos
+                    .Where(ei => DateTime.Now.AddDays(-2) <= ei.Date && ei.Date <= DateTime.Now.AddDays(2))
+                    .ToArray();
+                if (currentEvents.Length > 0)
+                {
+                    result.Add(
+                        new GroupContainer(currentEvents) 
+                            {
+                                Key = "Current Events"
+                            });
+                }
+
+                var futureEvents = org.EventInfos
+                    .Where(ei => ei.Date > DateTime.Now.AddDays(2))
+                    .ToArray();
+                if (futureEvents.Length > 0)
+                {
+                    result.Add(
+                        new GroupContainer(futureEvents) 
+                            {
+                                Key = "Future Events"
+                            });
+                }
 
                 return result.ToArray();
             }
@@ -129,5 +193,15 @@ namespace SmartWalk.iOS.Views
         {
             throw new System.NotImplementedException();
         }
+    }
+
+    public class GroupContainer : List<object>
+    {
+        public GroupContainer(IEnumerable<object> items)
+        {
+            this.AddRange(items);
+        }
+
+        public string Key { get; set; }
     }
 }

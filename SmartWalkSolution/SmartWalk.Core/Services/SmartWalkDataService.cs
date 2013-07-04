@@ -73,12 +73,22 @@ namespace SmartWalk.Core.Services
                         new OrgEventInfo 
                         { 
                             OrgId = "mapp",
+                            Date = new DateTime(2013, 4, 1)
+                        },
+                        new OrgEventInfo 
+                        { 
+                            OrgId = "mapp",
                             Date = new DateTime(2013, 6, 1)
                         },
                         new OrgEventInfo 
                         { 
                             OrgId = "mapp",
                             Date = new DateTime(2013, 8, 3)
+                        },
+                        new OrgEventInfo 
+                        { 
+                            OrgId = "mapp",
+                            Date = new DateTime(2013, 10, 3)
                         }
                     };
                 }

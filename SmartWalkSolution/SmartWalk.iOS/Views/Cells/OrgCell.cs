@@ -13,7 +13,7 @@ namespace SmartWalk.iOS.Views.Cells
 
         public const string BindingText = @"
 OrgNameText Info.Name;
-OrgDescriptionText Info.Description;
+OrgDescriptionText Description;
 ImageUrl Info.Logo";
 
         private MvxImageViewLoader _imageHelper;
