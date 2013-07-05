@@ -2,6 +2,7 @@ using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace SmartWalk.Core.ViewModels
 {
@@ -30,6 +31,14 @@ namespace SmartWalk.Core.ViewModels
                     _org = value;
                     RaisePropertyChanged(() => Org);
                 }
+            }
+        }
+
+        public ICommand RefreshCommand
+        {
+            get 
+            {
+                return new MvxCommand(() => UpdateOrg());
             }
         }
 

@@ -40,6 +40,7 @@
       <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="MonoTouch.Dialog-1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -68,5 +69,7 @@
     <Compile Include="Model\Org.cs" />
     <Compile Include="Services\IExceptionPolicy.cs" />
     <Compile Include="Services\ExceptionPolicy.cs" />
+    <Compile Include="Utils\ReflectExtensions.cs" />
+    <Compile Include="Utils\Reflect.cs" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
@@ -6,6 +7,7 @@ using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Cells;
 using SmartWalk.iOS.Views.Converters;
@@ -31,6 +33,25 @@ namespace SmartWalk.iOS.Views
 
             OrgEventsTableView.Source = tableSource;
             OrgEventsTableView.ReloadData();
+
+            var refreshControl = new UIRefreshControl();
+            refreshControl.ValueChanged += (sender, e) => 
+                {
+                    if (ViewModel.RefreshCommand.CanExecute(null))
+                    {
+                        ViewModel.RefreshCommand.Execute(null);
+                    }
+                };
+
+            ViewModel.PropertyChanged += (sender, e) => 
+                {
+                    if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Org))
+                    {
+                        InvokeOnMainThread(() => refreshControl.EndRefreshing());
+                    }
+                };
+
+            OrgEventsTableView.AddSubview(refreshControl);
         }
     }
 

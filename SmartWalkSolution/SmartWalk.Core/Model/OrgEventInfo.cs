@@ -23,5 +23,26 @@ namespace SmartWalk.Core.Model
                 return Date != DateTime.MinValue ? String.Format("{0:M}", Date) : null;
             }
         }
+
+        public int TimeStatus
+        {
+            get 
+            {
+                if (Date < DateTime.Now.AddDays(-2))
+                {
+                    return -1;
+                }
+                else if (DateTime.Now.AddDays(-2) <= Date && Date <= DateTime.Now.AddDays(2))
+                {
+                    return 0;
+                }
+                else if (Date > DateTime.Now.AddDays(2))
+                {
+                    return 1;
+                }
+
+                return -2;
+            }
+        }
     }
 }

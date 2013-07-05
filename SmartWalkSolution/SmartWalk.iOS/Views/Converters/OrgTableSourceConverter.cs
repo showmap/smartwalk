@@ -16,15 +16,10 @@ namespace SmartWalk.iOS.Views.Converters
             {
                 var result = new List<GroupContainer>();
 
-                result.Add(
-                    new GroupContainer(new [] { org }) 
-                    {
-                    Key = "Info"
-                });
+                result.Add(new GroupContainer(new [] { org }));
 
                 var pastEvents = org.EventInfos
-                    .Where(ei => ei.Date < DateTime.Now.AddDays(-2))
-                        .ToArray();
+                    .Where(ei => ei.TimeStatus < 0).ToArray();
                 if (pastEvents.Length > 0)
                 {
                     result.Add(
@@ -35,8 +30,7 @@ namespace SmartWalk.iOS.Views.Converters
                 }
 
                 var currentEvents = org.EventInfos
-                    .Where(ei => DateTime.Now.AddDays(-2) <= ei.Date && ei.Date <= DateTime.Now.AddDays(2))
-                        .ToArray();
+                    .Where(ei => ei.TimeStatus == 0).ToArray();
                 if (currentEvents.Length > 0)
                 {
                     result.Add(
@@ -47,8 +41,7 @@ namespace SmartWalk.iOS.Views.Converters
                 }
 
                 var futureEvents = org.EventInfos
-                    .Where(ei => ei.Date > DateTime.Now.AddDays(2))
-                        .ToArray();
+                    .Where(ei => ei.TimeStatus > 0).ToArray();
                 if (futureEvents.Length > 0)
                 {
                     result.Add(

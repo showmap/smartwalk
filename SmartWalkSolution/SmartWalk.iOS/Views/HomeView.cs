@@ -3,9 +3,10 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Cells;
-using SmartWalk.Core.Model;
 
 namespace SmartWalk.iOS.Views
 {
@@ -27,6 +28,25 @@ namespace SmartWalk.iOS.Views
 
             OrgTableView.Source = tableSource;
             OrgTableView.ReloadData();
+
+            var refreshControl = new UIRefreshControl();
+            refreshControl.ValueChanged += (sender, e) => 
+                {
+                    if (ViewModel.RefreshCommand.CanExecute(null))
+                    {
+                        ViewModel.RefreshCommand.Execute(null);
+                    }
+                };
+
+            ViewModel.PropertyChanged += (sender, e) => 
+                {
+                    if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgInfos))
+                    {
+                        InvokeOnMainThread(() => refreshControl.EndRefreshing());
+                    }
+                };
+                     
+            OrgTableView.AddSubview(refreshControl);
         }
     }
 
@@ -49,9 +69,9 @@ namespace SmartWalk.iOS.Views
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             var org = (OrgInfo)GetItemAt(indexPath);
-            if (_homeViewModel.ShowOrgViewCommand.CanExecute(org))
+            if (_homeViewModel.NavigateOrgViewCommand.CanExecute(org))
             {
-                _homeViewModel.ShowOrgViewCommand.Execute(org);
+                _homeViewModel.NavigateOrgViewCommand.Execute(org);
             }
         }
 

@@ -30,12 +30,20 @@ namespace SmartWalk.Core.ViewModels
 			}
 		}
 
-        public ICommand ShowOrgViewCommand
+        public ICommand NavigateOrgViewCommand
         {
             get
             {
                 return new MvxCommand<OrgInfo>(orgInfo => ShowViewModel<OrgViewModel>(
                     new OrgViewModel.Parameters { OrgId = orgInfo.Id }));
+            }
+        }
+
+        public ICommand RefreshCommand
+        {
+            get 
+            {
+                return new MvxCommand(() => UpdateOrgInfos());
             }
         }
 
