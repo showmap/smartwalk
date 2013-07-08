@@ -11,6 +11,7 @@ namespace SmartWalk.Core.ViewModels
         private readonly ISmartWalkDataService _dataService;
 
         private Org _org;
+        private bool _isDescriptionExpanded;
         private string _orgId;
 
         public OrgViewModel(ISmartWalkDataService dataService)
@@ -30,6 +31,22 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _org = value;
                     RaisePropertyChanged(() => Org);
+                }
+            }
+        }
+
+        public bool IsDescriptionExpanded
+        {
+            get
+            {
+                return _isDescriptionExpanded;
+            }
+            set
+            {
+                if (_isDescriptionExpanded != value)
+                {
+                    _isDescriptionExpanded = value;
+                    RaisePropertyChanged(() => IsDescriptionExpanded);
                 }
             }
         }

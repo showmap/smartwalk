@@ -11,6 +11,8 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Cells;
 using SmartWalk.iOS.Views.Converters;
+using MonoTouch;
+using System.Drawing;
 
 namespace SmartWalk.iOS.Views
 {
@@ -26,7 +28,7 @@ namespace SmartWalk.iOS.Views
         {
             base.ViewDidLoad();
 
-            var tableSource = new OrgEventTableSource(OrgEventsTableView);
+            var tableSource = new OrgEventTableSource(OrgEventsTableView, ViewModel);
 
             this.CreateBinding(tableSource).To((OrgViewModel vm) => vm.Org)
                 .WithConversion(new OrgTableSourceConverter(), null).Apply();
@@ -52,14 +54,20 @@ namespace SmartWalk.iOS.Views
                 };
 
             OrgEventsTableView.AddSubview(refreshControl);
+
+            NavigationItem.Title = ViewModel.Org.Info.Name;
         }
     }
 
     public class OrgEventTableSource : MvxTableViewSource
     {
-        public OrgEventTableSource(UITableView tableView)
+        private OrgViewModel _viewModel;
+
+        public OrgEventTableSource(UITableView tableView, OrgViewModel viewModel)
             : base(tableView)
         {
+            _viewModel = viewModel;
+
             UseAnimations = true;
             AddAnimation = UITableViewRowAnimation.Top;
             RemoveAnimation = UITableViewRowAnimation.Middle;
@@ -79,7 +87,20 @@ namespace SmartWalk.iOS.Views
 
             if (item is Org)
             {
-                return 240.0f;
+                if (_viewModel.IsDescriptionExpanded)
+                {
+                    var org = (Org)item;
+                    var size = new NSString(org.Description).StringSize(
+                        UIFont.FromName("Helvetica-Bold", 15),
+                        new SizeF(320, float.MaxValue),
+                        UILineBreakMode.WordWrap);
+
+                    return size.Height + 294f;
+                }
+                else
+                {
+                    return 350.0f;
+                }
             }
 
             if (item is OrgEventInfo)
@@ -119,7 +140,21 @@ namespace SmartWalk.iOS.Views
                 key = OrgEventCell.Key;
             }
 
-            return tableView.DequeueReusableCell(key, indexPath);
+            var cell = tableView.DequeueReusableCell(key, indexPath);
+
+            var orgCell = cell as OrgCell;
+            if (orgCell != null)
+            {
+                orgCell.ExpandCollapseClick += (sender, e) => 
+                    {
+                        _viewModel.IsDescriptionExpanded = !_viewModel.IsDescriptionExpanded;
+
+                        TableView.BeginUpdates();
+                        TableView.EndUpdates();
+                    };
+            }
+
+            return cell;
         }
 
         protected override object GetItemAt(NSIndexPath indexPath)

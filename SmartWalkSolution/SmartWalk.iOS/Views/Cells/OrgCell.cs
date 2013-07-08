@@ -28,6 +28,8 @@ ImageUrl Info.Logo";
             InitialiseImageHelper();
         }
 
+        public event EventHandler ExpandCollapseClick;
+
         public static OrgCell Create()
         {
             return (OrgCell)Nib.Instantiate(null, null)[0];
@@ -57,6 +59,14 @@ ImageUrl Info.Logo";
         {
             _imageHelper = new MvxImageViewLoader(
                 () => OrgImageView);
+        }
+
+        partial void OnExpandCollapseButtonClick(UIButton sender, UIEvent @event)
+        {
+            if (ExpandCollapseClick != null)
+            {
+                ExpandCollapseClick(this, EventArgs.Empty);
+            }
         }
     }
 }
