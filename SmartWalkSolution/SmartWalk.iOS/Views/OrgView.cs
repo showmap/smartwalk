@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
@@ -11,8 +11,7 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Cells;
 using SmartWalk.iOS.Views.Converters;
-using MonoTouch;
-using System.Drawing;
+using SmartWalk.iOS.Constants;
 
 namespace SmartWalk.iOS.Views
 {
@@ -49,7 +48,12 @@ namespace SmartWalk.iOS.Views
                 {
                     if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Org))
                     {
-                        InvokeOnMainThread(() => refreshControl.EndRefreshing());
+                        InvokeOnMainThread(refreshControl.EndRefreshing);
+                    }
+                    else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+                    {
+                        OrgEventsTableView.BeginUpdates();
+                        OrgEventsTableView.EndUpdates();
                     }
                 };
 
@@ -69,8 +73,6 @@ namespace SmartWalk.iOS.Views
             _viewModel = viewModel;
 
             UseAnimations = true;
-            AddAnimation = UITableViewRowAnimation.Top;
-            RemoveAnimation = UITableViewRowAnimation.Middle;
 
             tableView.RegisterNibForCellReuse(OrgCell.Nib, OrgCell.Key);
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
@@ -90,12 +92,23 @@ namespace SmartWalk.iOS.Views
                 if (_viewModel.IsDescriptionExpanded)
                 {
                     var org = (Org)item;
-                    var size = new NSString(org.Description).StringSize(
+
+                    var isVertical = 
+                        UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait || 
+                            UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.PortraitUpsideDown;
+
+                    var frameSize = new SizeF(
+                            (isVertical 
+                               ? UIScreen.MainScreen.Bounds.Width 
+                               : UIScreen.MainScreen.Bounds.Height) - UIConstants.DefaultTextMargin * 2,
+                        float.MaxValue);
+
+                    var textSize = new NSString(org.Description).StringSize(
                         UIFont.FromName("Helvetica-Bold", 15),
-                        new SizeF(320, float.MaxValue),
+                        frameSize,
                         UILineBreakMode.WordWrap);
 
-                    return size.Height + 294f;
+                    return textSize.Height + 270f;
                 }
                 else
                 {
@@ -145,13 +158,7 @@ namespace SmartWalk.iOS.Views
             var orgCell = cell as OrgCell;
             if (orgCell != null)
             {
-                orgCell.ExpandCollapseClick += (sender, e) => 
-                    {
-                        _viewModel.IsDescriptionExpanded = !_viewModel.IsDescriptionExpanded;
-
-                        TableView.BeginUpdates();
-                        TableView.EndUpdates();
-                    };
+                orgCell.ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
             }
 
             return cell;
@@ -162,17 +169,4 @@ namespace SmartWalk.iOS.Views
             return GroupItemsSource[indexPath.Section][indexPath.Row];
         }
     }
-
-    /*public class LogoImageConverter : IMvxValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return UIImage.FromFile((string)value);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new System.NotImplementedException();
-        }
-    }*/
 }

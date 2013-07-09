@@ -23,8 +23,8 @@ namespace SmartWalk.iOS.Views.Cells
 		[Outlet]
 		MonoTouch.UIKit.UILabel OrgNameLabel { get; set; }
 
-		[Action ("OnExpandCollapseButtonClick:forEvent:")]
-		partial void OnExpandCollapseButtonClick (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
+		[Action ("OnExpandCollapseButtonClick:")]
+		partial void OnExpandCollapseButtonClick (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

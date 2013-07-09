@@ -1,8 +1,7 @@
+using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
-using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace SmartWalk.Core.ViewModels
 {
@@ -11,8 +10,10 @@ namespace SmartWalk.Core.ViewModels
         private readonly ISmartWalkDataService _dataService;
 
         private Org _org;
-        private bool _isDescriptionExpanded;
         private string _orgId;
+        private bool _isDescriptionExpanded;
+        private MvxCommand _expandCollapseCommand;
+        private MvxCommand _refreshCommand;
 
         public OrgViewModel(ISmartWalkDataService dataService)
         {
@@ -41,7 +42,7 @@ namespace SmartWalk.Core.ViewModels
             {
                 return _isDescriptionExpanded;
             }
-            set
+            private set
             {
                 if (_isDescriptionExpanded != value)
                 {
@@ -51,11 +52,30 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        public ICommand ExpandCollapseCommand
+        {
+            get 
+            {
+                if (_expandCollapseCommand == null)
+                {
+                    _expandCollapseCommand = 
+                        new MvxCommand(() => IsDescriptionExpanded = !IsDescriptionExpanded);
+                }
+
+                return _expandCollapseCommand;
+            }
+        }
+
         public ICommand RefreshCommand
         {
             get 
             {
-                return new MvxCommand(() => UpdateOrg());
+                if (_refreshCommand == null)
+                {
+                    _refreshCommand = new MvxCommand(UpdateOrg);
+                }
+
+                return _refreshCommand;
             }
         }
 

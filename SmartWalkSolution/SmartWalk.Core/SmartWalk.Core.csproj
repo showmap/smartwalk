@@ -65,11 +65,11 @@
     <Compile Include="ViewModels\EventViewModel.cs" />
     <Compile Include="Services\SmartWalkDataService.cs" />
     <Compile Include="Utils\ServiceCacheStore.cs" />
-    <Compile Include="Model\OrgInfo.cs" />
     <Compile Include="Model\Org.cs" />
     <Compile Include="Services\IExceptionPolicy.cs" />
     <Compile Include="Services\ExceptionPolicy.cs" />
     <Compile Include="Utils\ReflectExtensions.cs" />
     <Compile Include="Utils\Reflect.cs" />
+    <Compile Include="Model\EntityInfo.cs" />
   </ItemGroup>
 </Project>

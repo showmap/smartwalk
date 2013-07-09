@@ -1,6 +1,6 @@
 namespace SmartWalk.Core.Model
 {
-    public class OrgInfo
+    public class EntityInfo
 	{
         public string Id { get; set; }
 

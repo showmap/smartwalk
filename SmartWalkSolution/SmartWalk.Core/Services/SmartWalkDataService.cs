@@ -15,13 +15,13 @@ namespace SmartWalk.Core.Services
             _exceptionPolicy = exceptionPolicy;
         }
 
-        public void GetOrgInfos(Action<IEnumerable<OrgInfo>, Exception> resultHandler)
+        public void GetOrgInfos(Action<IEnumerable<EntityInfo>, Exception> resultHandler)
         {
             try
             {
                 var xml = XDocument.Load(@"TempXML/Local/index.xml");
                 var result = xml.Descendants("organization").Select(org => 
-                    new OrgInfo 
+                    new EntityInfo 
                         {
                             Id = org.Attribute("id").Value,
                             Name = org.Attribute("name").Value,
@@ -44,7 +44,7 @@ namespace SmartWalk.Core.Services
             {
                 var xml = XDocument.Load(@"TempXML/Local/" + orgId + "/index.xml");
                 var result = new Org {
-                    Info = new OrgInfo{
+                    Info = new EntityInfo{
                         Id = orgId,
                         Name = xml.Root.Attribute("name").Value,
                         Logo = "TempXML/Local/" + orgId + "/" + xml.Root.Attribute("logo").Value,

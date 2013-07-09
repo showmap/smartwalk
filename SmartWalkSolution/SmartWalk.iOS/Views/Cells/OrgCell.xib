@@ -221,12 +221,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">OnExpandCollapseButtonClick:forEvent:</string>
+						<string key="label">OnExpandCollapseButtonClick:</string>
 						<reference key="source" ref="511775698"/>
 						<reference key="destination" ref="302723463"/>
 						<int key="IBEventType">1</int>
 					</object>
-					<int key="connectionID">66</int>
+					<int key="connectionID">406</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -636,7 +636,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">404</int>
+			<int key="maxID">406</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -652,14 +652,14 @@
 					<string key="className">OrgCell</string>
 					<string key="superclassName">UITableViewCell</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">OnExpandCollapseButtonClick:forEvent:</string>
-						<string key="NS.object.0">id</string>
+						<string key="NS.key.0">OnExpandCollapseButtonClick:</string>
+						<string key="NS.object.0">UIButton</string>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">OnExpandCollapseButtonClick:forEvent:</string>
+						<string key="NS.key.0">OnExpandCollapseButtonClick:</string>
 						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">OnExpandCollapseButtonClick:forEvent:</string>
-							<string key="candidateClassName">id</string>
+							<string key="name">OnExpandCollapseButtonClick:</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">

@@ -68,7 +68,7 @@ namespace SmartWalk.iOS.Views
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            var org = (OrgInfo)GetItemAt(indexPath);
+            var org = (EntityInfo)GetItemAt(indexPath);
             if (_homeViewModel.NavigateOrgViewCommand.CanExecute(org))
             {
                 _homeViewModel.NavigateOrgViewCommand.Execute(org);

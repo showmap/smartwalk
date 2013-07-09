@@ -1,7 +1,12 @@
 using System;
+using System.Windows.Input;
+using Cirrious.MvvmCross.Binding;
+using Cirrious.MvvmCross.Binding.Binders;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.Cells
 {
@@ -11,24 +16,29 @@ namespace SmartWalk.iOS.Views.Cells
             NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgCell");
 
-        public const string BindingText = @"
-OrgNameText Info.Name;
-OrgDescriptionText Description;
-ImageUrl Info.Logo";
+        private static MvxBindingDescription[] Bindings = new [] {
+            new MvxBindingDescription(
+                Reflect<OrgCell>.GetProperty(p => p.OrgNameText).Name,
+                ReflectExtensions.GetPath<Org, EntityInfo>(p => p.Info, p => p.Name), null, null, null, MvxBindingMode.OneWay),
+            new MvxBindingDescription(
+                Reflect<OrgCell>.GetProperty(p => p.OrgDescriptionText).Name,
+                ReflectExtensions.GetPath<Org>(p => p.Description), null, null, null, MvxBindingMode.OneWay),
+            new MvxBindingDescription(
+                Reflect<OrgCell>.GetProperty(p => p.ImageUrl).Name,
+                ReflectExtensions.GetPath<Org, EntityInfo>(p => p.Info, p => p.Logo), null, null, null, MvxBindingMode.OneWay)
+        };
 
-        private MvxImageViewLoader _imageHelper;
+        //private MvxImageViewLoader _imageHelper;
 
-        public OrgCell() : base(BindingText)
+        public OrgCell() : base(Bindings)
         {
             InitialiseImageHelper();      
         }
 
-        public OrgCell(IntPtr handle) : base (BindingText, handle)
+        public OrgCell(IntPtr handle) : base(Bindings, handle)
         {
             InitialiseImageHelper();
         }
-
-        public event EventHandler ExpandCollapseClick;
 
         public static OrgCell Create()
         {
@@ -55,17 +65,20 @@ ImageUrl Info.Logo";
             set { OrgImageView.Image = UIImage.FromFile(value); }
         }
 
+        public ICommand ExpandCollapseCommand { get; set; }
+
         private void InitialiseImageHelper()
         {
-            _imageHelper = new MvxImageViewLoader(
-                () => OrgImageView);
+            /*_imageHelper = new MvxImageViewLoader(
+                () => OrgImageView);*/
         }
 
-        partial void OnExpandCollapseButtonClick(UIButton sender, UIEvent @event)
+        partial void OnExpandCollapseButtonClick(UIButton sender)
         {
-            if (ExpandCollapseClick != null)
+            if (ExpandCollapseCommand != null &&
+                ExpandCollapseCommand.CanExecute(null))
             {
-                ExpandCollapseClick(this, EventArgs.Empty);
+                ExpandCollapseCommand.Execute(null);
             }
         }
     }

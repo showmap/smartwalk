@@ -10,14 +10,14 @@ namespace SmartWalk.Core.ViewModels
 	{
 		private readonly ISmartWalkDataService _dataService;
 
-		private IEnumerable<OrgInfo> _orgInfos;
+		private IEnumerable<EntityInfo> _orgInfos;
 
 		public HomeViewModel(ISmartWalkDataService dataService)
 		{
 			_dataService = dataService;
 		}
 
-		public IEnumerable<OrgInfo> OrgInfos 
+		public IEnumerable<EntityInfo> OrgInfos 
 		{
 			get
 			{
@@ -34,7 +34,7 @@ namespace SmartWalk.Core.ViewModels
         {
             get
             {
-                return new MvxCommand<OrgInfo>(orgInfo => ShowViewModel<OrgViewModel>(
+                return new MvxCommand<EntityInfo>(orgInfo => ShowViewModel<OrgViewModel>(
                     new OrgViewModel.Parameters { OrgId = orgInfo.Id }));
             }
         }

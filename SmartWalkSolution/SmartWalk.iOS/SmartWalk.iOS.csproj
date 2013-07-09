@@ -125,6 +125,7 @@
     <Folder Include="TempXML\Local\nbff\" />
     <Folder Include="Views\Cells\" />
     <Folder Include="Views\Converters\" />
+    <Folder Include="Constants\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -155,6 +156,7 @@
     </Compile>
     <Compile Include="Views\Converters\OrgTableSourceConverter.cs" />
     <Compile Include="Views\Converters\GroupContainer.cs" />
+    <Compile Include="Constants\UIConstants.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

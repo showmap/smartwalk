@@ -4,7 +4,7 @@ namespace SmartWalk.Core.Model
 {
     public class Org
     {
-        public OrgInfo Info { get; set; }
+        public EntityInfo Info { get; set; }
 
         public string Description { get; set; }
 
