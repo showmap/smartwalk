@@ -44,8 +44,10 @@
     <ConsolePause>false</ConsolePause>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <AssemblyName>SmartWalk.iOS</AssemblyName>
+    <AssemblyName>SmartWalkiOS</AssemblyName>
     <IpaPackageName />
+    <MtouchI18n />
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <Optimize>true</Optimize>

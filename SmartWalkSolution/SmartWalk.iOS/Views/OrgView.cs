@@ -19,7 +19,7 @@ namespace SmartWalk.iOS.Views
     {
         public new OrgViewModel ViewModel
         {
-            get { return (OrgViewModel) base.ViewModel; }
+            get { return (OrgViewModel)base.ViewModel; }
             set { base.ViewModel = value; }
         }
 
@@ -29,7 +29,7 @@ namespace SmartWalk.iOS.Views
 
             var tableSource = new OrgEventTableSource(OrgEventsTableView, ViewModel);
 
-            this.CreateBinding(tableSource).To((OrgViewModel vm) => vm.Org)
+            this.CreateBinding(tableSource).To((OrgViewModel vm) => vm)
                 .WithConversion(new OrgTableSourceConverter(), null).Apply();
 
             OrgEventsTableView.Source = tableSource;
@@ -87,11 +87,11 @@ namespace SmartWalk.iOS.Views
         {
             var item = GetItemAt(indexPath);
 
-            if (item is Org)
+            if (item is OrgViewModel)
             {
                 if (_viewModel.IsDescriptionExpanded)
                 {
-                    var org = (Org)item;
+                    var orgViewModel = (OrgViewModel)item;
 
                     var isVertical = 
                         UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait || 
@@ -100,15 +100,15 @@ namespace SmartWalk.iOS.Views
                     var frameSize = new SizeF(
                             (isVertical 
                                ? UIScreen.MainScreen.Bounds.Width 
-                               : UIScreen.MainScreen.Bounds.Height) - UIConstants.DefaultTextMargin * 2,
-                        float.MaxValue);
+                               : UIScreen.MainScreen.Bounds.Height),
+                        float.MaxValue); //  - UIConstants.DefaultTextMargin * 2
 
-                    var textSize = new NSString(org.Description).StringSize(
+                    var textSize = new NSString(orgViewModel.Org.Description).StringSize(
                         UIFont.FromName("Helvetica-Bold", 15),
                         frameSize,
                         UILineBreakMode.WordWrap);
 
-                    return textSize.Height + 270f;
+                    return textSize.Height + 274f;
                 }
                 else
                 {
@@ -143,7 +143,7 @@ namespace SmartWalk.iOS.Views
         {
             var key = default(NSString);
 
-            if (item is Org)
+            if (item is OrgViewModel)
             {
                 key = OrgCell.Key;
             }
@@ -154,13 +154,6 @@ namespace SmartWalk.iOS.Views
             }
 
             var cell = tableView.DequeueReusableCell(key, indexPath);
-
-            var orgCell = cell as OrgCell;
-            if (orgCell != null)
-            {
-                orgCell.ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
-            }
-
             return cell;
         }
 

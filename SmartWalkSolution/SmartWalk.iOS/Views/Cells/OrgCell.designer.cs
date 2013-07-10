@@ -12,9 +12,6 @@ namespace SmartWalk.iOS.Views.Cells
 	partial class OrgCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIButton ExpandCollapseButton { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UILabel OrgDescriptionLabel { get; set; }
 
 		[Outlet]
@@ -22,20 +19,12 @@ namespace SmartWalk.iOS.Views.Cells
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel OrgNameLabel { get; set; }
-
-		[Action ("OnExpandCollapseButtonClick:")]
-		partial void OnExpandCollapseButtonClick (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ExpandCollapseButton != null) {
-				ExpandCollapseButton.Dispose ();
-				ExpandCollapseButton = null;
-			}
-
-			if (OrgDescriptionLabel != null) {
-				OrgDescriptionLabel.Dispose ();
-				OrgDescriptionLabel = null;
+			if (OrgNameLabel != null) {
+				OrgNameLabel.Dispose ();
+				OrgNameLabel = null;
 			}
 
 			if (OrgImageView != null) {
@@ -43,9 +32,9 @@ namespace SmartWalk.iOS.Views.Cells
 				OrgImageView = null;
 			}
 
-			if (OrgNameLabel != null) {
-				OrgNameLabel.Dispose ();
-				OrgNameLabel = null;
+			if (OrgDescriptionLabel != null) {
+				OrgDescriptionLabel.Dispose ();
+				OrgDescriptionLabel = null;
 			}
 		}
 	}

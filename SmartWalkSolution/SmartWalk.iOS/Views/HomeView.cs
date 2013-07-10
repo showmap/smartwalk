@@ -42,7 +42,7 @@ namespace SmartWalk.iOS.Views
                 {
                     if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgInfos))
                     {
-                        InvokeOnMainThread(() => refreshControl.EndRefreshing());
+                        InvokeOnMainThread(refreshControl.EndRefreshing);
                     }
                 };
                      
@@ -73,6 +73,8 @@ namespace SmartWalk.iOS.Views
             {
                 _homeViewModel.NavigateOrgViewCommand.Execute(org);
             }
+
+            TableView.DeselectRow(indexPath, false);
         }
 
         protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
