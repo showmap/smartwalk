@@ -7,7 +7,7 @@ using SmartWalk.Core.ViewModels;
 
 namespace SmartWalk.iOS.Views.Converters
 {
-    public class OrgTableSourceConverter : IMvxValueConverter
+    public class OrgAndEventsTableSourceConverter : IMvxValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -25,8 +25,8 @@ namespace SmartWalk.iOS.Views.Converters
                     result.Add(
                         new GroupContainer(pastEvents) 
                         {
-                        Key = "Past Events"
-                    });
+                            Key = "Past Events"
+                        });
                 }
 
                 var currentEvents = orgViewModel.Org.EventInfos
@@ -36,8 +36,8 @@ namespace SmartWalk.iOS.Views.Converters
                     result.Add(
                         new GroupContainer(currentEvents) 
                         {
-                        Key = "Current Events"
-                    });
+                            Key = "Current Events"
+                        });
                 }
 
                 var futureEvents = orgViewModel.Org.EventInfos
@@ -47,8 +47,8 @@ namespace SmartWalk.iOS.Views.Converters
                     result.Add(
                         new GroupContainer(futureEvents) 
                         {
-                        Key = "Future Events"
-                    });
+                            Key = "Future Events"
+                        });
                 }
 
                 return result.ToArray();

@@ -7,5 +7,7 @@ namespace SmartWalk.Core.Model
 		public string Name { get; set; }
 
         public string Logo { get; set; }
+
+        public ContactInfo Contact { get; set; }
 	}
 }

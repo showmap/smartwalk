@@ -1,8 +1,7 @@
-using System.Collections.Generic;
+using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
-using System.Windows.Input;
 
 namespace SmartWalk.Core.ViewModels
 {
@@ -10,14 +9,16 @@ namespace SmartWalk.Core.ViewModels
 	{
 		private readonly ISmartWalkDataService _dataService;
 
-		private IEnumerable<EntityInfo> _orgInfos;
+		private EntityInfo[] _orgInfos;
+        private ICommand _refreshCommand;
+        private ICommand _navigateOrgViewCommand;
 
 		public HomeViewModel(ISmartWalkDataService dataService)
 		{
 			_dataService = dataService;
 		}
 
-		public IEnumerable<EntityInfo> OrgInfos 
+		public EntityInfo[] OrgInfos 
 		{
 			get
 			{
@@ -34,8 +35,14 @@ namespace SmartWalk.Core.ViewModels
         {
             get
             {
-                return new MvxCommand<EntityInfo>(orgInfo => ShowViewModel<OrgViewModel>(
-                    new OrgViewModel.Parameters { OrgId = orgInfo.Id }));
+                if (_navigateOrgViewCommand == null)
+                {
+                    _navigateOrgViewCommand = new MvxCommand<EntityInfo>(
+                        orgInfo => ShowViewModel<OrgViewModel>(
+                            new OrgViewModel.Parameters { OrgId = orgInfo.Id }));
+                }
+
+                return _navigateOrgViewCommand;
             }
         }
 
@@ -43,7 +50,12 @@ namespace SmartWalk.Core.ViewModels
         {
             get 
             {
-                return new MvxCommand(() => UpdateOrgInfos());
+                if (_refreshCommand == null)
+                {
+                    _refreshCommand = new MvxCommand(UpdateOrgInfos);
+                }
+
+                return _refreshCommand;
             }
         }
 

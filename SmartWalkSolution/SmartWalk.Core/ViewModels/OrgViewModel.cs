@@ -10,7 +10,8 @@ namespace SmartWalk.Core.ViewModels
         private readonly ISmartWalkDataService _dataService;
 
         private string _orgId;
-        private MvxCommand _refreshCommand;
+        private ICommand _refreshCommand;
+        private ICommand _navigateOrgEventViewCommand;
 
         public OrgViewModel(ISmartWalkDataService dataService)
         {
@@ -30,6 +31,24 @@ namespace SmartWalk.Core.ViewModels
                     Entity = value;
                     RaisePropertyChanged(() => Org);
                 }
+            }
+        }
+
+        public ICommand NavigateOrgEventViewCommand
+        {
+            get
+            {
+                if (_navigateOrgEventViewCommand == null)
+                {
+                    _navigateOrgEventViewCommand = new MvxCommand<OrgEventInfo>(
+                        evenInfo => ShowViewModel<OrgEventViewModel>(
+                        new OrgEventViewModel.Parameters {  
+                            OrgId = evenInfo.OrgId, 
+                            Date = evenInfo.Date
+                        }));
+                }
+
+                return _navigateOrgEventViewCommand;
             }
         }
 

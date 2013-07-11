@@ -15,7 +15,7 @@ namespace SmartWalk.Core.Services
             _exceptionPolicy = exceptionPolicy;
         }
 
-        public void GetOrgInfos(Action<IEnumerable<EntityInfo>, Exception> resultHandler)
+        public void GetOrgInfos(Action<EntityInfo[], Exception> resultHandler)
         {
             try
             {
@@ -102,22 +102,27 @@ namespace SmartWalk.Core.Services
             }
         }
 
-        public void GetOrgEvent(OrgEventInfo eventInfo, Action<OrgEvent, Exception> resultHandler)
+        public void GetOrgEvent(string orgId, DateTime date, Action<OrgEvent, Exception> resultHandler)
         {
             try
             {
-                var xml = XDocument.Load(@"TempXML/Local/" + eventInfo.OrgId + "/" + 
-                     eventInfo.OrgId + "-" + String.Format("{0:yyyy-mm-dd}", eventInfo.Date));
+                var xml = XDocument.Load(@"TempXML/Local/" + orgId + "/" + 
+                    orgId + "-" + String.Format("{0:yyyy-MM-dd}", date) + ".xml");
 
                 var result = new OrgEvent
                     {
-                        Info = eventInfo,
+                        Info = new OrgEventInfo {
+                            OrgId = orgId,
+                            Date = date
+                        },
                         Venues = xml.Descendants("venue").Select(venue => 
                             new Venue 
                             {
                                 Number = int.Parse(venue.Attribute("number").Value),
-                                Name = venue.Attribute("name").Value,
-                                Description = venue.Attribute("description").Value,
+                                Info = new EntityInfo {
+                                    Name = venue.Attribute("name").Value
+                                },
+                                Description = venue.Element("description").Value
                             }).ToArray()
                     };
 

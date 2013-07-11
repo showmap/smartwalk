@@ -11,7 +11,6 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Cells;
 using SmartWalk.iOS.Views.Converters;
-using SmartWalk.iOS.Constants;
 
 namespace SmartWalk.iOS.Views
 {
@@ -27,10 +26,10 @@ namespace SmartWalk.iOS.Views
         {
             base.ViewDidLoad();
 
-            var tableSource = new OrgEventTableSource(OrgEventsTableView, ViewModel);
+            var tableSource = new OrgAndEventsTableSource(OrgEventsTableView, ViewModel);
 
             this.CreateBinding(tableSource).To((OrgViewModel vm) => vm)
-                .WithConversion(new OrgTableSourceConverter(), null).Apply();
+                .WithConversion(new OrgAndEventsTableSourceConverter(), null).Apply();
 
             OrgEventsTableView.Source = tableSource;
             OrgEventsTableView.ReloadData();
@@ -63,11 +62,11 @@ namespace SmartWalk.iOS.Views
         }
     }
 
-    public class OrgEventTableSource : MvxTableViewSource
+    public class OrgAndEventsTableSource : MvxTableViewSource
     {
         private OrgViewModel _viewModel;
 
-        public OrgEventTableSource(UITableView tableView, OrgViewModel viewModel)
+        public OrgAndEventsTableSource(UITableView tableView, OrgViewModel viewModel)
             : base(tableView)
         {
             _viewModel = viewModel;
@@ -81,6 +80,19 @@ namespace SmartWalk.iOS.Views
         public GroupContainer[] GroupItemsSource
         {
             get { return ItemsSource as GroupContainer[];}
+        }
+
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            var eventInfo = GetItemAt(indexPath) as OrgEventInfo;
+
+            if (eventInfo != null &&
+                _viewModel.NavigateOrgEventViewCommand.CanExecute(eventInfo))
+            {
+                _viewModel.NavigateOrgEventViewCommand.Execute(eventInfo);
+            }
+
+            TableView.DeselectRow(indexPath, false);
         }
 
         public override float GetHeightForRow (UITableView tableView, NSIndexPath indexPath)
@@ -126,17 +138,17 @@ namespace SmartWalk.iOS.Views
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return GroupItemsSource.Count();
+            return GroupItemsSource != null ? GroupItemsSource.Count() : 0;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
         {
-            return GroupItemsSource[section].Count;
+            return GroupItemsSource != null ? GroupItemsSource[section].Count : 0;
         }
 
         public override string TitleForHeader(UITableView tableView, int section)
         {
-            return GroupItemsSource[section].Key;
+            return GroupItemsSource != null ? GroupItemsSource[section].Key : null;
         }
 
         protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)

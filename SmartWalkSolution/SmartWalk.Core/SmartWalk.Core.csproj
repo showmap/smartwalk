@@ -62,7 +62,6 @@
     <Compile Include="Model\ContactPhoneInfo.cs" />
     <Compile Include="ViewModels\OrgViewModel.cs" />
     <Compile Include="Model\OrgEventInfo.cs" />
-    <Compile Include="ViewModels\EventViewModel.cs" />
     <Compile Include="Services\SmartWalkDataService.cs" />
     <Compile Include="Utils\ServiceCacheStore.cs" />
     <Compile Include="Model\Org.cs" />
@@ -73,5 +72,6 @@
     <Compile Include="Model\EntityInfo.cs" />
     <Compile Include="ViewModels\EntityViewModel.cs" />
     <Compile Include="Model\Entity.cs" />
+    <Compile Include="ViewModels\OrgEventViewModel.cs" />
   </ItemGroup>
 </Project>

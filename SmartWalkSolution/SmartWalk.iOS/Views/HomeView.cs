@@ -52,16 +52,14 @@ namespace SmartWalk.iOS.Views
 
     public class OrgTableSource : MvxTableViewSource
     {
-        private HomeViewModel _homeViewModel;
+        private HomeViewModel _viewModel;
 
         public OrgTableSource(UITableView tableView, HomeViewModel homeViewModel)
             : base(tableView)
         {
-            _homeViewModel = homeViewModel;
+            _viewModel = homeViewModel;
 
             UseAnimations = true;
-            AddAnimation = UITableViewRowAnimation.Top;
-            RemoveAnimation = UITableViewRowAnimation.Middle;
 
             tableView.RegisterNibForCellReuse(OrgInfoCell.Nib, OrgInfoCell.Key);
         }
@@ -69,9 +67,10 @@ namespace SmartWalk.iOS.Views
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             var org = (EntityInfo)GetItemAt(indexPath);
-            if (_homeViewModel.NavigateOrgViewCommand.CanExecute(org))
+
+            if (_viewModel.NavigateOrgViewCommand.CanExecute(org))
             {
-                _homeViewModel.NavigateOrgViewCommand.Execute(org);
+                _viewModel.NavigateOrgViewCommand.Execute(org);
             }
 
             TableView.DeselectRow(indexPath, false);

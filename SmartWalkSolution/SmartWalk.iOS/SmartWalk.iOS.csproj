@@ -120,7 +120,6 @@
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Views\" />
-    <Folder Include="Services\" />
     <Folder Include="TempXML\" />
     <Folder Include="TempXML\Local\" />
     <Folder Include="TempXML\Local\mapp\" />
@@ -152,12 +151,24 @@
     <Compile Include="Views\Cells\OrgInfoCell.designer.cs">
       <DependentUpon>OrgInfoCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Converters\OrgTableSourceConverter.cs" />
     <Compile Include="Views\Converters\GroupContainer.cs" />
     <Compile Include="Constants\UIConstants.cs" />
     <Compile Include="Views\Cells\EntityCell.cs" />
     <Compile Include="Views\Cells\EntityCell.designer.cs">
       <DependentUpon>EntityCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrgEventView.cs" />
+    <Compile Include="Views\OrgEventView.designer.cs">
+      <DependentUpon>OrgEventView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Converters\OrgAndEventsTableSourceConverter.cs" />
+    <Compile Include="Views\Cells\VenueInfoCell.cs" />
+    <Compile Include="Views\Cells\VenueInfoCell.designer.cs">
+      <DependentUpon>VenueInfoCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Cells\VenueShowInfoCell.cs" />
+    <Compile Include="Views\Cells\VenueShowInfoCell.designer.cs">
+      <DependentUpon>VenueShowInfoCell.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -176,6 +187,9 @@
     <InterfaceDefinition Include="Views\Cells\OrgEventCell.xib" />
     <InterfaceDefinition Include="Views\Cells\OrgInfoCell.xib" />
     <InterfaceDefinition Include="Views\Cells\EntityCell.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView.xib" />
+    <InterfaceDefinition Include="Views\Cells\VenueInfoCell.xib" />
+    <InterfaceDefinition Include="Views\Cells\VenueShowInfoCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">
