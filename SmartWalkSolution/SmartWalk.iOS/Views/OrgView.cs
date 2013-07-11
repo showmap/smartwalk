@@ -74,7 +74,7 @@ namespace SmartWalk.iOS.Views
 
             UseAnimations = true;
 
-            tableView.RegisterNibForCellReuse(OrgCell.Nib, OrgCell.Key);
+            tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
         }
 
@@ -101,7 +101,7 @@ namespace SmartWalk.iOS.Views
                             (isVertical 
                                ? UIScreen.MainScreen.Bounds.Width 
                                : UIScreen.MainScreen.Bounds.Height),
-                        float.MaxValue); //  - UIConstants.DefaultTextMargin * 2
+                        float.MaxValue); // TODO:  - UIConstants.DefaultTextMargin * 2
 
                     var textSize = new NSString(orgViewModel.Org.Description).StringSize(
                         UIFont.FromName("Helvetica-Bold", 15),
@@ -145,7 +145,7 @@ namespace SmartWalk.iOS.Views
 
             if (item is OrgViewModel)
             {
-                key = OrgCell.Key;
+                key = EntityCell.Key;
             }
 
             if (item is OrgEventInfo)

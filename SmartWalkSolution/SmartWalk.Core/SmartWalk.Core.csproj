@@ -71,5 +71,7 @@
     <Compile Include="Utils\ReflectExtensions.cs" />
     <Compile Include="Utils\Reflect.cs" />
     <Compile Include="Model\EntityInfo.cs" />
+    <Compile Include="ViewModels\EntityViewModel.cs" />
+    <Compile Include="Model\Entity.cs" />
   </ItemGroup>
 </Project>

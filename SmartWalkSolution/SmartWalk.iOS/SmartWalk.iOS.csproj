@@ -140,10 +140,6 @@
     <Compile Include="Views\HomeView.designer.cs">
       <DependentUpon>HomeView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Cells\OrgCell.cs" />
-    <Compile Include="Views\Cells\OrgCell.designer.cs">
-      <DependentUpon>OrgCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\OrgView.cs" />
     <Compile Include="Views\OrgView.designer.cs">
       <DependentUpon>OrgView.cs</DependentUpon>
@@ -159,6 +155,10 @@
     <Compile Include="Views\Converters\OrgTableSourceConverter.cs" />
     <Compile Include="Views\Converters\GroupContainer.cs" />
     <Compile Include="Constants\UIConstants.cs" />
+    <Compile Include="Views\Cells\EntityCell.cs" />
+    <Compile Include="Views\Cells\EntityCell.designer.cs">
+      <DependentUpon>EntityCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -172,10 +172,10 @@
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\HomeView.xib" />
-    <InterfaceDefinition Include="Views\Cells\OrgCell.xib" />
     <InterfaceDefinition Include="Views\OrgView.xib" />
     <InterfaceDefinition Include="Views\Cells\OrgEventCell.xib" />
     <InterfaceDefinition Include="Views\Cells\OrgInfoCell.xib" />
+    <InterfaceDefinition Include="Views\Cells\EntityCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">

@@ -5,14 +5,11 @@ using SmartWalk.Core.Services;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class OrgViewModel : MvxViewModel
+    public class OrgViewModel : EntityViewModel
     {
         private readonly ISmartWalkDataService _dataService;
 
-        private Org _org;
         private string _orgId;
-        private bool _isDescriptionExpanded;
-        private MvxCommand _expandCollapseCommand;
         private MvxCommand _refreshCommand;
 
         public OrgViewModel(ISmartWalkDataService dataService)
@@ -24,45 +21,15 @@ namespace SmartWalk.Core.ViewModels
         {
             get
             {
-                return _org;
+                return (Org)Entity;
             }
             private set
             {
-                if (!Equals(_org, value))
+                if (!Equals(Entity, value))
                 {
-                    _org = value;
+                    Entity = value;
                     RaisePropertyChanged(() => Org);
                 }
-            }
-        }
-
-        public bool IsDescriptionExpanded
-        {
-            get
-            {
-                return _isDescriptionExpanded;
-            }
-            private set
-            {
-                if (_isDescriptionExpanded != value)
-                {
-                    _isDescriptionExpanded = value;
-                    RaisePropertyChanged(() => IsDescriptionExpanded);
-                }
-            }
-        }
-
-        public ICommand ExpandCollapseCommand
-        {
-            get 
-            {
-                if (_expandCollapseCommand == null)
-                {
-                    _expandCollapseCommand = 
-                        new MvxCommand(() => IsDescriptionExpanded = !IsDescriptionExpanded);
-                }
-
-                return _expandCollapseCommand;
             }
         }
 
