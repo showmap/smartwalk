@@ -13,7 +13,7 @@ namespace SmartWalk.iOS
 		{
 		}
 
-		protected override IMvxApplication CreateApp ()
+		protected override IMvxApplication CreateApp()
 		{
 			return new SmartWalkApplication();
 		}
@@ -31,7 +31,7 @@ namespace SmartWalk.iOS
             Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();
 
-            base.InitializeLastChance ();
+            base.InitializeLastChance();
         }
 	}
 }

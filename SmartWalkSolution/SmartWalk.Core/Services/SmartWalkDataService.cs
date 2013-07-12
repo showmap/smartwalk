@@ -45,10 +45,10 @@ namespace SmartWalk.Core.Services
                 var result = new Org {
                     Info = new EntityInfo{
                         Id = orgId,
-                        Name = xml.Root.Attribute("name").ValueOrNull(),
-                        Logo = "TempXML/Local/" + orgId + "/" + xml.Root.Attribute("logo").ValueOrNull(),
+                        Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
+                        Logo = "TempXML/Local/" + orgId + "/" + (xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null),
                     },
-                    Description = xml.Root.Element("description").ValueOrNull(),
+                    Description = xml.Root != null ? xml.Root.Element("description").ValueOrNull() : null,
                 };
 
                 if (orgId == "nbff")
@@ -145,7 +145,7 @@ namespace SmartWalk.Core.Services
         }
     }
 
-    public static class XMLExtensions
+    public static class XExtensions
     {
         public static string ValueOrNull(this XAttribute attribute)
         {

@@ -52,7 +52,7 @@ namespace SmartWalk.iOS.Views
 
     public class OrgTableSource : MvxTableViewSource
     {
-        private HomeViewModel _viewModel;
+        private readonly HomeViewModel _viewModel;
 
         public OrgTableSource(UITableView tableView, HomeViewModel homeViewModel)
             : base(tableView)

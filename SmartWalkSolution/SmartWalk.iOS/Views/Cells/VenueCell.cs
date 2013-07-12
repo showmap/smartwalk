@@ -14,7 +14,7 @@ namespace SmartWalk.iOS.Views.Cells
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
 
-        private static MvxBindingDescription[] Bindings = new [] {
+        private static readonly MvxBindingDescription[] Bindings = new [] {
             new MvxBindingDescription(
                 Reflect<VenueCell>.GetProperty(p => p.NumberText).Name,
                 Reflect<Venue>.GetProperty(p => p.Number).Name, 

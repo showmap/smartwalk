@@ -64,7 +64,7 @@ namespace SmartWalk.iOS.Views
 
     public class OrgAndEventsTableSource : MvxTableViewSource
     {
-        private OrgViewModel _viewModel;
+        private readonly OrgViewModel _viewModel;
 
         public OrgAndEventsTableSource(UITableView tableView, OrgViewModel viewModel)
             : base(tableView)
