@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using SmartWalk.Core.Model;
@@ -23,10 +22,10 @@ namespace SmartWalk.Core.Services
                 var result = xml.Descendants("organization").Select(org => 
                     new EntityInfo 
                         {
-                            Id = org.Attribute("id").Value,
-                            Name = org.Attribute("name").Value,
-                            Logo = "TempXML/Local/" + org.Attribute("id").Value + 
-                                "/" + org.Attribute("logo").Value,
+                            Id = org.Attribute("id").ValueOrNull(),
+                            Name = org.Attribute("name").ValueOrNull(),
+                            Logo = "TempXML/Local/" + org.Attribute("id").ValueOrNull() + 
+                                "/" + org.Attribute("logo").ValueOrNull(),
                         }).ToArray();
 
                 resultHandler(result, null);
@@ -46,10 +45,10 @@ namespace SmartWalk.Core.Services
                 var result = new Org {
                     Info = new EntityInfo{
                         Id = orgId,
-                        Name = xml.Root.Attribute("name").Value,
-                        Logo = "TempXML/Local/" + orgId + "/" + xml.Root.Attribute("logo").Value,
+                        Name = xml.Root.Attribute("name").ValueOrNull(),
+                        Logo = "TempXML/Local/" + orgId + "/" + xml.Root.Attribute("logo").ValueOrNull(),
                     },
-                    Description = xml.Root.Element("description").Value,
+                    Description = xml.Root.Element("description").ValueOrNull(),
                 };
 
                 if (orgId == "nbff")
@@ -118,11 +117,21 @@ namespace SmartWalk.Core.Services
                         Venues = xml.Descendants("venue").Select(venue => 
                             new Venue 
                             {
-                                Number = int.Parse(venue.Attribute("number").Value),
+                                Number = venue.Attribute("number") != null 
+                                    ? int.Parse(venue.Attribute("number").Value) : 0,
                                 Info = new EntityInfo {
-                                    Name = venue.Attribute("name").Value
+                                    Name = venue.Attribute("name").ValueOrNull()
                                 },
-                                Description = venue.Element("description").Value
+                                Description = venue.Element("description").ValueOrNull(),
+                                Shows = venue.Descendants("show").Select(show => 
+                                    new VenueShow
+                                    {
+                                        Start = show.Attribute("start") != null 
+                                            ? DateTime.Parse(show.Attribute("start").Value) : default(DateTime),
+                                        End = show.Attribute("end") != null 
+                                            ? DateTime.Parse(show.Attribute("end").Value) : default(DateTime),
+                                        Description = show.Value,
+                                    }).ToArray()
                             }).ToArray()
                     };
 
@@ -133,6 +142,19 @@ namespace SmartWalk.Core.Services
                 _exceptionPolicy.Trace(ex);
                 resultHandler(null, ex);
             }
+        }
+    }
+
+    public static class XMLExtensions
+    {
+        public static string ValueOrNull(this XAttribute attribute)
+        {
+            return attribute != null ? attribute.Value : null;
+        }
+
+        public static string ValueOrNull(this XElement element)
+        {
+            return element != null ? element.Value : null;
         }
     }
 }

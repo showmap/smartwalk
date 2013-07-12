@@ -95,7 +95,7 @@ namespace SmartWalk.iOS.Views
             TableView.DeselectRow(indexPath, false);
         }
 
-        public override float GetHeightForRow (UITableView tableView, NSIndexPath indexPath)
+        public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var item = GetItemAt(indexPath);
 

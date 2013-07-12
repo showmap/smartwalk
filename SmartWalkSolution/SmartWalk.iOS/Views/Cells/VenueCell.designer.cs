@@ -8,25 +8,25 @@ using MonoTouch.Foundation;
 
 namespace SmartWalk.iOS.Views.Cells
 {
-	[Register ("OrgInfoCell")]
-	partial class OrgInfoCell
+	[Register ("VenueCell")]
+	partial class VenueCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIImageView OrgImageView { get; set; }
+		MonoTouch.UIKit.UILabel NameLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel OrgNameLabel { get; set; }
+		MonoTouch.UIKit.UILabel NumberLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (OrgImageView != null) {
-				OrgImageView.Dispose ();
-				OrgImageView = null;
+			if (NumberLabel != null) {
+				NumberLabel.Dispose ();
+				NumberLabel = null;
 			}
 
-			if (OrgNameLabel != null) {
-				OrgNameLabel.Dispose ();
-				OrgNameLabel = null;
+			if (NameLabel != null) {
+				NameLabel.Dispose ();
+				NameLabel = null;
 			}
 		}
 	}

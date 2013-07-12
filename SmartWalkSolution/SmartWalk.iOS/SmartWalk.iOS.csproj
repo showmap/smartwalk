@@ -147,10 +147,6 @@
     <Compile Include="Views\Cells\OrgEventCell.designer.cs">
       <DependentUpon>OrgEventCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Cells\OrgInfoCell.cs" />
-    <Compile Include="Views\Cells\OrgInfoCell.designer.cs">
-      <DependentUpon>OrgInfoCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Converters\GroupContainer.cs" />
     <Compile Include="Constants\UIConstants.cs" />
     <Compile Include="Views\Cells\EntityCell.cs" />
@@ -162,13 +158,17 @@
       <DependentUpon>OrgEventView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\OrgAndEventsTableSourceConverter.cs" />
-    <Compile Include="Views\Cells\VenueInfoCell.cs" />
-    <Compile Include="Views\Cells\VenueInfoCell.designer.cs">
-      <DependentUpon>VenueInfoCell.cs</DependentUpon>
+    <Compile Include="Views\Cells\VenueCell.cs" />
+    <Compile Include="Views\Cells\VenueCell.designer.cs">
+      <DependentUpon>VenueCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Cells\VenueShowInfoCell.cs" />
-    <Compile Include="Views\Cells\VenueShowInfoCell.designer.cs">
-      <DependentUpon>VenueShowInfoCell.cs</DependentUpon>
+    <Compile Include="Views\Cells\VenueShowCell.cs" />
+    <Compile Include="Views\Cells\VenueShowCell.designer.cs">
+      <DependentUpon>VenueShowCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Cells\OrgCell.cs" />
+    <Compile Include="Views\Cells\OrgCell.designer.cs">
+      <DependentUpon>OrgCell.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -185,11 +185,11 @@
     <InterfaceDefinition Include="Views\HomeView.xib" />
     <InterfaceDefinition Include="Views\OrgView.xib" />
     <InterfaceDefinition Include="Views\Cells\OrgEventCell.xib" />
-    <InterfaceDefinition Include="Views\Cells\OrgInfoCell.xib" />
     <InterfaceDefinition Include="Views\Cells\EntityCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView.xib" />
-    <InterfaceDefinition Include="Views\Cells\VenueInfoCell.xib" />
-    <InterfaceDefinition Include="Views\Cells\VenueShowInfoCell.xib" />
+    <InterfaceDefinition Include="Views\Cells\VenueShowCell.xib" />
+    <InterfaceDefinition Include="Views\Cells\VenueCell.xib" />
+    <InterfaceDefinition Include="Views\Cells\OrgCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">

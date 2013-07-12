@@ -61,7 +61,7 @@ namespace SmartWalk.iOS.Views
 
             UseAnimations = true;
 
-            tableView.RegisterNibForCellReuse(OrgInfoCell.Nib, OrgInfoCell.Key);
+            tableView.RegisterNibForCellReuse(OrgCell.Nib, OrgCell.Key);
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
@@ -78,7 +78,7 @@ namespace SmartWalk.iOS.Views
 
         protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
         {
-            return tableView.DequeueReusableCell(OrgInfoCell.Key, indexPath);
+            return tableView.DequeueReusableCell(OrgCell.Key, indexPath);
         }
     }
 }

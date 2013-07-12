@@ -48,6 +48,7 @@
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Utils\" />
+    <Folder Include="Converters\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -73,5 +74,6 @@
     <Compile Include="ViewModels\EntityViewModel.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="ViewModels\OrgEventViewModel.cs" />
+    <Compile Include="Converters\DateTimeFormatConverter.cs" />
   </ItemGroup>
 </Project>

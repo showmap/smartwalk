@@ -58,8 +58,8 @@ namespace SmartWalk.iOS.Views
         {
             UseAnimations = true;
 
-            tableView.RegisterNibForCellReuse(VenueInfoCell.Nib, VenueInfoCell.Key);
-            tableView.RegisterNibForCellReuse(VenueShowInfoCell.Nib, VenueShowInfoCell.Key);
+            tableView.RegisterNibForCellReuse(VenueCell.Nib, VenueCell.Key);
+            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
         public Venue[] VenueItemsSource
@@ -74,7 +74,7 @@ namespace SmartWalk.iOS.Views
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
-            return 30.0f;
+            return 35.0f;
         }
 
         public override int NumberOfSections(UITableView tableView)
@@ -91,13 +91,14 @@ namespace SmartWalk.iOS.Views
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
-            var cell = tableView.DequeueReusableCell(VenueInfoCell.Key);
+            var cell = (VenueCell)tableView.DequeueReusableCell(VenueCell.Key);
+            cell.DataContext = VenueItemsSource[section];
             return cell;
         }
 
         protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)
         {
-            var cell = tableView.DequeueReusableCell(VenueShowInfoCell.Key, indexPath);
+            var cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
             return cell;
         }
 
