@@ -22,7 +22,7 @@ namespace SmartWalk.iOS.Views
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            
+
             var tableSource = new VenuesAndShowsTableSource(VenuesAndShowsTableView);
 
             this.CreateBinding(tableSource).To((OrgEventViewModel vm) => vm.OrgEvent.Venues).Apply();
@@ -32,20 +32,20 @@ namespace SmartWalk.iOS.Views
 
             var refreshControl = new UIRefreshControl();
             refreshControl.ValueChanged += (sender, e) => 
-            {
-                if (ViewModel.RefreshCommand.CanExecute(null))
                 {
-                    ViewModel.RefreshCommand.Execute(null);
-                }
-            };
+                    if (ViewModel.RefreshCommand.CanExecute(null))
+                    {
+                        ViewModel.RefreshCommand.Execute(null);
+                    }
+                };
 
             ViewModel.PropertyChanged += (sender, e) => 
-            {
-                if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
                 {
-                    InvokeOnMainThread(refreshControl.EndRefreshing);
-                }
-            };
+                    if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
+                    {
+                        InvokeOnMainThread(refreshControl.EndRefreshing);
+                    }
+                };
 
             VenuesAndShowsTableView.AddSubview(refreshControl);
         }
@@ -53,12 +53,15 @@ namespace SmartWalk.iOS.Views
 
     public class VenuesAndShowsTableSource : MvxTableViewSource
     {
+        private readonly ViewsFactory<VenueCell> _headerViewFactory;
+
         public VenuesAndShowsTableSource(UITableView tableView)
             : base(tableView)
         {
+            _headerViewFactory = new ViewsFactory<VenueCell>(VenueCell.Create);
+
             UseAnimations = true;
 
-            tableView.RegisterNibForCellReuse(VenueCell.Nib, VenueCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
@@ -69,7 +72,7 @@ namespace SmartWalk.iOS.Views
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return 40.0f;
+            return 70.0f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -91,9 +94,9 @@ namespace SmartWalk.iOS.Views
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
-            var cell = (VenueCell)tableView.DequeueReusableCell(VenueCell.Key);
-            cell.DataContext = VenueItemsSource[section];
-            return cell;
+            var headerView = _headerViewFactory.DequeueReusableView();
+            headerView.DataContext = VenueItemsSource[section];
+            return headerView;
         }
 
         protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)

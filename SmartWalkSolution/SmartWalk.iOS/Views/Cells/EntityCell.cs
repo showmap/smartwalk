@@ -35,7 +35,7 @@ namespace SmartWalk.iOS.Views.Cells
             InitializeImageHelper();      
         }
 
-        public EntityCell(IntPtr handle) : base (Bindings, handle)
+        public EntityCell(IntPtr handle) : base(Bindings, handle)
         {
             InitializeImageHelper();
         }

@@ -170,6 +170,7 @@
     <Compile Include="Views\Cells\OrgCell.designer.cs">
       <DependentUpon>OrgCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ViewsFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
