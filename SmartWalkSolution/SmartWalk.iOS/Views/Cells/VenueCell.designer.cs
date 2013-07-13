@@ -12,6 +12,9 @@ namespace SmartWalk.iOS.Views.Cells
 	partial class VenueCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UILabel AddressLabel { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel NameLabel { get; set; }
 
 		[Outlet]
@@ -19,14 +22,19 @@ namespace SmartWalk.iOS.Views.Cells
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (NameLabel != null) {
+				NameLabel.Dispose ();
+				NameLabel = null;
+			}
+
 			if (NumberLabel != null) {
 				NumberLabel.Dispose ();
 				NumberLabel = null;
 			}
 
-			if (NameLabel != null) {
-				NameLabel.Dispose ();
-				NameLabel = null;
+			if (AddressLabel != null) {
+				AddressLabel.Dispose ();
+				AddressLabel = null;
 			}
 		}
 	}

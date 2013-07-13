@@ -5,7 +5,7 @@ using System.Linq;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Core.ViewModels;
 
-namespace SmartWalk.iOS.Views.Converters
+namespace SmartWalk.iOS.Converters
 {
     public class OrgAndEventsTableSourceConverter : IMvxValueConverter
     {

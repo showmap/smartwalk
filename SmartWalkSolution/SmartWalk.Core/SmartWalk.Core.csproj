@@ -75,5 +75,7 @@
     <Compile Include="Model\Entity.cs" />
     <Compile Include="ViewModels\OrgEventViewModel.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
+    <Compile Include="Model\AddressInfo.cs" />
+    <Compile Include="Converters\AddressesConverter.cs" />
   </ItemGroup>
 </Project>

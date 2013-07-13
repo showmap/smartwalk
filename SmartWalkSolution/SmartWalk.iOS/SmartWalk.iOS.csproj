@@ -125,8 +125,8 @@
     <Folder Include="TempXML\Local\mapp\" />
     <Folder Include="TempXML\Local\nbff\" />
     <Folder Include="Views\Cells\" />
-    <Folder Include="Views\Converters\" />
     <Folder Include="Constants\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -147,7 +147,6 @@
     <Compile Include="Views\Cells\OrgEventCell.designer.cs">
       <DependentUpon>OrgEventCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Converters\GroupContainer.cs" />
     <Compile Include="Constants\UIConstants.cs" />
     <Compile Include="Views\Cells\EntityCell.cs" />
     <Compile Include="Views\Cells\EntityCell.designer.cs">
@@ -157,7 +156,6 @@
     <Compile Include="Views\OrgEventView.designer.cs">
       <DependentUpon>OrgEventView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Converters\OrgAndEventsTableSourceConverter.cs" />
     <Compile Include="Views\Cells\VenueCell.cs" />
     <Compile Include="Views\Cells\VenueCell.designer.cs">
       <DependentUpon>VenueCell.cs</DependentUpon>
@@ -170,7 +168,11 @@
     <Compile Include="Views\Cells\OrgCell.designer.cs">
       <DependentUpon>OrgCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewsFactory.cs" />
+    <Compile Include="Utils\ViewsFactory.cs" />
+    <Compile Include="Converters\GroupContainer.cs" />
+    <Compile Include="Converters\OrgAndEventsTableSourceConverter.cs" />
+    <Compile Include="Utils\VenueAnnotation.cs" />
+    <Compile Include="Utils\MapUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

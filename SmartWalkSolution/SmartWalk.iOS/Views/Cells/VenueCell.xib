@@ -54,7 +54,7 @@
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 								</object>
-								<float key="IBUIAlpha">0.5</float>
+								<float key="IBUIAlpha">0.69999998807907104</float>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
@@ -199,6 +199,14 @@
 						<reference key="destination" ref="852106590"/>
 					</object>
 					<int key="connectionID">12</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">AddressLabel</string>
+						<reference key="source" ref="302723463"/>
+						<reference key="destination" ref="1057005318"/>
+					</object>
+					<int key="connectionID">135</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -675,7 +683,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">134</int>
+			<int key="maxID">135</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -691,10 +699,15 @@
 					<string key="className">VenueCell</string>
 					<string key="superclassName">UITableViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="AddressLabel">UILabel</string>
 						<string key="NameLabel">UILabel</string>
 						<string key="NumberLabel">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="AddressLabel">
+							<string key="name">AddressLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="NameLabel">
 							<string key="name">NameLabel</string>
 							<string key="candidateClassName">UILabel</string>

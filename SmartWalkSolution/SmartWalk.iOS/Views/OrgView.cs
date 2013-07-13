@@ -9,8 +9,8 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Converters;
 using SmartWalk.iOS.Views.Cells;
-using SmartWalk.iOS.Views.Converters;
 
 namespace SmartWalk.iOS.Views
 {
@@ -26,6 +26,13 @@ namespace SmartWalk.iOS.Views
         {
             base.ViewDidLoad();
 
+            NavigationItem.Title = ViewModel.Org.Info.Name;
+
+            InitializeTableView();
+        }
+
+        private void InitializeTableView()
+        {
             var tableSource = new OrgAndEventsTableSource(OrgEventsTableView, ViewModel);
 
             this.CreateBinding(tableSource).To((OrgViewModel vm) => vm)
@@ -36,29 +43,27 @@ namespace SmartWalk.iOS.Views
 
             var refreshControl = new UIRefreshControl();
             refreshControl.ValueChanged += (sender, e) => 
+            {
+                if (ViewModel.RefreshCommand.CanExecute(null))
                 {
-                    if (ViewModel.RefreshCommand.CanExecute(null))
-                    {
-                        ViewModel.RefreshCommand.Execute(null);
-                    }
-                };
+                    ViewModel.RefreshCommand.Execute(null);
+                }
+            };
 
             ViewModel.PropertyChanged += (sender, e) => 
+            {
+                if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Org))
                 {
-                    if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Org))
-                    {
-                        InvokeOnMainThread(refreshControl.EndRefreshing);
-                    }
-                    else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
-                    {
-                        OrgEventsTableView.BeginUpdates();
-                        OrgEventsTableView.EndUpdates();
-                    }
-                };
+                    InvokeOnMainThread(refreshControl.EndRefreshing);
+                }
+                else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+                {
+                    OrgEventsTableView.BeginUpdates();
+                    OrgEventsTableView.EndUpdates();
+                }
+            };
 
             OrgEventsTableView.AddSubview(refreshControl);
-
-            NavigationItem.Title = ViewModel.Org.Info.Name;
         }
     }
 

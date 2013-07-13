@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SmartWalk.iOS.Views.Converters
+namespace SmartWalk.iOS.Converters
 {
     public class GroupContainer : List<object>
     {

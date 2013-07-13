@@ -6,6 +6,7 @@ using Cirrious.MvvmCross.Binding.Binders;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.Model;
 using Cirrious.MvvmCross.Binding;
+using SmartWalk.Core.Converters;
 
 namespace SmartWalk.iOS.Views.Cells
 {
@@ -22,7 +23,11 @@ namespace SmartWalk.iOS.Views.Cells
             new MvxBindingDescription(
                 Reflect<VenueCell>.GetProperty(p => p.NameText).Name,
                 ReflectExtensions.GetPath<Venue, EntityInfo>(p => p.Info, p => p.Name), 
-                null, null, null, MvxBindingMode.OneWay)
+                null, null, null, MvxBindingMode.OneWay),
+            new MvxBindingDescription(
+                Reflect<VenueCell>.GetProperty(p => p.AddressText).Name,
+                ReflectExtensions.GetPath<Venue, EntityInfo>(p => p.Info, p => p.Addresses), 
+                new AddressesConverter(), null, null, MvxBindingMode.OneWay)
         };
 
         public VenueCell() : base(Bindings)
@@ -46,6 +51,11 @@ namespace SmartWalk.iOS.Views.Cells
         public string NameText {
             get { return NameLabel.Text; }
             set { NameLabel.Text = value; }
+        }
+
+        public string AddressText {
+            get { return AddressLabel.Text; }
+            set { AddressLabel.Text = value; }
         }
     }
 }

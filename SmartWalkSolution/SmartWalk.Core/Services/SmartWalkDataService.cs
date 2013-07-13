@@ -120,7 +120,9 @@ namespace SmartWalk.Core.Services
                                 Number = venue.Attribute("number") != null 
                                     ? int.Parse(venue.Attribute("number").Value) : 0,
                                 Info = new EntityInfo {
-                                    Name = venue.Attribute("name").ValueOrNull()
+                                    Name = venue.Attribute("name").ValueOrNull(),
+                                Addresses = venue.Descendants("point").Select(point => 
+                                  CreateAddress(point.Attribute("coordinates").ValueOrNull(), point.ValueOrNull())).ToArray()
                                 },
                                 Description = venue.Element("description").ValueOrNull(),
                                 Shows = venue.Descendants("show").Select(show => 
@@ -142,6 +144,30 @@ namespace SmartWalk.Core.Services
                 _exceptionPolicy.Trace(ex);
                 resultHandler(null, ex);
             }
+        }
+
+        private AddressInfo CreateAddress(string coordinates, string address)
+        {
+            var latitude = default(double);
+            var longitude = default(double);
+
+            if (coordinates != null)
+            {
+                var points = coordinates.Split(',');
+
+                if (points.Length == 2)
+                {
+                    double.TryParse(points[0], out latitude);
+                    double.TryParse(points[1], out longitude);
+                }
+            }
+
+            return new AddressInfo 
+                {
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    Address = address,
+                };
         }
     }
 

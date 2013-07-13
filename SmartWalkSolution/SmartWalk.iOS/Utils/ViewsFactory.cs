@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.UIKit;
 
-namespace SmartWalk.iOS.Views
+namespace SmartWalk.iOS.Utils
 {
     public class ViewsFactory<T> where T : UIView
     {
