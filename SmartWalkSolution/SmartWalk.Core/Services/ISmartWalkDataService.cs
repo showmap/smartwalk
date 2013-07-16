@@ -9,6 +9,10 @@ namespace SmartWalk.Core.Services
 
         void GetOrg(string orgId, Action<Org, Exception> resultHandler);
 
-        void GetOrgEvent(string orgId, DateTime date, Action<OrgEvent, Exception> resultHandler);
+        void GetOrgEvent(
+            string orgId, 
+            DateTime date, 
+            DataSource source, 
+            Action<OrgEvent, Exception> resultHandler);
 	}
 }

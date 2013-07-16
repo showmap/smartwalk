@@ -64,7 +64,6 @@
     <Compile Include="ViewModels\OrgViewModel.cs" />
     <Compile Include="Model\OrgEventInfo.cs" />
     <Compile Include="Services\SmartWalkDataService.cs" />
-    <Compile Include="Utils\ServiceCacheStore.cs" />
     <Compile Include="Model\Org.cs" />
     <Compile Include="Services\IExceptionPolicy.cs" />
     <Compile Include="Services\ExceptionPolicy.cs" />
@@ -77,5 +76,8 @@
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Model\AddressInfo.cs" />
     <Compile Include="Converters\AddressesConverter.cs" />
+    <Compile Include="Services\ICacheService.cs" />
+    <Compile Include="Services\DataSource.cs" />
+    <Compile Include="ViewModels\VenueViewModel.cs" />
   </ItemGroup>
 </Project>

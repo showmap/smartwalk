@@ -127,6 +127,7 @@
     <Folder Include="Views\Cells\" />
     <Folder Include="Constants\" />
     <Folder Include="Utils\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -173,6 +174,12 @@
     <Compile Include="Converters\OrgAndEventsTableSourceConverter.cs" />
     <Compile Include="Utils\VenueAnnotation.cs" />
     <Compile Include="Utils\MapUtil.cs" />
+    <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Views\VenueView.cs" />
+    <Compile Include="Views\VenueView.designer.cs">
+      <DependentUpon>VenueView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\VenueAndShowsTableSourceConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -193,6 +200,7 @@
     <InterfaceDefinition Include="Views\Cells\VenueShowCell.xib" />
     <InterfaceDefinition Include="Views\Cells\VenueCell.xib" />
     <InterfaceDefinition Include="Views\Cells\OrgCell.xib" />
+    <InterfaceDefinition Include="Views\VenueView.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">

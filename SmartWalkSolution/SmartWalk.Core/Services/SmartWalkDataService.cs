@@ -7,11 +7,11 @@ namespace SmartWalk.Core.Services
 {
     public class SmartWalkDataService : ISmartWalkDataService
     {
-        private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly ICacheService _cacheService;
 
-        public SmartWalkDataService(IExceptionPolicy exceptionPolicy)
+        public SmartWalkDataService(ICacheService cacheService)
         {
-            _exceptionPolicy = exceptionPolicy;
+            _cacheService = cacheService;
         }
 
         public void GetOrgInfos(Action<EntityInfo[], Exception> resultHandler)
@@ -32,7 +32,6 @@ namespace SmartWalk.Core.Services
             }
             catch (Exception ex)
             {
-                _exceptionPolicy.Trace(ex);
                 resultHandler(null, ex);
             }
         }
@@ -43,7 +42,8 @@ namespace SmartWalk.Core.Services
             {
                 var xml = XDocument.Load(@"TempXML/Local/" + orgId + "/index.xml");
                 var result = new Org {
-                    Info = new EntityInfo{
+                    Info = new EntityInfo 
+                    {
                         Id = orgId,
                         Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
                         Logo = "TempXML/Local/" + orgId + "/" + (xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null),
@@ -96,54 +96,81 @@ namespace SmartWalk.Core.Services
             }
             catch (Exception ex)
             {
-                _exceptionPolicy.Trace(ex);
                 resultHandler(null, ex);
             }
         }
 
-        public void GetOrgEvent(string orgId, DateTime date, Action<OrgEvent, Exception> resultHandler)
+        public void GetOrgEvent(string orgId, DateTime date, DataSource source, Action<OrgEvent, Exception> resultHandler)
         {
             try
             {
-                var xml = XDocument.Load(@"TempXML/Local/" + orgId + "/" + 
-                    orgId + "-" + String.Format("{0:yyyy-MM-dd}", date) + ".xml");
+                var key = orgId + "-" + String.Format("{0:yyyy-MM-dd}", date);
+                var xml = default(XDocument);
 
-                var result = new OrgEvent
+                if (source == DataSource.Cache)
+                {
+                    var data = _cacheService.GetString(key);
+                    if (data != null)
                     {
-                        Info = new OrgEventInfo {
-                            OrgId = orgId,
-                            Date = date
-                        },
-                        Venues = xml.Descendants("venue").Select(venue => 
-                            new Venue 
-                            {
-                                Number = venue.Attribute("number") != null 
-                                    ? int.Parse(venue.Attribute("number").Value) : 0,
-                                Info = new EntityInfo {
-                                    Name = venue.Attribute("name").ValueOrNull(),
-                                Addresses = venue.Descendants("point").Select(point => 
-                                  CreateAddress(point.Attribute("coordinates").ValueOrNull(), point.ValueOrNull())).ToArray()
-                                },
-                                Description = venue.Element("description").ValueOrNull(),
-                                Shows = venue.Descendants("show").Select(show => 
-                                    new VenueShow
-                                    {
-                                        Start = show.Attribute("start") != null 
-                                            ? DateTime.Parse(show.Attribute("start").Value) : default(DateTime),
-                                        End = show.Attribute("end") != null 
-                                            ? DateTime.Parse(show.Attribute("end").Value) : default(DateTime),
-                                        Description = show.Value,
-                                    }).ToArray()
-                            }).ToArray()
-                    };
+                        xml = XDocument.Parse(data);
+                    }
+                }
 
-                resultHandler(result, null);
+                if (xml == null)
+                {
+                    xml = XDocument.Load(@"TempXML/Local/" + orgId + "/" + key + ".xml");
+                }
+
+                if (xml != null)
+                {
+                    var result = CreateOrgEvent(orgId, date, xml);
+
+                    _cacheService.SetString(key, xml.ToString());
+
+                    resultHandler(result, null);
+                }
             }
             catch (Exception ex)
             {
-                _exceptionPolicy.Trace(ex);
                 resultHandler(null, ex);
             }
+        }
+
+        private OrgEvent CreateOrgEvent(string orgId, DateTime date, XDocument xml)
+        {
+            return new OrgEvent 
+                {
+                    Info = new OrgEventInfo
+                            {
+                                OrgId = orgId,
+                                Date = date
+                            },
+                    Venues = xml.Descendants("venue")
+                        .Select(venue => new Venue 
+                            {
+                                Number = venue.Attribute("number") != null 
+                                    ? int.Parse(venue.Attribute("number").Value) : 0,
+                                    Info = new EntityInfo 
+                                {
+                                    Name = venue.Attribute("name").ValueOrNull(),
+                                    Addresses = venue.Descendants("point")
+                                        .Select(point => CreateAddress(
+                                            point.Attribute("coordinates").ValueOrNull(),
+                                            point.ValueOrNull()))
+                                        .ToArray()
+                                },
+                                Description = venue.Element("description").ValueOrNull(),
+                                Shows = venue.Descendants("show")
+                                    .Select(show => new VenueShow
+                                        {
+                                            Start = show.Attribute("start") != null 
+                                                ? DateTime.Parse(show.Attribute("start").Value) : default(DateTime),
+                                                End = show.Attribute("end") != null 
+                                                    ? DateTime.Parse(show.Attribute("end").Value) : default(DateTime),
+                                                    Description = show.Value,
+                                        }).ToArray()
+                            }).ToArray()
+                };
         }
 
         private AddressInfo CreateAddress(string coordinates, string address)

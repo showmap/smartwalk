@@ -7,6 +7,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
+using System.Drawing;
 
 namespace SmartWalk.iOS.Views.Cells
 {
@@ -67,7 +68,47 @@ namespace SmartWalk.iOS.Views.Cells
 
         public string ImageUrl {
             get { return null; }
-            set { LogoImageView.Image = UIImage.FromFile(value); }
+            set
+            { 
+                if (value != null)
+                {
+                    LogoImageViewHeightConstraint.Constant = 240f;
+                    LogoImageView.Image = UIImage.FromFile(value);
+                }
+                else
+                {
+                    LogoImageViewHeightConstraint.Constant = 0f;
+                }
+            }
+        }
+
+        public static float CalculateCellHeight(bool isExpanded, Entity entity)
+        {
+            var imageHeight = entity.Info.Logo != null ? 240f : 0f;
+
+            if (isExpanded)
+            {
+                var isVertical = 
+                    UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait || 
+                        UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.PortraitUpsideDown;
+
+                var frameSize = new SizeF(
+                    (isVertical 
+                         ? UIScreen.MainScreen.Bounds.Width 
+                         : UIScreen.MainScreen.Bounds.Height),
+                    float.MaxValue); // TODO:  - UIConstants.DefaultTextMargin * 2
+
+                var textSize = new NSString(entity.Description).StringSize(
+                    UIFont.FromName("Helvetica-Bold", 15),
+                    frameSize,
+                    UILineBreakMode.WordWrap);
+
+                return textSize.Height + imageHeight + 34f;
+            }
+            else
+            {
+                return imageHeight + 110.0f;
+            }
         }
 
         public override void LayoutSubviews()

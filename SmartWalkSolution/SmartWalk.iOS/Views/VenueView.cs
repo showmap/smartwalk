@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
@@ -11,17 +12,16 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Converters;
 using SmartWalk.iOS.Views.Cells;
-using System.ComponentModel;
 
 namespace SmartWalk.iOS.Views
 {
-    public partial class OrgView : MvxViewController
+    public partial class VenueView : MvxViewController
     {
         private UIRefreshControl _refreshControl;
 
-        public new OrgViewModel ViewModel
+        public new VenueViewModel ViewModel
         {
-            get { return (OrgViewModel)base.ViewModel; }
+            get { return (VenueViewModel)base.ViewModel; }
             set { base.ViewModel = value; }
         }
 
@@ -30,7 +30,7 @@ namespace SmartWalk.iOS.Views
             base.ViewDidLoad();
 
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-
+            
             UpdateViewTitle();
 
             InitializeTableView();
@@ -38,21 +38,21 @@ namespace SmartWalk.iOS.Views
 
         private void UpdateViewTitle()
         {
-            if (ViewModel.Org != null && ViewModel.Org.Info != null)
+            if (ViewModel.Venue != null && ViewModel.Venue.Info != null)
             {
-                NavigationItem.Title = ViewModel.Org.Info.Name;
+                NavigationItem.Title = ViewModel.Venue.Info.Name;
             }
         }
 
         private void InitializeTableView()
         {
-            var tableSource = new OrgAndEventsTableSource(OrgEventsTableView, ViewModel);
+            var tableSource = new VenueAndShowsTableSource(VenueShowsTableView, ViewModel);
 
-            this.CreateBinding(tableSource).To((OrgViewModel vm) => vm)
-                .WithConversion(new OrgAndEventsTableSourceConverter(), null).Apply();
+            this.CreateBinding(tableSource).To((VenueViewModel vm) => vm)
+                .WithConversion(new VenueAndShowsTableSourceConverter(), null).Apply();
 
-            OrgEventsTableView.Source = tableSource;
-            OrgEventsTableView.ReloadData();
+            VenueShowsTableView.Source = tableSource;
+            VenueShowsTableView.ReloadData();
 
             _refreshControl = new UIRefreshControl();
             _refreshControl.ValueChanged += (sender, e) => 
@@ -63,29 +63,29 @@ namespace SmartWalk.iOS.Views
                     }
                 };
 
-            OrgEventsTableView.AddSubview(_refreshControl);
+            VenueShowsTableView.AddSubview(_refreshControl);
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Org))
+            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Venue))
             {
                 UpdateViewTitle();
                 InvokeOnMainThread(_refreshControl.EndRefreshing);
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
-                OrgEventsTableView.BeginUpdates();
-                OrgEventsTableView.EndUpdates();
+                VenueShowsTableView.BeginUpdates();
+                VenueShowsTableView.EndUpdates();
             }
         }
     }
 
-    public class OrgAndEventsTableSource : MvxTableViewSource
+    public class VenueAndShowsTableSource : MvxTableViewSource
     {
-        private readonly OrgViewModel _viewModel;
+        private readonly VenueViewModel _viewModel;
 
-        public OrgAndEventsTableSource(UITableView tableView, OrgViewModel viewModel)
+        public VenueAndShowsTableSource(UITableView tableView, VenueViewModel viewModel)
             : base(tableView)
         {
             _viewModel = viewModel;
@@ -93,7 +93,7 @@ namespace SmartWalk.iOS.Views
             UseAnimations = true;
 
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
-            tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
+            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
         public GroupContainer[] GroupItemsSource
@@ -101,35 +101,22 @@ namespace SmartWalk.iOS.Views
             get { return (GroupContainer[])ItemsSource;}
         }
 
-        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
-        {
-            var eventInfo = GetItemAt(indexPath) as OrgEventInfo;
-
-            if (eventInfo != null &&
-                _viewModel.NavigateOrgEventViewCommand.CanExecute(eventInfo))
-            {
-                _viewModel.NavigateOrgEventViewCommand.Execute(eventInfo);
-            }
-
-            TableView.DeselectRow(indexPath, false);
-        }
-
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var item = GetItemAt(indexPath);
 
-            if (item is OrgViewModel)
+            if (item is VenueViewModel)
             {
                 var height = EntityCell.CalculateCellHeight(
                     _viewModel.IsDescriptionExpanded,
-                    _viewModel.Org);
+                    _viewModel.Venue);
 
                 return height;
             }
 
-            if (item is OrgEventInfo)
+            if (item is VenueShow)
             {
-                return 50.0f;
+                return 35.0f;
             }
 
             throw new Exception("There is an unsupported type in the list.");
@@ -150,18 +137,18 @@ namespace SmartWalk.iOS.Views
             return GroupItemsSource != null ? GroupItemsSource[section].Key : null;
         }
 
-        protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
+        protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)
         {
             var key = default(NSString);
 
-            if (item is OrgViewModel)
+            if (item is VenueViewModel)
             {
                 key = EntityCell.Key;
             }
 
-            if (item is OrgEventInfo)
+            if (item is VenueShow)
             {
-                key = OrgEventCell.Key;
+                key = VenueShowCell.Key;
             }
 
             var cell = tableView.DequeueReusableCell(key, indexPath);

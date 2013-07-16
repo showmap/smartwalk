@@ -18,13 +18,16 @@ namespace SmartWalk.iOS.Views.Cells
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint LogoImageViewHeightConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel NameLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (NameLabel != null) {
-				NameLabel.Dispose ();
-				NameLabel = null;
+			if (DescriptionLabel != null) {
+				DescriptionLabel.Dispose ();
+				DescriptionLabel = null;
 			}
 
 			if (LogoImageView != null) {
@@ -32,9 +35,14 @@ namespace SmartWalk.iOS.Views.Cells
 				LogoImageView = null;
 			}
 
-			if (DescriptionLabel != null) {
-				DescriptionLabel.Dispose ();
-				DescriptionLabel = null;
+			if (NameLabel != null) {
+				NameLabel.Dispose ();
+				NameLabel = null;
+			}
+
+			if (LogoImageViewHeightConstraint != null) {
+				LogoImageViewHeightConstraint.Dispose ();
+				LogoImageViewHeightConstraint = null;
 			}
 		}
 	}

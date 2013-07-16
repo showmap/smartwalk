@@ -1,12 +1,13 @@
 using System;
+using System.Windows.Input;
+using Cirrious.MvvmCross.Binding;
+using Cirrious.MvvmCross.Binding.Binders;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using Cirrious.MvvmCross.Binding.Touch.Views;
-using Cirrious.MvvmCross.Binding.Binders;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.Model;
-using Cirrious.MvvmCross.Binding;
 using SmartWalk.Core.Converters;
+using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.Cells
 {
@@ -31,11 +32,13 @@ namespace SmartWalk.iOS.Views.Cells
         };
 
         public VenueCell() : base(Bindings)
-        {    
+        {
+            InitGesture();
         }
 
         public VenueCell(IntPtr handle) : base(Bindings, handle)
         {
+            InitGesture();
         }
 
         public static VenueCell Create()
@@ -56,6 +59,57 @@ namespace SmartWalk.iOS.Views.Cells
         public string AddressText {
             get { return AddressLabel.Text; }
             set { AddressLabel.Text = value; }
+        }
+
+        public ICommand NavigateVenueCommand { get; set; }
+
+        public ICommand NavigateVenueOnMapCommand { get; set; }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            InitAddressGesture();
+        }
+
+        private void InitGesture()
+        {
+            var tap = new UITapGestureRecognizer(() => {
+                if (NavigateVenueCommand != null &&
+                    NavigateVenueCommand.CanExecute(DataContext))
+                {
+                    NavigateVenueCommand.Execute(DataContext);
+                }
+            });
+
+            tap.NumberOfTouchesRequired = (uint)1;
+            tap.NumberOfTapsRequired = (uint)1;
+
+            tap.ShouldReceiveTouch = new UITouchEventArgs((rec, touch) => 
+                touch.View != AddressLabel);
+
+            AddGestureRecognizer(tap);
+        }
+
+        private void InitAddressGesture()
+        {
+            if (AddressLabel != null &&
+                (AddressLabel.GestureRecognizers == null ||
+                AddressLabel.GestureRecognizers.Length == 0))
+            {
+                var tap = new UITapGestureRecognizer(() => {
+                    if (NavigateVenueOnMapCommand != null &&
+                        NavigateVenueOnMapCommand.CanExecute(DataContext))
+                    {
+                        NavigateVenueOnMapCommand.Execute(DataContext);
+                    }
+                });
+
+                tap.NumberOfTouchesRequired = (uint)1;
+                tap.NumberOfTapsRequired = (uint)1;
+
+                AddressLabel.AddGestureRecognizer(tap);
+            }
         }
     }
 }

@@ -9,14 +9,37 @@ namespace SmartWalk.Core.ViewModels
     public class OrgEventViewModel : MvxViewModel
     {
         private readonly ISmartWalkDataService _dataService;
+        private readonly IExceptionPolicy _exceptionPolicy;
 
+        private OrgViewMode _mode = OrgViewMode.List;
         private OrgEvent _orgEvent;
-        private ICommand _refreshCommand;
+        private Venue _selectedVenueOnMap;
+        private MvxCommand _refreshCommand;
+        private MvxCommand _switchModeCommand;
+        private MvxCommand<Venue> _navigateVenueCommand;
+        private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private Parameters _parameters;
 
-        public OrgEventViewModel(ISmartWalkDataService dataService)
+        public OrgEventViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
         {
             _dataService = dataService;
+            _exceptionPolicy = exceptionPolicy;
+        }
+
+        public OrgViewMode Mode
+        {
+            get
+            {
+                return _mode;
+            }
+            private set
+            {
+                if (_mode != value)
+                {
+                    _mode = value;
+                    RaisePropertyChanged(() => Mode);
+                }
+            }
         }
 
         public OrgEvent OrgEvent
@@ -35,6 +58,22 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        public Venue SelectedVenueOnMap
+        {
+            get
+            {
+                return _selectedVenueOnMap;
+            }
+            private set
+            {
+                if (!Equals(_selectedVenueOnMap, value))
+                {
+                    _selectedVenueOnMap = value;
+                    RaisePropertyChanged(() => SelectedVenueOnMap);
+                }
+            }
+        }
+
         public ICommand RefreshCommand
         {
             get 
@@ -45,6 +84,69 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _refreshCommand;
+            }
+        }
+
+        public ICommand SwitchModeCommand
+        {
+            get 
+            {
+                if (_switchModeCommand == null)
+                {
+                    _switchModeCommand = new MvxCommand(() => {
+                        switch (Mode)
+                        {
+                            case OrgViewMode.List:
+                                Mode = OrgViewMode.Map;
+                                break;
+
+                            case OrgViewMode.Map:
+                                Mode = OrgViewMode.List;
+                                break;
+                        }
+                    });
+                }
+
+                return _switchModeCommand;
+            }
+        }
+
+        public ICommand NavigateVenueCommand
+        {
+            get
+            {
+                if (_navigateVenueCommand == null)
+                {
+                    _navigateVenueCommand = new MvxCommand<Venue>(
+                        venue => ShowViewModel<VenueViewModel>(
+                        new VenueViewModel.Parameters {  
+                            OrgId = _parameters.OrgId, 
+                            EventDate = _parameters.Date,
+                            VenueNumber = venue.Number,
+                            VenueName = venue.Info.Name
+                        }),
+                        venue => venue != null && _parameters != null);
+                }
+
+                return _navigateVenueCommand;
+            }
+        }
+
+        public ICommand NavigateVenueOnMapCommand
+        {
+            get
+            {
+                if (_navigateVenueOnMapCommand == null)
+                {
+                    _navigateVenueOnMapCommand = new MvxCommand<Venue>(
+                        venue => {
+                            SelectedVenueOnMap = venue;
+                            Mode = OrgViewMode.Map;
+                        },
+                        venue => _parameters != null);
+                }
+
+                return _navigateVenueOnMapCommand;
             }
         }
 
@@ -59,17 +161,21 @@ namespace SmartWalk.Core.ViewModels
         {
             if (_parameters != null)
             {
-                _dataService.GetOrgEvent(_parameters.OrgId, _parameters.Date, (orgEvent, ex) => 
+                _dataService.GetOrgEvent(
+                    _parameters.OrgId, 
+                    _parameters.Date, 
+                    DataSource.Server, 
+                    (orgEvent, ex) => 
+                {
+                    if (ex == null)
                     {
-                        if (ex == null)
-                        {
-                            OrgEvent = orgEvent;
-                        }
-                        else
-                        {
-                            // TODO: handling
-                        }
-                    });
+                        OrgEvent = orgEvent;
+                    }
+                    else
+                    {
+                        _exceptionPolicy.Trace(ex);
+                    }
+                });
             }
             else
             {
@@ -83,5 +189,11 @@ namespace SmartWalk.Core.ViewModels
 
             public DateTime Date { get; set; }
         }
+    }
+
+    public enum OrgViewMode
+    {
+        List,
+        Map
     }
 }

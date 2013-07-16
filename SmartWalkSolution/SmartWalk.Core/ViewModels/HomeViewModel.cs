@@ -8,14 +8,16 @@ namespace SmartWalk.Core.ViewModels
     public class HomeViewModel : MvxViewModel
 	{
 		private readonly ISmartWalkDataService _dataService;
+        private readonly IExceptionPolicy _exceptionPolicy;
 
 		private EntityInfo[] _orgInfos;
         private ICommand _refreshCommand;
         private ICommand _navigateOrgViewCommand;
 
-		public HomeViewModel(ISmartWalkDataService dataService)
+        public HomeViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
 		{
 			_dataService = dataService;
+            _exceptionPolicy = exceptionPolicy;
 		}
 
 		public EntityInfo[] OrgInfos 
@@ -76,7 +78,7 @@ namespace SmartWalk.Core.ViewModels
 					}
 					else 
 					{
-						// TODO: handling
+                        _exceptionPolicy.Trace(ex);
 					}
 				});
 		}
