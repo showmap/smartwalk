@@ -1,16 +1,14 @@
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Cells;
 
 namespace SmartWalk.iOS.Views
 {
-    public partial class HomeView : MvxViewController
+    public partial class HomeView : TableViewBase
     {
         public new HomeViewModel ViewModel
         {
@@ -18,35 +16,28 @@ namespace SmartWalk.iOS.Views
             set { base.ViewModel = value; }
         }
 
+        public override UITableView TableView { get { return OrgTableView; } }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
+            NavigationController.NavigationBar.BarStyle = UIBarStyle.Black;
+            NavigationController.NavigationBar.TintColor = UIColor.Gray;
+        }
+
+        protected override void UpdateViewTitle()
+        {
+            NavigationItem.Title = ViewModel.Location;
+        }
+
+        protected override MvxTableViewSource CreateTableViewSource()
+        {
             var tableSource = new OrgTableSource(OrgTableView, ViewModel);
 
             this.CreateBinding(tableSource).To((HomeViewModel vm) => vm.OrgInfos).Apply();
 
-            OrgTableView.Source = tableSource;
-            OrgTableView.ReloadData();
-
-            var refreshControl = new UIRefreshControl();
-            refreshControl.ValueChanged += (sender, e) => 
-                {
-                    if (ViewModel.RefreshCommand.CanExecute(null))
-                    {
-                        ViewModel.RefreshCommand.Execute(null);
-                    }
-                };
-
-            ViewModel.PropertyChanged += (sender, e) => 
-                {
-                    if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgInfos))
-                    {
-                        InvokeOnMainThread(refreshControl.EndRefreshing);
-                    }
-                };
-                     
-            OrgTableView.AddSubview(refreshControl);
+            return tableSource;
         }
     }
 
@@ -62,6 +53,11 @@ namespace SmartWalk.iOS.Views
             UseAnimations = true;
 
             tableView.RegisterNibForCellReuse(OrgCell.Nib, OrgCell.Key);
+        }
+
+        public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            return 80.0f;
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)

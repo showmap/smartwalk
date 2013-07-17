@@ -15,6 +15,9 @@ namespace SmartWalk.iOS.Views.Cells
 		MonoTouch.UIKit.UILabel AddressLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel NameLabel { get; set; }
 
 		[Outlet]
@@ -22,19 +25,24 @@ namespace SmartWalk.iOS.Views.Cells
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (AddressLabel != null) {
+				AddressLabel.Dispose ();
+				AddressLabel = null;
+			}
+
 			if (NameLabel != null) {
 				NameLabel.Dispose ();
 				NameLabel = null;
 			}
 
+			if (LogoImageView != null) {
+				LogoImageView.Dispose ();
+				LogoImageView = null;
+			}
+
 			if (NumberLabel != null) {
 				NumberLabel.Dispose ();
 				NumberLabel = null;
-			}
-
-			if (AddressLabel != null) {
-				AddressLabel.Dispose ();
-				AddressLabel = null;
 			}
 		}
 	}

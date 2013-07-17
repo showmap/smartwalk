@@ -2,7 +2,6 @@ using System;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding;
 using Cirrious.MvvmCross.Binding.Binders;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Converters;
@@ -11,7 +10,7 @@ using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.Cells
 {
-    public partial class VenueCell : MvxTableViewCell
+    public partial class VenueCell : TableCellBase
     {
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
@@ -33,12 +32,12 @@ namespace SmartWalk.iOS.Views.Cells
 
         public VenueCell() : base(Bindings)
         {
-            InitGesture();
+            InitializeGesture();
         }
 
         public VenueCell(IntPtr handle) : base(Bindings, handle)
         {
-            InitGesture();
+            InitializeGesture();
         }
 
         public static VenueCell Create()
@@ -65,14 +64,15 @@ namespace SmartWalk.iOS.Views.Cells
 
         public ICommand NavigateVenueOnMapCommand { get; set; }
 
-        public override void LayoutSubviews()
+        protected override bool Initialize()
         {
-            base.LayoutSubviews();
+            var result = InitializeAddressGesture();
+            result = result && InitializeImageView();
 
-            InitAddressGesture();
+            return result;
         }
 
-        private void InitGesture()
+        private void InitializeGesture()
         {
             var tap = new UITapGestureRecognizer(() => {
                 if (NavigateVenueCommand != null &&
@@ -91,25 +91,47 @@ namespace SmartWalk.iOS.Views.Cells
             AddGestureRecognizer(tap);
         }
 
-        private void InitAddressGesture()
+        private bool InitializeAddressGesture()
         {
-            if (AddressLabel != null &&
-                (AddressLabel.GestureRecognizers == null ||
-                AddressLabel.GestureRecognizers.Length == 0))
+            if (AddressLabel != null)
             {
-                var tap = new UITapGestureRecognizer(() => {
-                    if (NavigateVenueOnMapCommand != null &&
-                        NavigateVenueOnMapCommand.CanExecute(DataContext))
-                    {
-                        NavigateVenueOnMapCommand.Execute(DataContext);
-                    }
-                });
+                if (AddressLabel.GestureRecognizers == null ||
+                    AddressLabel.GestureRecognizers.Length == 0)
+                {
+                    var tap = new UITapGestureRecognizer(() => {
+                        if (NavigateVenueOnMapCommand != null &&
+                            NavigateVenueOnMapCommand.CanExecute(DataContext))
+                        {
+                            NavigateVenueOnMapCommand.Execute(DataContext);
+                        }
+                    });
 
-                tap.NumberOfTouchesRequired = (uint)1;
-                tap.NumberOfTapsRequired = (uint)1;
+                    tap.NumberOfTouchesRequired = (uint)1;
+                    tap.NumberOfTapsRequired = (uint)1;
 
-                AddressLabel.AddGestureRecognizer(tap);
+                    AddressLabel.AddGestureRecognizer(tap);
+                }
+
+                return true;
             }
+
+            return false;
+        }
+
+        private bool InitializeImageView()
+        {
+            if (LogoImageView != null)
+            {
+                LogoImageView.BackgroundColor = UIColor.White;
+                LogoImageView.ClipsToBounds = true;
+                LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+                LogoImageView.Layer.BorderWidth = 1;
+                LogoImageView.Layer.CornerRadius = 5;
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

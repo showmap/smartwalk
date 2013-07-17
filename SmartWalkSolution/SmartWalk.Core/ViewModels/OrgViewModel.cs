@@ -2,10 +2,11 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
+using System;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class OrgViewModel : EntityViewModel
+    public class OrgViewModel : EntityViewModel, IRefreshableViewModel
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
@@ -19,6 +20,8 @@ namespace SmartWalk.Core.ViewModels
             _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
         }
+
+        public event EventHandler RefreshCompleted;
 
         public Org Org
         {
@@ -47,7 +50,8 @@ namespace SmartWalk.Core.ViewModels
                         new OrgEventViewModel.Parameters {  
                             OrgId = evenInfo.OrgId, 
                             Date = evenInfo.Date
-                        }));
+                        }),
+                        eventInfo => eventInfo.HasSchedule);
                 }
 
                 return _navigateOrgEventViewCommand;
@@ -83,6 +87,11 @@ namespace SmartWalk.Core.ViewModels
                         if (ex == null)
                         {
                             Org = org;
+
+                            if (RefreshCompleted != null)
+                            {
+                                RefreshCompleted(this, EventArgs.Empty);
+                            }
                         }
                         else
                         {

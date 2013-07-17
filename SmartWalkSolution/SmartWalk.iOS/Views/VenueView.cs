@@ -1,10 +1,8 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
@@ -12,31 +10,21 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Converters;
 using SmartWalk.iOS.Views.Cells;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views
 {
-    public partial class VenueView : MvxViewController
+    public partial class VenueView : TableViewBase
     {
-        private UIRefreshControl _refreshControl;
-
         public new VenueViewModel ViewModel
         {
             get { return (VenueViewModel)base.ViewModel; }
             set { base.ViewModel = value; }
         }
 
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
+        public override UITableView TableView { get { return VenueShowsTableView; } }
 
-            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-            
-            UpdateViewTitle();
-
-            InitializeTableView();
-        }
-
-        private void UpdateViewTitle()
+        protected override void UpdateViewTitle()
         {
             if (ViewModel.Venue != null && ViewModel.Venue.Info != null)
             {
@@ -44,36 +32,19 @@ namespace SmartWalk.iOS.Views
             }
         }
 
-        private void InitializeTableView()
+        protected override MvxTableViewSource CreateTableViewSource()
         {
             var tableSource = new VenueAndShowsTableSource(VenueShowsTableView, ViewModel);
 
             this.CreateBinding(tableSource).To((VenueViewModel vm) => vm)
                 .WithConversion(new VenueAndShowsTableSourceConverter(), null).Apply();
 
-            VenueShowsTableView.Source = tableSource;
-            VenueShowsTableView.ReloadData();
-
-            _refreshControl = new UIRefreshControl();
-            _refreshControl.ValueChanged += (sender, e) => 
-                {
-                    if (ViewModel.RefreshCommand.CanExecute(null))
-                    {
-                        ViewModel.RefreshCommand.Execute(null);
-                    }
-                };
-
-            VenueShowsTableView.AddSubview(_refreshControl);
+            return tableSource;
         }
 
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Venue))
-            {
-                UpdateViewTitle();
-                InvokeOnMainThread(_refreshControl.EndRefreshing);
-            }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 VenueShowsTableView.BeginUpdates();
                 VenueShowsTableView.EndUpdates();
@@ -84,11 +55,13 @@ namespace SmartWalk.iOS.Views
     public class VenueAndShowsTableSource : MvxTableViewSource
     {
         private readonly VenueViewModel _viewModel;
+        private readonly ViewsFactory<GroupHeaderCell> _headerViewFactory;
 
         public VenueAndShowsTableSource(UITableView tableView, VenueViewModel viewModel)
             : base(tableView)
         {
             _viewModel = viewModel;
+            _headerViewFactory = new ViewsFactory<GroupHeaderCell>(GroupHeaderCell.Create);
 
             UseAnimations = true;
 
@@ -99,6 +72,11 @@ namespace SmartWalk.iOS.Views
         public GroupContainer[] GroupItemsSource
         {
             get { return (GroupContainer[])ItemsSource;}
+        }
+
+        public override float GetHeightForHeader(UITableView tableView, int section)
+        {
+            return TitleForHeader(tableView, section) != null ? 23.0f : 0f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -137,7 +115,23 @@ namespace SmartWalk.iOS.Views
             return GroupItemsSource != null ? GroupItemsSource[section].Key : null;
         }
 
-        protected override UITableViewCell GetOrCreateCellFor (UITableView tableView, NSIndexPath indexPath, object item)
+        public override UIView GetViewForHeader(UITableView tableView, int section)
+        {
+            var title = TitleForHeader(tableView, section);
+
+            if (title != null)
+            {
+                var headerView = _headerViewFactory.DequeueReusableView();
+
+                headerView.Text = title;
+
+                return headerView;
+            }
+
+            return null;
+        }
+
+        protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
         {
             var key = default(NSString);
 

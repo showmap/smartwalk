@@ -47,7 +47,7 @@ namespace SmartWalk.iOS.Converters
                     result.Add(
                         new GroupContainer(futureEvents) 
                         {
-                            Key = "Future Events"
+                            Key = "Upcoming Events"
                         });
                 }
 

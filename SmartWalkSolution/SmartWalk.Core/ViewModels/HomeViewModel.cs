@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
@@ -5,11 +6,12 @@ using SmartWalk.Core.Services;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class HomeViewModel : MvxViewModel
+    public class HomeViewModel : MvxViewModel, IRefreshableViewModel
 	{
 		private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
+        private string _location;
 		private EntityInfo[] _orgInfos;
         private ICommand _refreshCommand;
         private ICommand _navigateOrgViewCommand;
@@ -18,7 +20,24 @@ namespace SmartWalk.Core.ViewModels
 		{
 			_dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
+
+            Location = "San Francisco Bay Area";
 		}
+
+        public event EventHandler RefreshCompleted;
+
+        public string Location
+        {
+            get
+            {
+                return _location;
+            }
+            set
+            {
+                _location = value;
+                RaisePropertyChanged(() => Location);
+            }
+        }
 
 		public EntityInfo[] OrgInfos 
 		{
@@ -70,11 +89,17 @@ namespace SmartWalk.Core.ViewModels
 
 		private void UpdateOrgInfos()
 		{
+            // TODO: Use location for getting orgs
 			_dataService.GetOrgInfos((orgInfos, ex) => 
           		{
 					if (ex == null) 
 					{
 						OrgInfos = orgInfos;
+
+                        if (RefreshCompleted != null)
+                        {
+                            RefreshCompleted(this, EventArgs.Empty);
+                        }
 					}
 					else 
 					{

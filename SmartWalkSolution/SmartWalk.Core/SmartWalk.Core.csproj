@@ -79,5 +79,6 @@
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\DataSource.cs" />
     <Compile Include="ViewModels\VenueViewModel.cs" />
+    <Compile Include="ViewModels\IRefreshableViewModel.cs" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -14,9 +13,8 @@ using SmartWalk.iOS.Views.Cells;
 
 namespace SmartWalk.iOS.Views
 {
-    public partial class OrgEventView : MvxViewController
+    public partial class OrgEventView : TableViewBase
     {
-        private UIRefreshControl _refreshControl;
         private UIBarButtonItem _modeButton;
 
         public new OrgEventViewModel ViewModel
@@ -25,22 +23,24 @@ namespace SmartWalk.iOS.Views
             set { base.ViewModel = value; }
         }
 
+        public override UITableView TableView { get { return VenuesAndShowsTableView; } }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-
-            UpdateViewTitle();
+            if (ViewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
+            {
+                ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
+            }
 
             InitializeToolBar();
-            InitializeTableView();
             InitializeMapView();
 
             UpdateViewModeState();
         }
 
-        private void UpdateViewTitle()
+        protected override void UpdateViewTitle()
         {
             if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.Info != null)
             {
@@ -48,34 +48,40 @@ namespace SmartWalk.iOS.Views
             }
         }
 
-        private void InitializeToolBar()
-        {
-            _modeButton = new UIBarButtonItem();
-
-            this.CreateBinding(_modeButton).To((OrgEventViewModel vm) => vm.SwitchModeCommand).Apply();
-
-            NavigationItem.SetRightBarButtonItem(_modeButton, true);
-        }
-
-        private void InitializeTableView()
+        protected override MvxTableViewSource CreateTableViewSource()
         {
             var tableSource = new VenuesAndShowsTableSource(VenuesAndShowsTableView, ViewModel);
 
             this.CreateBinding(tableSource).To((OrgEventViewModel vm) => vm.OrgEvent.Venues).Apply();
 
-            VenuesAndShowsTableView.Source = tableSource;
-            VenuesAndShowsTableView.ReloadData();
+            return tableSource;
+        }
 
-            _refreshControl = new UIRefreshControl();
-            _refreshControl.ValueChanged += (sender, e) => 
+        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
+            {
+                InitializeMapView();
+            }
+            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Mode))
+            {
+                UpdateViewModeState();
+            }
+        }
+
+        private void InitializeToolBar()
+        {
+            _modeButton = new UIBarButtonItem();
+
+            _modeButton.Clicked += (sender, e) => 
                 {
-                    if (ViewModel.RefreshCommand.CanExecute(null))
+                    if (ViewModel.SwitchModeCommand.CanExecute(null))
                     {
-                        ViewModel.RefreshCommand.Execute(null);
+                        ViewModel.SwitchModeCommand.Execute(null);
                     }
                 };
 
-            VenuesAndShowsTableView.AddSubview(_refreshControl);
+            NavigationItem.SetRightBarButtonItem(_modeButton, true);
         }
 
         private void InitializeMapView()
@@ -94,33 +100,19 @@ namespace SmartWalk.iOS.Views
                 VenuesMapView.AddAnnotations(annotations);
             }
         }
-
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
-            {
-                UpdateViewTitle();
-                InitializeMapView();
-                InvokeOnMainThread(_refreshControl.EndRefreshing);
-            }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Mode))
-            {
-                UpdateViewModeState();
-            }
-        }
-
+       
         private void UpdateViewModeState()
         {
-            if (ViewModel.Mode == OrgViewMode.Map)
+            if (ViewModel.Mode == OrgEventViewMode.Map)
             {
-                TableView.Hidden = true;
-                MapView.Hidden = false;
+                TablePanel.Hidden = true;
+                MapPanel.Hidden = false;
                 _modeButton.Title = "List";
             }
             else
             {
-                TableView.Hidden = false;
-                MapView.Hidden = true;
+                TablePanel.Hidden = false;
+                MapPanel.Hidden = true;
                 _modeButton.Title = "Map";
             }
         }
@@ -135,7 +127,7 @@ namespace SmartWalk.iOS.Views
             : base(tableView)
         {
             _viewModel = viewModel;
-            _headerViewFactory = new ViewsFactory<VenueCell>(VenueCell.Create);
+            _headerViewFactory = new ViewsFactory<VenueCell>(VenueCell.Create, 7);
 
             UseAnimations = true;
 
@@ -149,7 +141,7 @@ namespace SmartWalk.iOS.Views
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return 70.0f;
+            return 76.0f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

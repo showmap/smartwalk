@@ -3,19 +3,21 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
+using MonoTouch.Foundation;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class OrgEventViewModel : MvxViewModel
+    [Preserve(AllMembers=true)]
+    public class OrgEventViewModel : MvxViewModel, IRefreshableViewModel
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
-        private OrgViewMode _mode = OrgViewMode.List;
+        private OrgEventViewMode _mode = OrgEventViewMode.List;
         private OrgEvent _orgEvent;
         private Venue _selectedVenueOnMap;
         private MvxCommand _refreshCommand;
-        private MvxCommand _switchModeCommand;
+        private MvxCommand<OrgEventViewMode?> _switchModeCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private Parameters _parameters;
@@ -26,7 +28,9 @@ namespace SmartWalk.Core.ViewModels
             _exceptionPolicy = exceptionPolicy;
         }
 
-        public OrgViewMode Mode
+        public event EventHandler RefreshCompleted;
+
+        public OrgEventViewMode Mode
         {
             get
             {
@@ -93,18 +97,27 @@ namespace SmartWalk.Core.ViewModels
             {
                 if (_switchModeCommand == null)
                 {
-                    _switchModeCommand = new MvxCommand(() => {
-                        switch (Mode)
+                    _switchModeCommand = new MvxCommand<OrgEventViewMode?>(
+                        mode => 
                         {
-                            case OrgViewMode.List:
-                                Mode = OrgViewMode.Map;
-                                break;
+                            if (mode.HasValue)
+                            {
+                                Mode = mode.Value;
+                            }
+                            else
+                            {
+                                switch (Mode)
+                                {
+                                    case OrgEventViewMode.List:
+                                        Mode = OrgEventViewMode.Map;
+                                        break;
 
-                            case OrgViewMode.Map:
-                                Mode = OrgViewMode.List;
-                                break;
-                        }
-                    });
+                                    case OrgEventViewMode.Map:
+                                        Mode = OrgEventViewMode.List;
+                                        break;
+                                }
+                            }
+                        });
                 }
 
                 return _switchModeCommand;
@@ -119,11 +132,11 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _navigateVenueCommand = new MvxCommand<Venue>(
                         venue => ShowViewModel<VenueViewModel>(
-                        new VenueViewModel.Parameters {  
-                            OrgId = _parameters.OrgId, 
-                            EventDate = _parameters.Date,
-                            VenueNumber = venue.Number,
-                            VenueName = venue.Info.Name
+                            new VenueViewModel.Parameters {  
+                                OrgId = _parameters.OrgId, 
+                                EventDate = _parameters.Date,
+                                VenueNumber = venue.Number,
+                                VenueName = venue.Info.Name
                         }),
                         venue => venue != null && _parameters != null);
                 }
@@ -141,7 +154,7 @@ namespace SmartWalk.Core.ViewModels
                     _navigateVenueOnMapCommand = new MvxCommand<Venue>(
                         venue => {
                             SelectedVenueOnMap = venue;
-                            Mode = OrgViewMode.Map;
+                            Mode = OrgEventViewMode.Map;
                         },
                         venue => _parameters != null);
                 }
@@ -170,6 +183,11 @@ namespace SmartWalk.Core.ViewModels
                     if (ex == null)
                     {
                         OrgEvent = orgEvent;
+
+                        if (RefreshCompleted != null)
+                        {
+                            RefreshCompleted(this, EventArgs.Empty);
+                        }
                     }
                     else
                     {
@@ -191,7 +209,7 @@ namespace SmartWalk.Core.ViewModels
         }
     }
 
-    public enum OrgViewMode
+    public enum OrgEventViewMode
     {
         List,
         Map

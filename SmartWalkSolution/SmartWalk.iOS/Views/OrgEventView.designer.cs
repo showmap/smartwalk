@@ -12,10 +12,10 @@ namespace SmartWalk.iOS.Views
 	partial class OrgEventView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView MapView { get; set; }
+		MonoTouch.UIKit.UIView MapPanel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView TableView { get; set; }
+		MonoTouch.UIKit.UIView TablePanel { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UITableView VenuesAndShowsTableView { get; set; }
@@ -25,14 +25,14 @@ namespace SmartWalk.iOS.Views
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (TableView != null) {
-				TableView.Dispose ();
-				TableView = null;
+			if (TablePanel != null) {
+				TablePanel.Dispose ();
+				TablePanel = null;
 			}
 
-			if (MapView != null) {
-				MapView.Dispose ();
-				MapView = null;
+			if (MapPanel != null) {
+				MapPanel.Dispose ();
+				MapPanel = null;
 			}
 
 			if (VenuesAndShowsTableView != null) {

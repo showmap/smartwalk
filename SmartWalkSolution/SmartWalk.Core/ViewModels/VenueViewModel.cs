@@ -7,7 +7,7 @@ using SmartWalk.Core.Services;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class VenueViewModel : EntityViewModel
+    public class VenueViewModel : EntityViewModel, IRefreshableViewModel
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
@@ -20,6 +20,8 @@ namespace SmartWalk.Core.ViewModels
             _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
         }
+
+        public event EventHandler RefreshCompleted;
 
         public Venue Venue
         {
@@ -72,6 +74,11 @@ namespace SmartWalk.Core.ViewModels
                                 Venue = orgEvent.Venues.FirstOrDefault(v => 
                                    v.Number == _parameters.VenueNumber &&
                                    string.Compare(v.Info.Name, _parameters.VenueName, true) == 0);
+
+                                if (RefreshCompleted != null)
+                                {
+                                    RefreshCompleted(this, EventArgs.Empty);
+                                }
                             }
                             else
                             {

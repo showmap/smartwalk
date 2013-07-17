@@ -15,6 +15,19 @@ namespace SmartWalk.iOS.Utils
             _createHandler = createHandler;
         }
 
+        public ViewsFactory(Func<T> createHandler, int initialCount)
+        {
+            _createHandler = createHandler;
+
+            if (initialCount > 0)
+            {
+                for (var i = 0; i < initialCount; i++)
+                {
+                    _viewsQueue.Add(_createHandler());
+                }
+            }
+        }
+
         public T DequeueReusableView()
         {
             var recycledView = _viewsQueue.FirstOrDefault(v => v.Superview == null);

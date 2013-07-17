@@ -144,10 +144,6 @@
     <Compile Include="Views\OrgView.designer.cs">
       <DependentUpon>OrgView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Cells\OrgEventCell.cs" />
-    <Compile Include="Views\Cells\OrgEventCell.designer.cs">
-      <DependentUpon>OrgEventCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Constants\UIConstants.cs" />
     <Compile Include="Views\Cells\EntityCell.cs" />
     <Compile Include="Views\Cells\EntityCell.designer.cs">
@@ -180,6 +176,17 @@
       <DependentUpon>VenueView.cs</DependentUpon>
     </Compile>
     <Compile Include="Converters\VenueAndShowsTableSourceConverter.cs" />
+    <Compile Include="Views\TableViewBase.cs" />
+    <Compile Include="Views\Cells\GroupHeaderCell.cs" />
+    <Compile Include="Views\Cells\GroupHeaderCell.designer.cs">
+      <DependentUpon>GroupHeaderCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Cells\TableCellBase.cs" />
+    <Compile Include="Views\Cells\OrgEventCell.cs" />
+    <Compile Include="Views\Cells\OrgEventCell.designer.cs">
+      <DependentUpon>OrgEventCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\OrgEventHintConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -194,13 +201,14 @@
   <ItemGroup>
     <InterfaceDefinition Include="Views\HomeView.xib" />
     <InterfaceDefinition Include="Views\OrgView.xib" />
-    <InterfaceDefinition Include="Views\Cells\OrgEventCell.xib" />
     <InterfaceDefinition Include="Views\Cells\EntityCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView.xib" />
     <InterfaceDefinition Include="Views\Cells\VenueShowCell.xib" />
     <InterfaceDefinition Include="Views\Cells\VenueCell.xib" />
     <InterfaceDefinition Include="Views\Cells\OrgCell.xib" />
     <InterfaceDefinition Include="Views\VenueView.xib" />
+    <InterfaceDefinition Include="Views\Cells\GroupHeaderCell.xib" />
+    <InterfaceDefinition Include="Views\Cells\OrgEventCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">

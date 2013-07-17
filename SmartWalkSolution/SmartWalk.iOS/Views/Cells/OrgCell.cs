@@ -9,7 +9,7 @@ using SmartWalk.Core.Model;
 
 namespace SmartWalk.iOS.Views.Cells
 {
-    public partial class OrgCell : MvxTableViewCell
+    public partial class OrgCell : TableCellBase
     {
         public static readonly UINib Nib = UINib.FromName("OrgCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgCell");
@@ -25,7 +25,7 @@ namespace SmartWalk.iOS.Views.Cells
                 null, null, null, MvxBindingMode.OneWay)
         };
 
-        private MvxImageViewLoader _imageHelper;
+        //private MvxImageViewLoader _imageHelper;
 
         public OrgCell() : base(Bindings)
         {
@@ -54,13 +54,39 @@ namespace SmartWalk.iOS.Views.Cells
 
         public string ImageUrl {
             get { return null; }
-            set { OrgImageView.Image = UIImage.FromFile(value); }
+            set
+            { 
+                OrgImageView.Image = UIImage.FromFile(value);
+            }
+        }
+
+        protected override bool Initialize()
+        {
+            var result = InitializeImageView();
+
+            return result;
+        }
+
+        private bool InitializeImageView()
+        {
+            if (OrgImageView != null)
+            {
+                OrgImageView.BackgroundColor = UIColor.White;
+                OrgImageView.ClipsToBounds = true;
+                OrgImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+                OrgImageView.Layer.BorderWidth = 1;
+                OrgImageView.Layer.CornerRadius = 5;
+
+                return true;
+            }
+
+            return false;
         }
 
         private void InitialiseImageHelper()
         {
-            _imageHelper = new MvxImageViewLoader(
-                () => OrgImageView);
+            /*_imageHelper = new MvxImageViewLoader(
+                () => OrgImageView);*/
         }
     }
 }

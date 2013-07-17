@@ -8,22 +8,6 @@ namespace SmartWalk.Core.Model
 
         public DateTime Date { get; set; }
 
-        public string Day
-        {
-            get
-            {
-                return Date != DateTime.MinValue ? String.Format("{0:dd}", Date) : null;
-            }
-        }
-
-        public string Month
-        {
-            get
-            {
-                return Date != DateTime.MinValue ? String.Format("{0:M}", Date) : null;
-            }
-        }
-
         public int TimeStatus
         {
             get 
@@ -44,5 +28,7 @@ namespace SmartWalk.Core.Model
                 return -2;
             }
         }
+
+        public bool HasSchedule { get; set; }
     }
 }

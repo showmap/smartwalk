@@ -12,21 +12,37 @@ namespace SmartWalk.iOS.Views.Cells
 	partial class OrgEventCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UILabel DateLabel { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel DayLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel MonthLabel { get; set; }
+		MonoTouch.UIKit.UILabel HintLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UILabel WeekDayLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (DateLabel != null) {
+				DateLabel.Dispose ();
+				DateLabel = null;
+			}
+
 			if (DayLabel != null) {
 				DayLabel.Dispose ();
 				DayLabel = null;
 			}
 
-			if (MonthLabel != null) {
-				MonthLabel.Dispose ();
-				MonthLabel = null;
+			if (WeekDayLabel != null) {
+				WeekDayLabel.Dispose ();
+				WeekDayLabel = null;
+			}
+
+			if (HintLabel != null) {
+				HintLabel.Dispose ();
+				HintLabel = null;
 			}
 		}
 	}

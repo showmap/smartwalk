@@ -57,7 +57,8 @@ namespace SmartWalk.Core.Services
                         new OrgEventInfo 
                         { 
                             OrgId = "nbff",
-                            Date = new DateTime(2013, 6, 7)
+                            Date = new DateTime(2013, 6, 7),
+                            HasSchedule = true
                         },
                         new OrgEventInfo 
                         { 
@@ -77,7 +78,8 @@ namespace SmartWalk.Core.Services
                         new OrgEventInfo 
                         { 
                             OrgId = "mapp",
-                            Date = new DateTime(2013, 6, 1)
+                            Date = new DateTime(2013, 6, 1),
+                            HasSchedule = true,
                         },
                         new OrgEventInfo 
                         { 

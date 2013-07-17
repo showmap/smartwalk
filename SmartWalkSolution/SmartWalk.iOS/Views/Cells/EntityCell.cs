@@ -1,7 +1,6 @@
 using System;
 using Cirrious.MvvmCross.Binding;
 using Cirrious.MvvmCross.Binding.Binders;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
@@ -11,7 +10,7 @@ using System.Drawing;
 
 namespace SmartWalk.iOS.Views.Cells
 {
-    public partial class EntityCell : MvxTableViewCell
+    public partial class EntityCell : TableCellBase
     {
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
@@ -103,19 +102,20 @@ namespace SmartWalk.iOS.Views.Cells
                     frameSize,
                     UILineBreakMode.WordWrap);
 
-                return textSize.Height + imageHeight + 34f;
+                return textSize.Height + imageHeight + 30f + 10f;
             }
             else
             {
-                return imageHeight + 110.0f;
+                return imageHeight + 30f + 70.0f + 10f;
             }
         }
 
-        public override void LayoutSubviews()
+        protected override bool Initialize()
         {
-            base.LayoutSubviews();
+            var result = InitializeGestures();
+            result = result && InitializeImageView();
 
-            InitGestures();
+            return result;
         }
 
         private void InitializeImageHelper()
@@ -124,24 +124,46 @@ namespace SmartWalk.iOS.Views.Cells
                 () => OrgImageView);*/
         }
 
-        private void InitGestures()
+        private bool InitializeImageView()
         {
-            if (DescriptionLabel != null &&
-                (DescriptionLabel.GestureRecognizers == null ||
-                    DescriptionLabel.GestureRecognizers.Length == 0))
+            if (LogoImageView != null)
             {
-                var tap = new UITapGestureRecognizer(() => {
-                    if (ViewModel.ExpandCollapseCommand.CanExecute(null))
-                    {
-                        ViewModel.ExpandCollapseCommand.Execute(null);
-                    }
-                });
+                LogoImageView.BackgroundColor = UIColor.White;
+                LogoImageView.ClipsToBounds = true;
+                LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+                LogoImageView.Layer.BorderWidth = 1;
+                LogoImageView.Layer.CornerRadius = 5;
 
-                tap.NumberOfTouchesRequired = (uint)1;
-                tap.NumberOfTapsRequired = (uint)1;
-
-                DescriptionLabel.AddGestureRecognizer(tap);
+                return true;
             }
+
+            return false;
+        }
+
+        private bool InitializeGestures()
+        {
+            if (DescriptionLabel != null)
+            {
+                if (DescriptionLabel.GestureRecognizers == null ||
+                    DescriptionLabel.GestureRecognizers.Length == 0)
+                {
+                    var tap = new UITapGestureRecognizer(() => {
+                        if (ViewModel.ExpandCollapseCommand.CanExecute(null))
+                        {
+                            ViewModel.ExpandCollapseCommand.Execute(null);
+                        }
+                    });
+
+                    tap.NumberOfTouchesRequired = (uint)1;
+                    tap.NumberOfTapsRequired = (uint)1;
+
+                    DescriptionLabel.AddGestureRecognizer(tap);
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
