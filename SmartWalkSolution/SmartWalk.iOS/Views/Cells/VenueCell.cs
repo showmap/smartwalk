@@ -2,6 +2,7 @@ using System;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding;
 using Cirrious.MvvmCross.Binding.Binders;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Converters;
@@ -17,6 +18,10 @@ namespace SmartWalk.iOS.Views.Cells
 
         private static readonly MvxBindingDescription[] Bindings = new [] {
             new MvxBindingDescription(
+                Reflect<VenueCell>.GetProperty(p => p.ImageUrl).Name,
+                ReflectExtensions.GetPath<Venue, EntityInfo>(p => p.Info, p => p.Logo), 
+                null, null, null, MvxBindingMode.OneWay),
+            new MvxBindingDescription(
                 Reflect<VenueCell>.GetProperty(p => p.NumberText).Name,
                 Reflect<Venue>.GetProperty(p => p.Number).Name, 
                 null, null, null, MvxBindingMode.OneWay),
@@ -30,14 +35,18 @@ namespace SmartWalk.iOS.Views.Cells
                 new AddressesConverter(), null, null, MvxBindingMode.OneWay)
         };
 
+        private MvxImageViewLoader _imageHelper;
+
         public VenueCell() : base(Bindings)
         {
             InitializeGesture();
+            InitializeImageHelper();
         }
 
         public VenueCell(IntPtr handle) : base(Bindings, handle)
         {
             InitializeGesture();
+            InitializeImageHelper();
         }
 
         public static VenueCell Create()
@@ -58,6 +67,11 @@ namespace SmartWalk.iOS.Views.Cells
         public string AddressText {
             get { return AddressLabel.Text; }
             set { AddressLabel.Text = value; }
+        }
+
+        public string ImageUrl {
+            get { return _imageHelper.ImageUrl; }
+            set { _imageHelper.ImageUrl = value; }
         }
 
         public ICommand NavigateVenueCommand { get; set; }
@@ -116,6 +130,11 @@ namespace SmartWalk.iOS.Views.Cells
             }
 
             return false;
+        }
+
+        private void InitializeImageHelper()
+        {
+            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
         }
 
         private bool InitializeImageView()

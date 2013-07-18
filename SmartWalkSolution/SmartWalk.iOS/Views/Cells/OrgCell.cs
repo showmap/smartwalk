@@ -1,11 +1,11 @@
 using System;
+using Cirrious.MvvmCross.Binding;
+using Cirrious.MvvmCross.Binding.Binders;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using Cirrious.MvvmCross.Binding.Binders;
-using SmartWalk.Core.Utils;
-using Cirrious.MvvmCross.Binding;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.Cells
 {
@@ -25,7 +25,7 @@ namespace SmartWalk.iOS.Views.Cells
                 null, null, null, MvxBindingMode.OneWay)
         };
 
-        //private MvxImageViewLoader _imageHelper;
+        private MvxImageViewLoader _imageHelper;
 
         public OrgCell() : base(Bindings)
         {
@@ -47,17 +47,9 @@ namespace SmartWalk.iOS.Views.Cells
             set { OrgNameLabel.Text = value; }
         }
 
-        /*public string ImageUrl {
+        public string ImageUrl {
             get { return _imageHelper.ImageUrl; }
             set { _imageHelper.ImageUrl = value; }
-        }*/
-
-        public string ImageUrl {
-            get { return null; }
-            set
-            { 
-                OrgImageView.Image = UIImage.FromFile(value);
-            }
         }
 
         protected override bool Initialize()
@@ -85,8 +77,7 @@ namespace SmartWalk.iOS.Views.Cells
 
         private void InitialiseImageHelper()
         {
-            /*_imageHelper = new MvxImageViewLoader(
-                () => OrgImageView);*/
+            _imageHelper = new MvxImageViewLoader(() => OrgImageView);
         }
     }
 }

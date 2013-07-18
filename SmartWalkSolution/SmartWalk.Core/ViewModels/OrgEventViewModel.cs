@@ -153,8 +153,8 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _navigateVenueOnMapCommand = new MvxCommand<Venue>(
                         venue => {
-                            SelectedVenueOnMap = venue;
                             Mode = OrgEventViewMode.Map;
+                            SelectedVenueOnMap = venue;
                         },
                         venue => _parameters != null);
                 }

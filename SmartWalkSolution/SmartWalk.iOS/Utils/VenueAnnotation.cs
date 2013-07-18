@@ -6,18 +6,17 @@ namespace SmartWalk.iOS.Utils
 {
     public class VenueAnnotation : MKAnnotation
     {
-        private readonly int _number;
-        private readonly EntityInfo _venueInfo;
         private readonly AddressInfo _addressInfo;
 
-        public VenueAnnotation(int number, EntityInfo venueInfo, AddressInfo addressInfo)
+        public VenueAnnotation(Venue venue, AddressInfo addressInfo)
         {
-            _number = number;
-            _venueInfo = venueInfo;
+            Venue = venue;
             _addressInfo = addressInfo;
 
             Coordinate = new CLLocationCoordinate2D(_addressInfo.Latitude, _addressInfo.Longitude);
         }
+
+        public Venue Venue { get; set; }
 
         public override CLLocationCoordinate2D Coordinate { get; set; }
 
@@ -25,7 +24,7 @@ namespace SmartWalk.iOS.Utils
         {
             get
             {
-                return (_number != 0 ? _number + ". " : string.Empty) + _venueInfo.Name;
+                return (Venue.Number != 0 ? Venue.Number + ". " : string.Empty) + Venue.Info.Name;
             }
         }
 

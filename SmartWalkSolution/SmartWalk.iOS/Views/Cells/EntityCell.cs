@@ -1,12 +1,13 @@
 using System;
+using System.Drawing;
 using Cirrious.MvvmCross.Binding;
 using Cirrious.MvvmCross.Binding.Binders;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
-using System.Drawing;
 
 namespace SmartWalk.iOS.Views.Cells
 {
@@ -30,9 +31,11 @@ namespace SmartWalk.iOS.Views.Cells
                     null, null, null, MvxBindingMode.OneWay)
         };
 
+        private MvxImageViewLoader _imageHelper;
+
         public EntityCell() : base(Bindings)
         {
-            InitializeImageHelper();      
+            InitializeImageHelper();
         }
 
         public EntityCell(IntPtr handle) : base(Bindings, handle)
@@ -60,19 +63,14 @@ namespace SmartWalk.iOS.Views.Cells
             set { DescriptionLabel.Text = value; }
         }
 
-        /*public string ImageUrl {
-            get { return _imageHelper.ImageUrl; }
-            set { _imageHelper.ImageUrl = value; }
-        }*/
-
         public string ImageUrl {
-            get { return null; }
+            get { return _imageHelper.ImageUrl; }
             set
             { 
                 if (value != null)
                 {
                     LogoImageViewHeightConstraint.Constant = 240f;
-                    LogoImageView.Image = UIImage.FromFile(value);
+                    _imageHelper.ImageUrl = value;  // UIImage.FromFile(value);
                 }
                 else
                 {
@@ -120,8 +118,7 @@ namespace SmartWalk.iOS.Views.Cells
 
         private void InitializeImageHelper()
         {
-            /*_imageHelper = new MvxImageViewLoader(
-                () => OrgImageView);*/
+            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
         }
 
         private bool InitializeImageView()

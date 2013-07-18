@@ -24,8 +24,7 @@ namespace SmartWalk.Core.Services
                         {
                             Id = org.Attribute("id").ValueOrNull(),
                             Name = org.Attribute("name").ValueOrNull(),
-                            Logo = "TempXML/Local/" + org.Attribute("id").ValueOrNull() + 
-                                "/" + org.Attribute("logo").ValueOrNull(),
+                            Logo = org.Attribute("logo").ValueOrNull(),
                         }).ToArray();
 
                 resultHandler(result, null);
@@ -41,58 +40,25 @@ namespace SmartWalk.Core.Services
             try
             {
                 var xml = XDocument.Load(@"TempXML/Local/" + orgId + "/index.xml");
-                var result = new Org {
+                var result = new Org
+                {
                     Info = new EntityInfo 
-                    {
-                        Id = orgId,
-                        Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
-                        Logo = "TempXML/Local/" + orgId + "/" + (xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null),
-                    },
+                        {
+                            Id = orgId,
+                            Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
+                            Logo = xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null,
+                        },
                     Description = xml.Root != null ? xml.Root.Element("description").ValueOrNull() : null,
                 };
 
-                if (orgId == "nbff")
-                {
-                    result.EventInfos = new [] { 
+                result.EventInfos = xml.Descendants("event")
+                    .Select(org => 
                         new OrgEventInfo 
-                        { 
-                            OrgId = "nbff",
-                            Date = new DateTime(2013, 6, 7),
-                            HasSchedule = true
-                        },
-                        new OrgEventInfo 
-                        { 
-                            OrgId = "nbff",
-                            Date = new DateTime(2013, 7, 5)
-                        }
-                    };
-                }
-                else if (orgId == "mapp")
-                {
-                    result.EventInfos = new [] { 
-                        new OrgEventInfo 
-                        { 
-                            OrgId = "mapp",
-                            Date = new DateTime(2013, 4, 1)
-                        },
-                        new OrgEventInfo 
-                        { 
-                            OrgId = "mapp",
-                            Date = new DateTime(2013, 6, 1),
-                            HasSchedule = true,
-                        },
-                        new OrgEventInfo 
-                        { 
-                            OrgId = "mapp",
-                            Date = new DateTime(2013, 8, 3)
-                        },
-                        new OrgEventInfo 
-                        { 
-                            OrgId = "mapp",
-                            Date = new DateTime(2013, 10, 3)
-                        }
-                    };
-                }
+                        {
+                            OrgId = orgId,
+                            Date = DateTime.Parse(org.Attribute("date").ValueOrNull()),
+                            HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
+                        }).ToArray();
 
                 resultHandler(result, null);
             }
@@ -155,6 +121,7 @@ namespace SmartWalk.Core.Services
                                     Info = new EntityInfo 
                                 {
                                     Name = venue.Attribute("name").ValueOrNull(),
+                                    Logo = venue.Attribute("logo").ValueOrNull(),
                                     Addresses = venue.Descendants("point")
                                         .Select(point => CreateAddress(
                                             point.Attribute("coordinates").ValueOrNull(),

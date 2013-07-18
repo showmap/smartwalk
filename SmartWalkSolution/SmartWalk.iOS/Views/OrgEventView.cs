@@ -10,12 +10,16 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Cells;
+using MonoTouch.MapKit;
+using System;
+using System.Collections.Generic;
 
 namespace SmartWalk.iOS.Views
 {
     public partial class OrgEventView : TableViewBase
     {
         private UIBarButtonItem _modeButton;
+        private OrgEvent _currenmMapViewtOrgEvent;
 
         public new OrgEventViewModel ViewModel
         {
@@ -34,8 +38,9 @@ namespace SmartWalk.iOS.Views
                 ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
             }
 
+            VenuesMapView.Delegate = new VenuesMapViewDelegate(ViewModel);
+
             InitializeToolBar();
-            InitializeMapView();
 
             UpdateViewModeState();
         }
@@ -67,6 +72,10 @@ namespace SmartWalk.iOS.Views
             {
                 UpdateViewModeState();
             }
+            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
+            {
+                SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
+            }
         }
 
         private void InitializeToolBar()
@@ -89,15 +98,46 @@ namespace SmartWalk.iOS.Views
             if (ViewModel.OrgEvent != null &&
                 ViewModel.OrgEvent.Venues != null)
             {
-                var annotations = ViewModel.OrgEvent.Venues
+                if (_currenmMapViewtOrgEvent != ViewModel.OrgEvent)
+                {
+                    var annotations = ViewModel.OrgEvent.Venues
                     .SelectMany(v => v.Info.Addresses
-                        .Select(a => new VenueAnnotation(v.Number, v.Info, a))).ToArray();
-                var coordinates = annotations
+                        .Select(a => new VenueAnnotation(v, a))).ToArray();
+                    var coordinates = annotations
                     .Select(va => va.Coordinate)
                     .Where(c => c.Latitude != 0 && c.Longitude != 0).ToArray();
 
-                VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
-                VenuesMapView.AddAnnotations(annotations);
+                    VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
+                    VenuesMapView.AddAnnotations(annotations);
+
+                    _currenmMapViewtOrgEvent = ViewModel.OrgEvent;
+                }
+            }
+            else
+            {
+                VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
+            }
+        }
+
+        private void SelectVenueMapAnnotation(Venue venue)
+        {
+            if (venue != null)
+            {
+                var annotation = VenuesMapView.Annotations
+                .OfType<VenueAnnotation>()
+                    .FirstOrDefault(an => an.Venue == venue);
+
+                if (annotation != null)
+                {
+                    VenuesMapView.SelectAnnotation(annotation, true);
+                }
+            }
+            else if (VenuesMapView.SelectedAnnotations.Any())
+            {
+                foreach (var annotation in VenuesMapView.SelectedAnnotations)
+                {
+                    VenuesMapView.DeselectAnnotation(annotation, false);
+                }
             }
         }
        
@@ -105,6 +145,7 @@ namespace SmartWalk.iOS.Views
         {
             if (ViewModel.Mode == OrgEventViewMode.Map)
             {
+                InitializeMapView();
                 TablePanel.Hidden = true;
                 MapPanel.Hidden = false;
                 _modeButton.Title = "List";
@@ -183,6 +224,76 @@ namespace SmartWalk.iOS.Views
             return VenueItemsSource != null && VenueItemsSource[indexPath.Section].Shows != null 
                 ? VenueItemsSource[indexPath.Section].Shows.ElementAt(indexPath.Row) 
                 : null;
+        }
+    }
+
+    public class VenuesMapViewDelegate : MKMapViewDelegate
+    {
+        private readonly OrgEventViewModel _viewModel;
+        private readonly List<MKPinAnnotationView> _viewLinksList = 
+            new List<MKPinAnnotationView>(); // to prevent GC
+
+        private MvxImageViewLoader _imageHelper;
+        private string _annotationIdentifier = "BasicAnnotation";
+
+        public VenuesMapViewDelegate(OrgEventViewModel viewModel)
+        {
+            _viewModel = viewModel;
+
+        }
+
+        public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, NSObject annotation)
+        {
+            var annotationView = (MKPinAnnotationView)mapView.DequeueReusableAnnotation(_annotationIdentifier);
+            if (annotationView == null)
+            {
+                if (annotation is MKUserLocation)
+                {
+                    return null;
+                }
+                else
+                {
+                    annotationView = new MKPinAnnotationView(annotation, _annotationIdentifier);
+                }
+            }
+            else
+            {
+                annotationView.Annotation = annotation;
+            }
+
+            if (!_viewLinksList.Contains(annotationView))
+            {
+                _viewLinksList.Add(annotationView);
+            }
+
+            var venueAnnotation = annotation as VenueAnnotation;
+            if (venueAnnotation != null)
+            {
+                annotationView.CanShowCallout = true;
+                annotationView.AnimatesDrop = true;
+
+                var detailButton = UIButton.FromType(UIButtonType.DetailDisclosure);
+                detailButton.TouchUpInside += (s, e) => 
+                    {
+                        if (_viewModel.NavigateVenueCommand.CanExecute(venueAnnotation.Venue))
+                        {
+                            _viewModel.NavigateVenueCommand.Execute(venueAnnotation.Venue);
+                        };
+                    };
+
+                annotationView.RightCalloutAccessoryView = detailButton;
+
+                if (venueAnnotation.Venue.Info.Logo != null)
+                {
+                    var imageView = new UIImageView();
+                    annotationView.LeftCalloutAccessoryView = imageView;
+
+                    _imageHelper = new MvxImageViewLoader(() => imageView);
+                    _imageHelper.ImageUrl = venueAnnotation.Venue.Info.Logo;
+                }
+            }
+
+            return annotationView;
         }
     }
 }
