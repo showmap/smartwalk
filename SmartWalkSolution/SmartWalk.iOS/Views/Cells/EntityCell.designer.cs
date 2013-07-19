@@ -12,16 +12,37 @@ namespace SmartWalk.iOS.Views.Cells
 	partial class EntityCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIView ContactView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ContactViewWidthConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ImageViewWidthConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint LogoImageViewHeightConstraint { get; set; }
+		MonoTouch.UIKit.UIView LogoView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel NameLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIPageControl PageControl { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIScrollView ScrollView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ScrollViewHeightConstraint { get; set; }
+
+		[Action ("OnPageControlValueChanged:")]
+		partial void OnPageControlValueChanged (MonoTouch.UIKit.UIPageControl sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -40,9 +61,39 @@ namespace SmartWalk.iOS.Views.Cells
 				NameLabel = null;
 			}
 
-			if (LogoImageViewHeightConstraint != null) {
-				LogoImageViewHeightConstraint.Dispose ();
-				LogoImageViewHeightConstraint = null;
+			if (LogoView != null) {
+				LogoView.Dispose ();
+				LogoView = null;
+			}
+
+			if (ContactView != null) {
+				ContactView.Dispose ();
+				ContactView = null;
+			}
+
+			if (ScrollView != null) {
+				ScrollView.Dispose ();
+				ScrollView = null;
+			}
+
+			if (PageControl != null) {
+				PageControl.Dispose ();
+				PageControl = null;
+			}
+
+			if (ScrollViewHeightConstraint != null) {
+				ScrollViewHeightConstraint.Dispose ();
+				ScrollViewHeightConstraint = null;
+			}
+
+			if (ImageViewWidthConstraint != null) {
+				ImageViewWidthConstraint.Dispose ();
+				ImageViewWidthConstraint = null;
+			}
+
+			if (ContactViewWidthConstraint != null) {
+				ContactViewWidthConstraint.Dispose ();
+				ContactViewWidthConstraint = null;
 			}
 		}
 	}

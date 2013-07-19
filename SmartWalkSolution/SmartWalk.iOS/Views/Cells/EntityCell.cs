@@ -32,6 +32,7 @@ namespace SmartWalk.iOS.Views.Cells
         };
 
         private MvxImageViewLoader _imageHelper;
+        private bool _isPageControlBeingUsed;
 
         public EntityCell() : base(Bindings)
         {
@@ -69,13 +70,50 @@ namespace SmartWalk.iOS.Views.Cells
             { 
                 if (value != null)
                 {
-                    LogoImageViewHeightConstraint.Constant = 240f;
+                    ScrollViewHeightConstraint.Constant = 240f;
                     _imageHelper.ImageUrl = value;  // UIImage.FromFile(value);
                 }
                 else
                 {
-                    LogoImageViewHeightConstraint.Constant = 0f;
+                    ScrollViewHeightConstraint.Constant = 0f;
                 }
+            }
+        }
+
+        public override RectangleF Frame
+        {
+            set
+            {
+                base.Frame = value;
+
+                if (ImageViewWidthConstraint != null)
+                {
+                    ImageViewWidthConstraint.Constant = CurrentScreenWidth;
+                }
+
+                if (ContactViewWidthConstraint != null)
+                {
+                    ContactViewWidthConstraint.Constant = CurrentScreenWidth;
+                }
+            }
+        }
+
+        private static bool IsVerticalOrientation
+        {
+            get
+            {
+                return UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait || 
+                    UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.PortraitUpsideDown;
+            }
+        }
+
+        private static float CurrentScreenWidth
+        {
+            get
+            {
+                return IsVerticalOrientation 
+                    ? UIScreen.MainScreen.Bounds.Width 
+                        : UIScreen.MainScreen.Bounds.Height;
             }
         }
 
@@ -85,15 +123,8 @@ namespace SmartWalk.iOS.Views.Cells
 
             if (isExpanded)
             {
-                var isVertical = 
-                    UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait || 
-                        UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.PortraitUpsideDown;
-
-                var frameSize = new SizeF(
-                    (isVertical 
-                         ? UIScreen.MainScreen.Bounds.Width 
-                         : UIScreen.MainScreen.Bounds.Height),
-                    float.MaxValue); // TODO:  - UIConstants.DefaultTextMargin * 2
+                var frameSize = new SizeF(CurrentScreenWidth, float.MaxValue); 
+                // TODO:  - UIConstants.DefaultTextMargin * 2
 
                 var textSize = new NSString(entity.Description).StringSize(
                     UIFont.FromName("Helvetica-Bold", 15),
@@ -112,13 +143,15 @@ namespace SmartWalk.iOS.Views.Cells
         {
             var result = InitializeGestures();
             result = result && InitializeImageView();
+            result = result && InitializeScrollView();
 
             return result;
         }
 
         private void InitializeImageHelper()
         {
-            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
+            _imageHelper = new MvxImageViewLoader(
+                () => LogoImageView);
         }
 
         private bool InitializeImageView()
@@ -161,6 +194,65 @@ namespace SmartWalk.iOS.Views.Cells
             }
 
             return false;
+        }
+
+        private bool InitializeScrollView()
+        {
+            if (ScrollView != null)
+            {
+                if (ScrollView.Delegate == null)
+                {
+                    ScrollView.Delegate = new EntityCellScrollViewDelegate(this);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        partial void OnPageControlValueChanged(UIPageControl sender)
+        {
+            var frame = new RectangleF
+                {
+                    X = ScrollView.Frame.Size.Width * PageControl.CurrentPage,
+                    Y = 0,
+                    Size = ScrollView.Frame.Size
+                };
+
+            ScrollView.ScrollRectToVisible(frame, true);
+
+            _isPageControlBeingUsed = true;
+        }
+
+        private class EntityCellScrollViewDelegate : UIScrollViewDelegate
+        {
+            private readonly EntityCell _cell;
+
+            public EntityCellScrollViewDelegate(EntityCell cell)
+            {
+                _cell = cell;
+            }
+
+            public override void Scrolled(UIScrollView scrollView)
+            {
+                if (!_cell._isPageControlBeingUsed)
+                {
+                    var pageWidth = _cell.ScrollView.Frame.Size.Width;
+                    var page = Math.Floor((_cell.ScrollView.ContentOffset.X - pageWidth / 2) / pageWidth) + 1;
+                    _cell.PageControl.CurrentPage = (int)page;
+                }
+            }
+
+            public override void DraggingStarted(UIScrollView scrollView)
+            {
+                _cell._isPageControlBeingUsed = false;
+            }
+
+            public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+            {
+                _cell._isPageControlBeingUsed = false;
+            }
         }
     }
 }

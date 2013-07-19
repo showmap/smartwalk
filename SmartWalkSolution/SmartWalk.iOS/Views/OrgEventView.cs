@@ -9,10 +9,6 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
-using SmartWalk.iOS.Views.Cells;
-using MonoTouch.MapKit;
-using System;
-using System.Collections.Generic;
 
 namespace SmartWalk.iOS.Views
 {
@@ -38,11 +34,20 @@ namespace SmartWalk.iOS.Views
                 ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
             }
 
-            VenuesMapView.Delegate = new VenuesMapViewDelegate(ViewModel);
+            VenuesMapView.Delegate = new OrgEventMapViewDelegate(ViewModel);
 
             InitializeToolBar();
 
-            UpdateViewModeState();
+            UpdateViewState();
+        }
+
+        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            base.DidRotate(fromInterfaceOrientation);
+
+            // to fix the bug: http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
+            VenuesAndShowsTableView.BeginUpdates();
+            VenuesAndShowsTableView.EndUpdates();
         }
 
         protected override void UpdateViewTitle()
@@ -55,7 +60,7 @@ namespace SmartWalk.iOS.Views
 
         protected override MvxTableViewSource CreateTableViewSource()
         {
-            var tableSource = new VenuesAndShowsTableSource(VenuesAndShowsTableView, ViewModel);
+            var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, ViewModel);
 
             this.CreateBinding(tableSource).To((OrgEventViewModel vm) => vm.OrgEvent.Venues).Apply();
 
@@ -70,7 +75,7 @@ namespace SmartWalk.iOS.Views
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
-                UpdateViewModeState();
+                UpdateViewState();
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
@@ -141,7 +146,7 @@ namespace SmartWalk.iOS.Views
             }
         }
        
-        private void UpdateViewModeState()
+        private void UpdateViewState()
         {
             if (ViewModel.Mode == OrgEventViewMode.Map)
             {
@@ -156,144 +161,6 @@ namespace SmartWalk.iOS.Views
                 MapPanel.Hidden = true;
                 _modeButton.Title = "Map";
             }
-        }
-    }
-
-    public class VenuesAndShowsTableSource : MvxTableViewSource
-    {
-        private readonly OrgEventViewModel _viewModel;
-        private readonly ViewsFactory<VenueCell> _headerViewFactory;
-
-        public VenuesAndShowsTableSource(UITableView tableView, OrgEventViewModel viewModel)
-            : base(tableView)
-        {
-            _viewModel = viewModel;
-            _headerViewFactory = new ViewsFactory<VenueCell>(VenueCell.Create, 7);
-
-            UseAnimations = true;
-
-            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
-        }
-
-        public Venue[] VenueItemsSource
-        {
-            get { return ItemsSource != null ? (Venue[])ItemsSource : null; }
-        }
-
-        public override float GetHeightForHeader(UITableView tableView, int section)
-        {
-            return 76.0f;
-        }
-
-        public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
-        {
-            return 35.0f;
-        }
-
-        public override int NumberOfSections(UITableView tableView)
-        {
-            return VenueItemsSource != null ? VenueItemsSource.Count() : 0;
-        }
-
-        public override int RowsInSection(UITableView tableview, int section)
-        {
-            return VenueItemsSource != null && VenueItemsSource[section].Shows != null 
-                ? VenueItemsSource[section].Shows.Count() 
-                : 0;
-        }
-
-        public override UIView GetViewForHeader(UITableView tableView, int section)
-        {
-            var headerView = _headerViewFactory.DequeueReusableView();
-
-            headerView.DataContext = VenueItemsSource[section];
-            headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
-            headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
-
-            return headerView;
-        }
-
-        protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
-        {
-            var cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
-            return cell;
-        }
-
-        protected override object GetItemAt(NSIndexPath indexPath)
-        {
-            return VenueItemsSource != null && VenueItemsSource[indexPath.Section].Shows != null 
-                ? VenueItemsSource[indexPath.Section].Shows.ElementAt(indexPath.Row) 
-                : null;
-        }
-    }
-
-    public class VenuesMapViewDelegate : MKMapViewDelegate
-    {
-        private readonly OrgEventViewModel _viewModel;
-        private readonly List<MKPinAnnotationView> _viewLinksList = 
-            new List<MKPinAnnotationView>(); // to prevent GC
-
-        private MvxImageViewLoader _imageHelper;
-        private string _annotationIdentifier = "BasicAnnotation";
-
-        public VenuesMapViewDelegate(OrgEventViewModel viewModel)
-        {
-            _viewModel = viewModel;
-
-        }
-
-        public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, NSObject annotation)
-        {
-            var annotationView = (MKPinAnnotationView)mapView.DequeueReusableAnnotation(_annotationIdentifier);
-            if (annotationView == null)
-            {
-                if (annotation is MKUserLocation)
-                {
-                    return null;
-                }
-                else
-                {
-                    annotationView = new MKPinAnnotationView(annotation, _annotationIdentifier);
-                }
-            }
-            else
-            {
-                annotationView.Annotation = annotation;
-            }
-
-            if (!_viewLinksList.Contains(annotationView))
-            {
-                _viewLinksList.Add(annotationView);
-            }
-
-            var venueAnnotation = annotation as VenueAnnotation;
-            if (venueAnnotation != null)
-            {
-                annotationView.CanShowCallout = true;
-                annotationView.AnimatesDrop = true;
-
-                var detailButton = UIButton.FromType(UIButtonType.DetailDisclosure);
-                detailButton.TouchUpInside += (s, e) => 
-                    {
-                        if (_viewModel.NavigateVenueCommand.CanExecute(venueAnnotation.Venue))
-                        {
-                            _viewModel.NavigateVenueCommand.Execute(venueAnnotation.Venue);
-                        };
-                    };
-
-                annotationView.RightCalloutAccessoryView = detailButton;
-
-                if (venueAnnotation.Venue.Info.Logo != null)
-                {
-                    var imageView = new UIImageView();
-                    annotationView.LeftCalloutAccessoryView = imageView;
-
-                    _imageHelper = new MvxImageViewLoader(() => imageView);
-                    _imageHelper.ImageUrl = venueAnnotation.Venue.Info.Logo;
-                }
-            }
-
-            return annotationView;
         }
     }
 }
