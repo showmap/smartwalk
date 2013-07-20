@@ -7,6 +7,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.OrgEventView;
+using SmartWalk.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.iOS.Views.VenueView
 {

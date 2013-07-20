@@ -42,7 +42,10 @@ namespace SmartWalk.iOS.Views.Common
             TableView.Source = tableSource;
             TableView.ReloadData();
 
-            _refreshControl = new UIRefreshControl();
+            _refreshControl = new UIRefreshControl
+                {
+                    TintColor = UIColor.LightGray
+                };
             _refreshControl.ValueChanged += (sender, e) => 
                 {
                     if (ViewModel.RefreshCommand.CanExecute(null))

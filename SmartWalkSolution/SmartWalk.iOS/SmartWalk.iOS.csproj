@@ -124,7 +124,6 @@
     <Folder Include="TempXML\Local\" />
     <Folder Include="TempXML\Local\mapp\" />
     <Folder Include="TempXML\Local\nbff\" />
-    <Folder Include="Constants\" />
     <Folder Include="Utils\" />
     <Folder Include="Services\" />
     <Folder Include="Views\OrgView\" />
@@ -132,6 +131,7 @@
     <Folder Include="Views\HomeView\" />
     <Folder Include="Views\OrgEventView\" />
     <Folder Include="Views\Common\" />
+    <Folder Include="Views\Common\EntityCell\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -140,7 +140,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Setup.cs" />
-    <Compile Include="Constants\UIConstants.cs" />
     <Compile Include="Utils\MapUtil.cs" />
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Views\HomeView\HomeTableSource.cs" />
@@ -173,10 +172,6 @@
     <Compile Include="Views\OrgView\OrgEventCell.designer.cs">
       <DependentUpon>OrgEventCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Common\EntityCell.cs" />
-    <Compile Include="Views\Common\EntityCell.designer.cs">
-      <DependentUpon>EntityCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Common\GroupHeaderCell.cs" />
     <Compile Include="Views\Common\GroupHeaderCell.designer.cs">
       <DependentUpon>GroupHeaderCell.cs</DependentUpon>
@@ -197,6 +192,26 @@
     <Compile Include="Views\OrgEventView\VenueAnnotation.cs" />
     <Compile Include="Views\OrgView\OrgEventHintConverter.cs" />
     <Compile Include="Views\OrgEventView\OrgEventMapDelegate.cs" />
+    <Compile Include="Views\Common\EntityCell\EntityCell.cs" />
+    <Compile Include="Views\Common\EntityCell\EntityCell.designer.cs">
+      <DependentUpon>EntityCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\EntityCell\EmailCell.cs" />
+    <Compile Include="Views\Common\EntityCell\EmailCell.designer.cs">
+      <DependentUpon>EmailCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\EntityCell\PhoneCell.cs" />
+    <Compile Include="Views\Common\EntityCell\PhoneCell.designer.cs">
+      <DependentUpon>PhoneCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\EntityCell\WebSiteCell.cs" />
+    <Compile Include="Views\Common\EntityCell\WebSiteCell.designer.cs">
+      <DependentUpon>WebSiteCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\EntityCell\EntityScrollViewDelegate.cs" />
+    <Compile Include="Views\Common\EntityCell\ContactCollectionSource.cs" />
+    <Compile Include="Views\Common\EntityCell\ContactCollectionSourceConverter.cs" />
+    <Compile Include="Views\Common\EntityCell\ContactCollectionDelegate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -215,10 +230,13 @@
     <InterfaceDefinition Include="Views\VenueView\VenueView.xib" />
     <InterfaceDefinition Include="Views\HomeView\OrgCell.xib" />
     <InterfaceDefinition Include="Views\OrgView\OrgEventCell.xib" />
-    <InterfaceDefinition Include="Views\Common\EntityCell.xib" />
     <InterfaceDefinition Include="Views\Common\GroupHeaderCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell\EntityCell.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell\EmailCell.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell\PhoneCell.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell\WebSiteCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">

@@ -24,7 +24,7 @@ namespace SmartWalk.Core.Services
                         {
                             Id = org.Attribute("id").ValueOrNull(),
                             Name = org.Attribute("name").ValueOrNull(),
-                            Logo = org.Attribute("logo").ValueOrNull(),
+                            Logo = org.Attribute("logo").ValueOrNull()
                         }).ToArray();
 
                 resultHandler(result, null);
@@ -47,6 +47,7 @@ namespace SmartWalk.Core.Services
                             Id = orgId,
                             Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
                             Logo = xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null,
+                            Contact = CreateContact(xml)
                         },
                     Description = xml.Root != null ? xml.Root.Element("description").ValueOrNull() : null,
                 };
@@ -104,7 +105,7 @@ namespace SmartWalk.Core.Services
             }
         }
 
-        private OrgEvent CreateOrgEvent(string orgId, DateTime date, XDocument xml)
+        private OrgEvent CreateOrgEvent(string orgId, DateTime date, XContainer xml)
         {
             return new OrgEvent 
                 {
@@ -126,7 +127,8 @@ namespace SmartWalk.Core.Services
                                         .Select(point => CreateAddress(
                                             point.Attribute("coordinates").ValueOrNull(),
                                             point.ValueOrNull()))
-                                        .ToArray()
+                                        .ToArray(),
+                                    Contact = CreateContact(venue)
                                 },
                                 Description = venue.Element("description").ValueOrNull(),
                                 Shows = venue.Descendants("show")
@@ -163,6 +165,30 @@ namespace SmartWalk.Core.Services
                     Latitude = latitude,
                     Longitude = longitude,
                     Address = address,
+                };
+        }
+
+        private ContactInfo CreateContact(XContainer entity)
+        {
+            return new ContactInfo
+                {
+                    Phones = entity.Descendants("phone")
+                        .Select(phone => new ContactPhoneInfo 
+                            {
+                                Name = phone.Attribute("name").ValueOrNull(),
+                                Phone = phone.ValueOrNull(),
+                        }).ToArray(),
+                    Emails = entity.Descendants("email")
+                        .Select(email => new ContactEmailInfo 
+                            {
+                                Name = email.Attribute("name").ValueOrNull(),
+                                Email = email.ValueOrNull(),
+                            }).ToArray(),
+                    WebSites = entity.Descendants("web")
+                        .Select(web => new ContactWebSiteInfo
+                            {
+                                URL = web.ValueOrNull()
+                            }).ToArray(),
                 };
         }
     }

@@ -1,4 +1,3 @@
-
 #ignore thumbnails created by windows
 Thumbs.db
 #Ignore files build by Visual Studio
@@ -32,3 +31,4 @@ _ReSharper*/
 MvvmCross-3
 MvvmCross-Tutorials
 Newtonsoft.Json
+MvvmCross

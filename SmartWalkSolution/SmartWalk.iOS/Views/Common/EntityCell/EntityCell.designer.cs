@@ -6,13 +6,13 @@
 //
 using MonoTouch.Foundation;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.iOS.Views.Common.EntityCell
 {
 	[Register ("EntityCell")]
 	partial class EntityCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView ContactView { get; set; }
+		MonoTouch.UIKit.UICollectionView ContactCollectionView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ContactViewWidthConstraint { get; set; }
@@ -21,13 +21,13 @@ namespace SmartWalk.iOS.Views.Common
 		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIButton GoToContactButton { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ImageViewWidthConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIView LogoView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel NameLabel { get; set; }
@@ -41,14 +41,34 @@ namespace SmartWalk.iOS.Views.Common
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ScrollViewHeightConstraint { get; set; }
 
-		[Action ("OnPageControlValueChanged:")]
-		partial void OnPageControlValueChanged (MonoTouch.UIKit.UIPageControl sender);
+		[Action ("OnGoToContactButtonTouchUpInside:forEvent:")]
+		partial void OnGoToContactButtonTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ContactCollectionView != null) {
+				ContactCollectionView.Dispose ();
+				ContactCollectionView = null;
+			}
+
+			if (ContactViewWidthConstraint != null) {
+				ContactViewWidthConstraint.Dispose ();
+				ContactViewWidthConstraint = null;
+			}
+
 			if (DescriptionLabel != null) {
 				DescriptionLabel.Dispose ();
 				DescriptionLabel = null;
+			}
+
+			if (GoToContactButton != null) {
+				GoToContactButton.Dispose ();
+				GoToContactButton = null;
+			}
+
+			if (ImageViewWidthConstraint != null) {
+				ImageViewWidthConstraint.Dispose ();
+				ImageViewWidthConstraint = null;
 			}
 
 			if (LogoImageView != null) {
@@ -61,14 +81,9 @@ namespace SmartWalk.iOS.Views.Common
 				NameLabel = null;
 			}
 
-			if (LogoView != null) {
-				LogoView.Dispose ();
-				LogoView = null;
-			}
-
-			if (ContactView != null) {
-				ContactView.Dispose ();
-				ContactView = null;
+			if (PageControl != null) {
+				PageControl.Dispose ();
+				PageControl = null;
 			}
 
 			if (ScrollView != null) {
@@ -76,24 +91,9 @@ namespace SmartWalk.iOS.Views.Common
 				ScrollView = null;
 			}
 
-			if (PageControl != null) {
-				PageControl.Dispose ();
-				PageControl = null;
-			}
-
 			if (ScrollViewHeightConstraint != null) {
 				ScrollViewHeightConstraint.Dispose ();
 				ScrollViewHeightConstraint = null;
-			}
-
-			if (ImageViewWidthConstraint != null) {
-				ImageViewWidthConstraint.Dispose ();
-				ImageViewWidthConstraint = null;
-			}
-
-			if (ContactViewWidthConstraint != null) {
-				ContactViewWidthConstraint.Dispose ();
-				ContactViewWidthConstraint = null;
 			}
 		}
 	}

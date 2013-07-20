@@ -80,5 +80,6 @@
     <Compile Include="Services\DataSource.cs" />
     <Compile Include="ViewModels\VenueViewModel.cs" />
     <Compile Include="ViewModels\IRefreshableViewModel.cs" />
+    <Compile Include="Model\ContactWebSiteInfo.cs" />
   </ItemGroup>
 </Project>

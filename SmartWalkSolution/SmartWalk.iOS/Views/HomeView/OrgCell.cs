@@ -17,11 +17,11 @@ namespace SmartWalk.iOS.Views.HomeView
 
         private static readonly MvxBindingDescription[] Bindings = new [] {
             new MvxBindingDescription(
-                Reflect<EntityCell>.GetProperty(p => p.NameText).Name,
+                Reflect<OrgCell>.GetProperty(p => p.NameText).Name,
                 Reflect<EntityInfo>.GetProperty(p => p.Name).Name,
                 null, null, null, MvxBindingMode.OneWay),
             new MvxBindingDescription(
-                Reflect<EntityCell>.GetProperty(p => p.ImageUrl).Name,
+                Reflect<OrgCell>.GetProperty(p => p.ImageUrl).Name,
                 Reflect<EntityInfo>.GetProperty(p => p.Logo).Name,
                 null, null, null, MvxBindingMode.OneWay)
         };
