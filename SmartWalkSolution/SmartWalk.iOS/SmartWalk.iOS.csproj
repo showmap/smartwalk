@@ -124,10 +124,14 @@
     <Folder Include="TempXML\Local\" />
     <Folder Include="TempXML\Local\mapp\" />
     <Folder Include="TempXML\Local\nbff\" />
-    <Folder Include="Views\Cells\" />
     <Folder Include="Constants\" />
     <Folder Include="Utils\" />
     <Folder Include="Services\" />
+    <Folder Include="Views\OrgView\" />
+    <Folder Include="Views\VenueView\" />
+    <Folder Include="Views\HomeView\" />
+    <Folder Include="Views\OrgEventView\" />
+    <Folder Include="Views\Common\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -136,62 +140,63 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Setup.cs" />
-    <Compile Include="Views\HomeView.cs" />
-    <Compile Include="Views\HomeView.designer.cs">
-      <DependentUpon>HomeView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OrgView.cs" />
-    <Compile Include="Views\OrgView.designer.cs">
-      <DependentUpon>OrgView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Constants\UIConstants.cs" />
-    <Compile Include="Views\Cells\EntityCell.cs" />
-    <Compile Include="Views\Cells\EntityCell.designer.cs">
-      <DependentUpon>EntityCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OrgEventView.cs" />
-    <Compile Include="Views\OrgEventView.designer.cs">
-      <DependentUpon>OrgEventView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Cells\VenueCell.cs" />
-    <Compile Include="Views\Cells\VenueCell.designer.cs">
-      <DependentUpon>VenueCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Cells\VenueShowCell.cs" />
-    <Compile Include="Views\Cells\VenueShowCell.designer.cs">
-      <DependentUpon>VenueShowCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Cells\OrgCell.cs" />
-    <Compile Include="Views\Cells\OrgCell.designer.cs">
-      <DependentUpon>OrgCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\ViewsFactory.cs" />
-    <Compile Include="Converters\GroupContainer.cs" />
-    <Compile Include="Converters\OrgAndEventsTableSourceConverter.cs" />
-    <Compile Include="Utils\VenueAnnotation.cs" />
     <Compile Include="Utils\MapUtil.cs" />
     <Compile Include="Services\CacheService.cs" />
-    <Compile Include="Views\VenueView.cs" />
-    <Compile Include="Views\VenueView.designer.cs">
+    <Compile Include="Views\HomeView\HomeTableSource.cs" />
+    <Compile Include="Views\HomeView\HomeView.cs" />
+    <Compile Include="Views\HomeView\HomeView.designer.cs">
+      <DependentUpon>HomeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrgEventView\OrgEventTableSource.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventView.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventView.designer.cs">
+      <DependentUpon>OrgEventView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrgView\OrgTableSource.cs" />
+    <Compile Include="Views\OrgView\OrgView.cs" />
+    <Compile Include="Views\OrgView\OrgView.designer.cs">
+      <DependentUpon>OrgView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VenueView\VenueTableSource.cs" />
+    <Compile Include="Views\VenueView\VenueView.cs" />
+    <Compile Include="Views\VenueView\VenueView.designer.cs">
       <DependentUpon>VenueView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converters\VenueAndShowsTableSourceConverter.cs" />
-    <Compile Include="Views\TableViewBase.cs" />
-    <Compile Include="Views\Cells\GroupHeaderCell.cs" />
-    <Compile Include="Views\Cells\GroupHeaderCell.designer.cs">
-      <DependentUpon>GroupHeaderCell.cs</DependentUpon>
+    <Compile Include="Views\VenueView\VenueTableSourceConverter.cs" />
+    <Compile Include="Utils\ScreenUtil.cs" />
+    <Compile Include="Views\HomeView\OrgCell.cs" />
+    <Compile Include="Views\HomeView\OrgCell.designer.cs">
+      <DependentUpon>OrgCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Cells\TableCellBase.cs" />
-    <Compile Include="Views\Cells\OrgEventCell.cs" />
-    <Compile Include="Views\Cells\OrgEventCell.designer.cs">
+    <Compile Include="Views\OrgView\OrgEventCell.cs" />
+    <Compile Include="Views\OrgView\OrgEventCell.designer.cs">
       <DependentUpon>OrgEventCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converters\OrgEventHintConverter.cs" />
-    <Compile Include="Views\OrgEventTableSource.cs" />
-    <Compile Include="Views\OrgEventMapViewDelegate.cs" />
-    <Compile Include="Views\HomeTableSource.cs" />
-    <Compile Include="Views\OrgTableSource.cs" />
-    <Compile Include="Views\VenueTableSource.cs" />
+    <Compile Include="Views\Common\EntityCell.cs" />
+    <Compile Include="Views\Common\EntityCell.designer.cs">
+      <DependentUpon>EntityCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\GroupHeaderCell.cs" />
+    <Compile Include="Views\Common\GroupHeaderCell.designer.cs">
+      <DependentUpon>GroupHeaderCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\TableCellBase.cs" />
+    <Compile Include="Views\Common\TableViewBase.cs" />
+    <Compile Include="Views\Common\ViewsFactory.cs" />
+    <Compile Include="Views\Common\GroupContainer.cs" />
+    <Compile Include="Views\OrgEventView\VenueCell.cs" />
+    <Compile Include="Views\OrgEventView\VenueCell.designer.cs">
+      <DependentUpon>VenueCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrgView\OrgTableSourceConverter.cs" />
+    <Compile Include="Views\OrgEventView\VenueShowCell.cs" />
+    <Compile Include="Views\OrgEventView\VenueShowCell.designer.cs">
+      <DependentUpon>VenueShowCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrgEventView\VenueAnnotation.cs" />
+    <Compile Include="Views\OrgView\OrgEventHintConverter.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventMapDelegate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -204,16 +209,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Include="Views\HomeView.xib" />
-    <InterfaceDefinition Include="Views\OrgView.xib" />
-    <InterfaceDefinition Include="Views\Cells\EntityCell.xib" />
-    <InterfaceDefinition Include="Views\OrgEventView.xib" />
-    <InterfaceDefinition Include="Views\Cells\VenueShowCell.xib" />
-    <InterfaceDefinition Include="Views\Cells\VenueCell.xib" />
-    <InterfaceDefinition Include="Views\Cells\OrgCell.xib" />
-    <InterfaceDefinition Include="Views\VenueView.xib" />
-    <InterfaceDefinition Include="Views\Cells\GroupHeaderCell.xib" />
-    <InterfaceDefinition Include="Views\Cells\OrgEventCell.xib" />
+    <InterfaceDefinition Include="Views\HomeView\HomeView.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\OrgEventView.xib" />
+    <InterfaceDefinition Include="Views\OrgView\OrgView.xib" />
+    <InterfaceDefinition Include="Views\VenueView\VenueView.xib" />
+    <InterfaceDefinition Include="Views\HomeView\OrgCell.xib" />
+    <InterfaceDefinition Include="Views\OrgView\OrgEventCell.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell.xib" />
+    <InterfaceDefinition Include="Views\Common\GroupHeaderCell.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\VenueCell.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">
