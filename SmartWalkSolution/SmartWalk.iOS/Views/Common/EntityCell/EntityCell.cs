@@ -114,13 +114,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     ContactViewWidthConstraint.Constant = ScreenUtil.CurrentScreenWidth;
                 }
 
-                if (ScrollView != null)
+                if (ScrollView != null && PageControl != null)
                 {
-                    // HACK: to keep a correct scroll position on rotate
-                    // http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
-                    var contentSize = ScrollView.ContentSize;
-                    contentSize.Width = ScrollView.Bounds.Size.Width;
-                    ScrollView.ContentSize = contentSize;
+                    //HACK: to fix the page position
+                    //TODO: to review EntityScrollViewDelegate.Scrolled() impl
+                    ScrollView.ContentOffset = new PointF(
+                        ScreenUtil.CurrentScreenWidth * PageControl.CurrentPage, 
+                        0);
                 }
             }
         }
