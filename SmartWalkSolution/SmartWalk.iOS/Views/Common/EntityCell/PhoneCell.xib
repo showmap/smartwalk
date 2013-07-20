@@ -62,11 +62,12 @@
 											<bytes key="NSRGB">MCAwIDAAA</bytes>
 											<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
 										</object>
-										<object class="NSFont" key="NSFont">
+										<object class="NSFont" key="NSFont" id="986249460">
 											<string key="NSName">HiraKakuProN-W3</string>
-											<double key="NSSize">28</double>
+											<double key="NSSize">21</double>
 											<int key="NSfFlags">16</int>
 										</object>
+										<reference key="NSOriginalFont" ref="986249460"/>
 										<object class="NSMutableParagraphStyle" key="NSParagraphStyle">
 											<int key="NSAlignment">2</int>
 											<nil key="NSTabStops"/>

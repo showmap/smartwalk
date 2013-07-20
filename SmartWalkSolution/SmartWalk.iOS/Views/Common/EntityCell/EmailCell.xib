@@ -62,11 +62,12 @@
 											<bytes key="NSRGB">MCAwIDAAA</bytes>
 											<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
 										</object>
-										<object class="NSFont" key="NSFont">
+										<object class="NSFont" key="NSFont" id="129896349">
 											<string key="NSName">Helvetica-Bold</string>
-											<double key="NSSize">30</double>
+											<double key="NSSize">23</double>
 											<int key="NSfFlags">16</int>
 										</object>
+										<reference key="NSOriginalFont" ref="129896349"/>
 										<object class="NSMutableParagraphStyle" key="NSParagraphStyle">
 											<int key="NSAlignment">2</int>
 											<nil key="NSTabStops"/>

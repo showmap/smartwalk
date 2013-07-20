@@ -19,19 +19,8 @@ namespace SmartWalk.iOS.Views.OrgView
 
                 result.Add(new GroupContainer(new [] { orgViewModel }));
 
-                var pastEvents = orgViewModel.Org.EventInfos
-                    .Where(ei => ei.TimeStatus < 0).ToArray();
-                if (pastEvents.Length > 0)
-                {
-                    result.Add(
-                        new GroupContainer(pastEvents) 
-                        {
-                            Key = "Past Events"
-                        });
-                }
-
                 var currentEvents = orgViewModel.Org.EventInfos
-                    .Where(ei => ei.TimeStatus == 0).ToArray();
+                    .Where(ei => ei.TimeStatus == 0).OrderBy(ei => ei.Date).ToArray();
                 if (currentEvents.Length > 0)
                 {
                     result.Add(
@@ -42,13 +31,24 @@ namespace SmartWalk.iOS.Views.OrgView
                 }
 
                 var futureEvents = orgViewModel.Org.EventInfos
-                    .Where(ei => ei.TimeStatus > 0).ToArray();
+                    .Where(ei => ei.TimeStatus > 0).OrderBy(ei => ei.Date).ToArray();
                 if (futureEvents.Length > 0)
                 {
                     result.Add(
                         new GroupContainer(futureEvents) 
                         {
                             Key = "Upcoming Events"
+                        });
+                }
+
+                var pastEvents = orgViewModel.Org.EventInfos
+                    .Where(ei => ei.TimeStatus < 0).OrderByDescending(ei => ei.Date).ToArray();
+                if (pastEvents.Length > 0)
+                {
+                    result.Add(
+                        new GroupContainer(pastEvents) 
+                        {
+                            Key = "Past Events"
                         });
                 }
 

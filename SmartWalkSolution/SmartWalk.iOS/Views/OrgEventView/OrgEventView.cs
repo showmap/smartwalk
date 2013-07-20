@@ -47,8 +47,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
             base.DidRotate(fromInterfaceOrientation);
 
             // to fix the bug: http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
-            VenuesAndShowsTableView.BeginUpdates();
-            VenuesAndShowsTableView.EndUpdates();
+            TableView.BeginUpdates();
+            TableView.EndUpdates();
         }
 
         protected override void UpdateViewTitle()

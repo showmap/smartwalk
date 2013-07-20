@@ -114,9 +114,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     ContactViewWidthConstraint.Constant = ScreenUtil.CurrentScreenWidth;
                 }
 
-                if (ScrollView != null && ScrollView.Delegate != null)
+                if (ScrollView != null)
                 {
-                    ((EntityScrollViewDelegate)ScrollView.Delegate).ScrollToCurrentPage();
+                    // HACK: to keep a correct scroll position on rotate
+                    // http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
+                    var contentSize = ScrollView.ContentSize;
+                    contentSize.Width = ScrollView.Bounds.Size.Width;
+                    ScrollView.ContentSize = contentSize;
                 }
             }
         }
