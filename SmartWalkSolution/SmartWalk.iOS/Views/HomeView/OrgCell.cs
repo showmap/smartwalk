@@ -35,6 +35,7 @@ namespace SmartWalk.iOS.Views.HomeView
         protected override bool Initialize()
         {
             var result = InitializeImageView();
+            result = result && InitializeBackground();
 
             return result;
         }
@@ -48,6 +49,19 @@ namespace SmartWalk.iOS.Views.HomeView
                 OrgImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
                 OrgImageView.Layer.BorderWidth = 1;
                 OrgImageView.Layer.CornerRadius = 5;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool InitializeBackground()
+        {
+            if (BackgroudPanel != null)
+            {
+                BackgroudPanel.Layer.BorderColor = UIColor.Gray.CGColor;
+                BackgroudPanel.Layer.CornerRadius = 8;
 
                 return true;
             }

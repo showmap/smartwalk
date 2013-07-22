@@ -8,9 +8,12 @@ using MonoTouch.Foundation;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
-    [Register ("OrgCell")]
+	[Register ("OrgCell")]
 	partial class OrgCell
 	{
+		[Outlet]
+		MonoTouch.UIKit.UIView BackgroudPanel { get; set; }
+
 		[Outlet]
 		MonoTouch.UIKit.UIImageView OrgImageView { get; set; }
 
@@ -27,6 +30,11 @@ namespace SmartWalk.iOS.Views.HomeView
 			if (OrgNameLabel != null) {
 				OrgNameLabel.Dispose ();
 				OrgNameLabel = null;
+			}
+
+			if (BackgroudPanel != null) {
+				BackgroudPanel.Dispose ();
+				BackgroudPanel = null;
 			}
 		}
 	}
