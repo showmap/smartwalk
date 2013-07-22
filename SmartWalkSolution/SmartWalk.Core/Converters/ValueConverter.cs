@@ -1,18 +1,25 @@
 using System;
-using System.Globalization;
 using Cirrious.CrossCore.Converters;
-using SmartWalk.Core.Model;
+using System.Globalization;
 
 namespace SmartWalk.Core.Converters
 {
-    public class AddressesConverter : IMvxValueConverter
+    public class ValueConverter<TInput> : IMvxValueConverter 
+        where TInput : class
     {
+        private readonly Func<TInput, object> _convertFunc;
+
+        public ValueConverter(Func<TInput, object> convertFunc)
+        {
+            _convertFunc = convertFunc;
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var addressses = value as AddressInfo[];
-            if (addressses != null && addressses.Length > 0)
+            var t = value as TInput;
+            if (t != null || value == null)
             {
-                return addressses[0].Address;
+                return _convertFunc(t);
             }
 
             return null;

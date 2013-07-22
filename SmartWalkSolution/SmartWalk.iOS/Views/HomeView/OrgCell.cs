@@ -1,11 +1,9 @@
 using System;
-using Cirrious.MvvmCross.Binding;
-using Cirrious.MvvmCross.Binding.Binders;
+using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.HomeView
@@ -15,42 +13,23 @@ namespace SmartWalk.iOS.Views.HomeView
         public static readonly UINib Nib = UINib.FromName("OrgCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgCell");
 
-        private static readonly MvxBindingDescription[] Bindings = new [] {
-            new MvxBindingDescription(
-                Reflect<OrgCell>.GetProperty(p => p.NameText).Name,
-                Reflect<EntityInfo>.GetProperty(p => p.Name).Name,
-                null, null, null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<OrgCell>.GetProperty(p => p.ImageUrl).Name,
-                Reflect<EntityInfo>.GetProperty(p => p.Logo).Name,
-                null, null, null, MvxBindingMode.OneWay)
-        };
-
         private MvxImageViewLoader _imageHelper;
 
-        public OrgCell() : base(Bindings)
+        public OrgCell(IntPtr handle) : base(handle)
         {
-            InitialiseImageHelper();      
-        }
+            _imageHelper = new MvxImageViewLoader(() => OrgImageView);
 
-        public OrgCell(IntPtr handle) : base (Bindings, handle)
-        {
-            InitialiseImageHelper();
+            this.DelayBind(() => {
+                var set = this.CreateBindingSet<OrgCell, EntityInfo>();
+                set.Bind(OrgNameLabel).To(info => info.Name);
+                set.Bind(_imageHelper).To(info => info.Logo);
+                set.Apply();
+            });
         }
 
         public static OrgCell Create()
         {
             return (OrgCell)Nib.Instantiate(null, null)[0];
-        }
-
-        public string NameText {
-            get { return OrgNameLabel.Text; }
-            set { OrgNameLabel.Text = value; }
-        }
-
-        public string ImageUrl {
-            get { return _imageHelper.ImageUrl; }
-            set { _imageHelper.ImageUrl = value; }
         }
 
         protected override bool Initialize()
@@ -74,11 +53,6 @@ namespace SmartWalk.iOS.Views.HomeView
             }
 
             return false;
-        }
-
-        private void InitialiseImageHelper()
-        {
-            _imageHelper = new MvxImageViewLoader(() => OrgImageView);
         }
     }
 }

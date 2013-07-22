@@ -1,9 +1,10 @@
 using System;
+using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
+using SmartWalk.Core.Converters;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -12,31 +13,19 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("PhoneCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("PhoneCell");
 
-        private static readonly string Bindings = String.Format(
-            "{0} {1}; {2} {3};",
-            Reflect<PhoneCell>.GetProperty(p => p.NameText).Name,
-            ReflectExtensions.GetPath<ContactPhoneInfo>(p => p.Name),
-            Reflect<PhoneCell>.GetProperty(p => p.PhoneText).Name,
-            ReflectExtensions.GetPath<ContactPhoneInfo>(p => p.Phone));
-
-        public PhoneCell(IntPtr handle) : base(Bindings, handle)
+        public PhoneCell(IntPtr handle) : base(handle)
         {
             Layer.BorderColor = UIColor.Gray.CGColor;
             Layer.CornerRadius = 8;
-        }
 
-        public string NameText {
-            get { return ContactNameLabel.Text; }
-            set
-            { 
-                ContactNameLabel.Text = value; 
-                NameHeightConstraint.Constant = value != null ? 20 : 0;
-            }
-        }
-
-        public string PhoneText {
-            get { return PhoneNumberLabel.Text; }
-            set { PhoneNumberLabel.Text = value; }
+            this.DelayBind(() => {
+                var set = this.CreateBindingSet<PhoneCell, ContactPhoneInfo>();
+                set.Bind(ContactNameLabel).To(info => info.Name);
+                set.Bind(PhoneNumberLabel).To(info => info.Phone);
+                set.Bind(NameHeightConstraint).For(p => p.Constant).To(info => info.Name)
+                    .WithConversion(new ValueConverter<string>(s => s != null ? 20 : 0), null);
+                set.Apply();
+            });
         }
 
         public static PhoneCell Create()

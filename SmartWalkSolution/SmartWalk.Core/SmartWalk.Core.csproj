@@ -75,11 +75,11 @@
     <Compile Include="ViewModels\OrgEventViewModel.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Model\AddressInfo.cs" />
-    <Compile Include="Converters\AddressesConverter.cs" />
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\DataSource.cs" />
     <Compile Include="ViewModels\VenueViewModel.cs" />
     <Compile Include="ViewModels\IRefreshableViewModel.cs" />
     <Compile Include="Model\ContactWebSiteInfo.cs" />
+    <Compile Include="Converters\ValueConverter.cs" />
   </ItemGroup>
 </Project>

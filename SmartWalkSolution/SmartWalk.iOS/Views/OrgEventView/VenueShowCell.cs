@@ -1,63 +1,32 @@
 using System;
-using Cirrious.MvvmCross.Binding;
-using Cirrious.MvvmCross.Binding.Binders;
-using Cirrious.MvvmCross.Binding.Touch.Views;
+using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Converters;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class VenueShowCell : MvxTableViewCell
+    public partial class VenueShowCell : TableCellBase
     {
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
-        private static readonly MvxBindingDescription[] Bindings = new [] {
-            new MvxBindingDescription(
-                Reflect<VenueShowCell>.GetProperty(p => p.StartTimeText).Name,
-                Reflect<VenueShow>.GetProperty(p => p.Start).Name, 
-                new DateTimeFormatConverter(), "t", 
-                null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<VenueShowCell>.GetProperty(p => p.EndTimeText).Name,
-                Reflect<VenueShow>.GetProperty(p => p.End).Name, 
-                new DateTimeFormatConverter(), "t", 
-                null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<VenueShowCell>.GetProperty(p => p.DescriptionText).Name,
-                Reflect<VenueShow>.GetProperty(p => p.Description).Name, 
-                null, null, null, MvxBindingMode.OneWay)
-        };
-
-        public VenueShowCell() : base(Bindings)
-        {    
-        }
-
-        public VenueShowCell(IntPtr handle) : base(Bindings, handle)
+        public VenueShowCell(IntPtr handle) : base(handle)
         {
+            this.DelayBind(() => {
+                var set = this.CreateBindingSet<VenueShowCell, VenueShow>();
+                set.Bind(StartTimeLabel).To(vs => vs.Start).WithConversion(new DateTimeFormatConverter(), "t");
+                set.Bind(EndTimeLabel).To(vs => vs.End).WithConversion(new DateTimeFormatConverter(), "t");
+                set.Bind(DescriptionLabel).To(vs => vs.Description);
+                set.Apply();
+            });
         }
 
         public static VenueShowCell Create()
         {
             return (VenueShowCell)Nib.Instantiate(null, null)[0];
-        }
-
-        public string StartTimeText {
-            get { return StartTimeLabel.Text; }
-            set { StartTimeLabel.Text = value; }
-        }
-
-        public string EndTimeText {
-            get { return EndTimeLabel.Text; }
-            set { EndTimeLabel.Text = value; }
-        }
-
-        public string DescriptionText {
-            get { return DescriptionLabel.Text; }
-            set { DescriptionLabel.Text = value; }
         }
     }
 }

@@ -1,14 +1,12 @@
 using System;
 using System.Windows.Input;
-using Cirrious.MvvmCross.Binding;
-using Cirrious.MvvmCross.Binding.Binders;
+using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Converters;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.Core.Converters;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -17,62 +15,29 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
 
-        private static readonly MvxBindingDescription[] Bindings = new [] {
-            new MvxBindingDescription(
-                Reflect<VenueCell>.GetProperty(p => p.ImageUrl).Name,
-                ReflectExtensions.GetPath<Venue, EntityInfo>(p => p.Info, p => p.Logo), 
-                null, null, null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<VenueCell>.GetProperty(p => p.NumberText).Name,
-                Reflect<Venue>.GetProperty(p => p.Number).Name, 
-                null, null, null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<VenueCell>.GetProperty(p => p.NameText).Name,
-                ReflectExtensions.GetPath<Venue, EntityInfo>(p => p.Info, p => p.Name), 
-                null, null, null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<VenueCell>.GetProperty(p => p.AddressText).Name,
-                ReflectExtensions.GetPath<Venue, EntityInfo>(p => p.Info, p => p.Addresses), 
-                new AddressesConverter(), null, null, MvxBindingMode.OneWay)
-        };
-
         private MvxImageViewLoader _imageHelper;
 
-        public VenueCell() : base(Bindings)
+        public VenueCell(IntPtr handle) : base(handle)
         {
-            InitializeGesture();
-            InitializeImageHelper();
-        }
+            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
 
-        public VenueCell(IntPtr handle) : base(Bindings, handle)
-        {
+            this.DelayBind(() => {
+                var set = this.CreateBindingSet<VenueCell, Venue>();
+                set.Bind(NumberLabel).To(v => v.Number);
+                set.Bind(_imageHelper).To(v => v.Info.Logo);
+                set.Bind(NameLabel).To(v => v.Info.Name);
+                set.Bind(AddressLabel).To(v => v.Info.Addresses)
+                    .WithConversion(new ValueConverter<AddressInfo[]>(
+                        adds => adds != null && adds.Length > 0 ? adds[0].Address : null), null);
+                set.Apply();
+            });
+
             InitializeGesture();
-            InitializeImageHelper();
         }
 
         public static VenueCell Create()
         {
             return (VenueCell)Nib.Instantiate(null, null)[0];
-        }
-
-        public string NumberText {
-            get { return NumberLabel.Text; }
-            set { NumberLabel.Text = value; }
-        }
-
-        public string NameText {
-            get { return NameLabel.Text; }
-            set { NameLabel.Text = value; }
-        }
-
-        public string AddressText {
-            get { return AddressLabel.Text; }
-            set { AddressLabel.Text = value; }
-        }
-
-        public string ImageUrl {
-            get { return _imageHelper.ImageUrl; }
-            set { _imageHelper.ImageUrl = value; }
         }
 
         public ICommand NavigateVenueCommand { get; set; }
@@ -131,11 +96,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
 
             return false;
-        }
-
-        private void InitializeImageHelper()
-        {
-            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
         }
 
         private bool InitializeImageView()

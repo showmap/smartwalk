@@ -1,6 +1,5 @@
-using System;
-using Cirrious.MvvmCross.Binding.Binders;
 using Cirrious.MvvmCross.Binding.Touch.Views;
+using System;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -8,13 +7,7 @@ namespace SmartWalk.iOS.Views.Common
     {
         private bool _isInitialized;
 
-        protected TableCellBase(MvxBindingDescription[] bindings) : base(bindings)
-        {    
-        }
-
-        protected TableCellBase(MvxBindingDescription[] bindings, IntPtr handle) : base(bindings, handle)
-        {
-        }
+        protected TableCellBase(IntPtr handle) : base(handle) {}
 
         public override void LayoutSubviews()
         {

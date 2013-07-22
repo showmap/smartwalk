@@ -1,15 +1,13 @@
 using System;
 using System.Drawing;
-using Cirrious.MvvmCross.Binding;
-using Cirrious.MvvmCross.Binding.Binders;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
+using SmartWalk.Core.Converters;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -18,35 +16,27 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
 
-        private static readonly MvxBindingDescription[] Bindings = new [] {
-            new MvxBindingDescription(
-                Reflect<EntityCell>.GetProperty(p => p.NameText).Name,
-                ReflectExtensions.GetPath<EntityViewModel, Entity, EntityInfo>(p => p.Entity, p => p.Info, p => p.Name), 
-                    null, null, null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<EntityCell>.GetProperty(p => p.DescriptionText).Name,
-                ReflectExtensions.GetPath<EntityViewModel, Entity>(p => p.Entity, p => p.Description), 
-                    null, null, null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<EntityCell>.GetProperty(p => p.ImageUrl).Name,
-                ReflectExtensions.GetPath<EntityViewModel, Entity, EntityInfo>(p => p.Entity, p => p.Info, p => p.Logo), 
-                    null, null, null, MvxBindingMode.OneWay),
-            new MvxBindingDescription(
-                Reflect<EntityCell>.GetProperty(p => p.Info).Name,
-                ReflectExtensions.GetPath<EntityViewModel, Entity>(p => p.Entity, p => p.Info), 
-                null, null, null, MvxBindingMode.OneWay),
-        };
-
         private MvxImageViewLoader _imageHelper;
 
-        public EntityCell() : base(Bindings)
+        public EntityCell(IntPtr handle) : base(handle)
         {
-            InitializeImageHelper();
-        }
+            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
 
-        public EntityCell(IntPtr handle) : base(Bindings, handle)
-        {
-            InitializeImageHelper();
+            this.DelayBind(() => {
+                var set = this.CreateBindingSet<EntityCell, EntityViewModel>();
+                set.Bind(NameLabel).To(vm => vm.Entity.Info.Name);
+                set.Bind(DescriptionLabel).To(vm => vm.Entity.Description);
+                set.Bind(_imageHelper).To(vm => vm.Entity.Info.Logo);
+
+                set.Bind(ScrollViewHeightConstraint).For(p => p.Constant).To(vm => vm.Entity.Info.Logo)
+                    .WithConversion(new ValueConverter<string>(s => s != null ? 240 : 0), null);
+
+                set.Bind(PageControl).For(p => p.Hidden).To(vm => vm.Entity.Info)
+                    .WithConversion(new ValueConverter<EntityInfo>(
+                        info => info != null ? !IsScrollViewVisible(info) : false), null);
+
+                set.Apply();
+            });
         }
 
         public static EntityCell Create()
@@ -57,45 +47,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public EntityViewModel ViewModel
         {
             get { return (EntityViewModel)base.DataContext; }
-        }
-
-        public string NameText {
-            get { return NameLabel.Text; }
-            set { NameLabel.Text = value; }
-        }
-
-        public string DescriptionText {
-            get { return DescriptionLabel.Text; }
-            set
-            {
-                DescriptionLabel.Text = value;
-                DescriptionLabel.SizeToFit();
-            }
-        }
-
-        public string ImageUrl {
-            get { return _imageHelper.ImageUrl; }
-            set
-            { 
-                if (value != null)
-                {
-                    ScrollViewHeightConstraint.Constant = 240f;
-                    _imageHelper.ImageUrl = value;  // UIImage.FromFile(value);
-                }
-                else
-                {
-                    ScrollViewHeightConstraint.Constant = 0f;
-                }
-            }
-        }
-
-        public EntityInfo Info
-        {
-            get { return null; }
-            set 
-            {
-                PageControl.Hidden = value != null ? !IsScrollViewVisible(value) : false;
-            }
         }
 
         public override RectangleF Frame
@@ -176,12 +127,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             result = result && InitializeScrollView();
             result = result && InitializeContactCollectionView();
             return result;
-        }
-
-        private void InitializeImageHelper()
-        {
-            _imageHelper = new MvxImageViewLoader(
-                () => LogoImageView);
         }
 
         private bool InitializeImageView()
