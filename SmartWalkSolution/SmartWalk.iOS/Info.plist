@@ -11,9 +11,11 @@
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>SmartWalk</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
 	<key>MinimumOSVersion</key>
 	<string>6.1</string>
+	<key>CFBundleIdentifier</key>
+	<string>me.smartwalk.ios</string>
+	<key>CFBundleVersion</key>
+	<string>0.1</string>
 </dict>
 </plist>

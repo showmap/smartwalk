@@ -32,6 +32,8 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
+    <MtouchI18n />
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,10 +63,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <BuildIpa>true</BuildIpa>
-    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignKey>iPhone Developer: Ievgen Tiutiunnyk (J5QYB8CA9R)</CodesignKey>
     <ConsolePause>false</ConsolePause>
-    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
+    <CodesignProvision>242C2851-2A33-416F-B532-C8F9BF69DE0D</CodesignProvision>
     <IpaPackageName>me.smartwalk.ios</IpaPackageName>
+    <MtouchI18n />
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchExtraArgs>-nosymbolstrip -nostrip -cxx -gcc_flags "-lgcc_eh -L${ProjectDir}/../Binaries/TestFlight/ -ltestflight -ObjC"</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <Optimize>true</Optimize>
@@ -74,6 +79,8 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignProvision>Automatic:AppStore</CodesignProvision>
+    <MtouchI18n />
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -111,6 +118,9 @@
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File">
       <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
+    </Reference>
+    <Reference Include="monotouch-testflight">
+      <HintPath>..\Binaries\TestFlight\monotouch-testflight.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -211,9 +221,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <BundleResource Include="Resources\Default-568h%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Core\SmartWalk.Core.csproj">
       <Project>{A9012546-5146-407B-BDDB-B6A4FCABCB4A}</Project>
       <Name>SmartWalk.Core</Name>
@@ -249,12 +256,6 @@
     </Content>
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\index.xml">
       <Link>TempXML\Local\index.xml</Link>
-    </Content>
-    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\logo.jpg">
-      <Link>TempXML\Local\mapp\logo.jpg</Link>
-    </Content>
-    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\nbff\logo.png">
-      <Link>TempXML\Local\nbff\logo.png</Link>
     </Content>
   </ItemGroup>
 </Project>
