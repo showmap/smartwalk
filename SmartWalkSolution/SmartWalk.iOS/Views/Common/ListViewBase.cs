@@ -1,23 +1,34 @@
 using System;
 using System.ComponentModel;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.UIKit;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class TableViewBase : MvxViewController
+    public abstract class ListViewBase : MvxViewController
     {
         private UIRefreshControl _refreshControl;
+        private ListViewDecorator _listView;
 
         public new IRefreshableViewModel ViewModel
         {
             get { return (IRefreshableViewModel)base.ViewModel; }
-            set { base.ViewModel = value; }
         }
 
-        public abstract UITableView TableView { get; }
+        public ListViewDecorator ListView 
+        { 
+            get
+            {
+                if (_listView == null)
+                {
+                    _listView = GetListView();
+                }
+
+                return _listView;
+            }
+        }
 
         public override void ViewDidLoad()
         {
@@ -28,19 +39,21 @@ namespace SmartWalk.iOS.Views.Common
 
             UpdateViewTitle();
 
-            InitializeTableView();
+            InitializeListView();
         }
+
+        protected abstract ListViewDecorator GetListView();
 
         protected virtual void UpdateViewTitle()
         {
         }
 
-        protected virtual void InitializeTableView()
+        protected virtual void InitializeListView()
         {
-            var tableSource = CreateTableViewSource();
+            var source = CreateListViewSource();
 
-            TableView.Source = tableSource;
-            TableView.ReloadData();
+            ListView.Source = source;
+            ListView.ReloadData();
 
             _refreshControl = new UIRefreshControl
                 {
@@ -54,10 +67,10 @@ namespace SmartWalk.iOS.Views.Common
                     }
                 };
 
-            TableView.AddSubview(_refreshControl);
+            ListView.AddSubview(_refreshControl);
         }
 
-        protected abstract MvxTableViewSource CreateTableViewSource();
+        protected abstract object CreateListViewSource();
 
         protected virtual void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

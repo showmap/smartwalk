@@ -12,9 +12,6 @@ namespace SmartWalk.iOS.Views.HomeView
 	partial class OrgCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView BackgroudPanel { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UIImageView OrgImageView { get; set; }
 
 		[Outlet]
@@ -30,11 +27,6 @@ namespace SmartWalk.iOS.Views.HomeView
 			if (OrgNameLabel != null) {
 				OrgNameLabel.Dispose ();
 				OrgNameLabel = null;
-			}
-
-			if (BackgroudPanel != null) {
-				BackgroudPanel.Dispose ();
-				BackgroudPanel = null;
 			}
 		}
 	}

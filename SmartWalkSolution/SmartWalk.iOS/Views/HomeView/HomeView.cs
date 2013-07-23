@@ -1,20 +1,19 @@
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.UIKit;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Controls;
+using System.Drawing;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
-    public partial class HomeView : TableViewBase
+    public partial class HomeView : ListViewBase
     {
         public new HomeViewModel ViewModel
         {
-            get { return (HomeViewModel) base.ViewModel; }
-            set { base.ViewModel = value; }
+            get { return (HomeViewModel)base.ViewModel; }
         }
-
-        public override UITableView TableView { get { return OrgTableView; } }
 
         public override void ViewDidLoad()
         {
@@ -22,6 +21,20 @@ namespace SmartWalk.iOS.Views.HomeView
 
             NavigationController.NavigationBar.BarStyle = UIBarStyle.Black;
             NavigationController.NavigationBar.TintColor = UIColor.Gray;
+
+            SetCellWidth();
+        }
+
+        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            base.DidRotate(fromInterfaceOrientation);
+
+            SetCellWidth();
+        }
+
+        protected override ListViewDecorator GetListView()
+        { 
+            return new ListViewDecorator(OrgCollectionView);  
         }
 
         protected override void UpdateViewTitle()
@@ -29,13 +42,35 @@ namespace SmartWalk.iOS.Views.HomeView
             NavigationItem.Title = ViewModel.Location;
         }
 
-        protected override MvxTableViewSource CreateTableViewSource()
+        protected override void InitializeListView()
         {
-            var tableSource = new HomeTableSource(OrgTableView, ViewModel);
+            base.InitializeListView();
 
-            this.CreateBinding(tableSource).To((HomeViewModel vm) => vm.OrgInfos).Apply();
+            OrgCollectionView.Delegate = new HomeCollectionDelegate(
+                ViewModel, 
+                (HomeCollectionSource)OrgCollectionView.Source);
+        }
 
-            return tableSource;
+        protected override object CreateListViewSource()
+        {
+            var collectionSource = new HomeCollectionSource(OrgCollectionView);
+
+            this.CreateBinding(collectionSource).To((HomeViewModel vm) => vm.OrgInfos).Apply();
+
+            return collectionSource;
+        }
+
+        private void SetCellWidth()
+        {
+            var flowLayout = (UICollectionViewFlowLayout)OrgCollectionView.CollectionViewLayout;
+            var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
+
+            var cellWith = (ScreenUtil.CurrentScreenWidth - 
+                            flowLayout.SectionInset.Left -
+                            flowLayout.SectionInset.Right - 
+                            flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
+
+            flowLayout.ItemSize = new SizeF(cellWith, 80);
         }
     }
 }

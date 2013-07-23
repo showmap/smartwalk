@@ -1,22 +1,18 @@
 using System.ComponentModel;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
-    public partial class OrgView : TableViewBase
+    public partial class OrgView : ListViewBase
     {
         public new OrgViewModel ViewModel
         {
             get { return (OrgViewModel)base.ViewModel; }
-            set { base.ViewModel = value; }
         }
-
-        public override UITableView TableView { get { return OrgEventsTableView; } }
 
         protected override void UpdateViewTitle()
         {
@@ -26,7 +22,12 @@ namespace SmartWalk.iOS.Views.OrgView
             }
         }
 
-        protected override MvxTableViewSource CreateTableViewSource()
+        protected override ListViewDecorator GetListView()
+        { 
+            return new ListViewDecorator(OrgEventsTableView);  
+        }
+
+        protected override object CreateListViewSource()
         {
             var tableSource = new OrgTableSource(OrgEventsTableView, ViewModel);
 

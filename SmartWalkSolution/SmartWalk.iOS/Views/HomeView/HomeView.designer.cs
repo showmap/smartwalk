@@ -12,13 +12,13 @@ namespace SmartWalk.iOS.Views.HomeView
 	partial class HomeView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UITableView OrgTableView { get; set; }
+		MonoTouch.UIKit.UICollectionView OrgCollectionView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (OrgTableView != null) {
-				OrgTableView.Dispose ();
-				OrgTableView = null;
+			if (OrgCollectionView != null) {
+				OrgCollectionView.Dispose ();
+				OrgCollectionView = null;
 			}
 		}
 	}

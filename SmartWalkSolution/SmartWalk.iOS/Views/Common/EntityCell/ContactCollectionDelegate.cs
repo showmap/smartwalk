@@ -11,7 +11,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             cell.ContentView.BackgroundColor = UIColor.Gray;
         }
 
-        public override void ItemUnhighlighted (UICollectionView collectionView, NSIndexPath indexPath)
+        public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = collectionView.CellForItem(indexPath);
             cell.ContentView.BackgroundColor = UIColor.FromRGB(233, 233, 233);

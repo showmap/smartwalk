@@ -3,11 +3,11 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class TableCellBase : MvxTableViewCell
+    public abstract class CollectionCellBase : MvxCollectionViewCell
     {
         private bool _isInitialized;
 
-        protected TableCellBase(IntPtr handle) : base(handle) {}
+        protected CollectionCellBase(IntPtr handle) : base(handle) {}
 
         public override void LayoutSubviews()
         {

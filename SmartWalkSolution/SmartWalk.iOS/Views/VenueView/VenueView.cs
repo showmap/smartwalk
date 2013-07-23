@@ -1,22 +1,18 @@
 using System.ComponentModel;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.VenueView
 {
-    public partial class VenueView : TableViewBase
+    public partial class VenueView : ListViewBase
     {
         public new VenueViewModel ViewModel
         {
             get { return (VenueViewModel)base.ViewModel; }
-            set { base.ViewModel = value; }
         }
-
-        public override UITableView TableView { get { return VenueShowsTableView; } }
 
         protected override void UpdateViewTitle()
         {
@@ -26,7 +22,12 @@ namespace SmartWalk.iOS.Views.VenueView
             }
         }
 
-        protected override MvxTableViewSource CreateTableViewSource()
+        protected override ListViewDecorator GetListView()
+        { 
+            return new ListViewDecorator(VenueShowsTableView);  
+        }
+
+        protected override object CreateListViewSource()
         {
             var tableSource = new VenueTableSource(VenueShowsTableView, ViewModel);
 

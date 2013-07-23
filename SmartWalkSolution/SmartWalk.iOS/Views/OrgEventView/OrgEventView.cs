@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -10,10 +9,11 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class OrgEventView : TableViewBase
+    public partial class OrgEventView : ListViewBase
     {
         private UIBarButtonItem _modeButton;
         private OrgEvent _currenmMapViewtOrgEvent;
@@ -21,10 +21,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public new OrgEventViewModel ViewModel
         {
             get { return (OrgEventViewModel)base.ViewModel; }
-            set { base.ViewModel = value; }
         }
-
-        public override UITableView TableView { get { return VenuesAndShowsTableView; } }
 
         public override void ViewDidLoad()
         {
@@ -47,8 +44,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
             base.DidRotate(fromInterfaceOrientation);
 
             // to fix the bug: http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
-            TableView.BeginUpdates();
-            TableView.EndUpdates();
+            VenuesAndShowsTableView.BeginUpdates();
+            VenuesAndShowsTableView.EndUpdates();
+        }
+
+        protected override ListViewDecorator GetListView()
+        { 
+            return new ListViewDecorator(VenuesAndShowsTableView);  
         }
 
         protected override void UpdateViewTitle()
@@ -59,7 +61,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
-        protected override MvxTableViewSource CreateTableViewSource()
+        protected override object CreateListViewSource()
         {
             var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, ViewModel);
 

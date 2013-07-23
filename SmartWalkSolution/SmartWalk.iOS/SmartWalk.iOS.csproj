@@ -56,6 +56,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
+    <BuildIpa>true</BuildIpa>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <Optimize>true</Optimize>
@@ -138,6 +139,7 @@
     <Folder Include="Views\OrgEventView\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Common\EntityCell\" />
+    <Folder Include="Controls\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -148,7 +150,6 @@
     <Compile Include="Setup.cs" />
     <Compile Include="Utils\MapUtil.cs" />
     <Compile Include="Services\CacheService.cs" />
-    <Compile Include="Views\HomeView\HomeTableSource.cs" />
     <Compile Include="Views\HomeView\HomeView.cs" />
     <Compile Include="Views\HomeView\HomeView.designer.cs">
       <DependentUpon>HomeView.cs</DependentUpon>
@@ -183,7 +184,6 @@
       <DependentUpon>GroupHeaderCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\TableCellBase.cs" />
-    <Compile Include="Views\Common\TableViewBase.cs" />
     <Compile Include="Views\Common\ViewsFactory.cs" />
     <Compile Include="Views\Common\GroupContainer.cs" />
     <Compile Include="Views\OrgEventView\VenueCell.cs" />
@@ -217,6 +217,11 @@
     <Compile Include="Views\Common\EntityCell\ContactCollectionSource.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionSourceConverter.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionDelegate.cs" />
+    <Compile Include="Controls\ListViewDecorator.cs" />
+    <Compile Include="Views\Common\ListViewBase.cs" />
+    <Compile Include="Views\HomeView\HomeCollectionSource.cs" />
+    <Compile Include="Views\Common\CollectionCellBase.cs" />
+    <Compile Include="Views\HomeView\HomeCollectionDelegate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

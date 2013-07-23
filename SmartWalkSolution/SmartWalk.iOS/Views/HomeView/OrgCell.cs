@@ -8,7 +8,7 @@ using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
-    public partial class OrgCell : TableCellBase
+    public partial class OrgCell : CollectionCellBase
     {
         public static readonly UINib Nib = UINib.FromName("OrgCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgCell");
@@ -17,6 +17,10 @@ namespace SmartWalk.iOS.Views.HomeView
 
         public OrgCell(IntPtr handle) : base(handle)
         {
+            Layer.BorderColor = UIColor.Gray.CGColor;
+            Layer.BorderWidth = 1;
+            Layer.CornerRadius = 8;
+
             _imageHelper = new MvxImageViewLoader(() => OrgImageView);
 
             this.DelayBind(() => {
@@ -35,8 +39,6 @@ namespace SmartWalk.iOS.Views.HomeView
         protected override bool Initialize()
         {
             var result = InitializeImageView();
-            result = result && InitializeBackground();
-
             return result;
         }
 
@@ -49,19 +51,6 @@ namespace SmartWalk.iOS.Views.HomeView
                 OrgImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
                 OrgImageView.Layer.BorderWidth = 1;
                 OrgImageView.Layer.CornerRadius = 5;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool InitializeBackground()
-        {
-            if (BackgroudPanel != null)
-            {
-                BackgroudPanel.Layer.BorderColor = UIColor.Gray.CGColor;
-                BackgroudPanel.Layer.CornerRadius = 8;
 
                 return true;
             }
