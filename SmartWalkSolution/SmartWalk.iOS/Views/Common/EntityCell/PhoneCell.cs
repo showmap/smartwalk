@@ -16,6 +16,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public PhoneCell(IntPtr handle) : base(handle)
         {
             Layer.BorderColor = UIColor.Gray.CGColor;
+            Layer.BorderWidth = 1;
             Layer.CornerRadius = 8;
 
             this.DelayBind(() => {

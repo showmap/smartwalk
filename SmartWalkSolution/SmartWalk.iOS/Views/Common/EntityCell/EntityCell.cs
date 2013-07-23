@@ -73,6 +73,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                         ScreenUtil.CurrentScreenWidth * PageControl.CurrentPage, 
                         0);
                 }
+
+                if (ContactCollectionView != null)
+                {
+                    SetCollectionViewCellWidth();
+                }
             }
         }
 
@@ -204,6 +209,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (ContactCollectionView != null)
             {
+                SetCollectionViewCellWidth();
+
                 if (ContactCollectionView.Source == null)
                 {
                     var collectionSource = new ContactCollectionSource(ContactCollectionView);
@@ -228,6 +235,21 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             PageControl.CurrentPage = PageControl.CurrentPage == 0 ? 1 : 0;
             ((EntityScrollViewDelegate)ScrollView.Delegate).ScrollToCurrentPage();
+        }
+
+        private void SetCollectionViewCellWidth()
+        {
+            var flowLayout = (UICollectionViewFlowLayout)ContactCollectionView.CollectionViewLayout;
+            var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
+
+            var cellWith = (ScreenUtil.CurrentScreenWidth - 
+                            CollectionViewLeftConstraint.Constant -
+                            Math.Abs(CollectionViewRightConstraint.Constant) -
+                            flowLayout.SectionInset.Left -
+                            flowLayout.SectionInset.Right - 
+                            flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
+
+            flowLayout.ItemSize = new SizeF(cellWith, 40);
         }
     }
 }

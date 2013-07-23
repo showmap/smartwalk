@@ -9,12 +9,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             var cell = collectionView.CellForItem(indexPath);
             cell.ContentView.BackgroundColor = UIColor.Gray;
+            cell.ContentView.Layer.CornerRadius = 8;
         }
 
         public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = UIColor.FromRGB(233, 233, 233);
+            cell.ContentView.BackgroundColor = null;
         }
     }
 }
