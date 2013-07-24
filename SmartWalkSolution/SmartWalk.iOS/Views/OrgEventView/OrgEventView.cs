@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
     public partial class OrgEventView : ListViewBase
     {
         private UIBarButtonItem _modeButton;
-        private OrgEvent _currenmMapViewtOrgEvent;
+        private OrgEvent _currentMapViewOrgEvent;
 
         public new OrgEventViewModel ViewModel
         {
@@ -35,8 +35,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
             VenuesMapView.Delegate = new OrgEventMapDelegate(ViewModel);
 
             InitializeToolBar();
+            InitializeGestures();
 
-            UpdateViewState();
+            UpdateViewState(false);
         }
 
         public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
@@ -74,7 +75,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
-                InitializeMapView();
+                if (ViewModel.Mode == OrgEventViewMode.Map)
+                {
+                    InitializeMapView();
+                }
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
@@ -106,29 +110,46 @@ namespace SmartWalk.iOS.Views.OrgEventView
             NavigationItem.SetRightBarButtonItem(_modeButton, true);
         }
 
+        private void InitializeGestures()
+        {
+            var swipeLeft = new UISwipeGestureRecognizer(rec => 
+                {
+                    if (ViewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.Map))
+                    {
+                        ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.Map);
+                    }
+                });
+
+            swipeLeft.Direction = UISwipeGestureRecognizerDirection.Left;
+            TablePanel.AddGestureRecognizer(swipeLeft);
+        }
+
         private void InitializeMapView()
         {
             if (ViewModel.OrgEvent != null &&
                 ViewModel.OrgEvent.Venues != null)
             {
-                if (_currenmMapViewtOrgEvent != ViewModel.OrgEvent)
+                if (_currentMapViewOrgEvent != ViewModel.OrgEvent)
                 {
+                    VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
+
                     var annotations = ViewModel.OrgEvent.Venues
-                    .SelectMany(v => v.Info.Addresses
-                        .Select(a => new VenueAnnotation(v, a))).ToArray();
+                        .SelectMany(v => v.Info.Addresses
+                            .Select(a => new VenueAnnotation(v, a))).ToArray();
                     var coordinates = annotations
-                    .Select(va => va.Coordinate)
-                    .Where(c => c.Latitude != 0 && c.Longitude != 0).ToArray();
+                        .Select(va => va.Coordinate)
+                        .Where(c => c.Latitude != 0 && c.Longitude != 0).ToArray();
 
                     VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
                     VenuesMapView.AddAnnotations(annotations);
 
-                    _currenmMapViewtOrgEvent = ViewModel.OrgEvent;
+                    _currentMapViewOrgEvent = ViewModel.OrgEvent;
                 }
             }
             else
             {
                 VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
+                _currentMapViewOrgEvent = null;
             }
         }
 
@@ -154,20 +175,59 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
        
-        private void UpdateViewState()
+        private void UpdateViewState(bool isAnimated = true)
         {
             if (ViewModel.Mode == OrgEventViewMode.Map)
             {
-                InitializeMapView();
-                TablePanel.Hidden = true;
-                MapPanel.Hidden = false;
                 _modeButton.Title = "List";
+
+                var completeHandler = new NSAction(() => 
+                    {
+                        TablePanel.Hidden = true;
+                        MapPanel.Hidden = false;
+
+                        InitializeMapView();
+                    });
+
+                if (isAnimated)
+                {
+                    UIView.Transition(
+                        TablePanel, 
+                        MapPanel, 
+                        0.8, 
+                        UIViewAnimationOptions.TransitionFlipFromRight | 
+                        UIViewAnimationOptions.ShowHideTransitionViews, 
+                        completeHandler);
+                }
+                else
+                {
+                    completeHandler();
+                }
             }
             else
             {
-                TablePanel.Hidden = false;
-                MapPanel.Hidden = true;
                 _modeButton.Title = "Map";
+
+                var completeHandler = new NSAction(() => 
+                    {
+                        TablePanel.Hidden = false;
+                        MapPanel.Hidden = true;
+                    });
+
+                if (isAnimated)
+                {
+                    UIView.Transition(
+                        MapPanel, 
+                        TablePanel, 
+                        0.8,
+                        UIViewAnimationOptions.TransitionFlipFromLeft | 
+                        UIViewAnimationOptions.ShowHideTransitionViews,
+                        completeHandler);
+                }
+                else
+                {
+                    completeHandler();
+                }
             }
         }
     }

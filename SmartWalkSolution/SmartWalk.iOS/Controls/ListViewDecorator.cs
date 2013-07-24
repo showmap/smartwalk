@@ -72,5 +72,18 @@ namespace SmartWalk.iOS.Controls
                 _collectionView.AddSubview(view);
             }
         }
+
+        public void AddGestureRecognizer(UIGestureRecognizer gestureRecognizer)
+        {
+            if (_tableView != null)
+            {
+                _tableView.AddGestureRecognizer(gestureRecognizer);
+            }
+
+            if (_collectionView != null)
+            {
+                _collectionView.AddGestureRecognizer(gestureRecognizer);
+            }
+        }
     }
 }

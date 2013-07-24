@@ -50,6 +50,14 @@ namespace SmartWalk.iOS.Views.Common
 
         protected virtual void InitializeListView()
         {
+            var swipeRight = new UISwipeGestureRecognizer(rec => 
+                {
+                    NavigationController.PopViewControllerAnimated(true);
+                });
+
+            swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
+            ListView.AddGestureRecognizer(swipeRight);
+
             var source = CreateListViewSource();
 
             ListView.Source = source;
