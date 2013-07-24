@@ -23,12 +23,22 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             this.DelayBind(() => {
                 var set = this.CreateBindingSet<VenueCell, Venue>();
-                set.Bind(NumberLabel).To(v => v.Number);
                 set.Bind(_imageHelper).To(v => v.Info.Logo);
-                set.Bind(NameLabel).To(v => v.Info.Name);
+
+                set.Bind(LogoImageView).For(p => p.Hidden).To(v => v.Info.Logo)
+                    .WithConversion(new ValueConverter<string>(s => s == null), null);
+
+                set.Bind(NameLeftConstraint).For(p => p.Constant).To(v => v.Info.Logo)
+                    .WithConversion(new ValueConverter<string>(s => s != null ? 76 : 8), null);
+
+                set.Bind(NameLabel).To(v => v)
+                    .WithConversion(new ValueConverter<Venue>(
+                        v => v.Number == 0 ? v.Info.Name : string.Format("{0}. {1}", v.Number, v.Info.Name)), null);
+
                 set.Bind(AddressLabel).To(v => v.Info.Addresses)
                     .WithConversion(new ValueConverter<AddressInfo[]>(
                         adds => adds != null && adds.Length > 0 ? adds[0].Address : null), null);
+
                 set.Apply();
             });
 

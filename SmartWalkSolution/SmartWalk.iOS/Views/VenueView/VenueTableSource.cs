@@ -51,9 +51,14 @@ namespace SmartWalk.iOS.Views.VenueView
                 return height;
             }
 
-            if (item is VenueShow)
+            var venueShow = item as VenueShow;
+            if (venueShow != null)
             {
-                return 35.0f;
+                var height = VenueShowCell.CalculateCellHeight(
+                    Equals(_viewModel.ExpandedShow, venueShow),
+                    venueShow);
+
+                return height;
             }
 
             throw new Exception("There is an unsupported type in the list.");
@@ -108,6 +113,13 @@ namespace SmartWalk.iOS.Views.VenueView
             }
 
             var cell = tableView.DequeueReusableCell(key, indexPath);
+
+            var venueShowCell = cell as VenueShowCell;
+            if (venueShowCell != null)
+            {
+                venueShowCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
+            }
+
             return cell;
         }
 

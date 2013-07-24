@@ -21,7 +21,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel NameLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel NumberLabel { get; set; }
+		MonoTouch.UIKit.NSLayoutConstraint NameLeftConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -30,19 +30,19 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				AddressLabel = null;
 			}
 
-			if (NameLabel != null) {
-				NameLabel.Dispose ();
-				NameLabel = null;
-			}
-
 			if (LogoImageView != null) {
 				LogoImageView.Dispose ();
 				LogoImageView = null;
 			}
 
-			if (NumberLabel != null) {
-				NumberLabel.Dispose ();
-				NumberLabel = null;
+			if (NameLabel != null) {
+				NameLabel.Dispose ();
+				NameLabel = null;
+			}
+
+			if (NameLeftConstraint != null) {
+				NameLeftConstraint.Dispose ();
+				NameLeftConstraint = null;
 			}
 		}
 	}

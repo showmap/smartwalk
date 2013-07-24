@@ -14,6 +14,8 @@ namespace SmartWalk.Core.ViewModels
 
         private Parameters _parameters;
         private ICommand _refreshCommand;
+        private MvxCommand<VenueShow> _expandCollapseShowCommand;
+        private VenueShow _expandedShow;
 
         public VenueViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
         {
@@ -39,6 +41,22 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        public VenueShow ExpandedShow
+        {
+            get
+            {
+                return _expandedShow;
+            }
+            private set
+            {
+                if (!Equals(_expandedShow, value))
+                {
+                    _expandedShow = value;
+                    RaisePropertyChanged(() => ExpandedShow);
+                }
+            }
+        }
+
         public ICommand RefreshCommand
         {
             get 
@@ -49,6 +67,30 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _refreshCommand;
+            }
+        }
+
+        public ICommand ExpandCollapseShowCommand
+        {
+            get
+            {
+                if (_expandCollapseShowCommand == null)
+                {
+                    _expandCollapseShowCommand = new MvxCommand<VenueShow>(show => 
+                                                                           {
+                        if (ExpandedShow != show)
+                        {
+                            ExpandedShow = show;
+                        }
+                        else 
+                        {
+                            ExpandedShow = null;
+                        }
+                    },
+                    venue => _parameters != null);
+                }
+
+                return _expandCollapseShowCommand;
             }
         }
 
