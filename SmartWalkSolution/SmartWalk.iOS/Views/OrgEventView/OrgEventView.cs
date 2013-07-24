@@ -84,6 +84,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
             }
+            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
+            {
+                VenuesAndShowsTableView.BeginUpdates();
+                VenuesAndShowsTableView.EndUpdates();
+            }
         }
 
         private void InitializeToolBar()

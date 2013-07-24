@@ -112,10 +112,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
                 return cellHeight + textHeight;
             }
-            else
-            {
-                return cellHeight + (entity.Description != null ? 63.0f : 0);
-            }
+
+            return cellHeight + (entity.Description != null ? 63.0f : 0);
         }
 
         private static bool IsScrollViewVisible(EntityInfo info)

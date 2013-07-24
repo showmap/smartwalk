@@ -5,6 +5,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
+using System;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -36,7 +37,19 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
-            return 35.0f;
+            var item = GetItemAt(indexPath);
+            var venueShow = item as VenueShow;
+            if (venueShow != null)
+            {
+                var height = VenueShowCell.CalculateCellHeight(
+                    Equals(_viewModel.ExpandedShow, venueShow),
+                    venueShow);
+
+                return height;
+            }
+
+
+            throw new Exception("There is an unsupported type in the list.");
         }
 
         public override int NumberOfSections(UITableView tableView)
@@ -64,7 +77,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
         {
-            var cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
+            var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
+            cell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
             return cell;
         }
 

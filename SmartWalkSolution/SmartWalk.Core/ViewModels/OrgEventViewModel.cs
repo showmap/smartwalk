@@ -15,7 +15,9 @@ namespace SmartWalk.Core.ViewModels
 
         private OrgEventViewMode _mode = OrgEventViewMode.List;
         private OrgEvent _orgEvent;
+        private VenueShow _expandedShow;
         private Venue _selectedVenueOnMap;
+        private MvxCommand<VenueShow> _expandCollapseShowCommand;
         private MvxCommand _refreshCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
@@ -62,6 +64,22 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        public VenueShow ExpandedShow
+        {
+            get
+            {
+                return _expandedShow;
+            }
+            private set
+            {
+                if (!Equals(_expandedShow, value))
+                {
+                    _expandedShow = value;
+                    RaisePropertyChanged(() => ExpandedShow);
+                }
+            }
+        }
+
         public Venue SelectedVenueOnMap
         {
             get
@@ -88,6 +106,30 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _refreshCommand;
+            }
+        }
+
+        public ICommand ExpandCollapseShowCommand
+        {
+            get
+            {
+                if (_expandCollapseShowCommand == null)
+                {
+                    _expandCollapseShowCommand = new MvxCommand<VenueShow>(show => 
+                        {
+                            if (ExpandedShow != show)
+                            {
+                                ExpandedShow = show;
+                            }
+                            else 
+                            {
+                                ExpandedShow = null;
+                            }
+                        },
+                    venue => _parameters != null);
+                }
+
+                return _expandCollapseShowCommand;
             }
         }
 

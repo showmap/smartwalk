@@ -81,5 +81,6 @@
     <Compile Include="ViewModels\IRefreshableViewModel.cs" />
     <Compile Include="Model\ContactWebSiteInfo.cs" />
     <Compile Include="Converters\ValueConverter.cs" />
+    <Compile Include="Utils\HashCode.cs" />
   </ItemGroup>
 </Project>
