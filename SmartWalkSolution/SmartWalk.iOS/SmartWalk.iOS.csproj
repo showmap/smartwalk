@@ -11,6 +11,7 @@
     <RootNamespace>SmartWalk.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>SmartWalkiOS</AssemblyName>
+    <ReleaseVersion />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -129,8 +130,6 @@
     <Folder Include="Views\" />
     <Folder Include="TempXML\" />
     <Folder Include="TempXML\Local\" />
-    <Folder Include="TempXML\Local\mapp\" />
-    <Folder Include="TempXML\Local\nbff\" />
     <Folder Include="Utils\" />
     <Folder Include="Services\" />
     <Folder Include="Views\OrgView\" />
@@ -140,6 +139,7 @@
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Common\EntityCell\" />
     <Folder Include="Controls\" />
+    <Folder Include="TempXML\Local\san francisco bay area\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -246,23 +246,29 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\WebSiteCell.xib" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\events\mapp-2013-06-01.xml">
-      <Link>TempXML\Local\mapp\mapp-2013-06-01.xml</Link>
-    </Content>
-    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\nbff\events\nbff-2013-06-07.xml">
-      <Link>TempXML\Local\nbff\nbff-2013-06-07.xml</Link>
-    </Content>
-    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\mapp\index.xml">
-      <Link>TempXML\Local\mapp\index.xml</Link>
-    </Content>
-    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\nbff\index.xml">
-      <Link>TempXML\Local\nbff\index.xml</Link>
-    </Content>
-    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco\index.xml">
-      <Link>TempXML\Local\index.xml</Link>
-    </Content>
+    <BundleResource Include="Resources\Default-568h%402x.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Default-568h%402x.png" />
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\index.xml">
+      <Link>TempXML\Local\san francisco bay area\index.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\oam\index.xml">
+      <Link>TempXML\Local\san francisco bay area\oam\index.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\oam\events\oam-2013-08-02.xml">
+      <Link>TempXML\Local\san francisco bay area\oam\events\oam-2013-08-02.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\mapp\index.xml">
+      <Link>TempXML\Local\san francisco bay area\mapp\index.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\mapp\events\mapp-2013-06-01.xml">
+      <Link>TempXML\Local\san francisco bay area\mapp\events\mapp-2013-06-01.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\nbff\index.xml">
+      <Link>TempXML\Local\san francisco bay area\nbff\index.xml</Link>
+    </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\nbff\events\nbff-2013-06-07.xml">
+      <Link>TempXML\Local\san francisco bay area\nbff\events\nbff-2013-06-07.xml</Link>
+    </Content>
   </ItemGroup>
 </Project>

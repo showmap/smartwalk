@@ -28,8 +28,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 set.Bind(DescriptionLabel).To(vm => vm.Entity.Description);
                 set.Bind(_imageHelper).To(vm => vm.Entity.Info.Logo);
 
-                set.Bind(ScrollViewHeightConstraint).For(p => p.Constant).To(vm => vm.Entity.Info.Logo)
-                    .WithConversion(new ValueConverter<string>(s => s != null ? 240 : 0), null);
+                set.Bind(ScrollViewHeightConstraint).For(p => p.Constant).To(vm => vm.Entity.Info)
+                    .WithConversion(new ValueConverter<EntityInfo>(
+                        info => info != null && IsScrollViewVisible(info) ? 240 : 0), null);
 
                 set.Bind(PageControl).For(p => p.Hidden).To(vm => vm.Entity.Info)
                     .WithConversion(new ValueConverter<EntityInfo>(
@@ -100,7 +101,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             {
                 var textHeight = default(float);
 
-                if (entity.Description != null)
+                if (entity.Description != null && entity.Description != string.Empty)
                 {
                     var frameSize = new SizeF(ScreenUtil.CurrentScreenWidth - 8 * 2, float.MaxValue); 
                     var textSize = new NSString(entity.Description).StringSize(
@@ -113,7 +114,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 return cellHeight + textHeight;
             }
 
-            return cellHeight + (entity.Description != null ? 63.0f : 0);
+            return cellHeight + 
+                (entity.Description != null && entity.Description != string.Empty ? 63.0f : 0);
         }
 
         private static bool IsScrollViewVisible(EntityInfo info)

@@ -7,6 +7,7 @@ namespace SmartWalk.Core.Services
 {
     public class SmartWalkDataService : ISmartWalkDataService
     {
+        private const string TempURL = @"TempXML/Local/san francisco bay area/";
         private readonly ICacheService _cacheService;
 
         public SmartWalkDataService(ICacheService cacheService)
@@ -18,7 +19,7 @@ namespace SmartWalk.Core.Services
         {
             try
             {
-                var xml = XDocument.Load(@"TempXML/Local/index.xml");
+                var xml = XDocument.Load(TempURL + "index.xml");
                 var result = xml.Descendants("organization").Select(org => 
                     new EntityInfo 
                         {
@@ -39,7 +40,7 @@ namespace SmartWalk.Core.Services
         {
             try
             {
-                var xml = XDocument.Load(@"TempXML/Local/" + orgId + "/index.xml");
+                var xml = XDocument.Load(TempURL + orgId + "/index.xml");
                 var result = new Org
                 {
                     Info = new EntityInfo 
@@ -87,7 +88,7 @@ namespace SmartWalk.Core.Services
 
                 if (xml == null)
                 {
-                    xml = XDocument.Load(@"TempXML/Local/" + orgId + "/" + key + ".xml");
+                    xml = XDocument.Load(TempURL + orgId + "/events/" + key + ".xml");
                 }
 
                 if (xml != null)

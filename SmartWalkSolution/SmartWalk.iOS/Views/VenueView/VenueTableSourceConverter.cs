@@ -18,11 +18,15 @@ namespace SmartWalk.iOS.Views.VenueView
 
                 result.Add(new GroupContainer(new [] { venueViewModel }));
 
-                result.Add(
-                    new GroupContainer(venueViewModel.Venue.Shows) 
-                    {
-                        Key = "Shows"
-                    });
+                if (venueViewModel.Venue.Shows != null &&
+                    venueViewModel.Venue.Shows.Length > 0)
+                {
+                    result.Add(
+                        new GroupContainer(venueViewModel.Venue.Shows) 
+                        {
+                            Key = "Shows"
+                        });
+                }
 
                 return result.ToArray();
             }
