@@ -15,16 +15,41 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint DescriptionLogoSpaceConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel EndTimeLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint LogoDetailsSpaceConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint LogoHeightConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MoreInfoHeightConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (StartTimeLabel != null) {
-				StartTimeLabel.Dispose ();
-				StartTimeLabel = null;
+			if (DescriptionLabel != null) {
+				DescriptionLabel.Dispose ();
+				DescriptionLabel = null;
+			}
+
+			if (DescriptionLogoSpaceConstraint != null) {
+				DescriptionLogoSpaceConstraint.Dispose ();
+				DescriptionLogoSpaceConstraint = null;
+			}
+
+			if (LogoDetailsSpaceConstraint != null) {
+				LogoDetailsSpaceConstraint.Dispose ();
+				LogoDetailsSpaceConstraint = null;
 			}
 
 			if (EndTimeLabel != null) {
@@ -32,9 +57,24 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				EndTimeLabel = null;
 			}
 
-			if (DescriptionLabel != null) {
-				DescriptionLabel.Dispose ();
-				DescriptionLabel = null;
+			if (LogoHeightConstraint != null) {
+				LogoHeightConstraint.Dispose ();
+				LogoHeightConstraint = null;
+			}
+
+			if (LogoImageView != null) {
+				LogoImageView.Dispose ();
+				LogoImageView = null;
+			}
+
+			if (MoreInfoHeightConstraint != null) {
+				MoreInfoHeightConstraint.Dispose ();
+				MoreInfoHeightConstraint = null;
+			}
+
+			if (StartTimeLabel != null) {
+				StartTimeLabel.Dispose ();
+				StartTimeLabel = null;
 			}
 		}
 	}

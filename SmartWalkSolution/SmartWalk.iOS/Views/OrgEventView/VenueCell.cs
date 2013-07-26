@@ -54,6 +54,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public ICommand NavigateVenueOnMapCommand { get; set; }
 
+        public override void PrepareForReuse()
+        {
+            base.PrepareForReuse();
+
+            LogoImageView.Image = null;
+        }
+
         protected override bool Initialize()
         {
             var result = InitializeAddressGesture();

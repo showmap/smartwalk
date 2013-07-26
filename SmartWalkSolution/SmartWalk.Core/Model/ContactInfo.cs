@@ -2,11 +2,11 @@ namespace SmartWalk.Core.Model
 {
     public class ContactInfo
     {
-        public ContactPhoneInfo[] Phones { get; set; }
+        public PhoneInfo[] Phones { get; set; }
 
-        public ContactEmailInfo[] Emails { get; set; }
+        public EmailInfo[] Emails { get; set; }
 
-        public ContactWebSiteInfo[] WebSites { get; set; }
+        public WebSiteInfo[] WebSites { get; set; }
 
         public bool IsEmpty
         {

@@ -68,6 +68,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             var headerView = _headerViewFactory.DequeueReusableView();
 
+            headerView.PrepareForReuse();
             headerView.DataContext = VenueItemsSource[section];
             headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
             headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
@@ -79,6 +80,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
             cell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
+            cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
             return cell;
         }
 

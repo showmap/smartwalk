@@ -60,8 +60,6 @@
     <Compile Include="Model\ContactInfo.cs" />
     <Compile Include="Services\ISmartWalkDataService.cs" />
     <Compile Include="Model\OrgEvent.cs" />
-    <Compile Include="Model\ContactEmailInfo.cs" />
-    <Compile Include="Model\ContactPhoneInfo.cs" />
     <Compile Include="ViewModels\OrgViewModel.cs" />
     <Compile Include="Model\OrgEventInfo.cs" />
     <Compile Include="Services\SmartWalkDataService.cs" />
@@ -80,8 +78,10 @@
     <Compile Include="Services\DataSource.cs" />
     <Compile Include="ViewModels\VenueViewModel.cs" />
     <Compile Include="ViewModels\IRefreshableViewModel.cs" />
-    <Compile Include="Model\ContactWebSiteInfo.cs" />
     <Compile Include="Converters\ValueConverter.cs" />
     <Compile Include="Utils\HashCode.cs" />
+    <Compile Include="Model\WebSiteInfo.cs" />
+    <Compile Include="Model\PhoneInfo.cs" />
+    <Compile Include="Model\EmailInfo.cs" />
   </ItemGroup>
 </Project>

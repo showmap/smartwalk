@@ -11,6 +11,10 @@ namespace SmartWalk.Core.Model
 
         public string Description { get; set; }
 
+        public string Logo { get; set; }
+
+        public WebSiteInfo Site { get; set; }
+
         public override bool Equals(object obj)
         {
             var show = obj as VenueShow;

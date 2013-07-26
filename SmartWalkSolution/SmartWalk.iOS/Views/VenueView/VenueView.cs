@@ -1,9 +1,12 @@
 using System.ComponentModel;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using MonoTouch.CoreAnimation;
+using MonoTouch.Foundation;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Controls;
+using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Views.OrgEventView;
 
 namespace SmartWalk.iOS.Views.VenueView
 {
@@ -39,11 +42,26 @@ namespace SmartWalk.iOS.Views.VenueView
 
         protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded) ||
-                e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
+            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 VenueShowsTableView.BeginUpdates();
                 VenueShowsTableView.EndUpdates();
+            }
+            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
+            {
+                VenueShowCell.SetVenueCellsTableIsResizing(VenueShowsTableView, true);
+                VenueShowCell.CollapseVenueShowCell(VenueShowsTableView);
+
+                CATransaction.Begin();
+                CATransaction.CompletionBlock = new NSAction(
+                    () => VenueShowCell.SetVenueCellsTableIsResizing(VenueShowsTableView, false));
+
+                VenueShowsTableView.BeginUpdates();
+                VenueShowsTableView.EndUpdates();
+
+                CATransaction.Commit();
+
+                VenueShowCell.ExpandVenueShowCell(VenueShowsTableView, ViewModel.ExpandedShow);
             }
         }
     }

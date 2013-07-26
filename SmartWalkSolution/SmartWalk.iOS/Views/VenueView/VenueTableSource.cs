@@ -118,6 +118,7 @@ namespace SmartWalk.iOS.Views.VenueView
             if (venueShowCell != null)
             {
                 venueShowCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
+                venueShowCell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
             }
 
             return cell;

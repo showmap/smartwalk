@@ -17,17 +17,17 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         protected override UICollectionViewCell GetOrCreateCellFor(UICollectionView collectionView, NSIndexPath indexPath, object item)
         {
-            if (item is ContactPhoneInfo)
+            if (item is PhoneInfo)
             {
                 return (UICollectionViewCell)collectionView.DequeueReusableCell(PhoneCell.Key, indexPath);
             }
 
-            if (item is ContactEmailInfo)
+            if (item is EmailInfo)
             {
                 return (UICollectionViewCell)collectionView.DequeueReusableCell(EmailCell.Key, indexPath);
             }
 
-            if (item is ContactWebSiteInfo)
+            if (item is WebSiteInfo)
             {
                 return (UICollectionViewCell)collectionView.DequeueReusableCell(WebSiteCell.Key, indexPath);
             }

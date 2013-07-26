@@ -10,6 +10,7 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Controls;
+using MonoTouch.CoreAnimation;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -90,8 +91,19 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
+                VenueShowCell.SetVenueCellsTableIsResizing(VenuesAndShowsTableView, true);
+                VenueShowCell.CollapseVenueShowCell(VenuesAndShowsTableView);
+
+                CATransaction.Begin();
+                CATransaction.CompletionBlock = new NSAction(
+                    () => VenueShowCell.SetVenueCellsTableIsResizing(VenuesAndShowsTableView, false));
+
                 VenuesAndShowsTableView.BeginUpdates();
                 VenuesAndShowsTableView.EndUpdates();
+
+                CATransaction.Commit();
+
+                VenueShowCell.ExpandVenueShowCell(VenuesAndShowsTableView, ViewModel.ExpandedShow);
             }
         }
 
@@ -142,6 +154,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                     VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
                     VenuesMapView.AddAnnotations(annotations);
+
+                    if (ViewModel.SelectedVenueOnMap != null)
+                    {
+                        SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
+                    }
 
                     _currentMapViewOrgEvent = ViewModel.OrgEvent;
                 }

@@ -20,7 +20,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             Layer.CornerRadius = 8;
 
             this.DelayBind(() => {
-                var set = this.CreateBindingSet<PhoneCell, ContactPhoneInfo>();
+                var set = this.CreateBindingSet<PhoneCell, PhoneInfo>();
                 set.Bind(ContactNameLabel).To(info => info.Name);
                 set.Bind(PhoneNumberLabel).To(info => info.Phone);
                 set.Bind(NameHeightConstraint).For(p => p.Constant).To(info => info.Name)

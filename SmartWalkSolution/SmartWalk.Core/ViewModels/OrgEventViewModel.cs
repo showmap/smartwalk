@@ -3,11 +3,9 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
-using MonoTouch.Foundation;
 
 namespace SmartWalk.Core.ViewModels
 {
-    [Preserve(AllMembers=true)]
     public class OrgEventViewModel : MvxViewModel, IRefreshableViewModel
     {
         private readonly ISmartWalkDataService _dataService;
@@ -117,7 +115,7 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _expandCollapseShowCommand = new MvxCommand<VenueShow>(show => 
                         {
-                            if (ExpandedShow != show)
+                            if (!Equals(ExpandedShow, show))
                             {
                                 ExpandedShow = show;
                             }

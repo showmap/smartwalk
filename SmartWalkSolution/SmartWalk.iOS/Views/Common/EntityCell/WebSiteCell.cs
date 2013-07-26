@@ -4,6 +4,7 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.Converters;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -19,8 +20,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             Layer.CornerRadius = 8;
 
             this.DelayBind(() => {
-                var set = this.CreateBindingSet<WebSiteCell, ContactWebSiteInfo>();
-                set.Bind(WebSiteLabel).To(info => info.URL);
+                var set = this.CreateBindingSet<WebSiteCell, WebSiteInfo>();
+                set.Bind(WebSiteLabel).To(info => info)
+                    .WithConversion(new ValueConverter<WebSiteInfo>(
+                        wsi => wsi.Label ?? wsi.URL), null);
                 set.Apply();
             });
         }

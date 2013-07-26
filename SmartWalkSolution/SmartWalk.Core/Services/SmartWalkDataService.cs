@@ -137,9 +137,17 @@ namespace SmartWalk.Core.Services
                                         {
                                             Start = show.Attribute("start") != null 
                                                 ? DateTime.Parse(show.Attribute("start").Value) : default(DateTime),
-                                                End = show.Attribute("end") != null 
-                                                    ? DateTime.Parse(show.Attribute("end").Value) : default(DateTime),
-                                                    Description = show.Value,
+                                            End = show.Attribute("end") != null 
+                                                ? DateTime.Parse(show.Attribute("end").Value) : default(DateTime),
+                                                Description = show.Value,
+                                            Logo = show.Attribute("logo").ValueOrNull(),
+                                            Site = show.Attribute("web") != null 
+                                                ? new WebSiteInfo
+                                                {
+                                                    Label = "more info",
+                                                    URL = show.Attribute("logo").ValueOrNull()
+                                                }
+                                                : null
                                         }).ToArray()
                             }).ToArray()
                 };
@@ -174,19 +182,19 @@ namespace SmartWalk.Core.Services
             return new ContactInfo
                 {
                     Phones = entity.Descendants("phone")
-                        .Select(phone => new ContactPhoneInfo 
+                        .Select(phone => new PhoneInfo 
                             {
                                 Name = phone.Attribute("name").ValueOrNull(),
                                 Phone = phone.ValueOrNull(),
                         }).ToArray(),
                     Emails = entity.Descendants("email")
-                        .Select(email => new ContactEmailInfo 
+                        .Select(email => new EmailInfo 
                             {
                                 Name = email.Attribute("name").ValueOrNull(),
                                 Email = email.ValueOrNull(),
                             }).ToArray(),
                     WebSites = entity.Descendants("web")
-                        .Select(web => new ContactWebSiteInfo
+                        .Select(web => new WebSiteInfo
                             {
                                 URL = web.ValueOrNull()
                             }).ToArray(),

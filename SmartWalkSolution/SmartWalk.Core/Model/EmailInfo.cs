@@ -1,6 +1,6 @@
 namespace SmartWalk.Core.Model
 {
-    public class ContactEmailInfo
+    public class EmailInfo
     {
         public string Name { get; set; }
 

@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
 
-        private MvxImageViewLoader _imageHelper;
+        private readonly MvxImageViewLoader _imageHelper;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
