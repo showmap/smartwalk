@@ -148,7 +148,6 @@
 								<string key="NSFrame">{{139, 277}, {173, 18}}</string>
 								<reference key="NSSuperview" ref="856359853"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="NSHuggingPriority">{250, 250}</string>
 								<string key="NSAntiCompressionPriority">{750, 750}</string>
@@ -318,7 +317,7 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">MoreInfoHeightConstraint</string>
 						<reference key="source" ref="302723463"/>
-						<object class="IBNSLayoutConstraint" key="destination" id="410601977">
+						<object class="IBNSLayoutConstraint" key="destination" id="136761494">
 							<reference key="firstItem" ref="760483866"/>
 							<int key="firstAttribute">8</int>
 							<int key="relation">0</int>
@@ -730,7 +729,7 @@
 						<int key="objectID">181</int>
 						<reference key="object" ref="760483866"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="410601977"/>
+							<reference ref="136761494"/>
 						</array>
 						<reference key="parent" ref="302723463"/>
 					</object>
@@ -761,7 +760,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">367</int>
-						<reference key="object" ref="410601977"/>
+						<reference key="object" ref="136761494"/>
 						<reference key="parent" ref="760483866"/>
 					</object>
 				</array>
@@ -777,7 +776,7 @@
 				<string key="173.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="181.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<array class="NSMutableArray" key="181.IBViewMetadataConstraints">
-					<reference ref="410601977"/>
+					<reference ref="136761494"/>
 				</array>
 				<boolean value="NO" key="181.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

@@ -15,9 +15,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         public WebSiteCell(IntPtr handle) : base(handle)
         {
-            Layer.BorderColor = UIColor.Gray.CGColor;
-            Layer.BorderWidth = 1;
-            Layer.CornerRadius = 8;
+            //Layer.BorderColor = UIColor.Gray.CGColor;
+            //Layer.BorderWidth = 1;
+            Layer.CornerRadius = 3;
 
             this.DelayBind(() => {
                 var set = this.CreateBindingSet<WebSiteCell, WebSiteInfo>();

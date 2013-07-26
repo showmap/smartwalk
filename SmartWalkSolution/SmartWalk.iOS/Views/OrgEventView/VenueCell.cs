@@ -121,9 +121,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 LogoImageView.BackgroundColor = UIColor.White;
                 LogoImageView.ClipsToBounds = true;
-                LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-                LogoImageView.Layer.BorderWidth = 1;
-                LogoImageView.Layer.CornerRadius = 5;
+                //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+                //LogoImageView.Layer.BorderWidth = 1;
+                LogoImageView.Layer.CornerRadius = 3;
 
                 return true;
             }

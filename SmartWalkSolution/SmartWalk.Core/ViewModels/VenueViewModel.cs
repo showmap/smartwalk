@@ -38,11 +38,13 @@ namespace SmartWalk.Core.ViewModels
                     Entity = value;
                     RaisePropertyChanged(() => Venue);
 
-                    if (Entity != null && 
-                        (((Venue)Entity).Shows == null || ((Venue)Entity).Shows.Length == 0))
+                    IsDescriptionExpandable = Entity == null || 
+                        (((Venue)Entity).Shows != null && ((Venue)Entity).Shows.Length != 0);
+
+                    if (!IsDescriptionExpandable)
                     {
                         IsDescriptionExpanded = true;
-                    }
+                                            }
                 }
             }
         }

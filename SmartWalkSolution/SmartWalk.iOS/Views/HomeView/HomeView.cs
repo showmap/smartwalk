@@ -1,10 +1,10 @@
+using System.Drawing;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
 using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Controls;
-using System.Drawing;
 using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
@@ -20,7 +20,13 @@ namespace SmartWalk.iOS.Views.HomeView
             base.ViewDidLoad();
 
             NavigationController.NavigationBar.BarStyle = UIBarStyle.Black;
-            NavigationController.NavigationBar.TintColor = UIColor.Gray;
+            NavigationController.NavigationBar.TintColor = UIColor.LightGray;  //UIColor.FromRGB(230, 230, 230);
+
+
+            /*var attr = new UITextAttributes();
+            attr.TextColor = UIColor.Gray;
+            attr.TextShadowColor = UIColor.White;
+            NavigationController.NavigationBar.SetTitleTextAttributes(attr);*/
 
             SetCellWidth();
         }

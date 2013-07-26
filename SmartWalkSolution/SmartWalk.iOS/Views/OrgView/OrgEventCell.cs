@@ -4,7 +4,6 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Converters;
-using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgView
@@ -26,9 +25,28 @@ namespace SmartWalk.iOS.Views.OrgView
                 set.Apply();
             });
         }
+
         public static OrgEventCell Create()
         {
             return (OrgEventCell)Nib.Instantiate(null, null)[0];
+        }
+
+        protected override bool Initialize()
+        {
+            var result = InitializeDayLabelSquare();
+            return result;
+        }
+
+        private bool InitializeDayLabelSquare()
+        {
+            if (DayLabel != null)
+            {
+                DayLabel.Layer.CornerRadius = 3;
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

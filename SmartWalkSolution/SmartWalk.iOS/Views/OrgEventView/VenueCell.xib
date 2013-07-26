@@ -51,9 +51,9 @@
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1027897712"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
-								<object class="NSColor" key="IBUIBackgroundColor" id="54317167">
-									<int key="NSColorSpace">3</int>
-									<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+								<object class="NSColor" key="IBUIBackgroundColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MC45MDE5NjA3OTAyIDAuOTAxOTYwNzkwMiAwLjkwMTk2MDc5MDIAA</bytes>
 								</object>
 								<float key="IBUIAlpha">0.89999997615814209</float>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -65,8 +65,8 @@
 								<string key="NSFrame">{{8, 8}, {60, 60}}</string>
 								<reference key="NSSuperview" ref="856359853"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUIContentMode">2</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -121,11 +121,14 @@
 								<int key="IBUIContentMode">5</int>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<string key="IBUIText">Address</string>
-								<object class="NSColor" key="IBUITextColor" id="318496097">
+								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC4zMzMzMzMzMzMzAA</bytes>
 								</object>
-								<reference key="IBUIHighlightedColor" ref="54317167"/>
+								<object class="NSColor" key="IBUIHighlightedColor" id="54317167">
+									<int key="NSColorSpace">3</int>
+									<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+								</object>
 								<int key="IBUIBaselineAdjustment">0</int>
 								<bool key="IBUIAdjustsLetterSpacingToFitWidth">YES</bool>
 								<int key="IBUINumberOfLines">0</int>
@@ -157,7 +160,10 @@
 								<object class="NSAttributedString" key="IBUIAttributedText">
 									<string key="NSString">❯</string>
 									<dictionary key="NSAttributes">
-										<reference key="NSColor" ref="318496097"/>
+										<object class="NSColor" key="NSColor">
+											<int key="NSColorSpace">1</int>
+											<bytes key="NSRGB">MCAwLjUwMTk2MDgxNCAxAA</bytes>
+										</object>
 										<object class="NSFont" key="NSFont">
 											<string key="NSName">ZapfDingbatsITC</string>
 											<double key="NSSize">22</double>

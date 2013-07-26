@@ -17,9 +17,9 @@ namespace SmartWalk.iOS.Views.HomeView
 
         public OrgCell(IntPtr handle) : base(handle)
         {
-            Layer.BorderColor = UIColor.Gray.CGColor;
-            Layer.BorderWidth = 1;
-            Layer.CornerRadius = 8;
+            //Layer.BorderColor = UIColor.Gray.CGColor;
+            //Layer.BorderWidth = 1;
+            Layer.CornerRadius = 5;
 
             _imageHelper = new MvxImageViewLoader(() => OrgImageView);
 
@@ -48,9 +48,9 @@ namespace SmartWalk.iOS.Views.HomeView
             {
                 OrgImageView.BackgroundColor = UIColor.White;
                 OrgImageView.ClipsToBounds = true;
-                OrgImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-                OrgImageView.Layer.BorderWidth = 1;
-                OrgImageView.Layer.CornerRadius = 5;
+                //OrgImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+                //OrgImageView.Layer.BorderWidth = 1;
+                OrgImageView.Layer.CornerRadius = 3;
 
                 return true;
             }

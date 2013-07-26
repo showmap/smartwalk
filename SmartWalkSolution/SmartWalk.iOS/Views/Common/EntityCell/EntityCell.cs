@@ -18,6 +18,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private readonly MvxImageViewLoader _imageHelper;
 
+        private UITapGestureRecognizer _descriptionTapGesture;
+
         public EntityCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(() => LogoImageView);
@@ -27,6 +29,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 set.Bind(NameLabel).To(vm => vm.Entity.Info.Name);
                 set.Bind(DescriptionLabel).To(vm => vm.Entity.Description);
                 set.Bind(_imageHelper).To(vm => vm.Entity.Info.Logo);
+                set.Bind(_descriptionTapGesture).For(tap => tap.Enabled)
+                    .To(vm => vm.IsDescriptionExpandable);
 
                 set.Bind(ScrollViewHeightConstraint).For(p => p.Constant).To(vm => vm.Entity.Info)
                     .WithConversion(new ValueConverter<EntityInfo>(
@@ -138,11 +142,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (LogoImageView != null)
             {
-                LogoImageView.BackgroundColor = UIColor.White;
-                LogoImageView.ClipsToBounds = true;
-                LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-                LogoImageView.Layer.BorderWidth = 1;
-                LogoImageView.Layer.CornerRadius = 5;
+                //LogoImageView.BackgroundColor = UIColor.White;
+                //LogoImageView.ClipsToBounds = true;
+                //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+                //LogoImageView.Layer.BorderWidth = 1;
+                //LogoImageView.Layer.CornerRadius = 5;
 
                 return true;
             }
@@ -157,17 +161,17 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 if (DescriptionLabel.GestureRecognizers == null ||
                     DescriptionLabel.GestureRecognizers.Length == 0)
                 {
-                    var tap = new UITapGestureRecognizer(() => {
+                    _descriptionTapGesture = new UITapGestureRecognizer(() => {
                         if (ViewModel.ExpandCollapseCommand.CanExecute(null))
                         {
                             ViewModel.ExpandCollapseCommand.Execute(null);
                         }
                     });
 
-                    tap.NumberOfTouchesRequired = (uint)1;
-                    tap.NumberOfTapsRequired = (uint)1;
+                    _descriptionTapGesture.NumberOfTouchesRequired = (uint)1;
+                    _descriptionTapGesture.NumberOfTapsRequired = (uint)1;
 
-                    DescriptionLabel.AddGestureRecognizer(tap);
+                    DescriptionLabel.AddGestureRecognizer(_descriptionTapGesture);
                 }
 
                 return true;
@@ -180,9 +184,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (GoToContactButton != null)
             {
-                /*GoToContactButton.Layer.CornerRadius = 0;
+                GoToContactButton.Layer.CornerRadius = 3;
                 GoToContactButton.Layer.BorderWidth = 0;
-                GoToContactButton.Layer.BackgroundColor = UIColor.LightGray.CGColor;*/
+                GoToContactButton.Layer.BackgroundColor = UIColor.FromRGB(230, 230, 230).CGColor;
+                //GoToContactButton.colo
 
                 return true;
             }
@@ -249,7 +254,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                             flowLayout.SectionInset.Right - 
                             flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
-            flowLayout.ItemSize = new SizeF(cellWith, 40);
+            flowLayout.ItemSize = new SizeF(cellWith, 41);
         }
     }
 }
