@@ -8,7 +8,6 @@ namespace SmartWalk.Core.ViewModels
     {
         private Entity _entity;
         private bool _isDescriptionExpanded;
-        private bool _isDescriptionExpandable;
         private MvxCommand _expandCollapseCommand;
 
         public Entity Entity
@@ -23,6 +22,12 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _entity = value;
                     RaisePropertyChanged(() => Entity);
+                    RaisePropertyChanged(() => IsDescriptionExpandable);
+
+                    if (!IsDescriptionExpandable)
+                    {
+                        IsDescriptionExpanded = true;
+                    }
                 }
             }
         }
@@ -43,19 +48,11 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
-        public bool IsDescriptionExpandable
+        public virtual bool IsDescriptionExpandable
         {
             get
             {
-                return _isDescriptionExpandable;
-            }
-            protected set
-            {
-                if (_isDescriptionExpandable != value)
-                {
-                    _isDescriptionExpandable = value;
-                    RaisePropertyChanged(() => IsDescriptionExpandable);
-                }
+                return true;
             }
         }
 

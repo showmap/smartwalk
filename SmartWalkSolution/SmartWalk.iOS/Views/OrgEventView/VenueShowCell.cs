@@ -164,39 +164,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
             IsExpanded = false;
         }
 
-        protected override bool Initialize()
-        {
-            var result = InitializeGestures();
-            return result;
-        }
-
-        private bool InitializeGestures()
-        {
-            if (DescriptionLabel != null)
-            {
-                if (DescriptionLabel.GestureRecognizers == null ||
-                    DescriptionLabel.GestureRecognizers.Length == 0)
-                {
-                    var tap = new UITapGestureRecognizer(() => {
-                        if (ExpandCollapseShowCommand != null &&
-                            ExpandCollapseShowCommand.CanExecute(DataContext))
-                        {
-                            ExpandCollapseShowCommand.Execute(DataContext);
-                        }
-                    });
-
-                    tap.NumberOfTouchesRequired = (uint)1;
-                    tap.NumberOfTapsRequired = (uint)1;
-
-                    DescriptionLabel.AddGestureRecognizer(tap);
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
         private void UpdateViewState()
         {
             if (DescriptionLogoSpaceConstraint != null)

@@ -19,6 +19,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private readonly MvxImageViewLoader _imageHelper;
 
         private UITapGestureRecognizer _descriptionTapGesture;
+        private bool _isDescriptionTapGestureEnabled = true;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
@@ -29,7 +30,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 set.Bind(NameLabel).To(vm => vm.Entity.Info.Name);
                 set.Bind(DescriptionLabel).To(vm => vm.Entity.Description);
                 set.Bind(_imageHelper).To(vm => vm.Entity.Info.Logo);
-                set.Bind(_descriptionTapGesture).For(tap => tap.Enabled)
+                set.Bind().For(cell => cell.IsDescriptionTapGestureEnabled)
                     .To(vm => vm.IsDescriptionExpandable);
 
                 set.Bind(ScrollViewHeightConstraint).For(p => p.Constant).To(vm => vm.Entity.Info)
@@ -82,6 +83,20 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 if (ContactCollectionView != null)
                 {
                     SetCollectionViewCellWidth();
+                }
+            }
+        }
+
+        public bool IsDescriptionTapGestureEnabled
+        {
+            get { return _isDescriptionTapGestureEnabled; }
+            set 
+            { 
+                _isDescriptionTapGestureEnabled = value;
+
+                if (_descriptionTapGesture != null)
+                {
+                    _descriptionTapGesture.Enabled = _isDescriptionTapGestureEnabled;
                 }
             }
         }
@@ -166,7 +181,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                         {
                             ViewModel.ExpandCollapseCommand.Execute(null);
                         }
-                    });
+                    })
+                    {
+                        Enabled = IsDescriptionTapGestureEnabled
+                    };
 
                     _descriptionTapGesture.NumberOfTouchesRequired = (uint)1;
                     _descriptionTapGesture.NumberOfTapsRequired = (uint)1;

@@ -25,6 +25,14 @@ namespace SmartWalk.Core.ViewModels
 
         public event EventHandler RefreshCompleted;
 
+        public override bool IsDescriptionExpandable
+        {
+            get
+            {
+                return Venue == null || (Venue.Shows != null && Venue.Shows.Length != 0);
+            }
+        }
+
         public Venue Venue
         {
             get
@@ -37,14 +45,6 @@ namespace SmartWalk.Core.ViewModels
                 {
                     Entity = value;
                     RaisePropertyChanged(() => Venue);
-
-                    IsDescriptionExpandable = Entity == null || 
-                        (((Venue)Entity).Shows != null && ((Venue)Entity).Shows.Length != 0);
-
-                    if (!IsDescriptionExpandable)
-                    {
-                        IsDescriptionExpanded = true;
-                                            }
                 }
             }
         }
