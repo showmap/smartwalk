@@ -9,7 +9,6 @@ namespace SmartWalk.Core
 	{
 		public SmartWalkApplication()
 		{
-            Mvx.ConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
             Mvx.ConstructAndRegisterSingleton<ISmartWalkDataService, SmartWalkDataService>();
             Mvx.RegisterSingleton<IMvxAppStart>(new MvxAppStart<HomeViewModel>());
 		}

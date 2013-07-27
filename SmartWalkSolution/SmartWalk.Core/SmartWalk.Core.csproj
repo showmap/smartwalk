@@ -35,10 +35,10 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.CrossCore.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="MonoTouch.Dialog-1" />
@@ -65,7 +65,6 @@
     <Compile Include="Services\SmartWalkDataService.cs" />
     <Compile Include="Model\Org.cs" />
     <Compile Include="Services\IExceptionPolicy.cs" />
-    <Compile Include="Services\ExceptionPolicy.cs" />
     <Compile Include="Utils\ReflectExtensions.cs" />
     <Compile Include="Utils\Reflect.cs" />
     <Compile Include="Model\EntityInfo.cs" />

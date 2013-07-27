@@ -91,38 +91,44 @@
     <Reference Include="monotouch" />
     <Reference Include="MonoTouch.Dialog-1" />
     <Reference Include="Cirrious.CrossCore.Touch">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.CrossCore.Touch.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.CrossCore.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.CrossCore.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding.Touch">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Binding.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Binding.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Touch">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Touch.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File.Touch">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File">
-      <HintPath>..\Binaries\MvvmCross\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
     </Reference>
     <Reference Include="monotouch-testflight">
       <HintPath>..\Binaries\TestFlight\monotouch-testflight.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Json">
+      <HintPath>..\Binaries\JSON\Cirrious.MvvmCross.Plugins.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Binaries\JSON\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -222,6 +228,7 @@
     <Compile Include="Views\HomeView\HomeCollectionSource.cs" />
     <Compile Include="Views\Common\CollectionCellBase.cs" />
     <Compile Include="Views\HomeView\HomeCollectionDelegate.cs" />
+    <Compile Include="Services\ExceptionPolicy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
