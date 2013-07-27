@@ -41,8 +41,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
             });
         }
 
-        public ICommand ExpandCollapseShowCommand { get; set; }
-
         public bool IsExpanded
         {
             get

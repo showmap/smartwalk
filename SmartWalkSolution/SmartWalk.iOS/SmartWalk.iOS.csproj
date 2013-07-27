@@ -67,7 +67,7 @@
     <BuildIpa>true</BuildIpa>
     <CodesignKey>iPhone Developer: Ievgen Tiutiunnyk (J5QYB8CA9R)</CodesignKey>
     <ConsolePause>false</ConsolePause>
-    <CodesignProvision>242C2851-2A33-416F-B532-C8F9BF69DE0D</CodesignProvision>
+    <CodesignProvision>DF174499-3F85-424B-94DE-C386EC750C41</CodesignProvision>
     <IpaPackageName>me.smartwalk.ios</IpaPackageName>
     <MtouchI18n />
     <MtouchArch>ARMv7</MtouchArch>

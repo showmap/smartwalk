@@ -93,7 +93,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
         {
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
-            cell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
             cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
             return cell;
         }

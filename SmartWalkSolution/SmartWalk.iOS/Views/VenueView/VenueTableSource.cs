@@ -33,6 +33,20 @@ namespace SmartWalk.iOS.Views.VenueView
             get { return (GroupContainer[])ItemsSource;}
         }
 
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            var venueShow = GetItemAt(indexPath) as VenueShow;
+
+            if (venueShow != null &&
+                _viewModel.ExpandCollapseShowCommand != null &&
+                _viewModel.ExpandCollapseShowCommand.CanExecute(venueShow))
+            {
+                _viewModel.ExpandCollapseShowCommand.Execute(venueShow);
+            }
+
+            TableView.DeselectRow(indexPath, false);
+        }
+
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
             return TitleForHeader(tableView, section) != null ? 23.0f : 0f;
@@ -117,7 +131,6 @@ namespace SmartWalk.iOS.Views.VenueView
             var venueShowCell = cell as VenueShowCell;
             if (venueShowCell != null)
             {
-                venueShowCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 venueShowCell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
             }
 
