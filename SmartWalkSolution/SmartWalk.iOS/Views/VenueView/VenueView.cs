@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
+using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
@@ -15,6 +16,15 @@ namespace SmartWalk.iOS.Views.VenueView
         public new VenueViewModel ViewModel
         {
             get { return (VenueViewModel)base.ViewModel; }
+        }
+
+        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            base.DidRotate(fromInterfaceOrientation);
+
+            // to fix the bug: http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
+            VenueShowsTableView.BeginUpdates();
+            VenueShowsTableView.EndUpdates();
         }
 
         protected override void UpdateViewTitle()

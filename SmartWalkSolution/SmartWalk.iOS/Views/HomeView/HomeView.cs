@@ -38,6 +38,13 @@ namespace SmartWalk.iOS.Views.HomeView
             SetCellWidth();
         }
 
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            SetCellWidth();
+        }
+
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(OrgCollectionView);  

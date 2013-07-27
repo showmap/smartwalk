@@ -131,7 +131,7 @@
 							</object>
 							<object class="IBUIImageView" id="135400732">
 								<reference key="NSNextResponder" ref="856359853"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{139, 169}, {173, 100}}</string>
 								<reference key="NSSuperview" ref="856359853"/>
 								<reference key="NSWindow"/>
@@ -172,7 +172,6 @@
 										<object class="NSMutableParagraphStyle" key="NSParagraphStyle">
 											<nil key="NSTabStops"/>
 										</object>
-										<integer value="1" key="NSUnderline"/>
 									</dictionary>
 								</object>
 								<reference key="IBUIHighlightedColor" ref="671849259"/>

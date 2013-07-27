@@ -184,6 +184,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     LogoImageView.Image = null;
                     LogoImageView.Hidden = true;
                 }
+                else if (IsExpanded && !IsTableResizing)
+                {
+                    LogoImageView.Hidden = false;
+                }
             }
         }
 
@@ -218,6 +222,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     frame.Height);
 
                 LogoImageView.Layer.Frame = frame;
+                LayoutIfNeeded();
             }
         }
     }
