@@ -150,6 +150,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 ? String.Format("{0:t}", DataContext.End) : null;
             DescriptionLabel.Text = DataContext != null 
                 ? DataContext.Description : null;
+
+            EndTimeLeftSpaceConstraint.Constant =
+                EndTimeLabel.Text != null &&
+                EndTimeLabel.Text.StartsWith("1")
+                    ? 2 : 3;
+            EndTimeRightSpaceConstraint.Constant =
+                EndTimeLabel.Text != null &&
+                    EndTimeLabel.Text.StartsWith("1")
+                    ? 9 : 8;
         }
 
         private void UpdateViewState()

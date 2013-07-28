@@ -1,18 +1,23 @@
 using System;
 using System.Collections;
 using System.Drawing;
+using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
-using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
     public partial class EntityCell : TableCellBase<EntityViewModel>
     {
+        public const int DefaultLogoHeight = 240;
+        private const int MaxLogoHeight = 280;
+        private const int PagerHeight = 27;
+        private const int Gap = 8;
+
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
 
@@ -66,48 +71,37 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         public bool IsLogoSizeFixed { get; set; }
 
-        // TODO: it's still buggy
         public static float CalculateCellHeight(
             bool isExpanded, 
             Entity entity, 
-            float scrollViewHeight = 240f)
+            float logoHeight = DefaultLogoHeight)
         {
-            var nameLabelHeight = 30f + 5f;
-            var pagerHeight = 20f;
-            var bottomMargin = 8f;
-
             var isScrollVisible = IsScrollViewVisible(entity.Info);
+            var cellHeight = (isScrollVisible ? logoHeight + PagerHeight : Gap) + Gap;
+            var textHeight = default(float);
 
-            var cellHeight = nameLabelHeight + 
-                (isScrollVisible ? scrollViewHeight : 0f) + 
-                    pagerHeight + 
-                    bottomMargin;
-
-            if (isExpanded)
+            if (entity.Description != null && 
+                entity.Description != string.Empty)
             {
-                var textHeight = default(float);
+                var frameSize = new SizeF(ScreenUtil.CurrentScreenWidth - Gap * 2, float.MaxValue); 
+                var textSize = new NSString(entity.Description).StringSize(
+                    UIFont.FromName("Helvetica", 15),
+                    frameSize,
+                    UILineBreakMode.TailTruncation);
 
-                if (entity.Description != null && entity.Description != string.Empty)
-                {
-                    var frameSize = new SizeF(ScreenUtil.CurrentScreenWidth - 8 * 2, float.MaxValue); 
-                    var textSize = new NSString(entity.Description).StringSize(
-                        UIFont.FromName("Helvetica", 15),
-                        frameSize,
-                        UILineBreakMode.TailTruncation);
-                    textHeight = textSize.Height + 25; // magic number
-                }
-
-                return cellHeight + textHeight;
+                textHeight = textSize.Height;
             }
 
-            return cellHeight + 
-                (entity.Description != null && entity.Description != string.Empty ? 63.0f : 0);
+            var threeLinesHeight = 57.0f;
+
+            return isExpanded 
+                ? cellHeight + textHeight
+                : cellHeight + Math.Min(textHeight, threeLinesHeight);
         }
 
         protected override void OnInitialize()
         {
             InitializeGestures();
-            InitializeImageView();
             InitializeScrollView();
             InitializeContactCollectionView();
         }
@@ -140,15 +134,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private static bool IsScrollViewVisible(EntityInfo info)
         {
             return info.Logo != null || (info.Contact != null && !info.Contact.IsEmpty);
-        }
-
-        private void InitializeImageView()
-        {
-            //LogoImageView.BackgroundColor = UIColor.White;
-            //LogoImageView.ClipsToBounds = true;
-            //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-            //LogoImageView.Layer.BorderWidth = 1;
-            //LogoImageView.Layer.CornerRadius = 5;
         }
 
         private void InitializeGestures()
@@ -206,8 +191,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
 
             var cellWith = (ScreenUtil.CurrentScreenWidth - 
-                CollectionViewLeftConstraint.Constant -
-                Math.Abs(CollectionViewRightConstraint.Constant) -
                 flowLayout.SectionInset.Left -
                 flowLayout.SectionInset.Right - 
                 flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
@@ -217,27 +200,32 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void UpdateScrollViewHeightState()
         {
-            var height = 240;
-
+            var height = DefaultLogoHeight;
             if (!IsLogoSizeFixed)
             {
                 if (LogoImageView.Image != null)
                 {
                     var frame = LogoImageView.Layer.Frame;
                     var imageSize = LogoImageView.SizeThatFits(frame.Size);
-                    height = Math.Min(320, (int)(1.0 * 320 * imageSize.Height / imageSize.Width) + 1);
-                }
-
-                if (ImageHeightUpdated != null)
-                {
-                    ImageHeightUpdated(this, new MvxValueEventArgs<int>(height));
+                    height = Math.Min(MaxLogoHeight, 
+                        (int)(1.0 * ScreenUtil.CurrentScreenWidth * imageSize.Height / imageSize.Width) + 1);
                 }
             }
 
-            ScrollViewHeightConstraint.Constant = DataContext != null &&
+            var isScrollVisible = DataContext != null &&
                 DataContext.Entity.Info != null && 
-                    IsScrollViewVisible(DataContext.Entity.Info) 
-                    ? height : 0;
+                IsScrollViewVisible(DataContext.Entity.Info);
+            var newHeight = isScrollVisible ? height : 0;
+            ScrollViewHeightConstraint.Constant = newHeight;
+            DescriptionTopSpaceConstraint.Constant = isScrollVisible ? 27 : 8;
+
+            if (!IsLogoSizeFixed && 
+                newHeight != DefaultLogoHeight && 
+                ImageHeightUpdated != null)
+            {
+                ImageHeightUpdated(this,
+                    new MvxValueEventArgs<int>(newHeight));
+            }
         }
     }
 }

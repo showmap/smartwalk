@@ -12,12 +12,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 	partial class EntityCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CollectionViewLeftConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CollectionViewRightConstraint { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UICollectionView ContactCollectionView { get; set; }
 
 		[Outlet]
@@ -25,6 +19,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopSpaceConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIButton GoToContactButton { get; set; }
@@ -49,16 +46,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (CollectionViewLeftConstraint != null) {
-				CollectionViewLeftConstraint.Dispose ();
-				CollectionViewLeftConstraint = null;
-			}
-
-			if (CollectionViewRightConstraint != null) {
-				CollectionViewRightConstraint.Dispose ();
-				CollectionViewRightConstraint = null;
-			}
-
 			if (ContactCollectionView != null) {
 				ContactCollectionView.Dispose ();
 				ContactCollectionView = null;
@@ -102,6 +89,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (ScrollViewHeightConstraint != null) {
 				ScrollViewHeightConstraint.Dispose ();
 				ScrollViewHeightConstraint = null;
+			}
+
+			if (DescriptionTopSpaceConstraint != null) {
+				DescriptionTopSpaceConstraint.Dispose ();
+				DescriptionTopSpaceConstraint = null;
 			}
 		}
 	}

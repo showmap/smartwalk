@@ -65,7 +65,9 @@ namespace SmartWalk.iOS.Views.VenueView
                 var height = EntityCell.CalculateCellHeight(
                     _viewModel.IsDescriptionExpanded,
                     _viewModel.Venue,
-                    _entityImageHeight == 0 ? 240 : _entityImageHeight);
+                    _entityImageHeight == 0 
+                        ? EntityCell.DefaultLogoHeight 
+                        : _entityImageHeight);
 
                 return height;
             }

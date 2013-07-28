@@ -21,6 +21,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel EndTimeLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint EndTimeLeftSpaceConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint EndTimeRightSpaceConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint LogoDetailsSpaceConstraint { get; set; }
 
 		[Outlet]
@@ -47,19 +53,29 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				DescriptionLogoSpaceConstraint = null;
 			}
 
-			if (LogoDetailsSpaceConstraint != null) {
-				LogoDetailsSpaceConstraint.Dispose ();
-				LogoDetailsSpaceConstraint = null;
-			}
-
 			if (EndTimeLabel != null) {
 				EndTimeLabel.Dispose ();
 				EndTimeLabel = null;
 			}
 
+			if (LogoDetailsSpaceConstraint != null) {
+				LogoDetailsSpaceConstraint.Dispose ();
+				LogoDetailsSpaceConstraint = null;
+			}
+
 			if (LogoHeightConstraint != null) {
 				LogoHeightConstraint.Dispose ();
 				LogoHeightConstraint = null;
+			}
+
+			if (EndTimeLeftSpaceConstraint != null) {
+				EndTimeLeftSpaceConstraint.Dispose ();
+				EndTimeLeftSpaceConstraint = null;
+			}
+
+			if (EndTimeRightSpaceConstraint != null) {
+				EndTimeRightSpaceConstraint.Dispose ();
+				EndTimeRightSpaceConstraint = null;
 			}
 
 			if (LogoImageView != null) {
