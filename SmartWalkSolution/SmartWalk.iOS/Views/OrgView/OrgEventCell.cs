@@ -1,29 +1,18 @@
 using System;
-using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Converters;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
-    public partial class OrgEventCell : TableCellBase
+    public partial class OrgEventCell : TableCellBase<OrgEventInfo>
     {
         public static readonly UINib Nib = UINib.FromName("OrgEventCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgEventCell");
 
         public OrgEventCell(IntPtr handle) : base(handle)
         {
-            this.DelayBind(() => {
-                var set = this.CreateBindingSet<OrgEventCell, OrgEventInfo>();
-                set.Bind(WeekDayLabel).To(oei => oei.Date).WithConversion(new DateTimeFormatConverter(), "ddd");
-                set.Bind(DayLabel).To(oei => oei.Date).WithConversion(new DateTimeFormatConverter(), "dd");
-                set.Bind(DateLabel).To(oei => oei.Date).WithConversion(new DateTimeFormatConverter(), "d MMMM yyyy");
-                set.Bind(HintLabel).WithConversion(new ValueConverter<OrgEventInfo>(
-                    ei => ei != null && ei.HasSchedule ? null : "(no schedule)"), null);
-                set.Apply();
-            });
         }
 
         public static OrgEventCell Create()
@@ -31,22 +20,27 @@ namespace SmartWalk.iOS.Views.OrgView
             return (OrgEventCell)Nib.Instantiate(null, null)[0];
         }
 
-        protected override bool Initialize()
+        protected override void OnInitialize()
         {
-            var result = InitializeDayLabelSquare();
-            return result;
+            InitializeDayLabelSquare();
         }
 
-        private bool InitializeDayLabelSquare()
+        protected override void OnDataContextChanged()
         {
-            if (DayLabel != null)
-            {
-                DayLabel.Layer.CornerRadius = 3;
+            WeekDayLabel.Text = DataContext != null ? string.Format("{0:ddd}", DataContext.Date) : null;
+            DayLabel.Text = DataContext != null ? string.Format("{0:dd}", DataContext.Date) : null;
+            DateLabel.Text = DataContext != null ? string.Format("{0:d MMMM yyyy}", DataContext.Date) : null;
+            HintLabel.Text = DataContext != null && DataContext.HasSchedule ? null : "(no schedule)";
 
-                return true;
-            }
+            DateLabel.TextColor = DataContext != null && !DataContext.HasSchedule 
+                ? UIColor.LightGray : UIColor.Black;
+            DayLabel.BackgroundColor = DataContext != null && !DataContext.HasSchedule 
+                ? UIColor.FromRGB(128, 128, 128) : UIColor.FromRGB(0, 128, 255);
+        }
 
-            return false;
+        private void InitializeDayLabelSquare()
+        {
+            DayLabel.Layer.CornerRadius = 3;
         }
     }
 }

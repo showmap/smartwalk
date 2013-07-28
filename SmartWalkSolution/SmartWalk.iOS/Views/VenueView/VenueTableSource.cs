@@ -6,8 +6,9 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
-using SmartWalk.iOS.Views.OrgEventView;
 using SmartWalk.iOS.Views.Common.EntityCell;
+using SmartWalk.iOS.Views.OrgEventView;
+using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.iOS.Views.VenueView
 {
@@ -16,13 +17,15 @@ namespace SmartWalk.iOS.Views.VenueView
         private readonly VenueViewModel _viewModel;
         private readonly ViewsFactory<GroupHeaderCell> _headerViewFactory;
 
+        private int _entityImageHeight = 0;
+
         public VenueTableSource(UITableView tableView, VenueViewModel viewModel)
             : base(tableView)
         {
             _viewModel = viewModel;
             _headerViewFactory = new ViewsFactory<GroupHeaderCell>(GroupHeaderCell.Create);
 
-            UseAnimations = true;
+            UseAnimations = false;
 
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
@@ -60,7 +63,8 @@ namespace SmartWalk.iOS.Views.VenueView
             {
                 var height = EntityCell.CalculateCellHeight(
                     _viewModel.IsDescriptionExpanded,
-                    _viewModel.Venue);
+                    _viewModel.Venue,
+                    _entityImageHeight == 0 ? 240 : _entityImageHeight);
 
                 return height;
             }
@@ -114,24 +118,22 @@ namespace SmartWalk.iOS.Views.VenueView
             NSIndexPath indexPath, 
             object item)
         {
-            var key = default(NSString);
+            var cell = default(UITableViewCell);
 
-            if (item is VenueViewModel)
+            var venueViewModel = item as VenueViewModel;
+            if (venueViewModel != null)
             {
-                key = EntityCell.Key;
+                cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
+                ((EntityCell)cell).ImageHeightUpdated += OnEntityImageHeightUpdated; // TODO: unsubscribe
+                ((EntityCell)cell).DataContext = venueViewModel;
             }
 
-            if (item is VenueShow)
+            var venueShow = item as VenueShow;
+            if (venueShow != null)
             {
-                key = VenueShowCell.Key;
-            }
-
-            var cell = tableView.DequeueReusableCell(key, indexPath);
-
-            var venueShowCell = cell as VenueShowCell;
-            if (venueShowCell != null)
-            {
-                venueShowCell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
+                cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
+                ((VenueShowCell)cell).DataContext = venueShow;
+                ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
             }
 
             return cell;
@@ -140,6 +142,16 @@ namespace SmartWalk.iOS.Views.VenueView
         protected override object GetItemAt(NSIndexPath indexPath)
         {
             return GroupItemsSource[indexPath.Section][indexPath.Row];
+        }
+
+        private void OnEntityImageHeightUpdated(object sender, MvxValueEventArgs<int> e)
+        {
+            _entityImageHeight = e.Value;
+
+            UseAnimations = false;
+            TableView.BeginUpdates();
+            TableView.EndUpdates();
+            UseAnimations = true;
         }
     }
 }

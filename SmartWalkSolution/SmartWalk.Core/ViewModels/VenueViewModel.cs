@@ -45,6 +45,17 @@ namespace SmartWalk.Core.ViewModels
                 {
                     Entity = value;
                     RaisePropertyChanged(() => Venue);
+
+                    if (Entity != null &&
+                        ((Venue)Entity).Shows != null && 
+                        ((Venue)Entity).Shows.Length == 1)
+                    {
+                        ExpandedShow = ((Venue)Entity).Shows.First();
+                    }
+                    else
+                    {
+                        ExpandedShow = null;
+                    }
                 }
             }
         }

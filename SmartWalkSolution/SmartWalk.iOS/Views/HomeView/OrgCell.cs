@@ -1,5 +1,4 @@
 using System;
-using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -8,7 +7,7 @@ using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
-    public partial class OrgCell : CollectionCellBase
+    public partial class OrgCell : CollectionCellBase<EntityInfo>
     {
         public static readonly UINib Nib = UINib.FromName("OrgCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgCell");
@@ -17,18 +16,11 @@ namespace SmartWalk.iOS.Views.HomeView
 
         public OrgCell(IntPtr handle) : base(handle)
         {
+            _imageHelper = new MvxImageViewLoader(() => OrgImageView);
+
             //Layer.BorderColor = UIColor.Gray.CGColor;
             //Layer.BorderWidth = 1;
             Layer.CornerRadius = 5;
-
-            _imageHelper = new MvxImageViewLoader(() => OrgImageView);
-
-            this.DelayBind(() => {
-                var set = this.CreateBindingSet<OrgCell, EntityInfo>();
-                set.Bind(OrgNameLabel).To(info => info.Name);
-                set.Bind(_imageHelper).To(info => info.Logo);
-                set.Apply();
-            });
         }
 
         public static OrgCell Create()
@@ -36,26 +28,24 @@ namespace SmartWalk.iOS.Views.HomeView
             return (OrgCell)Nib.Instantiate(null, null)[0];
         }
 
-        protected override bool Initialize()
+        protected override void OnInitialize()
         {
-            var result = InitializeImageView();
-            return result;
+            InitializeImageView();
         }
 
-        private bool InitializeImageView()
+        protected override void OnDataContextChanged()
         {
-            if (OrgImageView != null)
-            {
-                OrgImageView.BackgroundColor = UIColor.White;
-                OrgImageView.ClipsToBounds = true;
-                //OrgImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-                //OrgImageView.Layer.BorderWidth = 1;
-                OrgImageView.Layer.CornerRadius = 3;
+            _imageHelper.ImageUrl = DataContext != null ? DataContext.Logo : null;
+            OrgNameLabel.Text = DataContext != null ? DataContext.Name : null;
+        }
 
-                return true;
-            }
-
-            return false;
+        private void InitializeImageView()
+        {
+            OrgImageView.BackgroundColor = UIColor.White;
+            OrgImageView.ClipsToBounds = true;
+            //OrgImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+            //OrgImageView.Layer.BorderWidth = 1;
+            OrgImageView.Layer.CornerRadius = 3;
         }
     }
 }

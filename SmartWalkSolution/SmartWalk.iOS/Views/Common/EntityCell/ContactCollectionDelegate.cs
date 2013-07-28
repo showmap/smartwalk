@@ -8,8 +8,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = UIColor.Gray;
-            cell.ContentView.Layer.CornerRadius = 8;
+            cell.ContentView.BackgroundColor = UIColor.FromRGB(245, 245, 245);
         }
 
         public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)

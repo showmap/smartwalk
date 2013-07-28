@@ -15,24 +15,35 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             collectionView.RegisterNibForCell(WebSiteCell.Nib, WebSiteCell.Key);
         }
 
-        protected override UICollectionViewCell GetOrCreateCellFor(UICollectionView collectionView, NSIndexPath indexPath, object item)
+        protected override UICollectionViewCell GetOrCreateCellFor(
+            UICollectionView collectionView, 
+            NSIndexPath indexPath, 
+            object item)
         {
-            if (item is PhoneInfo)
+            var cell = default(UICollectionViewCell);
+
+            var phoneInfo = item as PhoneInfo;
+            if (phoneInfo != null)
             {
-                return (UICollectionViewCell)collectionView.DequeueReusableCell(PhoneCell.Key, indexPath);
+                cell = (UICollectionViewCell)collectionView.DequeueReusableCell(PhoneCell.Key, indexPath);
+                ((PhoneCell)cell).DataContext = phoneInfo;
             }
 
-            if (item is EmailInfo)
+            var emailInfo = item as EmailInfo;
+            if (emailInfo != null)
             {
-                return (UICollectionViewCell)collectionView.DequeueReusableCell(EmailCell.Key, indexPath);
+                cell = (UICollectionViewCell)collectionView.DequeueReusableCell(EmailCell.Key, indexPath);
+                ((EmailCell)cell).DataContext = emailInfo;
             }
 
-            if (item is WebSiteInfo)
+            var webSiteInfo = item as WebSiteInfo;
+            if (webSiteInfo != null)
             {
-                return (UICollectionViewCell)collectionView.DequeueReusableCell(WebSiteCell.Key, indexPath);
+                cell = (UICollectionViewCell)collectionView.DequeueReusableCell(WebSiteCell.Key, indexPath);
+                ((WebSiteCell)cell).DataContext = webSiteInfo;
             }
 
-            return null;
+            return cell;
         }
     }
 }

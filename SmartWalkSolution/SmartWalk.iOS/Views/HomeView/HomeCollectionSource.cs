@@ -1,6 +1,7 @@
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Model;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
@@ -17,7 +18,9 @@ namespace SmartWalk.iOS.Views.HomeView
             NSIndexPath indexPath, 
             object item)
         {
-            return (UICollectionViewCell)collectionView.DequeueReusableCell(OrgCell.Key, indexPath);
+            var cell = (OrgCell)collectionView.DequeueReusableCell(OrgCell.Key, indexPath);
+            cell.DataContext = (EntityInfo)item;
+            return cell;
         }
     }
 }

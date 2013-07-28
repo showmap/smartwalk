@@ -1,20 +1,17 @@
 using System;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Input;
-using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Converters;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class VenueShowCell : TableCellBase
+    public partial class VenueShowCell : TableCellBase<VenueShow>
     {
         private const int LogoHeight = 100;
         private const int DetailsHeight = 18;
@@ -25,20 +22,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private readonly MvxImageViewLoader _imageHelper;
         private bool _isTableResizing;
-        private bool _isExpanded = true; // all constrains are expanded by default
+        private bool _isExpanded;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
-            _imageHelper = new MvxImageViewLoader(() => LogoImageView, UpdateLogoImageFrame);
-
-            this.DelayBind(() => {
-                var set = this.CreateBindingSet<VenueShowCell, VenueShow>();
-                set.Bind().For(p => p.DataContext).To(vs => vs);
-                set.Bind(StartTimeLabel).To(vs => vs.Start).WithConversion(new DateTimeFormatConverter(), "t");
-                set.Bind(EndTimeLabel).To(vs => vs.End).WithConversion(new DateTimeFormatConverter(), "t");
-                set.Bind(DescriptionLabel).To(vs => vs.Description);
-                set.Apply();
-            });
+            _imageHelper = new MvxImageViewLoader(
+                () => LogoImageView, 
+                UpdateLogoImageFrame);
         }
 
         public bool IsExpanded
@@ -68,20 +58,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 if (_isTableResizing != value)
                 {
                     _isTableResizing = value;
-                    UpdateLogoImageViewState();
+                    UpdateLogoImageHiddenState();
                 }
-            }
-        }
-
-        public new VenueShow DataContext
-        {
-            get
-            {
-                return (VenueShow)base.DataContext;
-            }
-            set
-            {
-                UpdateViewState();
             }
         }
 
@@ -162,42 +140,65 @@ namespace SmartWalk.iOS.Views.OrgEventView
             IsExpanded = false;
         }
 
+        protected override void OnDataContextChanged()
+        {
+            UpdateViewState();
+
+            StartTimeLabel.Text = DataContext != null 
+                ? String.Format("{0:t}", DataContext.Start) : null;
+            EndTimeLabel.Text = DataContext != null 
+                ? String.Format("{0:t}", DataContext.End) : null;
+            DescriptionLabel.Text = DataContext != null 
+                ? DataContext.Description : null;
+        }
+
         private void UpdateViewState()
         {
-            if (DescriptionLogoSpaceConstraint != null)
+            DescriptionLogoSpaceConstraint.Constant = 
+                IsExpanded && 
+                DataContext != null && 
+                DataContext.Logo != null 
+                    ? Gap : 0;
+            LogoHeightConstraint.Constant = 
+                IsExpanded && 
+                DataContext != null && 
+                DataContext.Logo != null 
+                    ? LogoHeight : 0;
+            MoreInfoHeightConstraint.Constant = 
+                IsExpanded && 
+                DataContext != null && 
+                DataContext.Site != null 
+                    ? DetailsHeight : 0;
+            LogoDetailsSpaceConstraint.Constant = 
+                IsExpanded && 
+                DataContext != null && 
+                DataContext.Site != null 
+                    ? Gap : 0;
+
+            _imageHelper.ImageUrl = 
+                IsExpanded && DataContext != null 
+                    ? DataContext.Logo : null;
+
+            if (!IsExpanded)
             {
-                DescriptionLogoSpaceConstraint.Constant = 
-                    IsExpanded && DataContext != null && DataContext.Logo != null ? Gap : 0;
-                LogoHeightConstraint.Constant = 
-                    IsExpanded && DataContext != null && DataContext.Logo != null ? LogoHeight : 0;
-                MoreInfoHeightConstraint.Constant = 
-                    IsExpanded && DataContext != null && DataContext.Site != null ? DetailsHeight : 0;
-                LogoDetailsSpaceConstraint.Constant = 
-                    IsExpanded && DataContext != null && DataContext.Site != null ? Gap : 0;
-
-                _imageHelper.ImageUrl = IsExpanded && DataContext != null ? DataContext.Logo : null;
-
-                if (!IsExpanded && IsTableResizing)
-                {
-                    LogoImageView.Image = null;
-                    LogoImageView.Hidden = true;
-                }
-                else if (IsExpanded && !IsTableResizing)
-                {
-                    LogoImageView.Hidden = false;
-                }
+                LogoImageView.Hidden = true;
+            }
+            else if (IsExpanded && !IsTableResizing) // if it's resizing, wait wait until the cell grows up
+            {
+                LogoImageView.Hidden = false;
             }
         }
 
-        private void UpdateLogoImageViewState()
+        private void UpdateLogoImageHiddenState()
         {
             if (IsExpanded && 
-                DataContext != null && DataContext.Logo != null)
+                DataContext != null && 
+                DataContext.Logo != null)
             {
                 UpdateLogoImageFrame();
 
                 var transition = new CATransition();
-                transition.Duration = 0.25;
+                transition.Duration = 0.2;
                 transition.Type = CAAnimation.TransitionFade.ToString();
                 LogoImageView.Layer.AddAnimation(transition, null);
 
@@ -208,7 +209,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private void UpdateLogoImageFrame()
         {
             if (_imageHelper.ImageUrl != null &&
-                LogoImageView != null && 
                 LogoImageView.Image != null && 
                 (int)LogoImageView.Layer.Frame.Height != 0)
             {

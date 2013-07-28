@@ -36,9 +36,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel NameLabel { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UIPageControl PageControl { get; set; }
 
 		[Outlet]
@@ -52,6 +49,16 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (CollectionViewLeftConstraint != null) {
+				CollectionViewLeftConstraint.Dispose ();
+				CollectionViewLeftConstraint = null;
+			}
+
+			if (CollectionViewRightConstraint != null) {
+				CollectionViewRightConstraint.Dispose ();
+				CollectionViewRightConstraint = null;
+			}
+
 			if (ContactCollectionView != null) {
 				ContactCollectionView.Dispose ();
 				ContactCollectionView = null;
@@ -82,11 +89,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				LogoImageView = null;
 			}
 
-			if (NameLabel != null) {
-				NameLabel.Dispose ();
-				NameLabel = null;
-			}
-
 			if (PageControl != null) {
 				PageControl.Dispose ();
 				PageControl = null;
@@ -100,16 +102,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (ScrollViewHeightConstraint != null) {
 				ScrollViewHeightConstraint.Dispose ();
 				ScrollViewHeightConstraint = null;
-			}
-
-			if (CollectionViewLeftConstraint != null) {
-				CollectionViewLeftConstraint.Dispose ();
-				CollectionViewLeftConstraint = null;
-			}
-
-			if (CollectionViewRightConstraint != null) {
-				CollectionViewRightConstraint.Dispose ();
-				CollectionViewRightConstraint = null;
 			}
 		}
 	}

@@ -75,7 +75,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             return VenueItemsSource != null && VenueItemsSource[section].Shows != null 
                 ? VenueItemsSource[section].Shows.Count() 
-                    : 0;
+                : 0;
         }
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
@@ -93,8 +93,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
         {
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
+            cell.DataContext = (VenueShow)item;
             cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
-            return cell;
+                        return cell;
         }
 
         protected override object GetItemAt(NSIndexPath indexPath)

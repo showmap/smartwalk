@@ -1,17 +1,17 @@
 using System;
+using System.Collections;
 using System.Drawing;
-using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
-using SmartWalk.Core.Converters;
+using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
-    public partial class EntityCell : TableCellBase
+    public partial class EntityCell : TableCellBase<EntityViewModel>
     {
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
@@ -19,40 +19,17 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private readonly MvxImageViewLoader _imageHelper;
 
         private UITapGestureRecognizer _descriptionTapGesture;
-        private bool _isDescriptionTapGestureEnabled = true;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
-            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
-
-            this.DelayBind(() => {
-                var set = this.CreateBindingSet<EntityCell, EntityViewModel>();
-                set.Bind(NameLabel).To(vm => vm.Entity.Info.Name);
-                set.Bind(DescriptionLabel).To(vm => vm.Entity.Description);
-                set.Bind(_imageHelper).To(vm => vm.Entity.Info.Logo);
-                set.Bind().For(cell => cell.IsDescriptionTapGestureEnabled)
-                    .To(vm => vm.IsDescriptionExpandable);
-
-                set.Bind(ScrollViewHeightConstraint).For(p => p.Constant).To(vm => vm.Entity.Info)
-                    .WithConversion(new ValueConverter<EntityInfo>(
-                        info => info != null && IsScrollViewVisible(info) ? 240 : 0), null);
-
-                set.Bind(PageControl).For(p => p.Hidden).To(vm => vm.Entity.Info)
-                    .WithConversion(new ValueConverter<EntityInfo>(
-                        info => info != null ? !IsScrollViewVisible(info) : false), null);
-
-                set.Apply();
-            });
+            _imageHelper = new MvxImageViewLoader(() => LogoImageView, UpdateScrollViewHeightState);
         }
+
+        public event EventHandler<MvxValueEventArgs<int>> ImageHeightUpdated;
 
         public static EntityCell Create()
         {
             return (EntityCell)Nib.Instantiate(null, null)[0];
-        }
-
-        public EntityViewModel ViewModel
-        {
-            get { return (EntityViewModel)base.DataContext; }
         }
 
         public override RectangleF Frame
@@ -87,25 +64,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             }
         }
 
-        public bool IsDescriptionTapGestureEnabled
-        {
-            get { return _isDescriptionTapGestureEnabled; }
-            set 
-            { 
-                _isDescriptionTapGestureEnabled = value;
-
-                if (_descriptionTapGesture != null)
-                {
-                    _descriptionTapGesture.Enabled = _isDescriptionTapGestureEnabled;
-                }
-            }
-        }
+        public bool IsLogoSizeFixed { get; set; }
 
         // TODO: it's still buggy
-        public static float CalculateCellHeight(bool isExpanded, Entity entity)
+        public static float CalculateCellHeight(
+            bool isExpanded, 
+            Entity entity, 
+            float scrollViewHeight = 240f)
         {
             var nameLabelHeight = 30f + 5f;
-            var scrollViewHeight = 240f;
             var pagerHeight = 20f;
             var bottomMargin = 8f;
 
@@ -137,121 +104,94 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 (entity.Description != null && entity.Description != string.Empty ? 63.0f : 0);
         }
 
+        protected override void OnInitialize()
+        {
+            InitializeGestures();
+            InitializeImageView();
+            InitializeScrollView();
+            InitializeContactCollectionView();
+        }
+
+        protected override void OnDataContextChanged()
+        {
+            _imageHelper.ImageUrl = DataContext != null 
+                ? DataContext.Entity.Info.Logo : null;
+
+            DescriptionLabel.Text = DataContext != null 
+                ? DataContext.Entity.Description : null;
+
+            _descriptionTapGesture.Enabled = DataContext != null 
+                ? DataContext.IsDescriptionExpandable : false;
+
+            PageControl.Hidden = DataContext != null && 
+                    DataContext.Entity.Info != null 
+                ? !IsScrollViewVisible(DataContext.Entity.Info) 
+                : false;
+
+            ((ContactCollectionSource)ContactCollectionView.WeakDataSource).ItemsSource =
+                DataContext != null 
+                    ? (IEnumerable)new ContactCollectionSourceConverter()
+                    .Convert(DataContext.Entity.Info.Contact, typeof(IEnumerable), null, null) 
+                    : null;
+
+            UpdateScrollViewHeightState();
+        }
+
         private static bool IsScrollViewVisible(EntityInfo info)
         {
-            return info.Logo != null || 
-                (info.Contact != null && !info.Contact.IsEmpty);
+            return info.Logo != null || (info.Contact != null && !info.Contact.IsEmpty);
         }
 
-        protected override bool Initialize()
+        private void InitializeImageView()
         {
-            var result = InitializeGestures();
-            result = result && InitializeImageView();
-            result = result && InitializeGoToContactButton();
-            result = result && InitializeScrollView();
-            result = result && InitializeContactCollectionView();
-            return result;
+            //LogoImageView.BackgroundColor = UIColor.White;
+            //LogoImageView.ClipsToBounds = true;
+            //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+            //LogoImageView.Layer.BorderWidth = 1;
+            //LogoImageView.Layer.CornerRadius = 5;
         }
 
-        private bool InitializeImageView()
+        private void InitializeGestures()
         {
-            if (LogoImageView != null)
+            if (DescriptionLabel.GestureRecognizers == null ||
+                DescriptionLabel.GestureRecognizers.Length == 0)
             {
-                //LogoImageView.BackgroundColor = UIColor.White;
-                //LogoImageView.ClipsToBounds = true;
-                //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-                //LogoImageView.Layer.BorderWidth = 1;
-                //LogoImageView.Layer.CornerRadius = 5;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool InitializeGestures()
-        {
-            if (DescriptionLabel != null)
-            {
-                if (DescriptionLabel.GestureRecognizers == null ||
-                    DescriptionLabel.GestureRecognizers.Length == 0)
-                {
-                    _descriptionTapGesture = new UITapGestureRecognizer(() => {
-                        if (ViewModel.ExpandCollapseCommand.CanExecute(null))
-                        {
-                            ViewModel.ExpandCollapseCommand.Execute(null);
-                        }
-                    })
+                _descriptionTapGesture = new UITapGestureRecognizer(() => {
+                    if (DataContext != null &&
+                        DataContext.ExpandCollapseCommand.CanExecute(null))
                     {
-                        Enabled = IsDescriptionTapGestureEnabled
-                    };
+                        DataContext.ExpandCollapseCommand.Execute(null);
+                    }
+                });
 
-                    _descriptionTapGesture.NumberOfTouchesRequired = (uint)1;
-                    _descriptionTapGesture.NumberOfTapsRequired = (uint)1;
+                _descriptionTapGesture.NumberOfTouchesRequired = (uint)1;
+                _descriptionTapGesture.NumberOfTapsRequired = (uint)1;
 
-                    DescriptionLabel.AddGestureRecognizer(_descriptionTapGesture);
-                }
-
-                return true;
+                DescriptionLabel.AddGestureRecognizer(_descriptionTapGesture);
             }
-
-            return false;
         }
 
-        private bool InitializeGoToContactButton()
+        private void InitializeScrollView()
         {
-            if (GoToContactButton != null)
+            if (ScrollView.Delegate == null)
             {
-                GoToContactButton.Layer.CornerRadius = 3;
-                GoToContactButton.Layer.BorderWidth = 0;
-                GoToContactButton.Layer.BackgroundColor = UIColor.FromRGB(230, 230, 230).CGColor;
-                //GoToContactButton.colo
-
-                return true;
+                ScrollView.Delegate = new EntityScrollViewDelegate(ScrollView, PageControl);
             }
-
-            return false;
         }
 
-        private bool InitializeScrollView()
+        private void InitializeContactCollectionView()
         {
-            if (ScrollView != null)
+            SetCollectionViewCellWidth();
+
+            if (ContactCollectionView.Source == null)
             {
-                if (ScrollView.Delegate == null)
-                {
-                    ScrollView.Delegate = new EntityScrollViewDelegate(ScrollView, PageControl);
-                }
+                var collectionSource = new ContactCollectionSource(ContactCollectionView);
 
-                return true;
+                ContactCollectionView.Source = collectionSource;
+                ContactCollectionView.Delegate = new ContactCollectionDelegate();
+
+                ContactCollectionView.ReloadData();
             }
-
-            return false;
-        }
-
-        private bool InitializeContactCollectionView()
-        {
-            if (ContactCollectionView != null)
-            {
-                SetCollectionViewCellWidth();
-
-                if (ContactCollectionView.Source == null)
-                {
-                    var collectionSource = new ContactCollectionSource(ContactCollectionView);
-
-                    this.CreateBinding(collectionSource)
-                        .WithConversion(new ContactCollectionSourceConverter(), null)
-                        .To((EntityViewModel vm) => vm.Entity.Info.Contact).Apply();
-
-                    ContactCollectionView.Source = collectionSource;
-                    ContactCollectionView.Delegate = new ContactCollectionDelegate();
-
-                    ContactCollectionView.ReloadData();
-                }
-
-                return true;
-            }
-
-            return false;
         }
 
         partial void OnGoToContactButtonTouchUpInside(UIButton sender, UIEvent @event)
@@ -266,13 +206,38 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
 
             var cellWith = (ScreenUtil.CurrentScreenWidth - 
-                            CollectionViewLeftConstraint.Constant -
-                            Math.Abs(CollectionViewRightConstraint.Constant) -
-                            flowLayout.SectionInset.Left -
-                            flowLayout.SectionInset.Right - 
-                            flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
+                CollectionViewLeftConstraint.Constant -
+                Math.Abs(CollectionViewRightConstraint.Constant) -
+                flowLayout.SectionInset.Left -
+                flowLayout.SectionInset.Right - 
+                flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
             flowLayout.ItemSize = new SizeF(cellWith, 41);
+        }
+
+        private void UpdateScrollViewHeightState()
+        {
+            var height = 240;
+
+            if (!IsLogoSizeFixed)
+            {
+                if (LogoImageView.Image != null)
+                {
+                    var frame = LogoImageView.Layer.Frame;
+                    var imageSize = LogoImageView.SizeThatFits(frame.Size);
+                    height = Math.Min(320, (int)(1.0 * 320 * imageSize.Height / imageSize.Width) + 1);
+                }
+
+                if (ImageHeightUpdated != null)
+                {
+                    ImageHeightUpdated(this, new MvxValueEventArgs<int>(height));
+                }
+            }
+
+            ScrollViewHeightConstraint.Constant = DataContext != null &&
+                DataContext.Entity.Info != null && 
+                    IsScrollViewVisible(DataContext.Entity.Info) 
+                    ? height : 0;
         }
     }
 }

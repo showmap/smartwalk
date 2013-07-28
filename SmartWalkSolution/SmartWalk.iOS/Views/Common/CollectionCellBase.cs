@@ -1,30 +1,42 @@
 using System;
-using Cirrious.MvvmCross.Binding.Touch.Views;
+using MonoTouch.UIKit;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class CollectionCellBase : MvxCollectionViewCell
+    public abstract class CollectionCellBase<TDataContext> : UICollectionViewCell
+        where TDataContext : class
     {
         private bool _isInitialized;
+        private TDataContext _dataContext;
 
         protected CollectionCellBase(IntPtr handle) : base(handle) {}
 
-        public override void LayoutSubviews()
+        public TDataContext DataContext
         {
-            base.LayoutSubviews();
-
-            if (!_isInitialized)
+            get { return _dataContext; }
+            set
             {
-                if (Initialize())
+                if (!Equals(_dataContext, value))
                 {
-                    _isInitialized = true;
+                    _dataContext = value;
+
+                    if (!_isInitialized)
+                    {
+                        OnInitialize();
+                        _isInitialized = true;
+                    }
+
+                    OnDataContextChanged();
                 }
             }
         }
 
-        protected virtual bool Initialize()
+        protected virtual void OnInitialize()
         {
-            return true;
+        }
+
+        protected virtual void OnDataContextChanged()
+        {
         }
     }
 }

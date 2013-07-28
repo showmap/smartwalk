@@ -107,19 +107,23 @@ namespace SmartWalk.iOS.Views.OrgView
             NSIndexPath indexPath, 
             object item)
         {
-            var key = default(NSString);
+            var cell = default(UITableViewCell);
 
-            if (item is OrgViewModel)
+            var orgViewModel = item as OrgViewModel;
+            if (orgViewModel != null)
             {
-                key = EntityCell.Key;
+                cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
+                ((EntityCell)cell).IsLogoSizeFixed = true;
+                ((EntityCell)cell).DataContext = orgViewModel;
             }
 
-            if (item is OrgEventInfo)
+            var orgEventInfo = item as OrgEventInfo;
+            if (orgEventInfo != null)
             {
-                key = OrgEventCell.Key;
+                cell = tableView.DequeueReusableCell(OrgEventCell.Key, indexPath);
+                ((OrgEventCell)cell).DataContext = orgEventInfo;
             }
 
-            var cell = tableView.DequeueReusableCell(key, indexPath);
             return cell;
         }
 

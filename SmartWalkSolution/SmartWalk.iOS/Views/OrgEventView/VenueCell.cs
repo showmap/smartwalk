@@ -1,48 +1,24 @@
 using System;
 using System.Windows.Input;
-using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Views.Common;
-using SmartWalk.Core.Converters;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class VenueCell : TableCellBase
+    public partial class VenueCell : TableCellBase<Venue>
     {
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
 
         private MvxImageViewLoader _imageHelper;
+        private Venue _dataContext;
 
         public VenueCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(() => LogoImageView);
-
-            this.DelayBind(() => {
-                var set = this.CreateBindingSet<VenueCell, Venue>();
-                set.Bind(_imageHelper).To(v => v.Info.Logo);
-
-                set.Bind(LogoImageView).For(p => p.Hidden).To(v => v.Info.Logo)
-                    .WithConversion(new ValueConverter<string>(s => s == null), null);
-
-                set.Bind(NameLeftConstraint).For(p => p.Constant).To(v => v.Info.Logo)
-                    .WithConversion(new ValueConverter<string>(s => s != null ? 76 : 8), null);
-
-                set.Bind(NameLabel).To(v => v)
-                    .WithConversion(new ValueConverter<Venue>(
-                        v => v.Number == 0 ? v.Info.Name : string.Format("{0}. {1}", v.Number, v.Info.Name)), null);
-
-                set.Bind(AddressLabel).To(v => v.Info.Addresses)
-                    .WithConversion(new ValueConverter<AddressInfo[]>(
-                        adds => adds != null && adds.Length > 0 ? adds[0].Address : null), null);
-
-                set.Apply();
-            });
-
-            InitializeGesture();
         }
 
         public static VenueCell Create()
@@ -61,12 +37,37 @@ namespace SmartWalk.iOS.Views.OrgEventView
             LogoImageView.Image = null;
         }
 
-        protected override bool Initialize()
+        protected override void OnInitialize()
         {
-            var result = InitializeAddressGesture();
-            result = result && InitializeImageView();
+            InitializeGesture();
+            InitializeAddressGesture();
+            InitializeImageView();
+        }
 
-            return result;
+        protected override void OnDataContextChanged()
+        {
+            _imageHelper.ImageUrl = DataContext != null 
+                ? DataContext.Info.Logo : null;
+
+            LogoImageView.Hidden = DataContext != null 
+                ? DataContext.Info.Logo == null : true;
+
+            NameLeftConstraint.Constant = DataContext != null && 
+                DataContext.Info.Logo != null 
+                ? 76 : 8;
+
+            NameLabel.Text = DataContext != null 
+                ? (DataContext.Number == 0 
+                    ? DataContext.Info.Name 
+                    : string.Format("{0}. {1}", 
+                        DataContext.Number, DataContext.Info.Name))
+                : null;
+
+            AddressLabel.Text = DataContext != null && 
+                    DataContext.Info.Addresses != null && 
+                    DataContext.Info.Addresses.Length > 0 
+                ? DataContext.Info.Addresses[0].Address 
+                : null;
         }
 
         private void InitializeGesture()
@@ -88,47 +89,33 @@ namespace SmartWalk.iOS.Views.OrgEventView
             AddGestureRecognizer(tap);
         }
 
-        private bool InitializeAddressGesture()
+        private void InitializeAddressGesture()
         {
-            if (AddressLabel != null)
+            if (AddressLabel.GestureRecognizers == null ||
+                AddressLabel.GestureRecognizers.Length == 0)
             {
-                if (AddressLabel.GestureRecognizers == null ||
-                    AddressLabel.GestureRecognizers.Length == 0)
-                {
-                    var tap = new UITapGestureRecognizer(() => {
-                        if (NavigateVenueOnMapCommand != null &&
-                            NavigateVenueOnMapCommand.CanExecute(DataContext))
-                        {
-                            NavigateVenueOnMapCommand.Execute(DataContext);
-                        }
-                    });
+                var tap = new UITapGestureRecognizer(() => {
+                    if (NavigateVenueOnMapCommand != null &&
+                        NavigateVenueOnMapCommand.CanExecute(DataContext))
+                    {
+                        NavigateVenueOnMapCommand.Execute(DataContext);
+                    }
+                });
 
-                    tap.NumberOfTouchesRequired = (uint)1;
-                    tap.NumberOfTapsRequired = (uint)1;
+                tap.NumberOfTouchesRequired = (uint)1;
+                tap.NumberOfTapsRequired = (uint)1;
 
-                    AddressLabel.AddGestureRecognizer(tap);
-                }
-
-                return true;
+                AddressLabel.AddGestureRecognizer(tap);
             }
-
-            return false;
         }
 
-        private bool InitializeImageView()
+        private void InitializeImageView()
         {
-            if (LogoImageView != null)
-            {
-                LogoImageView.BackgroundColor = UIColor.White;
-                LogoImageView.ClipsToBounds = true;
-                //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-                //LogoImageView.Layer.BorderWidth = 1;
-                LogoImageView.Layer.CornerRadius = 3;
-
-                return true;
-            }
-
-            return false;
+            LogoImageView.BackgroundColor = UIColor.White;
+            LogoImageView.ClipsToBounds = true;
+            //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
+            //LogoImageView.Layer.BorderWidth = 1;
+            LogoImageView.Layer.CornerRadius = 3;
         }
     }
 }
