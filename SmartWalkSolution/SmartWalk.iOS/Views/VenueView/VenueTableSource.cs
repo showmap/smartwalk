@@ -9,6 +9,7 @@ using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
 using SmartWalk.iOS.Views.OrgEventView;
 using Cirrious.CrossCore.Core;
+using MonoTouch.CoreFoundation;
 
 namespace SmartWalk.iOS.Views.VenueView
 {
@@ -25,7 +26,7 @@ namespace SmartWalk.iOS.Views.VenueView
             _viewModel = viewModel;
             _headerViewFactory = new ViewsFactory<GroupHeaderCell>(GroupHeaderCell.Create);
 
-            UseAnimations = false;
+            UseAnimations = true;
 
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
@@ -148,10 +149,12 @@ namespace SmartWalk.iOS.Views.VenueView
         {
             _entityImageHeight = e.Value;
 
-            UseAnimations = false;
-            TableView.BeginUpdates();
-            TableView.EndUpdates();
-            UseAnimations = true;
+            DispatchQueue.DefaultGlobalQueue.DispatchAsync(() => {
+                BeginInvokeOnMainThread(() => {
+                    TableView.BeginUpdates();
+                    TableView.EndUpdates();
+                });
+            });
         }
     }
 }
