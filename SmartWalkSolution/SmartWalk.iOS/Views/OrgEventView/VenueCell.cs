@@ -8,17 +8,22 @@ using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class VenueCell : TableCellBase<Venue>
+    public partial class VenueCell : TableCellBase
     {
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
 
         private MvxImageViewLoader _imageHelper;
-        private Venue _dataContext;
 
         public VenueCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(() => LogoImageView);
+        }
+
+        public new Venue DataContext
+        {
+            get { return (Venue)base.DataContext; }
+            set { base.DataContext = value; }
         }
 
         public static VenueCell Create()
@@ -41,7 +46,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             InitializeGesture();
             InitializeAddressGesture();
-            InitializeImageView();
         }
 
         protected override void OnDataContextChanged()
@@ -54,7 +58,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             NameLeftConstraint.Constant = DataContext != null && 
                 DataContext.Info.Logo != null 
-                ? 76 : 8;
+                ? 84 : 8;
 
             NameLabel.Text = DataContext != null 
                 ? (DataContext.Number == 0 
@@ -107,15 +111,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                 AddressLabel.AddGestureRecognizer(tap);
             }
-        }
-
-        private void InitializeImageView()
-        {
-            LogoImageView.BackgroundColor = UIColor.White;
-            LogoImageView.ClipsToBounds = true;
-            //LogoImageView.Layer.BorderColor = UIColor.LightGray.CGColor;
-            //LogoImageView.Layer.BorderWidth = 1;
-            LogoImageView.Layer.CornerRadius = 3;
         }
     }
 }

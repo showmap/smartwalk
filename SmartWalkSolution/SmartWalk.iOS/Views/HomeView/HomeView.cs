@@ -1,6 +1,9 @@
+using System.ComponentModel;
 using System.Drawing;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
@@ -10,6 +13,17 @@ namespace SmartWalk.iOS.Views.HomeView
 {
     public partial class HomeView : ListViewBase
     {
+        private MvxImageViewLoader _imageHelper;
+
+        public HomeView()
+        {
+            _imageHelper = new MvxImageViewLoader(() => BackgroundImageView);
+
+            var set = this.CreateBindingSet<HomeView, HomeViewModel>();
+            set.Bind(_imageHelper).To(vm => vm.Location.Logo);
+            set.Apply();
+        }
+
         public new HomeViewModel ViewModel
         {
             get { return (HomeViewModel)base.ViewModel; }
@@ -22,6 +36,8 @@ namespace SmartWalk.iOS.Views.HomeView
             NavigationController.NavigationBar.BarStyle = UIBarStyle.Black;
             NavigationController.NavigationBar.TintColor = UIColor.LightGray;  //UIColor.FromRGB(230, 230, 230);
 
+            BackgroundImageView.ClipsToBounds = true;
+            OrgCollectionView.BackgroundColor = null;
 
             /*var attr = new UITextAttributes();
             attr.TextColor = UIColor.Gray;
@@ -52,7 +68,7 @@ namespace SmartWalk.iOS.Views.HomeView
 
         protected override void UpdateViewTitle()
         {
-            NavigationItem.Title = ViewModel.Location;
+            NavigationItem.Title = ViewModel.Location != null ? ViewModel.Location.Name : string.Empty;
         }
 
         protected override void InitializeListView()
@@ -71,6 +87,14 @@ namespace SmartWalk.iOS.Views.HomeView
             this.CreateBinding(collectionSource).To((HomeViewModel vm) => vm.OrgInfos).Apply();
 
             return collectionSource;
+        }
+
+        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == ViewModel.GetPropertyName(p => p.Location))
+            {
+                UpdateViewTitle();
+            }
         }
 
         private void SetCellWidth()

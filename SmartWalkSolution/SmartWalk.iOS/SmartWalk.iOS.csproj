@@ -229,6 +229,7 @@
     <Compile Include="Views\Common\CollectionCellBase.cs" />
     <Compile Include="Views\HomeView\HomeCollectionDelegate.cs" />
     <Compile Include="Services\ExceptionPolicy.cs" />
+    <Compile Include="Controls\ThemeColors.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

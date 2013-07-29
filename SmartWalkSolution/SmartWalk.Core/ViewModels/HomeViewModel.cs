@@ -11,7 +11,7 @@ namespace SmartWalk.Core.ViewModels
 		private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
-        private string _location;
+        private Location _location;
 		private EntityInfo[] _orgInfos;
         private ICommand _refreshCommand;
         private ICommand _navigateOrgViewCommand;
@@ -20,22 +20,25 @@ namespace SmartWalk.Core.ViewModels
 		{
 			_dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
-
-            Location = "San Francisco Bay Area";
 		}
 
         public event EventHandler RefreshCompleted;
 
-        public string Location
+        public Location Location
         {
             get
             {
                 return _location;
             }
-            set
+            private set
             {
-                _location = value;
-                RaisePropertyChanged(() => Location);
+                if (!Equals(_location, value))
+                {
+                    _location = value;
+                    RaisePropertyChanged(() => Location);
+
+                    OrgInfos = _location != null ? _location.OrgInfos : null;
+                }
             }
         }
 
@@ -90,11 +93,11 @@ namespace SmartWalk.Core.ViewModels
 		private void UpdateOrgInfos()
 		{
             // TODO: Use location for getting orgs
-			_dataService.GetOrgInfos((orgInfos, ex) => 
+			_dataService.GetLocation((location, ex) => 
           		{
 					if (ex == null) 
 					{
-						OrgInfos = orgInfos;
+                        Location = location;
 
                         if (RefreshCompleted != null)
                         {

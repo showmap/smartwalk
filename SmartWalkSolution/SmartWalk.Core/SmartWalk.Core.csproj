@@ -82,5 +82,6 @@
     <Compile Include="Model\WebSiteInfo.cs" />
     <Compile Include="Model\PhoneInfo.cs" />
     <Compile Include="Model\EmailInfo.cs" />
+    <Compile Include="Model\Location.cs" />
   </ItemGroup>
 </Project>

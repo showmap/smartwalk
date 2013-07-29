@@ -6,13 +6,19 @@ using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
-    public partial class OrgEventCell : TableCellBase<OrgEventInfo>
+    public partial class OrgEventCell : TableCellBase
     {
         public static readonly UINib Nib = UINib.FromName("OrgEventCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgEventCell");
 
         public OrgEventCell(IntPtr handle) : base(handle)
         {
+        }
+
+        public new OrgEventInfo DataContext
+        {
+            get { return (OrgEventInfo)base.DataContext; }
+            set { base.DataContext = value; }
         }
 
         public static OrgEventCell Create()

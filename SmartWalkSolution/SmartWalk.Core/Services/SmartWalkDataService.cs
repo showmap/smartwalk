@@ -15,18 +15,25 @@ namespace SmartWalk.Core.Services
             _cacheService = cacheService;
         }
 
-        public void GetOrgInfos(Action<EntityInfo[], Exception> resultHandler)
+        public void GetLocation(Action<Location, Exception> resultHandler)
         {
             try
             {
                 var xml = XDocument.Load(TempURL + "index.xml");
-                var result = xml.Descendants("organization").Select(org => 
-                    new EntityInfo 
-                        {
-                            Id = org.Attribute("id").ValueOrNull(),
-                            Name = org.Attribute("name").ValueOrNull(),
-                            Logo = org.Attribute("logo").ValueOrNull()
-                        }).ToArray();
+
+                var result = new Location
+                    {
+                        Name = xml.Root.Attribute("name").ValueOrNull(),
+                        Logo = xml.Root.Attribute("logo").ValueOrNull(),
+                        OrgInfos = xml.Descendants("organization").Select(
+                            org => 
+                                new EntityInfo 
+                                {
+                                    Id = org.Attribute("id").ValueOrNull(),
+                                    Name = org.Attribute("name").ValueOrNull(),
+                                    Logo = org.Attribute("logo").ValueOrNull()
+                                }).ToArray()
+                    };
 
                 resultHandler(result, null);
             }

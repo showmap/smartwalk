@@ -3,15 +3,14 @@ using MonoTouch.UIKit;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class TableCellBase<TDataContext> : UITableViewCell 
-        where TDataContext : class
+    public abstract class TableCellBase : UITableViewCell
     {
         private bool _isInitialized;
-        private TDataContext _dataContext;
+        private object _dataContext;
 
         protected TableCellBase(IntPtr handle) : base(handle) {}
 
-        public TDataContext DataContext
+        public object DataContext
         {
             get { return _dataContext; }
             set

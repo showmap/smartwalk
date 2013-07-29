@@ -20,8 +20,7 @@ namespace SmartWalk.iOS.Views.HomeView
         public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = UIColor.LightGray;
-            cell.ContentView.Layer.CornerRadius = 8;
+            cell.ContentView.BackgroundColor = UIColor.DarkGray;
         }
 
         public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)

@@ -11,7 +11,7 @@ using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
-    public partial class EntityCell : TableCellBase<EntityViewModel>
+    public partial class EntityCell : TableCellBase
     {
         public const int DefaultLogoHeight = 240;
         private const int MaxLogoHeight = 280;
@@ -31,10 +31,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         }
 
         public event EventHandler<MvxValueEventArgs<int>> ImageHeightUpdated;
-
-        public static EntityCell Create()
+                
+        public new EntityViewModel DataContext
         {
-            return (EntityCell)Nib.Instantiate(null, null)[0];
+            get { return (EntityViewModel)base.DataContext; }
+            set { base.DataContext = value; }
         }
 
         public override RectangleF Frame
@@ -70,6 +71,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         }
 
         public bool IsLogoSizeFixed { get; set; }
+
+        public static EntityCell Create()
+        {
+            return (EntityCell)Nib.Instantiate(null, null)[0];
+        }
 
         public static float CalculateCellHeight(
             bool isExpanded, 

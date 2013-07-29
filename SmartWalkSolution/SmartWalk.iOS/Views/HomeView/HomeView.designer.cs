@@ -12,10 +12,18 @@ namespace SmartWalk.iOS.Views.HomeView
 	partial class HomeView
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIImageView BackgroundImageView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UICollectionView OrgCollectionView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (BackgroundImageView != null) {
+				BackgroundImageView.Dispose ();
+				BackgroundImageView = null;
+			}
+
 			if (OrgCollectionView != null) {
 				OrgCollectionView.Dispose ();
 				OrgCollectionView = null;

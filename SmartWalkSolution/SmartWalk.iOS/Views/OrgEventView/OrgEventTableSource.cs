@@ -46,7 +46,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return 76.0f;
+            return 80f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

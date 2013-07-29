@@ -11,7 +11,7 @@ using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class VenueShowCell : TableCellBase<VenueShow>
+    public partial class VenueShowCell : TableCellBase
     {
         private const int LogoHeight = 100;
         private const int DetailsHeight = 18;
@@ -29,6 +29,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
             _imageHelper = new MvxImageViewLoader(
                 () => LogoImageView, 
                 UpdateLogoImageFrame);
+        }
+
+        public new VenueShow DataContext
+        {
+            get { return (VenueShow)base.DataContext; }
+            set { base.DataContext = value; }
         }
 
         public bool IsExpanded

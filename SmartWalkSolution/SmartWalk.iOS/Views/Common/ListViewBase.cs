@@ -65,7 +65,7 @@ namespace SmartWalk.iOS.Views.Common
 
             _refreshControl = new UIRefreshControl
                 {
-                    TintColor = UIColor.LightGray
+                    TintColor = ThemeColors.Mercury
                 };
             _refreshControl.ValueChanged += (sender, e) => 
                 {
