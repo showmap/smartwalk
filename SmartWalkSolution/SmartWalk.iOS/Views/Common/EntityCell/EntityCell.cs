@@ -14,9 +14,16 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
     public partial class EntityCell : TableCellBase
     {
         public const int DefaultLogoHeight = 240;
-        private const int MaxLogoHeight = 280;
+
+        private const int TextLineHeight = 19;
         private const int PagerHeight = 27;
         private const int Gap = 8;
+
+        private const int MaxCollapsedCellHeight = 
+            DefaultLogoHeight + 
+            PagerHeight + 
+            TextLineHeight * 3 + 
+            Gap;
 
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
@@ -80,10 +87,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static float CalculateCellHeight(
             bool isExpanded, 
             Entity entity, 
-            float logoHeight = DefaultLogoHeight)
+            int logoHeight = DefaultLogoHeight)
         {
             var isScrollVisible = IsScrollViewVisible(entity.Info);
-            var cellHeight = (isScrollVisible ? logoHeight + PagerHeight : Gap) + Gap;
+            var noTextCellHeight = (isScrollVisible ? logoHeight + PagerHeight : Gap) + Gap;
             var textHeight = default(float);
 
             if (entity.Description != null && 
@@ -98,11 +105,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 textHeight = textSize.Height;
             }
 
-            var threeLinesHeight = 57.0f;
+            var linesCount = (int)Math.Round(
+                1.0 * (MaxCollapsedCellHeight - noTextCellHeight) / TextLineHeight, 
+                MidpointRounding.AwayFromZero);
 
             return isExpanded 
-                ? cellHeight + textHeight
-                : cellHeight + Math.Min(textHeight, threeLinesHeight);
+                ? noTextCellHeight + textHeight
+                    : noTextCellHeight + Math.Min(textHeight, TextLineHeight * linesCount);
         }
 
         protected override void OnInitialize()
@@ -213,7 +222,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 {
                     var frame = LogoImageView.Layer.Frame;
                     var imageSize = LogoImageView.SizeThatFits(frame.Size);
-                    height = Math.Min(MaxLogoHeight, 
+                    height = Math.Min(DefaultLogoHeight, 
                         (int)(1.0 * ScreenUtil.CurrentScreenWidth * imageSize.Height / imageSize.Width) + 1);
                 }
             }
