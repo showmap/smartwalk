@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
+using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
@@ -8,8 +9,6 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
 using SmartWalk.iOS.Views.OrgEventView;
-using Cirrious.CrossCore.Core;
-using MonoTouch.CoreFoundation;
 
 namespace SmartWalk.iOS.Views.VenueView
 {
@@ -65,9 +64,7 @@ namespace SmartWalk.iOS.Views.VenueView
                 var height = EntityCell.CalculateCellHeight(
                     _viewModel.IsDescriptionExpanded,
                     _viewModel.Venue,
-                    _entityImageHeight == 0 
-                        ? EntityCell.DefaultLogoHeight 
-                        : _entityImageHeight);
+                    _entityImageHeight);
 
                 return height;
             }
@@ -127,7 +124,7 @@ namespace SmartWalk.iOS.Views.VenueView
             if (venueViewModel != null)
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
-                ((EntityCell)cell).ImageHeightUpdated += OnEntityImageHeightUpdated; // TODO: unsubscribe
+                ((EntityCell)cell).ImageHeightUpdatedHandler = OnEntityImageHeightUpdated;
                 ((EntityCell)cell).DataContext = venueViewModel;
             }
 
@@ -147,16 +144,21 @@ namespace SmartWalk.iOS.Views.VenueView
             return GroupItemsSource[indexPath.Section][indexPath.Row];
         }
 
-        private void OnEntityImageHeightUpdated(object sender, MvxValueEventArgs<int> e)
+        private void OnEntityImageHeightUpdated(int imageHeight, bool updateTable)
         {
-            _entityImageHeight = e.Value;
+            _entityImageHeight = imageHeight;
 
-            DispatchQueue.DefaultGlobalQueue.DispatchAsync(() => {
-                BeginInvokeOnMainThread(() => {
-                    TableView.BeginUpdates();
-                    TableView.EndUpdates();
-                });
-            });
+            if (updateTable)
+            {
+                DispatchQueue.DefaultGlobalQueue.DispatchAsync(() => 
+                    {
+                        BeginInvokeOnMainThread(() => 
+                            {
+                                TableView.BeginUpdates();
+                                TableView.EndUpdates();
+                            });
+                    });
+            }
         }
     }
 }

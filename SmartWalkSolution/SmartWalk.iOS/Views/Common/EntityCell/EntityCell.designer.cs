@@ -12,6 +12,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 	partial class EntityCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIView BottomGradientView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UICollectionView ContactCollectionView { get; set; }
 
 		[Outlet]
@@ -61,6 +64,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				DescriptionLabel = null;
 			}
 
+			if (DescriptionTopSpaceConstraint != null) {
+				DescriptionTopSpaceConstraint.Dispose ();
+				DescriptionTopSpaceConstraint = null;
+			}
+
 			if (GoToContactButton != null) {
 				GoToContactButton.Dispose ();
 				GoToContactButton = null;
@@ -91,9 +99,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				ScrollViewHeightConstraint = null;
 			}
 
-			if (DescriptionTopSpaceConstraint != null) {
-				DescriptionTopSpaceConstraint.Dispose ();
-				DescriptionTopSpaceConstraint = null;
+			if (BottomGradientView != null) {
+				BottomGradientView.Dispose ();
+				BottomGradientView = null;
 			}
 		}
 	}

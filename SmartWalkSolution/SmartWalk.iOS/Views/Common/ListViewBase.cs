@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.ComponentModel;
 using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.UIKit;
@@ -40,6 +41,20 @@ namespace SmartWalk.iOS.Views.Common
             UpdateViewTitle();
 
             InitializeListView();
+        }
+
+        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            base.DidRotate(fromInterfaceOrientation);
+
+            PropagateViewDidRotateToCells(fromInterfaceOrientation);
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            PropagateViewDidRotateToCells(UIApplication.SharedApplication.StatusBarOrientation);
         }
 
         protected abstract ListViewDecorator GetListView();
@@ -88,6 +103,17 @@ namespace SmartWalk.iOS.Views.Common
         {
             UpdateViewTitle();
             InvokeOnMainThread(_refreshControl.EndRefreshing);
+        }
+
+        private void PropagateViewDidRotateToCells(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            if (ListView.VisibleCells != null)
+            {
+                foreach (var tableCell in ListView.VisibleCells.OfType<TableCellBase>().ToArray())
+                {
+                    tableCell.DidRotate(fromInterfaceOrientation);
+                }
+            }
         }
     }
 }

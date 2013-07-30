@@ -1,23 +1,23 @@
 using System;
 using MonoTouch.UIKit;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class TableCellBase : UITableViewCell
+    public abstract class TableCellBase : MvxTableViewCell
     {
         private bool _isInitialized;
-        private object _dataContext;
 
         protected TableCellBase(IntPtr handle) : base(handle) {}
 
-        public object DataContext
+        public new object DataContext
         {
-            get { return _dataContext; }
+            get { return base.DataContext; }
             set
             {
-                if (!Equals(_dataContext, value))
+                if (!Equals(base.DataContext, value))
                 {
-                    _dataContext = value;
+                    base.DataContext = value;
 
                     if (!_isInitialized)
                     {
@@ -28,6 +28,10 @@ namespace SmartWalk.iOS.Views.Common
                     OnDataContextChanged();
                 }
             }
+        }
+
+        public virtual void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
         }
 
         protected virtual void OnInitialize()

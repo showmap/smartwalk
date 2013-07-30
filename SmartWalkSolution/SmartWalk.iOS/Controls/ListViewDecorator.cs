@@ -47,6 +47,24 @@ namespace SmartWalk.iOS.Controls
             }
         }
 
+        public object[] VisibleCells
+        {
+            get
+            {
+                if (_tableView != null)
+                {
+                    return _tableView.VisibleCells;
+                }
+
+                if (_collectionView != null)
+                {
+                    return _collectionView.VisibleCells;
+                }
+
+                return null;
+            }
+        }
+
         public void ReloadData()
         {
             if (_tableView != null)

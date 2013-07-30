@@ -58,7 +58,8 @@ namespace SmartWalk.iOS.Views.OrgView
             {
                 var height = EntityCell.CalculateCellHeight(
                     _viewModel.IsDescriptionExpanded,
-                    _viewModel.Org);
+                    _viewModel.Org,
+                    EntityCell.DefaultLogoHeight);
 
                 return height;
             }

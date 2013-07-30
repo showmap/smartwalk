@@ -67,6 +67,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                         DataContext.Number, DataContext.Info.Name))
                 : null;
 
+            // TODO: to support showing more than one address
             AddressLabel.Text = DataContext != null && 
                     DataContext.Info.Addresses != null && 
                     DataContext.Info.Addresses.Length > 0 
