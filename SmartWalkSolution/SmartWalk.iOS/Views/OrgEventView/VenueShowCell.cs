@@ -146,7 +146,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             IsExpanded = false;
         }
 
-        protected override void OnDataContextChanged()
+        protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             UpdateViewState();
 

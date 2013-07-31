@@ -31,7 +31,7 @@ namespace SmartWalk.iOS.Views.OrgView
             InitializeDayLabelSquare();
         }
 
-        protected override void OnDataContextChanged()
+        protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             WeekDayLabel.Text = DataContext != null ? string.Format("{0:ddd}", DataContext.Date) : null;
             DayLabel.Text = DataContext != null ? string.Format("{0:dd}", DataContext.Date) : null;

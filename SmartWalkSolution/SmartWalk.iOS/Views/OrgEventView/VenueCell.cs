@@ -48,7 +48,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             InitializeAddressGesture();
         }
 
-        protected override void OnDataContextChanged()
+        protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Logo : null;

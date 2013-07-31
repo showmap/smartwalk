@@ -9,6 +9,8 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
+using SmartWalk.Core.Utils;
+using System.ComponentModel;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -38,12 +40,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public EntityCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(() => LogoImageView, () => UpdateScrollViewHeightState(true));
-
-            this.DelayBind(() => {
-                var set = this.CreateBindingSet<EntityCell, EntityViewModel>();
-                set.Bind(BottomGradientView).For(p => p.Hidden).To(vm => vm.IsDescriptionExpanded);
-                set.Apply();
-            });
         }
 
         public Action<int, bool> ImageHeightUpdatedHandler { get; set; }
@@ -168,8 +164,20 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             UpdateScrollViewHeightState(false);
         }
 
-        protected override void OnDataContextChanged()
+        protected override void OnDataContextChanged(object previousContext, object newContext)
         {
+            var context = previousContext as INotifyPropertyChanged;
+            if (context != null)
+            {
+                context.PropertyChanged -= OnDataContextPropertyChanged;
+            }
+
+            context = newContext as INotifyPropertyChanged;
+            if (context != null)
+            {
+                context.PropertyChanged += OnDataContextPropertyChanged;
+            }
+
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Entity.Info.Logo : null;
 
@@ -192,6 +200,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             UpdateScrollViewHeightState(false);
             UpdateBottomGradientHiddenState();
+        }
+
+        private void OnDataContextPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == DataContext.GetPropertyName(p => p.IsDescriptionExpanded))
+            {
+                UpdateBottomGradientHiddenState();
+            }
         }
        
         private void UpdateScrollSubViewsConstraints()
