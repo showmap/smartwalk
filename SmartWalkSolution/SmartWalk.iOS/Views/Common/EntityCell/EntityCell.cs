@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Drawing;
-using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
@@ -18,6 +17,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
     {
         public const int DefaultLogoHeight = 240;
 
+        private const int GotoButtonWidth = 60;
         private const int TextLineHeight = 19;
         private const int PagerHeight = 27;
         private const int Gap = 8;
@@ -126,7 +126,22 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private static bool IsScrollViewVisible(EntityInfo info)
         {
-            return info.Logo != null || (info.Contact != null && !info.Contact.IsEmpty);
+            return info != null && (HasLogo(info) || HasContact(info) || HasAddress(info));
+        }
+
+        private static bool HasLogo(EntityInfo info)
+        {
+            return info != null && info.Logo != null;
+        }
+
+        private static bool HasContact(EntityInfo info)
+        {
+            return info != null && info.Contact != null && !info.Contact.IsEmpty;
+        }
+
+        private static bool HasAddress(EntityInfo info)
+        {
+            return info != null && info.Addresses != null && info.Addresses.Length > 0;
         }
 
         public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
@@ -139,7 +154,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 ScreenUtil.CurrentScreenWidth * PageControl.CurrentPage, 
                 0);
 
-            SetCollectionViewCellWidth();
+            UpdateCollectionViewCellWidth();
             UpdateScrollViewHeightState(false);
             UpdateBottomGradientHiddenState();
         }
@@ -152,6 +167,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             LogoImageView.Image = null;
             _proportionalImageHeight = 0;
             ImageHeightUpdatedHandler = null;
+            MapView.RemoveAnnotations(MapView.Annotations);
         }
 
         protected override void OnInitialize()
@@ -162,7 +178,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             InitializeBottomGradientState();
 
             UpdateScrollSubViewsConstraints();
-            SetCollectionViewCellWidth();
+            UpdateCollectionViewCellWidth();
             UpdateScrollViewHeightState(false);
         }
 
@@ -194,10 +210,25 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             _descriptionTapGesture.Enabled = DataContext != null 
                 ? DataContext.IsDescriptionExpandable : false;
 
-            PageControl.Hidden = DataContext != null && 
-                DataContext.Entity.Info != null 
-                    ? !IsScrollViewVisible(DataContext.Entity.Info) 
-                    : false;
+            if (DataContext != null && HasAddress(DataContext.Entity.Info))
+            {
+                var annotation = new EntityAnnotation(
+                    DataContext.Entity, 
+                    DataContext.Entity.Info.Addresses[0]);
+                MapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(new [] {annotation.Coordinate}), false);
+                MapView.AddAnnotations(new [] {annotation});
+            }
+
+            GoToMapButton.Hidden = DataContext != null && !HasAddress(DataContext.Entity.Info);
+            GoToContactButton.Hidden = DataContext != null && !HasContact(DataContext.Entity.Info);
+            PageControl.Hidden = DataContext != null && !IsScrollViewVisible(DataContext.Entity.Info);
+
+            PageControl.Pages = DataContext != null ? 
+                (HasAddress(DataContext.Entity.Info) ? 1 : 0) +
+                (HasLogo(DataContext.Entity.Info) ? 1 : 0) +
+                (HasContact(DataContext.Entity.Info) ? 1 : 0) : 0;
+
+            PageControl.CurrentPage = 0;
 
             ((ContactCollectionSource)ContactCollectionView.WeakDataSource).ItemsSource =
                 DataContext != null 
@@ -206,6 +237,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     : null;
 
             UpdateScrollViewHeightState(false);
+            UpdateScrollSubViewsConstraints();
             UpdateBottomGradientHiddenState();
         }
 
@@ -216,19 +248,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 e.PropertyName == DataContext.GetPropertyName(p => p.IsDescriptionExpandable))
             {
                 UpdateBindedControls();
-            }
-        }
-       
-        private void UpdateScrollSubViewsConstraints()
-        {
-            if (ImageViewWidthConstraint != null)
-            {
-                ImageViewWidthConstraint.Constant = ScreenUtil.CurrentScreenWidth;
-            }
-
-            if (ContactViewWidthConstraint != null)
-            {
-                ContactViewWidthConstraint.Constant = ScreenUtil.CurrentScreenWidth;
             }
         }
 
@@ -262,7 +281,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void InitializeContactCollectionView()
         {
-            SetCollectionViewCellWidth();
+            UpdateCollectionViewCellWidth();
 
             if (ContactCollectionView.Source == null)
             {
@@ -289,7 +308,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             BottomGradientView.Layer.InsertSublayer(_bottomGradient, 0);
         }
 
-        private void SetCollectionViewCellWidth()
+        private void UpdateCollectionViewCellWidth()
         {
             var flowLayout = (UICollectionViewFlowLayout)ContactCollectionView.CollectionViewLayout;
             var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
@@ -313,9 +332,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     (int)(1.0 * ScreenUtil.CurrentScreenWidth * imageSize.Height / imageSize.Width) + 1);
             }
 
-            var isScrollVisible = DataContext != null &&
-                DataContext.Entity.Info != null && 
-                    IsScrollViewVisible(DataContext.Entity.Info);
+            var isScrollVisible = DataContext != null && IsScrollViewVisible(DataContext.Entity.Info);
             var newHeight = isScrollVisible ? _proportionalImageHeight : 0;
 
             ScrollViewHeightConstraint.Constant = newHeight;
@@ -328,6 +345,29 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             {
                 ImageHeightUpdatedHandler(_proportionalImageHeight, updateTable);
             }
+        }
+
+        private void UpdateScrollSubViewsConstraints()
+        {
+            MapViewWithConstraint.Constant = 
+                DataContext != null && HasAddress(DataContext.Entity.Info)
+                    ? ScreenUtil.CurrentScreenWidth : 0;
+
+            GoToMapButtonLeftConstraint.Constant = (int)MapViewWithConstraint.Constant != 0
+                ? MapViewWithConstraint.Constant - GotoButtonWidth / 2 
+                : 0;
+
+            ImageViewWidthConstraint.Constant = 
+                DataContext != null && HasLogo(DataContext.Entity.Info)
+                    ? ScreenUtil.CurrentScreenWidth : 0;
+
+            GoToContactButtonLeftConstraint.Constant = 
+                (int)MapViewWithConstraint.Constant != 0 || (int)ImageViewWidthConstraint.Constant != 0
+                    ? MapViewWithConstraint.Constant + ImageViewWidthConstraint.Constant - GotoButtonWidth / 2
+                    : 0;
+
+            ContactViewWidthConstraint.Constant = DataContext != null && HasContact(DataContext.Entity.Info)
+                    ? ScreenUtil.CurrentScreenWidth : 0;
         }
 
         private void UpdateBottomGradientHiddenState()
@@ -350,9 +390,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             }
         }
 
-        partial void OnGoToContactButtonTouchUpInside(UIButton sender, UIEvent @event)
+        partial void OnGoToMapButtonTouchUpInside(UIButton sender, UIEvent @event)
         {
             PageControl.CurrentPage = PageControl.CurrentPage == 0 ? 1 : 0;
+            ((EntityScrollViewDelegate)ScrollView.Delegate).ScrollToCurrentPage();
+        }
+
+        partial void OnGoToContactButtonTouchUpInside(UIButton sender, UIEvent @event)
+        {
+            PageControl.CurrentPage = PageControl.CurrentPage == 1 ? 2 : 1;
             ((EntityScrollViewDelegate)ScrollView.Delegate).ScrollToCurrentPage();
         }
     }

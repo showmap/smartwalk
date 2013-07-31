@@ -30,10 +30,25 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.UIButton GoToContactButton { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint GoToContactButtonLeftConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton GoToMapButton { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint GoToMapButtonLeftConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ImageViewWidthConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+
+		[Outlet]
+		MonoTouch.MapKit.MKMapView MapView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MapViewWithConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIPageControl PageControl { get; set; }
@@ -46,9 +61,27 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
 		[Action ("OnGoToContactButtonTouchUpInside:forEvent:")]
 		partial void OnGoToContactButtonTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
+
+		[Action ("OnGoToMapButtonTouchUpInside:forEvent:")]
+		partial void OnGoToMapButtonTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (GoToContactButton != null) {
+				GoToContactButton.Dispose ();
+				GoToContactButton = null;
+			}
+
+			if (GoToMapButton != null) {
+				GoToMapButton.Dispose ();
+				GoToMapButton = null;
+			}
+
+			if (BottomGradientView != null) {
+				BottomGradientView.Dispose ();
+				BottomGradientView = null;
+			}
+
 			if (ContactCollectionView != null) {
 				ContactCollectionView.Dispose ();
 				ContactCollectionView = null;
@@ -59,6 +92,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				ContactViewWidthConstraint = null;
 			}
 
+			if (MapViewWithConstraint != null) {
+				MapViewWithConstraint.Dispose ();
+				MapViewWithConstraint = null;
+			}
+
 			if (DescriptionLabel != null) {
 				DescriptionLabel.Dispose ();
 				DescriptionLabel = null;
@@ -67,11 +105,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (DescriptionTopSpaceConstraint != null) {
 				DescriptionTopSpaceConstraint.Dispose ();
 				DescriptionTopSpaceConstraint = null;
-			}
-
-			if (GoToContactButton != null) {
-				GoToContactButton.Dispose ();
-				GoToContactButton = null;
 			}
 
 			if (ImageViewWidthConstraint != null) {
@@ -94,14 +127,24 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				ScrollView = null;
 			}
 
+			if (GoToContactButtonLeftConstraint != null) {
+				GoToContactButtonLeftConstraint.Dispose ();
+				GoToContactButtonLeftConstraint = null;
+			}
+
+			if (GoToMapButtonLeftConstraint != null) {
+				GoToMapButtonLeftConstraint.Dispose ();
+				GoToMapButtonLeftConstraint = null;
+			}
+
+			if (MapView != null) {
+				MapView.Dispose ();
+				MapView = null;
+			}
+
 			if (ScrollViewHeightConstraint != null) {
 				ScrollViewHeightConstraint.Dispose ();
 				ScrollViewHeightConstraint = null;
-			}
-
-			if (BottomGradientView != null) {
-				BottomGradientView.Dispose ();
-				BottomGradientView = null;
 			}
 		}
 	}

@@ -230,6 +230,7 @@
     <Compile Include="Views\HomeView\HomeCollectionDelegate.cs" />
     <Compile Include="Services\ExceptionPolicy.cs" />
     <Compile Include="Controls\ThemeColors.cs" />
+    <Compile Include="Views\Common\EntityCell\EntityAnnotation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
