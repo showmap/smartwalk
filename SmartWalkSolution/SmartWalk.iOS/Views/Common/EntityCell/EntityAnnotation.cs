@@ -12,6 +12,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             Entity = entity;
             _addressInfo = addressInfo;
+
+            Coordinate = new CLLocationCoordinate2D(_addressInfo.Latitude, _addressInfo.Longitude);
         }
 
         public Entity Entity { get; set; }

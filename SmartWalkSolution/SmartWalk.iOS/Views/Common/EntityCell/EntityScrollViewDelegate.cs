@@ -38,23 +38,25 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             _isPageControlBeingUsed = false;
         }
 
-        public void ScrollToCurrentPage()
+        public void ScrollToCurrentPage(bool animated)
         {
             var frame = new RectangleF
-            {
-                X = _scrollView.Frame.Size.Width * _pageControl.CurrentPage,
-                Y = 0,
-                Size = _scrollView.Frame.Size
-            };
+                {
+                    X = _scrollView.Frame.Size.Width * _pageControl.CurrentPage,
+                    Y = 0,
+                    Size = _scrollView.Frame.Size
+                };
 
-            _scrollView.ScrollRectToVisible(frame, true);
+            frame.Height = 0;
+
+            _scrollView.ScrollRectToVisible(frame, animated);
 
             _isPageControlBeingUsed = true;
         }
 
         private void OnPageControlValueChanged(object sender, EventArgs e)
         {
-            ScrollToCurrentPage();
+            ScrollToCurrentPage(true);
         }
     }
 }

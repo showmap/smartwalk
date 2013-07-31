@@ -5,6 +5,11 @@ namespace SmartWalk.iOS.Utils
 {
     public static class MapUtil
     {
+        public static MKCoordinateRegion CoordinateRegionForCoordinates(CLLocationCoordinate2D coordinate) 
+        {
+            return MKCoordinateRegion.FromDistance(coordinate, 200, 200);
+        }
+
         public static MKCoordinateRegion CoordinateRegionForCoordinates(CLLocationCoordinate2D[] coordinates) 
         {
             var rect = default(MKMapRect);

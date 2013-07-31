@@ -26,14 +26,6 @@ namespace SmartWalk.Core.ViewModels
 
         public event EventHandler RefreshCompleted;
 
-        public override bool IsDescriptionExpandable
-        {
-            get
-            {
-                return Venue == null || (Venue.Shows != null && Venue.Shows.Length != 0);
-            }
-        }
-
         public OrgEvent OrgEvent
         {
             get

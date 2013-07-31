@@ -25,9 +25,6 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _entity = value;
                     RaisePropertyChanged(() => Entity);
-                    RaisePropertyChanged(() => IsDescriptionExpandable);
-
-                    IsDescriptionExpanded = !IsDescriptionExpandable;
                 }
             }
         }
@@ -38,21 +35,13 @@ namespace SmartWalk.Core.ViewModels
             {
                 return _isDescriptionExpanded;
             }
-            protected set
+            private set
             {
                 if (_isDescriptionExpanded != value)
                 {
                     _isDescriptionExpanded = value;
                     RaisePropertyChanged(() => IsDescriptionExpanded);
                 }
-            }
-        }
-
-        public virtual bool IsDescriptionExpandable
-        {
-            get
-            {
-                return true;
             }
         }
 
