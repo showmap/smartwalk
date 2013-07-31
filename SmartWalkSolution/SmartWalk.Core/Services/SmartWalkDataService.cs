@@ -15,27 +15,49 @@ namespace SmartWalk.Core.Services
             _cacheService = cacheService;
         }
 
-        public void GetLocation(Action<Location, Exception> resultHandler)
+        public void GetLocation(string name, DataSource source, Action<Location, Exception> resultHandler)
         {
             try
             {
-                var xml = XDocument.Load(TempURL + "index.xml");
+                var key = name;
+                var xml = default(XDocument);
 
-                var result = new Location
+                if (source == DataSource.Cache)
+                {
+                    var data = _cacheService.GetString(key);
+                    if (data != null)
                     {
-                        Name = xml.Root.Attribute("name").ValueOrNull(),
-                        Logo = xml.Root.Attribute("logo").ValueOrNull(),
-                        OrgInfos = xml.Descendants("organization").Select(
-                            org => 
-                                new EntityInfo 
-                                {
-                                    Id = org.Attribute("id").ValueOrNull(),
-                                    Name = org.Attribute("name").ValueOrNull(),
-                                    Logo = org.Attribute("logo").ValueOrNull()
-                                }).ToArray()
-                    };
+                        xml = XDocument.Parse(data);
+                    }
+                }
 
-                resultHandler(result, null);
+                if (xml == null)
+                {
+                    xml = XDocument.Load(TempURL + "index.xml");
+                }
+
+                if (xml != null)
+                {
+                    var result = new Location
+                        {
+                            Name = xml.Root.Attribute("name").ValueOrNull(),
+                            Logo = xml.Root.Attribute("logo").ValueOrNull(),
+                            OrgInfos = xml.Descendants("organization").Select(
+                                org => 
+                                    new EntityInfo 
+                                    {
+                                        Id = org.Attribute("id").ValueOrNull(),
+                                        Name = org.Attribute("name").ValueOrNull(),
+                                        Logo = org.Attribute("logo").ValueOrNull()
+                                    }).ToArray()
+                        };
+
+                    resultHandler(result, null);
+                }
+                else
+                {
+                    resultHandler(null, null);
+                }
             }
             catch (Exception ex)
             {
@@ -43,33 +65,56 @@ namespace SmartWalk.Core.Services
             }
         }
 
-        public void GetOrg(string orgId, Action<Org, Exception> resultHandler)
+        public void GetOrg(string orgId, DataSource source, Action<Org, Exception> resultHandler)
         {
             try
             {
-                var xml = XDocument.Load(TempURL + orgId + "/index.xml");
-                var result = new Org
+                var key = orgId;
+                var xml = default(XDocument);
+
+                if (source == DataSource.Cache)
                 {
-                    Info = new EntityInfo 
-                        {
-                            Id = orgId,
-                            Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
-                            Logo = xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null,
-                            Contact = CreateContact(xml)
-                        },
-                    Description = xml.Root != null ? xml.Root.Element("description").ValueOrNull() : null,
-                };
+                    var data = _cacheService.GetString(key);
+                    if (data != null)
+                    {
+                        xml = XDocument.Parse(data);
+                    }
+                }
 
-                result.EventInfos = xml.Descendants("event")
-                    .Select(org => 
-                        new OrgEventInfo 
-                        {
-                            OrgId = orgId,
-                            Date = DateTime.Parse(org.Attribute("date").ValueOrNull()),
-                            HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
-                        }).ToArray();
+                if (xml == null)
+                {
+                    xml = XDocument.Load(TempURL + orgId + "/index.xml");
+                }
 
-                resultHandler(result, null);
+                if (xml != null)
+                {
+                    var result = new Org
+                        {
+                            Info = new EntityInfo 
+                                {
+                                    Id = orgId,
+                                    Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
+                                    Logo = xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null,
+                                    Contact = CreateContact(xml)
+                                },
+                            Description = xml.Root != null ? xml.Root.Element("description").ValueOrNull() : null,
+                        };
+
+                    result.EventInfos = xml.Descendants("event")
+                        .Select(org => 
+                            new OrgEventInfo 
+                            {
+                                OrgId = orgId,
+                                Date = DateTime.Parse(org.Attribute("date").ValueOrNull()),
+                                HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
+                            }).ToArray();
+
+                    resultHandler(result, null);
+                }
+                else
+                {
+                    resultHandler(null, null);
+                }
             }
             catch (Exception ex)
             {

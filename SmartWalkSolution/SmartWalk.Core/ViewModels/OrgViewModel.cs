@@ -3,6 +3,8 @@ using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace SmartWalk.Core.ViewModels
 {
@@ -11,7 +13,8 @@ namespace SmartWalk.Core.ViewModels
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
-        private string _orgId;
+        private Parameters _parameters;
+        private EntityInfo[] _orgInfos;
         private ICommand _refreshCommand;
         private ICommand _navigateOrgEventViewCommand;
 
@@ -47,6 +50,22 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        public EntityInfo[] OrgInfos
+        {
+            get
+            {
+                return _orgInfos;
+            }
+            private set
+            {
+                if (!Equals(_orgInfos, value))
+                {
+                    _orgInfos = value;
+                    RaisePropertyChanged(() => OrgInfos);
+                }
+            }
+        }
+
         public ICommand NavigateOrgEventViewCommand
         {
             get
@@ -72,25 +91,68 @@ namespace SmartWalk.Core.ViewModels
             {
                 if (_refreshCommand == null)
                 {
-                    _refreshCommand = new MvxCommand(UpdateOrg);
+                    _refreshCommand = new MvxCommand(() => UpdateOrg());
                 }
 
                 return _refreshCommand;
             }
         }
 
-        public void Init(Parameters parameters)
+        public override bool CanShowNextEntity
         {
-            _orgId = parameters.OrgId;
-
-            UpdateOrg();
+            get { return OrgInfos != null && OrgInfos.Length > 0 && Org != null; }
         }
 
-        private void UpdateOrg()
+        public override bool CanShowPreviousEntity
         {
-            if (_orgId != null)
+            get { return CanShowNextEntity; }
+        }
+
+        public void Init(Parameters parameters)
+        {
+            _parameters = parameters;
+
+            UpdateOrg();
+            UpdateOrgInfos();
+        }
+
+        protected override void OnShowPreviousEntity()
+        {
+            var currentOrg = OrgInfos.FirstOrDefault(oi => oi.Id == Org.Info.Id);
+            var currentIndex = Array.IndexOf(OrgInfos, currentOrg);
+            if (currentIndex > 0)
             {
-                _dataService.GetOrg(_orgId, (org, ex) => 
+                _parameters.OrgId = OrgInfos[currentIndex - 1].Id;
+            }
+            else
+            {
+                _parameters.OrgId = OrgInfos.Last().Id;
+            }
+
+            UpdateOrg(DataSource.Cache);
+        }
+
+        protected override void OnShowNextEntity()
+        {
+            var currentOrg = OrgInfos.FirstOrDefault(oi => oi.Id == Org.Info.Id);
+            var currentIndex = Array.IndexOf(OrgInfos, currentOrg);
+            if (currentIndex < OrgInfos.Length - 1)
+            {
+                _parameters.OrgId = OrgInfos[currentIndex + 1].Id;
+            }
+            else
+            {
+                _parameters.OrgId = OrgInfos.First().Id;
+            }
+
+            UpdateOrg(DataSource.Cache);
+        }
+
+        private void UpdateOrg(DataSource source = DataSource.Server)
+        {
+            if (_parameters != null)
+            {
+                _dataService.GetOrg(_parameters.OrgId, source, (org, ex) => 
                     {
                         if (ex == null)
                         {
@@ -113,9 +175,40 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        private void UpdateOrgInfos()
+        {
+            if (_parameters != null)
+            {
+                _dataService.GetLocation(
+                    _parameters.Location, 
+                    DataSource.Cache,
+                    (location, ex) => 
+                        {
+                            if (ex == null)
+                            {
+                                OrgInfos = location.OrgInfos;
+
+                                if (RefreshCompleted != null)
+                                {
+                                    RefreshCompleted(this, EventArgs.Empty);
+                                }
+                            }
+                            else
+                            {
+                                _exceptionPolicy.Trace(ex);
+                            }
+                        });
+            }
+            else
+            {
+                OrgInfos = null;
+            }
+        }
+
         public class Parameters
         {
             public string OrgId { get; set; }
+            public string Location { get; set; }
         }
     }
 }

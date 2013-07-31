@@ -148,6 +148,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             base.PrepareForReuse();
 
+            DataContext = null;
+            LogoImageView.Image = null;
             _proportionalImageHeight = 0;
             ImageHeightUpdatedHandler = null;
         }
@@ -178,6 +180,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 context.PropertyChanged += OnDataContextPropertyChanged;
             }
 
+            UpdateBindedControls();
+        }
+
+        private void UpdateBindedControls()
+        {
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Entity.Info.Logo : null;
 
@@ -188,9 +195,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 ? DataContext.IsDescriptionExpandable : false;
 
             PageControl.Hidden = DataContext != null && 
-                    DataContext.Entity.Info != null 
-                ? !IsScrollViewVisible(DataContext.Entity.Info) 
-                : false;
+                DataContext.Entity.Info != null 
+                    ? !IsScrollViewVisible(DataContext.Entity.Info) 
+                    : false;
 
             ((ContactCollectionSource)ContactCollectionView.WeakDataSource).ItemsSource =
                 DataContext != null 
@@ -204,9 +211,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void OnDataContextPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == DataContext.GetPropertyName(p => p.IsDescriptionExpanded))
+            if (e.PropertyName == DataContext.GetPropertyName(p => p.Entity) ||
+                e.PropertyName == DataContext.GetPropertyName(p => p.IsDescriptionExpanded) ||
+                e.PropertyName == DataContext.GetPropertyName(p => p.IsDescriptionExpandable))
             {
-                UpdateBottomGradientHiddenState();
+                UpdateBindedControls();
             }
         }
        

@@ -27,6 +27,13 @@ namespace SmartWalk.iOS.Views.VenueView
             VenueShowsTableView.EndUpdates();
         }
 
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            InitializeToolBar();
+        }
+
         protected override void UpdateViewTitle()
         {
             if (ViewModel.Venue != null && ViewModel.Venue.Info != null)
@@ -44,15 +51,19 @@ namespace SmartWalk.iOS.Views.VenueView
         {
             var tableSource = new VenueTableSource(VenueShowsTableView, ViewModel);
 
-            this.CreateBinding(tableSource).To((VenueViewModel vm) => vm)
-                .WithConversion(new VenueTableSourceConverter(), null).Apply();
+            this.CreateBinding(tableSource).To((VenueViewModel vm) => vm.Venue)
+                .WithConversion(new VenueTableSourceConverter(), ViewModel).Apply();
 
             return tableSource;
         }
 
         protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Venue))
+            {
+                UpdateViewTitle();
+            }
+            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 VenueShowsTableView.BeginUpdates();
                 VenueShowsTableView.EndUpdates();
@@ -73,6 +84,26 @@ namespace SmartWalk.iOS.Views.VenueView
 
                 VenueShowCell.ExpandVenueShowCell(VenueShowsTableView, ViewModel.ExpandedShow);
             }
+        }
+
+        private void InitializeToolBar()
+        {
+            var buttonUp = new UIBarButtonItem("↑", UIBarButtonItemStyle.Plain, (s, e) => 
+                {
+                    if (ViewModel.ShowPreviousEntityCommand.CanExecute(null))
+                    {
+                        ViewModel.ShowPreviousEntityCommand.Execute(null);
+                    }
+                });
+            var buttonDown = new UIBarButtonItem("↓", UIBarButtonItemStyle.Plain, (s, e) => 
+                {
+                    if (ViewModel.ShowNextEntityCommand.CanExecute(null))
+                    {
+                        ViewModel.ShowNextEntityCommand.Execute(null);
+                    }
+                });
+
+            NavigationItem.SetRightBarButtonItems(new [] {buttonDown, buttonUp}, true);
         }
     }
 }

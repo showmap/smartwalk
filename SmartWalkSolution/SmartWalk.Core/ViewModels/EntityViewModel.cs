@@ -8,7 +8,10 @@ namespace SmartWalk.Core.ViewModels
     {
         private Entity _entity;
         private bool _isDescriptionExpanded;
+
         private MvxCommand _expandCollapseCommand;
+        private MvxCommand _showPreviousEntityCommand;
+        private MvxCommand _showNextEntityCommand;
 
         public Entity Entity
         {
@@ -24,10 +27,7 @@ namespace SmartWalk.Core.ViewModels
                     RaisePropertyChanged(() => Entity);
                     RaisePropertyChanged(() => IsDescriptionExpandable);
 
-                    if (!IsDescriptionExpandable)
-                    {
-                        IsDescriptionExpanded = true;
-                    }
+                    IsDescriptionExpanded = !IsDescriptionExpandable;
                 }
             }
         }
@@ -68,6 +68,52 @@ namespace SmartWalk.Core.ViewModels
 
                 return _expandCollapseCommand;
             }
+        }
+
+        public ICommand ShowPreviousEntityCommand
+        {
+            get
+            {
+                if (_showPreviousEntityCommand == null)
+                {
+                    _showPreviousEntityCommand = 
+                        new MvxCommand(OnShowPreviousEntity, () => CanShowNextEntity);
+                }
+
+                return _showPreviousEntityCommand;
+            }
+        }
+
+        public ICommand ShowNextEntityCommand
+        {
+            get
+            {
+                if (_showNextEntityCommand == null)
+                {
+                    _showNextEntityCommand = 
+                        new MvxCommand(OnShowNextEntity, () => CanShowPreviousEntity);
+                }
+
+                return _showNextEntityCommand;
+            }
+        }
+
+        public virtual bool CanShowNextEntity
+        {
+            get { return true; }
+        }
+
+        public virtual bool CanShowPreviousEntity
+        {
+            get { return true; }
+        }
+
+        protected virtual void OnShowPreviousEntity()
+        {
+        }
+
+        protected virtual void OnShowNextEntity()
+        {
         }
     }
 }

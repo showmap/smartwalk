@@ -5,6 +5,7 @@ using System.Linq;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.Core.Model;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
@@ -12,14 +13,15 @@ namespace SmartWalk.iOS.Views.OrgView
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var orgViewModel = value as OrgViewModel;
-            if (orgViewModel != null)
+            var org = value as Org;
+            var orgViewModel = parameter as OrgViewModel;
+            if (org != null && orgViewModel != null)
             {
                 var result = new List<GroupContainer>();
 
                 result.Add(new GroupContainer(new [] { orgViewModel }));
 
-                var currentEvents = orgViewModel.Org.EventInfos
+                var currentEvents = org.EventInfos
                     .Where(ei => ei.TimeStatus == 0).OrderBy(ei => ei.Date).ToArray();
                 if (currentEvents.Length > 0)
                 {
@@ -30,7 +32,7 @@ namespace SmartWalk.iOS.Views.OrgView
                         });
                 }
 
-                var futureEvents = orgViewModel.Org.EventInfos
+                var futureEvents = org.EventInfos
                     .Where(ei => ei.TimeStatus > 0).OrderBy(ei => ei.Date).ToArray();
                 if (futureEvents.Length > 0)
                 {
@@ -41,7 +43,7 @@ namespace SmartWalk.iOS.Views.OrgView
                         });
                 }
 
-                var pastEvents = orgViewModel.Org.EventInfos
+                var pastEvents = org.EventInfos
                     .Where(ei => ei.TimeStatus < 0).OrderByDescending(ei => ei.Date).ToArray();
                 if (pastEvents.Length > 0)
                 {

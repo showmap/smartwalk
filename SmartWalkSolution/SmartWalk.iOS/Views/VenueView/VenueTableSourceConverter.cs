@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Cirrious.CrossCore.Converters;
+using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 
@@ -11,18 +12,19 @@ namespace SmartWalk.iOS.Views.VenueView
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var venueViewModel = value as VenueViewModel;
-            if (venueViewModel != null)
+            var venue = value as Venue;
+            var venueViewModel = parameter as VenueViewModel;
+            if (venue != null && venueViewModel != null)
             {
                 var result = new List<GroupContainer>();
 
                 result.Add(new GroupContainer(new [] { venueViewModel }));
 
-                if (venueViewModel.Venue.Shows != null &&
-                    venueViewModel.Venue.Shows.Length > 0)
+                if (venue.Shows != null &&
+                    venue.Shows.Length > 0)
                 {
                     result.Add(
-                        new GroupContainer(venueViewModel.Venue.Shows) 
+                        new GroupContainer(venue.Shows) 
                         {
                             Key = "Shows"
                         });

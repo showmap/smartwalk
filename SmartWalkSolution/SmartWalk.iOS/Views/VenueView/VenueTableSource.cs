@@ -25,8 +25,6 @@ namespace SmartWalk.iOS.Views.VenueView
             _viewModel = viewModel;
             _headerViewFactory = new ViewsFactory<GroupHeaderCell>(GroupHeaderCell.Create);
 
-            UseAnimations = true;
-
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }

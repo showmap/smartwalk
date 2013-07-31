@@ -93,7 +93,7 @@ namespace SmartWalk.Core.ViewModels
 		private void UpdateOrgInfos()
 		{
             // TODO: Use location for getting orgs
-			_dataService.GetLocation((location, ex) => 
+            _dataService.GetLocation("sfba", DataSource.Server, (location, ex) => 
           		{
 					if (ex == null) 
 					{
