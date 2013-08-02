@@ -12,7 +12,7 @@ namespace SmartWalk.iOS.Views.OrgView
 	partial class OrgView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UITableView OrgEventsTableView { get; set; }
+		SmartWalk.iOS.Controls.FixedUITableView OrgEventsTableView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

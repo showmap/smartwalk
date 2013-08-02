@@ -31,10 +31,6 @@ namespace SmartWalk.iOS.Views.Common
             }
         }
 
-        public virtual void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
-        {
-        }
-
         protected virtual void OnInitialize()
         {
         }

@@ -219,7 +219,6 @@
     <Compile Include="Views\Common\EntityCell\WebSiteCell.designer.cs">
       <DependentUpon>WebSiteCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Common\EntityCell\EntityScrollViewDelegate.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionSource.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionSourceConverter.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionDelegate.cs" />
@@ -231,6 +230,10 @@
     <Compile Include="Services\ExceptionPolicy.cs" />
     <Compile Include="Controls\ThemeColors.cs" />
     <Compile Include="Views\Common\EntityCell\EntityAnnotation.cs" />
+    <Compile Include="..\SmartWalk.Shared\Controls\PagedScrollView.cs">
+      <Link>Controls\PagedScrollView.cs</Link>
+    </Compile>
+    <Compile Include="Controls\FixedUITableView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

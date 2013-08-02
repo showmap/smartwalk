@@ -57,6 +57,7 @@ namespace SmartWalk.iOS.Views.OrgView
             if (item is OrgViewModel)
             {
                 var height = EntityCell.CalculateCellHeight(
+                    tableView.Frame.Width,
                     _viewModel.IsDescriptionExpanded,
                     _viewModel.Org,
                     EntityCell.DefaultLogoHeight);

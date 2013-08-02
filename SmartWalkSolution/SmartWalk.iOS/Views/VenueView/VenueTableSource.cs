@@ -60,6 +60,7 @@ namespace SmartWalk.iOS.Views.VenueView
             if (item is VenueViewModel)
             {
                 var height = EntityCell.CalculateCellHeight(
+                    tableView.Frame.Width,
                     _viewModel.IsDescriptionExpanded,
                     _viewModel.Venue,
                     _entityImageHeight);
@@ -111,6 +112,13 @@ namespace SmartWalk.iOS.Views.VenueView
             return null;
         }
 
+        public override void ReloadTableData()
+        {
+            base.ReloadTableData();
+
+            _entityImageHeight = 0;
+        }
+
         protected override UITableViewCell GetOrCreateCellFor(
             UITableView tableView, 
             NSIndexPath indexPath, 
@@ -148,6 +156,7 @@ namespace SmartWalk.iOS.Views.VenueView
 
             if (updateTable)
             {
+                // TODO: to check how many times it's scheduled
                 DispatchQueue.DefaultGlobalQueue.DispatchAsync(() => 
                     {
                         BeginInvokeOnMainThread(() => 

@@ -18,15 +18,6 @@ namespace SmartWalk.iOS.Views.VenueView
             get { return (VenueViewModel)base.ViewModel; }
         }
 
-        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
-        {
-            base.DidRotate(fromInterfaceOrientation);
-
-            // to fix the bug: http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
-            VenueShowsTableView.BeginUpdates();
-            VenueShowsTableView.EndUpdates();
-        }
-
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();

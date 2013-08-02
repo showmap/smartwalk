@@ -15,86 +15,22 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.UIView BottomGradientView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UICollectionView ContactCollectionView { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ContactViewWidthConstraint { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopSpaceConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton GoToContactButton { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint GoToContactButtonLeftConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIButton GoToMapButton { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint GoToMapButtonLeftConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageViewWidthConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
-
-		[Outlet]
-		MonoTouch.MapKit.MKMapView MapView { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapViewWithConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIPageControl PageControl { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIScrollView ScrollView { get; set; }
+		SmartWalk.iOS.Controls.PagedScrollView ScrollView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ScrollViewHeightConstraint { get; set; }
-
-		[Action ("OnGoToContactButtonTouchUpInside:forEvent:")]
-		partial void OnGoToContactButtonTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
-
-		[Action ("OnGoToMapButtonTouchUpInside:forEvent:")]
-		partial void OnGoToMapButtonTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (GoToContactButton != null) {
-				GoToContactButton.Dispose ();
-				GoToContactButton = null;
-			}
-
-			if (GoToMapButton != null) {
-				GoToMapButton.Dispose ();
-				GoToMapButton = null;
-			}
-
 			if (BottomGradientView != null) {
 				BottomGradientView.Dispose ();
 				BottomGradientView = null;
-			}
-
-			if (ContactCollectionView != null) {
-				ContactCollectionView.Dispose ();
-				ContactCollectionView = null;
-			}
-
-			if (ContactViewWidthConstraint != null) {
-				ContactViewWidthConstraint.Dispose ();
-				ContactViewWidthConstraint = null;
-			}
-
-			if (MapViewWithConstraint != null) {
-				MapViewWithConstraint.Dispose ();
-				MapViewWithConstraint = null;
 			}
 
 			if (DescriptionLabel != null) {
@@ -107,39 +43,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				DescriptionTopSpaceConstraint = null;
 			}
 
-			if (ImageViewWidthConstraint != null) {
-				ImageViewWidthConstraint.Dispose ();
-				ImageViewWidthConstraint = null;
-			}
-
-			if (LogoImageView != null) {
-				LogoImageView.Dispose ();
-				LogoImageView = null;
-			}
-
-			if (PageControl != null) {
-				PageControl.Dispose ();
-				PageControl = null;
-			}
-
 			if (ScrollView != null) {
 				ScrollView.Dispose ();
 				ScrollView = null;
-			}
-
-			if (GoToContactButtonLeftConstraint != null) {
-				GoToContactButtonLeftConstraint.Dispose ();
-				GoToContactButtonLeftConstraint = null;
-			}
-
-			if (GoToMapButtonLeftConstraint != null) {
-				GoToMapButtonLeftConstraint.Dispose ();
-				GoToMapButtonLeftConstraint = null;
-			}
-
-			if (MapView != null) {
-				MapView.Dispose ();
-				MapView = null;
 			}
 
 			if (ScrollViewHeightConstraint != null) {

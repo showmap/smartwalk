@@ -25,6 +25,7 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _entity = value;
                     RaisePropertyChanged(() => Entity);
+                    IsDescriptionExpanded = false;
                 }
             }
         }
