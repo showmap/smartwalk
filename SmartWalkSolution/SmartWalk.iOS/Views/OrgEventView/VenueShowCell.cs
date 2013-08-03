@@ -21,26 +21,68 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private const int Gap = 8;
 
         private readonly MvxImageViewLoader _imageHelper;
-        private UILabel _startLabel;
-        private UILabel _endLabel;
-        private UILabel _descriptionLabel;
-        private UIImageView _imageView;
-        private UILabel _detailsLabel;
+        private readonly UILabel _startLabel;
+        private readonly UILabel _endLabel;
+        private readonly UILabel _descriptionLabel;
+        private readonly UIImageView _imageView;
+        private readonly UILabel _detailsLabel;
 
         private bool _isExpanded;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
-            Initialize();
+            SelectionStyle = UITableViewCellSelectionStyle.None;
+
+            // TIME
+
+            var font = UIFont.BoldSystemFontOfSize(13);
+            _startLabel = new UILabel { Font = font };
+            _endLabel = new UILabel { Font = font };
+
+            Add(_startLabel);
+            Add(_endLabel);
+
+            // DESCRIPTION
+
+            font = UIFont.SystemFontOfSize(15);
+            _descriptionLabel = new UILabel { 
+                Font = font, 
+                Lines = 0, 
+                LineBreakMode = UILineBreakMode.TailTruncation,
+                ContentMode = UIViewContentMode.Top
+            };
+
+            Add(_descriptionLabel);
+
+            // IMAGE
+
+            _imageView = new UIImageView { 
+                ContentMode = UIViewContentMode.ScaleAspectFit,
+                ClipsToBounds = true,
+                Hidden = true
+            };
 
             _imageHelper = new MvxImageViewLoader(
                 () => _imageView, 
                 () => {
-                    if (_imageHelper.ImageUrl != null && _imageView.Image != null)
-                    {
-                        SetNeedsLayout();
-                    }
-                });
+                if (_imageHelper.ImageUrl != null && _imageView.Image != null)
+                {
+                    SetNeedsLayout();
+                }
+            });
+
+            Add(_imageView);
+
+            // MORE INFO
+
+            font = UIFont.SystemFontOfSize(13);
+            _detailsLabel = new UILabel { 
+                Font = font, 
+                TextColor = ThemeColors.Aqua,
+                Text = "more info"
+            };
+
+            Add(_detailsLabel);
         }
 
         public static float CalculateCellHeight(float frameWidth, bool isExpanded, VenueShow show)
@@ -166,53 +208,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 EndTimeLabel.Text != null &&
                     EndTimeLabel.Text.StartsWith("1")
                     ? 9 : 8;*/
-        }
-
-        private void Initialize()
-        {
-            SelectionStyle = UITableViewCellSelectionStyle.None;
-
-            // TIME
-
-            var font = UIFont.BoldSystemFontOfSize(13);
-            _startLabel = new UILabel { Font = font };
-            _endLabel = new UILabel { Font = font };
-
-            AddSubview(_startLabel);
-            AddSubview(_endLabel);
-
-            // DESCRIPTION
-
-            font = UIFont.SystemFontOfSize(15);
-            _descriptionLabel = new UILabel { 
-                Font = font, 
-                Lines = 0, 
-                LineBreakMode = UILineBreakMode.TailTruncation,
-                ContentMode = UIViewContentMode.Top
-            };
-
-            AddSubview(_descriptionLabel);
-
-            // IMAGE
-
-            _imageView = new UIImageView { 
-                ContentMode = UIViewContentMode.ScaleAspectFit,
-                ClipsToBounds = true,
-                Hidden = true
-            };
- 
-            AddSubview(_imageView);
-
-            // MORE INFO
-
-            font = UIFont.SystemFontOfSize(13);
-            _detailsLabel = new UILabel { 
-                Font = font, 
-                TextColor = ThemeColors.Aqua,
-                Text = "more info"
-            };
-
-            AddSubview(_detailsLabel);
         }
 
         private void UpateImageState()

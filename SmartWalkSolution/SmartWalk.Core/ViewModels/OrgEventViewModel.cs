@@ -150,6 +150,7 @@ namespace SmartWalk.Core.ViewModels
                                 {
                                     case OrgEventViewMode.List:
                                         Mode = OrgEventViewMode.Map;
+                                        SelectedVenueOnMap = null;
                                         break;
 
                                     case OrgEventViewMode.Map:

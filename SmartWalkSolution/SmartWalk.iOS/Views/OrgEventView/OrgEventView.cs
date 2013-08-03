@@ -11,6 +11,8 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -133,9 +135,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     var annotations = ViewModel.OrgEvent.Venues
                         .SelectMany(v => v.Info.Addresses
                             .Select(a => new VenueAnnotation(v, a))).ToArray();
-                    var coordinates = annotations
-                        .Select(va => va.Coordinate)
-                        .Where(c => c.Latitude != 0 && c.Longitude != 0).ToArray();
+                    var coordinates = GetAnnotationsCoordinates(annotations);
 
                     VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
                     VenuesMapView.AddAnnotations(annotations);
@@ -165,6 +165,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                 if (annotation != null)
                 {
+                    VenuesMapView.SetRegion(
+                        MapUtil.CoordinateRegionForCoordinates(annotation.Coordinate), true);
                     VenuesMapView.SelectAnnotation(annotation, true);
                 }
             }
@@ -174,7 +176,19 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 {
                     VenuesMapView.DeselectAnnotation(annotation, false);
                 }
+
+                var annotations = VenuesMapView.Annotations.OfType<VenueAnnotation>();
+                var coordinates = GetAnnotationsCoordinates(annotations);
+                VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), true);
             }
+        }
+
+        private CLLocationCoordinate2D[] GetAnnotationsCoordinates(IEnumerable<VenueAnnotation> annotations)
+        {
+            var coordinates = annotations
+                .Select(va => va.Coordinate)
+                    .Where(c => c.Latitude != 0 && c.Longitude != 0).ToArray();
+            return coordinates;
         }
        
         private void UpdateViewState(bool isAnimated = true)

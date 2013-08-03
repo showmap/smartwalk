@@ -1,18 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
-using System.Windows.Input;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -47,14 +43,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             _imageHelper = new MvxImageViewLoader(
                 () => _imageView,
                 () => {
-                    if (_imageView.Image != null)
+                    if (_imageHelper.ImageUrl != null && 
+                        _imageView.Image != null)
                     {
                         UpdateScrollViewHeightState(true);
                     }
                 });
 
             _mapView = new MKMapView {
-                ShowsUserLocation = false,
+                ShowsUserLocation = true,
                 UserInteractionEnabled = false
             };
 
@@ -90,7 +87,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             }
 
             var noTextCellHeight = CalculateNoTextCellHeight(entity.Info, logoHeight);
-            var textHeight = CalculateTextHeight(frameWidth, entity.Description);
+            var textHeight = CalculateTextHeight(frameWidth - Gap * 2, entity.Description);
             var linesCount = (int)Math.Round(
                 1.0 * (MaxCollapsedCellHeight - noTextCellHeight) / TextLineHeight, 
                 MidpointRounding.AwayFromZero);
@@ -127,7 +124,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             if (text != null && text != string.Empty)
             {
                 var frameSize = new SizeF(
-                    frameWidth - Gap * 2,
+                    frameWidth,
                     float.MaxValue); 
                 var textSize = new NSString(text).StringSize(
                     UIFont.FromName("Helvetica", 15),
@@ -201,18 +198,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             InitializeContactCollectionView();
             InitializeBottomGradientState();
 
-            UpdateCollectionViewCellWidth();
-            UpdateScrollViewHeightState();
+            SetNeedsLayout();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             PopulateScrollView();
-            UpdateBindedControls();
-        }
 
-        private void UpdateBindedControls()
-        {
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Entity.Info.Logo : null;
 
@@ -237,13 +229,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     .Convert(DataContext.Entity.Info.Contact, typeof(IEnumerable), null, null) 
                     : null;*/
 
-            UpdateScrollViewHeightState();
-            UpdateBottomGradientHiddenState();
-
             ScrollView.CurrentPage = 
                 HasAddress(DataContextEntityInfo) && 
-                HasLogo(DataContextEntityInfo) 
+                    HasLogo(DataContextEntityInfo) 
                     ? 1 : 0;
+
+            SetNeedsLayout();
         }
 
         private void PopulateScrollView()
@@ -360,12 +351,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (_bottomGradient == null) return;
 
+            // TODO: It doesn't work on rotation
             _bottomGradient.Frame = BottomGradientView.Bounds;
 
-            if (DataContext != null && !DataContext.IsDescriptionExpanded)
+            if (DataContext != null && 
+                !DataContext.IsDescriptionExpanded)
             {
                 var textHeight = CalculateTextHeight(
-                    Frame.Width, 
+                    DescriptionLabel.Frame.Width, 
                     DataContext.Entity.Description);
 
                 var labelHeight = CalculateCellHeight(

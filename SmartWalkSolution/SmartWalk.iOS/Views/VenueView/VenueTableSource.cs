@@ -116,9 +116,9 @@ namespace SmartWalk.iOS.Views.VenueView
 
         public override void ReloadTableData()
         {
-            base.ReloadTableData();
-
             _entityImageHeight = 0;
+
+            base.ReloadTableData();
         }
 
         protected override UITableViewCell GetOrCreateCellFor(
