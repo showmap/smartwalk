@@ -28,7 +28,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             _imageHelper = new MvxImageViewLoader(
                 () => LogoImageView, 
-                UpdateLogoImageFrame);
+                () => 
+                {
+                    if (LogoImageView.Image != null)
+                    {
+                        UpdateLogoImageFrame();
+                    }
+                });
         }
 
         public new VenueShow DataContext
@@ -69,21 +75,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
-        public override RectangleF Frame
-        {
-            set
-            {
-                base.Frame = value;
-                UpdateLogoImageFrame();
-            }
-        }
-
         public static VenueShowCell Create()
         {
             return (VenueShowCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static float CalculateCellHeight(bool isExpanded, VenueShow show)
+        public static float CalculateCellHeight(float frameWidth, bool isExpanded, VenueShow show)
         {
             if (isExpanded)
             {
@@ -93,8 +90,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 {
                     var logoHeight = show.Logo != null ? Gap + LogoHeight : 0;
                     var detailsHeight = show.Site != null ? Gap + DetailsHeight : 0;
-                    var cellWidth = Gap + 60 + 3 + 60 + Gap;
-                    var frameSize = new SizeF(ScreenUtil.CurrentScreenWidth - cellWidth, float.MaxValue); 
+                    var timeLabelsWidth = Gap + 60 + 3 + 60 + Gap;
+                    var frameSize = new SizeF(frameWidth - timeLabelsWidth, float.MaxValue); 
                     var textSize = new NSString(show.Description).StringSize(
                         UIFont.FromName("Helvetica", 15),
                         frameSize,
@@ -140,10 +137,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.PrepareForReuse();
 
-            DataContext = null;
             IsTableResizing = false;
             LogoImageView.Image = null;
             IsExpanded = false;
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            UpdateLogoImageFrame();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -235,7 +238,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     frame.Height);
 
                 LogoImageView.Layer.Frame = frame;
-                LayoutIfNeeded();
             }
         }
     }

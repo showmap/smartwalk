@@ -54,12 +54,13 @@ namespace SmartWalk.iOS.Views.OrgView
         {
             var item = GetItemAt(indexPath);
 
-            if (item is OrgViewModel)
+            var entityCellContext = item as IEntityCellContext;
+            if (entityCellContext != null)
             {
                 var height = EntityCell.CalculateCellHeight(
                     tableView.Frame.Width,
-                    _viewModel.IsDescriptionExpanded,
-                    _viewModel.Org,
+                    entityCellContext.IsDescriptionExpanded,
+                    entityCellContext.Entity,
                     EntityCell.DefaultLogoHeight);
 
                 return height;
@@ -111,12 +112,13 @@ namespace SmartWalk.iOS.Views.OrgView
         {
             var cell = default(UITableViewCell);
 
-            var orgViewModel = item as OrgViewModel;
-            if (orgViewModel != null)
+            var entityCellContext = item as IEntityCellContext;
+            if (entityCellContext != null)
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
+                ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
                 ((EntityCell)cell).IsLogoSizeFixed = true;
-                ((EntityCell)cell).DataContext = orgViewModel;
+                ((EntityCell)cell).DataContext = entityCellContext;
             }
 
             var orgEventInfo = item as OrgEventInfo;

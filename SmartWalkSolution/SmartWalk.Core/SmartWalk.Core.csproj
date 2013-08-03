@@ -83,5 +83,6 @@
     <Compile Include="Model\PhoneInfo.cs" />
     <Compile Include="Model\EmailInfo.cs" />
     <Compile Include="Model\Location.cs" />
+    <Compile Include="Utils\EnumerableExtensions.cs" />
   </ItemGroup>
 </Project>

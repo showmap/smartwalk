@@ -57,12 +57,13 @@ namespace SmartWalk.iOS.Views.VenueView
         {
             var item = GetItemAt(indexPath);
 
-            if (item is VenueViewModel)
+            var entityCellContext = item as IEntityCellContext;
+            if (entityCellContext != null)
             {
                 var height = EntityCell.CalculateCellHeight(
                     tableView.Frame.Width,
-                    _viewModel.IsDescriptionExpanded,
-                    _viewModel.Venue,
+                    entityCellContext.IsDescriptionExpanded,
+                    entityCellContext.Entity,
                     _entityImageHeight);
 
                 return height;
@@ -72,6 +73,7 @@ namespace SmartWalk.iOS.Views.VenueView
             if (venueShow != null)
             {
                 var height = VenueShowCell.CalculateCellHeight(
+                    tableView.Frame.Width,
                     Equals(_viewModel.ExpandedShow, venueShow),
                     venueShow);
 
@@ -126,12 +128,13 @@ namespace SmartWalk.iOS.Views.VenueView
         {
             var cell = default(UITableViewCell);
 
-            var venueViewModel = item as VenueViewModel;
-            if (venueViewModel != null)
+            var entityCellContext = item as IEntityCellContext;
+            if (entityCellContext != null)
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
+                ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
                 ((EntityCell)cell).ImageHeightUpdatedHandler = OnEntityImageHeightUpdated;
-                ((EntityCell)cell).DataContext = venueViewModel;
+                ((EntityCell)cell).DataContext = entityCellContext;
             }
 
             var venueShow = item as VenueShow;
@@ -156,7 +159,6 @@ namespace SmartWalk.iOS.Views.VenueView
 
             if (updateTable)
             {
-                // TODO: to check how many times it's scheduled
                 DispatchQueue.DefaultGlobalQueue.DispatchAsync(() => 
                     {
                         BeginInvokeOnMainThread(() => 

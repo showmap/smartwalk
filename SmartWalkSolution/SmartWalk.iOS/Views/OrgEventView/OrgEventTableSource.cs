@@ -56,6 +56,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             if (venueShow != null)
             {
                 var height = VenueShowCell.CalculateCellHeight(
+                    tableView.Frame.Width,
                     Equals(_viewModel.ExpandedShow, venueShow),
                     venueShow);
 
@@ -95,7 +96,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
             cell.DataContext = (VenueShow)item;
             cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
-                        return cell;
+            return cell;
         }
 
         protected override object GetItemAt(NSIndexPath indexPath)

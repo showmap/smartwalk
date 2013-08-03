@@ -1,3 +1,5 @@
+using SmartWalk.Core.Utils;
+
 namespace SmartWalk.Core.Model
 {
     public class EntityInfo
@@ -11,5 +13,30 @@ namespace SmartWalk.Core.Model
         public ContactInfo Contact { get; set; }
 
         public AddressInfo[] Addresses { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var info = obj as EntityInfo;
+            if (info != null)
+            {
+                return Id == info.Id &&
+                    Name == info.Name &&
+                        Logo == info.Logo &&
+                            Equals(Contact, info.Contact) &&
+                               Addresses.EnumerableEquals(info.Addresses);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Initial
+                .CombineHashCodeOrDefault(Id)
+                    .CombineHashCodeOrDefault(Name)
+                    .CombineHashCodeOrDefault(Logo)
+                    .CombineHashCodeOrDefault(Contact)
+                    .CombineHashCodeOrDefault(Addresses);
+        }
 	}
 }

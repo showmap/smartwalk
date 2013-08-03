@@ -12,6 +12,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
+using System.Windows.Input;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -33,20 +34,24 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static readonly NSString Key = new NSString("EntityCell");
 
         private readonly MvxImageViewLoader _imageHelper;
+        private readonly MKMapView _mapView;
+        private readonly UIImageView _imageView;
+        private readonly UICollectionView _collectionView;
 
         private UITapGestureRecognizer _descriptionTapGesture;
         private CAGradientLayer _bottomGradient;
         private int _proportionalImageHeight;
 
-        private MKMapView _mapView;
-        private UIImageView _imageView;
-        private UICollectionView _collectionView;
-
         public EntityCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(
                 () => _imageView,
-                () => UpdateScrollViewHeightState(true));
+                () => {
+                    if (_imageView.Image != null)
+                    {
+                        UpdateScrollViewHeightState(true);
+                    }
+                });
 
             _mapView = new MKMapView {
                 ShowsUserLocation = false,
@@ -158,31 +163,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         public Action<int, bool> ImageHeightUpdatedHandler { get; set; }
         public bool IsLogoSizeFixed { get; set; }
+        public ICommand ExpandCollapseCommand { get; set; }
 
-        public new EntityViewModel DataContext
+        public new IEntityCellContext DataContext
         {
-            get { return (EntityViewModel)base.DataContext; }
+            get { return (IEntityCellContext)base.DataContext; }
             set { base.DataContext = value; }
-        }
-
-        public override RectangleF Frame
-        {
-            get
-            {
-                return base.Frame;
-            }
-            set
-            {
-                var previousFrame = base.Frame;
-                base.Frame = value;
-
-                if (ScrollView != null && previousFrame != value)
-                {
-                    UpdateScrollViewHeightState();
-                    UpdateCollectionViewCellWidth();
-                    UpdateBottomGradientHiddenState();
-                }
-            }
         }
 
         private EntityInfo DataContextEntityInfo
@@ -194,11 +180,19 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             base.PrepareForReuse();
 
-            DataContext = null;
             _imageView.Image = null;
             _proportionalImageHeight = 0;
             ImageHeightUpdatedHandler = null;
             _mapView.RemoveAnnotations(_mapView.Annotations);
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            UpdateScrollViewHeightState();
+            UpdateCollectionViewCellWidth();
+            UpdateBottomGradientHiddenState();
         }
 
         protected override void OnInitialize()
@@ -213,28 +207,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            var context = previousContext as INotifyPropertyChanged;
-            if (context != null)
-            {
-                context.PropertyChanged -= OnDataContextPropertyChanged;
-            }
-
-            context = newContext as INotifyPropertyChanged;
-            if (context != null)
-            {
-                context.PropertyChanged += OnDataContextPropertyChanged;
-            }
-
             PopulateScrollView();
             UpdateBindedControls();
-        }
-
-        private void OnDataContextPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == DataContext.GetPropertyName(p => p.IsDescriptionExpanded))
-            {
-                UpdateBottomGradientHiddenState();
-            }
         }
 
         private void UpdateBindedControls()
@@ -257,11 +231,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 _mapView.SelectAnnotation(annotation, false);
             }
 
-            ((ContactCollectionSource)_collectionView.WeakDataSource).ItemsSource =
+            /*((ContactCollectionSource)_collectionView.WeakDataSource).ItemsSource =
                 DataContext != null 
                     ? (IEnumerable)new ContactCollectionSourceConverter()
                     .Convert(DataContext.Entity.Info.Contact, typeof(IEnumerable), null, null) 
-                    : null;
+                    : null;*/
 
             UpdateScrollViewHeightState();
             UpdateBottomGradientHiddenState();
@@ -300,10 +274,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 DescriptionLabel.GestureRecognizers.Length == 0)
             {
                 _descriptionTapGesture = new UITapGestureRecognizer(() => {
-                    if (DataContext != null &&
-                        DataContext.ExpandCollapseCommand.CanExecute(null))
+                    if (ExpandCollapseCommand != null &&
+                        ExpandCollapseCommand.CanExecute(null))
                     {
-                        DataContext.ExpandCollapseCommand.Execute(null);
+                        ExpandCollapseCommand.Execute(null);
                     }
                 });
 
@@ -348,7 +322,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             var flowLayout = (UICollectionViewFlowLayout)_collectionView.CollectionViewLayout;
             var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
 
-            var cellWith = (ScreenUtil.CurrentScreenWidth - 
+            var cellWith = (Frame.Width - 
                 flowLayout.SectionInset.Left -
                 flowLayout.SectionInset.Right - 
                 flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
@@ -374,8 +348,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 isScrollVisible ? _proportionalImageHeight + pagerHeight : 0;
             DescriptionTopSpaceConstraint.Constant = 
                 isScrollVisible && pagerHeight > 0 ? 0 : Gap;
-
-            UpdateBottomGradientHiddenState();
 
             if (!IsLogoSizeFixed && 
                 ImageHeightUpdatedHandler != null)

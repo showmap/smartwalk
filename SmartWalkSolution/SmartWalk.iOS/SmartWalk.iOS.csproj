@@ -234,6 +234,8 @@
       <Link>Controls\PagedScrollView.cs</Link>
     </Compile>
     <Compile Include="Controls\FixedUITableView.cs" />
+    <Compile Include="Views\Common\EntityCell\IEntityCellContext.cs" />
+    <Compile Include="Views\Common\EntityViewModelWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

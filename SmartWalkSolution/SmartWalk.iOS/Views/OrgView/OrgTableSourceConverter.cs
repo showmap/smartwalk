@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Cirrious.CrossCore.Converters;
+using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
-using SmartWalk.Core.Model;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
@@ -19,7 +19,7 @@ namespace SmartWalk.iOS.Views.OrgView
             {
                 var result = new List<GroupContainer>();
 
-                result.Add(new GroupContainer(new [] { orgViewModel }));
+                result.Add(new GroupContainer(new [] { new EntityViewModelWrapper(orgViewModel) }));
 
                 var currentEvents = org.EventInfos
                     .Where(ei => ei.TimeStatus == 0).OrderBy(ei => ei.Date).ToArray();

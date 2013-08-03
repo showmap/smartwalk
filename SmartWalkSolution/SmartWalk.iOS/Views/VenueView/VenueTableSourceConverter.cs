@@ -18,7 +18,7 @@ namespace SmartWalk.iOS.Views.VenueView
             {
                 var result = new List<GroupContainer>();
 
-                result.Add(new GroupContainer(new [] { venueViewModel }));
+                result.Add(new GroupContainer(new [] { new EntityViewModelWrapper(venueViewModel) }));
 
                 if (venue.Shows != null &&
                     venue.Shows.Length > 0)
