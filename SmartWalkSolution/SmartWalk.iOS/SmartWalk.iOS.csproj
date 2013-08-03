@@ -198,9 +198,6 @@
     </Compile>
     <Compile Include="Views\OrgView\OrgTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.cs" />
-    <Compile Include="Views\OrgEventView\VenueShowCell.designer.cs">
-      <DependentUpon>VenueShowCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\OrgEventView\VenueAnnotation.cs" />
     <Compile Include="Views\OrgEventView\OrgEventMapDelegate.cs" />
     <Compile Include="Views\Common\EntityCell\EntityCell.cs" />
@@ -253,7 +250,6 @@
     <InterfaceDefinition Include="Views\OrgView\OrgEventCell.xib" />
     <InterfaceDefinition Include="Views\Common\GroupHeaderCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueCell.xib" />
-    <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\EntityCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\EmailCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\PhoneCell.xib" />

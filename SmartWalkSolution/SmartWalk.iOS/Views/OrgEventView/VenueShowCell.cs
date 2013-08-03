@@ -1,40 +1,83 @@
 using System;
 using System.Drawing;
-using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class VenueShowCell : TableCellBase
+    public class VenueShowCell : TableCellBase
     {
-        private const int LogoHeight = 100;
-        private const int DetailsHeight = 18;
-        private const int Gap = 8;
+        public const int DefaultCellHeight = Gap + TextLineHeight + Gap;
 
-        public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
+        private const int ImageHeight = 100;
+        private const int TimeLabelWidth = 60;
+        private const int TextLineHeight = 19;
+        private const int Gap = 8;
+
         private readonly MvxImageViewLoader _imageHelper;
-        private bool _isTableResizing;
+        private UILabel _startLabel;
+        private UILabel _endLabel;
+        private UILabel _descriptionLabel;
+        private UIImageView _imageView;
+        private UILabel _detailsLabel;
+
         private bool _isExpanded;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
+            Initialize();
+
             _imageHelper = new MvxImageViewLoader(
-                () => LogoImageView, 
-                () => 
-                {
-                    if (LogoImageView.Image != null)
+                () => _imageView, 
+                () => {
+                    if (_imageHelper.ImageUrl != null && _imageView.Image != null)
                     {
-                        UpdateLogoImageFrame();
+                        SetNeedsLayout();
                     }
                 });
+        }
+
+        public static float CalculateCellHeight(float frameWidth, bool isExpanded, VenueShow show)
+        {
+            if (isExpanded)
+            {
+                var cellHeight = default(float);
+
+                if (show.Description != null)
+                {
+                    var logoHeight = show.Logo != null ? Gap + ImageHeight : 0;
+                    var detailsHeight = show.Site != null ? TextLineHeight : 0;
+                    var timeLabelsWidth = Gap + TimeLabelWidth + 3 + TimeLabelWidth + Gap;
+                    var textHeight = CalculateTextHeight(frameWidth - timeLabelsWidth, show.Description);
+                    cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
+                }
+
+                return cellHeight;
+            }
+
+            return DefaultCellHeight;
+        }
+
+        private static float CalculateTextHeight(float frameWidth, string text)
+        {
+            if (text != null && text != string.Empty)
+            {
+                var frameSize = new SizeF(frameWidth, float.MaxValue); 
+                var textSize = new NSString(text).StringSize(
+                    UIFont.FromName("Helvetica", 15),
+                    frameSize,
+                    UILineBreakMode.TailTruncation);
+
+                return textSize.Height;
+            }
+
+            return 0;
         }
 
         public new VenueShow DataContext
@@ -54,82 +97,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 if (_isExpanded != value)
                 {
                     _isExpanded = value;
-                    UpdateViewState();
+                    UpateImageState();
                 }
-            }
-        }
-
-        public bool IsTableResizing
-        {
-            get
-            {
-                return _isTableResizing;
-            }
-            set
-            {
-                if (_isTableResizing != value)
-                {
-                    _isTableResizing = value;
-                    UpdateLogoImageHiddenState();
-                }
-            }
-        }
-
-        public static VenueShowCell Create()
-        {
-            return (VenueShowCell)Nib.Instantiate(null, null)[0];
-        }
-
-        public static float CalculateCellHeight(float frameWidth, bool isExpanded, VenueShow show)
-        {
-            if (isExpanded)
-            {
-                var textHeight = default(float);
-
-                if (show.Description != null)
-                {
-                    var logoHeight = show.Logo != null ? Gap + LogoHeight : 0;
-                    var detailsHeight = show.Site != null ? Gap + DetailsHeight : 0;
-                    var timeLabelsWidth = Gap + 60 + 3 + 60 + Gap;
-                    var frameSize = new SizeF(frameWidth - timeLabelsWidth, float.MaxValue); 
-                    var textSize = new NSString(show.Description).StringSize(
-                        UIFont.FromName("Helvetica", 15),
-                        frameSize,
-                        UILineBreakMode.TailTruncation);
-                    textHeight = Gap + textSize.Height + logoHeight + detailsHeight + Gap;
-                }
-
-                return textHeight;
-            }
-
-            return 35;
-        }
-
-        public static void SetVenueCellsTableIsResizing(UITableView tableView, bool isResizing)
-        {
-            foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>().ToArray())
-            {
-                cell.IsTableResizing = isResizing;
-            }
-        }
-
-        public static void CollapseVenueShowCell(UITableView tableView)
-        {
-            var cell = tableView.VisibleCells.OfType<VenueShowCell>()
-                .FirstOrDefault(c => c.IsExpanded);
-            if (cell != null)
-            {
-                cell.IsExpanded = false;
-            }
-        }
-
-        public static void ExpandVenueShowCell(UITableView tableView, VenueShow expandedShow)
-        {
-            var cell = tableView.VisibleCells.OfType<VenueShowCell>()
-                .FirstOrDefault(c => Equals(expandedShow, c.DataContext));
-            if (cell != null)
-            {
-                cell.IsExpanded = true;
             }
         }
 
@@ -137,8 +106,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.PrepareForReuse();
 
-            IsTableResizing = false;
-            LogoImageView.Image = null;
+            _imageView.Image = null;
+            _imageView.Hidden = true;
             IsExpanded = false;
         }
 
@@ -146,99 +115,127 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.LayoutSubviews();
 
-            UpdateLogoImageFrame();
+            _startLabel.Frame = new RectangleF(Gap, 7, TimeLabelWidth, TextLineHeight);
+            _endLabel.Frame = new RectangleF(Gap + TimeLabelWidth + 3, 7, TimeLabelWidth, TextLineHeight);
+
+            var timeRectWidth = Gap + TimeLabelWidth + 3 + TimeLabelWidth + Gap;
+            var textWidth = Frame.Width - timeRectWidth - Gap;
+            var textHeight = IsExpanded 
+                ? CalculateTextHeight(textWidth, _descriptionLabel.Text) 
+                : TextLineHeight;
+
+            _descriptionLabel.Frame = new RectangleF(timeRectWidth, Gap, textWidth, textHeight);
+
+            var detailsHeight = DataContext != null && 
+                DataContext.Site != null && IsExpanded ? TextLineHeight : 0;
+
+            _detailsLabel.Frame = new RectangleF(
+                timeRectWidth,
+                Frame.Height - detailsHeight - Gap,
+                textWidth,
+                detailsHeight);
+
+            var imageWidth = GetImageWidth();
+            _imageView.Frame = new RectangleF(
+                timeRectWidth,
+                Gap + textHeight + Gap,
+                imageWidth,
+                Math.Min(ImageHeight, Frame.Height - Gap - textHeight - detailsHeight - Gap));
+
+            _imageView.Hidden = !IsExpanded && _imageView.Frame.Height < ImageHeight - 5;
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            UpdateViewState();
-
-            StartTimeLabel.Text = DataContext != null 
+            _startLabel.Text = DataContext != null 
                 ? String.Format("{0:t}", DataContext.Start) : null;
-            EndTimeLabel.Text = DataContext != null 
+            _endLabel.Text = DataContext != null 
                 ? String.Format("{0:t}", DataContext.End) : null;
-            DescriptionLabel.Text = DataContext != null 
+            _descriptionLabel.Text = DataContext != null 
                 ? DataContext.Description : null;
 
-            EndTimeLeftSpaceConstraint.Constant =
+            UpateImageState();
+            SetNeedsLayout();
+
+            // TODO: to adjust times that start with 1 digit
+            /*EndTimeLeftSpaceConstraint.Constant =
                 EndTimeLabel.Text != null &&
                 EndTimeLabel.Text.StartsWith("1")
                     ? 2 : 3;
             EndTimeRightSpaceConstraint.Constant =
                 EndTimeLabel.Text != null &&
                     EndTimeLabel.Text.StartsWith("1")
-                    ? 9 : 8;
+                    ? 9 : 8;*/
         }
 
-        private void UpdateViewState()
+        private void Initialize()
         {
-            DescriptionLogoSpaceConstraint.Constant = 
-                IsExpanded && 
-                DataContext != null && 
-                DataContext.Logo != null 
-                    ? Gap : 0;
-            LogoHeightConstraint.Constant = 
-                IsExpanded && 
-                DataContext != null && 
-                DataContext.Logo != null 
-                    ? LogoHeight : 0;
-            MoreInfoHeightConstraint.Constant = 
-                IsExpanded && 
-                DataContext != null && 
-                DataContext.Site != null 
-                    ? DetailsHeight : 0;
-            LogoDetailsSpaceConstraint.Constant = 
-                IsExpanded && 
-                DataContext != null && 
-                DataContext.Site != null 
-                    ? Gap : 0;
+            SelectionStyle = UITableViewCellSelectionStyle.None;
 
+            // TIME
+
+            var font = UIFont.BoldSystemFontOfSize(13);
+            _startLabel = new UILabel { Font = font };
+            _endLabel = new UILabel { Font = font };
+
+            AddSubview(_startLabel);
+            AddSubview(_endLabel);
+
+            // DESCRIPTION
+
+            font = UIFont.SystemFontOfSize(15);
+            _descriptionLabel = new UILabel { 
+                Font = font, 
+                Lines = 0, 
+                LineBreakMode = UILineBreakMode.TailTruncation,
+                ContentMode = UIViewContentMode.Top
+            };
+
+            AddSubview(_descriptionLabel);
+
+            // IMAGE
+
+            _imageView = new UIImageView { 
+                ContentMode = UIViewContentMode.ScaleAspectFit,
+                ClipsToBounds = true,
+                Hidden = true
+            };
+ 
+            AddSubview(_imageView);
+
+            // MORE INFO
+
+            font = UIFont.SystemFontOfSize(13);
+            _detailsLabel = new UILabel { 
+                Font = font, 
+                TextColor = ThemeColors.Aqua,
+                Text = "more info"
+            };
+
+            AddSubview(_detailsLabel);
+        }
+
+        private void UpateImageState()
+        {
             _imageHelper.ImageUrl = 
                 IsExpanded && DataContext != null 
                     ? DataContext.Logo : null;
-
-            if (!IsExpanded)
-            {
-                LogoImageView.Hidden = true;
-            }
-            else if (IsExpanded && !IsTableResizing) // if it's resizing, wait wait until the cell grows up
-            {
-                LogoImageView.Hidden = false;
-            }
         }
 
-        private void UpdateLogoImageHiddenState()
-        {
-            if (IsExpanded && 
-                DataContext != null && 
-                DataContext.Logo != null)
-            {
-                UpdateLogoImageFrame();
-
-                var transition = new CATransition();
-                transition.Duration = 0.2;
-                transition.Type = CAAnimation.TransitionFade.ToString();
-                LogoImageView.Layer.AddAnimation(transition, null);
-
-                LogoImageView.Hidden = false;
-            }
-        }
-
-        private void UpdateLogoImageFrame()
+        private float GetImageWidth()
         {
             if (_imageHelper.ImageUrl != null &&
-                LogoImageView.Image != null && 
-                (int)LogoImageView.Layer.Frame.Height != 0)
+                _imageView.Image != null &&
+                IsExpanded)
             {
-                var frame = LogoImageView.Layer.Frame;
-                var imageSize = LogoImageView.SizeThatFits(frame.Size);
+                var imageSize = _imageView.Image.Size;
 
-                frame.Size = new SizeF(
-                    (float)(1.0 * imageSize.Width * frame.Height / imageSize.Height), 
-                    frame.Height);
-
-                LogoImageView.Layer.Frame = frame;
+                var width = (float)(1.0 * imageSize.Width * ImageHeight / imageSize.Height);
+                return width;
             }
+
+            return 0;
         }
+
     }
 }

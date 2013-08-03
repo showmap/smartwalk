@@ -1,7 +1,6 @@
 using System.ComponentModel;
+using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using MonoTouch.CoreAnimation;
-using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
@@ -61,19 +60,13 @@ namespace SmartWalk.iOS.Views.VenueView
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
-                VenueShowCell.SetVenueCellsTableIsResizing(VenueShowsTableView, true);
-                VenueShowCell.CollapseVenueShowCell(VenueShowsTableView);
-
-                CATransaction.Begin();
-                CATransaction.CompletionBlock = new NSAction(
-                    () => VenueShowCell.SetVenueCellsTableIsResizing(VenueShowsTableView, false));
+                foreach (var cell in VenueShowsTableView.VisibleCells.OfType<VenueShowCell>())
+                {
+                    cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+                }
 
                 VenueShowsTableView.BeginUpdates();
                 VenueShowsTableView.EndUpdates();
-
-                CATransaction.Commit();
-
-                VenueShowCell.ExpandVenueShowCell(VenueShowsTableView, ViewModel.ExpandedShow);
             }
         }
 

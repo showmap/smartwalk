@@ -82,19 +82,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
-                VenueShowCell.SetVenueCellsTableIsResizing(VenuesAndShowsTableView, true);
-                VenueShowCell.CollapseVenueShowCell(VenuesAndShowsTableView);
-
-                CATransaction.Begin();
-                CATransaction.CompletionBlock = new NSAction(
-                    () => VenueShowCell.SetVenueCellsTableIsResizing(VenuesAndShowsTableView, false));
+                foreach (var cell in VenuesAndShowsTableView.VisibleCells.OfType<VenueShowCell>())
+                {
+                    cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+                }
 
                 VenuesAndShowsTableView.BeginUpdates();
                 VenuesAndShowsTableView.EndUpdates();
-
-                CATransaction.Commit();
-
-                VenueShowCell.ExpandVenueShowCell(VenuesAndShowsTableView, ViewModel.ExpandedShow);
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
@@ -5,7 +6,6 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
-using System;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -22,7 +22,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             UseAnimations = true;
 
-            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
+            tableView.RegisterClassForCellReuse(typeof(VenueShowCell), VenueShowCell.Key);
         }
 
         public Venue[] VenueItemsSource
