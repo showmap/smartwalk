@@ -280,5 +280,8 @@
     <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\nbff\events\nbff-2013-06-07.xml">
       <Link>TempXML\Local\san francisco bay area\nbff\events\nbff-2013-06-07.xml</Link>
     </Content>
+    <Content Include="..\..\..\smartwalk.me\data\us\ca\san francisco bay area\mapp\events\mapp-2013-08-03.xml">
+      <Link>TempXML\Local\san francisco bay area\mapp\events\mapp-2013-08-03.xml</Link>
+    </Content>
   </ItemGroup>
 </Project>
