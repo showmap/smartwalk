@@ -9,6 +9,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Utils;
+using System.Collections;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -149,8 +150,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private static bool HasContact(EntityInfo info)
         {
-            // TODO: Temporary disabled all contacts
-            return false; //info != null && info.Contact != null && !info.Contact.IsEmpty;
+            return info != null && info.Contact != null && !info.Contact.IsEmpty;
         }
 
         private static bool HasAddress(EntityInfo info)
@@ -223,11 +223,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 _mapView.SelectAnnotation(annotation, false);
             }
 
-            /*((ContactCollectionSource)_collectionView.WeakDataSource).ItemsSource =
+            ((ContactCollectionSource)_collectionView.WeakDataSource).ItemsSource =
                 DataContext != null 
                     ? (IEnumerable)new ContactCollectionSourceConverter()
                     .Convert(DataContext.Entity.Info.Contact, typeof(IEnumerable), null, null) 
-                    : null;*/
+                    : null;
 
             ScrollView.CurrentPage = 
                 HasAddress(DataContextEntityInfo) && 
@@ -334,6 +334,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             var isScrollVisible = IsScrollViewVisible(DataContextEntityInfo);
             var pagerHeight = CalculatePagerHeight(DataContextEntityInfo);
+
+            ScrollView.Frame = new RectangleF(
+                0,
+                0,
+                Frame.Width,
+                isScrollVisible ? _proportionalImageHeight + pagerHeight : 0);
 
             ScrollViewHeightConstraint.Constant = 
                 isScrollVisible ? _proportionalImageHeight + pagerHeight : 0;
