@@ -7,7 +7,7 @@ namespace SmartWalk.iOS.Utils
     {
         public static MKCoordinateRegion CoordinateRegionForCoordinates(CLLocationCoordinate2D coordinate) 
         {
-            return MKCoordinateRegion.FromDistance(coordinate, 200, 200);
+            return MKCoordinateRegion.FromDistance(coordinate, 300, 300);
         }
 
         public static MKCoordinateRegion CoordinateRegionForCoordinates(CLLocationCoordinate2D[] coordinates) 

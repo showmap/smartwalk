@@ -20,6 +20,11 @@ namespace SmartWalk.iOS.Controls
 
         private bool _isTouching;
 
+        public PagedScrollView()
+        {
+            Initialize();
+        }
+
         public PagedScrollView(IntPtr handle) : base(handle)
         {
             Initialize();

@@ -185,21 +185,23 @@ namespace SmartWalk.Core.Services
                                 },
                                 Description = venue.Element("description").ValueOrNull(),
                                 Shows = venue.Descendants("show")
-                                    .Select(show => new VenueShow
-                                        {
-                                            Start = show.Attribute("start") != null 
-                                                ? DateTime.Parse(show.Attribute("start").Value) : default(DateTime),
-                                            End = show.Attribute("end") != null 
-                                                ? DateTime.Parse(show.Attribute("end").Value) : default(DateTime),
+                                    .Select(show => {
+                                        var times = ParseShowTime(show.Attribute("start").ValueOrNull(),
+                                            show.Attribute("end").ValueOrNull(), date);
+                                        return new VenueShow
+                                            {
+                                                Start = times.Item1,
+                                                End = times.Item2,
                                                 Description = show.Value,
-                                            Logo = show.Attribute("logo").ValueOrNull(),
-                                            Site = show.Attribute("web") != null 
-                                                ? new WebSiteInfo
-                                                {
-                                                    Label = "more info",
-                                                    URL = show.Attribute("logo").ValueOrNull()
-                                                }
-                                                : null
+                                                Logo = show.Attribute("logo").ValueOrNull(),
+                                                Site = show.Attribute("web") != null 
+                                                    ? new WebSiteInfo
+                                                    {
+                                                        Label = "more info",
+                                                        URL = show.Attribute("logo").ValueOrNull()
+                                                    }
+                                                    : null
+                                            };
                                         }).ToArray()
                             }).ToArray()
                 };
@@ -251,6 +253,43 @@ namespace SmartWalk.Core.Services
                                 URL = web.ValueOrNull()
                             }).ToArray(),
                 };
+        }
+
+        private Tuple<DateTime, DateTime> ParseShowTime(string start, string end, DateTime eventDate)
+        {
+            DateTime parsedStartTime;
+            if (start != null && DateTime.TryParse(start, out parsedStartTime))
+            {
+                parsedStartTime = new DateTime(
+                    eventDate.Year, 
+                    eventDate.Month, 
+                    eventDate.Day, 
+                    parsedStartTime.Hour, 
+                    parsedStartTime.Minute,
+                    0);
+            }
+            else
+            {
+                parsedStartTime = DateTime.MinValue;
+            }
+
+            DateTime parsedEndTime;
+            if (end != null && DateTime.TryParse(end, out parsedEndTime))
+            {
+                parsedEndTime = new DateTime(
+                    eventDate.Year, 
+                    eventDate.Month, 
+                    eventDate.Day, 
+                    parsedEndTime.Hour, 
+                    parsedEndTime.Minute,
+                    0).AddDays(parsedStartTime > parsedEndTime ? 1 : 0);
+            }
+            else
+            {
+                parsedEndTime = DateTime.MaxValue;
+            }
+
+            return new Tuple<DateTime, DateTime>(parsedStartTime, parsedEndTime);
         }
     }
 

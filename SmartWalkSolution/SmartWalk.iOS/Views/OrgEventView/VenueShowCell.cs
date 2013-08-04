@@ -32,6 +32,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public VenueShowCell(IntPtr handle) : base(handle)
         {
             SelectionStyle = UITableViewCellSelectionStyle.None;
+            ClipsToBounds = true;
 
             // TIME
 
@@ -162,9 +163,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             var timeRectWidth = Gap + TimeLabelWidth + 3 + TimeLabelWidth + Gap;
             var textWidth = Frame.Width - timeRectWidth - Gap;
-            var textHeight = IsExpanded 
-                ? CalculateTextHeight(textWidth, _descriptionLabel.Text) 
-                : TextLineHeight;
+            var textHeight = Math.Min(
+                IsExpanded 
+                    ? CalculateTextHeight(textWidth, _descriptionLabel.Text) 
+                    : TextLineHeight,
+                Frame.Height - Gap * 2);
 
             _descriptionLabel.Frame = new RectangleF(timeRectWidth, Gap, textWidth, textHeight);
 
@@ -189,10 +192,27 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            _startLabel.Text = DataContext != null 
+            var timeTextColor = 
+                (DataContext.Start.Date != DateTime.Now.Date) ||
+                (DataContext.Start == DateTime.MinValue && DataContext.End >= DateTime.Now) ||
+                (DataContext.End == DateTime.MaxValue) ||
+                (DataContext.End >= DateTime.Now)
+                    ? UIColor.Black : UIColor.LightGray;
+
+            if (DataContext.Start.Date == DateTime.Now.Date &&
+                DataContext.Start <= DateTime.Now && DateTime.Now <= DataContext.End)
+            {
+                timeTextColor = UIColor.FromRGB(9, 135, 16);
+            }
+
+            _startLabel.Text = DataContext != null && DataContext.Start != DateTime.MinValue
                 ? String.Format("{0:t}", DataContext.Start) : null;
-            _endLabel.Text = DataContext != null 
+            _startLabel.TextColor = timeTextColor;
+
+            _endLabel.Text = DataContext != null && DataContext.End != DateTime.MaxValue
                 ? String.Format("{0:t}", DataContext.End) : null;
+            _endLabel.TextColor = timeTextColor;
+
             _descriptionLabel.Text = DataContext != null 
                 ? DataContext.Description : null;
 
