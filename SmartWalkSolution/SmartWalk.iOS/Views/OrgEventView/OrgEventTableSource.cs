@@ -22,7 +22,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             UseAnimations = true;
 
-            tableView.RegisterClassForCellReuse(typeof(VenueShowCell), VenueShowCell.Key);
+            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
         public Venue[] VenueItemsSource
