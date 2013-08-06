@@ -62,6 +62,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             this.CreateBinding(tableSource).To((OrgEventViewModel vm) => vm.OrgEvent.Venues).Apply();
 
+            SearchDisplayController.SearchResultsTableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
+            SearchDisplayController.SearchResultsSource = tableSource;
+
             return tableSource;
         }
 
@@ -187,7 +190,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             var coordinates = annotations
                 .Select(va => va.Coordinate)
-                    .Where(c => c.Latitude != 0 && c.Longitude != 0).ToArray();
+                    .Where(c => (long)c.Latitude != 0 && (long)c.Longitude != 0).ToArray();
             return coordinates;
         }
        

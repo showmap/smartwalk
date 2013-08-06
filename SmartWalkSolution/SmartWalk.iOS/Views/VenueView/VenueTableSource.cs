@@ -26,7 +26,7 @@ namespace SmartWalk.iOS.Views.VenueView
             _headerViewFactory = new ViewsFactory<GroupHeaderCell>(GroupHeaderCell.Create);
 
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
-            tableView.RegisterClassForCellReuse(typeof(VenueShowCell), VenueShowCell.Key);
+            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
         public GroupContainer[] GroupItemsSource

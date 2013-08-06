@@ -15,6 +15,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UIView MapPanel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UISearchDisplayController SearchDisplayController { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIView TablePanel { get; set; }
 
 		[Outlet]
@@ -43,6 +49,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (VenuesMapView != null) {
 				VenuesMapView.Dispose ();
 				VenuesMapView = null;
+			}
+
+			if (SearchBar != null) {
+				SearchBar.Dispose ();
+				SearchBar = null;
+			}
+
+			if (SearchDisplayController != null) {
+				SearchDisplayController.Dispose ();
+				SearchDisplayController = null;
 			}
 		}
 	}
