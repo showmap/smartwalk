@@ -32,7 +32,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            var venueShow = GetItemAt(indexPath) as VenueShow;
+            var item = GetItemAt(indexPath);
+            var venueShow = item as VenueShow;
 
             if (venueShow != null &&
                 _viewModel.ExpandCollapseShowCommand != null &&
@@ -63,7 +64,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return height;
             }
 
-
             throw new Exception("There is an unsupported type in the list.");
         }
 
@@ -74,7 +74,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override int RowsInSection(UITableView tableview, int section)
         {
-            return VenueItemsSource != null && VenueItemsSource[section].Shows != null 
+            return VenueItemsSource != null && 
+                   VenueItemsSource[section].Shows != null 
                 ? VenueItemsSource[section].Shows.Count() 
                 : 0;
         }

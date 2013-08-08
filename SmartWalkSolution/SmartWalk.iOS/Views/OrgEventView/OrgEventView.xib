@@ -201,22 +201,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">SearchBar</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="744435111"/>
-					</object>
-					<int key="connectionID">42</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">SearchDisplayController</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="1010035941"/>
-					</object>
-					<int key="connectionID">43</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="744435111"/>
 						<reference key="destination" ref="372490531"/>
@@ -237,31 +221,7 @@
 						<reference key="source" ref="1010035941"/>
 						<reference key="destination" ref="372490531"/>
 					</object>
-					<int key="connectionID">37</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">searchResultsDataSource</string>
-						<reference key="source" ref="1010035941"/>
-						<reference key="destination" ref="372490531"/>
-					</object>
-					<int key="connectionID">38</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">searchResultsDelegate</string>
-						<reference key="source" ref="1010035941"/>
-						<reference key="destination" ref="372490531"/>
-					</object>
-					<int key="connectionID">39</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="1010035941"/>
-						<reference key="destination" ref="372490531"/>
-					</object>
-					<int key="connectionID">40</int>
+					<int key="connectionID">44</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -731,7 +691,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">43</int>
+			<int key="maxID">44</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -756,8 +716,6 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="MapPanel">UIView</string>
-						<string key="SearchBar">UISearchBar</string>
-						<string key="SearchDisplayController">UISearchDisplayController</string>
 						<string key="TablePanel">UIView</string>
 						<string key="VenuesAndShowsTableView">FixedUITableView</string>
 						<string key="VenuesMapView">MKMapView</string>
@@ -766,14 +724,6 @@
 						<object class="IBToOneOutletInfo" key="MapPanel">
 							<string key="name">MapPanel</string>
 							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SearchBar">
-							<string key="name">SearchBar</string>
-							<string key="candidateClassName">UISearchBar</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="SearchDisplayController">
-							<string key="name">SearchDisplayController</string>
-							<string key="candidateClassName">UISearchDisplayController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="TablePanel">
 							<string key="name">TablePanel</string>

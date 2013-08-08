@@ -2,11 +2,19 @@ using SmartWalk.Core.Utils;
 
 namespace SmartWalk.Core.Model
 {
-    public class PhoneInfo
+    public class PhoneInfo : ISearchable
     {
         public string Name { get; set; }
 
         public string Phone { get; set; }
+
+        public string SearchableText
+        {
+            get
+            {
+                return Name ?? string.Empty + " " + Phone ?? string.Empty;
+            }
+        }
 
         public override bool Equals(object obj)
         {

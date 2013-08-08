@@ -1,8 +1,9 @@
+using System.Linq;
 using SmartWalk.Core.Utils;
 
 namespace SmartWalk.Core.Model
 {
-    public class EntityInfo
+    public class EntityInfo : ISearchable
 	{
         public string Id { get; set; }
 
@@ -13,6 +14,18 @@ namespace SmartWalk.Core.Model
         public ContactInfo Contact { get; set; }
 
         public AddressInfo[] Addresses { get; set; }
+
+        public string SearchableText
+        {
+            get
+            {
+                return (Name != null ? " " + Name : string.Empty) + 
+                    (Contact != null ? " " + Contact.SearchableText : string.Empty) +
+                        (Addresses != null 
+                            ? Addresses.Select(a => a.SearchableText).Aggregate((a, b) => a + " " + b) 
+                            : string.Empty);
+            }
+        }
 
         public override bool Equals(object obj)
         {
@@ -37,6 +50,17 @@ namespace SmartWalk.Core.Model
                     .CombineHashCodeOrDefault(Logo)
                     .CombineHashCodeOrDefault(Contact)
                     .CombineHashCodeOrDefault(Addresses);
+        }
+
+        public EntityInfo Clone()
+        {
+            return new EntityInfo {
+                Id = Id,
+                Name = Name,
+                Logo = Logo,
+                Contact = Contact,
+                Addresses = Addresses
+            };
         }
 	}
 }

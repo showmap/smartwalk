@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using MonoTouch.CoreAnimation;
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -11,8 +11,6 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -37,6 +35,14 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             VenuesMapView.Delegate = new OrgEventMapDelegate(ViewModel);
 
+            var searchDelegate = new OrgEventSearchDelegate(ViewModel);
+            SearchDisplayController.Delegate = searchDelegate;
+
+            this.CreateBinding(searchDelegate)
+                .For(p => p.ItemsSource)
+                .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
+                .Apply();
+
             InitializeToolBar();
             InitializeGestures();
 
@@ -58,12 +64,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override object CreateListViewSource()
         {
-            var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, ViewModel);
+            var tableSource = new OrgEventTableSource(
+                VenuesAndShowsTableView,
+                ViewModel);
 
             this.CreateBinding(tableSource).To((OrgEventViewModel vm) => vm.OrgEvent.Venues).Apply();
-
-            SearchDisplayController.SearchResultsTableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
-            SearchDisplayController.SearchResultsSource = tableSource;
 
             return tableSource;
         }
@@ -94,6 +99,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                 VenuesAndShowsTableView.BeginUpdates();
                 VenuesAndShowsTableView.EndUpdates();
+
+                // TODO: check out how to know if search table is visible
+                foreach (var cell in SearchDisplayController.SearchResultsTableView.VisibleCells.OfType<VenueShowCell>())
+                {
+                    cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+                }
+
+                SearchDisplayController.SearchResultsTableView.BeginUpdates();
+                SearchDisplayController.SearchResultsTableView.EndUpdates();
             }
         }
 

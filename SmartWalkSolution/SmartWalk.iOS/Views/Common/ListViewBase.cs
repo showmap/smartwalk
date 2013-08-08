@@ -62,7 +62,6 @@ namespace SmartWalk.iOS.Views.Common
             var source = CreateListViewSource();
 
             ListView.Source = source;
-            ListView.ReloadData();
 
             _refreshControl = new UIRefreshControl
                 {

@@ -29,9 +29,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public VenueShowCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(
-                () => ImageView, 
+                () => ThumbImageView, 
                 () => {
-                if (_imageHelper.ImageUrl != null && ImageView.Image != null)
+                if (_imageHelper.ImageUrl != null && ThumbImageView.Image != null)
                 {
                     SetNeedsLayout();
                 }
@@ -107,8 +107,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.PrepareForReuse();
 
-            ImageView.Image = null;
-            ImageView.Hidden = true;
+            ThumbImageView.Image = null;
+            ThumbImageView.Hidden = true;
             IsExpanded = false;
 
             UpdateConstraints();
@@ -118,7 +118,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.LayoutSubviews();
 
-            ImageView.Hidden = !IsExpanded || DataContext == null || DataContext.Logo == null;
+            ThumbImageView.Hidden = !IsExpanded || DataContext == null || DataContext.Logo == null;
 
             UpdateConstraints();
         }
@@ -133,7 +133,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
                 ImageHeightConstraint.Constant = ImageHeight;
-                ImageWidthConstraint.Constant = GetImageWidth();
+                ImageWidthConstraint.Constant = GetImageProportionalWidth();
                 DescriptionAndImageSpaceConstraint.Constant = Gap;
             }
             else
@@ -205,13 +205,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     ? DataContext.Logo : null;
         }
 
-        private float GetImageWidth()
+        private float GetImageProportionalWidth()
         {
             if (_imageHelper.ImageUrl != null &&
-                ImageView.Image != null &&
+                ThumbImageView.Image != null &&
                 IsExpanded)
             {
-                var imageSize = ImageView.Image.Size;
+                var imageSize = ThumbImageView.Image.Size;
 
                 var width = (float)(1.0 * imageSize.Width * ImageHeight / imageSize.Height);
                 return width;
@@ -219,6 +219,5 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             return 0;
         }
-
     }
 }

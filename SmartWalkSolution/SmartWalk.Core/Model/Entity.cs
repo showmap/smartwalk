@@ -2,11 +2,20 @@ using SmartWalk.Core.Utils;
 
 namespace SmartWalk.Core.Model
 {
-    public abstract class Entity
+    public abstract class Entity : ISearchable
     {
         public EntityInfo Info { get; set; }
 
         public string Description { get; set; }
+
+        public virtual string SearchableText
+        {
+            get
+            {
+                return (Info != null ? " " + Info.SearchableText : string.Empty) + 
+                    (Description != null ? " " + Description : string.Empty);
+            }
+        }
 
         public override bool Equals(object obj)
         {

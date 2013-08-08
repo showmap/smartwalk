@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Input;
@@ -9,20 +10,19 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Utils;
-using System.Collections;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
     public partial class EntityCell : TableCellBase
     {
-        public const int DefaultLogoHeight = 240;
+        public const int DefaultImageHeight = 240;
 
         private const int TextLineHeight = 19;
         private const int DefaultPagerHeight = 27;
         private const int Gap = 8;
 
         private const int MaxCollapsedCellHeight = 
-            DefaultLogoHeight + 
+            DefaultImageHeight + 
             DefaultPagerHeight + 
             TextLineHeight * 3 + 
             Gap;
@@ -84,7 +84,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (logoHeight == 0)
             {
-                logoHeight = DefaultLogoHeight;
+                logoHeight = DefaultImageHeight;
             }
 
             var noTextCellHeight = CalculateNoTextCellHeight(entity.Info, logoHeight);
@@ -178,7 +178,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             base.PrepareForReuse();
 
             _imageView.Image = null;
-            _proportionalImageHeight = 0;
+            _proportionalImageHeight = DefaultImageHeight;
             ImageHeightUpdatedHandler = null;
             _mapView.RemoveAnnotations(_mapView.Annotations);
         }
@@ -214,6 +214,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             if (DataContext != null && 
                 HasAddress(DataContextEntityInfo))
             {
+                _mapView.RemoveAnnotations(_mapView.Annotations);
                 var annotation = new EntityAnnotation(
                     DataContext.Entity, 
                     DataContext.Entity.Info.Addresses[0]);
@@ -323,14 +324,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void UpdateScrollViewHeightState(bool updateTable = false)
         {
-            _proportionalImageHeight = DefaultLogoHeight;
-            if (!IsLogoSizeFixed && _imageView.Image != null)
-            {
-                var frame = _imageView.Layer.Frame;
-                var imageSize = _imageView.SizeThatFits(frame.Size);
-                _proportionalImageHeight = Math.Min(DefaultLogoHeight, 
-                    (int)(1.0 * Frame.Width * imageSize.Height / imageSize.Width) + 1);
-            }
+            _proportionalImageHeight = GetImageProportionalHeight();
 
             var isScrollVisible = IsScrollViewVisible(DataContextEntityInfo);
             var pagerHeight = CalculatePagerHeight(DataContextEntityInfo);
@@ -382,6 +376,21 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             {
                 _bottomGradient.Hidden = true;
             }
+        }
+
+        private int GetImageProportionalHeight()
+        {
+            if (_imageHelper.ImageUrl != null &&
+                _imageView.Image != null &&
+                !IsLogoSizeFixed)
+            {
+                var imageSize = _imageView.Image.Size;
+                var height = Math.Min(DefaultImageHeight, 
+                    (int)(1.0 * Frame.Width * imageSize.Height / imageSize.Width) + 1);
+                return height;
+            }
+
+            return DefaultImageHeight;
         }
     }
 }

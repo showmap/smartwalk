@@ -39,16 +39,21 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIImageView ImageView { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIImageView ThumbImageView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ThumbImageView != null) {
+				ThumbImageView.Dispose ();
+				ThumbImageView = null;
+			}
+
 			if (DescriptionAndImageSpaceConstraint != null) {
 				DescriptionAndImageSpaceConstraint.Dispose ();
 				DescriptionAndImageSpaceConstraint = null;
@@ -97,11 +102,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (ImageWidthConstraint != null) {
 				ImageWidthConstraint.Dispose ();
 				ImageWidthConstraint = null;
-			}
-
-			if (ImageView != null) {
-				ImageView.Dispose ();
-				ImageView = null;
 			}
 
 			if (StartTimeLabel != null) {

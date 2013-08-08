@@ -3,7 +3,7 @@ using SmartWalk.Core.Utils;
 
 namespace SmartWalk.Core.Model
 {
-    public class VenueShow
+    public class VenueShow : ISearchable
     {
         public DateTime Start { get; set; }
 
@@ -14,6 +14,17 @@ namespace SmartWalk.Core.Model
         public string Logo { get; set; }
 
         public WebSiteInfo Site { get; set; }
+
+        public string SearchableText
+        {
+            get
+            {
+                return (Start != DateTime.MinValue ? " " + Start.ToShortTimeString() : string.Empty) + 
+                    (End != DateTime.MaxValue ? " " + End.ToShortTimeString() : string.Empty) +
+                    (Site != null ? " " + Site.SearchableText : string.Empty) +
+                        (Description != null ? " " + Description :  string.Empty);
+            }
+        }
 
         public override bool Equals(object obj)
         {
@@ -34,6 +45,17 @@ namespace SmartWalk.Core.Model
                 .CombineHashCode(Start)
                 .CombineHashCode(End)
                 .CombineHashCodeOrDefault(Description);
+        }
+
+        public VenueShow Clone()
+        {
+            return new VenueShow {
+                Start = Start,
+                End = End,
+                Description = Description,
+                Logo = Logo,
+                Site = Site
+            };
         }
     }
 }

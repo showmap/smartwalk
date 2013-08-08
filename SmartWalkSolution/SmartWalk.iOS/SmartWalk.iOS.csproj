@@ -236,6 +236,7 @@
     <Compile Include="Views\OrgEventView\VenueShowCell.designer.cs">
       <DependentUpon>VenueShowCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\OrgEventView\OrgEventSearchDelegate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

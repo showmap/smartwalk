@@ -2,13 +2,21 @@ using SmartWalk.Core.Utils;
 
 namespace SmartWalk.Core.Model
 {
-    public class AddressInfo
+    public class AddressInfo : ISearchable
     {
         public double Latitude { get; set; }
 
         public double Longitude { get; set; }
 
         public string Address { get; set; }
+
+        public string SearchableText
+        {
+            get
+            {
+                return Address != null ? " " + Address : string.Empty;
+            }
+        }
 
         public override bool Equals(object obj)
         {

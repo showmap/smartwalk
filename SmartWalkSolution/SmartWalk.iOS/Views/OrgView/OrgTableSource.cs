@@ -61,7 +61,7 @@ namespace SmartWalk.iOS.Views.OrgView
                     tableView.Frame.Width,
                     entityCellContext.IsDescriptionExpanded,
                     entityCellContext.Entity,
-                    EntityCell.DefaultLogoHeight);
+                    EntityCell.DefaultImageHeight);
 
                 return height;
             }
