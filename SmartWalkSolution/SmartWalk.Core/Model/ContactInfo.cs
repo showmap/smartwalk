@@ -26,8 +26,8 @@ namespace SmartWalk.Core.Model
             get
             {
                 return (Phones != null  && Phones.Length != 0 ? " " + Phones.Select(p => p.SearchableText).Aggregate((a, b) => a + " " + b) : string.Empty) +
-                    (Emails != null  && Phones.Length != 0 ? " " + Emails.Select(e => e.SearchableText).Aggregate((a, b) => a + " " + b) : string.Empty) +
-                        (WebSites != null  && Phones.Length != 0 ? " " + WebSites.Select(e => e.SearchableText).Aggregate((a, b) => a + " " + b) : string.Empty);
+                    (Emails != null  && Emails.Length != 0 ? " " + Emails.Select(e => e.SearchableText).Aggregate((a, b) => a + " " + b) : string.Empty) +
+                        (WebSites != null  && WebSites.Length != 0 ? " " + WebSites.Select(e => e.SearchableText).Aggregate((a, b) => a + " " + b) : string.Empty);
             }
         }
 

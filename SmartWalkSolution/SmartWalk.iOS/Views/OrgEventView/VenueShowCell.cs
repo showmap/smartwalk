@@ -170,13 +170,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             var timeTextColor = 
+                DataContext == null ||
                 (DataContext.Start.Date != DateTime.Now.Date) ||
                 (DataContext.Start == DateTime.MinValue && DataContext.End >= DateTime.Now) ||
                 (DataContext.End == DateTime.MaxValue) ||
                 (DataContext.End >= DateTime.Now)
                     ? UIColor.Black : UIColor.LightGray;
 
-            if (DataContext.Start.Date == DateTime.Now.Date &&
+            if (DataContext != null &&
+                DataContext.Start.Date == DateTime.Now.Date &&
                 DataContext.Start <= DateTime.Now &&
                 DateTime.Now <= DataContext.End)
             {

@@ -25,6 +25,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
+        public bool IsEmptyRowAppended { get; set; }
+
         public Venue[] VenueItemsSource
         {
             get { return ItemsSource != null ? (Venue[])ItemsSource : null; }
@@ -64,7 +66,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return height;
             }
 
-            throw new Exception("There is an unsupported type in the list.");
+            return 35f;
         }
 
         public override int NumberOfSections(UITableView tableView)
@@ -74,10 +76,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override int RowsInSection(UITableView tableview, int section)
         {
-            return VenueItemsSource != null && 
+            var delta = IsEmptyRowAppended &&
+                section == NumberOfSections(tableview) - 1 ? 1 : 0;
+
+            return (VenueItemsSource != null && 
                    VenueItemsSource[section].Shows != null 
                 ? VenueItemsSource[section].Shows.Count() 
-                : 0;
+                    : 0) + delta;
         }
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
@@ -94,6 +99,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
         {
+            if (IsEmptyRowAppended && item == null)
+            {
+                return new UITableViewCell(UITableViewCellStyle.Default, "empty") {
+                    SelectionStyle =  UITableViewCellSelectionStyle.None
+                };
+            }
+
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
             cell.DataContext = (VenueShow)item;
             cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
@@ -102,9 +114,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override object GetItemAt(NSIndexPath indexPath)
         {
-            return VenueItemsSource != null && VenueItemsSource[indexPath.Section].Shows != null 
-                ? VenueItemsSource[indexPath.Section].Shows.ElementAt(indexPath.Row) 
+            if (VenueItemsSource != null && VenueItemsSource[indexPath.Section].Shows != null)
+            {
+                // Asumming that there may be an empty row
+                return indexPath.Row < VenueItemsSource[indexPath.Section].Shows.Length
+                    ? VenueItemsSource[indexPath.Section].Shows.ElementAt(indexPath.Row) 
                     : null;
+            }
+           
+            return null;
         }
     }
 }
