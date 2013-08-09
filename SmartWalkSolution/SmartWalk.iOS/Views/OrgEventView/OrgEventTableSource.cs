@@ -68,7 +68,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override void WillDisplay(UITableView tableView, UITableViewCell cell, NSIndexPath indexPath)
         {
-            if (_isSearchBarMoved) return;
+            if (IsSearchSource || _isSearchBarMoved) return;
 
             var lastIndexPath = tableView.IndexPathsForVisibleRows.LastOrDefault();
             if (lastIndexPath != null &&
