@@ -8,7 +8,7 @@ using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public partial class VenueCell : TableCellBase
+    public partial class VenueCell : TableHeaderBase
     {
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
@@ -17,6 +17,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public VenueCell(IntPtr handle) : base(handle)
         {
+            BackgroundView = new UIView();
             _imageHelper = new MvxImageViewLoader(() => LogoImageView);
         }
 

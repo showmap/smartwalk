@@ -190,7 +190,6 @@
       <DependentUpon>GroupHeaderCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\TableCellBase.cs" />
-    <Compile Include="Views\Common\ViewsFactory.cs" />
     <Compile Include="Views\Common\GroupContainer.cs" />
     <Compile Include="Views\OrgEventView\VenueCell.cs" />
     <Compile Include="Views\OrgEventView\VenueCell.designer.cs">
@@ -237,6 +236,15 @@
       <DependentUpon>VenueShowCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\OrgEventView\OrgEventSearchDelegate.cs" />
+    <Compile Include="Views\OrgEventView\GroupByCell.cs" />
+    <Compile Include="Views\OrgEventView\GroupByCell.designer.cs">
+      <DependentUpon>GroupByCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\TableHeaderBase.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventHeaderView.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventHeaderView.designer.cs">
+      <DependentUpon>OrgEventHeaderView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -259,6 +267,8 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\PhoneCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\WebSiteCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\GroupByCell.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />

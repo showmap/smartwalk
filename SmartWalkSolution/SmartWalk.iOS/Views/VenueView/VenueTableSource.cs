@@ -15,7 +15,6 @@ namespace SmartWalk.iOS.Views.VenueView
     public class VenueTableSource : MvxTableViewSource
     {
         private readonly VenueViewModel _viewModel;
-        private readonly ViewsFactory<GroupHeaderCell> _headerViewFactory;
 
         private int _entityImageHeight = 0;
 
@@ -23,10 +22,10 @@ namespace SmartWalk.iOS.Views.VenueView
             : base(tableView)
         {
             _viewModel = viewModel;
-            _headerViewFactory = new ViewsFactory<GroupHeaderCell>(GroupHeaderCell.Create);
 
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
+            tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderCell.Nib, GroupHeaderCell.Key);
         }
 
         public GroupContainer[] GroupItemsSource
@@ -104,7 +103,8 @@ namespace SmartWalk.iOS.Views.VenueView
 
             if (title != null)
             {
-                var headerView = _headerViewFactory.DequeueReusableView();
+                var headerView = (GroupHeaderCell)tableView
+                    .DequeueReusableHeaderFooterView(GroupHeaderCell.Key);
 
                 headerView.Text = title;
 

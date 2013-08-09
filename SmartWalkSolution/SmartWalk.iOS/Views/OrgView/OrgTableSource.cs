@@ -7,22 +7,20 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
     public class OrgTableSource : MvxTableViewSource
     {
         private readonly OrgViewModel _viewModel;
-        private readonly ViewsFactory<GroupHeaderCell> _headerViewFactory;
 
         public OrgTableSource(UITableView tableView, OrgViewModel viewModel)
             : base(tableView)
         {
             _viewModel = viewModel;
-            _headerViewFactory = new ViewsFactory<GroupHeaderCell>(GroupHeaderCell.Create);
 
-            UseAnimations = true;
-
+            tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderCell.Nib, GroupHeaderCell.Key);
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
         }
@@ -95,7 +93,7 @@ namespace SmartWalk.iOS.Views.OrgView
 
             if (title != null)
             {
-                var headerView = _headerViewFactory.DequeueReusableView();
+                var headerView = (GroupHeaderCell)tableView.DequeueReusableHeaderFooterView(GroupHeaderCell.Key);
 
                 headerView.Text = title;
 

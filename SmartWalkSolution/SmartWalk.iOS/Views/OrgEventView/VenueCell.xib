@@ -206,9 +206,10 @@
 				<reference key="NSNextKeyView" ref="856359853"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+				<int key="IBUISelectionStyle">0</int>
 				<reference key="IBUIContentView" ref="856359853"/>
 				<string key="IBUIReuseIdentifier">VenueCell</string>
-				<real value="242" key="IBUIRowHeight"/>
+				<integer value="80" key="IBUIRowHeight"/>
 			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -830,8 +831,16 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">UITableViewHeaderFooterView</string>
+					<string key="superclassName">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/UITableViewHeaderFooterView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">VenueCell</string>
-					<string key="superclassName">UITableViewCell</string>
+					<string key="superclassName">UITableViewHeaderFooterView</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="AddressLabel">UILabel</string>
 						<string key="LogoImageView">UIImageView</string>

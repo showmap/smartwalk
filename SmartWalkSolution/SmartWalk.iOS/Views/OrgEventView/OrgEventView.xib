@@ -14,8 +14,6 @@
 			<string>IBMKMapView</string>
 			<string>IBNSLayoutConstraint</string>
 			<string>IBProxyObject</string>
-			<string>IBUISearchBar</string>
-			<string>IBUISearchDisplayController</string>
 			<string>IBUITableView</string>
 			<string>IBUIView</string>
 		</array>
@@ -78,31 +76,11 @@
 							<object class="IBUITableView" id="882104718">
 								<reference key="NSNextResponder" ref="720222716"/>
 								<int key="NSvFlags">274</int>
-								<array class="NSMutableArray" key="NSSubviews">
-									<object class="IBUISearchBar" id="744435111">
-										<reference key="NSNextResponder" ref="882104718"/>
-										<int key="NSvFlags">290</int>
-										<string key="NSFrameSize">{320, 44}</string>
-										<reference key="NSSuperview" ref="882104718"/>
-										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView"/>
-										<string key="NSReuseIdentifierKey">_NS:9</string>
-										<int key="IBUIContentMode">3</int>
-										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<int key="IBBarStyle">2</int>
-										<object class="NSColor" key="IBTintColor">
-											<int key="NSColorSpace">1</int>
-											<bytes key="NSRGB">MC44OTgyOTc5OTExIDAuODk4Mjk3OTkxMSAwLjg5ODI5Nzk5MTEAA</bytes>
-										</object>
-										<object class="IBUITextInputTraits" key="IBTextInputTraits">
-											<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										</object>
-									</object>
-								</array>
+								<array class="NSMutableArray" key="NSSubviews"/>
 								<string key="NSFrameSize">{320, 460}</string>
 								<reference key="NSSuperview" ref="720222716"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="744435111"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
@@ -117,7 +95,6 @@
 								<float key="IBUIRowHeight">44</float>
 								<float key="IBUISectionHeaderHeight">22</float>
 								<float key="IBUISectionFooterHeight">22</float>
-								<reference key="IBUITableHeaderView" ref="744435111"/>
 							</object>
 						</array>
 						<string key="NSFrameSize">{320, 460}</string>
@@ -143,9 +120,6 @@
 					<reference key="NSCustomColorSpace" ref="661769978"/>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-			</object>
-			<object class="IBUISearchDisplayController" id="1010035941">
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 		</array>
@@ -190,38 +164,6 @@
 						<reference key="destination" ref="720222716"/>
 					</object>
 					<int key="connectionID">32</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">searchDisplayController</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="1010035941"/>
-					</object>
-					<int key="connectionID">36</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="744435111"/>
-						<reference key="destination" ref="372490531"/>
-					</object>
-					<int key="connectionID">41</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">searchBar</string>
-						<reference key="source" ref="1010035941"/>
-						<reference key="destination" ref="744435111"/>
-					</object>
-					<int key="connectionID">35</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">searchContentsController</string>
-						<reference key="source" ref="1010035941"/>
-						<reference key="destination" ref="372490531"/>
-					</object>
-					<int key="connectionID">44</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -594,9 +536,7 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">19</int>
 						<reference key="object" ref="882104718"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="744435111"/>
-						</array>
+						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="720222716"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -618,16 +558,6 @@
 						<int key="objectID">23</int>
 						<reference key="object" ref="289080215"/>
 						<reference key="parent" ref="720222716"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">33</int>
-						<reference key="object" ref="744435111"/>
-						<reference key="parent" ref="882104718"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">34</int>
-						<reference key="object" ref="1010035941"/>
-						<reference key="parent" ref="0"/>
 					</object>
 				</array>
 			</object>
@@ -664,8 +594,6 @@
 				<string key="21.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="22.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="33.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="34.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<array key="4.IBViewMetadataConstraints">
 					<reference ref="1067892052"/>

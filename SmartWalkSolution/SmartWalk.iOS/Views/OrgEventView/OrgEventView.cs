@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.CoreLocation;
@@ -16,8 +17,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
 {
     public partial class OrgEventView : ListViewBase
     {
+        private OrgEventHeaderView _headerView;
         private UIBarButtonItem _modeButton;
         private OrgEvent _currentMapViewOrgEvent;
+        private UISearchDisplayController _searchDisplayController;
 
         public new OrgEventViewModel ViewModel
         {
@@ -35,15 +38,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             VenuesMapView.Delegate = new OrgEventMapDelegate(ViewModel);
 
-            var searchDelegate = new OrgEventSearchDelegate(ViewModel);
-            SearchDisplayController.Delegate = searchDelegate;
-
-            this.CreateBinding(searchDelegate)
-                .For(p => p.ItemsSource)
-                .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
-                .Apply();
-
             InitializeToolBar();
+            InitializeTableHeader();
+            InitializeSearchDisplayController();
             InitializeGestures();
 
             UpdateViewState(false);
@@ -90,6 +87,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
             }
+            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation))
+            {
+                VenuesAndShowsTableView.ReloadData();
+            }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
                 foreach (var cell in VenuesAndShowsTableView.VisibleCells.OfType<VenueShowCell>())
@@ -124,6 +125,29 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 };
 
             NavigationItem.SetRightBarButtonItem(_modeButton, true);
+        }
+
+        private void InitializeTableHeader()
+        {
+            _headerView = OrgEventHeaderView.Create();
+
+            _headerView.GroupByLocationCommand = ViewModel.GroupByLocationCommand;
+            _headerView.SearchBarControl.WeakDelegate = this;
+
+            VenuesAndShowsTableView.TableHeaderView = _headerView;
+        }
+
+        private void InitializeSearchDisplayController()
+        {
+            _searchDisplayController = new UISearchDisplayController(_headerView.SearchBarControl, this);
+
+            var searchDelegate = new OrgEventSearchDelegate(ViewModel);
+            _searchDisplayController.Delegate = searchDelegate;
+
+            this.CreateBinding(searchDelegate)
+                .For(p => p.ItemsSource)
+                    .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
+                    .Apply();
         }
 
         private void InitializeGestures()

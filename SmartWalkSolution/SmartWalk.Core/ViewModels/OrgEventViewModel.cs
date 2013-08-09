@@ -20,7 +20,9 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
+        private MvxCommand<bool?> _groupByLocationCommand;
         private Parameters _parameters;
+        private bool _isGroupedByLocation = true;
 
         public OrgEventViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
         {
@@ -90,6 +92,22 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _selectedVenueOnMap = value;
                     RaisePropertyChanged(() => SelectedVenueOnMap);
+                }
+            }
+        }
+
+        public bool IsGroupedByLocation
+        {
+            get
+            {
+                return _isGroupedByLocation;
+            }
+            private set
+            {
+                if (_isGroupedByLocation != value)
+                {
+                    _isGroupedByLocation = value;
+                    RaisePropertyChanged(() => IsGroupedByLocation);
                 }
             }
         }
@@ -201,6 +219,21 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _navigateVenueOnMapCommand;
+            }
+        }
+
+        public ICommand GroupByLocationCommand
+        {
+            get
+            {
+                if (_groupByLocationCommand == null)
+                {
+                    _groupByLocationCommand = new MvxCommand<bool?>(
+                        groupBy => IsGroupedByLocation = (bool)groupBy,
+                        groupBy => groupBy.HasValue);
+                }
+
+                return _groupByLocationCommand;
             }
         }
 

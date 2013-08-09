@@ -105,7 +105,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 var tableSource = (OrgEventTableSource)controller.SearchResultsTableView.Source;
 
-                tableSource.IsEmptyRowAppended = _searchResults != null;
+                tableSource.IsSearchSource = _searchResults != null;
                 tableSource.ItemsSource = _searchResults;
             }
 
@@ -118,7 +118,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 var tableSource = new OrgEventTableSource(tableView, _viewModel);
                 tableView.Source = tableSource;
-                tableSource.IsEmptyRowAppended = _searchResults != null;
+                tableSource.IsSearchSource = _searchResults != null;
                 tableSource.ItemsSource = _searchResults;
             }
         }
