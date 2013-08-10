@@ -245,6 +245,7 @@
     <Compile Include="Views\OrgEventView\OrgEventHeaderView.designer.cs">
       <DependentUpon>OrgEventHeaderView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UIProgressImageView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

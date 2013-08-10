@@ -10,6 +10,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -32,7 +33,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private readonly MvxImageViewLoader _imageHelper;
         private readonly MKMapView _mapView;
-        private readonly UIImageView _imageView;
+        private readonly UIProgressImageView _imageView;
         private readonly UICollectionView _collectionView;
 
         private UITapGestureRecognizer _descriptionTapGesture;
@@ -47,7 +48,16 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     if (_imageHelper.ImageUrl != null && 
                         _imageView.Image != null)
                     {
+                        _imageView.StopProgress();
                         UpdateScrollViewHeightState(true);
+                    }
+                    else if (_imageHelper.ImageUrl == null)
+                    {
+                        _imageView.StopProgress();
+                    }
+                    else
+                    {
+                        _imageView.StartProgress();
                     }
                 });
 
@@ -56,7 +66,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 UserInteractionEnabled = false
             };
 
-            _imageView = new UIImageView {
+            _imageView = new UIProgressImageView {
                 ContentMode = UIViewContentMode.ScaleAspectFit
             };
 
