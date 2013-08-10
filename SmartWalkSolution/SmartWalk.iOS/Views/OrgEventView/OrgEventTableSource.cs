@@ -18,6 +18,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private VenueShow[] _flattenItemsSource;
         private bool _isTouched;
+        private NSTimer _timer;
 
         public OrgEventTableSource(UITableView tableView, OrgEventViewModel viewModel)
             : base(tableView)
@@ -69,15 +70,21 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.ReloadTableData();
 
-            NSTimer.CreateScheduledTimer(TimeSpan.MinValue, 
-                new NSAction(() => 
+            if (VenueItemsSource != null && VenueItemsSource.Length > 0)
             {
-                if (TableView.TableHeaderView != null)
-                {
-                    TableView.SetContentOffset(
-                        new PointF(0, TableView.TableHeaderView.Frame.Height), _isTouched);
-                }
-            }));
+                _timer = NSTimer.CreateRepeatingScheduledTimer(TimeSpan.MinValue, 
+                    new NSAction(() => 
+                    {
+                        if (TableView.TableHeaderView != null &&
+                            TableView.ContentSize.Height > TableView.TableHeaderView.Frame.Height)
+                        {
+                            TableView.SetContentOffset(
+                                new PointF(0, TableView.TableHeaderView.Frame.Height), _isTouched);
+                            _timer.Invalidate();
+                            _timer = null;
+                        }
+                    }));
+            }
         }
 
         public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
