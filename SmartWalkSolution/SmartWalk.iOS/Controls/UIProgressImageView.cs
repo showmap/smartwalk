@@ -1,23 +1,27 @@
 using System;
 using MonoTouch.UIKit;
+using MonoTouch.Foundation;
 
 namespace SmartWalk.iOS.Controls
 {
+    [Register("UIProgressImageView")]
     public class UIProgressImageView : UIImageView
     {
-        private readonly UIActivityIndicatorView _progress;
-
-        public UIProgressImageView()
-        {
-            _progress = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray)
+        private readonly UIActivityIndicatorView _progress = 
+            new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray)
                 {
                     HidesWhenStopped = true
                 };
 
+        public UIProgressImageView()
+        {
             Add(_progress);
         }
 
-        public UIProgressImageView(IntPtr handle) : base(handle) {}
+        public UIProgressImageView(IntPtr handle) : base(handle) 
+        {
+            Add(_progress);
+        }
 
         public override void LayoutSubviews()
         {

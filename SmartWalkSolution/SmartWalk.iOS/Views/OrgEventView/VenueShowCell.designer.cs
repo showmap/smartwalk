@@ -1,10 +1,11 @@
 // WARNING
 //
 // This file has been generated automatically by Xamarin Studio to store outlets and
-// actions made in the Xcode designer. If it is removed, they will be lost.
+// actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
 using MonoTouch.Foundation;
+using System.CodeDom.Compiler;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -45,15 +46,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIImageView ThumbImageView { get; set; }
+		SmartWalk.iOS.Controls.UIProgressImageView ThumbImageView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ThumbImageView != null) {
-				ThumbImageView.Dispose ();
-				ThumbImageView = null;
-			}
-
 			if (DescriptionAndImageSpaceConstraint != null) {
 				DescriptionAndImageSpaceConstraint.Dispose ();
 				DescriptionAndImageSpaceConstraint = null;
@@ -107,6 +103,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (StartTimeLabel != null) {
 				StartTimeLabel.Dispose ();
 				StartTimeLabel = null;
+			}
+
+			if (ThumbImageView != null) {
+				ThumbImageView.Dispose ();
+				ThumbImageView = null;
 			}
 		}
 	}

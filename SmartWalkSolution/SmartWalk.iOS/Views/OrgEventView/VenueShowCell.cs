@@ -30,12 +30,23 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             _imageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
-                () => {
-                if (_imageHelper.ImageUrl != null && ThumbImageView.Image != null)
+                () => 
                 {
-                    SetNeedsLayout();
-                }
-            });
+                    if (_imageHelper.ImageUrl != null && 
+                        ThumbImageView.Image != null)
+                    {
+                        ThumbImageView.StopProgress();
+                        SetNeedsLayout();
+                    }
+                    else if (_imageHelper.ImageUrl == null)
+                    {
+                        ThumbImageView.StopProgress();
+                    }
+                    else
+                    {
+                        ThumbImageView.StartProgress();
+                    }
+                });
         }
 
         public static VenueShowCell Create()
@@ -219,7 +230,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return width;
             }
 
-            return 0;
+            return 150f;
         }
     }
 }
