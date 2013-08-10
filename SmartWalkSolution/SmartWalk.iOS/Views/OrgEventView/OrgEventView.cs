@@ -139,7 +139,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void InitializeSearchDisplayController()
         {
-            _searchDisplayController = new UISearchDisplayController(_headerView.SearchBarControl, this);
+            _searchDisplayController = 
+                new UISearchDisplayController(_headerView.SearchBarControl, this);
 
             var searchDelegate = new OrgEventSearchDelegate(ViewModel);
             _searchDisplayController.Delegate = searchDelegate;

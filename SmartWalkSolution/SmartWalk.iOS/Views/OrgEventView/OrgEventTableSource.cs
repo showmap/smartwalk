@@ -7,6 +7,8 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using System.Drawing;
+using MonoTouch.CoreFoundation;
+using MonoTouch.ObjCRuntime;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -16,9 +18,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private readonly OrgEventViewModel _viewModel;
 
-        private VenueShow[] _showItemsSource;
-
-        private bool _isSearchBarMoved;
+        private VenueShow[] _flattenItemsSource;
+        private bool _isTouched;
 
         public OrgEventTableSource(UITableView tableView, OrgEventViewModel viewModel)
             : base(tableView)
@@ -39,21 +40,21 @@ namespace SmartWalk.iOS.Views.OrgEventView
             get { return ItemsSource != null ? (Venue[])ItemsSource : null; }
         }
 
-        public VenueShow[] ShowItemsSource
+        public VenueShow[] FlattenItemsSource
         {
             get
             {
-                if (_showItemsSource == null &&
+                if (_flattenItemsSource == null &&
                     VenueItemsSource != null)
                 {
-                    _showItemsSource = 
+                    _flattenItemsSource = 
                         VenueItemsSource
                             .SelectMany(v => v.Shows)
                             .OrderBy(show => show.Start)
                             .ToArray();
                 }
 
-                return _showItemsSource;
+                return _flattenItemsSource;
             }
         }
 
@@ -61,24 +62,44 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             set
             {
-                _showItemsSource = null;
+                _flattenItemsSource = null;
                 base.ItemsSource = value;
             }
         }
 
-        public override void WillDisplay(UITableView tableView, UITableViewCell cell, NSIndexPath indexPath)
+        public override void ReloadTableData()
         {
-            if (IsSearchSource || _isSearchBarMoved) return;
+            base.ReloadTableData();
 
-            var lastIndexPath = tableView.IndexPathsForVisibleRows.LastOrDefault();
-            if (lastIndexPath != null &&
-                indexPath.Section == lastIndexPath.Section &&
-                indexPath.Row == lastIndexPath.Row)
+            NSTimer.CreateScheduledTimer(TimeSpan.MinValue, 
+                new NSAction(() => 
             {
-                _isSearchBarMoved = true;
-                tableView.SetContentOffset(
-                    new PointF(0, tableView.TableHeaderView.Frame.Height), false);
+                if (TableView.TableHeaderView != null)
+                {
+                    TableView.SetContentOffset(
+                        new PointF(0, TableView.TableHeaderView.Frame.Height), _isTouched);
+                }
+            }));
+        }
+
+        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+        {
+            if (TableView.ContentOffset.Y < 0 || scrollView.Decelerating) return;
+
+            if (TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height / 2)
+            {
+                TableView.SetContentOffset(new PointF(0, 0), true);
             }
+            else if (TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height)
+            {
+                TableView.SetContentOffset(
+                    new PointF(0, TableView.TableHeaderView.Frame.Height), true);
+            }
+        }
+
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            _isTouched = true;
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
@@ -139,8 +160,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else
             {
-                var showsCount = ShowItemsSource != null 
-                    ? ShowItemsSource.Count()
+                var showsCount = FlattenItemsSource != null 
+                    ? FlattenItemsSource.Count()
                     : 0;
 
                 return showsCount;
@@ -198,9 +219,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else
             {
-                if (ShowItemsSource != null)
+                if (FlattenItemsSource != null)
                 {
-                    return ShowItemsSource[indexPath.Row];
+                    return FlattenItemsSource[indexPath.Row];
                 }
 
                 return null;
