@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.CoreLocation;
@@ -19,8 +18,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
     {
         private OrgEventHeaderView _headerView;
         private UIBarButtonItem _modeButton;
-        private OrgEvent _currentMapViewOrgEvent;
         private UISearchDisplayController _searchDisplayController;
+        private bool _isMapViewInitialized;
+        private bool _isAnimating;
 
         public new OrgEventViewModel ViewModel
         {
@@ -85,7 +85,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
-                SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
+                if (!_isAnimating && ViewModel.Mode == OrgEventViewMode.Map)
+                {
+                    SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
+                }
             }
             else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation))
             {
@@ -170,7 +173,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             if (ViewModel.OrgEvent != null &&
                 ViewModel.OrgEvent.Venues != null)
             {
-                if (_currentMapViewOrgEvent != ViewModel.OrgEvent)
+                if (!_isMapViewInitialized)
                 {
                     VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
 
@@ -187,13 +190,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
                         SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
                     }
 
-                    _currentMapViewOrgEvent = ViewModel.OrgEvent;
+                    _isMapViewInitialized = true;
                 }
             }
             else
             {
                 VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
-                _currentMapViewOrgEvent = null;
+                _isMapViewInitialized = false;
             }
         }
 
@@ -241,14 +244,23 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                 var completeHandler = new NSAction(() => 
                     {
+                        _isAnimating = false;
+
                         TablePanel.Hidden = true;
                         MapPanel.Hidden = false;
 
                         InitializeMapView();
+
+                        if (ViewModel.SelectedVenueOnMap != null)
+                        {
+                            SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
+                        }
                     });
 
                 if (isAnimated)
                 {
+                    _isAnimating = true;
+
                     UIView.Transition(
                         TablePanel, 
                         MapPanel, 
@@ -268,12 +280,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                 var completeHandler = new NSAction(() => 
                     {
+                        _isAnimating = false;
+
                         TablePanel.Hidden = false;
                         MapPanel.Hidden = true;
                     });
 
                 if (isAnimated)
                 {
+                    _isAnimating = true;
+
                     UIView.Transition(
                         MapPanel, 
                         TablePanel, 

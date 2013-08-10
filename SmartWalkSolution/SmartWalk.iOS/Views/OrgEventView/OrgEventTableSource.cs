@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
+using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
-using System.Drawing;
-using MonoTouch.CoreFoundation;
-using MonoTouch.ObjCRuntime;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
