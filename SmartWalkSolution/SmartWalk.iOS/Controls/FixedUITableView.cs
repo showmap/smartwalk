@@ -1,6 +1,7 @@
 using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using System.Drawing;
 
 namespace SmartWalk.iOS.Controls
 {
@@ -16,9 +17,12 @@ namespace SmartWalk.iOS.Controls
         {
             base.LayoutSubviews();
 
-            var contentSize = ContentSize;
-            contentSize.Width  = Bounds.Size.Width;
-            ContentSize = contentSize;
+            if (ContentSize != SizeF.Empty)
+            {
+                var contentSize = ContentSize;
+                contentSize.Width = Bounds.Size.Width;
+                ContentSize = contentSize;
+            }
         }
     }
 }

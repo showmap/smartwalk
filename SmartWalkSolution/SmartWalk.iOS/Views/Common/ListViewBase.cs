@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.ComponentModel;
 using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.UIKit;

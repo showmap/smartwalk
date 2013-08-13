@@ -11,6 +11,7 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
+using System.Drawing;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -21,6 +22,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private UISearchDisplayController _searchDisplayController;
         private bool _isMapViewInitialized;
         private bool _isAnimating;
+        private PointF _tableContentOffset;
 
         public new OrgEventViewModel ViewModel
         {
@@ -44,6 +46,24 @@ namespace SmartWalk.iOS.Views.OrgEventView
             InitializeGestures();
 
             UpdateViewState(false);
+        }
+
+        // HACK: To persist table scroll offset
+        public override void ViewDidDisappear(bool animated)
+        {
+            base.ViewDidDisappear(animated);
+
+            _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
+        }
+
+        // HACK: To persist table scroll offset
+        public override void ViewWillAppear(bool animated)
+        {
+            if (_tableContentOffset != PointF.Empty)
+            {
+                VenuesAndShowsTableView.SetContentOffset(_tableContentOffset, false);
+                _tableContentOffset = PointF.Empty;
+            }
         }
 
         protected override ListViewDecorator GetListView()

@@ -236,10 +236,6 @@
       <DependentUpon>VenueShowCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\OrgEventView\OrgEventSearchDelegate.cs" />
-    <Compile Include="Views\OrgEventView\GroupByCell.cs" />
-    <Compile Include="Views\OrgEventView\GroupByCell.designer.cs">
-      <DependentUpon>GroupByCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Common\TableHeaderBase.cs" />
     <Compile Include="Views\OrgEventView\OrgEventHeaderView.cs" />
     <Compile Include="Views\OrgEventView\OrgEventHeaderView.designer.cs">
@@ -268,7 +264,6 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\PhoneCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\WebSiteCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
-    <InterfaceDefinition Include="Views\OrgEventView\GroupByCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
   </ItemGroup>
   <ItemGroup>

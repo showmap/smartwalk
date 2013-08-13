@@ -87,8 +87,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            _isTouched = true;
+        }
+
         public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
         {
+            if (TableView.TableHeaderView == null) return;
+
             if (TableView.ContentOffset.Y < 0 || scrollView.Decelerating) return;
 
             if (TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height / 2)
@@ -100,11 +107,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 TableView.SetContentOffset(
                     new PointF(0, TableView.TableHeaderView.Frame.Height), true);
             }
-        }
-
-        public override void DraggingStarted(UIScrollView scrollView)
-        {
-            _isTouched = true;
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
