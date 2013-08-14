@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -7,7 +8,6 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
-using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
@@ -24,6 +24,8 @@ namespace SmartWalk.iOS.Views.OrgView
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
         }
+
+        public ICommand ShowImageFullscreenCommand { get; set; }
 
         public GroupContainer[] GroupItemsSource
         {
@@ -115,6 +117,7 @@ namespace SmartWalk.iOS.Views.OrgView
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
+                ((EntityCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
                 ((EntityCell)cell).IsLogoSizeFixed = true;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }

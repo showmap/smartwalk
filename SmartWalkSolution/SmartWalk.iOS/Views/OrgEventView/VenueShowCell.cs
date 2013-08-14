@@ -1,13 +1,11 @@
 using System;
-using System.Linq;
 using System.Drawing;
+using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Views.Common;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreAnimation;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -24,6 +22,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private const int Gap = 8;
 
         private readonly MvxImageViewLoader _imageHelper;
+        private UITapGestureRecognizer _imageTapGesture;
         private bool _isExpanded;
 
         public VenueShowCell(IntPtr handle) : base(handle)
@@ -90,6 +89,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             return 0;
         }
+
+        public ICommand ShowImageFullscreenCommand { get; set; }
 
         public new VenueShow DataContext
         {
@@ -178,6 +179,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     ? 9 : 8;
         }
 
+        protected override void OnInitialize()
+        {
+            InitializeGestures();
+        }
+
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             var timeTextColor = 
@@ -231,6 +237,21 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
 
             return 150f;
+        }
+
+        private void InitializeGestures()
+        {
+            _imageTapGesture = new UITapGestureRecognizer(() => {
+                if (ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
+                {
+                    ShowImageFullscreenCommand.Execute(DataContext.Logo);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
+            ThumbImageView.AddGestureRecognizer(_imageTapGesture);
         }
     }
 }

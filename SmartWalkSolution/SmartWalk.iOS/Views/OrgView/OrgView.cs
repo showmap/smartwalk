@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
@@ -38,6 +39,8 @@ namespace SmartWalk.iOS.Views.OrgView
         protected override object CreateListViewSource()
         {
             var tableSource = new OrgTableSource(OrgEventsTableView, ViewModel);
+
+            tableSource.ShowImageFullscreenCommand = new MvxCommand<string>(ShowImageFullscreenView);
 
             this.CreateBinding(tableSource).To((OrgViewModel vm) => vm.Org)
                 .WithConversion(new OrgTableSourceConverter(), ViewModel).Apply();

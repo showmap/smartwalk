@@ -11,6 +11,7 @@ namespace SmartWalk.iOS.Views.Common
     {
         private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
+        private ImageFullscreenController _imageFullscreenController;
 
         public new IRefreshableViewModel ViewModel
         {
@@ -81,6 +82,17 @@ namespace SmartWalk.iOS.Views.Common
 
         protected virtual void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+        }
+
+        protected void ShowImageFullscreenView(string url)
+        {
+            if (_imageFullscreenController == null)
+            {
+                _imageFullscreenController = new ImageFullscreenController();
+            }
+
+            _imageFullscreenController.ImageURL = url;
+            _imageFullscreenController.Show();
         }
 
         private void OnViewModelRefreshCompleted(object sender, EventArgs e)

@@ -102,7 +102,7 @@ namespace SmartWalk.iOS.Views.HomeView
             var flowLayout = (UICollectionViewFlowLayout)OrgCollectionView.CollectionViewLayout;
             var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
 
-            var cellWith = (ScreenUtil.CurrentScreenWidth - 
+            var cellWith = (ScreenUtil.CurrentScreenSize.Width - 
                             flowLayout.SectionInset.Left -
                             flowLayout.SectionInset.Right - 
                             flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;

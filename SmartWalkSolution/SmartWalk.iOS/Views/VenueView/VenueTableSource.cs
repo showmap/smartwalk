@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
@@ -27,6 +28,8 @@ namespace SmartWalk.iOS.Views.VenueView
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderCell.Nib, GroupHeaderCell.Key);
         }
+
+        public ICommand ShowImageFullscreenCommand { get; set; }
 
         public GroupContainer[] GroupItemsSource
         {
@@ -133,6 +136,7 @@ namespace SmartWalk.iOS.Views.VenueView
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
+                ((EntityCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
                 ((EntityCell)cell).ImageHeightUpdatedHandler = OnEntityImageHeightUpdated;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }
@@ -141,6 +145,7 @@ namespace SmartWalk.iOS.Views.VenueView
             if (venueShow != null)
             {
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
+                ((VenueShowCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
             }

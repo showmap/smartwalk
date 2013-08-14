@@ -84,10 +84,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 {
                     NavigateVenueCommand.Execute(DataContext);
                 }
-            });
-
-            tap.NumberOfTouchesRequired = (uint)1;
-            tap.NumberOfTapsRequired = (uint)1;
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
 
             tap.ShouldReceiveTouch = new UITouchEventArgs((rec, touch) => 
                 touch.View != AddressLabel);

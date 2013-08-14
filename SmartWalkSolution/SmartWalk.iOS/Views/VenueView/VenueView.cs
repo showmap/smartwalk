@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
@@ -40,6 +41,8 @@ namespace SmartWalk.iOS.Views.VenueView
         protected override object CreateListViewSource()
         {
             var tableSource = new VenueTableSource(VenueShowsTableView, ViewModel);
+
+            tableSource.ShowImageFullscreenCommand = new MvxCommand<string>(ShowImageFullscreenView);
 
             this.CreateBinding(tableSource).To((VenueViewModel vm) => vm.Venue)
                 .WithConversion(new VenueTableSourceConverter(), ViewModel).Apply();

@@ -37,6 +37,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private readonly UICollectionView _collectionView;
 
         private UITapGestureRecognizer _descriptionTapGesture;
+        private UITapGestureRecognizer _imageTapGesture;
         private CAGradientLayer _bottomGradient;
         private int _proportionalImageHeight;
 
@@ -67,7 +68,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             };
 
             _imageView = new UIProgressImageView {
-                ContentMode = UIViewContentMode.ScaleAspectFit
+                ContentMode = UIViewContentMode.ScaleAspectFit,
+                UserInteractionEnabled = true
             };
 
             var layout = new UICollectionViewFlowLayout {
@@ -171,6 +173,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public Action<int, bool> ImageHeightUpdatedHandler { get; set; }
         public bool IsLogoSizeFixed { get; set; }
         public ICommand ExpandCollapseCommand { get; set; }
+        public ICommand ShowImageFullscreenCommand { get; set; }
 
         public new IEntityCellContext DataContext
         {
@@ -272,22 +275,30 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void InitializeGestures()
         {
-            if (DescriptionLabel.GestureRecognizers == null ||
-                DescriptionLabel.GestureRecognizers.Length == 0)
-            {
-                _descriptionTapGesture = new UITapGestureRecognizer(() => {
-                    if (ExpandCollapseCommand != null &&
-                        ExpandCollapseCommand.CanExecute(null))
-                    {
-                        ExpandCollapseCommand.Execute(null);
-                    }
-                });
+            _descriptionTapGesture = new UITapGestureRecognizer(() => {
+                if (ExpandCollapseCommand != null &&
+                    ExpandCollapseCommand.CanExecute(null))
+                {
+                    ExpandCollapseCommand.Execute(null);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
 
-                _descriptionTapGesture.NumberOfTouchesRequired = (uint)1;
-                _descriptionTapGesture.NumberOfTapsRequired = (uint)1;
+            DescriptionLabel.AddGestureRecognizer(_descriptionTapGesture);
 
-                DescriptionLabel.AddGestureRecognizer(_descriptionTapGesture);
-            }
+            _imageTapGesture = new UITapGestureRecognizer(() => {
+                if (ShowImageFullscreenCommand.CanExecute(DataContext.Entity.Info.Logo))
+                {
+                    ShowImageFullscreenCommand.Execute(DataContext.Entity.Info.Logo);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
+            _imageView.AddGestureRecognizer(_imageTapGesture);
         }
 
         private void InitializeContactCollectionView()
@@ -339,14 +350,16 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             var isScrollVisible = IsScrollViewVisible(DataContextEntityInfo);
             var pagerHeight = CalculatePagerHeight(DataContextEntityInfo);
 
+            ScrollViewHeightConstraint.Constant = 
+                isScrollVisible ? _proportionalImageHeight + pagerHeight : 0;
+
+            // HACK: Setting Frame implicitly to trigger re-layout on rotation
             ScrollView.Frame = new RectangleF(
                 0,
                 0,
                 Frame.Width,
-                isScrollVisible ? _proportionalImageHeight + pagerHeight : 0);
+                ScrollViewHeightConstraint.Constant);
 
-            ScrollViewHeightConstraint.Constant = 
-                isScrollVisible ? _proportionalImageHeight + pagerHeight : 0;
             DescriptionTopSpaceConstraint.Constant = 
                 isScrollVisible && pagerHeight > 0 ? 0 : Gap;
 

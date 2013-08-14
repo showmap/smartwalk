@@ -1,4 +1,5 @@
 using MonoTouch.UIKit;
+using System.Drawing;
 
 namespace SmartWalk.iOS.Utils
 {
@@ -13,13 +14,15 @@ namespace SmartWalk.iOS.Utils
             }
         }
 
-        public static float CurrentScreenWidth
+        public static SizeF CurrentScreenSize
         {
             get
             {
                 return IsVerticalOrientation 
-                    ? UIScreen.MainScreen.Bounds.Width 
-                        : UIScreen.MainScreen.Bounds.Height;
+                    ? UIScreen.MainScreen.Bounds.Size 
+                        : new SizeF(
+                            UIScreen.MainScreen.Bounds.Size.Height,
+                            UIScreen.MainScreen.Bounds.Size.Width);
             }
         }
     }

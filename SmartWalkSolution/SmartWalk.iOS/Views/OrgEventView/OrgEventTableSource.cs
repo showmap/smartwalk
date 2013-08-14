@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -33,6 +34,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         }
 
         public bool IsSearchSource { get; set; }
+        public ICommand ShowImageFullscreenCommand { get; set; }
 
         public Venue[] VenueItemsSource
         {
@@ -204,6 +206,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
 
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
+            cell.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
             cell.DataContext = (VenueShow)item;
             cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
             return cell;

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -11,7 +13,6 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
-using System.Drawing;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -84,6 +85,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
             var tableSource = new OrgEventTableSource(
                 VenuesAndShowsTableView,
                 ViewModel);
+
+            tableSource.ShowImageFullscreenCommand = new MvxCommand<string>(ShowImageFullscreenView);
 
             this.CreateBinding(tableSource).To((OrgEventViewModel vm) => vm.OrgEvent.Venues).Apply();
 
