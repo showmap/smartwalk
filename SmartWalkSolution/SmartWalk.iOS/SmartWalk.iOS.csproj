@@ -246,10 +246,6 @@
     <Compile Include="Views\Common\ImageFullscreenController.designer.cs">
       <DependentUpon>ImageFullscreenController.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageFullscreenView.cs" />
-    <Compile Include="ImageFullscreenView.designer.cs">
-      <DependentUpon>ImageFullscreenView.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

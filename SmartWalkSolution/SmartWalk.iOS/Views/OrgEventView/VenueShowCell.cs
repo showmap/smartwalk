@@ -23,6 +23,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private readonly MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _imageTapGesture;
+        private UITapGestureRecognizer _cellTapGesture;
         private bool _isExpanded;
 
         public VenueShowCell(IntPtr handle) : base(handle)
@@ -91,6 +92,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         }
 
         public ICommand ShowImageFullscreenCommand { get; set; }
+        public ICommand ExpandCollapseShowCommand { get; set; }
 
         public new VenueShow DataContext
         {
@@ -241,6 +243,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void InitializeGestures()
         {
+            _cellTapGesture = new UITapGestureRecognizer(() => {
+                if (ExpandCollapseShowCommand.CanExecute(DataContext))
+                {
+                    ExpandCollapseShowCommand.Execute(DataContext);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
             _imageTapGesture = new UITapGestureRecognizer(() => {
                 if (ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
                 {
@@ -251,6 +263,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 NumberOfTapsRequired = (uint)1
             };
 
+            _cellTapGesture.RequireGestureRecognizerToFail(_imageTapGesture);
+
+            AddGestureRecognizer(_cellTapGesture);
             ThumbImageView.AddGestureRecognizer(_imageTapGesture);
         }
     }

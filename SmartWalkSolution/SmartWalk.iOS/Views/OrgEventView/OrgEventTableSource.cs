@@ -113,16 +113,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            var item = GetItemAt(indexPath);
-            var venueShow = item as VenueShow;
-
-            if (venueShow != null &&
-                _viewModel.ExpandCollapseShowCommand != null &&
-                _viewModel.ExpandCollapseShowCommand.CanExecute(venueShow))
-            {
-                _viewModel.ExpandCollapseShowCommand.Execute(venueShow);
-            }
-
             TableView.DeselectRow(indexPath, false);
         }
 
@@ -207,6 +197,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
             cell.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+            cell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
             cell.DataContext = (VenueShow)item;
             cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
             return cell;

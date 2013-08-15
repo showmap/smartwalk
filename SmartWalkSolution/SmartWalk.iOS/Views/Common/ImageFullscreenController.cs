@@ -148,10 +148,13 @@ namespace SmartWalk.iOS.Views.Common
 
         private void SetZoomConstants(bool animated = false)
         {
-            if (ImageView.Image == null) return;
+            var imageSize = ImageView.Image != null 
+                ? ImageView.Image.Size
+                : View.Bounds.Size;
 
-            var widthScale = View.Bounds.Size.Width / ImageView.Image.Size.Width;
-            var heightScale = View.Bounds.Size.Height / ImageView.Image.Size.Height;
+            // TODO: Use View.Bounds.Size instead, but it's buggy after rotation
+            var widthScale = ScreenUtil.CurrentScreenSize.Width / imageSize.Width;
+            var heightScale = ScreenUtil.CurrentScreenSize.Height / imageSize.Height;
 
             ScrollView.MinimumZoomScale = 
                 Math.Min(ScrollView.MaximumZoomScale, Math.Min(widthScale, heightScale));
@@ -161,7 +164,7 @@ namespace SmartWalk.iOS.Views.Common
 
         private void ZoomTo()
         {
-            if (ScrollView.MinimumZoomScale == ScrollView.MaximumZoomScale)
+            if (Math.Abs(ScrollView.MinimumZoomScale - ScrollView.MaximumZoomScale) < 0.1f)
             {
                 return;
             }
@@ -216,7 +219,8 @@ namespace SmartWalk.iOS.Views.Common
         {
             var frame = ImageView.Frame;
 
-            if (ImageView.Frame.Width < Bounds.Size.Width)
+            if (ImageView.Frame.Width != 0 &&
+                ImageView.Frame.Width < Bounds.Size.Width)
             {
                 frame.X = (Bounds.Size.Width - ImageView.Frame.Width) / 2;
             }
@@ -225,13 +229,19 @@ namespace SmartWalk.iOS.Views.Common
                 frame.X = 0;
             }
 
-            if (ImageView.Frame.Height < Bounds.Size.Height)
+            if (ImageView.Frame.Height != 0 &&
+                ImageView.Frame.Height < Bounds.Size.Height)
             {
                 frame.Y = (Bounds.Size.Height - ImageView.Frame.Height) / 2;
             }
             else
             {
                 frame.Y = 0;
+            }
+
+            if (frame.Size == SizeF.Empty)
+            {
+                frame.Size = Bounds.Size;
             }
 
             return frame;
