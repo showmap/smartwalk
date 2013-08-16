@@ -76,6 +76,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 : null;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
+        }
+
         private void InitializeGesture()
         {
             var tap = new UITapGestureRecognizer(() => {

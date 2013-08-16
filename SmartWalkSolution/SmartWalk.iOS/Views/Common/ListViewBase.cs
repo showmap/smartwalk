@@ -9,9 +9,10 @@ namespace SmartWalk.iOS.Views.Common
 {
     public abstract class ListViewBase : MvxViewController
     {
+        private UISwipeGestureRecognizer _swipeRight;
         private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
-        private ImageFullscreenController _imageFullscreenController;
+        private ImageFullscreenView _imageFullscreenView;
 
         public new IRefreshableViewModel ViewModel
         {
@@ -51,13 +52,13 @@ namespace SmartWalk.iOS.Views.Common
 
         protected virtual void InitializeListView()
         {
-            var swipeRight = new UISwipeGestureRecognizer(rec => 
+            _swipeRight = new UISwipeGestureRecognizer(rec => 
                 {
                     NavigationController.PopViewControllerAnimated(true);
                 });
 
-            swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
-            ListView.AddGestureRecognizer(swipeRight);
+            _swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
+            ListView.AddGestureRecognizer(_swipeRight);
 
             var source = CreateListViewSource();
 
@@ -86,13 +87,36 @@ namespace SmartWalk.iOS.Views.Common
 
         protected void ShowImageFullscreenView(string url)
         {
-            if (_imageFullscreenController == null)
+            if (_imageFullscreenView == null)
             {
-                _imageFullscreenController = new ImageFullscreenController();
+                _imageFullscreenView = new ImageFullscreenView();
             }
 
-            _imageFullscreenController.ImageURL = url;
-            _imageFullscreenController.Show();
+            _imageFullscreenView.ImageURL = url;
+            _imageFullscreenView.Show();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_refreshControl != null)
+            {
+                _refreshControl.Dispose();
+                _refreshControl = null;
+            }
+
+            if (_swipeRight != null)
+            {
+                _swipeRight.Dispose();
+                _swipeRight = null;
+            }
+
+            if (_imageFullscreenView != null)
+            {
+                _imageFullscreenView.Dispose();
+                _imageFullscreenView = null;
+            }
+
+            base.Dispose(disposing);
         }
 
         private void OnViewModelRefreshCompleted(object sender, EventArgs e)

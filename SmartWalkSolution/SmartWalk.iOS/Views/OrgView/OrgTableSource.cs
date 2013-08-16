@@ -118,6 +118,7 @@ namespace SmartWalk.iOS.Views.OrgView
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
                 ((EntityCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+                ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
                 ((EntityCell)cell).IsLogoSizeFixed = true;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }

@@ -128,6 +128,7 @@ namespace SmartWalk.iOS.Views.VenueView
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
                 ((EntityCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+                ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
                 ((EntityCell)cell).ImageHeightUpdatedHandler = OnEntityImageHeightUpdated;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }
@@ -138,6 +139,7 @@ namespace SmartWalk.iOS.Views.VenueView
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
                 ((VenueShowCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
                 ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
+                ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
             }

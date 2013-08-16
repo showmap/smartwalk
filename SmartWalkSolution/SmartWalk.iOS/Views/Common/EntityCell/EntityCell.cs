@@ -32,9 +32,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static readonly NSString Key = new NSString("EntityCell");
 
         private readonly MvxImageViewLoader _imageHelper;
-        private readonly MKMapView _mapView;
-        private readonly UIProgressImageView _imageView;
-        private readonly ExtendedCollectionView _collectionView;
+        private MKMapView _mapView;
+        private UIProgressImageView _imageView;
+        private ExtendedCollectionView _collectionView;
 
         private UITapGestureRecognizer _descriptionTapGesture;
         private UITapGestureRecognizer _imageTapGesture;
@@ -175,6 +175,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public bool IsLogoSizeFixed { get; set; }
         public ICommand ExpandCollapseCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
+        public ICommand NavigateWebSiteCommand { get; set; }
 
         public new IEntityCellContext DataContext
         {
@@ -251,6 +252,48 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             SetNeedsLayout();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (_mapView != null)
+            {
+                _mapView.Dispose();
+                _mapView = null;
+            }
+
+            if (_imageView != null)
+            {
+                _imageView.Dispose();
+                _imageView = null;
+            }
+
+            if (_collectionView != null)
+            {
+                _collectionView.Dispose();
+                _collectionView = null;
+            }
+
+            if (_descriptionTapGesture != null)
+            {
+                _descriptionTapGesture.Dispose();
+                _descriptionTapGesture = null;
+            }
+
+            if (_imageTapGesture != null)
+            {
+                _imageTapGesture.Dispose();
+                _imageTapGesture = null;
+            }
+
+            if (_bottomGradient != null)
+            {
+                _bottomGradient.Dispose();
+                _bottomGradient = null;
+            }
+
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
+        }
+
         private void PopulateScrollView()
         {
             var pages = new List<UIView>();
@@ -305,7 +348,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (_collectionView.Source == null)
             {
-                var collectionSource = new ContactCollectionSource(_collectionView);
+                var collectionSource = new ContactCollectionSource(_collectionView) {
+                    NavigateSiteLinkCommand = NavigateWebSiteCommand
+                };
 
                 _collectionView.Source = collectionSource;
                 _collectionView.Delegate = new ContactCollectionDelegate();

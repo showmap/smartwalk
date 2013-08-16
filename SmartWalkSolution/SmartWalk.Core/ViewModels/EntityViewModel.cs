@@ -12,6 +12,7 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand _expandCollapseCommand;
         private MvxCommand _showPreviousEntityCommand;
         private MvxCommand _showNextEntityCommand;
+        private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
 
         public Entity Entity
         {
@@ -85,6 +86,24 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _showNextEntityCommand;
+            }
+        }
+
+        public ICommand NavigateWebLinkCommand
+        {
+            get
+            {
+                if (_navigateWebLinkCommand == null)
+                {
+                    _navigateWebLinkCommand = new MvxCommand<WebSiteInfo>(
+                        info => ShowViewModel<BrowserViewModel>(
+                        new BrowserViewModel.Parameters {  
+                        URL = info.URL
+                    }),
+                    info => info != null);
+                }
+
+                return _navigateWebLinkCommand;
             }
         }
 

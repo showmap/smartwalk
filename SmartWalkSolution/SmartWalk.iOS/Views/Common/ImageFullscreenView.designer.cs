@@ -10,7 +10,7 @@ using System.CodeDom.Compiler;
 namespace SmartWalk.iOS.Views.Common
 {
 	[Register ("ImageFullscreenController")]
-	partial class ImageFullscreenController
+	partial class ImageFullscreenView
 	{
 		[Outlet]
 		MonoTouch.UIKit.UIButton CloseButton { get; set; }

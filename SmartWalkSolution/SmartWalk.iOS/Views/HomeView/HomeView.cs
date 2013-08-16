@@ -32,11 +32,17 @@ namespace SmartWalk.iOS.Views.HomeView
             base.ViewDidLoad();
 
             NavigationController.NavigationBar.BarStyle = UIBarStyle.Black;
-            NavigationController.NavigationBar.TintColor = UIColor.LightGray;  //UIColor.FromRGB(230, 230, 230);
+            NavigationController.NavigationBar.TintColor = UIColor.LightGray;
 
             BackgroundImageView.ClipsToBounds = true;
             OrgCollectionView.BackgroundColor = null;
             OrgCollectionView.CellHeight = 80;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
         }
 
         protected override ListViewDecorator GetListView()
@@ -46,7 +52,9 @@ namespace SmartWalk.iOS.Views.HomeView
 
         protected override void UpdateViewTitle()
         {
-            NavigationItem.Title = ViewModel.Location != null ? ViewModel.Location.Name : string.Empty;
+            NavigationItem.Title = ViewModel.Location != null 
+                ? ViewModel.Location.Name 
+                : string.Empty;
         }
 
         protected override void InitializeListView()

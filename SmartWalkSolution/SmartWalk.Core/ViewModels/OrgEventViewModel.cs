@@ -20,6 +20,7 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
+        private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
         private Parameters _parameters;
         private bool _isGroupedByLocation = true;
@@ -219,6 +220,24 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _navigateVenueOnMapCommand;
+            }
+        }
+
+        public ICommand NavigateWebLinkCommand
+        {
+            get
+            {
+                if (_navigateWebLinkCommand == null)
+                {
+                    _navigateWebLinkCommand = new MvxCommand<WebSiteInfo>(
+                        info => ShowViewModel<BrowserViewModel>(
+                            new BrowserViewModel.Parameters {  
+                                URL = info.URL
+                        }),
+                        info => info != null);
+                }
+
+                return _navigateWebLinkCommand;
             }
         }
 

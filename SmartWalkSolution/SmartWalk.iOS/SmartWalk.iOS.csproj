@@ -242,11 +242,15 @@
       <DependentUpon>OrgEventHeaderView.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\UIProgressImageView.cs" />
-    <Compile Include="Views\Common\ImageFullscreenController.cs" />
-    <Compile Include="Views\Common\ImageFullscreenController.designer.cs">
-      <DependentUpon>ImageFullscreenController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ExtendedCollectionView.cs" />
+    <Compile Include="Views\Common\ImageFullscreenView.cs" />
+    <Compile Include="Views\Common\ImageFullscreenView.designer.cs">
+      <DependentUpon>ImageFullscreenView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\BrowserView.cs" />
+    <Compile Include="Views\Common\BrowserView.designer.cs">
+      <DependentUpon>BrowserView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -270,7 +274,8 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\WebSiteCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
-    <InterfaceDefinition Include="Views\Common\ImageFullscreenController.xib" />
+    <InterfaceDefinition Include="Views\Common\ImageFullscreenView.xib" />
+    <InterfaceDefinition Include="Views\Common\BrowserView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />

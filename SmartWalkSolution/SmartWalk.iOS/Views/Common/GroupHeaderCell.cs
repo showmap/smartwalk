@@ -24,5 +24,11 @@ namespace SmartWalk.iOS.Views.Common
             get { return TitleLabel.Text; }
             set { TitleLabel.Text = value; }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
+        }
     }
 }

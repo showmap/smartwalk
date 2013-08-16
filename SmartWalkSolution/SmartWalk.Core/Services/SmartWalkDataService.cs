@@ -197,8 +197,7 @@ namespace SmartWalk.Core.Services
                                                 Site = show.Attribute("web") != null 
                                                     ? new WebSiteInfo
                                                     {
-                                                        Label = "more info",
-                                                        URL = show.Attribute("logo").ValueOrNull()
+                                                        URL = show.Attribute("web").ValueOrNull()
                                                     }
                                                     : null
                                             };

@@ -21,6 +21,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private OrgEventHeaderView _headerView;
         private UIBarButtonItem _modeButton;
         private UISearchDisplayController _searchDisplayController;
+        private UISwipeGestureRecognizer _swipeLeft;
         private bool _isMapViewInitialized;
         private bool _isAnimating;
         private PointF _tableContentOffset;
@@ -65,6 +66,37 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 VenuesAndShowsTableView.SetContentOffset(_tableContentOffset, false);
                 _tableContentOffset = PointF.Empty;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+
+            if (_headerView != null)
+            {
+                _headerView.Dispose();
+                _headerView = null;
+            }
+
+            if (_modeButton != null)
+            {
+                _modeButton.Dispose();
+                _modeButton = null;
+            }
+
+            if (_searchDisplayController != null)
+            {
+                _searchDisplayController.Dispose();
+                _searchDisplayController = null;
+            }
+
+            if (_swipeLeft != null)
+            {
+                _swipeLeft.Dispose();
+                _swipeLeft = null;
+            }
+
+            base.Dispose(disposing);
         }
 
         protected override ListViewDecorator GetListView()
@@ -179,7 +211,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void InitializeGestures()
         {
-            var swipeLeft = new UISwipeGestureRecognizer(rec => 
+            _swipeLeft = new UISwipeGestureRecognizer(rec => 
                 {
                     if (ViewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.Map))
                     {
@@ -187,8 +219,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     }
                 });
 
-            swipeLeft.Direction = UISwipeGestureRecognizerDirection.Left;
-            TablePanel.AddGestureRecognizer(swipeLeft);
+            _swipeLeft.Direction = UISwipeGestureRecognizerDirection.Left;
+            TablePanel.AddGestureRecognizer(_swipeLeft);
         }
 
         private void InitializeMapView()

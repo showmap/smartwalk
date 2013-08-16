@@ -85,5 +85,6 @@
     <Compile Include="Model\Location.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Model\ISearchable.cs" />
+    <Compile Include="ViewModels\BrowserViewModel.cs" />
   </ItemGroup>
 </Project>

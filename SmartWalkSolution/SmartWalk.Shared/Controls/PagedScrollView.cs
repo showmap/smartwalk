@@ -125,6 +125,34 @@ namespace SmartWalk.iOS.Controls
             _isTouching = false;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (_scrollView != null)
+            {
+                _scrollView.Dispose();
+                _scrollView = null;
+            }
+
+            if (_pageControl != null)
+            {
+                _pageControl.Dispose();
+                _pageControl = null;
+            }
+
+            if (_gotoButtons != null)
+            {
+                foreach (var button in _gotoButtons)
+                {
+                    button.Dispose();
+                }
+                _gotoButtons = null;
+            }
+
+            PageViews = null;
+
+            base.Dispose(disposing);
+        }
+
         private void Initialize()
         {
             // SCROLL

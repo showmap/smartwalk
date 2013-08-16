@@ -23,6 +23,12 @@ namespace SmartWalk.iOS.Views.OrgView
             InitializeToolBar();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
+        }
+
         protected override void UpdateViewTitle()
         {
             if (ViewModel.Org != null && ViewModel.Org.Info != null)

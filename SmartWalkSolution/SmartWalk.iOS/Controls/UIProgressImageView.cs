@@ -7,7 +7,7 @@ namespace SmartWalk.iOS.Controls
     [Register("UIProgressImageView")]
     public class UIProgressImageView : UIImageView
     {
-        private readonly UIActivityIndicatorView _progress = 
+        private UIActivityIndicatorView _progress = 
             new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray)
                 {
                     HidesWhenStopped = true
@@ -44,6 +44,17 @@ namespace SmartWalk.iOS.Controls
         public void StopProgress()
         {
             _progress.StopAnimating();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_progress != null)
+            {
+                _progress.Dispose();
+                _progress = null;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

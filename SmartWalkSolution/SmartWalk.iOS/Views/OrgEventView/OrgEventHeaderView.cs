@@ -36,6 +36,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
+        }
+
         partial void OnGroupByLocationTouchUpInside(UISwitch sender, UIEvent @event)
         {
             if (GroupByLocationCommand != null &&

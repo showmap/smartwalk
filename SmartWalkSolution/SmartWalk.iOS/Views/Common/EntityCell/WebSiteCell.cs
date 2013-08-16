@@ -2,6 +2,7 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using System.Windows.Input;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -9,6 +10,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
     {
         public static readonly UINib Nib = UINib.FromName("WebSiteCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("WebSiteCell");
+        
+        private UITapGestureRecognizer _siteTapGesture;
 
         public WebSiteCell(IntPtr handle) : base(handle)
         {
@@ -16,6 +19,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             //Layer.BorderWidth = 1;
             Layer.CornerRadius = 3;
         }
+
+        public ICommand NavigateSiteLinkCommand { get; set; }
 
         public new WebSiteInfo DataContext
         {
@@ -28,9 +33,36 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             return (WebSiteCell)Nib.Instantiate(null, null)[0];
         }
 
+        protected override void OnInitialize()
+        {
+            InitializeGestures();
+        }
+
         protected override void OnDataContextChanged()
         {
             WebSiteLabel.Text = DataContext != null ? DataContext.Label ?? DataContext.URL : null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
+        }
+
+        private void InitializeGestures()
+        {
+            _siteTapGesture = new UITapGestureRecognizer(() => {
+                if (NavigateSiteLinkCommand != null &&
+                    NavigateSiteLinkCommand.CanExecute(DataContext))
+                {
+                    NavigateSiteLinkCommand.Execute(DataContext);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
+            WebSiteLabel.AddGestureRecognizer(_siteTapGesture);
         }
     }
 }

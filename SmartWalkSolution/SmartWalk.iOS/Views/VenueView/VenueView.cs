@@ -25,6 +25,12 @@ namespace SmartWalk.iOS.Views.VenueView
             InitializeToolBar();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
+        }
+
         protected override void UpdateViewTitle()
         {
             if (ViewModel.Venue != null && ViewModel.Venue.Info != null)

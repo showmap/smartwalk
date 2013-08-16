@@ -198,6 +198,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
             cell.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
             cell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
+            cell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
             cell.DataContext = (VenueShow)item;
             cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
             return cell;

@@ -7,7 +7,7 @@ using MonoTouch.UIKit;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public partial class ImageFullscreenController : UIViewController
+    public partial class ImageFullscreenView : UIViewController
     {
         private string _imageUrl;
         private MvxImageViewLoader _imageHelper;
@@ -15,7 +15,7 @@ namespace SmartWalk.iOS.Views.Common
         private UITapGestureRecognizer _doubleTapRecognizer;
         private UISwipeGestureRecognizer _swipeRecognizer;
 
-        public ImageFullscreenController() : base("ImageFullscreenController", null)
+        public ImageFullscreenView() : base("ImageFullscreenController", null)
         {
             WantsFullScreenLayout = true;
             ModalTransitionStyle = UIModalTransitionStyle.CrossDissolve;
@@ -111,12 +111,18 @@ namespace SmartWalk.iOS.Views.Common
                 }));
         }
 
-        // HACK:
+        // HACK: to trigger scrollview layoutSubviews on rotation
         public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
         {
             base.WillRotate(toInterfaceOrientation, duration);
 
             ScrollView.SetNeedsLayout();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            ReleaseDesignerOutlets();
+            base.Dispose(disposing);
         }
 
         partial void OnCloseButtonTouchUpInside(UIButton sender, UIEvent @event)
