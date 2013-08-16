@@ -1,5 +1,4 @@
 using MonoTouch.UIKit;
-using System.Drawing;
 
 namespace SmartWalk.iOS.Utils
 {
@@ -9,21 +8,14 @@ namespace SmartWalk.iOS.Utils
         {
             get
             {
-                return UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.Portrait || 
-                    UIApplication.SharedApplication.StatusBarOrientation == UIInterfaceOrientation.PortraitUpsideDown;
+                return GetIsVerticalOrientation(UIApplication.SharedApplication.StatusBarOrientation);
             }
         }
 
-        public static SizeF CurrentScreenSize
+        public static bool GetIsVerticalOrientation(UIInterfaceOrientation orientation)
         {
-            get
-            {
-                return IsVerticalOrientation 
-                    ? UIScreen.MainScreen.Bounds.Size 
-                        : new SizeF(
-                            UIScreen.MainScreen.Bounds.Size.Height,
-                            UIScreen.MainScreen.Bounds.Size.Width);
-            }
+            return orientation == UIInterfaceOrientation.Portrait || 
+                orientation == UIInterfaceOrientation.PortraitUpsideDown;
         }
     }
 }

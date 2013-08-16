@@ -4,7 +4,6 @@ using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -46,6 +45,8 @@ namespace SmartWalk.iOS.Views.Common
         {
             base.ViewDidLoad();
 
+            ImageView.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.White;
+
             // HACK: Removing all constraints defined in IB to avoid flickering on zooming
             ScrollView.RemoveConstraints(ScrollView.Constraints);
 
@@ -56,8 +57,6 @@ namespace SmartWalk.iOS.Views.Common
             _imageHelper = new MvxImageViewLoader(
                 () => ImageView,
                 () => {
-                    SetZoomConstants();
-
                     if (_imageHelper.ImageUrl != null && 
                         ImageView.Image != null)
                     {
@@ -71,42 +70,13 @@ namespace SmartWalk.iOS.Views.Common
                     {
                         ImageView.StartProgress();
                     }
-            });
+
+                    ScrollView.UpdateZoomConstants();
+                });
 
             _imageHelper.ImageUrl = ImageURL;
 
-            _singleTapRecognizer = new UITapGestureRecognizer(() =>
-                    CloseButton.Hidden = !CloseButton.Hidden) {
-                NumberOfTapsRequired = (uint)1
-            };
-
-            _doubleTapRecognizer = new UITapGestureRecognizer(ZoomTo) {
-                NumberOfTapsRequired = (uint)2
-            };
-
-            _swipeRecognizer = new UISwipeGestureRecognizer(Hide) {
-                Direction = UISwipeGestureRecognizerDirection.Down
-            };
-
-            _singleTapRecognizer.RequireGestureRecognizerToFail(_doubleTapRecognizer);
-
-            ScrollView.AddGestureRecognizer(_singleTapRecognizer);
-            ScrollView.AddGestureRecognizer(_doubleTapRecognizer);
-            ScrollView.AddGestureRecognizer(_swipeRecognizer);
-        }
-
-        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
-        {
-            base.WillRotate(toInterfaceOrientation, duration);
-
-            ScrollView.SetNeedsLayout();
-        }
-
-        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
-        {
-            base.DidRotate(fromInterfaceOrientation);
-
-            SetZoomConstants(true);
+            InitializeGestures();
         }
 
         public void Show()
@@ -141,25 +111,39 @@ namespace SmartWalk.iOS.Views.Common
                 }));
         }
 
+        // HACK:
+        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillRotate(toInterfaceOrientation, duration);
+
+            ScrollView.SetNeedsLayout();
+        }
+
         partial void OnCloseButtonTouchUpInside(UIButton sender, UIEvent @event)
         {
             Hide();
         }
 
-        private void SetZoomConstants(bool animated = false)
+        private void InitializeGestures()
         {
-            var imageSize = ImageView.Image != null 
-                ? ImageView.Image.Size
-                : View.Bounds.Size;
+            _singleTapRecognizer = new UITapGestureRecognizer(
+                () => CloseButton.Hidden = !CloseButton.Hidden) {
+                NumberOfTapsRequired = (uint)1
+            };
 
-            // TODO: Use View.Bounds.Size instead, but it's buggy after rotation
-            var widthScale = ScreenUtil.CurrentScreenSize.Width / imageSize.Width;
-            var heightScale = ScreenUtil.CurrentScreenSize.Height / imageSize.Height;
+            _doubleTapRecognizer = new UITapGestureRecognizer(ZoomTo) {
+                NumberOfTapsRequired = (uint)2
+            };
 
-            ScrollView.MinimumZoomScale = 
-                Math.Min(ScrollView.MaximumZoomScale, Math.Min(widthScale, heightScale));
-            ScrollView.SetZoomScale(ScrollView.MinimumZoomScale, animated);
-            ScrollView.SetContentOffset(PointF.Empty, animated);
+            _swipeRecognizer = new UISwipeGestureRecognizer(Hide) {
+                Direction = UISwipeGestureRecognizerDirection.Down
+            };
+
+            _singleTapRecognizer.RequireGestureRecognizerToFail(_doubleTapRecognizer);
+
+            ScrollView.AddGestureRecognizer(_singleTapRecognizer);
+            ScrollView.AddGestureRecognizer(_doubleTapRecognizer);
+            ScrollView.AddGestureRecognizer(_swipeRecognizer);
         }
 
         private void ZoomTo()
@@ -200,6 +184,8 @@ namespace SmartWalk.iOS.Views.Common
     [Register("ImageZoomScrollView")]
     public class ImageZoomScrollView : UIScrollView
     {
+        private SizeF _lastBoundsSize;
+
         public ImageZoomScrollView(IntPtr handle) : base(handle)
         {
         }
@@ -212,39 +198,60 @@ namespace SmartWalk.iOS.Views.Common
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
+
+            if (_lastBoundsSize != Bounds.Size)
+            {
+                UpdateZoomConstants();
+                // to avoid ios exception
+                base.LayoutSubviews();
+
+                _lastBoundsSize = Bounds.Size;
+            }
+
             ImageView.Frame = GetCenteredImageFrame();
         }
 
-        public RectangleF GetCenteredImageFrame()
+        public void UpdateZoomConstants()
         {
-            var frame = ImageView.Frame;
+            var imageSize = ImageView.Image != null
+                ? ImageView.Image.Size
+                : Bounds.Size;
 
-            if (ImageView.Frame.Width != 0 &&
-                ImageView.Frame.Width < Bounds.Size.Width)
+            var widthScale = Bounds.Size.Width / imageSize.Width;
+            var heightScale = Bounds.Size.Height / imageSize.Height;
+
+            MinimumZoomScale = 
+            Math.Min(MaximumZoomScale, Math.Min(widthScale, heightScale));
+            SetZoomScale(MinimumZoomScale, false);
+            SetContentOffset(PointF.Empty, false);
+        }
+
+        private RectangleF GetCenteredImageFrame()
+        {
+            var imageFrame = ImageView.Image != null 
+                ? ImageView.Frame
+                : Bounds;
+            var result = imageFrame;
+
+            if (imageFrame.Width < Bounds.Size.Width)
             {
-                frame.X = (Bounds.Size.Width - ImageView.Frame.Width) / 2;
+                result.X = (Bounds.Size.Width - imageFrame.Width) / 2;
             }
             else
             {
-                frame.X = 0;
+                result.X = 0;
             }
 
-            if (ImageView.Frame.Height != 0 &&
-                ImageView.Frame.Height < Bounds.Size.Height)
+            if (imageFrame.Height < Bounds.Size.Height)
             {
-                frame.Y = (Bounds.Size.Height - ImageView.Frame.Height) / 2;
+                result.Y = (Bounds.Size.Height - imageFrame.Height) / 2;
             }
             else
             {
-                frame.Y = 0;
+                result.Y = 0;
             }
 
-            if (frame.Size == SizeF.Empty)
-            {
-                frame.Size = Bounds.Size;
-            }
-
-            return frame;
+            return result;
         }
     }
 }

@@ -363,6 +363,7 @@
 					<reference ref="252226533"/>
 					<reference ref="343131368"/>
 				</array>
+				<string key="12.CustomClassName">ExtendedCollectionView</string>
 				<string key="12.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<boolean value="NO" key="12.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="13.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -386,11 +387,19 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
+					<string key="className">ExtendedCollectionView</string>
+					<string key="superclassName">UICollectionView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ExtendedCollectionView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">HomeView</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="BackgroundImageView">UIImageView</string>
-						<string key="OrgCollectionView">UICollectionView</string>
+						<string key="OrgCollectionView">ExtendedCollectionView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="BackgroundImageView">
@@ -399,7 +408,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="OrgCollectionView">
 							<string key="name">OrgCollectionView</string>
-							<string key="candidateClassName">UICollectionView</string>
+							<string key="candidateClassName">ExtendedCollectionView</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

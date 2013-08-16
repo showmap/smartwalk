@@ -1,12 +1,10 @@
 using System.ComponentModel;
-using System.Drawing;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
-using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.HomeView
@@ -38,27 +36,7 @@ namespace SmartWalk.iOS.Views.HomeView
 
             BackgroundImageView.ClipsToBounds = true;
             OrgCollectionView.BackgroundColor = null;
-
-            /*var attr = new UITextAttributes();
-            attr.TextColor = UIColor.Gray;
-            attr.TextShadowColor = UIColor.White;
-            NavigationController.NavigationBar.SetTitleTextAttributes(attr);*/
-
-            SetCellWidth();
-        }
-
-        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
-        {
-            base.DidRotate(fromInterfaceOrientation);
-
-            SetCellWidth();
-        }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            SetCellWidth();
+            OrgCollectionView.CellHeight = 80;
         }
 
         protected override ListViewDecorator GetListView()
@@ -95,19 +73,6 @@ namespace SmartWalk.iOS.Views.HomeView
             {
                 UpdateViewTitle();
             }
-        }
-
-        private void SetCellWidth()
-        {
-            var flowLayout = (UICollectionViewFlowLayout)OrgCollectionView.CollectionViewLayout;
-            var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
-
-            var cellWith = (ScreenUtil.CurrentScreenSize.Width - 
-                            flowLayout.SectionInset.Left -
-                            flowLayout.SectionInset.Right - 
-                            flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
-
-            flowLayout.ItemSize = new SizeF(cellWith, 80);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private readonly MvxImageViewLoader _imageHelper;
         private readonly MKMapView _mapView;
         private readonly UIProgressImageView _imageView;
-        private readonly UICollectionView _collectionView;
+        private readonly ExtendedCollectionView _collectionView;
 
         private UITapGestureRecognizer _descriptionTapGesture;
         private UITapGestureRecognizer _imageTapGesture;
@@ -78,8 +78,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 MinimumInteritemSpacing = 16
             };
 
-            _collectionView = new UICollectionView(RectangleF.Empty, layout) {
-                BackgroundColor = UIColor.White
+            _collectionView = new ExtendedCollectionView(RectangleF.Empty, layout) {
+                BackgroundColor = UIColor.White,
+                CellHeight = 41
             };
         }
 
@@ -201,7 +202,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             base.LayoutSubviews();
 
             UpdateScrollViewHeightState();
-            UpdateCollectionViewCellWidth();
             UpdateBottomGradientHiddenState();
         }
 
@@ -303,8 +303,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void InitializeContactCollectionView()
         {
-            UpdateCollectionViewCellWidth();
-
             if (_collectionView.Source == null)
             {
                 var collectionSource = new ContactCollectionSource(_collectionView);
@@ -328,19 +326,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 };
 
             BottomGradientView.Layer.InsertSublayer(_bottomGradient, 0);
-        }
-
-        private void UpdateCollectionViewCellWidth()
-        {
-            var flowLayout = (UICollectionViewFlowLayout)_collectionView.CollectionViewLayout;
-            var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
-
-            var cellWith = (Frame.Width - 
-                flowLayout.SectionInset.Left -
-                flowLayout.SectionInset.Right - 
-                flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
-
-            flowLayout.ItemSize = new SizeF(cellWith, 41);
         }
 
         private void UpdateScrollViewHeightState(bool updateTable = false)

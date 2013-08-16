@@ -23,6 +23,12 @@ namespace SmartWalk.iOS.Controls
             Add(_progress);
         }
 
+        public UIActivityIndicatorViewStyle ActivityIndicatorViewStyle
+        {
+            get { return _progress.ActivityIndicatorViewStyle; }
+            set { _progress.ActivityIndicatorViewStyle = value; }
+        }
+
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
