@@ -34,11 +34,5 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             PhoneNumberLabel.Text = DataContext != null ? DataContext.Phone : null;
             NameHeightConstraint.Constant = DataContext != null && DataContext.Name != null ? 20 : 0;
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
     }
 }

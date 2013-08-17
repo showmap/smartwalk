@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -8,6 +7,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
@@ -25,8 +25,6 @@ namespace SmartWalk.iOS.Views.OrgView
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
         }
 
-        public ICommand ShowImageFullscreenCommand { get; set; }
-
         public GroupContainer[] GroupItemsSource
         {
             get { return (GroupContainer[])ItemsSource;}
@@ -43,6 +41,7 @@ namespace SmartWalk.iOS.Views.OrgView
             }
 
             TableView.DeselectRow(indexPath, false);
+
         }
 
         public override float GetHeightForHeader(UITableView tableView, int section)
@@ -117,7 +116,7 @@ namespace SmartWalk.iOS.Views.OrgView
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
-                ((EntityCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+                ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowFullscreenImageCommand;
                 ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
                 ((EntityCell)cell).IsLogoSizeFixed = true;
                 ((EntityCell)cell).DataContext = entityCellContext;
@@ -136,6 +135,12 @@ namespace SmartWalk.iOS.Views.OrgView
         protected override object GetItemAt(NSIndexPath indexPath)
         {
             return GroupItemsSource[indexPath.Section][indexPath.Row];
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
     }
 }

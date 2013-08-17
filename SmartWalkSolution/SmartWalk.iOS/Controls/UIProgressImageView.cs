@@ -1,6 +1,7 @@
 using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Controls
 {
@@ -48,13 +49,8 @@ namespace SmartWalk.iOS.Controls
 
         protected override void Dispose(bool disposing)
         {
-            if (_progress != null)
-            {
-                _progress.Dispose();
-                _progress = null;
-            }
-
             base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
     }
 }

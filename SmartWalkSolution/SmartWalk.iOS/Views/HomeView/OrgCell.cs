@@ -39,11 +39,5 @@ namespace SmartWalk.iOS.Views.HomeView
             _imageHelper.ImageUrl = DataContext != null ? DataContext.Logo : null;
             OrgNameLabel.Text = DataContext != null ? DataContext.Name : null;
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
     }
 }

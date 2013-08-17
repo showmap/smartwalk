@@ -4,6 +4,8 @@ using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.UIKit;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
+using SmartWalk.Core.Utils;
+using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -42,6 +44,22 @@ namespace SmartWalk.iOS.Views.Common
             UpdateViewTitle();
 
             InitializeListView();
+            InitializeGesture();
+            InitializeRefreshControl();
+        }
+
+        public override void WillMoveToParentViewController(UIViewController parent)
+        {
+            base.WillMoveToParentViewController(parent);
+
+            if (parent == null)
+            {
+                ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                ViewModel.RefreshCompleted -= OnViewModelRefreshCompleted;
+
+                DisposeGesture();
+                DisposeRefreshControl();
+            }
         }
 
         protected abstract ListViewDecorator GetListView();
@@ -52,36 +70,14 @@ namespace SmartWalk.iOS.Views.Common
 
         protected virtual void InitializeListView()
         {
-            _swipeRight = new UISwipeGestureRecognizer(rec => 
-                {
-                    NavigationController.PopViewControllerAnimated(true);
-                });
-
-            _swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
-            ListView.AddGestureRecognizer(_swipeRight);
-
             var source = CreateListViewSource();
 
             ListView.Source = source;
-
-            _refreshControl = new UIRefreshControl
-                {
-                    TintColor = ThemeColors.Mercury
-                };
-            _refreshControl.ValueChanged += (sender, e) => 
-                {
-                    if (ViewModel.RefreshCommand.CanExecute(null))
-                    {
-                        ViewModel.RefreshCommand.Execute(null);
-                    }
-                };
-
-            ListView.AddSubview(_refreshControl);
         }
 
         protected abstract object CreateListViewSource();
 
-        protected virtual void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected virtual void OnViewModelPropertyChanged(string propertyName)
         {
         }
 
@@ -98,31 +94,76 @@ namespace SmartWalk.iOS.Views.Common
 
         protected override void Dispose(bool disposing)
         {
-            if (_refreshControl != null)
-            {
-                _refreshControl.Dispose();
-                _refreshControl = null;
-            }
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
+        }
 
+        private void InitializeGesture()
+        {
+            _swipeRight = new UISwipeGestureRecognizer(() => {
+                NavigationController.PopViewControllerAnimated(true);
+            });
+
+            _swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
+
+            ListView.AddGestureRecognizer(_swipeRight);
+        }
+
+        private void DisposeGesture()
+        {
             if (_swipeRight != null)
             {
+                ListView.RemoveGestureRecognizer(_swipeRight);
                 _swipeRight.Dispose();
                 _swipeRight = null;
             }
+        }
 
-            if (_imageFullscreenView != null)
+        private void InitializeRefreshControl()
+        {
+            _refreshControl = new UIRefreshControl {
+                TintColor = ThemeColors.Mercury
+            };
+
+            _refreshControl.ValueChanged += OnRefreshControlValueChanged;
+
+            ListView.AddSubview(_refreshControl);
+        }
+
+        private void DisposeRefreshControl()
+        {
+            if (_refreshControl != null)
             {
-                _imageFullscreenView.Dispose();
-                _imageFullscreenView = null;
+                _refreshControl.ValueChanged -= OnRefreshControlValueChanged;
+                _refreshControl.Dispose();
+                _refreshControl = null;
+            }
+        }
+
+        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var fullscreenProvider = ViewModel as IFullscreenImageProvider;
+            if (fullscreenProvider != null &&
+                e.PropertyName == fullscreenProvider.GetPropertyName(p => p.CurrentFullscreenImage))
+            {
+                ShowImageFullscreenView(fullscreenProvider.CurrentFullscreenImage);
             }
 
-            base.Dispose(disposing);
+            OnViewModelPropertyChanged(e.PropertyName);
         }
 
         private void OnViewModelRefreshCompleted(object sender, EventArgs e)
         {
             UpdateViewTitle();
             InvokeOnMainThread(_refreshControl.EndRefreshing);
+        }
+
+        private void OnRefreshControlValueChanged(object sender, EventArgs e)
+        {
+            if (ViewModel.RefreshCommand.CanExecute(null))
+            {
+                ViewModel.RefreshCommand.Execute(null);
+            }
         }
     }
 }

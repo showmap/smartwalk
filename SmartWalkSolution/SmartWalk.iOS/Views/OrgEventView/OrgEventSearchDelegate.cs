@@ -4,6 +4,7 @@ using System.Linq;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -121,6 +122,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 tableSource.IsSearchSource = _searchResults != null;
                 tableSource.ItemsSource = _searchResults;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         private class SearchKey : Tuple<Venue, VenueShow>

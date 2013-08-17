@@ -50,6 +50,7 @@
     <Folder Include="ViewModels\" />
     <Folder Include="Utils\" />
     <Folder Include="Converters\" />
+    <Folder Include="ViewModels\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -76,7 +77,6 @@
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\DataSource.cs" />
     <Compile Include="ViewModels\VenueViewModel.cs" />
-    <Compile Include="ViewModels\IRefreshableViewModel.cs" />
     <Compile Include="Converters\ValueConverter.cs" />
     <Compile Include="Utils\HashCode.cs" />
     <Compile Include="Model\WebSiteInfo.cs" />
@@ -86,5 +86,8 @@
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Model\ISearchable.cs" />
     <Compile Include="ViewModels\BrowserViewModel.cs" />
+    <Compile Include="Utils\ConsoleUtil.cs" />
+    <Compile Include="ViewModels\Interfaces\IRefreshableViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IFullscreenImageProvider.cs" />
   </ItemGroup>
 </Project>

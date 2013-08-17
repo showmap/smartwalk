@@ -140,10 +140,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 var frameSize = new SizeF(
                     frameWidth,
                     float.MaxValue); 
-                var textSize = new NSString(text).StringSize(
-                    UIFont.FromName("Helvetica", 15),
-                    frameSize,
-                    UILineBreakMode.TailTruncation);
+
+                SizeF textSize;
+                using (var ns = new NSString(text))
+                {
+                    textSize = ns.StringSize(
+                        UIFont.FromName("Helvetica", 15),
+                        frameSize,
+                        UILineBreakMode.TailTruncation);
+                }
 
                 return textSize.Height;
             }
@@ -206,6 +211,21 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             UpdateBottomGradientHiddenState();
         }
 
+        public override void WillMoveToSuperview(UIView newsuper)
+        {
+            base.WillMoveToSuperview(newsuper);
+
+            if (newsuper == null)
+            {
+                ImageHeightUpdatedHandler = null;
+                ExpandCollapseCommand = null;
+                ShowImageFullscreenCommand = null;
+                NavigateWebSiteCommand = null;
+
+                DisposeGestures();
+            }
+        }
+
         protected override void OnInitialize()
         {
             InitializeGestures();
@@ -250,48 +270,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     ? 1 : 0;
 
             SetNeedsLayout();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (_mapView != null)
-            {
-                _mapView.Dispose();
-                _mapView = null;
-            }
-
-            if (_imageView != null)
-            {
-                _imageView.Dispose();
-                _imageView = null;
-            }
-
-            if (_collectionView != null)
-            {
-                _collectionView.Dispose();
-                _collectionView = null;
-            }
-
-            if (_descriptionTapGesture != null)
-            {
-                _descriptionTapGesture.Dispose();
-                _descriptionTapGesture = null;
-            }
-
-            if (_imageTapGesture != null)
-            {
-                _imageTapGesture.Dispose();
-                _imageTapGesture = null;
-            }
-
-            if (_bottomGradient != null)
-            {
-                _bottomGradient.Dispose();
-                _bottomGradient = null;
-            }
-
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
         }
 
         private void PopulateScrollView()
@@ -342,6 +320,23 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             };
 
             _imageView.AddGestureRecognizer(_imageTapGesture);
+        }
+
+        private void DisposeGestures()
+        {
+            if (_descriptionTapGesture != null)
+            {
+                DescriptionLabel.RemoveGestureRecognizer(_descriptionTapGesture);
+                _descriptionTapGesture.Dispose();
+                _descriptionTapGesture = null;
+            }
+
+            if (_imageTapGesture != null)
+            {
+                _imageView.RemoveGestureRecognizer(_imageTapGesture);
+                _imageTapGesture.Dispose();
+                _imageTapGesture = null;
+            }
         }
 
         private void InitializeContactCollectionView()

@@ -81,10 +81,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
             if (text != null && text != string.Empty)
             {
                 var frameSize = new SizeF(frameWidth, float.MaxValue); 
-                var textSize = new NSString(text).StringSize(
-                    UIFont.FromName("Helvetica", 15),
-                    frameSize,
-                    UILineBreakMode.TailTruncation);
+                SizeF textSize;
+
+                using (var ns = new NSString(text))
+                {
+                    textSize = ns.StringSize(
+                        UIFont.FromName("Helvetica", 15),
+                        frameSize,
+                        UILineBreakMode.TailTruncation);
+                }
 
                 return textSize.Height;
             }
@@ -183,6 +188,20 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     ? 9 : 8;
         }
 
+        public override void WillMoveToSuperview(UIView newsuper)
+        {
+            base.WillMoveToSuperview(newsuper);
+
+            if (newsuper == null)
+            {
+                ExpandCollapseShowCommand = null;
+                ShowImageFullscreenCommand = null;
+                NavigateDetailsLinkCommand = null;
+
+                DisposeGestures();
+            }
+        }
+
         protected override void OnInitialize()
         {
             InitializeGestures();
@@ -221,12 +240,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
             SetNeedsUpdateConstraints();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
-
         private void UpateImageState()
         {
             _imageHelper.ImageUrl = 
@@ -263,8 +276,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             };
 
             _imageTapGesture = new UITapGestureRecognizer(() => {
-                if (ShowImageFullscreenCommand != null &&
-                    ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
+                if (ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
                 {
                     ShowImageFullscreenCommand.Execute(DataContext.Logo);
                 }
@@ -290,6 +302,30 @@ namespace SmartWalk.iOS.Views.OrgEventView
             AddGestureRecognizer(_cellTapGesture);
             ThumbImageView.AddGestureRecognizer(_imageTapGesture);
             DetailsLabel.AddGestureRecognizer(_detailsTapGesture);
+        }
+             
+        private void DisposeGestures()
+        {
+            if (_cellTapGesture != null)
+            {
+                RemoveGestureRecognizer(_cellTapGesture);
+                _cellTapGesture.Dispose();
+                _cellTapGesture = null;
+            }
+
+            if (_imageTapGesture != null)
+            {
+                ThumbImageView.RemoveGestureRecognizer(_imageTapGesture);
+                _imageTapGesture.Dispose();
+                _imageTapGesture = null;
+            }
+
+            if (_detailsTapGesture != null)
+            {
+                DetailsLabel.RemoveGestureRecognizer(_detailsTapGesture);
+                _detailsTapGesture.Dispose();
+                _detailsTapGesture = null;
+            }
         }
     }
 }

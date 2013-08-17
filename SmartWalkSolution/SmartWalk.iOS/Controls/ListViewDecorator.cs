@@ -1,4 +1,5 @@
 using MonoTouch.UIKit;
+using System;
 
 namespace SmartWalk.iOS.Controls
 {
@@ -9,11 +10,13 @@ namespace SmartWalk.iOS.Controls
 
         public ListViewDecorator(UITableView tableView)
         {
+            if (tableView == null) throw new ArgumentNullException("tableView");
             _tableView = tableView;
         }
 
         public ListViewDecorator(UICollectionView collectionView)
         {
+            if (collectionView == null) throw new ArgumentNullException("collectionView");
             _collectionView = collectionView;
         }
 
@@ -83,6 +86,19 @@ namespace SmartWalk.iOS.Controls
             if (_collectionView != null)
             {
                 _collectionView.AddGestureRecognizer(gestureRecognizer);
+            }
+        }
+
+        public void RemoveGestureRecognizer(UIGestureRecognizer gestureRecognizer)
+        {
+            if (_tableView != null)
+            {
+                _tableView.RemoveGestureRecognizer(gestureRecognizer);
+            }
+
+            if (_collectionView != null)
+            {
+                _collectionView.RemoveGestureRecognizer(gestureRecognizer);
             }
         }
     }

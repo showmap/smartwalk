@@ -3,10 +3,11 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
+using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class OrgEventViewModel : MvxViewModel, IRefreshableViewModel
+    public class OrgEventViewModel : MvxViewModel, IRefreshableViewModel, IFullscreenImageProvider
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
@@ -15,6 +16,10 @@ namespace SmartWalk.Core.ViewModels
         private OrgEvent _orgEvent;
         private VenueShow _expandedShow;
         private Venue _selectedVenueOnMap;
+        private string _currentFullscreenImage;
+        private Parameters _parameters;
+        private bool _isGroupedByLocation = true;
+
         private MvxCommand<VenueShow> _expandCollapseShowCommand;
         private MvxCommand _refreshCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
@@ -22,8 +27,7 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
-        private Parameters _parameters;
-        private bool _isGroupedByLocation = true;
+        private MvxCommand<string> _showFullscreenImageCommand;
 
         public OrgEventViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
         {
@@ -93,6 +97,22 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _selectedVenueOnMap = value;
                     RaisePropertyChanged(() => SelectedVenueOnMap);
+                }
+            }
+        }
+
+        public string CurrentFullscreenImage
+        {
+            get
+            {
+                return _currentFullscreenImage;
+            }
+            private set
+            {
+                if (_currentFullscreenImage != value)
+                {
+                    _currentFullscreenImage = value;
+                    RaisePropertyChanged(() => CurrentFullscreenImage);
                 }
             }
         }
@@ -238,6 +258,20 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _navigateWebLinkCommand;
+            }
+        }
+
+        public ICommand ShowFullscreenImageCommand
+        {
+            get
+            {
+                if (_showFullscreenImageCommand == null)
+                {
+                    _showFullscreenImageCommand = new MvxCommand<string>(
+                        image => CurrentFullscreenImage = image);
+                }
+
+                return _showFullscreenImageCommand;
             }
         }
 

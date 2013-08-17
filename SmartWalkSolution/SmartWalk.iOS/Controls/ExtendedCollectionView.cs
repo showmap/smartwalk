@@ -3,6 +3,7 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.iOS.Utils;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Controls
 {
@@ -36,6 +37,12 @@ namespace SmartWalk.iOS.Controls
                             flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
             flowLayout.ItemSize = new SizeF(cellWith, CellHeight);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
     }
 }

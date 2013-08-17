@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Controls
 {
@@ -107,8 +108,8 @@ namespace SmartWalk.iOS.Controls
         {
             if (_isTouching)
             {
-                var pageWidth = _scrollView.Frame.Size.Width;
-                var page = Math.Floor((_scrollView.ContentOffset.X - pageWidth / 2) / pageWidth) + 1;
+                var pageWidth = scrollView.Frame.Size.Width;
+                var page = Math.Floor((scrollView.ContentOffset.X - pageWidth / 2) / pageWidth) + 1;
                 _pageControl.CurrentPage = (int)page;
             }
         }
@@ -127,41 +128,20 @@ namespace SmartWalk.iOS.Controls
 
         protected override void Dispose(bool disposing)
         {
-            if (_scrollView != null)
-            {
-                _scrollView.Dispose();
-                _scrollView = null;
-            }
-
-            if (_pageControl != null)
-            {
-                _pageControl.Dispose();
-                _pageControl = null;
-            }
-
-            if (_gotoButtons != null)
-            {
-                foreach (var button in _gotoButtons)
-                {
-                    button.Dispose();
-                }
-                _gotoButtons = null;
-            }
-
-            PageViews = null;
-
             base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         private void Initialize()
         {
             // SCROLL
 
-            _scrollView = new UIScrollView();
-            _scrollView.ShowsHorizontalScrollIndicator = false;
-            _scrollView.ShowsVerticalScrollIndicator = false;
-            _scrollView.PagingEnabled = true;
-            _scrollView.WeakDelegate = this;
+            _scrollView = new UIScrollView {
+                ShowsHorizontalScrollIndicator = false,
+                ShowsVerticalScrollIndicator = false,
+                PagingEnabled = true,
+                WeakDelegate = this
+            };
 
             AddSubviews(_scrollView);
 
@@ -173,10 +153,11 @@ namespace SmartWalk.iOS.Controls
 
             // PAGER
 
-            _pageControl = new UIPageControl();
-            _pageControl.HidesForSinglePage = true;
-            _pageControl.CurrentPageIndicatorTintColor = UIColor.FromRGB(0, 128, 255);
-            _pageControl.PageIndicatorTintColor = UIColor.LightGray;
+            _pageControl = new UIPageControl {
+                HidesForSinglePage = true,
+                CurrentPageIndicatorTintColor = UIColor.FromRGB(0, 128, 255),
+                PageIndicatorTintColor = UIColor.LightGray,
+            };
             _pageControl.ValueChanged += OnPageControlValueChanged;
 
             AddSubviews(_pageControl);
@@ -188,6 +169,12 @@ namespace SmartWalk.iOS.Controls
             {
                 foreach (var view in _scrollView.Subviews.ToArray())
                 {
+                    var button = view as UIButton;
+                    if (button != null)
+                    {
+                        button.TouchUpInside -= OnGotoButtonTouchUpInside;
+                    }
+
                     view.RemoveFromSuperview();
                 }
             }

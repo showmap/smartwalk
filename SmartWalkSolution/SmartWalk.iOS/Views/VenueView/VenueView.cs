@@ -1,7 +1,5 @@
-using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
@@ -48,26 +46,24 @@ namespace SmartWalk.iOS.Views.VenueView
         {
             var tableSource = new VenueTableSource(VenueShowsTableView, ViewModel);
 
-            tableSource.ShowImageFullscreenCommand = new MvxCommand<string>(ShowImageFullscreenView);
-
             this.CreateBinding(tableSource).To((VenueViewModel vm) => vm.Venue)
                 .WithConversion(new VenueTableSourceConverter(), ViewModel).Apply();
 
             return tableSource;
         }
 
-        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Venue))
+            if (propertyName == ViewModel.GetPropertyName(vm => vm.Venue))
             {
                 UpdateViewTitle();
             }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 VenueShowsTableView.BeginUpdates();
                 VenueShowsTableView.EndUpdates();
             }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
                 foreach (var cell in VenueShowsTableView.VisibleCells.OfType<VenueShowCell>())
                 {

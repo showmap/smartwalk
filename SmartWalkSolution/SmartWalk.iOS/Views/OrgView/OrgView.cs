@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel;
+using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.UIKit;
@@ -23,12 +25,6 @@ namespace SmartWalk.iOS.Views.OrgView
             InitializeToolBar();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
-
         protected override void UpdateViewTitle()
         {
             if (ViewModel.Org != null && ViewModel.Org.Info != null)
@@ -46,24 +42,27 @@ namespace SmartWalk.iOS.Views.OrgView
         {
             var tableSource = new OrgTableSource(OrgEventsTableView, ViewModel);
 
-            tableSource.ShowImageFullscreenCommand = new MvxCommand<string>(ShowImageFullscreenView);
-
-            this.CreateBinding(tableSource).To((OrgViewModel vm) => vm.Org)
+            this.CreateBinding(tableSource)
+                .To((OrgViewModel vm) => vm.Org)
                 .WithConversion(new OrgTableSourceConverter(), ViewModel).Apply();
 
             return tableSource;
         }
 
-        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Org))
+            if (propertyName == ViewModel.GetPropertyName(vm => vm.Org))
             {
                 UpdateViewTitle();
             }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 OrgEventsTableView.BeginUpdates();
                 OrgEventsTableView.EndUpdates();
+            }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentFullscreenImage))
+            {
+                ShowImageFullscreenView(ViewModel.CurrentFullscreenImage);
             }
         }
 
@@ -84,7 +83,8 @@ namespace SmartWalk.iOS.Views.OrgView
                     }
                 });
 
-            NavigationItem.SetRightBarButtonItems(new [] {buttonDown, buttonUp}, true);
+            NavigationItem.SetRightBarButtonItems(
+                new [] {buttonUp, buttonDown}, true);
         }
     }
 }

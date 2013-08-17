@@ -13,6 +13,8 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
+using System;
+using System.Windows.Input;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -50,6 +52,18 @@ namespace SmartWalk.iOS.Views.OrgEventView
             UpdateViewState(false);
         }
 
+        public override void WillMoveToParentViewController(UIViewController parent)
+        {
+            base.WillMoveToParentViewController(parent);
+
+            if (parent == null)
+            {
+                DisposeToolBar();
+                DisposeGestures();
+                DisposeTableHeader();
+            }
+        }
+
         // HACK: To persist table scroll offset
         public override void ViewDidDisappear(bool animated)
         {
@@ -66,37 +80,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 VenuesAndShowsTableView.SetContentOffset(_tableContentOffset, false);
                 _tableContentOffset = PointF.Empty;
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-
-            if (_headerView != null)
-            {
-                _headerView.Dispose();
-                _headerView = null;
-            }
-
-            if (_modeButton != null)
-            {
-                _modeButton.Dispose();
-                _modeButton = null;
-            }
-
-            if (_searchDisplayController != null)
-            {
-                _searchDisplayController.Dispose();
-                _searchDisplayController = null;
-            }
-
-            if (_swipeLeft != null)
-            {
-                _swipeLeft.Dispose();
-                _swipeLeft = null;
-            }
-
-            base.Dispose(disposing);
         }
 
         protected override ListViewDecorator GetListView()
@@ -118,38 +101,38 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 VenuesAndShowsTableView,
                 ViewModel);
 
-            tableSource.ShowImageFullscreenCommand = new MvxCommand<string>(ShowImageFullscreenView);
-
-            this.CreateBinding(tableSource).To((OrgEventViewModel vm) => vm.OrgEvent.Venues).Apply();
+            this.CreateBinding(tableSource)
+                .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
+                .Apply();
 
             return tableSource;
         }
 
-        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
+            if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
                 if (ViewModel.Mode == OrgEventViewMode.Map)
                 {
                     InitializeMapView();
                 }
             }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.Mode))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
                 UpdateViewState();
             }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
                 if (!_isAnimating && ViewModel.Mode == OrgEventViewMode.Map)
                 {
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
                 }
             }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation))
             {
                 VenuesAndShowsTableView.ReloadData();
             }
-            else if (e.PropertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
                 foreach (var cell in VenuesAndShowsTableView.VisibleCells.OfType<VenueShowCell>())
                 {
@@ -173,16 +156,25 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private void InitializeToolBar()
         {
             _modeButton = new UIBarButtonItem();
-
-            _modeButton.Clicked += (sender, e) => 
-                {
-                    if (ViewModel.SwitchModeCommand.CanExecute(null))
-                    {
-                        ViewModel.SwitchModeCommand.Execute(null);
-                    }
-                };
+            _modeButton.Clicked += OnModeButtonClicked;
 
             NavigationItem.SetRightBarButtonItem(_modeButton, true);
+        }
+
+        private void DisposeToolBar()
+        {
+            if (_modeButton != null)
+            {
+                _modeButton.Clicked -= OnModeButtonClicked;
+            }
+        }
+
+        private void OnModeButtonClicked(object sender, EventArgs e)
+        {
+            if (ViewModel.SwitchModeCommand.CanExecute(null))
+            {
+                ViewModel.SwitchModeCommand.Execute(null);
+            }
         }
 
         private void InitializeTableHeader()
@@ -193,6 +185,18 @@ namespace SmartWalk.iOS.Views.OrgEventView
             _headerView.SearchBarControl.WeakDelegate = this;
 
             VenuesAndShowsTableView.TableHeaderView = _headerView;
+        }
+
+        private void DisposeTableHeader()
+        {
+            if (_headerView != null)
+            {
+                VenuesAndShowsTableView.TableHeaderView = null;
+                _headerView.SearchBarControl.WeakDelegate = null;
+                _headerView.SearchBarControl.Dispose();
+                _headerView.Dispose();
+                _headerView = null;
+            }
         }
 
         private void InitializeSearchDisplayController()
@@ -221,6 +225,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             _swipeLeft.Direction = UISwipeGestureRecognizerDirection.Left;
             TablePanel.AddGestureRecognizer(_swipeLeft);
+        }
+
+        private void DisposeGestures()
+        {
+            if (_swipeLeft != null)
+            {
+                TablePanel.RemoveGestureRecognizer(_swipeLeft);
+                _swipeLeft.Dispose();
+                _swipeLeft = null;
+            }
         }
 
         private void InitializeMapView()

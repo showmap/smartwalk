@@ -44,12 +44,6 @@ namespace SmartWalk.iOS.Views.OrgView
                 ? UIColor.FromRGB(128, 128, 128) : UIColor.FromRGB(0, 128, 255);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
-
         private void InitializeDayLabelSquare()
         {
             DayLabel.Layer.CornerRadius = 3;

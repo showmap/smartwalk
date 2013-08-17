@@ -1,7 +1,8 @@
 using System;
+using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using System.Drawing;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Controls
 {
@@ -23,6 +24,12 @@ namespace SmartWalk.iOS.Controls
                 contentSize.Width = Bounds.Size.Width;
                 ContentSize = contentSize;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
     }
 }

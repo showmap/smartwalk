@@ -14,6 +14,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public static readonly NSString Key = new NSString("VenueCell");
 
         private MvxImageViewLoader _imageHelper;
+        private UITapGestureRecognizer _cellTapGesture;
+        private UITapGestureRecognizer _addressTapGesture;
 
         public VenueCell(IntPtr handle) : base(handle)
         {
@@ -33,7 +35,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         }
 
         public ICommand NavigateVenueCommand { get; set; }
-
         public ICommand NavigateVenueOnMapCommand { get; set; }
 
         public override void PrepareForReuse()
@@ -43,10 +44,22 @@ namespace SmartWalk.iOS.Views.OrgEventView
             LogoImageView.Image = null;
         }
 
+        public override void WillMoveToSuperview(UIView newsuper)
+        {
+            base.WillMoveToSuperview(newsuper);
+
+            if (newsuper == null)
+            {
+                NavigateVenueCommand = null;
+                NavigateVenueOnMapCommand = null;
+
+                DisposeGestures();
+            }
+        }
+
         protected override void OnInitialize()
         {
-            InitializeGesture();
-            InitializeAddressGesture();
+            InitializeGestures();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -76,15 +89,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 : null;
         }
 
-        protected override void Dispose(bool disposing)
+        private void InitializeGestures()
         {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
-
-        private void InitializeGesture()
-        {
-            var tap = new UITapGestureRecognizer(() => {
+            _cellTapGesture = new UITapGestureRecognizer(() => {
                 if (NavigateVenueCommand != null &&
                     NavigateVenueCommand.CanExecute(DataContext))
                 {
@@ -95,29 +102,38 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 NumberOfTapsRequired = (uint)1
             };
 
-            tap.ShouldReceiveTouch = new UITouchEventArgs((rec, touch) => 
+            _cellTapGesture.ShouldReceiveTouch = new UITouchEventArgs((rec, touch) => 
                 touch.View != AddressLabel);
 
-            AddGestureRecognizer(tap);
+            AddGestureRecognizer(_cellTapGesture);
+
+            _addressTapGesture = new UITapGestureRecognizer(() => {
+                if (NavigateVenueOnMapCommand != null &&
+                    NavigateVenueOnMapCommand.CanExecute(DataContext))
+                {
+                    NavigateVenueOnMapCommand.Execute(DataContext);
+                }
+            });
+
+            _addressTapGesture.NumberOfTouchesRequired = (uint)1;
+            _addressTapGesture.NumberOfTapsRequired = (uint)1;
+
+            AddressLabel.AddGestureRecognizer(_addressTapGesture);
         }
 
-        private void InitializeAddressGesture()
+        private void DisposeGestures()
         {
-            if (AddressLabel.GestureRecognizers == null ||
-                AddressLabel.GestureRecognizers.Length == 0)
+            if (_cellTapGesture != null)
             {
-                var tap = new UITapGestureRecognizer(() => {
-                    if (NavigateVenueOnMapCommand != null &&
-                        NavigateVenueOnMapCommand.CanExecute(DataContext))
-                    {
-                        NavigateVenueOnMapCommand.Execute(DataContext);
-                    }
-                });
-
-                tap.NumberOfTouchesRequired = (uint)1;
-                tap.NumberOfTapsRequired = (uint)1;
-
-                AddressLabel.AddGestureRecognizer(tap);
+                RemoveGestureRecognizer(_cellTapGesture);
+                _cellTapGesture.Dispose();
+                _cellTapGesture = null;
+            }
+            if (_addressTapGesture != null)
+            {
+                AddressLabel.RemoveGestureRecognizer(_addressTapGesture);
+                _addressTapGesture.Dispose();
+                _addressTapGesture = null;
             }
         }
     }

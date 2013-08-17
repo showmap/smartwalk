@@ -6,6 +6,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -62,20 +63,8 @@ namespace SmartWalk.iOS.Views.Common
 
         protected override void Dispose(bool disposing)
         {
-            if (_indicatorView != null)
-            {
-                _indicatorView.Dispose();
-                _indicatorView = null;
-            }
-
-            if (_progressBarItem != null)
-            {
-                _progressBarItem.Dispose();
-                _progressBarItem = null;
-            }
-
-            ReleaseDesignerOutlets();
             base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         private void UpdateNavButtonsState()

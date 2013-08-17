@@ -4,6 +4,7 @@ using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -74,6 +75,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
 
             return annotationView;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
     }
 }

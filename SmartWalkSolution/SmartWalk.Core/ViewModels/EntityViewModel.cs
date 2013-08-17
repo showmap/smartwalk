@@ -1,17 +1,20 @@
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public abstract class EntityViewModel : MvxViewModel
+    public abstract class EntityViewModel : MvxViewModel, IFullscreenImageProvider
     {
         private Entity _entity;
         private bool _isDescriptionExpanded;
+        private string _currentFullscreenImage;
 
         private MvxCommand _expandCollapseCommand;
         private MvxCommand _showPreviousEntityCommand;
         private MvxCommand _showNextEntityCommand;
+        private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
 
         public Entity Entity
@@ -43,6 +46,22 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _isDescriptionExpanded = value;
                     RaisePropertyChanged(() => IsDescriptionExpanded);
+                }
+            }
+        }
+
+        public string CurrentFullscreenImage
+        {
+            get
+            {
+                return _currentFullscreenImage;
+            }
+            private set
+            {
+                if (_currentFullscreenImage != value)
+                {
+                    _currentFullscreenImage = value;
+                    RaisePropertyChanged(() => CurrentFullscreenImage);
                 }
             }
         }
@@ -86,6 +105,20 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _showNextEntityCommand;
+            }
+        }
+
+        public ICommand ShowFullscreenImageCommand
+        {
+            get
+            {
+                if (_showFullscreenImageCommand == null)
+                {
+                    _showFullscreenImageCommand = new MvxCommand<string>(
+                        image => CurrentFullscreenImage = image);
+                }
+
+                return _showFullscreenImageCommand;
             }
         }
 

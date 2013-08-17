@@ -4,6 +4,7 @@ using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -121,8 +122,8 @@ namespace SmartWalk.iOS.Views.Common
 
         protected override void Dispose(bool disposing)
         {
-            ReleaseDesignerOutlets();
             base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         partial void OnCloseButtonTouchUpInside(UIButton sender, UIEvent @event)

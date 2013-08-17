@@ -8,6 +8,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -34,7 +35,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         }
 
         public bool IsSearchSource { get; set; }
-        public ICommand ShowImageFullscreenCommand { get; set; }
 
         public Venue[] VenueItemsSource
         {
@@ -196,7 +196,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
 
             var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
-            cell.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+            cell.ShowImageFullscreenCommand = _viewModel.ShowFullscreenImageCommand;
             cell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
             cell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
             cell.DataContext = (VenueShow)item;
@@ -228,6 +228,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                 return null;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
     }
 }

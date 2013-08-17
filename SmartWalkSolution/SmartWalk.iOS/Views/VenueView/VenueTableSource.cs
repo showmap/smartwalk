@@ -10,6 +10,7 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
 using SmartWalk.iOS.Views.OrgEventView;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.VenueView
 {
@@ -28,8 +29,6 @@ namespace SmartWalk.iOS.Views.VenueView
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderCell.Nib, GroupHeaderCell.Key);
         }
-
-        public ICommand ShowImageFullscreenCommand { get; set; }
 
         public GroupContainer[] GroupItemsSource
         {
@@ -127,7 +126,7 @@ namespace SmartWalk.iOS.Views.VenueView
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
-                ((EntityCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+                ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowFullscreenImageCommand;
                 ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
                 ((EntityCell)cell).ImageHeightUpdatedHandler = OnEntityImageHeightUpdated;
                 ((EntityCell)cell).DataContext = entityCellContext;
@@ -137,7 +136,7 @@ namespace SmartWalk.iOS.Views.VenueView
             if (venueShow != null)
             {
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
-                ((VenueShowCell)cell).ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+                ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowFullscreenImageCommand;
                 ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = venueShow;
@@ -150,6 +149,12 @@ namespace SmartWalk.iOS.Views.VenueView
         protected override object GetItemAt(NSIndexPath indexPath)
         {
             return GroupItemsSource[indexPath.Section][indexPath.Row];
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         private void OnEntityImageHeightUpdated(int imageHeight, bool updateTable)

@@ -39,12 +39,6 @@ namespace SmartWalk.iOS.Views.HomeView
             OrgCollectionView.CellHeight = 80;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
-
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(OrgCollectionView);  
@@ -75,9 +69,9 @@ namespace SmartWalk.iOS.Views.HomeView
             return collectionSource;
         }
 
-        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (e.PropertyName == ViewModel.GetPropertyName(p => p.Location))
+            if (propertyName == ViewModel.GetPropertyName(p => p.Location))
             {
                 UpdateViewTitle();
             }

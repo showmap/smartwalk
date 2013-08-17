@@ -43,12 +43,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             WebSiteLabel.Text = DataContext != null ? DataContext.Label ?? DataContext.URL : null;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
-        }
-
         private void InitializeGestures()
         {
             _siteTapGesture = new UITapGestureRecognizer(() => {
