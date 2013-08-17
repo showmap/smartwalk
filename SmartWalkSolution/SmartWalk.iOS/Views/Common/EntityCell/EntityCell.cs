@@ -343,12 +343,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (_collectionView.Source == null)
             {
-                var collectionSource = new ContactCollectionSource(_collectionView) {
-                    NavigateSiteLinkCommand = NavigateWebSiteCommand
-                };
+                var collectionSource = new ContactCollectionSource(_collectionView);
 
                 _collectionView.Source = collectionSource;
-                _collectionView.Delegate = new ContactCollectionDelegate();
+
+                _collectionView.Delegate = new ContactCollectionDelegate(collectionSource) {
+                    NavigateSiteLinkCommand = NavigateWebSiteCommand
+                };
 
                 _collectionView.ReloadData();
             }

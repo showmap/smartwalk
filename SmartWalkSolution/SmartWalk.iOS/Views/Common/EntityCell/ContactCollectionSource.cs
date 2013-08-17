@@ -2,7 +2,6 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using System.Windows.Input;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -15,8 +14,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             collectionView.RegisterNibForCell(EmailCell.Nib, EmailCell.Key);
             collectionView.RegisterNibForCell(WebSiteCell.Nib, WebSiteCell.Key);
         }
-
-        public ICommand NavigateSiteLinkCommand { get; set; }
 
         protected override UICollectionViewCell GetOrCreateCellFor(
             UICollectionView collectionView, 
@@ -44,7 +41,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             {
                 cell = (UICollectionViewCell)collectionView.DequeueReusableCell(WebSiteCell.Key, indexPath);
                 ((WebSiteCell)cell).DataContext = webSiteInfo;
-                ((WebSiteCell)cell).NavigateSiteLinkCommand = NavigateSiteLinkCommand;
             }
 
             return cell;
