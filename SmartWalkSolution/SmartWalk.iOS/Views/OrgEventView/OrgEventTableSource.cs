@@ -72,7 +72,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.ReloadTableData();
 
-            if (VenueItemsSource != null && VenueItemsSource.Length > 0)
+            if (VenueItemsSource != null && 
+                VenueItemsSource.Length > 0 && 
+                _timer == null)
             {
                 _timer = NSTimer.CreateRepeatingScheduledTimer(TimeSpan.MinValue, 
                     new NSAction(() => 
