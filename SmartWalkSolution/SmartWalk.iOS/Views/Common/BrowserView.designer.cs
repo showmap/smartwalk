@@ -19,6 +19,9 @@ namespace SmartWalk.iOS.Views.Common
 		MonoTouch.UIKit.UIBarButtonItem ForwardButton { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem ProgressButton { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIWebView WebView { get; set; }
 
 		[Action ("OnActionButtonClick:")]
@@ -35,11 +38,6 @@ namespace SmartWalk.iOS.Views.Common
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (WebView != null) {
-				WebView.Dispose ();
-				WebView = null;
-			}
-
 			if (BackButton != null) {
 				BackButton.Dispose ();
 				BackButton = null;
@@ -48,6 +46,16 @@ namespace SmartWalk.iOS.Views.Common
 			if (ForwardButton != null) {
 				ForwardButton.Dispose ();
 				ForwardButton = null;
+			}
+
+			if (ProgressButton != null) {
+				ProgressButton.Dispose ();
+				ProgressButton = null;
+			}
+
+			if (WebView != null) {
+				WebView.Dispose ();
+				WebView = null;
 			}
 		}
 	}

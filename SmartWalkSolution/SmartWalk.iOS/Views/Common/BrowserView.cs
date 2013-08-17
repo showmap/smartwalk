@@ -6,14 +6,12 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common
 {
     public partial class BrowserView : MvxViewController
     {
         private UIActivityIndicatorView _indicatorView;
-        private UIBarButtonItem _progressBarItem;
 
         public new BrowserViewModel ViewModel
         {
@@ -24,7 +22,8 @@ namespace SmartWalk.iOS.Views.Common
         {
             base.ViewDidLoad();
 
-            InitializeToolBar();
+            InitializeIndicator();
+            UpdateViewTitle();
 
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
@@ -36,12 +35,12 @@ namespace SmartWalk.iOS.Views.Common
             UpdateNavButtonsState();
         }
 
-        private void InitializeToolBar()
+        private void InitializeIndicator()
         {
             _indicatorView = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White) {
                 Frame = new RectangleF(0, 0, 40, 40)
             };
-            _progressBarItem = new UIBarButtonItem(_indicatorView);
+            ProgressButton.CustomView = _indicatorView;
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -67,30 +66,22 @@ namespace SmartWalk.iOS.Views.Common
             ConsoleUtil.LogDisposed(this);
         }
 
-        private void UpdateNavButtonsState()
-        {
-            BackButton.Enabled = WebView.CanGoBack;
-            ForwardButton.Enabled = WebView.CanGoForward;
-        }
-
         private void OnWebViewLoadStarted(object sender, EventArgs e)
         {
             _indicatorView.StartAnimating();
-
-            if (NavigationItem.RightBarButtonItem != _progressBarItem)
-            {
-                NavigationItem.SetRightBarButtonItem(_progressBarItem, true);
-            }
+            _indicatorView.Hidden = false;
 
             UpdateNavButtonsState();
+            UpdateViewTitle();
         }
 
         private void OnWebViewLoadFinished(object sender, EventArgs e)
         {
             _indicatorView.StopAnimating();
-            NavigationItem.SetRightBarButtonItem(null, true);
+            _indicatorView.Hidden = true;
 
             UpdateNavButtonsState();
+            UpdateViewTitle();
         }
 
         partial void OnBackButtonClick(NSObject sender)
@@ -111,6 +102,20 @@ namespace SmartWalk.iOS.Views.Common
         partial void OnActionButtonClick(NSObject sender)
         {
 
+        }
+
+        private void UpdateNavButtonsState()
+        {
+            BackButton.Enabled = WebView.CanGoBack;
+            ForwardButton.Enabled = WebView.CanGoForward;
+        }
+
+        private void UpdateViewTitle()
+        {
+            var pageTitle = WebView.EvaluateJavascript("document.title");
+            NavigationItem.Title = pageTitle != null && pageTitle != string.Empty
+                ? pageTitle
+                    : (WebView.CanGoBack ? null: ViewModel.BrowserURL);
         }
     }
 }

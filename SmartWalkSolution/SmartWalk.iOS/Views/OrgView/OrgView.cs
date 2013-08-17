@@ -1,8 +1,4 @@
-using System;
-using System.ComponentModel;
-using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
