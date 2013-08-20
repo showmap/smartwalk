@@ -36,7 +36,10 @@ namespace SmartWalk.iOS.Views.HomeView
 
         protected override void OnDataContextChanged()
         {
+            OrgImageView.Image = null;
+
             _imageHelper.ImageUrl = DataContext != null ? DataContext.Logo : null;
+
             OrgNameLabel.Text = DataContext != null ? DataContext.Name : null;
         }
     }

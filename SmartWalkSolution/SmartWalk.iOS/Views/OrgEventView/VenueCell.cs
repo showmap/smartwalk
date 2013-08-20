@@ -37,13 +37,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public ICommand NavigateVenueCommand { get; set; }
         public ICommand NavigateVenueOnMapCommand { get; set; }
 
-        public override void PrepareForReuse()
-        {
-            base.PrepareForReuse();
-
-            LogoImageView.Image = null;
-        }
-
         public override void WillMoveToSuperview(UIView newsuper)
         {
             base.WillMoveToSuperview(newsuper);
@@ -64,6 +57,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
+            LogoImageView.Image = null;
+
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Logo : null;
 

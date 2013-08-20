@@ -16,6 +16,9 @@ namespace SmartWalk.iOS.Views.Common
 		MonoTouch.UIKit.UIBarButtonItem BackButton { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIToolbar BottomToolbar { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIBarButtonItem ForwardButton { get; set; }
 
 		[Outlet]
@@ -38,6 +41,11 @@ namespace SmartWalk.iOS.Views.Common
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (BottomToolbar != null) {
+				BottomToolbar.Dispose ();
+				BottomToolbar = null;
+			}
+
 			if (BackButton != null) {
 				BackButton.Dispose ();
 				BackButton = null;

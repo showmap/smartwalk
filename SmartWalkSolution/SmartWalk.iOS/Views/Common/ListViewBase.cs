@@ -140,9 +140,9 @@ namespace SmartWalk.iOS.Views.Common
             if (url != null)
             {
                 _imageFullscreenView = new ImageFullscreenView
-                {
-                    ImageURL = url
-                };
+                    {
+                        ImageURL = url
+                    };
                 _imageFullscreenView.Hidden += OnFullscreenViewHidden;
 
                 _imageFullscreenView.Show();
@@ -154,6 +154,7 @@ namespace SmartWalk.iOS.Views.Common
             if (_imageFullscreenView != null)
             {
                 _imageFullscreenView.Hidden -= OnFullscreenViewHidden;
+                _imageFullscreenView.Hide();
                 _imageFullscreenView.Dispose();
                 _imageFullscreenView = null;
             }
