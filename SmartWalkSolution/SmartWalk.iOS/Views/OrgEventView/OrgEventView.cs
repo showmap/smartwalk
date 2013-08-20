@@ -61,6 +61,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 DisposeToolBar();
                 DisposeGestures();
                 DisposeTableHeader();
+                DisposeSearchDisplayController();
             }
         }
 
@@ -211,6 +212,20 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 .For(p => p.ItemsSource)
                     .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
                     .Apply();
+        }
+
+        // To avoid iOS exception sometimes
+        // http://stackoverflow.com/questions/2758575/how-can-uisearchdisplaycontroller-autorelease-cause-crash-in-a-different-view-co
+        private void DisposeSearchDisplayController()
+        {
+            if (_searchDisplayController != null)
+            {
+                _searchDisplayController.Delegate = null;
+                _searchDisplayController.SearchResultsDelegate = null;
+                _searchDisplayController.SearchResultsDataSource = null;
+                _searchDisplayController.Dispose();
+                _searchDisplayController = null;
+            }
         }
 
         private void InitializeGestures()
