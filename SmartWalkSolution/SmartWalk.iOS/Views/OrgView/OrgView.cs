@@ -56,10 +56,6 @@ namespace SmartWalk.iOS.Views.OrgView
                 OrgEventsTableView.BeginUpdates();
                 OrgEventsTableView.EndUpdates();
             }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentFullscreenImage))
-            {
-                ShowImageFullscreenView(ViewModel.CurrentFullscreenImage);
-            }
         }
 
         private void InitializeToolBar()

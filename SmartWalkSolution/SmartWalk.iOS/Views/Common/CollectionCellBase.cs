@@ -39,10 +39,10 @@ namespace SmartWalk.iOS.Views.Common
         {
         }
 
-        protected override void Dispose(bool disposing)
+        /*protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
-        }
+        }*/
     }
 }

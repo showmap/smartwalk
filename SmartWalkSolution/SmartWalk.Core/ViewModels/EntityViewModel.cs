@@ -108,7 +108,7 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
-        public ICommand ShowFullscreenImageCommand
+        public ICommand ShowHideFullscreenImageCommand
         {
             get
             {

@@ -22,6 +22,9 @@ namespace SmartWalk.iOS.Views.Common
             ModalTransitionStyle = UIModalTransitionStyle.CrossDissolve;
         }
 
+        public event EventHandler Shown;
+        public event EventHandler Hidden;
+
         public string ImageURL
         {
             get
@@ -90,6 +93,11 @@ namespace SmartWalk.iOS.Views.Common
                 UIApplication.SharedApplication.SetStatusBarHidden(
                     true,
                     UIStatusBarAnimation.Slide);
+
+                if (Shown != null)
+                {
+                    Shown(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -102,14 +110,12 @@ namespace SmartWalk.iOS.Views.Common
                     UIStatusBarAnimation.Slide);
 
                 DismissViewController(true, null);
-            }
 
-            NSTimer.CreateScheduledTimer(
-                TimeSpan.FromSeconds(0.5), 
-                new NSAction(() => {
-                    ImageURL = null;
-                    ImageView.Image = null;
-                }));
+                if (Hidden != null)
+                {
+                    Hidden(this, EventArgs.Empty);
+                }
+            }
         }
 
         // HACK: to trigger scrollview layoutSubviews on rotation

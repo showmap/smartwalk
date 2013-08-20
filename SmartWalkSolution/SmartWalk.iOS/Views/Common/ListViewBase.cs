@@ -59,6 +59,7 @@ namespace SmartWalk.iOS.Views.Common
 
                 DisposeGesture();
                 DisposeRefreshControl();
+                DisposeFullscreenView();
             }
         }
 
@@ -79,17 +80,6 @@ namespace SmartWalk.iOS.Views.Common
 
         protected virtual void OnViewModelPropertyChanged(string propertyName)
         {
-        }
-
-        protected void ShowImageFullscreenView(string url)
-        {
-            if (_imageFullscreenView == null)
-            {
-                _imageFullscreenView = new ImageFullscreenView();
-            }
-
-            _imageFullscreenView.ImageURL = url;
-            _imageFullscreenView.Show();
         }
 
         protected override void Dispose(bool disposing)
@@ -140,13 +130,42 @@ namespace SmartWalk.iOS.Views.Common
             }
         }
 
+        private void ShowHideImageFullscreenView(string url)
+        {
+            if (_imageFullscreenView != null)
+            {
+                DisposeFullscreenView();
+            }
+
+            if (url != null)
+            {
+                _imageFullscreenView = new ImageFullscreenView
+                {
+                    ImageURL = url
+                };
+                _imageFullscreenView.Hidden += OnFullscreenViewHidden;
+
+                _imageFullscreenView.Show();
+            }
+        }
+
+        private void DisposeFullscreenView()
+        {
+            if (_imageFullscreenView != null)
+            {
+                _imageFullscreenView.Hidden -= OnFullscreenViewHidden;
+                _imageFullscreenView.Dispose();
+                _imageFullscreenView = null;
+            }
+        }
+
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var fullscreenProvider = ViewModel as IFullscreenImageProvider;
             if (fullscreenProvider != null &&
                 e.PropertyName == fullscreenProvider.GetPropertyName(p => p.CurrentFullscreenImage))
             {
-                ShowImageFullscreenView(fullscreenProvider.CurrentFullscreenImage);
+                ShowHideImageFullscreenView(fullscreenProvider.CurrentFullscreenImage);
             }
 
             OnViewModelPropertyChanged(e.PropertyName);
@@ -163,6 +182,16 @@ namespace SmartWalk.iOS.Views.Common
             if (ViewModel.RefreshCommand.CanExecute(null))
             {
                 ViewModel.RefreshCommand.Execute(null);
+            }
+        }
+
+        private void OnFullscreenViewHidden(object sender, EventArgs e)
+        {
+            var fullscreenProvider = ViewModel as IFullscreenImageProvider;
+            if (fullscreenProvider != null &&
+                fullscreenProvider.ShowHideFullscreenImageCommand.CanExecute(null))
+            {
+                fullscreenProvider.ShowHideFullscreenImageCommand.Execute(null);
             }
         }
     }
