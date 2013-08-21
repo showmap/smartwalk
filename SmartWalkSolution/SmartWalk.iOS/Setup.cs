@@ -19,7 +19,6 @@ namespace SmartWalk.iOS
 		protected override IMvxApplication CreateApp()
 		{
             Mvx.ConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
-            Mvx.ConstructAndRegisterSingleton<ICacheService, CacheService>();
 
             return new SmartWalkApplication();
 		}

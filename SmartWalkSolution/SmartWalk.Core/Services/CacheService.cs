@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using SmartWalk.Core.Services;
 
-namespace SmartWalk.iOS.Services
+namespace SmartWalk.Core.Services
 {
     public class CacheService : ICacheService
     {
@@ -14,7 +14,7 @@ namespace SmartWalk.iOS.Services
         public CacheService()
         {
             var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            _cacheFolderPath = Path.Combine(documents, "..", "Library", "Caches");
+            _cacheFolderPath = Path.Combine(documents, "..", "Library", "Caches", "SmartWalkData.Cache");
         }
 
         public string GetString(string key)

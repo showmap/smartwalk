@@ -89,5 +89,7 @@
     <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="ViewModels\Interfaces\IRefreshableViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IFullscreenImageProvider.cs" />
+    <Compile Include="Utils\Reachability.cs" />
+    <Compile Include="Services\CacheService.cs" />
   </ItemGroup>
 </Project>

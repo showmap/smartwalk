@@ -178,7 +178,7 @@ namespace SmartWalk.Core.ViewModels
                         {
                             if (ex == null)
                             {
-                                OrgInfos = location.OrgInfos;
+                                OrgInfos = location != null ? location.OrgInfos : null;
 
                                 if (RefreshCompleted != null)
                                 {

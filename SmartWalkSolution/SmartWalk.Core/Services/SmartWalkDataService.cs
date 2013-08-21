@@ -2,12 +2,15 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.Core.Services
 {
     public class SmartWalkDataService : ISmartWalkDataService
     {
-        private const string TempURL = @"TempXML/Local/san francisco bay area/";
+        private const string host = "smartwalk.me";
+        private const string TempURL = "http://" + host + "/data/us/ca/sfbay/";
+
         private readonly ICacheService _cacheService;
 
         public SmartWalkDataService(ICacheService cacheService)
@@ -21,8 +24,9 @@ namespace SmartWalk.Core.Services
             {
                 var key = name;
                 var xml = default(XDocument);
+                var isConnected = GetIsConnected();
 
-                if (source == DataSource.Cache)
+                if (!isConnected || source == DataSource.Cache)
                 {
                     var data = _cacheService.GetString(key);
                     if (data != null)
@@ -31,7 +35,7 @@ namespace SmartWalk.Core.Services
                     }
                 }
 
-                if (xml == null)
+                if (isConnected && xml == null)
                 {
                     xml = XDocument.Load(TempURL + "index.xml");
                 }
@@ -52,6 +56,8 @@ namespace SmartWalk.Core.Services
                                     }).ToArray()
                         };
 
+                    _cacheService.SetString(key, xml.ToString());
+
                     resultHandler(result, null);
                 }
                 else
@@ -71,8 +77,9 @@ namespace SmartWalk.Core.Services
             {
                 var key = orgId;
                 var xml = default(XDocument);
+                var isConnected = GetIsConnected();
 
-                if (source == DataSource.Cache)
+                if (!isConnected || source == DataSource.Cache)
                 {
                     var data = _cacheService.GetString(key);
                     if (data != null)
@@ -81,7 +88,7 @@ namespace SmartWalk.Core.Services
                     }
                 }
 
-                if (xml == null)
+                if (isConnected && xml == null)
                 {
                     xml = XDocument.Load(TempURL + orgId + "/index.xml");
                 }
@@ -109,6 +116,8 @@ namespace SmartWalk.Core.Services
                                 HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
                             }).ToArray();
 
+                    _cacheService.SetString(key, xml.ToString());
+
                     resultHandler(result, null);
                 }
                 else
@@ -128,8 +137,9 @@ namespace SmartWalk.Core.Services
             {
                 var key = orgId + "-" + String.Format("{0:yyyy-MM-dd}", date);
                 var xml = default(XDocument);
+                var isConnected = GetIsConnected();
 
-                if (source == DataSource.Cache)
+                if (!isConnected || source == DataSource.Cache)
                 {
                     var data = _cacheService.GetString(key);
                     if (data != null)
@@ -138,7 +148,7 @@ namespace SmartWalk.Core.Services
                     }
                 }
 
-                if (xml == null)
+                if (isConnected && xml == null)
                 {
                     xml = XDocument.Load(TempURL + orgId + "/events/" + key + ".xml");
                 }
@@ -158,55 +168,68 @@ namespace SmartWalk.Core.Services
             }
         }
 
-        private OrgEvent CreateOrgEvent(string orgId, DateTime date, XContainer xml)
+        private static bool GetIsConnected()
         {
-            return new OrgEvent 
-                {
-                    Info = new OrgEventInfo
-                            {
-                                OrgId = orgId,
-                                Date = date
-                            },
-                    Venues = xml.Descendants("venue")
-                        .Select(venue => new Venue 
-                            {
-                                Number = venue.Attribute("number") != null 
-                                    ? int.Parse(venue.Attribute("number").Value) : 0,
-                                    Info = new EntityInfo 
-                                {
-                                    Name = venue.Attribute("name").ValueOrNull(),
-                                    Logo = venue.Attribute("logo").ValueOrNull(),
-                                    Addresses = venue.Descendants("point")
-                                        .Select(point => CreateAddress(
-                                            point.Attribute("coordinates").ValueOrNull(),
-                                            point.ValueOrNull()))
-                                        .ToArray(),
-                                    Contact = CreateContact(venue)
-                                },
-                                Description = venue.Element("description").ValueOrNull(),
-                                Shows = venue.Descendants("show")
-                                    .Select(show => {
-                                        var times = ParseShowTime(show.Attribute("start").ValueOrNull(),
-                                            show.Attribute("end").ValueOrNull(), date);
-                                        return new VenueShow
-                                            {
-                                                Start = times.Item1,
-                                                End = times.Item2,
-                                                Description = show.Value,
-                                                Logo = show.Attribute("logo").ValueOrNull(),
-                                                Site = show.Attribute("web") != null 
-                                                    ? new WebSiteInfo
-                                                    {
-                                                        URL = show.Attribute("web").ValueOrNull()
-                                                    }
-                                                    : null
-                                            };
-                                        }).ToArray()
-                            }).ToArray()
-                };
+            return Reachability.IsHostReachable(host);
         }
 
-        private AddressInfo CreateAddress(string coordinates, string address)
+        private static OrgEvent CreateOrgEvent(string orgId, DateTime date, XContainer xml)
+        {
+            return new OrgEvent {
+                Info = new OrgEventInfo
+                    {
+                        OrgId = orgId,
+                        Date = date
+                    },
+                Venues = xml.Descendants("venue")
+                        .Select(venue => 
+                        {
+                            int number;
+                            int.TryParse(venue.Attribute("number") != null 
+                                     ? venue.Attribute("number").Value 
+                                     : "0", out number);
+
+                            var result = new Venue 
+                                {
+                                    Number = number,
+                                    Info = new EntityInfo 
+                                    {
+                                        Name = venue.Attribute("name").ValueOrNull(),
+                                        Logo = venue.Attribute("logo").ValueOrNull(),
+                                        Addresses = venue.Descendants("point")
+                                            .Select(point => CreateAddress(
+                                                point.Attribute("coordinates").ValueOrNull(),
+                                                point.ValueOrNull()))
+                                            .ToArray(),
+                                        Contact = CreateContact(venue)
+                                    },
+                                    Description = venue.Element("description").ValueOrNull(),
+                                    Shows = venue.Descendants("show")
+                                        .Select(show => {
+                                            var times = ParseShowTime(show.Attribute("start").ValueOrNull(),
+                                                show.Attribute("end").ValueOrNull(), date);
+                                            return new VenueShow
+                                                {
+                                                    Start = times.Item1,
+                                                    End = times.Item2,
+                                                    Description = show.Value,
+                                                    Logo = show.Attribute("logo").ValueOrNull(),
+                                                    Site = show.Attribute("web") != null 
+                                                        ? new WebSiteInfo
+                                                        {
+                                                            URL = show.Attribute("web").ValueOrNull()
+                                                        }
+                                                        : null
+                                                };
+                                            }).ToArray()
+                                };
+                            
+                            return result;
+                        }).ToArray()
+            };
+        }
+
+        private static AddressInfo CreateAddress(string coordinates, string address)
         {
             var latitude = default(double);
             var longitude = default(double);
@@ -230,7 +253,7 @@ namespace SmartWalk.Core.Services
                 };
         }
 
-        private ContactInfo CreateContact(XContainer entity)
+        private static ContactInfo CreateContact(XContainer entity)
         {
             return new ContactInfo
                 {
@@ -254,7 +277,7 @@ namespace SmartWalk.Core.Services
                 };
         }
 
-        private Tuple<DateTime, DateTime> ParseShowTime(string start, string end, DateTime eventDate)
+        private static Tuple<DateTime, DateTime> ParseShowTime(string start, string end, DateTime eventDate)
         {
             DateTime parsedStartTime;
             if (start != null && DateTime.TryParse(start, out parsedStartTime))
