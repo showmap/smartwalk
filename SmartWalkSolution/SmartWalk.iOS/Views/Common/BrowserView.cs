@@ -55,7 +55,14 @@ namespace SmartWalk.iOS.Views.Common
         {
             if (ViewModel.BrowserURL != null)
             {
-                var request = new NSUrlRequest(new NSUrl(ViewModel.BrowserURL));
+                var url = ViewModel.BrowserURL;
+                if (!url.StartsWith(@"http://", true, null) ||
+                    !url.StartsWith(@"https://", true, null))
+                {
+                    url = "http://" + url;
+                }
+
+                var request = new NSUrlRequest(new NSUrl(url));
                 WebView.LoadRequest(request);
             }
         }

@@ -197,10 +197,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             base.PrepareForReuse();
 
-            _imageView.Image = null;
             _proportionalImageHeight = DefaultImageHeight;
-            ImageHeightUpdatedHandler = null;
-            _mapView.RemoveAnnotations(_mapView.Annotations);
         }
 
         public override void LayoutSubviews()
@@ -238,6 +235,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             PopulateScrollView();
+
+            _imageView.Image = null;
+            _mapView.RemoveAnnotations(_mapView.Annotations);
 
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Entity.Info.Logo : null;
