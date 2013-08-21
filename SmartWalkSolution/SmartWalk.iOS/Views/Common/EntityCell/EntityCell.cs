@@ -400,8 +400,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             if (_bottomGradient == null) return;
 
-            // TODO: It doesn't work on rotation
-            _bottomGradient.Frame = BottomGradientView.Bounds;
+            // HACK: getting width from Cell's bounds, because Label's ones aren't updated yet
+            var frame = _bottomGradient.Frame;
+            frame.Width = Bounds.Width - Gap * 2;
+            _bottomGradient.Frame = frame;
 
             if (DataContext != null && 
                 !DataContext.IsDescriptionExpanded)

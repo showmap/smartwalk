@@ -82,6 +82,10 @@ namespace SmartWalk.iOS.Views.Common
         {
         }
 
+        protected virtual void OnViewModelRefreshed()
+        {
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -176,6 +180,8 @@ namespace SmartWalk.iOS.Views.Common
         {
             UpdateViewTitle();
             InvokeOnMainThread(_refreshControl.EndRefreshing);
+
+            OnViewModelRefreshed();
         }
 
         private void OnRefreshControlValueChanged(object sender, EventArgs e)

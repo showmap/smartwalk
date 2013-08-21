@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;

@@ -1,9 +1,8 @@
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -13,8 +12,6 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
-using System;
-using System.Windows.Input;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -111,14 +108,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
-            {
-                if (ViewModel.Mode == OrgEventViewMode.Map)
-                {
-                    InitializeMapView();
-                }
-            }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
+            if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
                 UpdateViewState();
             }
@@ -151,6 +141,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
                 SearchDisplayController.SearchResultsTableView.BeginUpdates();
                 SearchDisplayController.SearchResultsTableView.EndUpdates();
+            }
+        }
+
+        protected override void OnViewModelRefreshed()
+        {
+            _isMapViewInitialized = false;
+
+            if (ViewModel.Mode == OrgEventViewMode.Map)
+            {
+                InitializeMapView();
             }
         }
 
@@ -290,7 +290,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 var annotation = VenuesMapView.Annotations
                 .OfType<VenueAnnotation>()
-                    .FirstOrDefault(an => an.Venue == venue);
+                    .FirstOrDefault(an => Equals(an.Venue, venue));
 
                 if (annotation != null)
                 {
