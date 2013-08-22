@@ -3,6 +3,12 @@ using System.Linq;
 using System.Xml.Linq;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
+using System.Net;
+using MonoTouch.Foundation;
+using MonoTouch.CoreFoundation;
+using System.Text;
+using System.Xml;
+using System.IO;
 
 namespace SmartWalk.Core.Services
 {
@@ -18,153 +24,122 @@ namespace SmartWalk.Core.Services
             _cacheService = cacheService;
         }
 
-        public void GetLocation(string name, DataSource source, Action<Location, Exception> resultHandler)
+        public void GetLocation(
+            string name,
+            DataSource source,
+            Action<Location, Exception> resultHandler)
         {
-            try
-            {
-                var key = name;
-                var xml = default(XDocument);
-                var isConnected = GetIsConnected();
+            GetGenericContract<Location>(
+                name,
+                TempURL + "index.xml",
+                CreateLocation,
+                source,
+                resultHandler);
+        }
 
-                if (!isConnected || source == DataSource.Cache)
+        public void GetOrg(
+            string orgId,
+            DataSource source,
+            Action<Org, Exception> resultHandler)
+        {
+            GetGenericContract<Org>(
+                orgId,
+                TempURL + orgId + "/index.xml",
+                new Func<XDocument, Org>(doc => CreateOrg(orgId, doc)),
+                source,
+                resultHandler);
+        }
+
+        public void GetOrgEvent(
+            string orgId,
+            DateTime date,
+            DataSource source,
+            Action<OrgEvent, Exception> resultHandler)
+        {
+            var key = orgId + "-" + String.Format("{0:yyyy-MM-dd}", date);
+
+            GetGenericContract<OrgEvent>(
+                key,
+                TempURL + orgId + "/events/" + key + ".xml",
+                new Func<XDocument, OrgEvent>(doc => CreateOrgEvent(orgId, date, doc)),
+                source,
+                resultHandler);
+        }
+
+        private void GetGenericContract<T>(
+            string key,
+            string url,
+            Func<XDocument, T> createContract,
+            DataSource source, Action<T, Exception> resultHandler)
+                where T : class
+        {
+            var xml = default(XDocument);
+            var isConnected = GetIsConnected();
+            var processXmlHandler = new Action<XDocument>(doc => {
+                if (doc != null)
                 {
-                    var data = _cacheService.GetString(key);
-                    if (data != null)
-                    {
-                        xml = XDocument.Parse(data);
-                    }
-                }
+                    var contract = createContract(doc);
 
-                if (isConnected && xml == null)
-                {
-                    xml = XDocument.Load(TempURL + "index.xml");
-                }
+                    _cacheService.SetString(key, doc.ToString());
 
-                if (xml != null)
-                {
-                    var result = new Location
-                        {
-                            Name = xml.Root.Attribute("name").ValueOrNull(),
-                            Logo = xml.Root.Attribute("logo").ValueOrNull(),
-                            OrgInfos = xml.Descendants("organization").Select(
-                                org => 
-                                    new EntityInfo 
-                                    {
-                                        Id = org.Attribute("id").ValueOrNull(),
-                                        Name = org.Attribute("name").ValueOrNull(),
-                                        Logo = org.Attribute("logo").ValueOrNull()
-                                    }).ToArray()
-                        };
-
-                    _cacheService.SetString(key, xml.ToString());
-
-                    resultHandler(result, null);
+                    resultHandler(contract, null);
                 }
                 else
                 {
                     resultHandler(null, null);
                 }
-            }
-            catch (Exception ex)
-            {
-                resultHandler(null, ex);
-            }
-        }
+            });
 
-        public void GetOrg(string orgId, DataSource source, Action<Org, Exception> resultHandler)
-        {
-            try
+            if (!isConnected || source == DataSource.Cache)
             {
-                var key = orgId;
-                var xml = default(XDocument);
-                var isConnected = GetIsConnected();
-
-                if (!isConnected || source == DataSource.Cache)
+                var data = _cacheService.GetString(key);
+                if (data != null)
                 {
-                    var data = _cacheService.GetString(key);
-                    if (data != null)
+                    try
                     {
                         xml = XDocument.Parse(data);
                     }
+                    catch (Exception xmlEx)
+                    {
+                        resultHandler(null, xmlEx);
+                        return;
+                    }
                 }
+            }
 
-                if (isConnected && xml == null)
-                {
-                    xml = XDocument.Load(TempURL + orgId + "/index.xml");
-                }
-
-                if (xml != null)
-                {
-                    var result = new Org
+            if (isConnected && xml == null)
+            {
+                DownloadString(
+                    url,
+                    (result, ex) =>
+                    {
+                    if (ex == null && result != null)
                         {
-                            Info = new EntityInfo 
-                                {
-                                    Id = orgId,
-                                    Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
-                                    Logo = xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null,
-                                    Contact = CreateContact(xml)
-                                },
-                            Description = xml.Root != null ? xml.Root.Element("description").ValueOrNull() : null,
-                        };
+                            XDocument xmlDoc;
 
-                    result.EventInfos = xml.Descendants("event")
-                        .Select(org => 
-                            new OrgEventInfo 
+                            try
                             {
-                                OrgId = orgId,
-                                Date = DateTime.Parse(org.Attribute("date").ValueOrNull()),
-                                HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
-                            }).ToArray();
+                                xmlDoc = XDocument.Load(
+                                    XmlReader.Create(
+                                        new MemoryStream(result)));
+                            }
+                            catch (Exception xmlEx)
+                            {
+                                resultHandler(null, xmlEx);
+                                return;
+                            }
 
-                    _cacheService.SetString(key, xml.ToString());
-
-                    resultHandler(result, null);
-                }
-                else
-                {
-                    resultHandler(null, null);
-                }
+                            processXmlHandler(xmlDoc);
+                        }
+                        else
+                        {
+                            resultHandler(null, ex);
+                        }
+                    });
             }
-            catch (Exception ex)
+            else
             {
-                resultHandler(null, ex);
-            }
-        }
-
-        public void GetOrgEvent(string orgId, DateTime date, DataSource source, Action<OrgEvent, Exception> resultHandler)
-        {
-            try
-            {
-                var key = orgId + "-" + String.Format("{0:yyyy-MM-dd}", date);
-                var xml = default(XDocument);
-                var isConnected = GetIsConnected();
-
-                if (!isConnected || source == DataSource.Cache)
-                {
-                    var data = _cacheService.GetString(key);
-                    if (data != null)
-                    {
-                        xml = XDocument.Parse(data);
-                    }
-                }
-
-                if (isConnected && xml == null)
-                {
-                    xml = XDocument.Load(TempURL + orgId + "/events/" + key + ".xml");
-                }
-
-                if (xml != null)
-                {
-                    var result = CreateOrgEvent(orgId, date, xml);
-
-                    _cacheService.SetString(key, xml.ToString());
-
-                    resultHandler(result, null);
-                }
-            }
-            catch (Exception ex)
-            {
-                resultHandler(null, ex);
+                processXmlHandler(xml);
             }
         }
 
@@ -173,38 +148,98 @@ namespace SmartWalk.Core.Services
             return Reachability.IsHostReachable(host);
         }
 
+        private static void DownloadString(string url, Action<byte[], Exception> resultHandler)
+        {
+            var client = new WebClient();
+            client.DownloadDataCompleted += (sender, e) => 
+                InvokeOnMainThread(() => resultHandler(e.Result, e.Error));
+            client.DownloadDataAsync(new Uri(url));
+        }
+
+        private static void InvokeOnMainThread(Action handler)
+        {
+            using (var obj = new NSObject())
+            {
+                obj.InvokeOnMainThread(new NSAction(handler));
+            }
+        }
+
+        private static Location CreateLocation(XDocument xml)
+        {
+            var result = new Location
+            {
+                Name = xml.Root.Attribute("name").ValueOrNull(),
+                Logo = xml.Root.Attribute("logo").ValueOrNull(),
+                OrgInfos = xml.Descendants("organization").Select(
+                    org => 
+                    new EntityInfo 
+                    {
+                        Id = org.Attribute("id").ValueOrNull(),
+                        Name = org.Attribute("name").ValueOrNull(),
+                        Logo = org.Attribute("logo").ValueOrNull()
+                    }).ToArray()
+            };
+            return result;
+        }
+
+        private static Org CreateOrg(string orgId, XDocument xml)
+        {
+            var result = new Org
+                {
+                    Info = new EntityInfo 
+                    {
+                        Id = orgId,
+                        Name = xml.Root != null ? xml.Root.Attribute("name").ValueOrNull() : null,
+                        Logo = xml.Root != null ? xml.Root.Attribute("logo").ValueOrNull() : null,
+                        Contact = CreateContact(xml)
+                    },
+                    Description = xml.Root != null ? xml.Root.Element("description").ValueOrNull() : null,
+                };
+
+            result.EventInfos = xml.Descendants("event")
+                .Select(org => 
+                        new OrgEventInfo 
+                        {
+                    OrgId = orgId,
+                    Date = DateTime.Parse(org.Attribute("date").ValueOrNull()),
+                    HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
+                }).ToArray();
+
+            return result;
+        }
+
         private static OrgEvent CreateOrgEvent(string orgId, DateTime date, XContainer xml)
         {
-            return new OrgEvent {
+            var result = new OrgEvent {
                 Info = new OrgEventInfo
                     {
                         OrgId = orgId,
                         Date = date
                     },
                 Venues = xml.Descendants("venue")
-                        .Select(venue => 
+                        .Select(v => 
                         {
                             int number;
-                            int.TryParse(venue.Attribute("number") != null 
-                                     ? venue.Attribute("number").Value 
+                            int.TryParse(v.Attribute("number") != null 
+                                     ? v.Attribute("number").Value 
                                      : "0", out number);
 
-                            var result = new Venue 
+                            var venue = new Venue 
                                 {
                                     Number = number,
                                     Info = new EntityInfo 
                                     {
-                                        Name = venue.Attribute("name").ValueOrNull(),
-                                        Logo = venue.Attribute("logo").ValueOrNull(),
-                                        Addresses = venue.Descendants("point")
+                                        Name = v.Attribute("name").ValueOrNull(),
+                                        Logo = v.Attribute("logo").ValueOrNull(),
+                                        Addresses = v.Descendants("point")
                                             .Select(point => CreateAddress(
                                                 point.Attribute("coordinates").ValueOrNull(),
                                                 point.ValueOrNull()))
                                             .ToArray(),
-                                        Contact = CreateContact(venue)
+                                        Contact = CreateContact(v)
                                     },
-                                    Description = venue.Element("description").ValueOrNull(),
-                                    Shows = venue.Descendants("show")
+                                    Description = v.Element("description").ValueOrNull(),
+                                    Shows = v.Descendants("show")
                                         .Select(show => {
                                             var times = ParseShowTime(show.Attribute("start").ValueOrNull(),
                                                 show.Attribute("end").ValueOrNull(), date);
@@ -224,9 +259,10 @@ namespace SmartWalk.Core.Services
                                             }).ToArray()
                                 };
                             
-                            return result;
+                            return venue;
                         }).ToArray()
             };
+            return result;
         }
 
         private static AddressInfo CreateAddress(string coordinates, string address)
@@ -245,17 +281,18 @@ namespace SmartWalk.Core.Services
                 }
             }
 
-            return new AddressInfo 
+            var result = new AddressInfo 
                 {
                     Latitude = latitude,
                     Longitude = longitude,
                     Address = address,
                 };
+            return result;
         }
 
         private static ContactInfo CreateContact(XContainer entity)
         {
-            return new ContactInfo
+            var result = new ContactInfo
                 {
                     Phones = entity.Descendants("phone")
                         .Select(phone => new PhoneInfo 
@@ -275,6 +312,7 @@ namespace SmartWalk.Core.Services
                                 URL = web.ValueOrNull()
                             }).ToArray(),
                 };
+            return result;
         }
 
         private static Tuple<DateTime, DateTime> ParseShowTime(string start, string end, DateTime eventDate)

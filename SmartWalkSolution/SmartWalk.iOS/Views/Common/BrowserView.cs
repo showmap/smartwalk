@@ -56,7 +56,7 @@ namespace SmartWalk.iOS.Views.Common
             if (ViewModel.BrowserURL != null)
             {
                 var url = ViewModel.BrowserURL;
-                if (!url.StartsWith(@"http://", true, null) ||
+                if (!url.StartsWith(@"http://", true, null) &&
                     !url.StartsWith(@"https://", true, null))
                 {
                     url = "http://" + url;

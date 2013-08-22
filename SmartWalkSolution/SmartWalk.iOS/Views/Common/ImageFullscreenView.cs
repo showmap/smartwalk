@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.Common
         private UITapGestureRecognizer _doubleTapRecognizer;
         private UISwipeGestureRecognizer _swipeRecognizer;
 
-        public ImageFullscreenView() : base("ImageFullscreenController", null)
+        public ImageFullscreenView() : base("ImageFullscreenView", null)
         {
             WantsFullScreenLayout = true;
             ModalTransitionStyle = UIModalTransitionStyle.CrossDissolve;
