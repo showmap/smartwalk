@@ -33,7 +33,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private readonly MvxImageViewLoader _imageHelper;
         private MKMapView _mapView;
-        private UIProgressImageView _imageView;
+        private ProgressImageView _imageView;
         private ExtendedCollectionView _collectionView;
 
         private UITapGestureRecognizer _descriptionTapGesture;
@@ -67,7 +67,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 UserInteractionEnabled = false
             };
 
-            _imageView = new UIProgressImageView {
+            _imageView = new ProgressImageView {
                 ContentMode = UIViewContentMode.ScaleAspectFit,
                 UserInteractionEnabled = true
             };

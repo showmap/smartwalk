@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
@@ -8,10 +7,11 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
 using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
-    public class OrgTableSource : MvxTableViewSource
+    public class OrgTableSource : ProgressTableSource
     {
         private readonly OrgViewModel _viewModel;
 
@@ -21,13 +21,14 @@ namespace SmartWalk.iOS.Views.OrgView
             _viewModel = viewModel;
 
             tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderCell.Nib, GroupHeaderCell.Key);
+            tableView.RegisterNibForCellReuse(ProgressCell.Nib, ProgressCell.Key);
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
         }
 
         public GroupContainer[] GroupItemsSource
         {
-            get { return (GroupContainer[])ItemsSource;}
+            get { return (GroupContainer[])ItemsSource; }
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
@@ -41,7 +42,6 @@ namespace SmartWalk.iOS.Views.OrgView
             }
 
             TableView.DeselectRow(indexPath, false);
-
         }
 
         public override float GetHeightForHeader(UITableView tableView, int section)
@@ -70,22 +70,28 @@ namespace SmartWalk.iOS.Views.OrgView
                 return 50.0f;
             }
 
+            if (IsProgressVisible)
+            {
+                return tableView.Frame.Height;
+            }
+
+
             throw new Exception("There is an unsupported type in the list.");
         }
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return GroupItemsSource != null ? GroupItemsSource.Count() : 0;
+            return IsProgressVisible ? 1 : (GroupItemsSource != null ? GroupItemsSource.Count() : 0);
         }
 
         public override int RowsInSection(UITableView tableview, int section)
         {
-            return GroupItemsSource != null ? GroupItemsSource[section].Count : 0;
+            return IsProgressVisible ? 1 : (GroupItemsSource != null ? GroupItemsSource[section].Count : 0);
         }
 
         public override string TitleForHeader(UITableView tableView, int section)
         {
-            return GroupItemsSource != null ? GroupItemsSource[section].Key : null;
+            return IsProgressVisible ? null : (GroupItemsSource != null ? GroupItemsSource[section].Key : null);
         }
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
@@ -111,6 +117,11 @@ namespace SmartWalk.iOS.Views.OrgView
         {
             var cell = default(UITableViewCell);
 
+            if (IsProgressVisible)
+            {
+                cell = tableView.DequeueReusableCell(ProgressCell.Key, indexPath);
+            }
+
             var entityCellContext = item as IEntityCellContext;
             if (entityCellContext != null)
             {
@@ -134,7 +145,7 @@ namespace SmartWalk.iOS.Views.OrgView
 
         protected override object GetItemAt(NSIndexPath indexPath)
         {
-            return GroupItemsSource[indexPath.Section][indexPath.Row];
+            return !IsProgressVisible ? GroupItemsSource[indexPath.Section][indexPath.Row] : null;
         }
 
         protected override void Dispose(bool disposing)

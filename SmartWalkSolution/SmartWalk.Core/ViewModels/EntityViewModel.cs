@@ -5,7 +5,7 @@ using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public abstract class EntityViewModel : MvxViewModel, IFullscreenImageProvider
+    public abstract class EntityViewModel : ProgressViewModel, IFullscreenImageProvider
     {
         private Entity _entity;
         private bool _isDescriptionExpanded;

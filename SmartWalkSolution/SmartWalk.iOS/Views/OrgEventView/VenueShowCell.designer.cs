@@ -46,7 +46,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
 
 		[Outlet]
-		SmartWalk.iOS.Controls.UIProgressImageView ThumbImageView { get; set; }
+		SmartWalk.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

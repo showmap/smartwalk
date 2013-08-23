@@ -151,9 +151,26 @@ namespace SmartWalk.Core.Services
         private static void DownloadString(string url, Action<byte[], Exception> resultHandler)
         {
             var client = new WebClient();
-            client.DownloadDataCompleted += (sender, e) => 
-                InvokeOnMainThread(() => resultHandler(e.Result, e.Error));
+            client.DownloadDataCompleted += (s, e) => 
+                InvokeOnMainThread(() => 
+                    HoldOnABit(() => 
+                        resultHandler(e.Result, e.Error)));
             client.DownloadDataAsync(new Uri(url));
+        }
+
+        /// <summary>
+        /// A debug only trick to simulate slower network connection,
+        /// for testing loading progress indication.
+        /// </summary>
+        private static void HoldOnABit(Action handler)
+        {
+#if DEBUG
+            NSTimer.CreateScheduledTimer(
+                TimeSpan.FromSeconds(2), 
+                new NSAction(handler));
+#else
+            handler();
+#endif
         }
 
         private static void InvokeOnMainThread(Action handler)

@@ -119,6 +119,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
                 .Apply();
 
+            this.CreateBinding(tableSource)
+                .For(p => p.IsLoading)
+                .To((OrgEventViewModel vm) => vm.IsLoading)
+                .Apply();
+
             return tableSource;
         }
 

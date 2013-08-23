@@ -7,7 +7,7 @@ using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class OrgEventViewModel : MvxViewModel, IRefreshableViewModel, IFullscreenImageProvider
+    public class OrgEventViewModel : ProgressViewModel, IRefreshableViewModel, IFullscreenImageProvider
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
@@ -301,12 +301,16 @@ namespace SmartWalk.Core.ViewModels
         {
             if (_parameters != null)
             {
+                IsLoading = true;
+
                 _dataService.GetOrgEvent(
                     _parameters.OrgId, 
                     _parameters.Date, 
                     DataSource.Server, 
                     (orgEvent, ex) => 
                 {
+                    IsLoading = false;
+
                     if (ex == null)
                     {
                         OrgEvent = orgEvent;

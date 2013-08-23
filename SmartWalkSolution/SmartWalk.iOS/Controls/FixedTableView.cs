@@ -7,10 +7,10 @@ using SmartWalk.Core.Utils;
 namespace SmartWalk.iOS.Controls
 {
     // HACK: taken from http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
-    [Register("FixedUITableView")]
-    public class FixedUITableView : UITableView
+    [Register("FixedTableView")]
+    public class FixedTableView : UITableView
     {
-        public FixedUITableView(IntPtr handle) : base(handle)
+        public FixedTableView(IntPtr handle) : base(handle)
         {
         }
 

@@ -91,5 +91,6 @@
     <Compile Include="ViewModels\Interfaces\IFullscreenImageProvider.cs" />
     <Compile Include="Utils\Reachability.cs" />
     <Compile Include="Services\CacheService.cs" />
+    <Compile Include="ViewModels\ProgressViewModel.cs" />
   </ItemGroup>
 </Project>

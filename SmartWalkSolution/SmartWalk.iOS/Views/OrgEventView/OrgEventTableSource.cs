@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Linq;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -27,6 +28,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             UseAnimations = true;
 
             tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
+            tableView.RegisterNibForCellReuse(ProgressCell.Nib, ProgressCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             tableView.RegisterNibForHeaderFooterViewReuse(VenueCell.Nib, VenueCell.Key);
         }
@@ -73,7 +75,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return _viewModel.IsGroupedByLocation ? 80f : 0;
+            return !IsProgressVisible && _viewModel.IsGroupedByLocation ? 80f : 0;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -90,18 +92,25 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return height;
             }
 
+            if (IsProgressVisible)
+            {
+                return tableView.Frame.Height;
+            }
+
             return 35f;
         }
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return _viewModel.IsGroupedByLocation
+            return !IsProgressVisible && _viewModel.IsGroupedByLocation
                 ? (VenueItemsSource != null ? VenueItemsSource.Count() : 0)
                 : 1;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
         {
+            if (IsProgressVisible) return 1;
+
             if (_viewModel.IsGroupedByLocation)
             {
                 var emptyRow = IsSearchSource &&
@@ -122,9 +131,14 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
+        public override string TitleForHeader(UITableView tableView, int section)
+        {
+            return null;
+        }
+
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
-            if (_viewModel.IsGroupedByLocation)
+            if (!IsProgressVisible && _viewModel.IsGroupedByLocation)
             {
                 var headerView = (VenueCell)tableView.DequeueReusableHeaderFooterView(VenueCell.Key);
 
@@ -150,17 +164,31 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return emptyCell;
             }
 
-            var cell = (VenueShowCell)tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
-            cell.ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
-            cell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
-            cell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
-            cell.DataContext = (VenueShow)item;
-            cell.IsExpanded = Equals(_viewModel.ExpandedShow, item);
+            var cell = default(UITableViewCell);
+
+            if (IsProgressVisible)
+            {
+                cell = tableView.DequeueReusableCell(ProgressCell.Key, indexPath);
+            }
+
+            var venueShow = item as VenueShow;
+            if (venueShow != null)
+            {
+                cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
+                ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
+                ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
+                ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
+                ((VenueShowCell)cell).DataContext = venueShow;
+                ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
+            }
+
             return cell;
         }
 
         protected override object GetItemAt(NSIndexPath indexPath)
         {
+            if (IsProgressVisible) return null;
+
             if (_viewModel.IsGroupedByLocation)
             {
                 if (VenueItemsSource != null &&
@@ -195,7 +223,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
     /// <summary>
     /// This is a helper base class that incapsulates the HACK for initial hiding of table's header view.
     /// </summary>
-    public class HiddenHeaderTableSource : MvxTableViewSource
+    public class HiddenHeaderTableSource : ProgressTableSource
     {
         private bool _isTouched;
         private NSTimer _timer;
@@ -208,8 +236,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.ReloadTableData();
 
-            if (ItemsSource != null && 
-                ItemsSource.Cast<object>().Any() && 
+            if ((IsProgressVisible || 
+                 (ItemsSource != null && ItemsSource.Cast<object>().Any())) && 
                 _timer == null)
             {
                 _timer = NSTimer.CreateRepeatingScheduledTimer(

@@ -5,8 +5,8 @@ using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Controls
 {
-    [Register("UIProgressImageView")]
-    public class UIProgressImageView : UIImageView
+    [Register("ProgressImageView")]
+    public class ProgressImageView : UIImageView
     {
         private UIActivityIndicatorView _progress = 
             new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray)
@@ -14,12 +14,12 @@ namespace SmartWalk.iOS.Controls
                     HidesWhenStopped = true
                 };
 
-        public UIProgressImageView()
+        public ProgressImageView()
         {
             Add(_progress);
         }
 
-        public UIProgressImageView(IntPtr handle) : base(handle) 
+        public ProgressImageView(IntPtr handle) : base(handle) 
         {
             Add(_progress);
         }

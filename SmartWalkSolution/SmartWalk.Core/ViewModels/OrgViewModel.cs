@@ -144,8 +144,12 @@ namespace SmartWalk.Core.ViewModels
         {
             if (_parameters != null)
             {
+                IsLoading = true;
+
                 _dataService.GetOrg(_parameters.OrgId, source, (org, ex) => 
                     {
+                        IsLoading = false;
+
                         if (ex == null)
                         {
                             Org = org;

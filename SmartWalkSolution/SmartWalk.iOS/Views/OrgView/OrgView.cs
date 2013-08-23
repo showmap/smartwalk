@@ -40,7 +40,13 @@ namespace SmartWalk.iOS.Views.OrgView
 
             this.CreateBinding(tableSource)
                 .To((OrgViewModel vm) => vm.Org)
-                .WithConversion(new OrgTableSourceConverter(), ViewModel).Apply();
+                .WithConversion(new OrgTableSourceConverter(), ViewModel)
+                .Apply();
+
+            this.CreateBinding(tableSource)
+                .For(p => p.IsLoading)
+                .To((OrgViewModel vm) => vm.IsLoading)
+                .Apply();
 
             return tableSource;
         }

@@ -18,7 +18,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UIView TablePanel { get; set; }
 
 		[Outlet]
-		SmartWalk.iOS.Controls.FixedUITableView VenuesAndShowsTableView { get; set; }
+		SmartWalk.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
 
 		[Outlet]
 		MonoTouch.MapKit.MKMapView VenuesMapView { get; set; }

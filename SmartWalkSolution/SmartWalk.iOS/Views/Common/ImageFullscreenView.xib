@@ -632,7 +632,7 @@
 				<string key="144.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="148.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="149.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="15.CustomClassName">UIProgressImageView</string>
+				<string key="15.CustomClassName">ProgressImageView</string>
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<boolean value="NO" key="15.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="150.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -695,7 +695,7 @@
 					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="CloseButton">UIButton</string>
-						<string key="ImageView">UIProgressImageView</string>
+						<string key="ImageView">ProgressImageView</string>
 						<string key="ScrollView">ImageZoomScrollView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -705,7 +705,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="ImageView">
 							<string key="name">ImageView</string>
-							<string key="candidateClassName">UIProgressImageView</string>
+							<string key="candidateClassName">ProgressImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="ScrollView">
 							<string key="name">ScrollView</string>
@@ -734,11 +734,11 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">UIProgressImageView</string>
+					<string key="className">ProgressImageView</string>
 					<string key="superclassName">UIImageView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/UIProgressImageView.h</string>
+						<string key="minorKey">./Classes/ProgressImageView.h</string>
 					</object>
 				</object>
 			</array>

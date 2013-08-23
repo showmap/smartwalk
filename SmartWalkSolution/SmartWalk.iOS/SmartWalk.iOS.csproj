@@ -225,7 +225,6 @@
     <Compile Include="..\SmartWalk.Shared\Controls\PagedScrollView.cs">
       <Link>Controls\PagedScrollView.cs</Link>
     </Compile>
-    <Compile Include="Controls\FixedUITableView.cs" />
     <Compile Include="Views\Common\EntityCell\IEntityCellContext.cs" />
     <Compile Include="Views\Common\EntityViewModelWrapper.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.designer.cs">
@@ -237,7 +236,6 @@
     <Compile Include="Views\OrgEventView\OrgEventHeaderView.designer.cs">
       <DependentUpon>OrgEventHeaderView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\UIProgressImageView.cs" />
     <Compile Include="Controls\ExtendedCollectionView.cs" />
     <Compile Include="Views\Common\ImageFullscreenView.cs" />
     <Compile Include="Views\Common\ImageFullscreenView.designer.cs">
@@ -247,6 +245,13 @@
     <Compile Include="Views\Common\BrowserView.designer.cs">
       <DependentUpon>BrowserView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FixedTableView.cs" />
+    <Compile Include="Controls\ProgressImageView.cs" />
+    <Compile Include="Views\Common\ProgressCell.cs" />
+    <Compile Include="Views\Common\ProgressCell.designer.cs">
+      <DependentUpon>ProgressCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\ProgressTableSource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -272,6 +277,7 @@
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
     <InterfaceDefinition Include="Views\Common\ImageFullscreenView.xib" />
     <InterfaceDefinition Include="Views\Common\BrowserView.xib" />
+    <InterfaceDefinition Include="Views\Common\ProgressCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />

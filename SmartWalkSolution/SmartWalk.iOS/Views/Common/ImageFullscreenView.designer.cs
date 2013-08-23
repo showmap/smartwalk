@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.Common
 		MonoTouch.UIKit.UIButton CloseButton { get; set; }
 
 		[Outlet]
-		SmartWalk.iOS.Controls.UIProgressImageView ImageView { get; set; }
+		SmartWalk.iOS.Controls.ProgressImageView ImageView { get; set; }
 
 		[Outlet]
 		SmartWalk.iOS.Views.Common.ImageZoomScrollView ScrollView { get; set; }

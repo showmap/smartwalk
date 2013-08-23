@@ -12,7 +12,7 @@ namespace SmartWalk.iOS.Views.VenueView
 	partial class VenueView
 	{
 		[Outlet]
-		SmartWalk.iOS.Controls.FixedUITableView VenueShowsTableView { get; set; }
+		SmartWalk.iOS.Controls.FixedTableView VenueShowsTableView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

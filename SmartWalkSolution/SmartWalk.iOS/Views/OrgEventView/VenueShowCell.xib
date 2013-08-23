@@ -847,7 +847,7 @@
 				<string key="394.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="50.CustomClassName">UIProgressImageView</string>
+				<string key="50.CustomClassName">ProgressImageView</string>
 				<string key="50.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<array class="NSMutableArray" key="50.IBViewMetadataConstraints">
 					<reference ref="5281652"/>
@@ -881,11 +881,11 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">UIProgressImageView</string>
+					<string key="className">ProgressImageView</string>
 					<string key="superclassName">UIImageView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/UIProgressImageView.h</string>
+						<string key="minorKey">./Classes/ProgressImageView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -903,7 +903,7 @@
 						<string key="ImageHeightConstraint">NSLayoutConstraint</string>
 						<string key="ImageWidthConstraint">NSLayoutConstraint</string>
 						<string key="StartTimeLabel">UILabel</string>
-						<string key="ThumbImageView">UIProgressImageView</string>
+						<string key="ThumbImageView">ProgressImageView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="DescriptionAndImageSpaceConstraint">
@@ -952,7 +952,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="ThumbImageView">
 							<string key="name">ThumbImageView</string>
-							<string key="candidateClassName">UIProgressImageView</string>
+							<string key="candidateClassName">ProgressImageView</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

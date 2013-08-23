@@ -7,7 +7,7 @@ using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class HomeViewModel : MvxViewModel, IRefreshableViewModel
+    public class HomeViewModel : ProgressViewModel, IRefreshableViewModel
 	{
 		private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
@@ -93,9 +93,13 @@ namespace SmartWalk.Core.ViewModels
 
 		private void UpdateOrgInfos()
 		{
+            IsLoading = true;
+
             // TODO: Use location for getting orgs
             _dataService.GetLocation("sfba", DataSource.Server, (location, ex) => 
           		{
+                    IsLoading = false;
+
 					if (ex == null) 
 					{
                         Location = location;

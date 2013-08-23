@@ -12,7 +12,7 @@ namespace SmartWalk.iOS.Views.OrgView
 	partial class OrgView
 	{
 		[Outlet]
-		SmartWalk.iOS.Controls.FixedUITableView OrgEventsTableView { get; set; }
+		SmartWalk.iOS.Controls.FixedTableView OrgEventsTableView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

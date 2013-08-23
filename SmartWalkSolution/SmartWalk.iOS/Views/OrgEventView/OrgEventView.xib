@@ -587,7 +587,7 @@
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="18.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="19.CustomClassName">FixedUITableView</string>
+				<string key="19.CustomClassName">FixedTableView</string>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<boolean value="NO" key="19.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="20.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -624,11 +624,11 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
-					<string key="className">FixedUITableView</string>
+					<string key="className">FixedTableView</string>
 					<string key="superclassName">UITableView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/FixedUITableView.h</string>
+						<string key="minorKey">./Classes/FixedTableView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -645,7 +645,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="MapPanel">UIView</string>
 						<string key="TablePanel">UIView</string>
-						<string key="VenuesAndShowsTableView">FixedUITableView</string>
+						<string key="VenuesAndShowsTableView">FixedTableView</string>
 						<string key="VenuesMapView">MKMapView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -659,7 +659,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="VenuesAndShowsTableView">
 							<string key="name">VenuesAndShowsTableView</string>
-							<string key="candidateClassName">FixedUITableView</string>
+							<string key="candidateClassName">FixedTableView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="VenuesMapView">
 							<string key="name">VenuesMapView</string>
