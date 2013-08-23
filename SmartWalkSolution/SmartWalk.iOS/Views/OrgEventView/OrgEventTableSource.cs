@@ -11,15 +11,13 @@ using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public class OrgEventTableSource : MvxTableViewSource
+    public class OrgEventTableSource : HiddenHeaderTableSource
     {
         private static readonly NSString EmptyCellKey = new NSString("empty");
 
         private readonly OrgEventViewModel _viewModel;
 
         private VenueShow[] _flattenItemsSource;
-        private bool _isTouched;
-        private NSTimer _timer;
 
         public OrgEventTableSource(UITableView tableView, OrgEventViewModel viewModel)
             : base(tableView)
@@ -39,6 +37,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             get { return ItemsSource != null ? (Venue[])ItemsSource : null; }
         }
+
 
         public VenueShow[] FlattenItemsSource
         {
@@ -64,51 +63,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 _flattenItemsSource = null;
                 base.ItemsSource = value;
-            }
-        }
-
-        public override void ReloadTableData()
-        {
-            base.ReloadTableData();
-
-            if (VenueItemsSource != null && 
-                VenueItemsSource.Length > 0 && 
-                _timer == null)
-            {
-                _timer = NSTimer.CreateRepeatingScheduledTimer(TimeSpan.MinValue, 
-                    new NSAction(() => 
-                    {
-                        if (TableView.TableHeaderView != null &&
-                            TableView.ContentSize.Height > TableView.TableHeaderView.Frame.Height)
-                        {
-                            TableView.SetContentOffset(
-                                new PointF(0, TableView.TableHeaderView.Frame.Height), _isTouched);
-                            _timer.Invalidate();
-                            _timer = null;
-                        }
-                    }));
-            }
-        }
-
-        public override void DraggingStarted(UIScrollView scrollView)
-        {
-            _isTouched = true;
-        }
-
-        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
-        {
-            if (TableView.TableHeaderView == null) return;
-
-            if (TableView.ContentOffset.Y < 0 || scrollView.Decelerating) return;
-
-            if (TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height / 2)
-            {
-                TableView.SetContentOffset(new PointF(0, 0), true);
-            }
-            else if (TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height)
-            {
-                TableView.SetContentOffset(
-                    new PointF(0, TableView.TableHeaderView.Frame.Height), true);
             }
         }
 
@@ -235,6 +189,74 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
+        }
+    }
+
+    /// <summary>
+    /// This is a helper base class that incapsulates the HACK for initial hiding of table's header view.
+    /// </summary>
+    public class HiddenHeaderTableSource : MvxTableViewSource
+    {
+        private bool _isTouched;
+        private NSTimer _timer;
+
+        protected HiddenHeaderTableSource(UITableView tableView) : base(tableView)
+        {
+        }
+
+        public override void ReloadTableData()
+        {
+            base.ReloadTableData();
+
+            if (ItemsSource != null && 
+                ItemsSource.Cast<object>().Any() && 
+                _timer == null)
+            {
+                _timer = NSTimer.CreateRepeatingScheduledTimer(
+                    TimeSpan.MinValue, 
+                    new NSAction(() => 
+                    {
+                        if (TableView.TableHeaderView != null &&
+                            TableView.ContentSize.Height > TableView.TableHeaderView.Frame.Height)
+                        {
+                            TableView.SetContentOffset(
+                                new PointF(0, TableView.TableHeaderView.Frame.Height), _isTouched);
+                            _timer.Invalidate();
+                            _timer.Dispose();
+                            _timer = null;
+                        }
+                    }));
+            }
+        }
+
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            _isTouched = true;
+        }
+
+        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+        {
+            if (TableView.TableHeaderView == null) return;
+
+            if (TableView.ContentOffset.Y < 0 || scrollView.Decelerating) return;
+
+            if (TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height / 2)
+            {
+                TableView.SetContentOffset(new PointF(0, 0), true);
+            }
+            else if (TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height)
+            {
+                TableView.SetContentOffset(
+                    new PointF(0, TableView.TableHeaderView.Frame.Height), true);
+            }
+        }
+
+        protected override UITableViewCell GetOrCreateCellFor(
+            UITableView tableView,
+            NSIndexPath indexPath,
+            object item)
+        {
+            return null;
         }
     }
 }

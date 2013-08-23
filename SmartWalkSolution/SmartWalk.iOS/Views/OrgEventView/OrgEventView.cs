@@ -25,6 +25,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private bool _isAnimating;
         private PointF _tableContentOffset;
 
+        private NSTimer _timer;
+
         public new OrgEventViewModel ViewModel
         {
             get { return (OrgEventViewModel)base.ViewModel; }
@@ -70,13 +72,27 @@ namespace SmartWalk.iOS.Views.OrgEventView
             _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
         }
 
-        // HACK: To persist table scroll offset
+        // TODO: Find another soltuion. It must be much simpler.
+        // HACK: To persist table scroll offset on rotation and appearing
         public override void ViewWillAppear(bool animated)
         {
-            if (_tableContentOffset != PointF.Empty)
+            if (_tableContentOffset != PointF.Empty && _timer == null)
             {
-                VenuesAndShowsTableView.SetContentOffset(_tableContentOffset, false);
-                _tableContentOffset = PointF.Empty;
+                _timer = NSTimer.CreateRepeatingScheduledTimer(
+                    TimeSpan.MinValue, 
+                    new NSAction(() => 
+                    {
+                        if (VenuesAndShowsTableView.TableHeaderView != null &&
+                            VenuesAndShowsTableView.ContentSize.Height > 
+                                VenuesAndShowsTableView.TableHeaderView.Frame.Height)
+                        {
+                            VenuesAndShowsTableView.SetContentOffset(_tableContentOffset, false);
+                            _tableContentOffset = PointF.Empty;
+                            _timer.Invalidate();
+                            _timer.Dispose();
+                            _timer = null;
+                        }
+                    }));
             }
         }
 
