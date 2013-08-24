@@ -101,6 +101,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
             return new ListViewDecorator(VenuesAndShowsTableView);  
         }
 
+        protected override UIView GetProgressViewContainer()
+        { 
+            return ProgressViewContainer;  
+        }
+
         protected override void UpdateViewTitle()
         {
             if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.Info != null)
@@ -109,7 +114,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
-        protected override object CreateListViewSource()
+        protected override IListViewSource CreateListViewSource()
         {
             var tableSource = new OrgEventTableSource(
                 VenuesAndShowsTableView,
@@ -117,11 +122,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             this.CreateBinding(tableSource)
                 .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
-                .Apply();
-
-            this.CreateBinding(tableSource)
-                .For(p => p.IsLoading)
-                .To((OrgEventViewModel vm) => vm.IsLoading)
                 .Apply();
 
             return tableSource;

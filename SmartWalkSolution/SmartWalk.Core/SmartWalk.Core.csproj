@@ -51,6 +51,7 @@
     <Folder Include="Utils\" />
     <Folder Include="Converters\" />
     <Folder Include="ViewModels\Interfaces\" />
+    <Folder Include="ViewModels\Common\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -91,6 +92,8 @@
     <Compile Include="ViewModels\Interfaces\IFullscreenImageProvider.cs" />
     <Compile Include="Utils\Reachability.cs" />
     <Compile Include="Services\CacheService.cs" />
-    <Compile Include="ViewModels\ProgressViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IProgressViewModel.cs" />
+    <Compile Include="ViewModels\Common\ProgressViewModel.cs" />
+    <Compile Include="ViewModels\Common\RefreshableViewModel.cs" />
   </ItemGroup>
 </Project>

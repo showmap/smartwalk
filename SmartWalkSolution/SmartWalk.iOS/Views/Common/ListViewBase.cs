@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel;
 using Cirrious.MvvmCross.Touch.Views;
+using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Controls;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -14,14 +14,10 @@ namespace SmartWalk.iOS.Views.Common
         private UISwipeGestureRecognizer _swipeRight;
         private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
+        private UIView _progressView;
         private ImageFullscreenView _imageFullscreenView;
 
-        public new IRefreshableViewModel ViewModel
-        {
-            get { return (IRefreshableViewModel)base.ViewModel; }
-        }
-
-        public ListViewDecorator ListView 
+        private ListViewDecorator ListView 
         { 
             get
             {
@@ -34,18 +30,47 @@ namespace SmartWalk.iOS.Views.Common
             }
         }
 
+        private UIView ProgressViewContainer 
+        { 
+            get
+            {
+                if (_progressView == null)
+                {
+                    _progressView = GetProgressViewContainer();
+                    var progress = ProgressView.Create();
+                    _progressView.AddSubview(progress);
+                }
+
+                return _progressView;
+            }
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-            ViewModel.RefreshCompleted += OnViewModelRefreshCompleted;
+            var notifyableViewModel = ViewModel as INotifyPropertyChanged;
+            if (notifyableViewModel != null)
+            {
+                notifyableViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            }
+
+            var refreshableViewModel = ViewModel as IRefreshableViewModel;
+            if (refreshableViewModel != null)
+            {
+                refreshableViewModel.RefreshCompleted += OnViewModelRefreshCompleted;
+            }
 
             UpdateViewTitle();
+            UpdateViewState();
 
             InitializeListView();
             InitializeGesture();
-            InitializeRefreshControl();
+
+            if (refreshableViewModel != null)
+            {
+                InitializeRefreshControl();
+            }
         }
 
         public override void WillMoveToParentViewController(UIViewController parent)
@@ -54,8 +79,17 @@ namespace SmartWalk.iOS.Views.Common
 
             if (parent == null)
             {
-                ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
-                ViewModel.RefreshCompleted -= OnViewModelRefreshCompleted;
+                var notifyableViewModel = ViewModel as INotifyPropertyChanged;
+                if (notifyableViewModel != null)
+                {
+                    notifyableViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+                }
+
+                var refreshableViewModel = ViewModel as IRefreshableViewModel;
+                if (refreshableViewModel != null)
+                {
+                    refreshableViewModel.RefreshCompleted -= OnViewModelRefreshCompleted;
+                }
 
                 DisposeGesture();
                 DisposeRefreshControl();
@@ -64,6 +98,8 @@ namespace SmartWalk.iOS.Views.Common
         }
 
         protected abstract ListViewDecorator GetListView();
+
+        protected abstract UIView GetProgressViewContainer();
 
         protected virtual void UpdateViewTitle()
         {
@@ -76,7 +112,7 @@ namespace SmartWalk.iOS.Views.Common
             ListView.Source = source;
         }
 
-        protected abstract object CreateListViewSource();
+        protected abstract IListViewSource CreateListViewSource();
 
         protected virtual void OnViewModelPropertyChanged(string propertyName)
         {
@@ -173,6 +209,13 @@ namespace SmartWalk.iOS.Views.Common
                 ShowHideImageFullscreenView(fullscreenProvider.CurrentFullscreenImage);
             }
 
+            var progressViewModel = ViewModel as IProgressViewModel;
+            if (progressViewModel != null &&
+                e.PropertyName == progressViewModel.GetPropertyName(p => p.IsLoading))
+            {
+                UpdateViewState();
+            }
+
             OnViewModelPropertyChanged(e.PropertyName);
         }
 
@@ -186,9 +229,11 @@ namespace SmartWalk.iOS.Views.Common
 
         private void OnRefreshControlValueChanged(object sender, EventArgs e)
         {
-            if (ViewModel.RefreshCommand.CanExecute(null))
+            var refreshableViewModel = ViewModel as IRefreshableViewModel;
+            if (refreshableViewModel != null &&
+                refreshableViewModel.RefreshCommand.CanExecute(null))
             {
-                ViewModel.RefreshCommand.Execute(null);
+                refreshableViewModel.RefreshCommand.Execute(null);
             }
         }
 
@@ -199,6 +244,29 @@ namespace SmartWalk.iOS.Views.Common
                 fullscreenProvider.ShowHideFullscreenImageCommand.CanExecute(null))
             {
                 fullscreenProvider.ShowHideFullscreenImageCommand.Execute(null);
+            }   
+        }
+
+        private void UpdateViewState()
+        {
+            if (ListView.Source != null && ListView.Source.ItemsSource != null) return;
+
+            var progressViewModel = (IProgressViewModel)ViewModel;
+            if (progressViewModel.IsLoading)
+            {
+                ProgressViewContainer.Hidden = false;
+                ListView.View.Hidden = true;
+            }
+            else
+            {
+                ProgressViewContainer.Hidden = true;
+
+                UIView.Transition(
+                    ListView.View,
+                    0.15,
+                    UIViewAnimationOptions.TransitionCrossDissolve,
+                    new NSAction(() => ListView.View.Hidden = false),
+                    null);
             }
         }
     }

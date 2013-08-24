@@ -1,20 +1,20 @@
 using System;
 using System.Linq;
-using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
 using SmartWalk.iOS.Views.OrgEventView;
-using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.VenueView
 {
-    public class VenueTableSource : MvxTableViewSource
+    public class VenueTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly VenueViewModel _viewModel;
 

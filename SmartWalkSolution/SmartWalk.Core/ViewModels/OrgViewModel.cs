@@ -4,18 +4,16 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class OrgViewModel : EntityViewModel, IRefreshableViewModel
+    public class OrgViewModel : EntityViewModel
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
         private EntityInfo[] _orgInfos;
-        private ICommand _refreshCommand;
         private ICommand _navigateOrgEventViewCommand;
 
         public OrgViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
@@ -23,8 +21,6 @@ namespace SmartWalk.Core.ViewModels
             _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
         }
-
-        public event EventHandler RefreshCompleted;
 
         public Org Org
         {
@@ -77,19 +73,6 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
-        public ICommand RefreshCommand
-        {
-            get 
-            {
-                if (_refreshCommand == null)
-                {
-                    _refreshCommand = new MvxCommand(() => UpdateOrg());
-                }
-
-                return _refreshCommand;
-            }
-        }
-
         public override bool CanShowNextEntity
         {
             get { return OrgInfos != null && OrgInfos.Length > 0 && Org != null; }
@@ -106,6 +89,11 @@ namespace SmartWalk.Core.ViewModels
 
             UpdateOrg();
             UpdateOrgInfos();
+        }
+
+        protected override void Refresh()
+        {
+            UpdateOrg();
         }
 
         protected override void OnShowPreviousEntity()
@@ -153,11 +141,7 @@ namespace SmartWalk.Core.ViewModels
                         if (ex == null)
                         {
                             Org = org;
-
-                            if (RefreshCompleted != null)
-                            {
-                                RefreshCompleted(this, EventArgs.Empty);
-                            }
+                            RaiseRefreshCompleted();
                         }
                         else
                         {
@@ -183,11 +167,7 @@ namespace SmartWalk.Core.ViewModels
                             if (ex == null)
                             {
                                 OrgInfos = location != null ? location.OrgInfos : null;
-
-                                if (RefreshCompleted != null)
-                                {
-                                    RefreshCompleted(this, EventArgs.Empty);
-                                }
+                                RaiseRefreshCompleted();
                             }
                             else
                             {

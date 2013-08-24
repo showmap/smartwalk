@@ -4,10 +4,11 @@ using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
 using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.Core.ViewModels.Common;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class OrgEventViewModel : ProgressViewModel, IRefreshableViewModel, IFullscreenImageProvider
+    public class OrgEventViewModel : RefreshableViewModel, IFullscreenImageProvider
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
@@ -21,7 +22,6 @@ namespace SmartWalk.Core.ViewModels
         private bool _isGroupedByLocation = true;
 
         private MvxCommand<VenueShow> _expandCollapseShowCommand;
-        private MvxCommand _refreshCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
@@ -29,13 +29,13 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand<bool?> _groupByLocationCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
 
-        public OrgEventViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
+        public OrgEventViewModel(
+            ISmartWalkDataService dataService,
+            IExceptionPolicy exceptionPolicy)
         {
             _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
         }
-
-        public event EventHandler RefreshCompleted;
 
         public OrgEventViewMode Mode
         {
@@ -130,19 +130,6 @@ namespace SmartWalk.Core.ViewModels
                     _isGroupedByLocation = value;
                     RaisePropertyChanged(() => IsGroupedByLocation);
                 }
-            }
-        }
-
-        public ICommand RefreshCommand
-        {
-            get 
-            {
-                if (_refreshCommand == null)
-                {
-                    _refreshCommand = new MvxCommand(UpdateOrgEvent);
-                }
-
-                return _refreshCommand;
             }
         }
 
@@ -297,6 +284,11 @@ namespace SmartWalk.Core.ViewModels
             UpdateOrgEvent();
         }
 
+        protected override void Refresh()
+        {
+            UpdateOrgEvent();
+        }
+
         private void UpdateOrgEvent()
         {
             if (_parameters != null)
@@ -314,11 +306,7 @@ namespace SmartWalk.Core.ViewModels
                     if (ex == null)
                     {
                         OrgEvent = orgEvent;
-
-                        if (RefreshCompleted != null)
-                        {
-                            RefreshCompleted(this, EventArgs.Empty);
-                        }
+                        RaiseRefreshCompleted();
                     }
                     else
                     {

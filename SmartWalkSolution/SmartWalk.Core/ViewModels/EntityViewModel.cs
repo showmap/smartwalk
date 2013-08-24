@@ -2,10 +2,11 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.Core.ViewModels.Common;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public abstract class EntityViewModel : ProgressViewModel, IFullscreenImageProvider
+    public abstract class EntityViewModel : RefreshableViewModel, IFullscreenImageProvider
     {
         private Entity _entity;
         private bool _isDescriptionExpanded;

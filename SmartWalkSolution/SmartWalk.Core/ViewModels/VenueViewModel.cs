@@ -4,17 +4,15 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class VenueViewModel : EntityViewModel, IRefreshableViewModel
+    public class VenueViewModel : EntityViewModel
     {
         private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
-        private ICommand _refreshCommand;
         private MvxCommand<VenueShow> _expandCollapseShowCommand;
         private VenueShow _expandedShow;
         private OrgEvent _orgEvent;
@@ -24,8 +22,6 @@ namespace SmartWalk.Core.ViewModels
             _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
         }
-
-        public event EventHandler RefreshCompleted;
 
         public OrgEvent OrgEvent
         {
@@ -112,19 +108,6 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
-        public ICommand RefreshCommand
-        {
-            get 
-            {
-                if (_refreshCommand == null)
-                {
-                    _refreshCommand = new MvxCommand(() => UpdateOrgEventAndVenue(DataSource.Server));
-                }
-
-                return _refreshCommand;
-            }
-        }
-
         public ICommand ExpandCollapseShowCommand
         {
             get
@@ -166,6 +149,11 @@ namespace SmartWalk.Core.ViewModels
             UpdateOrgEventAndVenue(DataSource.Cache);
         }
 
+        protected override void Refresh()
+        {
+            UpdateOrgEventAndVenue(DataSource.Server);
+        }
+
         protected override void OnShowPreviousEntity()
         {
             var currentIndex = Array.IndexOf(OrgEvent.Venues, Venue);
@@ -205,11 +193,7 @@ namespace SmartWalk.Core.ViewModels
                             if (ex == null)
                             {
                                 OrgEvent = orgEvent;
-
-                                if (RefreshCompleted != null)
-                                {
-                                    RefreshCompleted(this, EventArgs.Empty);
-                                }
+                                RaiseRefreshCompleted();
                             }
                             else
                             {

@@ -1,5 +1,6 @@
 using MonoTouch.UIKit;
 using System;
+using System.Collections;
 
 namespace SmartWalk.iOS.Controls
 {
@@ -20,18 +21,26 @@ namespace SmartWalk.iOS.Controls
             _collectionView = collectionView;
         }
 
-        public object Source
+        public UIView View
+        {
+            get
+            {
+                return (UIView)_tableView ?? (UIView)_collectionView;
+            }
+        }
+
+        public IListViewSource Source
         {
             get
             {
                 if (_tableView != null)
                 {
-                    return _tableView.Source;
+                    return (IListViewSource)_tableView.Source;
                 }
 
                 if (_collectionView != null)
                 {
-                    return _collectionView.Source;
+                    return (IListViewSource)_collectionView.WeakDataSource;
                 }
 
                 return null;
@@ -101,5 +110,10 @@ namespace SmartWalk.iOS.Controls
                 _collectionView.RemoveGestureRecognizer(gestureRecognizer);
             }
         }
+    }
+
+    public interface IListViewSource 
+    {
+        IEnumerable ItemsSource { get; }
     }
 }

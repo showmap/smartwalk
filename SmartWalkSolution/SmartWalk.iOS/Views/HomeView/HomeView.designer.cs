@@ -17,6 +17,9 @@ namespace SmartWalk.iOS.Views.HomeView
 
 		[Outlet]
 		SmartWalk.iOS.Controls.ExtendedCollectionView OrgCollectionView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -28,6 +31,11 @@ namespace SmartWalk.iOS.Views.HomeView
 			if (OrgCollectionView != null) {
 				OrgCollectionView.Dispose ();
 				OrgCollectionView = null;
+			}
+
+			if (ProgressViewContainer != null) {
+				ProgressViewContainer.Dispose ();
+				ProgressViewContainer = null;
 			}
 		}
 	}

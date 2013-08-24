@@ -1,8 +1,9 @@
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Core.ViewModels.Interfaces;
 
-namespace SmartWalk.Core.ViewModels
+namespace SmartWalk.Core.ViewModels.Common
 {
-    public class ProgressViewModel : MvxViewModel
+    public class ProgressViewModel : MvxViewModel, IProgressViewModel
     {
         private bool _isLoading;
 

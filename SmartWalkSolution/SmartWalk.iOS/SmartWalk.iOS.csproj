@@ -247,11 +247,10 @@
     </Compile>
     <Compile Include="Controls\FixedTableView.cs" />
     <Compile Include="Controls\ProgressImageView.cs" />
-    <Compile Include="Views\Common\ProgressCell.cs" />
-    <Compile Include="Views\Common\ProgressCell.designer.cs">
-      <DependentUpon>ProgressCell.cs</DependentUpon>
+    <Compile Include="Views\Common\ProgressView.cs" />
+    <Compile Include="Views\Common\ProgressView.designer.cs">
+      <DependentUpon>ProgressView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\ProgressTableSource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -277,7 +276,7 @@
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
     <InterfaceDefinition Include="Views\Common\ImageFullscreenView.xib" />
     <InterfaceDefinition Include="Views\Common\BrowserView.xib" />
-    <InterfaceDefinition Include="Views\Common\ProgressCell.xib" />
+    <InterfaceDefinition Include="Views\Common\ProgressView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />

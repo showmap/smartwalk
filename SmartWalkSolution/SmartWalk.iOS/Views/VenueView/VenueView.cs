@@ -42,7 +42,12 @@ namespace SmartWalk.iOS.Views.VenueView
             return new ListViewDecorator(VenueShowsTableView);  
         }
 
-        protected override object CreateListViewSource()
+        protected override UIView GetProgressViewContainer()
+        { 
+            return ProgressViewContainer;  
+        }
+
+        protected override IListViewSource CreateListViewSource()
         {
             var tableSource = new VenueTableSource(VenueShowsTableView, ViewModel);
 

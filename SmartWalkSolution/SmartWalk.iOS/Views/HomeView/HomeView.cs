@@ -44,6 +44,11 @@ namespace SmartWalk.iOS.Views.HomeView
             return new ListViewDecorator(OrgCollectionView);  
         }
 
+        protected override UIView GetProgressViewContainer()
+        { 
+            return ProgressViewContainer;  
+        }
+
         protected override void UpdateViewTitle()
         {
             NavigationItem.Title = ViewModel.Location != null 
@@ -60,7 +65,7 @@ namespace SmartWalk.iOS.Views.HomeView
                 (HomeCollectionSource)OrgCollectionView.Source);
         }
 
-        protected override object CreateListViewSource()
+        protected override IListViewSource CreateListViewSource()
         {
             var collectionSource = new HomeCollectionSource(OrgCollectionView);
 

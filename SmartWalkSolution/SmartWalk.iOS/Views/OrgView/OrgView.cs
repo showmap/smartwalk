@@ -34,18 +34,18 @@ namespace SmartWalk.iOS.Views.OrgView
             return new ListViewDecorator(OrgEventsTableView);  
         }
 
-        protected override object CreateListViewSource()
+        protected override UIView GetProgressViewContainer()
+        { 
+            return ProgressViewContainer;
+        }
+
+        protected override IListViewSource CreateListViewSource()
         {
             var tableSource = new OrgTableSource(OrgEventsTableView, ViewModel);
 
             this.CreateBinding(tableSource)
                 .To((OrgViewModel vm) => vm.Org)
                 .WithConversion(new OrgTableSourceConverter(), ViewModel)
-                .Apply();
-
-            this.CreateBinding(tableSource)
-                .For(p => p.IsLoading)
-                .To((OrgViewModel vm) => vm.IsLoading)
                 .Apply();
 
             return tableSource;

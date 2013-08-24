@@ -2,17 +2,17 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Linq;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.ViewModels;
 using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Views.Common;
-using SmartWalk.iOS.Utils;
+using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
-    public class OrgEventTableSource : HiddenHeaderTableSource
+    public class OrgEventTableSource : HiddenHeaderTableSource, IListViewSource
     {
         private static readonly NSString EmptyCellKey = new NSString("empty");
 
@@ -28,7 +28,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
             UseAnimations = true;
 
             tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
-            tableView.RegisterNibForCellReuse(ProgressCell.Nib, ProgressCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             tableView.RegisterNibForHeaderFooterViewReuse(VenueCell.Nib, VenueCell.Key);
         }
@@ -75,7 +74,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return !IsProgressVisible && _viewModel.IsGroupedByLocation ? 80f : 0;
+            return _viewModel.IsGroupedByLocation ? 80f : 0;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -92,25 +91,18 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return height;
             }
 
-            if (IsProgressVisible)
-            {
-                return tableView.Frame.Height;
-            }
-
             return 35f;
         }
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return !IsProgressVisible && _viewModel.IsGroupedByLocation
+            return _viewModel.IsGroupedByLocation
                 ? (VenueItemsSource != null ? VenueItemsSource.Count() : 0)
                 : 1;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
         {
-            if (IsProgressVisible) return 1;
-
             if (_viewModel.IsGroupedByLocation)
             {
                 var emptyRow = IsSearchSource &&
@@ -138,7 +130,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
-            if (!IsProgressVisible && _viewModel.IsGroupedByLocation)
+            if (_viewModel.IsGroupedByLocation)
             {
                 var headerView = (VenueCell)tableView.DequeueReusableHeaderFooterView(VenueCell.Key);
 
@@ -166,11 +158,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             var cell = default(UITableViewCell);
 
-            if (IsProgressVisible)
-            {
-                cell = tableView.DequeueReusableCell(ProgressCell.Key, indexPath);
-            }
-
             var venueShow = item as VenueShow;
             if (venueShow != null)
             {
@@ -187,8 +174,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override object GetItemAt(NSIndexPath indexPath)
         {
-            if (IsProgressVisible) return null;
-
             if (_viewModel.IsGroupedByLocation)
             {
                 if (VenueItemsSource != null &&
@@ -223,7 +208,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
     /// <summary>
     /// This is a helper base class that incapsulates the HACK for initial hiding of table's header view.
     /// </summary>
-    public class HiddenHeaderTableSource : ProgressTableSource
+    public class HiddenHeaderTableSource : MvxTableViewSource
     {
         private bool _isTouched;
         private NSTimer _timer;
@@ -236,8 +221,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.ReloadTableData();
 
-            if ((IsProgressVisible || 
-                 (ItemsSource != null && ItemsSource.Cast<object>().Any())) && 
+            if (ItemsSource != null &&
+                ItemsSource.Cast<object>().Any() && 
                 _timer == null)
             {
                 _timer = NSTimer.CreateRepeatingScheduledTimer(

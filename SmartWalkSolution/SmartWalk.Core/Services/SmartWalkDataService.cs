@@ -152,8 +152,8 @@ namespace SmartWalk.Core.Services
         {
             var client = new WebClient();
             client.DownloadDataCompleted += (s, e) => 
-                InvokeOnMainThread(() => 
-                    HoldOnABit(() => 
+                HoldOnABit(() => 
+                    InvokeOnMainThread(() => 
                         resultHandler(e.Result, e.Error)));
             client.DownloadDataAsync(new Uri(url));
         }
@@ -165,9 +165,8 @@ namespace SmartWalk.Core.Services
         private static void HoldOnABit(Action handler)
         {
 #if DEBUG
-            NSTimer.CreateScheduledTimer(
-                TimeSpan.FromSeconds(2), 
-                new NSAction(handler));
+            NSThread.SleepFor(2);
+            handler();
 #else
             handler();
 #endif

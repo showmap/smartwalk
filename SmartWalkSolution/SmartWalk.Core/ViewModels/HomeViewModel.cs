@@ -1,20 +1,18 @@
-using System;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.Core.ViewModels.Common;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class HomeViewModel : ProgressViewModel, IRefreshableViewModel
+    public class HomeViewModel : RefreshableViewModel
 	{
 		private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Location _location;
 		private EntityInfo[] _orgInfos;
-        private ICommand _refreshCommand;
         private ICommand _navigateOrgViewCommand;
 
         public HomeViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
@@ -22,8 +20,6 @@ namespace SmartWalk.Core.ViewModels
 			_dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
 		}
-
-        public event EventHandler RefreshCompleted;
 
         public Location Location
         {
@@ -71,25 +67,17 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
-        public ICommand RefreshCommand
-        {
-            get 
-            {
-                if (_refreshCommand == null)
-                {
-                    _refreshCommand = new MvxCommand(UpdateOrgInfos);
-                }
-
-                return _refreshCommand;
-            }
-        }
-
 		public override void Start()
 		{
 			UpdateOrgInfos();
 
 			base.Start();
 		}
+
+        protected override void Refresh()
+        {
+            UpdateOrgInfos();
+        }
 
 		private void UpdateOrgInfos()
 		{
@@ -103,11 +91,7 @@ namespace SmartWalk.Core.ViewModels
 					if (ex == null) 
 					{
                         Location = location;
-
-                        if (RefreshCompleted != null)
-                        {
-                            RefreshCompleted(this, EventArgs.Empty);
-                        }
+                        RaiseRefreshCompleted();
 					}
 					else 
 					{
