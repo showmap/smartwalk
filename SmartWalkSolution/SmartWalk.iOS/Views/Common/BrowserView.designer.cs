@@ -13,6 +13,9 @@ namespace SmartWalk.iOS.Views.Common
 	partial class BrowserView
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem ActionButton { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIBarButtonItem BackButton { get; set; }
 
 		[Outlet]
@@ -41,14 +44,14 @@ namespace SmartWalk.iOS.Views.Common
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (BottomToolbar != null) {
-				BottomToolbar.Dispose ();
-				BottomToolbar = null;
-			}
-
 			if (BackButton != null) {
 				BackButton.Dispose ();
 				BackButton = null;
+			}
+
+			if (BottomToolbar != null) {
+				BottomToolbar.Dispose ();
+				BottomToolbar = null;
 			}
 
 			if (ForwardButton != null) {
@@ -59,6 +62,11 @@ namespace SmartWalk.iOS.Views.Common
 			if (ProgressButton != null) {
 				ProgressButton.Dispose ();
 				ProgressButton = null;
+			}
+
+			if (ActionButton != null) {
+				ActionButton.Dispose ();
+				ActionButton = null;
 			}
 
 			if (WebView != null) {

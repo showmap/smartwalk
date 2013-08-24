@@ -165,7 +165,7 @@ namespace SmartWalk.Core.Services
         private static void HoldOnABit(Action handler)
         {
 #if DEBUG
-            NSThread.SleepFor(2);
+            NSThread.SleepFor(0.5);
             handler();
 #else
             handler();
