@@ -9,6 +9,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
+using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -217,11 +218,21 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
         }
 
+        public bool IsHeaderViewHidden
+        {
+            get
+            {
+                return TableView.TableHeaderView == null ||
+                    TableView.ContentOffset.Y >= TableView.TableHeaderView.Frame.Height;
+            }
+        }
+
         public override void ReloadTableData()
         {
             base.ReloadTableData();
 
-            if (ItemsSource != null &&
+            if (!IsHeaderViewHidden &&
+                ItemsSource != null &&
                 ItemsSource.Cast<object>().Any() && 
                 _timer == null)
             {
@@ -229,11 +240,22 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     TimeSpan.MinValue, 
                     new NSAction(() => 
                     {
-                        if (TableView.TableHeaderView != null &&
-                            TableView.ContentSize.Height > TableView.TableHeaderView.Frame.Height)
+                        if (TableView.ContentSize.Height >
+                            TableView.TableHeaderView.Frame.Height)
                         {
                             TableView.SetContentOffset(
                                 new PointF(0, TableView.TableHeaderView.Frame.Height), _isTouched);
+
+                            if (TableView.Hidden)
+                            {
+                                UIView.Transition(
+                                    TableView,
+                                    ListViewBase.ListViewShowAnimationDuration,
+                                    UIViewAnimationOptions.TransitionCrossDissolve,
+                                    new NSAction(() => TableView.Hidden = false),
+                                    null);
+                            }
+
                             _timer.Invalidate();
                             _timer.Dispose();
                             _timer = null;

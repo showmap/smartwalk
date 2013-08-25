@@ -44,11 +44,17 @@ namespace SmartWalk.iOS.Views.OrgEventView
             VenuesMapView.Delegate = new OrgEventMapDelegate(ViewModel);
 
             InitializeToolBar();
-            InitializeTableHeader();
-            InitializeSearchDisplayController();
             InitializeGestures();
 
             UpdateViewState(false);
+        }
+
+        // set header before items source is passed to table
+        // for easier header auto-hiding
+        protected override void OnBeforeSetListViewSource()
+        {   
+            InitializeTableHeader();
+            InitializeSearchDisplayController();
         }
 
         public override void WillMoveToParentViewController(UIViewController parent)
@@ -131,7 +137,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
-                UpdateViewState();
+                UpdateViewState(true);
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
@@ -175,6 +181,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
+        protected override void OnLoadedViewStateUpdate()
+        {
+            var tableSource = (HiddenHeaderTableSource)VenuesAndShowsTableView.Source;
+
+            if (tableSource.IsHeaderViewHidden)
+            {
+                base.OnLoadedViewStateUpdate();
+            }
+        }
+
         private void InitializeToolBar()
         {
             _modeButton = new UIBarButtonItem();
@@ -213,7 +229,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             if (_headerView != null)
             {
-                VenuesAndShowsTableView.TableHeaderView = null;
                 _headerView.SearchBarControl.WeakDelegate = null;
                 _headerView.SearchBarControl.Dispose();
                 _headerView.Dispose();
@@ -341,7 +356,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             return coordinates;
         }
        
-        private void UpdateViewState(bool isAnimated = true)
+        private void UpdateViewState(bool isAnimated)
         {
             if (ViewModel.Mode == OrgEventViewMode.Map)
             {

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -34,6 +35,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 value.Height = 82;
                 base.Frame = value;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         partial void OnGroupByLocationTouchUpInside(UISwitch sender, UIEvent @event)

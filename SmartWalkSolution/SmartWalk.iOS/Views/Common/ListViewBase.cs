@@ -11,6 +11,8 @@ namespace SmartWalk.iOS.Views.Common
 {
     public abstract class ListViewBase : MvxViewController
     {
+        public const double ListViewShowAnimationDuration = 0.15;
+
         private UISwipeGestureRecognizer _swipeRight;
         private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
@@ -109,10 +111,16 @@ namespace SmartWalk.iOS.Views.Common
         {
             var source = CreateListViewSource();
 
+            OnBeforeSetListViewSource();
+
             ListView.Source = source;
         }
 
         protected abstract IListViewSource CreateListViewSource();
+
+        protected virtual void OnBeforeSetListViewSource()
+        {
+        }
 
         protected virtual void OnViewModelPropertyChanged(string propertyName)
         {
@@ -120,6 +128,21 @@ namespace SmartWalk.iOS.Views.Common
 
         protected virtual void OnViewModelRefreshed()
         {
+        }
+
+        protected virtual void OnLoadingViewStateUpdate()
+        {
+            ListView.View.Hidden = true;
+        }
+
+        protected virtual void OnLoadedViewStateUpdate()
+        {
+            UIView.Transition(
+                ListView.View,
+                ListViewShowAnimationDuration,
+                UIViewAnimationOptions.TransitionCrossDissolve,
+                new NSAction(() => ListView.View.Hidden = false),
+                null);
         }
 
         protected override void Dispose(bool disposing)
@@ -255,18 +278,12 @@ namespace SmartWalk.iOS.Views.Common
             if (progressViewModel.IsLoading)
             {
                 ProgressViewContainer.Hidden = false;
-                ListView.View.Hidden = true;
+                OnLoadingViewStateUpdate();
             }
             else
             {
                 ProgressViewContainer.Hidden = true;
-
-                UIView.Transition(
-                    ListView.View,
-                    0.15,
-                    UIViewAnimationOptions.TransitionCrossDissolve,
-                    new NSAction(() => ListView.View.Hidden = false),
-                    null);
+                OnLoadedViewStateUpdate();
             }
         }
     }
