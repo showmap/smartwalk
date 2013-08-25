@@ -6,7 +6,6 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -54,6 +53,14 @@ namespace SmartWalk.iOS.Views.Common
 
             LoadURL();
             UpdateNavButtonsState();
+            UpdateFrames();
+        }
+
+        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillAnimateRotation(toInterfaceOrientation, duration);
+
+            UpdateFrames();
         }
 
         private void InitializeIndicator()
@@ -182,6 +189,22 @@ namespace SmartWalk.iOS.Views.Common
             NavigationItem.Title = pageTitle != null && pageTitle != string.Empty
                 ? pageTitle
                     : (WebView.CanGoBack ? null: ViewModel.BrowserURL);
+        }
+
+        // HACK: This is to keep bottom toolbar proper height on rotation
+        // by default it doesn't work with autolayout :-(
+        private void UpdateFrames()
+        {
+            var topBarFrame = NavigationController.Toolbar.Frame;
+            BottomToolbar.Frame = new RectangleF(
+                0, 
+                View.Frame.Height - topBarFrame.Height, 
+                View.Frame.Width,
+                topBarFrame.Height);
+
+            var frame = WebView.Frame;
+            frame.Height = View.Bounds.Height - topBarFrame.Height;
+            WebView.Frame = frame;
         }
     }
 }
