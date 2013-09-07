@@ -1,8 +1,9 @@
 using System.Linq;
+using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.Core.Model
 {
-    public class Venue : Entity
+    public class Venue : Entity, INumberEntity
     {
         public int Number { get; set; }
 

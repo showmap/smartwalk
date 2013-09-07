@@ -42,6 +42,9 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="MonoTouch.Dialog-1" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Binaries\JSON\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -52,6 +55,7 @@
     <Folder Include="Converters\" />
     <Folder Include="ViewModels\Interfaces\" />
     <Folder Include="ViewModels\Common\" />
+    <Folder Include="Model\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -85,7 +89,6 @@
     <Compile Include="Model\EmailInfo.cs" />
     <Compile Include="Model\Location.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
-    <Compile Include="Model\ISearchable.cs" />
     <Compile Include="ViewModels\BrowserViewModel.cs" />
     <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="ViewModels\Interfaces\IRefreshableViewModel.cs" />
@@ -95,5 +98,8 @@
     <Compile Include="ViewModels\Interfaces\IProgressViewModel.cs" />
     <Compile Include="ViewModels\Common\ProgressViewModel.cs" />
     <Compile Include="ViewModels\Common\RefreshableViewModel.cs" />
+    <Compile Include="ViewModels\MapViewModel.cs" />
+    <Compile Include="Model\Interfaces\ISearchable.cs" />
+    <Compile Include="Model\Interfaces\INumberEntity.cs" />
   </ItemGroup>
 </Project>

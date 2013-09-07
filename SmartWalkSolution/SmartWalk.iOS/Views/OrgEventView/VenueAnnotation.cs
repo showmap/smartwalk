@@ -1,5 +1,6 @@
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Views.Common.EntityCell;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -17,7 +18,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             get
             {
-                return (Venue.Number != 0 ? Venue.Number + ". " : string.Empty) + Venue.Info.Name;
+                return MapUtil.GetAnnotationTitle(Venue.Number, Venue.Info.Name);
             }
         }
     }

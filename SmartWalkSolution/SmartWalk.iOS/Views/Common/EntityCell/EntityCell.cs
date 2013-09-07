@@ -11,6 +11,8 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Controls;
+using SmartWalk.Core.ViewModels;
+using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -38,6 +40,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private UITapGestureRecognizer _descriptionTapGesture;
         private UITapGestureRecognizer _imageTapGesture;
+        private UITapGestureRecognizer _mapTapGesture;
         private CAGradientLayer _bottomGradient;
         private int _proportionalImageHeight;
 
@@ -64,7 +67,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             _mapView = new MKMapView {
                 ShowsUserLocation = true,
-                UserInteractionEnabled = false
+                UserInteractionEnabled = true,
+                ZoomEnabled = false,
+                ScrollEnabled = false
             };
 
             _imageView = new ProgressImageView {
@@ -181,6 +186,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public ICommand ExpandCollapseCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
+        public ICommand NavigateAddressesCommand { get; set; }
 
         public new IEntityCellContext DataContext
         {
@@ -218,6 +224,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 ExpandCollapseCommand = null;
                 ShowImageFullscreenCommand = null;
                 NavigateWebSiteCommand = null;
+                NavigateAddressesCommand = null;
 
                 DisposeGestures();
             }
@@ -320,6 +327,18 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             };
 
             _imageView.AddGestureRecognizer(_imageTapGesture);
+
+            _mapTapGesture = new UITapGestureRecognizer(() => {
+                if (NavigateAddressesCommand.CanExecute(DataContext.Entity))
+                {
+                    NavigateAddressesCommand.Execute(DataContext.Entity);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
+            _mapView.AddGestureRecognizer(_mapTapGesture);
         }
 
         private void DisposeGestures()
@@ -336,6 +355,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 _imageView.RemoveGestureRecognizer(_imageTapGesture);
                 _imageTapGesture.Dispose();
                 _imageTapGesture = null;
+            }
+
+            if (_mapTapGesture != null)
+            {
+                _mapView.RemoveGestureRecognizer(_mapTapGesture);
+                _mapTapGesture.Dispose();
+                _mapTapGesture = null;
             }
         }
 

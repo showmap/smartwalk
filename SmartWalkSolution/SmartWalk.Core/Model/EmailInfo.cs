@@ -1,4 +1,5 @@
 using SmartWalk.Core.Utils;
+using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.Core.Model
 {

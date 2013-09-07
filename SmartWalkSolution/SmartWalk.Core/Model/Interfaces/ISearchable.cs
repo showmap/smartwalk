@@ -1,4 +1,4 @@
-namespace SmartWalk.Core.Model
+namespace SmartWalk.Core.Model.Interfaces
 {
     public interface ISearchable
     {

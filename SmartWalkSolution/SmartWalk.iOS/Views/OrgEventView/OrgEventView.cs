@@ -12,6 +12,7 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -185,7 +186,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             var tableSource = (HiddenHeaderTableSource)VenuesAndShowsTableView.Source;
 
-            if (tableSource.IsHeaderViewHidden)
+            if (tableSource == null || tableSource.IsHeaderViewHidden)
             {
                 base.OnLoadedViewStateUpdate();
             }
@@ -300,7 +301,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     var annotations = ViewModel.OrgEvent.Venues
                         .SelectMany(v => v.Info.Addresses
                             .Select(a => new VenueAnnotation(v, a))).ToArray();
-                    var coordinates = GetAnnotationsCoordinates(annotations);
+                    var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 
                     VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
                     VenuesMapView.AddAnnotations(annotations);
@@ -343,17 +344,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 }
 
                 var annotations = VenuesMapView.Annotations.OfType<VenueAnnotation>();
-                var coordinates = GetAnnotationsCoordinates(annotations);
+                var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
                 VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), true);
             }
-        }
-
-        private CLLocationCoordinate2D[] GetAnnotationsCoordinates(IEnumerable<VenueAnnotation> annotations)
-        {
-            var coordinates = annotations
-                .Select(va => va.Coordinate)
-                    .Where(c => (long)c.Latitude != 0 && (long)c.Longitude != 0).ToArray();
-            return coordinates;
         }
        
         private void UpdateViewState(bool isAnimated)

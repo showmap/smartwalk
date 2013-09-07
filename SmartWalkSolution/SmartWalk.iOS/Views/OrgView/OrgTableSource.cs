@@ -118,6 +118,7 @@ namespace SmartWalk.iOS.Views.OrgView
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
                 ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
+                ((EntityCell)cell).NavigateAddressesCommand = _viewModel.NavigateAddressesCommand;
                 ((EntityCell)cell).IsLogoSizeFixed = true;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }

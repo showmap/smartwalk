@@ -251,6 +251,10 @@
     <Compile Include="Views\Common\ProgressView.designer.cs">
       <DependentUpon>ProgressView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\MapView.cs" />
+    <Compile Include="Views\Common\MapView.designer.cs">
+      <DependentUpon>MapView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -277,6 +281,7 @@
     <InterfaceDefinition Include="Views\Common\ImageFullscreenView.xib" />
     <InterfaceDefinition Include="Views\Common\BrowserView.xib" />
     <InterfaceDefinition Include="Views\Common\ProgressView.xib" />
+    <InterfaceDefinition Include="Views\Common\MapView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />

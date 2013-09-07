@@ -128,6 +128,7 @@ namespace SmartWalk.iOS.Views.VenueView
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
                 ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
+                ((EntityCell)cell).NavigateAddressesCommand = _viewModel.NavigateAddressesCommand;
                 ((EntityCell)cell).ImageHeightUpdatedHandler = OnEntityImageHeightUpdated;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }

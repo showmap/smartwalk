@@ -32,7 +32,7 @@ namespace SmartWalk.iOS
 
         }
 
-        protected override void InitializeLastChance ()
+        protected override void InitializeLastChance()
         {
             Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();

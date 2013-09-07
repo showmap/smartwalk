@@ -1,5 +1,7 @@
-using MonoTouch.MapKit;
+using System.Collections.Generic;
+using System.Linq;
 using MonoTouch.CoreLocation;
+using MonoTouch.MapKit;
 
 namespace SmartWalk.iOS.Utils
 {
@@ -23,6 +25,19 @@ namespace SmartWalk.iOS.Utils
             }
 
             return MKCoordinateRegion.FromMapRect(rect);
+        }
+
+        public static CLLocationCoordinate2D[] GetAnnotationsCoordinates(IEnumerable<MKAnnotation> annotations)
+        {
+            var coordinates = annotations
+                .Select(va => va.Coordinate)
+                    .Where(c => (long)c.Latitude != 0 && (long)c.Longitude != 0).ToArray();
+            return coordinates;
+        }
+
+        public static string GetAnnotationTitle(int number, string title)
+        {
+            return (number != 0 ? number + ". " : string.Empty) + title;
         }
     }
 }

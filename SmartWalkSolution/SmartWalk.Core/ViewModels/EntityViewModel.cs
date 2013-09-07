@@ -3,6 +3,10 @@ using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels.Interfaces;
 using SmartWalk.Core.ViewModels.Common;
+using SmartWalk.Core.ViewModels;
+using System;
+using System.Linq;
+using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
@@ -17,6 +21,7 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand _showNextEntityCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
+        private MvxCommand<Entity> _navigateAddressesCommand;
 
         public Entity Entity
         {
@@ -131,13 +136,37 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _navigateWebLinkCommand = new MvxCommand<WebSiteInfo>(
                         info => ShowViewModel<BrowserViewModel>(
-                        new BrowserViewModel.Parameters {  
-                        URL = info.URL
-                    }),
-                    info => info != null);
+                            new BrowserViewModel.Parameters {  
+                                URL = info.URL
+                            }),
+                        info => info != null);
                 }
 
                 return _navigateWebLinkCommand;
+            }
+        }
+
+        public ICommand NavigateAddressesCommand
+        {
+            get
+            {
+                if (_navigateAddressesCommand == null)
+                {
+                    _navigateAddressesCommand = new MvxCommand<Entity>(
+                        entity => ShowViewModel<MapViewModel>(
+                            new MapViewModel.Parameters {
+                                Title = entity.Info.Name,
+                                Number = entity is INumberEntity ? ((INumberEntity)entity).Number : 0,
+                                Addresses = new Addresses { Items = entity.Info.Addresses }
+                            }),
+                        entity => 
+                            entity != null && 
+                            entity.Info != null && 
+                            entity.Info.Addresses != null &&
+                            entity.Info.Addresses.Length > 0);
+                }
+
+                return _navigateAddressesCommand;
             }
         }
 
