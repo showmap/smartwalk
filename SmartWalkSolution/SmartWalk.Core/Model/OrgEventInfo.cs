@@ -1,4 +1,5 @@
 using System;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.Core.Model
 {
@@ -8,6 +9,8 @@ namespace SmartWalk.Core.Model
 
         public DateTime Date { get; set; }
 
+        public bool HasSchedule { get; set; }
+
         public int TimeStatus
         {
             get 
@@ -16,7 +19,8 @@ namespace SmartWalk.Core.Model
                 {
                     return -1;
                 }
-                else if (DateTime.Now.AddDays(-2) <= Date && Date <= DateTime.Now.AddDays(2))
+                else if (DateTime.Now.AddDays(-2) <= Date && 
+                    Date <= DateTime.Now.AddDays(2))
                 {
                     return 0;
                 }
@@ -29,6 +33,25 @@ namespace SmartWalk.Core.Model
             }
         }
 
-        public bool HasSchedule { get; set; }
+        public override bool Equals(object obj)
+        {
+            var eventInfo = obj as OrgEventInfo;
+            if (eventInfo != null)
+            {
+                return OrgId == eventInfo.OrgId &&
+                    Date == eventInfo.Date &&
+                        HasSchedule == eventInfo.HasSchedule;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Initial
+                .CombineHashCode(OrgId)
+                    .CombineHashCode(Date)
+                        .CombineHashCode(HasSchedule);
+        }
     }
 }

@@ -58,6 +58,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             LogoImageView.Image = null;
+            _imageHelper.ImageUrl = null;
 
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Logo : null;
@@ -97,8 +98,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 NumberOfTapsRequired = (uint)1
             };
 
-            _cellTapGesture.ShouldReceiveTouch = new UITouchEventArgs((rec, touch) => 
-                touch.View != AddressLabel);
+            _cellTapGesture.ShouldReceiveTouch = 
+                new UITouchEventArgs((rec, touch) => 
+                    touch.View != AddressLabel);
 
             AddGestureRecognizer(_cellTapGesture);
 
@@ -124,6 +126,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 _cellTapGesture.Dispose();
                 _cellTapGesture = null;
             }
+
             if (_addressTapGesture != null)
             {
                 AddressLabel.RemoveGestureRecognizer(_addressTapGesture);

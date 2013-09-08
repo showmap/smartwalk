@@ -138,7 +138,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.LayoutSubviews();
 
-            ThumbImageView.Hidden = !IsExpanded || DataContext == null || DataContext.Logo == null;
+            ThumbImageView.Hidden = !IsExpanded || 
+                DataContext == null || DataContext.Logo == null;
 
             UpdateConstraints();
         }
@@ -209,6 +210,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             ThumbImageView.Image = null;
+            _imageHelper.ImageUrl = null;
 
             var timeTextColor = 
                 DataContext == null ||

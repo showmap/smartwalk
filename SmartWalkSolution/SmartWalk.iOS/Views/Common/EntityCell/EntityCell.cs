@@ -244,6 +244,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             PopulateScrollView();
 
             _imageView.Image = null;
+            _imageHelper.ImageUrl = null;
             _mapView.RemoveAnnotations(_mapView.Annotations);
 
             _imageHelper.ImageUrl = DataContext != null 

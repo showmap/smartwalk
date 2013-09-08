@@ -1,4 +1,5 @@
 using System.Linq;
+using SmartWalk.Core.Utils;
 using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.Core.Model
@@ -26,6 +27,29 @@ namespace SmartWalk.Core.Model
                 Description = Description,
                 Shows = Shows != null ? Shows.Select(s => s.Clone()).ToArray() : null
             };
+        }
+
+        public override bool Equals(object obj)
+        {
+            var venue = obj as Venue;
+            if (venue != null)
+            {
+                return Number == venue.Number && 
+                    Equals(Info, venue.Info) &&
+                        Description == venue.Description &&
+                            Shows.EnumerableEquals(venue.Shows);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Initial
+                .CombineHashCode(Number)
+                    .CombineHashCodeOrDefault(Info)
+                        .CombineHashCodeOrDefault(Description)
+                            .CombineHashCodeOrDefault(Shows);
         }
     }
 }
