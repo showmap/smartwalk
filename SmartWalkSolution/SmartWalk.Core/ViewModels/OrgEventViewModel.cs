@@ -145,12 +145,10 @@ namespace SmartWalk.Core.ViewModels
                             if (!Equals(ExpandedShow, show))
                             {
                                 ExpandedShow = show;
-                                SelectedVenueOnMap = GetVenueByShow(show);
                             }
                             else 
                             {
                                 ExpandedShow = null;
-                                SelectedVenueOnMap = null;
                             }
                         },
                     venue => _parameters != null);
@@ -179,6 +177,7 @@ namespace SmartWalk.Core.ViewModels
                                 {
                                     case OrgEventViewMode.List:
                                         Mode = OrgEventViewMode.Map;
+                                        SelectedVenueOnMap = null;
                                         break;
 
                                     case OrgEventViewMode.Map:

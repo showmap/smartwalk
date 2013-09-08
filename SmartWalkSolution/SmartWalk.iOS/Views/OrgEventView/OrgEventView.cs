@@ -320,7 +320,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
             {
                 var annotation = VenuesMapView.Annotations
                 .OfType<VenueAnnotation>()
-                    .FirstOrDefault(an => Equals(an.Venue, venue));
+                    .FirstOrDefault(an => 
+                        an.Venue.Number == venue.Number &&
+                        an.Venue.Description == venue.Description); // don't use Equals, venues have different shows (un-grouped mode)
 
                 if (annotation != null)
                 {
