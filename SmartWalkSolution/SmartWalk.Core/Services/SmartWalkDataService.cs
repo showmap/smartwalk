@@ -1,14 +1,12 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Xml;
 using System.Xml.Linq;
+using MonoTouch.Foundation;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
-using System.Net;
-using MonoTouch.Foundation;
-using MonoTouch.CoreFoundation;
-using System.Text;
-using System.Xml;
-using System.IO;
 
 namespace SmartWalk.Core.Services
 {
@@ -358,7 +356,13 @@ namespace SmartWalk.Core.Services
                     eventDate.Day, 
                     parsedEndTime.Hour, 
                     parsedEndTime.Minute,
-                    0).AddDays(parsedStartTime > parsedEndTime ? 1 : 0);
+                    0);
+
+                // all night AM time should be set to the next day
+                if (parsedStartTime > parsedEndTime)
+                {
+                    parsedEndTime = parsedEndTime.AddDays(1);
+                }
             }
             else
             {
