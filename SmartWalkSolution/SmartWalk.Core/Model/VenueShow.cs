@@ -1,6 +1,7 @@
 using System;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.Model.Interfaces;
+using System.Collections.Generic;
 
 namespace SmartWalk.Core.Model
 {
@@ -57,6 +58,34 @@ namespace SmartWalk.Core.Model
                 Logo = Logo,
                 Site = Site
             };
+        }
+    }
+
+    public class VenueShowComparer : IComparer<VenueShow>
+    {
+        public int Compare(VenueShow x, VenueShow y)
+        {
+            if (x.Start < y.Start)
+            {
+                return -1;
+            }
+
+            if (x.Start > y.Start)
+            {
+                return 1;
+            }
+
+            if (x.End < y.End)
+            {
+                return -1;
+            }
+
+            if (x.End > y.End)
+            {
+                return 1;
+            }
+
+            return 0;
         }
     }
 }

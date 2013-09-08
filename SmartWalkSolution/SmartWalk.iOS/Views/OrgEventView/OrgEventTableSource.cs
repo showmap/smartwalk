@@ -64,7 +64,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                                     venue.Shows = new [] { s };
                                     return venue;
                                 }))
-                            .OrderBy(v => v.Shows[0].Start)
+                            .OrderBy(v => v.Shows[0], new VenueShowComparer())
                             .ToArray();
                 }
 

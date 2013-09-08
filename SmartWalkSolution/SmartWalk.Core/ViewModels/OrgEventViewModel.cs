@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
@@ -144,10 +145,12 @@ namespace SmartWalk.Core.ViewModels
                             if (!Equals(ExpandedShow, show))
                             {
                                 ExpandedShow = show;
+                                SelectedVenueOnMap = GetVenueByShow(show);
                             }
                             else 
                             {
                                 ExpandedShow = null;
+                                SelectedVenueOnMap = null;
                             }
                         },
                     venue => _parameters != null);
@@ -176,7 +179,6 @@ namespace SmartWalk.Core.ViewModels
                                 {
                                     case OrgEventViewMode.List:
                                         Mode = OrgEventViewMode.Map;
-                                        SelectedVenueOnMap = null;
                                         break;
 
                                     case OrgEventViewMode.Map:
@@ -318,6 +320,16 @@ namespace SmartWalk.Core.ViewModels
             {
                 OrgEvent = null;
             }
+        }
+
+        private Venue GetVenueByShow(VenueShow show)
+        {
+            if (OrgEvent != null && show != null)
+            {
+                return OrgEvent.Venues.FirstOrDefault(v => v.Shows.Contains(show));
+            }
+
+            return null;
         }
 
         public class Parameters

@@ -142,7 +142,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
-                if (!_isAnimating && ViewModel.Mode == OrgEventViewMode.Map)
+                if ((!_isAnimating && ViewModel.Mode == OrgEventViewMode.Map) ||
+                    ViewModel.SelectedVenueOnMap == null)
                 {
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
                 }
@@ -328,7 +329,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     VenuesMapView.SelectAnnotation(annotation, true);
                 }
             }
-            else if (VenuesMapView.SelectedAnnotations.Any())
+            else if (VenuesMapView.SelectedAnnotations != null &&
+                VenuesMapView.SelectedAnnotations.Any())
             {
                 foreach (var annotation in VenuesMapView.SelectedAnnotations)
                 {
