@@ -12,7 +12,6 @@ using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
-using SmartWalk.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -25,6 +24,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private bool _isMapViewInitialized;
         private bool _isAnimating;
         private PointF _tableContentOffset;
+        private VenueShow _previousExpandedShow;
 
         private NSTimer _timer;
 
@@ -153,22 +153,14 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
-                foreach (var cell in VenuesAndShowsTableView.VisibleCells.OfType<VenueShowCell>())
+                UpdateTableViewOnShowExpanding(VenuesAndShowsTableView);
+
+                if (SearchDisplayController.SearchResultsTableView.Superview != null)
                 {
-                    cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+                    UpdateTableViewOnShowExpanding(SearchDisplayController.SearchResultsTableView);
                 }
 
-                VenuesAndShowsTableView.BeginUpdates();
-                VenuesAndShowsTableView.EndUpdates();
-
-                // TODO: check out how to know if search table is visible
-                foreach (var cell in SearchDisplayController.SearchResultsTableView.VisibleCells.OfType<VenueShowCell>())
-                {
-                    cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
-                }
-
-                SearchDisplayController.SearchResultsTableView.BeginUpdates();
-                SearchDisplayController.SearchResultsTableView.EndUpdates();
+                _previousExpandedShow = ViewModel.ExpandedShow;
             }
         }
 
@@ -416,6 +408,38 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     completeHandler();
                 }
             }
+        }
+
+        private void UpdateTableViewOnShowExpanding(UITableView tableView)
+        {
+            foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
+            {
+                cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+            }
+
+            if (!ViewModel.IsGroupedByLocation)
+            {
+                var tableSoure = (OrgEventTableSource)tableView.WeakDataSource;
+
+                if (_previousExpandedShow != null)
+                {
+                    tableView.ReloadSections(
+                        NSIndexSet.FromIndex(
+                            tableSoure.GetSectionIndexByShow(_previousExpandedShow)),
+                        UITableViewRowAnimation.Fade);
+                }
+
+                if (ViewModel.ExpandedShow != null)
+                {
+                    tableView.ReloadSections(
+                        NSIndexSet.FromIndex(
+                            tableSoure.GetSectionIndexByShow(ViewModel.ExpandedShow)),
+                        UITableViewRowAnimation.Fade);
+                }
+            }
+
+            tableView.BeginUpdates();
+            tableView.EndUpdates();
         }
     }
 }

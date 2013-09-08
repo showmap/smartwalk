@@ -19,7 +19,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private readonly OrgEventViewModel _viewModel;
 
-        private VenueShow[] _flattenItemsSource;
+        private Venue[] _flattenItemsSource;
 
         public OrgEventTableSource(UITableView tableView, OrgEventViewModel viewModel)
             : base(tableView)
@@ -35,30 +35,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public bool IsSearchSource { get; set; }
 
-        public Venue[] VenueItemsSource
-        {
-            get { return ItemsSource != null ? (Venue[])ItemsSource : null; }
-        }
-
-
-        public VenueShow[] FlattenItemsSource
-        {
-            get
-            {
-                if (_flattenItemsSource == null &&
-                    VenueItemsSource != null)
-                {
-                    _flattenItemsSource = 
-                        VenueItemsSource
-                            .SelectMany(v => v.Shows)
-                            .OrderBy(show => show.Start)
-                            .ToArray();
-                }
-
-                return _flattenItemsSource;
-            }
-        }
-
         public override IEnumerable ItemsSource
         {
             set
@@ -68,6 +44,52 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
+        private Venue[] VenueItemsSource
+        {
+            get { return ItemsSource != null ? (Venue[])ItemsSource : null; }
+        }
+
+        private Venue[] FlattenItemsSource
+        {
+            get
+            {
+                if (_flattenItemsSource == null &&
+                    VenueItemsSource != null)
+                {
+                    _flattenItemsSource = 
+                        VenueItemsSource
+                            .SelectMany(v => v.Shows.Select(s => 
+                                { 
+                                    var venue = v.Clone(); 
+                                    venue.Shows = new [] { s };
+                                    return venue;
+                                }))
+                            .OrderBy(v => v.Shows[0].Start)
+                            .ToArray();
+                }
+
+                return _flattenItemsSource;
+            }
+        }
+
+        private Venue[] CurrentItemsSource
+        {
+            get { return _viewModel.IsGroupedByLocation ? VenueItemsSource : FlattenItemsSource; }
+        }
+
+        public int GetSectionIndexByShow(VenueShow show)
+        {
+            for (var i = 0; i < CurrentItemsSource.Length; i++)
+            {
+                if (CurrentItemsSource[i].Shows.Contains(show))
+                {
+                    return i;
+                }
+            }
+
+            return 0;
+        }
+
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             TableView.DeselectRow(indexPath, false);
@@ -75,7 +97,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return _viewModel.IsGroupedByLocation ? 80f : 0;
+            return _viewModel.IsGroupedByLocation || 
+                (_viewModel.ExpandedShow != null && 
+                CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)) ? 80f : 0;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -97,31 +121,18 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return _viewModel.IsGroupedByLocation
-                ? (VenueItemsSource != null ? VenueItemsSource.Count() : 0)
-                : 1;
+            return CurrentItemsSource != null ? CurrentItemsSource.Count() : 0;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
         {
-            if (_viewModel.IsGroupedByLocation)
-            {
-                var emptyRow = IsSearchSource &&
-                    section == NumberOfSections(tableview) - 1 ? 1 : 0; // empty row for search
+            var emptyRow = IsSearchSource &&
+                section == NumberOfSections(tableview) - 1 ? 1 : 0; // empty row for search
 
-                return (VenueItemsSource != null && 
-                        VenueItemsSource[section].Shows != null 
-                    ? VenueItemsSource[section].Shows.Count() 
+            return (CurrentItemsSource != null && 
+                CurrentItemsSource[section].Shows != null 
+                    ? CurrentItemsSource[section].Shows.Count() 
                     : 0) + emptyRow;
-            }
-            else
-            {
-                var showsCount = FlattenItemsSource != null 
-                    ? FlattenItemsSource.Count()
-                    : 0;
-
-                return showsCount;
-            }
         }
 
         public override string TitleForHeader(UITableView tableView, int section)
@@ -131,11 +142,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
-            if (_viewModel.IsGroupedByLocation)
+            if (_viewModel.IsGroupedByLocation || 
+                (_viewModel.ExpandedShow != null && 
+                    CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)))
             {
                 var headerView = (VenueCell)tableView.DequeueReusableHeaderFooterView(VenueCell.Key);
 
-                headerView.DataContext = VenueItemsSource[section];
+                headerView.DataContext = CurrentItemsSource[section];
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
                 headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
 
@@ -175,28 +188,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         protected override object GetItemAt(NSIndexPath indexPath)
         {
-            if (_viewModel.IsGroupedByLocation)
+            if (CurrentItemsSource != null &&
+                CurrentItemsSource[indexPath.Section].Shows != null)
             {
-                if (VenueItemsSource != null &&
-                    VenueItemsSource[indexPath.Section].Shows != null)
-                {
-                    // Asumming that there may be an empty row for search
-                    return indexPath.Row < VenueItemsSource[indexPath.Section].Shows.Length
-                        ? VenueItemsSource[indexPath.Section].Shows.ElementAt(indexPath.Row) 
+                // Asumming that there may be an empty row for search
+                return indexPath.Row < CurrentItemsSource[indexPath.Section].Shows.Length
+                    ? CurrentItemsSource[indexPath.Section].Shows.ElementAt(indexPath.Row) 
                     : null;
-                }
+            }
            
-                return null;
-            }
-            else
-            {
-                if (FlattenItemsSource != null)
-                {
-                    return FlattenItemsSource[indexPath.Row];
-                }
-
-                return null;
-            }
+            return null;
         }
 
         protected override void Dispose(bool disposing)

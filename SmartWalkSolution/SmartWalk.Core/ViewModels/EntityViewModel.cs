@@ -4,8 +4,6 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels.Interfaces;
 using SmartWalk.Core.ViewModels.Common;
 using SmartWalk.Core.ViewModels;
-using System;
-using System.Linq;
 using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.Core.ViewModels

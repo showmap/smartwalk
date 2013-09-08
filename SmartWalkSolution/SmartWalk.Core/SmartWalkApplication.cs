@@ -1,8 +1,8 @@
 using Cirrious.CrossCore;
+using Cirrious.MvvmCross.Platform;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Services;
 using SmartWalk.Core.ViewModels;
-using Cirrious.MvvmCross.Platform;
 
 namespace SmartWalk.Core
 {
