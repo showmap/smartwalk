@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
@@ -17,8 +16,6 @@ namespace SmartWalk.iOS.Views.VenueView
     public class VenueTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly VenueViewModel _viewModel;
-
-        private int _entityImageHeight = 0;
 
         public VenueTableSource(UITableView tableView, VenueViewModel viewModel)
             : base(tableView)
@@ -55,8 +52,7 @@ namespace SmartWalk.iOS.Views.VenueView
                 var height = EntityCell.CalculateCellHeight(
                     tableView.Frame.Width,
                     entityCellContext.IsDescriptionExpanded,
-                    entityCellContext.Entity,
-                    _entityImageHeight);
+                    entityCellContext.Entity);
 
                 return height;
             }
@@ -107,13 +103,6 @@ namespace SmartWalk.iOS.Views.VenueView
             return null;
         }
 
-        public override void ReloadTableData()
-        {
-            _entityImageHeight = 0;
-
-            base.ReloadTableData();
-        }
-
         protected override UITableViewCell GetOrCreateCellFor(
             UITableView tableView, 
             NSIndexPath indexPath, 
@@ -129,7 +118,6 @@ namespace SmartWalk.iOS.Views.VenueView
                 ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
                 ((EntityCell)cell).NavigateAddressesCommand = _viewModel.NavigateAddressesCommand;
-                ((EntityCell)cell).ImageHeightUpdatedHandler = OnEntityImageHeightUpdated;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }
 
@@ -156,23 +144,6 @@ namespace SmartWalk.iOS.Views.VenueView
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
-        }
-
-        private void OnEntityImageHeightUpdated(int imageHeight, bool updateTable)
-        {
-            _entityImageHeight = imageHeight;
-
-            if (updateTable)
-            {
-                DispatchQueue.DefaultGlobalQueue.DispatchAsync(() => 
-                    {
-                        BeginInvokeOnMainThread(() => 
-                            {
-                                TableView.BeginUpdates();
-                                TableView.EndUpdates();
-                            });
-                    });
-            }
         }
     }
 }

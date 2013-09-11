@@ -2,8 +2,6 @@ using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.CoreLocation;
-using MonoTouch.MapKit;
-using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
@@ -68,40 +66,6 @@ namespace SmartWalk.iOS.Views.Common
             NavigationItem.Title = ViewModel.Annotation != null
                 ? ViewModel.Annotation.Title
                 : null;
-        }
-    }
-
-    public class MapViewAnnotation : MKAnnotation
-    {
-        private readonly string _title;
-        private readonly string _subTitle;
-
-        public MapViewAnnotation(int number, string title, AddressInfo addressInfo)
-        {
-            _title = MapUtil.GetAnnotationTitle(number, title);
-            _subTitle = addressInfo.Address;
-
-            Coordinate = new CLLocationCoordinate2D(
-                addressInfo.Latitude,
-                addressInfo.Longitude);
-        }
-
-        public override CLLocationCoordinate2D Coordinate { get; set; }
-
-        public override string Title
-        {
-            get
-            {
-                return _title;
-            }
-        }
-
-        public override string Subtitle
-        {
-            get
-            {
-                return _subTitle;
-            }
         }
     }
 }

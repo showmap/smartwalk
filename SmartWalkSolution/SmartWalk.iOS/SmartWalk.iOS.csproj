@@ -255,6 +255,16 @@
     <Compile Include="Views\Common\MapView.designer.cs">
       <DependentUpon>MapView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\EntityCell\ImageCell.cs" />
+    <Compile Include="Views\Common\EntityCell\ImageCell.designer.cs">
+      <DependentUpon>ImageCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\EntityCell\MapCell.cs" />
+    <Compile Include="Views\Common\EntityCell\MapCell.designer.cs">
+      <DependentUpon>MapCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\MapViewAnnotation.cs" />
+    <Compile Include="Views\Common\EntityCell\EntityCollectionSource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -282,8 +292,12 @@
     <InterfaceDefinition Include="Views\Common\BrowserView.xib" />
     <InterfaceDefinition Include="Views\Common\ProgressView.xib" />
     <InterfaceDefinition Include="Views\Common\MapView.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell\ImageCell.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="Resources\Icon%402x.png" />
+    <BundleResource Include="Resources\Icon.png" />
   </ItemGroup>
 </Project>

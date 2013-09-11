@@ -59,8 +59,7 @@ namespace SmartWalk.iOS.Views.OrgView
                 var height = EntityCell.CalculateCellHeight(
                     tableView.Frame.Width,
                     entityCellContext.IsDescriptionExpanded,
-                    entityCellContext.Entity,
-                    EntityCell.DefaultImageHeight);
+                    entityCellContext.Entity);
 
                 return height;
             }
@@ -119,7 +118,6 @@ namespace SmartWalk.iOS.Views.OrgView
                 ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
                 ((EntityCell)cell).NavigateAddressesCommand = _viewModel.NavigateAddressesCommand;
-                ((EntityCell)cell).IsLogoSizeFixed = true;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }
 

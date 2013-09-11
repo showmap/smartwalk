@@ -14,11 +14,13 @@ namespace SmartWalk.iOS.Controls
         {
         }
 
-        public ExtendedCollectionView(RectangleF frame, UICollectionViewLayout layout) : base(frame, layout)
+        public ExtendedCollectionView(RectangleF frame, UICollectionViewLayout layout) 
+            : base(frame, layout)
         {
         }
 
-        public float CellHeight { get; set; }
+        public float? CellHeight { get; set; }
+        public int? ItemsInRowCount { get; set; }
 
         public override void LayoutSubviews()
         {
@@ -26,23 +28,24 @@ namespace SmartWalk.iOS.Controls
             SetCellWidth();
         }
 
-        private void SetCellWidth()
-        {
-            var flowLayout = (UICollectionViewFlowLayout)CollectionViewLayout;
-            var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
-
-            var cellWith = (Frame.Width - 
-                            flowLayout.SectionInset.Left -
-                            flowLayout.SectionInset.Right - 
-                            flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
-
-            flowLayout.ItemSize = new SizeF(cellWith, CellHeight);
-        }
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
+        }
+
+        private void SetCellWidth()
+        {
+            var flowLayout = (UICollectionViewFlowLayout)CollectionViewLayout;
+            var itemsInRow = ItemsInRowCount ?? (ScreenUtil.IsVerticalOrientation ? 1 : 2);
+            var maxCellWidth = (Frame.Width - 
+                flowLayout.SectionInset.Left -
+                flowLayout.SectionInset.Right - 
+                flowLayout.MinimumInteritemSpacing * (itemsInRow - 1));
+
+            var cellWidth = maxCellWidth / itemsInRow;
+
+            flowLayout.ItemSize = new SizeF(cellWidth, CellHeight ?? 50);
         }
     }
 }

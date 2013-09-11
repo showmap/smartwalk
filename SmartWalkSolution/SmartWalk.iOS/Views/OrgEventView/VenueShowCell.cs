@@ -279,7 +279,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
             };
 
             _imageTapGesture = new UITapGestureRecognizer(() => {
-                if (ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
+                if (ShowImageFullscreenCommand != null &&
+                    ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
                 {
                     ShowImageFullscreenCommand.Execute(DataContext.Logo);
                 }

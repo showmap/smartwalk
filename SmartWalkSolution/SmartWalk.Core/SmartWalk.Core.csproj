@@ -101,5 +101,6 @@
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="Model\Interfaces\ISearchable.cs" />
     <Compile Include="Model\Interfaces\INumberEntity.cs" />
+    <Compile Include="Utils\EntityInfoExtensions.cs" />
   </ItemGroup>
 </Project>
