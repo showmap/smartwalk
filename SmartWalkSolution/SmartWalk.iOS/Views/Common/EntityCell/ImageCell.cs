@@ -22,20 +22,20 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             _imageHelper = new MvxImageViewLoader(
                 () => ImageView,
                 () => {
-                if (_imageHelper.ImageUrl != null && 
-                    ImageView.Image != null)
-                {
-                    ImageView.StopProgress();
-                }
-                else if (_imageHelper.ImageUrl == null)
-                {
-                    ImageView.StopProgress();
-                }
-                else
-                {
-                    ImageView.StartProgress();
-                }
-            });
+                    if (_imageHelper.ImageUrl != null && 
+                        ImageView.Image != null)
+                    {
+                        ImageView.StopProgress();
+                    }
+                    else if (_imageHelper.ImageUrl == null)
+                    {
+                        ImageView.StopProgress();
+                    }
+                    else
+                    {
+                        ImageView.StartProgress();
+                    }
+                });
         }
 
         public new EntityInfo DataContext
@@ -74,6 +74,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         protected override void OnInitialize()
         {
             InitializeGestures();
+
+            ImageView.ActivityIndicatorViewStyle = 
+                UIActivityIndicatorViewStyle.White;
         }
 
         protected override void OnDataContextChanged()
@@ -83,6 +86,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Logo : null;
+
+            PlaceholderLabel.Text = DataContext != null ? DataContext.Name : null;
+            Placeholder.Hidden = DataContext == null || DataContext.Logo != null;
         }
 
         private void InitializeGestures()

@@ -42,10 +42,9 @@ namespace SmartWalk.iOS.Controls
                 flowLayout.SectionInset.Left -
                 flowLayout.SectionInset.Right - 
                 flowLayout.MinimumInteritemSpacing * (itemsInRow - 1));
-
             var cellWidth = maxCellWidth / itemsInRow;
 
-            flowLayout.ItemSize = new SizeF(cellWidth, CellHeight ?? 50);
+            flowLayout.ItemSize = new SizeF(cellWidth, CellHeight ?? 100);
         }
     }
 }

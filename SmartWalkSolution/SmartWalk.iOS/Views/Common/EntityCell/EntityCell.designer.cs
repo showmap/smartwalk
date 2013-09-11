@@ -22,7 +22,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.NSLayoutConstraint CollectionViewHeightConstraint { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint DescriptionBottomConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -44,6 +50,16 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (DescriptionLabel != null) {
 				DescriptionLabel.Dispose ();
 				DescriptionLabel = null;
+			}
+
+			if (DescriptionTopConstraint != null) {
+				DescriptionTopConstraint.Dispose ();
+				DescriptionTopConstraint = null;
+			}
+
+			if (DescriptionBottomConstraint != null) {
+				DescriptionBottomConstraint.Dispose ();
+				DescriptionBottomConstraint = null;
 			}
 		}
 	}

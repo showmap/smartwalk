@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Input;
@@ -38,8 +39,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             Entity entity)
         {
             var textHeight = CalculateTextHeight(frameWidth - Gap * 2, entity.Description);
-            var result = GetCollectionViewHeight() + Gap + 
-                (isExpanded ? textHeight : Math.Min(textHeight, TextLineHeight * 3)) + Gap;
+            var result = 
+                GetCollectionViewHeight(entity) + 
+                ((int)textHeight != 0 ? Gap * 2 : 0) + 
+                (isExpanded ? textHeight : Math.Min(textHeight, TextLineHeight * 3));
             return result;
         }
 
@@ -66,9 +69,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             return 0;
         }
 
-        private static float GetCollectionViewHeight()
+        private static float GetCollectionViewHeight(Entity entity)
         {
-            return ScreenUtil.IsVerticalOrientation ? ImageHeight * 2 : ImageHeight;
+            if (entity.Info.HasLogo() || entity.Info.HasAddress())
+            {
+                return ScreenUtil.IsVerticalOrientation ? ImageHeight * 2 : ImageHeight;
+            }
+
+            return 0;
         }
 
         public ICommand ExpandCollapseCommand { get; set; }
@@ -87,6 +95,23 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             get { return DataContext != null ? DataContext.Entity.Info : null; }
         }
 
+        private EntityCollectionSource CollectionSource
+        {
+            get { return (EntityCollectionSource)CollectionView.WeakDataSource; }
+            set { CollectionView.WeakDataSource = value; }
+        }
+
+        private int CollectionSourceItemsCount
+        {
+            get
+            {
+                return CollectionSource != null && 
+                        CollectionSource.ItemsSource != null
+                    ? CollectionSource.ItemsSource.Cast<object>().Count() 
+                    : 0;
+            }
+        }
+
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
@@ -101,7 +126,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             base.UpdateConstraints();
 
-            var collectionViewHeight = GetCollectionViewHeight();
+            var collectionViewHeight = DataContext != null && DataContext.Entity != null 
+                ? GetCollectionViewHeight(DataContext.Entity)
+                : 0;
             if (Frame.Height >= collectionViewHeight)
             {
                 CollectionViewHeightConstraint.Constant = collectionViewHeight;
@@ -109,6 +136,18 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             else
             {
                 CollectionViewHeightConstraint.Constant = ImageHeight;
+            }
+
+            if (DataContext != null &&
+                DataContext.Entity.Description != null)
+            {
+                DescriptionTopConstraint.Constant = Gap;
+                DescriptionBottomConstraint.Constant = Gap;
+            }
+            else
+            {
+                DescriptionTopConstraint.Constant = 0;
+                DescriptionBottomConstraint.Constant = 0;
             }
         }
 
@@ -143,19 +182,23 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 ? DataContext.Entity.Description : null;
 
             var collectionItems = new List<object>();
-            collectionItems.Add(new ImageCollectionItem { EntityInfo = DataContext.Entity.Info });
+            if (DataContext.Entity.Info.HasLogo())
+            {
+                collectionItems.Add(new ImageCollectionItem { EntityInfo = DataContext.Entity.Info });
+            }
 
             if (DataContext.Entity.Info.HasAddress())
             {
                 collectionItems.Add(new MapCollectionItem { Entity = DataContext.Entity });
             }
 
-            ((EntityCollectionSource)CollectionView.WeakDataSource).ItemsSource =
+            CollectionSource.ItemsSource =
                 DataContext != null 
                     ? collectionItems
                     : null;
 
             SetNeedsLayout();
+            SetNeedsUpdateConstraints();
         }
 
         private void InitializeGestures()
@@ -204,10 +247,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             if (CollectionView != null &&
                 CollectionView.WeakDataSource is EntityCollectionSource)
             {
-                var source = ((EntityCollectionSource)CollectionView.WeakDataSource);
-                source.ShowImageFullscreenCommand = null;
-                source.NavigateWebSiteCommand = null;
-                source.NavigateAddressesCommand = null;
+                CollectionSource.ShowImageFullscreenCommand = null;
+                CollectionSource.NavigateWebSiteCommand = null;
+                CollectionSource.NavigateAddressesCommand = null;
             }
         }
 
@@ -244,7 +286,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 var labelHeight = CalculateCellHeight(
                     Frame.Width, 
                     false, 
-                    DataContext.Entity) - CollectionViewHeightConstraint.Constant;
+                    DataContext.Entity) - 
+                        GetCollectionViewHeight(DataContext.Entity);
 
                 _bottomGradient.Hidden = textHeight <= labelHeight;
             }
@@ -259,14 +302,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             if (DataContext != null)
             {
                 CollectionView.CellHeight = ScreenUtil.IsVerticalOrientation &&
-                        !DataContext.Entity.Info.HasAddress()
-                    ? ImageHeight * 2
-                    : ImageHeight;
+                    CollectionSourceItemsCount == 1
+                        ? ImageHeight * 2
+                        : ImageHeight;
 
                 CollectionView.ItemsInRowCount = ScreenUtil.IsVerticalOrientation ||
-                        DataContext.Entity.Info.HasAddress()
-                    ? null
-                    : (int?)1;
+                    CollectionSourceItemsCount == 2
+                        ? null
+                        : (int?)1;
             }
         }
     }
