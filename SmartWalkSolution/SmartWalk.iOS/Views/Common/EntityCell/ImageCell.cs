@@ -3,8 +3,8 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -45,6 +45,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         }
 
         public ICommand ShowImageFullscreenCommand { get; set; }
+        public ICommand ShowContactsViewCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
 
         public static ImageCell Create()
@@ -59,6 +60,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             if (newsuper == null)
             {
                 ShowImageFullscreenCommand = null;
+                ShowContactsViewCommand = null;
                 NavigateWebSiteCommand = null;
 
                 DisposeGestures();
@@ -116,6 +118,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         partial void OnContactsButtonClick(NSObject sender, UIEvent @event)
         {
+            if (ShowContactsViewCommand != null &&
+                ShowContactsViewCommand.CanExecute(DataContext))
+            {
+                ShowContactsViewCommand.Execute(DataContext);
+            }
         }
     }
 }

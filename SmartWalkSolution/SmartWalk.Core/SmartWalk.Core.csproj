@@ -102,5 +102,6 @@
     <Compile Include="Model\Interfaces\ISearchable.cs" />
     <Compile Include="Model\Interfaces\INumberEntity.cs" />
     <Compile Include="Utils\EntityInfoExtensions.cs" />
+    <Compile Include="ViewModels\Interfaces\IContactsEntityProvider.cs" />
   </ItemGroup>
 </Project>

@@ -83,6 +83,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         public ICommand ExpandCollapseCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
+        public ICommand ShowContactsViewCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
         public ICommand NavigateAddressesCommand { get; set; }
 
@@ -233,6 +234,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             {
                 ExpandCollapseCommand = null;
                 ShowImageFullscreenCommand = null;
+                ShowContactsViewCommand = null;
                 NavigateWebSiteCommand = null;
                 NavigateAddressesCommand = null;
 
@@ -301,6 +303,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             MapCellPlaceholder.Content = MapCell.Create();
 
             ImageCell.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
+            ImageCell.ShowContactsViewCommand = ShowContactsViewCommand;
             ImageCell.NavigateWebSiteCommand = NavigateWebSiteCommand;
             MapCell.NavigateAddressesCommand = NavigateAddressesCommand;
         }

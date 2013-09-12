@@ -8,16 +8,20 @@ using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public abstract class EntityViewModel : RefreshableViewModel, IFullscreenImageProvider
+    public abstract class EntityViewModel : RefreshableViewModel, 
+        IFullscreenImageProvider,
+        IContactsEntityProvider
     {
         private Entity _entity;
         private bool _isDescriptionExpanded;
+        private EntityInfo _currentContactsEntityInfo;
         private string _currentFullscreenImage;
 
         private MvxCommand _expandCollapseCommand;
         private MvxCommand _showPreviousEntityCommand;
         private MvxCommand _showNextEntityCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
+        private MvxCommand<EntityInfo> _showHideContactsCommand;
         private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
         private MvxCommand<Entity> _navigateAddressesCommand;
 
@@ -66,6 +70,22 @@ namespace SmartWalk.Core.ViewModels
                 {
                     _currentFullscreenImage = value;
                     RaisePropertyChanged(() => CurrentFullscreenImage);
+                }
+            }
+        }
+
+        public EntityInfo CurrentContactsEntityInfo
+        {
+            get
+            {
+                return _currentContactsEntityInfo;
+            }
+            private set
+            {
+                if (!Equals(_currentContactsEntityInfo, value))
+                {
+                    _currentContactsEntityInfo = value;
+                    RaisePropertyChanged(() => CurrentContactsEntityInfo);
                 }
             }
         }
@@ -123,6 +143,20 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _showFullscreenImageCommand;
+            }
+        }
+
+        public ICommand ShowHideContactsCommand
+        {
+            get
+            {
+                if (_showHideContactsCommand == null)
+                {
+                    _showHideContactsCommand = new MvxCommand<EntityInfo>(
+                        entityInfo => CurrentContactsEntityInfo = entityInfo);
+                }
+
+                return _showHideContactsCommand;
             }
         }
 

@@ -6,6 +6,8 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels.Interfaces;
 using SmartWalk.iOS.Controls;
+using SmartWalk.Core.Model;
+using SmartWalk.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -223,6 +225,43 @@ namespace SmartWalk.iOS.Views.Common
             }
         }
 
+        private void ShowContactsView(EntityInfo entityInfo)
+        {
+            if (entityInfo != null)
+            {
+                var contactsView = ContactsView.Create();
+                contactsView.Close += OnContactsViewClose;
+                contactsView.Frame = View.Bounds;
+                contactsView.EntityInfo = entityInfo;
+                contactsView.NavigateWebSiteCommand = 
+                ((IContactsEntityProvider)ViewModel).NavigateWebLinkCommand;
+
+                contactsView.Alpha = 0;
+                View.Add(contactsView);
+                UIView.BeginAnimations(null);
+                contactsView.Alpha = 1;
+                UIView.CommitAnimations();
+            }
+        }
+
+        private void OnContactsViewClose(object sender, EventArgs e)
+        {
+            var contactsView = (ContactsView)sender;
+
+            UIView.Animate(
+                0.2, 
+                new NSAction(() => contactsView.Alpha = 0),
+                new NSAction(contactsView.RemoveFromSuperview));
+
+            contactsView.Close -= OnContactsViewClose;
+            var contactsProvider = ((IContactsEntityProvider)ViewModel);
+
+            if (contactsProvider.ShowHideContactsCommand.CanExecute(null))
+            {
+                contactsProvider.ShowHideContactsCommand.Execute(null);
+            }
+        }
+
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var fullscreenProvider = ViewModel as IFullscreenImageProvider;
@@ -230,6 +269,13 @@ namespace SmartWalk.iOS.Views.Common
                 e.PropertyName == fullscreenProvider.GetPropertyName(p => p.CurrentFullscreenImage))
             {
                 ShowHideImageFullscreenView(fullscreenProvider.CurrentFullscreenImage);
+            }
+
+            var contactsProvider = ViewModel as IContactsEntityProvider;
+            if (contactsProvider != null &&
+                e.PropertyName == contactsProvider.GetPropertyName(p => p.CurrentContactsEntityInfo))
+            {
+                ShowContactsView(contactsProvider.CurrentContactsEntityInfo);
             }
 
             var progressViewModel = ViewModel as IProgressViewModel;
