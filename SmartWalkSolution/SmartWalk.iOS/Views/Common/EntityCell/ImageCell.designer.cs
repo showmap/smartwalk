@@ -18,30 +18,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		[Outlet]
 		SmartWalk.iOS.Controls.ProgressImageView ImageView { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIView Placeholder { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UILabel PlaceholderLabel { get; set; }
-
 		[Action ("OnContactsButtonClick:forEvent:")]
 		partial void OnContactsButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (Placeholder != null) {
-				Placeholder.Dispose ();
-				Placeholder = null;
-			}
-
 			if (ContactsButton != null) {
 				ContactsButton.Dispose ();
 				ContactsButton = null;
-			}
-
-			if (PlaceholderLabel != null) {
-				PlaceholderLabel.Dispose ();
-				PlaceholderLabel = null;
 			}
 
 			if (ImageView != null) {

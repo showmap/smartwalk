@@ -86,9 +86,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Logo : null;
-
-            PlaceholderLabel.Text = DataContext != null ? DataContext.Name : null;
-            Placeholder.Hidden = DataContext == null || DataContext.Logo != null;
         }
 
         private void InitializeGestures()

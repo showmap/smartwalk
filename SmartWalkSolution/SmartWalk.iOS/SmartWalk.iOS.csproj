@@ -264,7 +264,7 @@
       <DependentUpon>MapCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\MapViewAnnotation.cs" />
-    <Compile Include="Views\Common\EntityCell\EntityCollectionSource.cs" />
+    <Compile Include="Controls\Placeholder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

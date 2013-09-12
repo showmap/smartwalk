@@ -16,12 +16,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.UIView BottomGradientView { get; set; }
 
 		[Outlet]
-		SmartWalk.iOS.Controls.ExtendedCollectionView CollectionView { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CollectionViewHeightConstraint { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionBottomConstraint { get; set; }
 
 		[Outlet]
@@ -29,6 +23,33 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.iOS.Controls.Placeholder ImageCellPlaceholder { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.iOS.Controls.Placeholder MapCellPlaceholder { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MapWidthConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MapXConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MapYConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -37,14 +58,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				BottomGradientView = null;
 			}
 
-			if (CollectionView != null) {
-				CollectionView.Dispose ();
-				CollectionView = null;
-			}
-
-			if (CollectionViewHeightConstraint != null) {
-				CollectionViewHeightConstraint.Dispose ();
-				CollectionViewHeightConstraint = null;
+			if (DescriptionBottomConstraint != null) {
+				DescriptionBottomConstraint.Dispose ();
+				DescriptionBottomConstraint = null;
 			}
 
 			if (DescriptionLabel != null) {
@@ -57,9 +73,49 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				DescriptionTopConstraint = null;
 			}
 
-			if (DescriptionBottomConstraint != null) {
-				DescriptionBottomConstraint.Dispose ();
-				DescriptionBottomConstraint = null;
+			if (HeaderHeightConstraint != null) {
+				HeaderHeightConstraint.Dispose ();
+				HeaderHeightConstraint = null;
+			}
+
+			if (ImageCellPlaceholder != null) {
+				ImageCellPlaceholder.Dispose ();
+				ImageCellPlaceholder = null;
+			}
+
+			if (ImageHeightConstraint != null) {
+				ImageHeightConstraint.Dispose ();
+				ImageHeightConstraint = null;
+			}
+
+			if (ImageWidthConstraint != null) {
+				ImageWidthConstraint.Dispose ();
+				ImageWidthConstraint = null;
+			}
+
+			if (MapCellPlaceholder != null) {
+				MapCellPlaceholder.Dispose ();
+				MapCellPlaceholder = null;
+			}
+
+			if (MapHeightConstraint != null) {
+				MapHeightConstraint.Dispose ();
+				MapHeightConstraint = null;
+			}
+
+			if (MapWidthConstraint != null) {
+				MapWidthConstraint.Dispose ();
+				MapWidthConstraint = null;
+			}
+
+			if (MapXConstraint != null) {
+				MapXConstraint.Dispose ();
+				MapXConstraint = null;
+			}
+
+			if (MapYConstraint != null) {
+				MapYConstraint.Dispose ();
+				MapYConstraint = null;
 			}
 		}
 	}
