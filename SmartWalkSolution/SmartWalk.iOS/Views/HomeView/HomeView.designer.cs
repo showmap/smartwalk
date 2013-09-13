@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.HomeView
 		MonoTouch.UIKit.UIImageView BackgroundImageView { get; set; }
 
 		[Outlet]
-		SmartWalk.iOS.Controls.ExtendedCollectionView OrgCollectionView { get; set; }
+        SmartWalk.iOS.Views.HomeView.HomeCollectionView OrgCollectionView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }

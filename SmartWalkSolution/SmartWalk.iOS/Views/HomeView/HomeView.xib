@@ -480,7 +480,7 @@
 					<reference ref="308726796"/>
 					<reference ref="608268635"/>
 				</array>
-				<string key="12.CustomClassName">ExtendedCollectionView</string>
+				<string key="12.CustomClassName">HomeCollectionView</string>
 				<string key="12.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<boolean value="NO" key="12.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="13.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -510,11 +510,11 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
-					<string key="className">ExtendedCollectionView</string>
+					<string key="className">HomeCollectionView</string>
 					<string key="superclassName">UICollectionView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/ExtendedCollectionView.h</string>
+						<string key="minorKey">./Classes/HomeCollectionView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -522,7 +522,7 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="BackgroundImageView">UIImageView</string>
-						<string key="OrgCollectionView">ExtendedCollectionView</string>
+						<string key="OrgCollectionView">HomeCollectionView</string>
 						<string key="ProgressViewContainer">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -532,7 +532,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="OrgCollectionView">
 							<string key="name">OrgCollectionView</string>
-							<string key="candidateClassName">ExtendedCollectionView</string>
+							<string key="candidateClassName">HomeCollectionView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="ProgressViewContainer">
 							<string key="name">ProgressViewContainer</string>

@@ -5,16 +5,16 @@ using MonoTouch.UIKit;
 using SmartWalk.iOS.Utils;
 using SmartWalk.Core.Utils;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.iOS.Views.HomeView
 {
-    [Register("ExtendedCollectionView")]
-    public class ExtendedCollectionView : UICollectionView
+    [Register("HomeCollectionView")]
+    public class HomeCollectionView : UICollectionView
     {
-        public ExtendedCollectionView(IntPtr handle) : base(handle)
+        public HomeCollectionView(IntPtr handle) : base(handle)
         {
         }
 
-        public ExtendedCollectionView(RectangleF frame, UICollectionViewLayout layout) : base(frame, layout)
+        public HomeCollectionView(RectangleF frame, UICollectionViewLayout layout) : base(frame, layout)
         {
         }
 

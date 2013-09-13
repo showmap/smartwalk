@@ -222,9 +222,6 @@
     <Compile Include="Services\ExceptionPolicy.cs" />
     <Compile Include="Controls\ThemeColors.cs" />
     <Compile Include="Views\Common\EntityCell\EntityAnnotation.cs" />
-    <Compile Include="..\SmartWalk.Shared\Controls\PagedScrollView.cs">
-      <Link>Controls\PagedScrollView.cs</Link>
-    </Compile>
     <Compile Include="Views\Common\EntityCell\IEntityCellContext.cs" />
     <Compile Include="Views\Common\EntityViewModelWrapper.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.designer.cs">
@@ -236,7 +233,6 @@
     <Compile Include="Views\OrgEventView\OrgEventHeaderView.designer.cs">
       <DependentUpon>OrgEventHeaderView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExtendedCollectionView.cs" />
     <Compile Include="Views\Common\ImageFullscreenView.cs" />
     <Compile Include="Views\Common\ImageFullscreenView.designer.cs">
       <DependentUpon>ImageFullscreenView.cs</DependentUpon>
@@ -269,6 +265,7 @@
     <Compile Include="Views\Common\EntityCell\ContactsView.designer.cs">
       <DependentUpon>ContactsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\HomeView\HomeCollectionView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
