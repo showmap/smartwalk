@@ -19,7 +19,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionBottomConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
+		SmartWalk.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopConstraint { get; set; }

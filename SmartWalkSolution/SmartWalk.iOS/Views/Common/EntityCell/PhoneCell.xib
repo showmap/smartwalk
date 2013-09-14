@@ -46,7 +46,6 @@
 								<string key="NSFrame">{{265, 0}, {35, 40}}</string>
 								<reference key="NSSuperview" ref="391566389"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -509,6 +508,7 @@
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="11.CustomClassName">CopyLabel</string>
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<boolean value="NO" key="11.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="114.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -533,6 +533,7 @@
 					<reference ref="909364448"/>
 					<reference ref="235082247"/>
 				</array>
+				<string key="21.CustomClassName">CopyLabel</string>
 				<string key="21.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<array class="NSMutableArray" key="21.IBViewMetadataConstraints">
 					<reference ref="893671807"/>
@@ -557,6 +558,14 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
+					<string key="className">CopyLabel</string>
+					<string key="superclassName">UILabel</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CopyLabel.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">NSLayoutConstraint</string>
 					<string key="superclassName">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -568,14 +577,14 @@
 					<string key="className">PhoneCell</string>
 					<string key="superclassName">UICollectionViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="ContactNameLabel">UILabel</string>
+						<string key="ContactNameLabel">CopyLabel</string>
 						<string key="NameHeightConstraint">NSLayoutConstraint</string>
-						<string key="PhoneNumberLabel">UILabel</string>
+						<string key="PhoneNumberLabel">CopyLabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="ContactNameLabel">
 							<string key="name">ContactNameLabel</string>
-							<string key="candidateClassName">UILabel</string>
+							<string key="candidateClassName">CopyLabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="NameHeightConstraint">
 							<string key="name">NameHeightConstraint</string>
@@ -583,7 +592,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="PhoneNumberLabel">
 							<string key="name">PhoneNumberLabel</string>
-							<string key="candidateClassName">UILabel</string>
+							<string key="candidateClassName">CopyLabel</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

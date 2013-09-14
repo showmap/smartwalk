@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
+		SmartWalk.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DetailsHeightConstraint { get; set; }

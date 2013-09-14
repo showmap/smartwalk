@@ -266,6 +266,7 @@
       <DependentUpon>ContactsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\HomeView\HomeCollectionView.cs" />
+    <Compile Include="Controls\CopyLabel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

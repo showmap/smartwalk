@@ -790,6 +790,7 @@
 				<string key="1031.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1032.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="1033.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="19.CustomClassName">CopyLabel</string>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<boolean value="NO" key="19.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="2.CustomClassName">EntityCell</string>
@@ -837,19 +838,25 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
+					<string key="className">CopyLabel</string>
+					<string key="superclassName">UILabel</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CopyLabel.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">EntityCell</string>
 					<string key="superclassName">UITableViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="BottomGradientView">UIView</string>
 						<string key="DescriptionBottomConstraint">NSLayoutConstraint</string>
-						<string key="DescriptionLabel">UILabel</string>
+						<string key="DescriptionLabel">CopyLabel</string>
 						<string key="DescriptionTopConstraint">NSLayoutConstraint</string>
 						<string key="HeaderHeightConstraint">NSLayoutConstraint</string>
-						<string key="ImageCell">Placeholder</string>
 						<string key="ImageCellPlaceholder">Placeholder</string>
 						<string key="ImageHeightConstraint">NSLayoutConstraint</string>
 						<string key="ImageWidthConstraint">NSLayoutConstraint</string>
-						<string key="MapCell">Placeholder</string>
 						<string key="MapCellPlaceholder">Placeholder</string>
 						<string key="MapHeightConstraint">NSLayoutConstraint</string>
 						<string key="MapWidthConstraint">NSLayoutConstraint</string>
@@ -867,7 +874,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="DescriptionLabel">
 							<string key="name">DescriptionLabel</string>
-							<string key="candidateClassName">UILabel</string>
+							<string key="candidateClassName">CopyLabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="DescriptionTopConstraint">
 							<string key="name">DescriptionTopConstraint</string>
@@ -876,10 +883,6 @@
 						<object class="IBToOneOutletInfo" key="HeaderHeightConstraint">
 							<string key="name">HeaderHeightConstraint</string>
 							<string key="candidateClassName">NSLayoutConstraint</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="ImageCell">
-							<string key="name">ImageCell</string>
-							<string key="candidateClassName">Placeholder</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="ImageCellPlaceholder">
 							<string key="name">ImageCellPlaceholder</string>
@@ -892,10 +895,6 @@
 						<object class="IBToOneOutletInfo" key="ImageWidthConstraint">
 							<string key="name">ImageWidthConstraint</string>
 							<string key="candidateClassName">NSLayoutConstraint</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="MapCell">
-							<string key="name">MapCell</string>
-							<string key="candidateClassName">Placeholder</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="MapCellPlaceholder">
 							<string key="name">MapCellPlaceholder</string>
