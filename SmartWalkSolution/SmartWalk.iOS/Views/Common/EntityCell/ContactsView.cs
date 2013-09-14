@@ -6,6 +6,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
+using System.Drawing;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -104,15 +105,16 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             {
                 var itemsCount = colletionSource.ItemsSource != null
                     ? colletionSource.ItemsSource.Cast<object>().Count()
-                    : 0;
+                        : 0;
                 var collectionHeight = itemsCount * CellHeight + (itemsCount - 1) * Gap;
                 var placeholderHeight = 
                     CollectionTopConstraint.Constant +
-                    collectionHeight +
-                    CollectionBottomConstraint.Constant;
-                var placeholderMargin = (Bounds.Height - placeholderHeight) / 2;
-                PlaceholderTopConstraint.Constant = Math.Max(placeholderMargin, DefaultPlaceholderMargin);
-                PlaceholderBottomConstraint.Constant = Math.Max(placeholderMargin, DefaultPlaceholderMargin);
+                        collectionHeight +
+                        CollectionBottomConstraint.Constant;
+                var placeholderMargin = (Bounds.Height - placeholderHeight) / 2.0;
+
+                PlaceholderTopConstraint.Constant = Math.Max((float)placeholderMargin, DefaultPlaceholderMargin);
+                PlaceholderBottomConstraint.Constant = Math.Max((float)placeholderMargin, DefaultPlaceholderMargin);
             }
         }
 
