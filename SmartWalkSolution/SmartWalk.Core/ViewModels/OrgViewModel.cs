@@ -159,14 +159,13 @@ namespace SmartWalk.Core.ViewModels
         {
             if (_parameters != null)
             {
-                _dataService.GetLocation(
-                    _parameters.Location, 
+                _dataService.GetLocationIndex(
                     DataSource.Cache,
-                    (location, ex) => 
+                    (index, ex) => 
                         {
                             if (ex == null)
                             {
-                                OrgInfos = location != null ? location.OrgInfos : null;
+                                OrgInfos = index != null ? index.OrgInfos : null;
                                 RaiseRefreshCompleted();
                             }
                             else
@@ -184,7 +183,6 @@ namespace SmartWalk.Core.ViewModels
         public class Parameters
         {
             public string OrgId { get; set; }
-            public string Location { get; set; }
         }
     }
 }

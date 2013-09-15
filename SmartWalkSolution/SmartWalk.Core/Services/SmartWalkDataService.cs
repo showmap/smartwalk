@@ -13,23 +13,29 @@ namespace SmartWalk.Core.Services
     public class SmartWalkDataService : ISmartWalkDataService
     {
         private const string host = "smartwalk.me";
-        private const string TempURL = "http://" + host + "/data/us/ca/sfbay/";
+        private const string dataUrl = "http://" + host + "/data/";
 
         private readonly ICacheService _cacheService;
+        private readonly ILocationService _locationService;
 
-        public SmartWalkDataService(ICacheService cacheService)
+        public SmartWalkDataService(
+            ICacheService cacheService,
+            ILocationService locationService)
         {
             _cacheService = cacheService;
+            _locationService = locationService;
         }
 
-        public void GetLocation(
-            string name,
+        public void GetLocationIndex(
             DataSource source,
-            Action<Location, Exception> resultHandler)
+            Action<LocationIndex, Exception> resultHandler)
         {
-            GetGenericContract<Location>(
-                name,
-                TempURL + "index.xml",
+            var location = _locationService.GetCurrentLocation();
+            var key = GenerateKey(location);
+
+            GetGenericContract<LocationIndex>(
+                key,
+                dataUrl + location + "index.xml",
                 CreateLocation,
                 source,
                 resultHandler);
@@ -40,9 +46,12 @@ namespace SmartWalk.Core.Services
             DataSource source,
             Action<Org, Exception> resultHandler)
         {
+            var location = _locationService.GetCurrentLocation();
+            var key = GenerateKey(location, orgId);
+
             GetGenericContract<Org>(
-                orgId,
-                TempURL + orgId + "/index.xml",
+                key,
+                dataUrl + location + orgId + "/index.xml",
                 new Func<XDocument, Org>(doc => CreateOrg(orgId, doc)),
                 source,
                 resultHandler);
@@ -54,11 +63,16 @@ namespace SmartWalk.Core.Services
             DataSource source,
             Action<OrgEvent, Exception> resultHandler)
         {
-            var key = orgId + "-" + String.Format("{0:yyyy-MM-dd}", date);
+            var location = _locationService.GetCurrentLocation();
+            var key = GenerateKey(
+                location,
+                orgId,
+                String.Format("{0:yyyy-MM-dd}", date));
 
             GetGenericContract<OrgEvent>(
                 key,
-                TempURL + orgId + "/events/" + key + ".xml",
+                dataUrl + location + orgId + "/events/" + 
+                    orgId + "-" + String.Format("{0:yyyy-MM-dd}", date) + ".xml",
                 new Func<XDocument, OrgEvent>(doc => CreateOrgEvent(orgId, date, doc)),
                 source,
                 resultHandler);
@@ -178,9 +192,37 @@ namespace SmartWalk.Core.Services
             }
         }
 
-        private static Location CreateLocation(XDocument xml)
+        private static string GenerateKey(params string[] args)
         {
-            var result = new Location
+            var key = default(string);
+            var comp = StringComparison.InvariantCultureIgnoreCase;
+
+            if (args != null)
+            {
+                if (args.Length == 1)
+                {
+                    key = args[0].Replace("/", "-").TrimEnd('-');
+                }
+                else if (args.Length > 0)
+                {
+                    key = args.Aggregate((a, b) => 
+                        {
+                            var one = a.Replace("/", "-");
+                            var another = b.Replace("/", "-");
+
+                            return one + 
+                                (one.EndsWith("-", comp) ? string.Empty : "-") + 
+                                another;
+                        });
+                }
+            }
+
+            return key;
+        }
+
+        private static LocationIndex CreateLocation(XDocument xml)
+        {
+            var result = new LocationIndex
             {
                 Name = xml.Root.Attribute("name").ValueOrNull(),
                 Logo = xml.Root.Attribute("logo").ValueOrNull(),

@@ -103,5 +103,7 @@
     <Compile Include="Model\Interfaces\INumberEntity.cs" />
     <Compile Include="Utils\EntityInfoExtensions.cs" />
     <Compile Include="ViewModels\Interfaces\IContactsEntityProvider.cs" />
+    <Compile Include="Services\LocationService.cs" />
+    <Compile Include="Services\ILocationService.cs" />
   </ItemGroup>
 </Project>

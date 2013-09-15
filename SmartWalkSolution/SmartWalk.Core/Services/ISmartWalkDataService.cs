@@ -5,10 +5,9 @@ namespace SmartWalk.Core.Services
 {
 	public interface ISmartWalkDataService
 	{
-        void GetLocation(
-            string location,
+        void GetLocationIndex(
             DataSource source,
-            Action<Location, Exception> resultHandler);
+            Action<LocationIndex, Exception> resultHandler);
 
         void GetOrg(
             string orgId,

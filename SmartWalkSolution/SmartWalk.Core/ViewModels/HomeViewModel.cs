@@ -11,17 +11,19 @@ namespace SmartWalk.Core.ViewModels
 		private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
-        private Location _location;
+        private LocationIndex _location;
 		private EntityInfo[] _orgInfos;
         private ICommand _navigateOrgViewCommand;
 
-        public HomeViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
+        public HomeViewModel(
+            ISmartWalkDataService dataService,
+            IExceptionPolicy exceptionPolicy)
 		{
 			_dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
 		}
 
-        public Location Location
+        public LocationIndex Location
         {
             get
             {
@@ -83,8 +85,7 @@ namespace SmartWalk.Core.ViewModels
 		{
             IsLoading = true;
 
-            // TODO: Use location for getting orgs
-            _dataService.GetLocation("sfba", DataSource.Server, (location, ex) => 
+            _dataService.GetLocationIndex(DataSource.Server, (location, ex) => 
           		{
                     IsLoading = false;
 
