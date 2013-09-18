@@ -16,7 +16,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>me.smartwalk.ios</string>
 	<key>CFBundleVersion</key>
-	<string>0.8.9</string>
+	<string>0.9.0</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon@2x</string>
@@ -24,5 +24,10 @@
 	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Fonts/Brandon_reg.otf</string>
+		<string>Fonts/Brandon_blk.otf</string>
+	</array>
 </dict>
 </plist>

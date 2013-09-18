@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
@@ -20,13 +21,13 @@ namespace SmartWalk.iOS.Views.HomeView
         public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = UIColor.DarkGray;
+            cell.ContentView.BackgroundColor = ThemeColors.CellHighlight;
         }
 
         public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = null;
+            cell.ContentView.BackgroundColor = ThemeColors.CellBackground;
         }
 
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)

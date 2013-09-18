@@ -3,10 +3,11 @@ using System.ComponentModel;
 using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels.Interfaces;
 using SmartWalk.iOS.Controls;
-using SmartWalk.Core.Model;
+using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.iOS.Views.Common
@@ -52,6 +53,10 @@ namespace SmartWalk.iOS.Views.Common
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            View.BackgroundColor = UIColor.FromPatternImage(UIImage.FromFile("Images/Background.png"));
+
+            InitializeLeftButton();
 
             var notifyableViewModel = ViewModel as INotifyPropertyChanged;
             if (notifyableViewModel != null)
@@ -105,8 +110,23 @@ namespace SmartWalk.iOS.Views.Common
 
         protected abstract UIView GetProgressViewContainer();
 
-        protected virtual void UpdateViewTitle()
+        protected virtual void InitializeLeftButton()
         {
+            NavigationItem.HidesBackButton = true;
+
+            var spacer = ButtonBarUtil.CreateSpacer();
+
+            var button = ButtonBarUtil.Create("Icons/NavBarBack.png");
+            button.TouchUpInside += (sender, e) => 
+                NavigationController.PopViewControllerAnimated(true);
+            var barButton = new UIBarButtonItem(button);
+
+            NavigationItem.SetLeftBarButtonItems(new [] { spacer, barButton }, true);
+        }
+
+        protected virtual string GetViewTitle()
+        {
+            return null;
         }
 
         protected virtual void InitializeListView()
@@ -314,6 +334,13 @@ namespace SmartWalk.iOS.Views.Common
             {
                 fullscreenProvider.ShowHideFullscreenImageCommand.Execute(null);
             }   
+        }
+
+        // TODO: probably upper case only of EN locale
+        private void UpdateViewTitle()
+        {
+            var title = GetViewTitle();
+            NavigationItem.Title = title != null ? title.ToUpper() : string.Empty;
         }
 
         private void UpdateViewState()

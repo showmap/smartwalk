@@ -1,5 +1,4 @@
 using Cirrious.MvvmCross.Binding.BindingContext;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
@@ -10,37 +9,19 @@ namespace SmartWalk.iOS.Views.HomeView
 {
     public partial class HomeView : ListViewBase
     {
-        private MvxImageViewLoader _imageHelper;
-
-        public HomeView()
-        {
-            _imageHelper = new MvxImageViewLoader(() => BackgroundImageView);
-
-            var set = this.CreateBindingSet<HomeView, HomeViewModel>();
-            set.Bind(_imageHelper).To(vm => vm.Location.Logo);
-            set.Apply();
-        }
-
         public new HomeViewModel ViewModel
         {
             get { return (HomeViewModel)base.ViewModel; }
         }
 
-        public override void ViewDidLoad()
+        // we don't need default Back button on Home view
+        protected override void InitializeLeftButton()
         {
-            base.ViewDidLoad();
-
-            NavigationController.NavigationBar.BarStyle = UIBarStyle.Black;
-            NavigationController.NavigationBar.TintColor = UIColor.LightGray;
-
-            BackgroundImageView.ClipsToBounds = true;
-            OrgCollectionView.BackgroundColor = null;
-            OrgCollectionView.CellHeight = 80;
         }
 
         protected override ListViewDecorator GetListView()
         { 
-            return new ListViewDecorator(OrgCollectionView);  
+            return new ListViewDecorator(OrgCollectionView);
         }
 
         protected override UIView GetProgressViewContainer()
@@ -48,11 +29,9 @@ namespace SmartWalk.iOS.Views.HomeView
             return ProgressViewContainer;  
         }
 
-        protected override void UpdateViewTitle()
+        protected override string GetViewTitle()
         {
-            NavigationItem.Title = ViewModel.Location != null 
-                ? ViewModel.Location.Name 
-                : string.Empty;
+            return ViewModel.Location != null ? ViewModel.Location.Name : null;
         }
 
         protected override void InitializeListView()
@@ -77,7 +56,7 @@ namespace SmartWalk.iOS.Views.HomeView
         {
             if (propertyName == ViewModel.GetPropertyName(p => p.Location))
             {
-                UpdateViewTitle();
+                GetViewTitle();
             }
         }
     }

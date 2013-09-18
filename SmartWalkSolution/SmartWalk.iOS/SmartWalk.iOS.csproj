@@ -143,6 +143,9 @@
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Common\EntityCell\" />
     <Folder Include="Controls\" />
+    <Folder Include="Resources\Fonts\" />
+    <Folder Include="Resources\Images\" />
+    <Folder Include="Resources\Icons\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -267,6 +270,7 @@
     </Compile>
     <Compile Include="Views\HomeView\HomeCollectionView.cs" />
     <Compile Include="Controls\CopyLabel.cs" />
+    <Compile Include="Utils\ButtonBarUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -302,5 +306,28 @@
     <BundleResource Include="Resources\Default-568h%402x.png" />
     <BundleResource Include="Resources\Icon%402x.png" />
     <BundleResource Include="Resources\Icon.png" />
+    <BundleResource Include="Resources\Fonts\Brandon_blk.otf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </BundleResource>
+    <BundleResource Include="Resources\Fonts\Brandon_reg.otf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </BundleResource>
+    <BundleResource Include="Resources\Images\Background.png" />
+    <BundleResource Include="Resources\Images\Background%402x.png" />
+    <BundleResource Include="Resources\Images\NavBarBackground.png" />
+    <BundleResource Include="Resources\Images\NavBarBackground%402x.png" />
+    <BundleResource Include="Resources\Images\NavBarShadow.png" />
+    <BundleResource Include="Resources\Images\NavBarShadow%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarBack.png" />
+    <BundleResource Include="Resources\Icons\NavBarBack%402x.png" />
+    <BundleResource Include="Resources\Images\Black.png" />
+    <BundleResource Include="Resources\Icons\NavBarDown.png" />
+    <BundleResource Include="Resources\Icons\NavBarDown%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarUp.png" />
+    <BundleResource Include="Resources\Icons\NavBarUp%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarList.png" />
+    <BundleResource Include="Resources\Icons\NavBarList%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarMap.png" />
+    <BundleResource Include="Resources\Icons\NavBarMap%402x.png" />
   </ItemGroup>
 </Project>

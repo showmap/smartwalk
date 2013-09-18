@@ -113,12 +113,14 @@ namespace SmartWalk.iOS.Views.OrgEventView
             return ProgressViewContainer;  
         }
 
-        protected override void UpdateViewTitle()
+        protected override string GetViewTitle()
         {
             if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.Info != null)
             {
-                NavigationItem.Title = ViewModel.OrgEvent.Info.Date.ToShortDateString();
+                return ViewModel.OrgEvent.Info.Date.ToShortDateString();
             }
+
+            return null;
         }
 
         protected override IListViewSource CreateListViewSource()

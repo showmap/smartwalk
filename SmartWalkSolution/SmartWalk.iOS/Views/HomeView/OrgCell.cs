@@ -4,7 +4,6 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Views.Common;
-using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
@@ -18,9 +17,6 @@ namespace SmartWalk.iOS.Views.HomeView
         public OrgCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(() => OrgImageView);
-
-            Layer.BorderWidth = 1;
-            Layer.BorderColor = ThemeColors.MercuryLight.CGColor;
         }
 
         public new EntityInfo DataContext
@@ -40,7 +36,18 @@ namespace SmartWalk.iOS.Views.HomeView
 
             _imageHelper.ImageUrl = DataContext != null ? DataContext.Logo : null;
 
-            OrgNameLabel.Text = DataContext != null ? DataContext.Name : null;
+            if (DataContext != null && DataContext.Name != null)
+            {
+                var paragraphStyle = new NSMutableParagraphStyle { LineSpacing = -9 };
+                var str = new NSAttributedString(
+                    DataContext.Name, null, null, null, null, paragraphStyle);
+
+                OrgNameLabel.AttributedText = str;
+            }
+            else
+            {
+                OrgNameLabel.AttributedText = null;
+            }
         }
     }
 }
