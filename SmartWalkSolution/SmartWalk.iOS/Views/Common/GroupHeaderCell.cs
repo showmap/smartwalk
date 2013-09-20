@@ -1,7 +1,6 @@
 using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -9,6 +8,8 @@ namespace SmartWalk.iOS.Views.Common
     {
         public static readonly UINib Nib = UINib.FromName("GroupHeaderCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("GroupHeaderCell");
+
+        public const float DefaultHeight = 26;
 
         public GroupHeaderCell(IntPtr handle) : base(handle)
         {
@@ -23,13 +24,18 @@ namespace SmartWalk.iOS.Views.Common
         public string Text
         {
             get { return TitleLabel.Text; }
-            set { TitleLabel.Text = value; }
+            set { TitleLabel.Text = value != null ? value.ToUpper() : null; }
         }
 
-        protected override void Dispose(bool disposing)
+        public override void LayoutSubviews()
         {
-            base.Dispose(disposing);
-            ConsoleUtil.LogDisposed(this);
+            base.LayoutSubviews();
+
+            if (ShadowImageView != null && ShadowImageView.Image == null)
+            {
+                ShadowImageView.Image = UIImage.FromFile("Images/Shadow.png")
+                    .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
+            }
         }
     }
 }

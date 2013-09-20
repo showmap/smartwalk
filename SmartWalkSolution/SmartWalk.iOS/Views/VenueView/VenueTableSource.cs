@@ -39,7 +39,7 @@ namespace SmartWalk.iOS.Views.VenueView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return TitleForHeader(tableView, section) != null ? 23.0f : 0f;
+            return TitleForHeader(tableView, section) != null ? GroupHeaderCell.DefaultHeight : 0f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

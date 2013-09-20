@@ -6,6 +6,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
@@ -15,8 +16,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private const int ImageVerticalHeight = 120;
         private const int MapVerticalHeight = 80;
         private const int CellHorizontalHeight = 100;
-        private const int TextLineHeight = 19;
-        private const int Gap = 8;
+        private const int Gap = 15;
 
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
@@ -42,7 +42,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             var result = 
                 GetHeaderHeight(entity) + 
                 ((int)textHeight != 0 ? Gap * 2 : 0) + 
-                (isExpanded ? textHeight : Math.Min(textHeight, TextLineHeight * 3));
+                    (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrTextLineHeight * 3));
             return result;
         }
 
@@ -58,7 +58,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 using (var ns = new NSString(text))
                 {
                     textSize = ns.StringSize(
-                        UIFont.FromName("Helvetica", 15),
+                        Theme.EntityDescrFont,
                         frameSize,
                         UILineBreakMode.TailTruncation);
                 }
@@ -213,6 +213,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 MapWidthConstraint.Constant,
                 MapHeightConstraint.Constant);
 
+            if (DataContext != null)
+            {
+                ImageCell.IsShadowHidden = !ScreenUtil.IsVerticalOrientation || 
+                    !DataContext.Entity.Info.HasLogo() || 
+                        !DataContext.Entity.Info.HasAddress();
+            }
+
             if (DataContext != null &&
                 DataContext.Entity.Description != null)
             {
@@ -326,8 +333,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 {
                     Frame = BottomGradientView.Bounds,
                     Colors = new [] { 
-                        UIColor.White.ColorWithAlpha(0.2f).CGColor, 
-                        UIColor.White.CGColor 
+                        Theme.MercuryLight.ColorWithAlpha(0.2f).CGColor, 
+                        Theme.MercuryLight.CGColor 
                     },
                 };
 

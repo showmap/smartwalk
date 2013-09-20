@@ -3,6 +3,7 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.HomeView
@@ -30,24 +31,40 @@ namespace SmartWalk.iOS.Views.HomeView
             return (OrgCell)Nib.Instantiate(null, null)[0];
         }
 
+        public void SetSelected(bool isSelected)
+        {
+            SetAttributedString(isSelected);
+        }
+
         protected override void OnDataContextChanged()
         {
             OrgImageView.Image = null;
 
             _imageHelper.ImageUrl = DataContext != null ? DataContext.Logo : null;
 
+            SetAttributedString();
+        }
+
+        private void SetAttributedString(bool isSelected = false)
+        {
+            var result = default(NSAttributedString);
+
             if (DataContext != null && DataContext.Name != null)
             {
-                var paragraphStyle = new NSMutableParagraphStyle { LineSpacing = -9 };
-                var str = new NSAttributedString(
-                    DataContext.Name, null, null, null, null, paragraphStyle);
+                var paragraphStyle = new NSMutableParagraphStyle { 
+                    LineSpacing = Theme.OrgTextLineSpacing
+                };
 
-                OrgNameLabel.AttributedText = str;
+                result = new NSAttributedString(
+                    DataContext.Name, 
+                    null, 
+                    isSelected ? OrgNameLabel.HighlightedTextColor: null, 
+                    null, 
+                    null, 
+                    paragraphStyle);
             }
-            else
-            {
-                OrgNameLabel.AttributedText = null;
-            }
+
+            OrgNameLabel.AttributedText = result;
         }
     }
 }

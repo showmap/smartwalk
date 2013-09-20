@@ -16,6 +16,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private readonly MvxImageViewLoader _imageHelper;
 
         private UITapGestureRecognizer _imageTapGesture;
+        private bool _isShadowHidden;
 
         public ImageCell(IntPtr handle) : base (handle)
         {
@@ -48,6 +49,27 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public ICommand ShowContactsViewCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
 
+
+        public bool IsShadowHidden
+        {
+            get
+            {
+                return _isShadowHidden;
+            }
+            set
+            {
+                if (_isShadowHidden != value)
+                {
+                    _isShadowHidden = value;
+
+                    if (ShadowImageView != null)
+                    {
+                        ShadowImageView.Hidden = _isShadowHidden;
+                    }
+                }
+            }
+        }
+
         public static ImageCell Create()
         {
             return (ImageCell)Nib.Instantiate(null, null)[0];
@@ -79,12 +101,16 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             ImageView.ActivityIndicatorViewStyle = 
                 UIActivityIndicatorViewStyle.White;
+
+            ShadowImageView.Hidden = IsShadowHidden;
+            ShadowImageView.Image = UIImage.FromFile("Images/Shadow.png")
+                .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
         }
 
         protected override void OnDataContextChanged()
         {
             ImageView.Image = null;
-            _imageHelper.ImageUrl = null;
+            _imageHelper.ImageUrl = null; // we have to reset it, since Image is reset too
 
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Logo : null;

@@ -223,7 +223,6 @@
     <Compile Include="Views\Common\CollectionCellBase.cs" />
     <Compile Include="Views\HomeView\HomeCollectionDelegate.cs" />
     <Compile Include="Services\ExceptionPolicy.cs" />
-    <Compile Include="Controls\ThemeColors.cs" />
     <Compile Include="Views\Common\EntityCell\EntityAnnotation.cs" />
     <Compile Include="Views\Common\EntityCell\IEntityCellContext.cs" />
     <Compile Include="Views\Common\EntityViewModelWrapper.cs" />
@@ -271,6 +270,7 @@
     <Compile Include="Views\HomeView\HomeCollectionView.cs" />
     <Compile Include="Controls\CopyLabel.cs" />
     <Compile Include="Utils\ButtonBarUtil.cs" />
+    <Compile Include="Resources\Theme.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -316,8 +316,6 @@
     <BundleResource Include="Resources\Images\Background%402x.png" />
     <BundleResource Include="Resources\Images\NavBarBackground.png" />
     <BundleResource Include="Resources\Images\NavBarBackground%402x.png" />
-    <BundleResource Include="Resources\Images\NavBarShadow.png" />
-    <BundleResource Include="Resources\Images\NavBarShadow%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarBack.png" />
     <BundleResource Include="Resources\Icons\NavBarBack%402x.png" />
     <BundleResource Include="Resources\Images\Black.png" />
@@ -329,5 +327,9 @@
     <BundleResource Include="Resources\Icons\NavBarList%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarMap.png" />
     <BundleResource Include="Resources\Icons\NavBarMap%402x.png" />
+    <BundleResource Include="Resources\Images\Shadow.png" />
+    <BundleResource Include="Resources\Images\Shadow%402x.png" />
+    <BundleResource Include="Resources\Images\NavBarLandscapeBackground%402x.png" />
+    <BundleResource Include="Resources\Images\NavBarLandscapeBackground.png" />
   </ItemGroup>
 </Project>

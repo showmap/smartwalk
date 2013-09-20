@@ -7,6 +7,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels.Interfaces;
 using SmartWalk.iOS.Controls;
+using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common.EntityCell;
 
@@ -197,7 +198,7 @@ namespace SmartWalk.iOS.Views.Common
         private void InitializeRefreshControl()
         {
             _refreshControl = new UIRefreshControl {
-                TintColor = ThemeColors.Mercury
+                TintColor = Theme.Mercury
             };
 
             _refreshControl.ValueChanged += OnRefreshControlValueChanged;

@@ -46,7 +46,7 @@ namespace SmartWalk.iOS.Views.OrgView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return TitleForHeader(tableView, section) != null ? 23.0f : 0f;
+            return TitleForHeader(tableView, section) != null ? GroupHeaderCell.DefaultHeight : 0f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -66,7 +66,7 @@ namespace SmartWalk.iOS.Views.OrgView
 
             if (item is OrgEventInfo)
             {
-                return 50.0f;
+                return OrgEventCell.DefaultHeight;
             }
 
             throw new Exception("There is an unsupported type in the list.");

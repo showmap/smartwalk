@@ -13,6 +13,9 @@ namespace SmartWalk.iOS.Views.OrgView
 	partial class OrgEventCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIView CalendarView { get; set; }
+
+		[Outlet]
 		SmartWalk.iOS.Controls.CopyLabel DateLabel { get; set; }
 
 		[Outlet]
@@ -26,6 +29,11 @@ namespace SmartWalk.iOS.Views.OrgView
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (CalendarView != null) {
+				CalendarView.Dispose ();
+				CalendarView = null;
+			}
+
 			if (DateLabel != null) {
 				DateLabel.Dispose ();
 				DateLabel = null;

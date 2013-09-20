@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.OrgView
 {
@@ -11,8 +12,11 @@ namespace SmartWalk.iOS.Views.OrgView
         public static readonly UINib Nib = UINib.FromName("OrgEventCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgEventCell");
 
+        public const float DefaultHeight = 44;
+
         public OrgEventCell(IntPtr handle) : base(handle)
         {
+            SelectedBackgroundView = new UIView { BackgroundColor = Theme.CellHighlight };
         }
 
         public new OrgEventInfo DataContext
@@ -28,25 +32,33 @@ namespace SmartWalk.iOS.Views.OrgView
 
         protected override void OnInitialize()
         {
-            InitializeDayLabelSquare();
+            InitializeLabels();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            WeekDayLabel.Text = DataContext != null ? string.Format("{0:ddd}", DataContext.Date) : null;
-            DayLabel.Text = DataContext != null ? string.Format("{0:dd}", DataContext.Date) : null;
+            WeekDayLabel.Text = DataContext != null ? string.Format("{0:ddd}", DataContext.Date).ToUpper() : null; // TODO: probably only for EN locale
+            DayLabel.Text = DataContext != null ? DataContext.Date.Day.ToString() : null;
             DateLabel.Text = DataContext != null ? string.Format("{0:d MMMM yyyy}", DataContext.Date) : null;
-            HintLabel.Text = DataContext != null && DataContext.HasSchedule ? null : "(no schedule)";
+            HintLabel.Text = DataContext != null && DataContext.HasSchedule ? null : "no schedule";
 
-            DateLabel.TextColor = DataContext != null && !DataContext.HasSchedule 
-                ? UIColor.LightGray : UIColor.Black;
-            DayLabel.BackgroundColor = DataContext != null && !DataContext.HasSchedule 
-                ? UIColor.FromRGB(128, 128, 128) : UIColor.FromRGB(0, 128, 255);
+            CalendarView.BackgroundColor = DataContext != null && !DataContext.HasSchedule 
+                ? Theme.OrgEventPassive : Theme.OrgEventActive;
         }
 
-        private void InitializeDayLabelSquare()
+        private void InitializeLabels()
         {
-            DayLabel.Layer.CornerRadius = 3;
+            WeekDayLabel.Font = Theme.OrgEventWeekDayFont;
+            WeekDayLabel.TextColor = Theme.OrgEventDayText;
+
+            DayLabel.Font = Theme.OrgEventDayFont;
+            DayLabel.TextColor = Theme.OrgEventDayText;
+
+            DateLabel.Font = Theme.OrgEventDateFont;
+            DateLabel.TextColor = Theme.OrgEventDateText;
+
+            HintLabel.Font = Theme.OrgEventHintFont;
+            HintLabel.TextColor = Theme.OrgEventHintText;
         }
     }
 }
