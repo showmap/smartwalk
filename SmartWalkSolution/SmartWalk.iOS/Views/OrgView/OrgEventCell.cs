@@ -15,7 +15,8 @@ namespace SmartWalk.iOS.Views.OrgView
         public const float DefaultHeight = 44;
 
         public OrgEventCell(IntPtr handle) : base(handle)
-        {
+        {   
+            BackgroundView = new UIView { BackgroundColor = Theme.BackgroundPatternColor };
             SelectedBackgroundView = new UIView { BackgroundColor = Theme.CellHighlight };
         }
 
@@ -32,21 +33,32 @@ namespace SmartWalk.iOS.Views.OrgView
 
         protected override void OnInitialize()
         {
-            InitializeLabels();
+            InitializeLabelsStyle();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            WeekDayLabel.Text = DataContext != null ? string.Format("{0:ddd}", DataContext.Date).ToUpper() : null; // TODO: probably only for EN locale
-            DayLabel.Text = DataContext != null ? DataContext.Date.Day.ToString() : null;
-            DateLabel.Text = DataContext != null ? string.Format("{0:d MMMM yyyy}", DataContext.Date) : null;
-            HintLabel.Text = DataContext != null && DataContext.HasSchedule ? null : "no schedule";
+            WeekDayLabel.Text = DataContext != null 
+                ? string.Format("{0:ddd}", DataContext.Date).ToUpper() 
+                : null; // TODO: probably only for EN locale
+
+            DayLabel.Text = DataContext != null 
+                ? DataContext.Date.Day.ToString() 
+                : null;
+
+            DateLabel.Text = DataContext != null 
+                ? string.Format("{0:d MMMM yyyy}", DataContext.Date) 
+                : null;
+
+            HintLabel.Text = DataContext != null && DataContext.HasSchedule 
+                ? null 
+                : "no schedule";
 
             CalendarView.BackgroundColor = DataContext != null && !DataContext.HasSchedule 
                 ? Theme.OrgEventPassive : Theme.OrgEventActive;
         }
 
-        private void InitializeLabels()
+        private void InitializeLabelsStyle()
         {
             WeekDayLabel.Font = Theme.OrgEventWeekDayFont;
             WeekDayLabel.TextColor = Theme.OrgEventDayText;

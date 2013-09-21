@@ -26,16 +26,5 @@ namespace SmartWalk.iOS.Views.Common
             get { return TitleLabel.Text; }
             set { TitleLabel.Text = value != null ? value.ToUpper() : null; }
         }
-
-        public override void LayoutSubviews()
-        {
-            base.LayoutSubviews();
-
-            if (ShadowImageView != null && ShadowImageView.Image == null)
-            {
-                ShadowImageView.Image = UIImage.FromFile("Images/Shadow.png")
-                    .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
-            }
-        }
     }
 }

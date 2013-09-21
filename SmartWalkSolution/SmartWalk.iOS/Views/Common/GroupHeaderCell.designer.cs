@@ -13,21 +13,21 @@ namespace SmartWalk.iOS.Views.Common
 	partial class GroupHeaderCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIImageView ShadowImageView { get; set; }
+		SmartWalk.iOS.Controls.Shadow Shadow { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ShadowImageView != null) {
-				ShadowImageView.Dispose ();
-				ShadowImageView = null;
-			}
-
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
+			}
+
+			if (Shadow != null) {
+				Shadow.Dispose ();
+				Shadow = null;
 			}
 		}
 	}

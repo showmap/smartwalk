@@ -23,6 +23,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint NameLeftConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.iOS.Controls.Shadow Shadow { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -44,6 +47,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (NameLeftConstraint != null) {
 				NameLeftConstraint.Dispose ();
 				NameLeftConstraint = null;
+			}
+
+			if (Shadow != null) {
+				Shadow.Dispose ();
+				Shadow = null;
 			}
 		}
 	}

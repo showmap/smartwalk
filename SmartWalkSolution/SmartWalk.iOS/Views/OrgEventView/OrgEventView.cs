@@ -25,6 +25,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private bool _isAnimating;
         private PointF _tableContentOffset;
         private VenueShow _previousExpandedShow;
+        private UIButton _modeButtonList;
+        private UIButton _modeButtonMap;
 
         private NSTimer _timer;
 
@@ -117,7 +119,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.Info != null)
             {
-                return ViewModel.OrgEvent.Info.Date.ToShortDateString();
+                return string.Format("{0:d MMMM yyyy}", ViewModel.OrgEvent.Info.Date);
             }
 
             return null;
@@ -189,10 +191,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void InitializeToolBar()
         {
-            _modeButton = new UIBarButtonItem();
-            _modeButton.Clicked += OnModeButtonClicked;
+            _modeButtonList = ButtonBarUtil.Create("Icons/NavBarList.png");
+            _modeButtonList.TouchUpInside += OnModeButtonClicked;
 
-            NavigationItem.SetRightBarButtonItem(_modeButton, true);
+            _modeButtonMap = ButtonBarUtil.Create("Icons/NavBarMap.png");
+            _modeButtonMap.TouchUpInside += OnModeButtonClicked;
+
+            _modeButton = new UIBarButtonItem(_modeButtonMap);
+            var spacer = ButtonBarUtil.CreateSpacer();
+
+            NavigationItem.SetRightBarButtonItems(new [] {spacer, _modeButton}, true);
         }
 
         private void DisposeToolBar()
@@ -351,7 +359,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             if (ViewModel.Mode == OrgEventViewMode.Map)
             {
-                _modeButton.Title = "List";
+                _modeButton.CustomView = _modeButtonList;
 
                 var completeHandler = new NSAction(() => 
                     {
@@ -387,7 +395,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
             else
             {
-                _modeButton.Title = "Map";
+                _modeButton.CustomView = _modeButtonMap;
 
                 var completeHandler = new NSAction(() => 
                     {

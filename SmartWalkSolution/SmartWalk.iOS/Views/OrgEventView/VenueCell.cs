@@ -5,6 +5,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -13,13 +14,17 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
 
+        public const float DefaultHeight = 64;
+        private const float ImageTextGap = 74;
+        private const float TextGap = 10;
+
         private MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _addressTapGesture;
 
         public VenueCell(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView();
+            BackgroundView = new UIView { BackgroundColor = Theme.BackgroundPatternColor };
             _imageHelper = new MvxImageViewLoader(() => LogoImageView);
         }
 
@@ -53,6 +58,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override void OnInitialize()
         {
             InitializeGestures();
+            InitializeLabelsStyle();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -68,13 +74,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             NameLeftConstraint.Constant = DataContext != null && 
                 DataContext.Info.Logo != null 
-                ? 84 : 8;
+                    ? ImageTextGap : TextGap;
 
             NameLabel.Text = DataContext != null 
                 ? (DataContext.Number == 0 
                     ? DataContext.Info.Name 
                     : string.Format("{0}. {1}", 
-                        DataContext.Number, DataContext.Info.Name))
+                        DataContext.Number, DataContext.Info.Name)).ToUpper()
                 : null;
 
             // TODO: to support showing more than one address
@@ -116,6 +122,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
             _addressTapGesture.NumberOfTapsRequired = (uint)1;
 
             AddressLabel.AddGestureRecognizer(_addressTapGesture);
+        }
+
+        private void InitializeLabelsStyle()
+        {
+            NameLabel.Font = Theme.VenueCellTitleFont;
+            NameLabel.TextColor = Theme.VenueCellTitleText;
+
+            AddressLabel.Font = Theme.VenueCellAddressFont;
+            AddressLabel.TextColor = Theme.VenueCellAddressText;
         }
 
         private void DisposeGestures()

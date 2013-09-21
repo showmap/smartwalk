@@ -5,20 +5,20 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
     public partial class VenueShowCell : TableCellBase
     {
-        public const int DefaultCellHeight = Gap + TextLineHeight + Gap;
-
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
+        public const int DefaultHeight = 44;
+
         private const int ImageHeight = 100;
         private const int TimeLabelWidth = 60;
-        private const int TextLineHeight = 19;
         private const int Gap = 8;
 
         private readonly MvxImageViewLoader _imageHelper;
@@ -29,6 +29,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
+            BackgroundView = new UIView { BackgroundColor = Theme.CellBackground };
+
             _imageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
                 () => 
@@ -64,7 +66,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 if (show.Description != null)
                 {
                     var logoHeight = show.Logo != null ? Gap + ImageHeight : 0;
-                    var detailsHeight = show.Site != null ? Gap + TextLineHeight : 0;
+                    var detailsHeight = show.Site != null ? Gap + Theme.VenueShowTextLineHeight : 0;
                     var timeLabelsWidth = Gap + TimeLabelWidth + 3 + TimeLabelWidth + Gap;
                     var textHeight = CalculateTextHeight(frameWidth - timeLabelsWidth, show.Description);
                     cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
@@ -73,7 +75,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return cellHeight;
             }
 
-            return DefaultCellHeight;
+            return DefaultHeight;
         }
 
         private static float CalculateTextHeight(float frameWidth, string text)
@@ -86,7 +88,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 using (var ns = new NSString(text))
                 {
                     textSize = ns.StringSize(
-                        UIFont.FromName("Helvetica", 15),
+                        Theme.VenueShowCellFont,
                         frameSize,
                         UILineBreakMode.TailTruncation);
                 }
@@ -169,7 +171,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 DataContext.Site != null &&
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
-                DetailsHeightConstraint.Constant = TextLineHeight;
+                DetailsHeightConstraint.Constant = Theme.VenueShowTextLineHeight;
                 ImageAndDetailsSpaceConstraint.Constant = Gap - 3;
             }
             else
@@ -205,6 +207,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override void OnInitialize()
         {
             InitializeGestures();
+            InitializeLabelsStyle();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -330,6 +333,21 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 _detailsTapGesture.Dispose();
                 _detailsTapGesture = null;
             }
+        }
+
+        private void InitializeLabelsStyle()
+        {
+            StartTimeLabel.Font = Theme.VenueShowCellTimeFont;
+            StartTimeLabel.TextColor = Theme.VenueShowCellTimeText;
+
+            EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
+            EndTimeLabel.TextColor = Theme.VenueShowCellTimeText;
+
+            DescriptionLabel.Font = Theme.VenueShowCellFont;
+            DescriptionLabel.TextColor = Theme.VenueShowCellText;
+
+            DetailsLabel.Font = Theme.VenueShowCellFont;
+            DetailsLabel.TextColor = Theme.HyperlinkText;
         }
     }
 }

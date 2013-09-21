@@ -110,7 +110,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             return _viewModel.IsGroupedByLocation || 
                 (_viewModel.ExpandedShow != null && 
-                CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)) ? 80f : 0;
+                CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)) 
+                    ? VenueCell.DefaultHeight : 0;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -127,7 +128,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 return height;
             }
 
-            return 35f;
+            return VenueShowCell.DefaultHeight;
         }
 
         public override int NumberOfSections(UITableView tableView)

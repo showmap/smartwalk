@@ -25,6 +25,7 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchI18n />
     <MtouchArch>ARMv7</MtouchArch>
+    <MtouchSdkVersion>6.1</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
@@ -35,6 +36,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchI18n />
     <MtouchArch>ARMv7</MtouchArch>
+    <MtouchSdkVersion>6.1</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -271,6 +273,7 @@
     <Compile Include="Controls\CopyLabel.cs" />
     <Compile Include="Utils\ButtonBarUtil.cs" />
     <Compile Include="Resources\Theme.cs" />
+    <Compile Include="Controls\Shadow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -26,6 +26,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         public EntityCell(IntPtr handle) : base(handle)
         {
+            BackgroundView = new UIView { BackgroundColor = Theme.BackgroundPatternColor };
         }
 
         public static EntityCell Create()

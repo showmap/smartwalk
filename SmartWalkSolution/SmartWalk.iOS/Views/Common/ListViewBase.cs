@@ -55,7 +55,7 @@ namespace SmartWalk.iOS.Views.Common
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = UIColor.FromPatternImage(UIImage.FromFile("Images/Background.png"));
+            View.BackgroundColor = Theme.BackgroundPatternColor;
 
             InitializeLeftButton();
 
@@ -198,7 +198,7 @@ namespace SmartWalk.iOS.Views.Common
         private void InitializeRefreshControl()
         {
             _refreshControl = new UIRefreshControl {
-                TintColor = Theme.Mercury
+                TintColor = Theme.NavBarBackground
             };
 
             _refreshControl.ValueChanged += OnRefreshControlValueChanged;
