@@ -19,6 +19,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
 
 		[Outlet]
+		MonoTouch.MapKit.MKMapView MapView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIView MapViewContainer { get; set; }
+
+		[Outlet]
 		SmartWalk.iOS.Controls.CopyLabel NameLabel { get; set; }
 
 		[Outlet]
@@ -37,6 +43,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (LogoImageView != null) {
 				LogoImageView.Dispose ();
 				LogoImageView = null;
+			}
+
+			if (MapViewContainer != null) {
+				MapViewContainer.Dispose ();
+				MapViewContainer = null;
+			}
+
+			if (MapView != null) {
+				MapView.Dispose ();
+				MapView = null;
 			}
 
 			if (NameLabel != null) {

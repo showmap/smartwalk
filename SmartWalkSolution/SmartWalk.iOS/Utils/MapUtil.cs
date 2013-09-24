@@ -12,14 +12,26 @@ namespace SmartWalk.iOS.Utils
             return MKCoordinateRegion.FromDistance(coordinate, 300, 300);
         }
 
-        public static MKCoordinateRegion CoordinateRegionForCoordinates(CLLocationCoordinate2D[] coordinates) 
+        public static MKCoordinateRegion CoordinateRegionForCoordinates(
+            CLLocationCoordinate2D[] coordinates)
         {
-            var rect = default(MKMapRect);
+            return CoordinateRegionForCoordinates(coordinates, new MKMapSize(0, 0));
+        }
+
+        public static MKCoordinateRegion CoordinateRegionForCoordinates(
+            CLLocationCoordinate2D[] coordinates,
+            MKMapSize margin) 
+        {
+            var rect = default(MKMapRect); 
 
             foreach (var coordinate in coordinates)
             {
                 var point = MKMapPoint.FromCoordinate(coordinate);
-                var pointRect = new MKMapRect(point.X, point.Y, 0, 0);
+                var pointRect = new MKMapRect(
+                    point.X - margin.Width / 2, 
+                    point.Y - margin.Height / 2, 
+                    margin.Width, 
+                    margin.Height);
 
                 rect = rect != default(MKMapRect) ? MKMapRect.Union(rect, pointRect) : pointRect;
             }

@@ -5,6 +5,7 @@ using MonoTouch.CoreLocation;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
+using MonoTouch.MapKit;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -18,6 +19,8 @@ namespace SmartWalk.iOS.Views.Common
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
 
             UpdateViewTitle();
             SelectAnnotation();
@@ -55,7 +58,11 @@ namespace SmartWalk.iOS.Views.Common
                         address)).ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 
-                MapViewControl.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
+                MapViewControl.SetRegion(
+                    MapUtil.CoordinateRegionForCoordinates(
+                        coordinates,
+                        new MKMapSize(5000, 5000)), 
+                    false);
                 MapViewControl.AddAnnotations(annotations);
                 MapViewControl.SelectAnnotation(annotations.First(), false);
             }
@@ -64,7 +71,7 @@ namespace SmartWalk.iOS.Views.Common
         private void UpdateViewTitle()
         {
             NavigationItem.Title = ViewModel.Annotation != null
-                ? ViewModel.Annotation.Title
+                ? ViewModel.Annotation.Title.ToUpper()
                 : null;
         }
     }

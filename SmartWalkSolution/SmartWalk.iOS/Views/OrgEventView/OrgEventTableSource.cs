@@ -164,6 +164,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
                 headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
 
+                // to overlap shadow from previous header
+                headerView.Layer.ZPosition = section;
+
                 return headerView;
             }
 

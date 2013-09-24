@@ -6,6 +6,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -41,6 +42,8 @@ namespace SmartWalk.iOS.Views.Common
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
 
             InitializeIndicator();
             UpdateViewTitle();
@@ -187,7 +190,7 @@ namespace SmartWalk.iOS.Views.Common
         {
             var pageTitle = WebView.EvaluateJavascript("document.title");
             NavigationItem.Title = pageTitle != null && pageTitle != string.Empty
-                ? pageTitle
+                ? pageTitle.ToUpper()
                     : (WebView.CanGoBack ? null: ViewModel.BrowserURL);
         }
 

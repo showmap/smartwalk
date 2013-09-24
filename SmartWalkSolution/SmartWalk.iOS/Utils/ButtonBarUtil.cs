@@ -27,6 +27,22 @@ namespace SmartWalk.iOS.Utils
             return button;
         }
 
+        public static void OverrideNavigatorBackButton(
+            UINavigationItem navItem,
+            UINavigationController navController)
+        {
+            navItem.HidesBackButton = true;
+
+            var spacer = CreateSpacer();
+
+            var button = Create("Icons/NavBarBack.png");
+            button.TouchUpInside += (sender, e) => 
+                navController.PopViewControllerAnimated(true);
+            var barButton = new UIBarButtonItem(button);
+
+            navItem.SetLeftBarButtonItems(new [] { spacer, barButton }, true);
+        }
+
         public static UIBarButtonItem[] GetUpDownBarItems(Action upClickHandler, Action downClickHandler)
         {
             var spacer = ButtonBarUtil.CreateSpacer();
@@ -39,7 +55,7 @@ namespace SmartWalk.iOS.Utils
             buttonDown.TouchUpInside += (s, e) => downClickHandler();
             var barButtonDown = new UIBarButtonItem(buttonDown) { Width = 34 };
 
-            var result = new [] { spacer, barButtonUp, spacer, barButtonDown };
+            var result = new [] { spacer, barButtonDown, spacer, barButtonUp };
             return result;
         }
     }

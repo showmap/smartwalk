@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
@@ -6,6 +7,8 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Resources;
+using SmartWalk.iOS.Utils;
+using MonoTouch.MapKit;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -69,12 +72,32 @@ namespace SmartWalk.iOS.Views.OrgEventView
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Logo : null;
 
-            LogoImageView.Hidden = DataContext != null 
-                ? DataContext.Info.Logo == null : true;
-
-            NameLeftConstraint.Constant = DataContext != null && 
+            /*NameLeftConstraint.Constant = DataContext != null && 
                 DataContext.Info.Logo != null 
-                    ? ImageTextGap : TextGap;
+                    ? ImageTextGap : TextGap;*/
+
+            if (DataContext != null && DataContext.Info.Logo == null)
+            {
+                LogoImageView.Hidden = true;
+                MapViewContainer.Hidden = false;
+
+                var annotations = DataContext.Info.Addresses
+                    .Select(a => new VenueAnnotation(DataContext, a))
+                    .ToArray();
+                var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
+                MapView.SetRegion(
+                    MapUtil.CoordinateRegionForCoordinates(
+                        coordinates,
+                        new MKMapSize(5000, 5000)), 
+                    false);
+            }
+            else
+            {
+                LogoImageView.Hidden = false;
+                MapViewContainer.Hidden = true;
+
+                MapView.RemoveAnnotations(MapView.Annotations);
+            }
 
             NameLabel.Text = DataContext != null 
                 ? (DataContext.Number == 0 

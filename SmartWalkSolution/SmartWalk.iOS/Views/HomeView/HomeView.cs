@@ -14,11 +14,6 @@ namespace SmartWalk.iOS.Views.HomeView
             get { return (HomeViewModel)base.ViewModel; }
         }
 
-        // we don't need default Back button on Home view
-        protected override void InitializeLeftButton()
-        {
-        }
-
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(OrgCollectionView);

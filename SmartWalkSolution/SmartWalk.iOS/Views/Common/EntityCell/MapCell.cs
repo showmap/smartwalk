@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -6,6 +7,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Utils;
 using SmartWalk.Core.Model.Interfaces;
+using MonoTouch.MapKit;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -64,13 +66,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             if (DataContext != null && 
                 DataContext.Info.HasAddress())
             {
-                var annotation = new MapViewAnnotation(
-                    DataContext is INumberEntity ? ((INumberEntity)DataContext).Number : 0,
-                    DataContext.Info.Name, 
-                    DataContext.Info.Addresses[0]);
+                var annotations = DataContext.Info.Addresses.Select(
+                        a => new MapViewAnnotation(
+                            DataContext is INumberEntity ? ((INumberEntity)DataContext).Number : 0,
+                                DataContext.Info.Name, 
+                                a)).ToArray();
+                var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
                 MapView.SetRegion(
-                    MapUtil.CoordinateRegionForCoordinates(annotation.Coordinate), false);
-                MapView.AddAnnotation(annotation);
+                    MapUtil.CoordinateRegionForCoordinates(coordinates, new MKMapSize(2000, 2000)), false);
+                MapView.AddAnnotations(annotations);
             }
         }
 

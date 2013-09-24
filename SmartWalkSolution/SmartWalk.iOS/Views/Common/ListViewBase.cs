@@ -57,7 +57,11 @@ namespace SmartWalk.iOS.Views.Common
 
             View.BackgroundColor = Theme.BackgroundPatternColor;
 
-            InitializeLeftButton();
+            // override back button if it's visible
+            if (NavigationController.ViewControllers.Length > 1)
+            {
+                ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
+            }
 
             var notifyableViewModel = ViewModel as INotifyPropertyChanged;
             if (notifyableViewModel != null)
@@ -110,20 +114,6 @@ namespace SmartWalk.iOS.Views.Common
         protected abstract ListViewDecorator GetListView();
 
         protected abstract UIView GetProgressViewContainer();
-
-        protected virtual void InitializeLeftButton()
-        {
-            NavigationItem.HidesBackButton = true;
-
-            var spacer = ButtonBarUtil.CreateSpacer();
-
-            var button = ButtonBarUtil.Create("Icons/NavBarBack.png");
-            button.TouchUpInside += (sender, e) => 
-                NavigationController.PopViewControllerAnimated(true);
-            var barButton = new UIBarButtonItem(button);
-
-            NavigationItem.SetLeftBarButtonItems(new [] { spacer, barButton }, true);
-        }
 
         protected virtual string GetViewTitle()
         {
