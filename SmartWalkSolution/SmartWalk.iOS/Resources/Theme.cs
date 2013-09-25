@@ -62,6 +62,8 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIImage ShadowImage = UIImage.FromFile("Images/Shadow.png")
             .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
 
+        public static readonly UIImage SmallMapIcon = UIImage.FromFile("Icons/SmallMap.png");
+
         public static void Apply()
         {
             UINavigationBar.Appearance.SetBackgroundImage(

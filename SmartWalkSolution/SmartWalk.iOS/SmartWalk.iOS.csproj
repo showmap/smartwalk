@@ -334,5 +334,7 @@
     <BundleResource Include="Resources\Images\Shadow%402x.png" />
     <BundleResource Include="Resources\Images\NavBarLandscapeBackground%402x.png" />
     <BundleResource Include="Resources\Images\NavBarLandscapeBackground.png" />
+    <BundleResource Include="Resources\Icons\SmallMap.png" />
+    <BundleResource Include="Resources\Icons\SmallMap%402x.png" />
   </ItemGroup>
 </Project>

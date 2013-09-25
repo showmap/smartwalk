@@ -137,4 +137,3 @@ namespace SmartWalk.iOS.Views.OrgEventView
         }
     }
 }
-

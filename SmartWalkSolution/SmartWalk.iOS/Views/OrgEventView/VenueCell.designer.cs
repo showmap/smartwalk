@@ -31,7 +31,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		MonoTouch.UIKit.NSLayoutConstraint NameLeftConstraint { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIButton NavigateOnMapButton { get; set; }
+
+		[Outlet]
 		SmartWalk.iOS.Controls.Shadow Shadow { get; set; }
+
+		[Action ("OnNavigateOnMapClick:")]
+		partial void OnNavigateOnMapClick (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -45,14 +51,14 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				LogoImageView = null;
 			}
 
-			if (MapViewContainer != null) {
-				MapViewContainer.Dispose ();
-				MapViewContainer = null;
-			}
-
 			if (MapView != null) {
 				MapView.Dispose ();
 				MapView = null;
+			}
+
+			if (MapViewContainer != null) {
+				MapViewContainer.Dispose ();
+				MapViewContainer = null;
 			}
 
 			if (NameLabel != null) {
@@ -68,6 +74,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (Shadow != null) {
 				Shadow.Dispose ();
 				Shadow = null;
+			}
+
+			if (NavigateOnMapButton != null) {
+				NavigateOnMapButton.Dispose ();
+				NavigateOnMapButton = null;
 			}
 		}
 	}

@@ -3,12 +3,12 @@ using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
+using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Utils;
-using MonoTouch.MapKit;
+using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -23,7 +23,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _cellTapGesture;
-        private UITapGestureRecognizer _addressTapGesture;
+        private UILongPressGestureRecognizer _cellPressGesture;
 
         public VenueCell(IntPtr handle) : base(handle)
         {
@@ -116,37 +116,58 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void InitializeGestures()
         {
-            _cellTapGesture = new UITapGestureRecognizer(() => {
-                if (NavigateVenueCommand != null &&
-                    NavigateVenueCommand.CanExecute(DataContext))
+            var selectedAction = new NSAction(() => 
                 {
-                    NavigateVenueCommand.Execute(DataContext);
-                }
-            }) {
-                NumberOfTouchesRequired = (uint)1,
-                NumberOfTapsRequired = (uint)1
-            };
+                    SetSelectedState(true);
 
-            _cellTapGesture.ShouldReceiveTouch = 
-                new UITouchEventArgs((rec, touch) => 
-                    touch.View != AddressLabel);
+                    if (NavigateVenueCommand != null &&
+                        NavigateVenueCommand.CanExecute(DataContext))
+                    {
+                        NavigateVenueCommand.Execute(DataContext);
+                    }
+
+                    NSTimer.CreateScheduledTimer(
+                        TimeSpan.MinValue,
+                        () => SetSelectedState(false));
+                });
+
+            // TODO: fail if it's ended outside of the cell
+            _cellPressGesture = new UILongPressGestureRecognizer(rec => 
+                {
+                    if (rec.State == UIGestureRecognizerState.Began)
+                    {
+                        SetSelectedState(true);
+                    }
+                    else if (rec.State == UIGestureRecognizerState.Ended)
+                    {
+                        selectedAction();
+                    }
+                });
+
+            _cellTapGesture = new UITapGestureRecognizer(selectedAction);
 
             AddGestureRecognizer(_cellTapGesture);
-
-            _addressTapGesture = new UITapGestureRecognizer(() => {
-                if (NavigateVenueOnMapCommand != null &&
-                    NavigateVenueOnMapCommand.CanExecute(DataContext))
-                {
-                    NavigateVenueOnMapCommand.Execute(DataContext);
-                }
-            });
-
-            _addressTapGesture.NumberOfTouchesRequired = (uint)1;
-            _addressTapGesture.NumberOfTapsRequired = (uint)1;
-
-            AddressLabel.AddGestureRecognizer(_addressTapGesture);
+            AddGestureRecognizer(_cellPressGesture);
         }
 
+        private void DisposeGestures()
+        {
+            if (_cellPressGesture != null)
+            {
+                RemoveGestureRecognizer(_cellPressGesture);
+                _cellPressGesture.Dispose();
+                _cellPressGesture = null;
+            }
+
+            if (_cellTapGesture != null)
+            {
+                RemoveGestureRecognizer(_cellTapGesture);
+                _cellTapGesture.Dispose();
+                _cellTapGesture = null;
+            }
+        }
+
+        
         private void InitializeLabelsStyle()
         {
             NameLabel.Font = Theme.VenueCellTitleFont;
@@ -154,23 +175,34 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             AddressLabel.Font = Theme.VenueCellAddressFont;
             AddressLabel.TextColor = Theme.VenueCellAddressText;
+
+            NavigateOnMapButton.SetImage(Theme.SmallMapIcon, UIControlState.Normal);
         }
 
-        private void DisposeGestures()
+
+        partial void OnNavigateOnMapClick(UIButton sender)
         {
-            if (_cellTapGesture != null)
+            if (NavigateVenueOnMapCommand != null &&
+                NavigateVenueOnMapCommand.CanExecute(DataContext))
             {
-                RemoveGestureRecognizer(_cellTapGesture);
-                _cellTapGesture.Dispose();
-                _cellTapGesture = null;
+                NavigateVenueOnMapCommand.Execute(DataContext);
+            }
+        }
+
+        private void SetSelectedState(bool isSelected)
+        {
+            if (isSelected)
+            {
+                BackgroundView.BackgroundColor = Theme.CellHighlight;
+            }
+            else
+            {
+                BackgroundView.BackgroundColor = Theme.BackgroundPatternColor;
             }
 
-            if (_addressTapGesture != null)
-            {
-                AddressLabel.RemoveGestureRecognizer(_addressTapGesture);
-                _addressTapGesture.Dispose();
-                _addressTapGesture = null;
-            }
+            NameLabel.Highlighted = isSelected;
+            AddressLabel.Highlighted = isSelected;
+            NavigateOnMapButton.Highlighted = isSelected;
         }
     }
 }
