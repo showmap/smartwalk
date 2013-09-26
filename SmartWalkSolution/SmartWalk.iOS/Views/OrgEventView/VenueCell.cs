@@ -17,7 +17,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
 
-        public const float DefaultHeight = 64;
+        public const float DefaultHeight = 63;
         private const float ImageTextGap = 74;
         private const float TextGap = 10;
 
@@ -61,7 +61,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override void OnInitialize()
         {
             InitializeGestures();
-            InitializeLabelsStyle();
+            InitializeStyle();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -168,7 +168,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         }
 
         
-        private void InitializeLabelsStyle()
+        private void InitializeStyle()
         {
             NameLabel.Font = Theme.VenueCellTitleFont;
             NameLabel.TextColor = Theme.VenueCellTitleText;
@@ -177,6 +177,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             AddressLabel.TextColor = Theme.VenueCellAddressText;
 
             NavigateOnMapButton.SetImage(Theme.SmallMapIcon, UIControlState.Normal);
+            GoRightImageView.Image = Theme.GoRightIcon;
         }
 
 

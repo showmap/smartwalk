@@ -307,12 +307,13 @@ namespace SmartWalk.Core.ViewModels
                     if (ex == null)
                     {
                         OrgEvent = orgEvent;
-                        RaiseRefreshCompleted();
                     }
                     else
                     {
                         _exceptionPolicy.Trace(ex);
                     }
+                    
+                    RaiseRefreshCompleted();
                 });
             }
             else

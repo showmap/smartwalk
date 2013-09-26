@@ -92,12 +92,14 @@ namespace SmartWalk.Core.ViewModels
 					if (ex == null) 
 					{
                         Location = location;
-                        RaiseRefreshCompleted();
 					}
 					else 
 					{
                         _exceptionPolicy.Trace(ex);
 					}
+
+                
+                    RaiseRefreshCompleted();
 				});
 		}
 	}

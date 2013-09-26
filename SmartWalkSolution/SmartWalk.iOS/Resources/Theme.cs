@@ -9,6 +9,7 @@ namespace SmartWalk.iOS.Resources
     public class Theme
     {
         private const string BrandonBlack = "BrandonGrotesque-Black";
+        private const string BrandonBold = "BrandonGrotesque-Bold";
         private const string BrandonRegular = "BrandonGrotesque-Regular";
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGB(51, 51, 51);
@@ -40,16 +41,16 @@ namespace SmartWalk.iOS.Resources
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(BrandonRegular, 16);
         public static readonly UIColor OrgEventHeaderText = UIColor.FromRGB(153, 153, 153);
-        public static readonly UIFont VenueCellTitleFont = UIFont.FromName(BrandonBlack, 14);
+        public static readonly UIFont VenueCellTitleFont = UIFont.FromName(BrandonBold, 14);
         public static readonly UIColor VenueCellTitleText = UIColor.Black;
         public static readonly UIFont VenueCellAddressFont = UIFont.FromName(BrandonRegular, 14);
         public static readonly UIColor VenueCellAddressText = UIColor.FromRGB(153, 153, 153);
 
         public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(BrandonRegular, 12);
         public static readonly UIColor VenueShowCellTimeText = UIColor.Black;
-        public static readonly UIFont VenueShowCellFont = UIFont.FromName(BrandonRegular, 16);
+        public static readonly UIFont VenueShowCellFont = UIFont.FromName(BrandonRegular, 14);
         public static readonly UIColor VenueShowCellText = UIColor.Black;
-        public const int VenueShowTextLineHeight = 24;
+        public const int VenueShowTextLineHeight = 20;
 
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 
@@ -63,6 +64,10 @@ namespace SmartWalk.iOS.Resources
             .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
 
         public static readonly UIImage SmallMapIcon = UIImage.FromFile("Icons/SmallMap.png");
+        public static readonly UIImage GoRightIcon = UIImage.FromFile("Icons/GoRight.png");
+        public static readonly UIImage ClockRedIcon = UIImage.FromFile("Icons/ClockRed.png");
+        public static readonly UIImage ClockGreenIcon = UIImage.FromFile("Icons/ClockGreen.png");
+        public static readonly UIImage ClockBlueIcon = UIImage.FromFile("Icons/ClockBlue.png");
 
         public static void Apply()
         {

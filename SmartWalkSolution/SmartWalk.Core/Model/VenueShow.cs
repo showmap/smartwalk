@@ -28,6 +28,29 @@ namespace SmartWalk.Core.Model
             }
         }
 
+        public VenueShowStatus Status
+        {
+            get 
+            {
+                var status = 
+                    (Start.Date != DateTime.Now.Date) ||
+                        (Start == DateTime.MinValue && End >= DateTime.Now) ||
+                            (End == DateTime.MaxValue) ||
+                                (End >= DateTime.Now)
+                        ? VenueShowStatus.NotStarted 
+                        : VenueShowStatus.Finished;
+
+                if (Start.Date == DateTime.Now.Date &&
+                    Start <= DateTime.Now &&
+                    DateTime.Now <= End)
+                {
+                    status = VenueShowStatus.Started;
+                }
+
+                return status;
+            }
+        }
+
         public override bool Equals(object obj)
         {
             var show = obj as VenueShow;
@@ -59,6 +82,13 @@ namespace SmartWalk.Core.Model
                 Site = Site
             };
         }
+    }
+
+    public enum VenueShowStatus
+    {
+        NotStarted,
+        Started,
+        Finished
     }
 
     public class VenueShowComparer : IComparer<VenueShow>

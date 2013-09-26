@@ -336,5 +336,14 @@
     <BundleResource Include="Resources\Images\NavBarLandscapeBackground.png" />
     <BundleResource Include="Resources\Icons\SmallMap.png" />
     <BundleResource Include="Resources\Icons\SmallMap%402x.png" />
+    <BundleResource Include="Resources\Icons\GoRight.png" />
+    <BundleResource Include="Resources\Icons\GoRight%402x.png" />
+    <BundleResource Include="Resources\Fonts\Brandon_bld.otf" />
+    <BundleResource Include="Resources\Icons\ClockBlue.png" />
+    <BundleResource Include="Resources\Icons\ClockBlue%402x.png" />
+    <BundleResource Include="Resources\Icons\ClockGreen.png" />
+    <BundleResource Include="Resources\Icons\ClockGreen%402x.png" />
+    <BundleResource Include="Resources\Icons\ClockRed.png" />
+    <BundleResource Include="Resources\Icons\ClockRed%402x.png" />
   </ItemGroup>
 </Project>

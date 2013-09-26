@@ -141,12 +141,13 @@ namespace SmartWalk.Core.ViewModels
                         if (ex == null)
                         {
                             Org = org;
-                            RaiseRefreshCompleted();
                         }
                         else
                         {
                             _exceptionPolicy.Trace(ex);
                         }
+
+                        RaiseRefreshCompleted();
                     });
             }
             else
@@ -166,12 +167,13 @@ namespace SmartWalk.Core.ViewModels
                             if (ex == null)
                             {
                                 OrgInfos = index != null ? index.OrgInfos : null;
-                                RaiseRefreshCompleted();
                             }
                             else
                             {
                                 _exceptionPolicy.Trace(ex);
                             }
+
+                            RaiseRefreshCompleted();
                         });
             }
             else

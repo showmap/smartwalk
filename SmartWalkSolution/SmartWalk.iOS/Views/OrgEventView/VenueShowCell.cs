@@ -15,10 +15,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
-        public const int DefaultHeight = 44;
+        public const int DefaultHeight = Gap + Theme.VenueShowTextLineHeight + Gap + 1;
 
         private const int ImageHeight = 100;
-        private const int TimeLabelWidth = 60;
+        private const int TimeBlockWidth = 124;
         private const int Gap = 8;
 
         private readonly MvxImageViewLoader _imageHelper;
@@ -67,8 +67,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 {
                     var logoHeight = show.Logo != null ? Gap + ImageHeight : 0;
                     var detailsHeight = show.Site != null ? Gap + Theme.VenueShowTextLineHeight : 0;
-                    var timeLabelsWidth = Gap + TimeLabelWidth + 3 + TimeLabelWidth + Gap;
-                    var textHeight = CalculateTextHeight(frameWidth - timeLabelsWidth, show.Description);
+                    var textHeight = CalculateTextHeight(frameWidth - TimeBlockWidth, show.Description);
                     cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
                 }
 
@@ -172,7 +171,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
                 DetailsHeightConstraint.Constant = Theme.VenueShowTextLineHeight;
-                ImageAndDetailsSpaceConstraint.Constant = Gap - 3;
+                ImageAndDetailsSpaceConstraint.Constant = Gap;
             }
             else
             {
@@ -180,14 +179,14 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 ImageAndDetailsSpaceConstraint.Constant = 0;
             }
 
-            EndTimeLeftSpaceConstraint.Constant =
+            /*EndTimeLeftSpaceConstraint.Constant =
                 EndTimeLabel.Text != null &&
                     EndTimeLabel.Text.StartsWith("1", StringComparison.InvariantCultureIgnoreCase)
                     ? 2 : 3;
             EndTimeRightSpaceConstraint.Constant =
                 EndTimeLabel.Text != null &&
                     EndTimeLabel.Text.StartsWith("1", StringComparison.InvariantCultureIgnoreCase)
-                    ? 9 : 8;
+                    ? 9 : 8;*/
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -207,7 +206,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         protected override void OnInitialize()
         {
             InitializeGestures();
-            InitializeLabelsStyle();
+            InitializeStyle();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -215,33 +214,22 @@ namespace SmartWalk.iOS.Views.OrgEventView
             ThumbImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
-            var timeTextColor = 
-                DataContext == null ||
-                (DataContext.Start.Date != DateTime.Now.Date) ||
-                (DataContext.Start == DateTime.MinValue && DataContext.End >= DateTime.Now) ||
-                (DataContext.End == DateTime.MaxValue) ||
-                (DataContext.End >= DateTime.Now)
-                    ? UIColor.Black : UIColor.LightGray;
+            StartTimeLabel.Text = DataContext != null && 
+                    DataContext.Start != DateTime.MinValue
+                ? String.Format("{0:t}", DataContext.Start)
+                    .Replace(" ", "").ToLower() 
+                : null;
 
-            if (DataContext != null &&
-                DataContext.Start.Date == DateTime.Now.Date &&
-                DataContext.Start <= DateTime.Now &&
-                DateTime.Now <= DataContext.End)
-            {
-                timeTextColor = UIColor.FromRGB(9, 135, 16);
-            }
-
-            StartTimeLabel.Text = DataContext != null && DataContext.Start != DateTime.MinValue
-                ? String.Format("{0:t}", DataContext.Start) : null;
-            StartTimeLabel.TextColor = timeTextColor;
-
-            EndTimeLabel.Text = DataContext != null && DataContext.End != DateTime.MaxValue
-                ? String.Format("{0:t}", DataContext.End) : null;
-            EndTimeLabel.TextColor = timeTextColor;
+            EndTimeLabel.Text = DataContext != null && 
+                    DataContext.End != DateTime.MaxValue
+                ? String.Format("{0:t}", DataContext.End)
+                    .Replace(" ", "").ToLower() 
+                : null;
 
             DescriptionLabel.Text = DataContext != null 
                 ? DataContext.Description : null;
 
+            UpdateClockIcon();
             UpateImageState();
             SetNeedsUpdateConstraints();
         }
@@ -335,7 +323,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
-        private void InitializeLabelsStyle()
+        private void InitializeStyle()
         {
             StartTimeLabel.Font = Theme.VenueShowCellTimeFont;
             StartTimeLabel.TextColor = Theme.VenueShowCellTimeText;
@@ -348,6 +336,32 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             DetailsLabel.Font = Theme.VenueShowCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
+
+            ClockImageView.Image = Theme.ClockBlueIcon;
+        }
+
+        private void UpdateClockIcon()
+        {
+            if (DataContext == null)
+            {
+                ClockImageView.Image = Theme.ClockBlueIcon;
+                return;
+            }
+
+            switch (DataContext.Status)
+            {
+                case VenueShowStatus.NotStarted:
+                    ClockImageView.Image = Theme.ClockBlueIcon;
+                    break;
+
+                case VenueShowStatus.Started:
+                    ClockImageView.Image = Theme.ClockGreenIcon;
+                    break;
+
+                case VenueShowStatus.Finished:
+                    ClockImageView.Image = Theme.ClockRedIcon;
+                    break;
+            }
         }
     }
 }

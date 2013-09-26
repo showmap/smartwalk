@@ -13,10 +13,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
 	partial class VenueShowCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIImageView ClockImageView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint DescriptionLeftConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DetailsHeightConstraint { get; set; }
@@ -26,12 +32,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel EndTimeLabel { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint EndTimeLeftSpaceConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint EndTimeRightSpaceConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
@@ -65,6 +65,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				DetailsHeightConstraint = null;
 			}
 
+			if (DescriptionLeftConstraint != null) {
+				DescriptionLeftConstraint.Dispose ();
+				DescriptionLeftConstraint = null;
+			}
+
 			if (DetailsLabel != null) {
 				DetailsLabel.Dispose ();
 				DetailsLabel = null;
@@ -75,16 +80,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				EndTimeLabel = null;
 			}
 
-			if (EndTimeLeftSpaceConstraint != null) {
-				EndTimeLeftSpaceConstraint.Dispose ();
-				EndTimeLeftSpaceConstraint = null;
-			}
-
-			if (EndTimeRightSpaceConstraint != null) {
-				EndTimeRightSpaceConstraint.Dispose ();
-				EndTimeRightSpaceConstraint = null;
-			}
-
 			if (ImageAndDetailsSpaceConstraint != null) {
 				ImageAndDetailsSpaceConstraint.Dispose ();
 				ImageAndDetailsSpaceConstraint = null;
@@ -93,6 +88,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (ImageHeightConstraint != null) {
 				ImageHeightConstraint.Dispose ();
 				ImageHeightConstraint = null;
+			}
+
+			if (ClockImageView != null) {
+				ClockImageView.Dispose ();
+				ClockImageView = null;
 			}
 
 			if (ImageWidthConstraint != null) {

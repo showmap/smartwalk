@@ -16,6 +16,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
 		SmartWalk.iOS.Controls.CopyLabel AddressLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIImageView GoRightImageView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
 
 		[Outlet]
@@ -71,14 +74,19 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				NameLeftConstraint = null;
 			}
 
+			if (NavigateOnMapButton != null) {
+				NavigateOnMapButton.Dispose ();
+				NavigateOnMapButton = null;
+			}
+
 			if (Shadow != null) {
 				Shadow.Dispose ();
 				Shadow = null;
 			}
 
-			if (NavigateOnMapButton != null) {
-				NavigateOnMapButton.Dispose ();
-				NavigateOnMapButton = null;
+			if (GoRightImageView != null) {
+				GoRightImageView.Dispose ();
+				GoRightImageView = null;
 			}
 		}
 	}
