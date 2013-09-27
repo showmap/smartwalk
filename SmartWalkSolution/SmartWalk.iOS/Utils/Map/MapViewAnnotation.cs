@@ -1,16 +1,19 @@
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
 using SmartWalk.Core.Model;
+using SmartWalk.iOS.Utils.Map;
 
-namespace SmartWalk.iOS.Utils
+namespace SmartWalk.iOS.Utils.Map
 {
-    public class MapViewAnnotation : MKAnnotation
+    public class MapViewAnnotation : MKAnnotation, IMapAnnotation
     {
+        private readonly int _number;
         private readonly string _title;
         private readonly string _subTitle;
 
         public MapViewAnnotation(int number, string title, AddressInfo addressInfo)
         {
+            _number = number;
             _title = MapUtil.GetAnnotationTitle(number, title);
             _subTitle = addressInfo.Address;
 
@@ -34,6 +37,22 @@ namespace SmartWalk.iOS.Utils
             get
             {
                 return _subTitle;
+            }
+        }
+
+        public int Number
+        {
+            get
+            {
+                return _number;
+            }
+        }
+
+        public string Logo
+        {
+            get
+            {
+                return null;
             }
         }
     }

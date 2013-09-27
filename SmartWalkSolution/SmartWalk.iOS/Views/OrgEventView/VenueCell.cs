@@ -7,7 +7,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.iOS.Resources;
-using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Utils.Map;
 using SmartWalk.iOS.Views.Common;
 
 namespace SmartWalk.iOS.Views.OrgEventView

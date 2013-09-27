@@ -2,10 +2,11 @@ using System.ComponentModel;
 using System.Linq;
 using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.CoreLocation;
+using MonoTouch.MapKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
-using MonoTouch.MapKit;
+using SmartWalk.iOS.Utils.Map;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -21,6 +22,8 @@ namespace SmartWalk.iOS.Views.Common
             base.ViewDidLoad();
 
             ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
+
+            MapViewControl.Delegate = new MapDelegate { CanShowDetails = false };
 
             UpdateViewTitle();
             SelectAnnotation();

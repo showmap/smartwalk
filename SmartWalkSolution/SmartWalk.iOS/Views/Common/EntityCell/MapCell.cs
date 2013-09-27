@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
+using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Utils;
 using SmartWalk.Core.Model.Interfaces;
-using MonoTouch.MapKit;
+using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Utils.Map;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -56,6 +56,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         protected override void OnInitialize()
         {
             InitializeGestures();
+
+            MapView.Delegate = new MapDelegate { CanShowCallout = false };
         }
 
         protected override void OnDataContextChanged()

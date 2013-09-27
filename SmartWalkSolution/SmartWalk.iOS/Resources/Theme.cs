@@ -3,6 +3,7 @@ using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
 using SmartWalk.iOS.Views.HomeView;
 using SmartWalk.iOS.Views.OrgEventView;
+using System.Drawing;
 
 namespace SmartWalk.iOS.Resources
 {
@@ -26,8 +27,8 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIFont GroupHeaderText = UIFont.FromName(BrandonBlack, 14);
 
         public static readonly UIColor OrgEventDayText = UIColor.White;
-        public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(BrandonBlack, 10);
         public static readonly UIFont OrgEventDayFont = UIFont.FromName(BrandonRegular, 18);
+        public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(BrandonBlack, 10);
         public static readonly UIColor OrgEventDateText = UIColor.FromRGB(102, 102, 102);
         public static readonly UIFont OrgEventDateFont = UIFont.FromName(BrandonRegular, 18);
         public static readonly UIColor OrgEventHintText = UIColor.FromRGB(187, 187, 187);
@@ -51,6 +52,13 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIFont VenueShowCellFont = UIFont.FromName(BrandonRegular, 14);
         public static readonly UIColor VenueShowCellText = UIColor.Black;
         public const int VenueShowTextLineHeight = 20;
+
+        
+        public static readonly UIImage MapPinIcon = UIImage.FromFile("Icons/MapPin.png");
+        public static readonly UIColor MapPinText = UIColor.White;
+        public static readonly UIFont MapPinFont = UIFont.FromName(BrandonBold, 14);
+        public static readonly PointF MapPinOffset = new PointF(-8, -4);
+        public static readonly PointF MapPinTextOffset = new PointF(5, 5);
 
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 

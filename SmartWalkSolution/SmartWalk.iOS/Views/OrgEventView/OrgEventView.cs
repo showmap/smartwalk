@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
@@ -11,7 +12,9 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Utils.Map;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Views.OrgEventView;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -44,7 +47,9 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
             }
 
-            VenuesMapView.Delegate = new OrgEventMapDelegate(ViewModel);
+            var mapDelegate = new MapDelegate();
+            mapDelegate.DetailsClick += OnMapDelegateDetailsClick;
+            VenuesMapView.Delegate = mapDelegate;
 
             InitializeToolBar();
             InitializeGestures();
@@ -70,6 +75,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 DisposeGestures();
                 DisposeTableHeader();
                 DisposeSearchDisplayController();
+                DisposeMapView();
             }
         }
 
@@ -324,6 +330,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
+        private void DisposeMapView()
+        {
+            var mapDelegate = (MapDelegate)VenuesMapView.WeakDelegate;
+            mapDelegate.DetailsClick -= OnMapDelegateDetailsClick;
+            mapDelegate.Dispose();
+            VenuesMapView.WeakDelegate = null;
+            VenuesMapView.Dispose();
+        }
+
         private void SelectVenueMapAnnotation(Venue venue)
         {
             if (venue != null)
@@ -353,6 +368,16 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
                 VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), true);
             }
+        }
+
+        private void OnMapDelegateDetailsClick(object sender, MvxValueEventArgs<IMapAnnotation> e)
+        {
+            var venueAnnotation = e.Value as VenueAnnotation;
+            if (venueAnnotation != null &&
+                ViewModel.NavigateVenueCommand.CanExecute(venueAnnotation.Venue))
+            {
+                ViewModel.NavigateVenueCommand.Execute(venueAnnotation.Venue);
+            };
         }
        
         private void UpdateViewState(bool isAnimated)

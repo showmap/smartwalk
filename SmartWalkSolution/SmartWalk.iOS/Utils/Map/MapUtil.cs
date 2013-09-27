@@ -3,7 +3,7 @@ using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
 
-namespace SmartWalk.iOS.Utils
+namespace SmartWalk.iOS.Utils.Map
 {
     public static class MapUtil
     {

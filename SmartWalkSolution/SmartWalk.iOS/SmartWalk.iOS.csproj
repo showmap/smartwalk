@@ -148,6 +148,7 @@
     <Folder Include="Resources\Fonts\" />
     <Folder Include="Resources\Images\" />
     <Folder Include="Resources\Icons\" />
+    <Folder Include="Utils\Map\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -156,7 +157,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Setup.cs" />
-    <Compile Include="Utils\MapUtil.cs" />
     <Compile Include="Views\HomeView\HomeView.cs" />
     <Compile Include="Views\HomeView\HomeView.designer.cs">
       <DependentUpon>HomeView.cs</DependentUpon>
@@ -199,7 +199,6 @@
     <Compile Include="Views\OrgView\OrgTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.cs" />
     <Compile Include="Views\OrgEventView\VenueAnnotation.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventMapDelegate.cs" />
     <Compile Include="Views\Common\EntityCell\EntityCell.cs" />
     <Compile Include="Views\Common\EntityCell\EntityCell.designer.cs">
       <DependentUpon>EntityCell.cs</DependentUpon>
@@ -263,7 +262,6 @@
     <Compile Include="Views\Common\EntityCell\MapCell.designer.cs">
       <DependentUpon>MapCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\MapViewAnnotation.cs" />
     <Compile Include="Controls\Placeholder.cs" />
     <Compile Include="Views\Common\EntityCell\ContactsView.cs" />
     <Compile Include="Views\Common\EntityCell\ContactsView.designer.cs">
@@ -274,6 +272,11 @@
     <Compile Include="Utils\ButtonBarUtil.cs" />
     <Compile Include="Resources\Theme.cs" />
     <Compile Include="Controls\Shadow.cs" />
+    <Compile Include="Utils\Map\IMapAnnotation.cs" />
+    <Compile Include="Utils\Map\MapDelegate.cs" />
+    <Compile Include="Utils\Map\MapUtil.cs" />
+    <Compile Include="Utils\Map\MapViewAnnotation.cs" />
+    <Compile Include="Utils\UIViewExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -345,5 +348,7 @@
     <BundleResource Include="Resources\Icons\ClockGreen%402x.png" />
     <BundleResource Include="Resources\Icons\ClockRed.png" />
     <BundleResource Include="Resources\Icons\ClockRed%402x.png" />
+    <BundleResource Include="Resources\Icons\MapPin.png" />
+    <BundleResource Include="Resources\Icons\MapPin%402x.png" />
   </ItemGroup>
 </Project>
