@@ -16,6 +16,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
     public class OrgEventTableSource : HiddenHeaderTableSource, IListViewSource
     {
         private static readonly NSString EmptyCellKey = new NSString("empty");
+        private const int startZIndex = -500;
 
         private readonly OrgEventViewModel _viewModel;
 
@@ -165,7 +166,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
 
                 // to overlap shadow from previous header
-                headerView.Layer.ZPosition = section;
+                headerView.Layer.ZPosition = startZIndex + section;
 
                 return headerView;
             }
@@ -211,6 +212,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
             }
+
+            cell.Layer.ZPosition = startZIndex;
 
             return cell;
         }

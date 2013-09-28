@@ -47,10 +47,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
             }
 
-            var mapDelegate = new MapDelegate();
-            mapDelegate.DetailsClick += OnMapDelegateDetailsClick;
-            VenuesMapView.Delegate = mapDelegate;
-
             InitializeToolBar();
             InitializeGestures();
 
@@ -307,6 +303,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 {
                     VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
 
+                    if (!(VenuesMapView.WeakDelegate is MapDelegate))
+                    {
+                        var mapDelegate = new MapDelegate();
+                        mapDelegate.DetailsClick += OnMapDelegateDetailsClick;
+                        VenuesMapView.Delegate = mapDelegate;
+                    }
+
                     var annotations = ViewModel.OrgEvent.Venues
                         .SelectMany(v => v.Info.Addresses
                             .Select(a => new VenueAnnotation(v, a))).ToArray();
@@ -332,11 +335,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void DisposeMapView()
         {
-            var mapDelegate = (MapDelegate)VenuesMapView.WeakDelegate;
-            mapDelegate.DetailsClick -= OnMapDelegateDetailsClick;
-            mapDelegate.Dispose();
-            VenuesMapView.WeakDelegate = null;
-            VenuesMapView.Dispose();
+            VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
+
+            var mapDelegate = VenuesMapView.WeakDelegate as MapDelegate;
+            if (mapDelegate != null)
+            {
+                mapDelegate.DetailsClick -= OnMapDelegateDetailsClick;
+                mapDelegate.Dispose();
+                VenuesMapView.WeakDelegate = null;
+            }
         }
 
         private void SelectVenueMapAnnotation(Venue venue)

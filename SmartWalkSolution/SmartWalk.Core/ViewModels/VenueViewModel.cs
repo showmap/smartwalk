@@ -165,6 +165,8 @@ namespace SmartWalk.Core.ViewModels
             {
                 Venue = OrgEvent.Venues.Last();
             }
+
+            RaiseRefreshCompleted();
         }
 
         protected override void OnShowNextEntity()
@@ -178,6 +180,8 @@ namespace SmartWalk.Core.ViewModels
             {
                 Venue = OrgEvent.Venues.First();
             }
+
+            RaiseRefreshCompleted();
         }
 
         private void UpdateOrgEventAndVenue(DataSource source)
