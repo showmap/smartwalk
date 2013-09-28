@@ -16,6 +16,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		SmartWalk.iOS.Controls.CopyLabel ContactNameLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint NameHeightConstraint { get; set; }
 
 		[Outlet]
@@ -36,6 +39,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (PhoneNumberLabel != null) {
 				PhoneNumberLabel.Dispose ();
 				PhoneNumberLabel = null;
+			}
+
+			if (LogoImageView != null) {
+				LogoImageView.Dispose ();
+				LogoImageView = null;
 			}
 		}
 	}

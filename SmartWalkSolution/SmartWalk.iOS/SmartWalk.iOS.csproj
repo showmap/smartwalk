@@ -350,5 +350,11 @@
     <BundleResource Include="Resources\Icons\ClockRed%402x.png" />
     <BundleResource Include="Resources\Icons\MapPin.png" />
     <BundleResource Include="Resources\Icons\MapPin%402x.png" />
+    <BundleResource Include="Resources\Icons\ContactEmail.png" />
+    <BundleResource Include="Resources\Icons\ContactEmail%402x.png" />
+    <BundleResource Include="Resources\Icons\ContactPhone.png" />
+    <BundleResource Include="Resources\Icons\ContactPhone%402x.png" />
+    <BundleResource Include="Resources\Icons\ContactWeb.png" />
+    <BundleResource Include="Resources\Icons\ContactWeb%402x.png" />
   </ItemGroup>
 </Project>

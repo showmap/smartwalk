@@ -2,6 +2,7 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -12,9 +13,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         public PhoneCell(IntPtr handle) : base(handle)
         {
-            //Layer.BorderColor = UIColor.Gray.CGColor;
-            //Layer.BorderWidth = 1;
-            Layer.CornerRadius = 3;
         }
 
         public new PhoneInfo DataContext
@@ -26,6 +24,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static PhoneCell Create()
         {
             return (PhoneCell)Nib.Instantiate(null, null)[0];
+        }
+
+        protected override void OnInitialize()
+        {
+            ContactNameLabel.TextColor = Theme.HyperlinkText;
+            LogoImageView.Image = Theme.ContactPhoneIcon;
         }
 
         protected override void OnDataContextChanged()

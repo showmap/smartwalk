@@ -19,6 +19,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		SmartWalk.iOS.Controls.CopyLabel EmailLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint NameHeightConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
@@ -36,6 +39,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (NameHeightConstraint != null) {
 				NameHeightConstraint.Dispose ();
 				NameHeightConstraint = null;
+			}
+
+			if (LogoImageView != null) {
+				LogoImageView.Dispose ();
+				LogoImageView = null;
 			}
 		}
 	}

@@ -2,6 +2,7 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -12,9 +13,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         public EmailCell(IntPtr handle) : base(handle)
         {
-            //Layer.BorderColor = UIColor.Gray.CGColor;
-            //Layer.BorderWidth = 1;
-            Layer.CornerRadius = 3;
         }
 
         public new EmailInfo DataContext
@@ -26,6 +24,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static EmailCell Create()
         {
             return (EmailCell)Nib.Instantiate(null, null)[0];
+        }
+
+        protected override void OnInitialize()
+        {
+            ContactNameLabel.TextColor = Theme.HyperlinkText;
+            LogoImageView.Image = Theme.ContactEmailIcon;
         }
 
         protected override void OnDataContextChanged()

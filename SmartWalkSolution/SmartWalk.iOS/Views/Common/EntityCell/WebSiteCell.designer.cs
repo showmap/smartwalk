@@ -13,6 +13,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 	partial class WebSiteCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+
+		[Outlet]
 		SmartWalk.iOS.Controls.CopyLabel WebSiteLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
@@ -20,6 +23,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (WebSiteLabel != null) {
 				WebSiteLabel.Dispose ();
 				WebSiteLabel = null;
+			}
+
+			if (LogoImageView != null) {
+				LogoImageView.Dispose ();
+				LogoImageView = null;
 			}
 		}
 	}

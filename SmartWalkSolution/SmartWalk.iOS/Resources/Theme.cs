@@ -77,6 +77,10 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIImage ClockGreenIcon = UIImage.FromFile("Icons/ClockGreen.png");
         public static readonly UIImage ClockBlueIcon = UIImage.FromFile("Icons/ClockBlue.png");
 
+        public static readonly UIImage ContactEmailIcon = UIImage.FromFile("Icons/ContactEmail.png");
+        public static readonly UIImage ContactPhoneIcon = UIImage.FromFile("Icons/ContactPhone.png");
+        public static readonly UIImage ContactWebIcon = UIImage.FromFile("Icons/ContactWeb.png");
+
         public static void Apply()
         {
             UINavigationBar.Appearance.SetBackgroundImage(

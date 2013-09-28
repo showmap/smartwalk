@@ -1,12 +1,11 @@
 using System;
-using System.Linq;
 using System.Collections;
+using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
-using System.Drawing;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
