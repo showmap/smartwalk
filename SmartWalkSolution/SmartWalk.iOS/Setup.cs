@@ -18,7 +18,8 @@ namespace SmartWalk.iOS
 
 		protected override IMvxApplication CreateApp()
 		{
-            Mvx.ConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
+            Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
+            Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
 
             return new SmartWalkApplication();
 		}
@@ -27,6 +28,8 @@ namespace SmartWalk.iOS
         {
             registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.DownloadCache.Touch.Plugin>();
             registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.File.Touch.Plugin>();
+            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.PhoneCall.Touch.Plugin>();
+            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.Email.Touch.Plugin>();
 
             base.AddPluginsLoaders(registry);
 
@@ -36,6 +39,8 @@ namespace SmartWalk.iOS
         {
             Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();
+            Cirrious.MvvmCross.Plugins.PhoneCall.PluginLoader.Instance.EnsureLoaded();
+            Cirrious.MvvmCross.Plugins.Email.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
 
             base.InitializeLastChance();

@@ -1,13 +1,14 @@
-using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.Core.Services;
 
 namespace SmartWalk.Core.ViewModels.Common
 {
-    public class ProgressViewModel : MvxViewModel, IProgressViewModel
+    public abstract class ProgressViewModel : ActiveViewModel, IProgressViewModel
     {
         private bool _isLoading;
 
-        protected ProgressViewModel()
+        protected ProgressViewModel(IAnalyticsService analyticsService) : 
+            base(analyticsService)
         {
         }
 

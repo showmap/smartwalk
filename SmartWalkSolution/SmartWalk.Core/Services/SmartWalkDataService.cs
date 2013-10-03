@@ -30,7 +30,7 @@ namespace SmartWalk.Core.Services
             DataSource source,
             Action<LocationIndex, Exception> resultHandler)
         {
-            var location = _locationService.GetCurrentLocation();
+            var location = _locationService.CurrentLocation;
             var key = GenerateKey(location);
 
             GetGenericContract<LocationIndex>(
@@ -46,7 +46,7 @@ namespace SmartWalk.Core.Services
             DataSource source,
             Action<Org, Exception> resultHandler)
         {
-            var location = _locationService.GetCurrentLocation();
+            var location = _locationService.CurrentLocation;
             var key = GenerateKey(location, orgId);
 
             GetGenericContract<Org>(
@@ -63,7 +63,7 @@ namespace SmartWalk.Core.Services
             DataSource source,
             Action<OrgEvent, Exception> resultHandler)
         {
-            var location = _locationService.GetCurrentLocation();
+            var location = _locationService.CurrentLocation;
             var key = GenerateKey(
                 location,
                 orgId,

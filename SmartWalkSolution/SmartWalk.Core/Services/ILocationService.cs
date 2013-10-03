@@ -1,7 +1,11 @@
+using System;
+
 namespace SmartWalk.Core.Services
 {
     public interface ILocationService
     {
-        string GetCurrentLocation();
+        event EventHandler LocationChanged;
+
+        string CurrentLocation { get; }
     }
 }

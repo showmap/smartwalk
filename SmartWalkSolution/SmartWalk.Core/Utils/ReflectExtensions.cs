@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Linq.Expressions;
 using System.Text;
+using System.Collections.Generic;
 
 namespace SmartWalk.Core.Utils
 {
@@ -589,6 +590,21 @@ namespace SmartWalk.Core.Utils
         {
             var propertyInfo = GetProperty(property);
             return propertyInfo.Name;
+        }
+
+        public static Dictionary<string, object> ToDictionary(this object obj)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+
+            var result = new Dictionary<string, object>();
+            var properties = obj.GetType().GetProperties();
+
+            foreach (var property in properties)
+            {
+                result[property.Name.ToLowerInvariant()] = obj.GetValue<object>(property.Name);
+            }
+
+            return result;
         }
     }
 }

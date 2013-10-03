@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Windows.Input;
+using Cirrious.MvvmCross.Plugins.Email;
+using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
@@ -16,7 +18,13 @@ namespace SmartWalk.Core.ViewModels
         private EntityInfo[] _orgInfos;
         private ICommand _navigateOrgEventViewCommand;
 
-        public OrgViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
+        public OrgViewModel(
+            ISmartWalkDataService dataService,
+            IAnalyticsService analyticsService,
+            IMvxPhoneCallTask phoneCallTask,
+            IMvxComposeEmailTask composeEmailTask,
+            IExceptionPolicy exceptionPolicy) : 
+                base(analyticsService, phoneCallTask, composeEmailTask)
         {
             _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
@@ -81,6 +89,11 @@ namespace SmartWalk.Core.ViewModels
         public override bool CanShowPreviousEntity
         {
             get { return CanShowNextEntity; }
+        }
+
+        protected override object InitParameters
+        {
+            get { return _parameters; }
         }
 
         public void Init(Parameters parameters)

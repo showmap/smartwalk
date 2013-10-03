@@ -6,12 +6,14 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
 using SmartWalk.Core.ViewModels.Interfaces;
 using SmartWalk.Core.ViewModels.Common;
+using SmartWalk.Core.Constants;
 
 namespace SmartWalk.Core.ViewModels
 {
     public class OrgEventViewModel : RefreshableViewModel, IFullscreenImageProvider
     {
         private readonly ISmartWalkDataService _dataService;
+        private readonly IAnalyticsService _analyticsService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private OrgEventViewMode _mode = OrgEventViewMode.List;
@@ -32,9 +34,11 @@ namespace SmartWalk.Core.ViewModels
 
         public OrgEventViewModel(
             ISmartWalkDataService dataService,
-            IExceptionPolicy exceptionPolicy)
+            IAnalyticsService analyticsService,
+            IExceptionPolicy exceptionPolicy) : base(analyticsService)
         {
             _dataService = dataService;
+            _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
         }
 
@@ -150,6 +154,14 @@ namespace SmartWalk.Core.ViewModels
                             {
                                 ExpandedShow = null;
                             }
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                ExpandedShow != null 
+                                    ? Analytics.ActionLabelExpandVenueShow 
+                                    : Analytics.ActionLabelCollapseVenueShow,
+                                GetExpandedShowNumber());
                         },
                     venue => _parameters != null);
                 }
@@ -185,6 +197,13 @@ namespace SmartWalk.Core.ViewModels
                                         break;
                                 }
                             }
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Mode == OrgEventViewMode.List 
+                                    ? Analytics.ActionLabelSwitchToList 
+                                    : Analytics.ActionLabelSwitchToMap);
                         });
                 }
 
@@ -223,8 +242,14 @@ namespace SmartWalk.Core.ViewModels
                         venue => {
                             Mode = OrgEventViewMode.Map;
                             SelectedVenueOnMap = venue;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelNavigateVenueOnMap,
+                                venue.Number);
                         },
-                        venue => _parameters != null);
+                        venue => venue != null);
                 }
 
                 return _navigateVenueOnMapCommand;
@@ -256,7 +281,16 @@ namespace SmartWalk.Core.ViewModels
                 if (_showFullscreenImageCommand == null)
                 {
                     _showFullscreenImageCommand = new MvxCommand<string>(
-                        image => CurrentFullscreenImage = image);
+                        image => { 
+                            CurrentFullscreenImage = image;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                CurrentFullscreenImage != null
+                                    ? Analytics.ActionLabelShowFullscreenImage
+                                    : Analytics.ActionLabelHideFullscreenImage);
+                        });
                 }
 
                 return _showFullscreenImageCommand;
@@ -270,12 +304,26 @@ namespace SmartWalk.Core.ViewModels
                 if (_groupByLocationCommand == null)
                 {
                     _groupByLocationCommand = new MvxCommand<bool?>(
-                        groupBy => IsGroupedByLocation = (bool)groupBy,
+                        groupBy => { 
+                            IsGroupedByLocation = (bool)groupBy;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                IsGroupedByLocation 
+                                    ? Analytics.ActionLabelTurnOnGroupByLocation
+                                    : Analytics.ActionLabelTurnOffGroupByLocation);
+                        },
                         groupBy => groupBy.HasValue);
                 }
 
                 return _groupByLocationCommand;
             }
+        }
+
+        protected override object InitParameters
+        {
+            get { return _parameters; }
         }
 
         public void Init(Parameters parameters)
@@ -330,6 +378,20 @@ namespace SmartWalk.Core.ViewModels
             }
 
             return null;
+        }
+
+        private int GetExpandedShowNumber()
+        {
+            if (OrgEvent != null && ExpandedShow != null)
+            {
+                var venue = GetVenueByShow(ExpandedShow);
+                var venueNumber = Array.IndexOf(OrgEvent.Venues, venue);
+                var showNumber = Array.IndexOf(venue.Shows, ExpandedShow);
+
+                return venueNumber * 100 + showNumber;
+            }
+
+            return 0;
         }
 
         public class Parameters

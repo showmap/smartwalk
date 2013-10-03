@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
@@ -10,7 +9,7 @@ using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public partial class BrowserView : MvxViewController
+    public partial class BrowserView : ActiveAwareController
     {
         private UIActivityIndicatorView _indicatorView;
 

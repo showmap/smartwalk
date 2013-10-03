@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Linq;
-using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
 using SmartWalk.Core.Utils;
@@ -10,7 +9,7 @@ using SmartWalk.iOS.Utils.Map;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public partial class MapView : MvxViewController
+    public partial class MapView : ActiveAwareController
     {
         public new MapViewModel ViewModel
         {

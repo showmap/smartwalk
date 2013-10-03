@@ -1,10 +1,16 @@
-using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Core.ViewModels.Common;
+using SmartWalk.Core.Services;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class BrowserViewModel : MvxViewModel
+    public class BrowserViewModel : ActiveViewModel
     {
+        private Parameters _parameters;
         private string _browserURL;
+
+        public BrowserViewModel(IAnalyticsService analyticsService) : base(analyticsService)
+        {
+        }
 
         public string BrowserURL
         {
@@ -22,8 +28,15 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        protected override object InitParameters
+        {
+            get { return _parameters; }
+        }
+
         public void Init(Parameters parameters)
         {
+            _parameters = parameters;
+
             BrowserURL = parameters.URL;
         }
 

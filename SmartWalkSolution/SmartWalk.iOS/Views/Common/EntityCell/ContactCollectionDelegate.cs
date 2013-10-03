@@ -15,6 +15,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             _collectionSource = collectionSource;
         }
 
+        public ICommand CallPhoneCommand { get; set; }
+        public ICommand ComposeEmailCommand { get; set; }
         public ICommand NavigateSiteLinkCommand { get; set; }
 
         public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
@@ -36,24 +38,20 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             var phoneInfo = item as PhoneInfo;
             if (phoneInfo != null)
             {
-                if (phoneInfo.Phone != null)
+                if (CallPhoneCommand != null &&
+                    CallPhoneCommand.CanExecute(phoneInfo))
                 {
-                    using (var url = new NSUrl("tel:" + phoneInfo.Phone))
-                    {
-                        UIApplication.SharedApplication.OpenUrl(url);
-                    }
+                    CallPhoneCommand.Execute(phoneInfo);
                 }
             }
 
             var emailInfo = item as EmailInfo;
             if (emailInfo != null)
             {
-                if (emailInfo.Email != null)
+                if (ComposeEmailCommand != null &&
+                    ComposeEmailCommand.CanExecute(emailInfo))
                 {
-                    using (var url = new NSUrl("mailto:" + emailInfo.Email))
-                    {
-                        UIApplication.SharedApplication.OpenUrl(url);
-                    }
+                    ComposeEmailCommand.Execute(emailInfo);
                 }
             }
 

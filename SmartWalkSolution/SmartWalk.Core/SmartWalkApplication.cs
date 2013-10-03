@@ -10,9 +10,10 @@ namespace SmartWalk.Core
 	{
 		public SmartWalkApplication()
 		{
-            Mvx.ConstructAndRegisterSingleton<ICacheService, CacheService>();
-            Mvx.ConstructAndRegisterSingleton<ILocationService, LocationService>();
-            Mvx.ConstructAndRegisterSingleton<ISmartWalkDataService, SmartWalkDataService>();
+            Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
+            Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();
+            Mvx.LazyConstructAndRegisterSingleton<ISmartWalkDataService, SmartWalkDataService>();
+
             Mvx.RegisterSingleton<IMvxAppStart>(new MvxAppStart<HomeViewModel>());
 
             var parserDir = Mvx.Resolve<IMvxFillableStringToTypeParser>();

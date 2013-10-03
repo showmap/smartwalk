@@ -1,14 +1,20 @@
 using System;
 using Cirrious.MvvmCross.Platform;
-using Cirrious.MvvmCross.ViewModels;
 using Newtonsoft.Json;
 using SmartWalk.Core.Model;
+using SmartWalk.Core.Services;
+using SmartWalk.Core.ViewModels.Common;
 
 namespace SmartWalk.Core.ViewModels
 {
-    public class MapViewModel : MvxViewModel
+    public class MapViewModel : ActiveViewModel
     {
+        private Parameters _parameters;
         private MapAnnotation _annotation;
+
+        public MapViewModel(IAnalyticsService analyticsService) : base(analyticsService)
+        {
+        }
 
         public MapAnnotation Annotation
         {
@@ -26,8 +32,15 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        protected override object InitParameters
+        {
+            get { return _parameters; }
+        }
+
         public void Init(Parameters parameters)
         {
+            _parameters = parameters;
+
             if (parameters != null)
             {
                 Annotation = new MapAnnotation(
@@ -43,8 +56,8 @@ namespace SmartWalk.Core.ViewModels
 
         public class Parameters
         {
-            public string Title { get; set; }
             public int Number { get; set; }
+            public string Title { get; set; }
             public Addresses Addresses { get; set; }
         }
     }

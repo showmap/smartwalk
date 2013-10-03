@@ -19,6 +19,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private EntityInfo _entityInfo;
         private UITapGestureRecognizer _backgroundTapGesture;
+        private ICommand _callPhoneCommand;
+        private ICommand _composeEmailCommand;
         private ICommand _navigateWebSiteCommand;
 
         public ContactsView(IntPtr handle) : base(handle)
@@ -31,6 +33,42 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         }
 
         public event EventHandler Close;
+
+        public ICommand CallPhoneCommand
+        {
+            get
+            {
+                return _callPhoneCommand;
+            }
+            set
+            {
+                _callPhoneCommand = value;
+
+                var collectionDelegate = CollectionView.WeakDelegate as ContactCollectionDelegate;
+                if (collectionDelegate != null)
+                {
+                    collectionDelegate.CallPhoneCommand = _callPhoneCommand;
+                }
+            }
+        }
+
+        public ICommand ComposeEmailCommand
+        {
+            get
+            {
+                return _composeEmailCommand;
+            }
+            set
+            {
+                _composeEmailCommand = value;
+
+                var collectionDelegate = CollectionView.WeakDelegate as ContactCollectionDelegate;
+                if (collectionDelegate != null)
+                {
+                    collectionDelegate.ComposeEmailCommand = _composeEmailCommand;
+                }
+            }
+        }
 
         public ICommand NavigateWebSiteCommand
         {
@@ -82,6 +120,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             if (newsuper == null)
             {
+                CallPhoneCommand = null;
+                ComposeEmailCommand = null;
                 NavigateWebSiteCommand = null;
 
                 DisposeGestures();
@@ -131,6 +171,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 CollectionView.Source = collectionSource;
 
                 CollectionView.Delegate = new ContactCollectionDelegate(collectionSource) {
+                    CallPhoneCommand = CallPhoneCommand,
+                    ComposeEmailCommand = ComposeEmailCommand,
                     NavigateSiteLinkCommand = NavigateWebSiteCommand
                 };
             }

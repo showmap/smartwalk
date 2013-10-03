@@ -1,10 +1,14 @@
 using System.Windows.Input;
+using Cirrious.MvvmCross.Plugins.Email;
+using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Core.Constants;
 using SmartWalk.Core.Model;
-using SmartWalk.Core.ViewModels.Interfaces;
-using SmartWalk.Core.ViewModels.Common;
-using SmartWalk.Core.ViewModels;
 using SmartWalk.Core.Model.Interfaces;
+using SmartWalk.Core.Services;
+using SmartWalk.Core.ViewModels;
+using SmartWalk.Core.ViewModels.Common;
+using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels
 {
@@ -12,6 +16,10 @@ namespace SmartWalk.Core.ViewModels
         IFullscreenImageProvider,
         IContactsEntityProvider
     {
+        private readonly IAnalyticsService _analyticsService;
+        private readonly IMvxPhoneCallTask _phoneCallTask;
+        private readonly IMvxComposeEmailTask _composeEmailTask;
+
         private Entity _entity;
         private bool _isDescriptionExpanded;
         private EntityInfo _currentContactsEntityInfo;
@@ -22,8 +30,21 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand _showNextEntityCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand<EntityInfo> _showHideContactsCommand;
+        private MvxCommand<PhoneInfo> _callPhoneCommand;
+        private MvxCommand<EmailInfo> _composeEmailCommand;
         private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
         private MvxCommand<Entity> _navigateAddressesCommand;
+
+        protected EntityViewModel(
+            IAnalyticsService analyticsService,
+            IMvxPhoneCallTask phoneCallTask,
+            IMvxComposeEmailTask composeEmailTask) : 
+            base(analyticsService)
+        {
+            _analyticsService = analyticsService;
+            _phoneCallTask = phoneCallTask;
+            _composeEmailTask = composeEmailTask;
+        }
 
         public Entity Entity
         {
@@ -97,7 +118,16 @@ namespace SmartWalk.Core.ViewModels
                 if (_expandCollapseCommand == null)
                 {
                     _expandCollapseCommand = 
-                        new MvxCommand(() => IsDescriptionExpanded = !IsDescriptionExpanded);
+                        new MvxCommand(() => {
+                            IsDescriptionExpanded = !IsDescriptionExpanded;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                IsDescriptionExpanded 
+                                    ? Analytics.ActionLabelExpandDescription 
+                                    : Analytics.ActionLabelCollapseDescription);
+                        });
                 }
 
                 return _expandCollapseCommand;
@@ -111,7 +141,15 @@ namespace SmartWalk.Core.ViewModels
                 if (_showPreviousEntityCommand == null)
                 {
                     _showPreviousEntityCommand = 
-                        new MvxCommand(OnShowPreviousEntity, () => CanShowNextEntity);
+                        new MvxCommand(() => {
+                            OnShowPreviousEntity();
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShowPreviousEntity);
+                        },
+                        () => CanShowNextEntity);
                 }
 
                 return _showPreviousEntityCommand;
@@ -125,7 +163,15 @@ namespace SmartWalk.Core.ViewModels
                 if (_showNextEntityCommand == null)
                 {
                     _showNextEntityCommand = 
-                        new MvxCommand(OnShowNextEntity, () => CanShowPreviousEntity);
+                        new MvxCommand(() => { 
+                            OnShowNextEntity();
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShowNextEntity);
+                        }, 
+                        () => CanShowPreviousEntity);
                 }
 
                 return _showNextEntityCommand;
@@ -139,7 +185,16 @@ namespace SmartWalk.Core.ViewModels
                 if (_showFullscreenImageCommand == null)
                 {
                     _showFullscreenImageCommand = new MvxCommand<string>(
-                        image => CurrentFullscreenImage = image);
+                        image => {
+                            CurrentFullscreenImage = image;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                CurrentFullscreenImage != null
+                                    ? Analytics.ActionLabelShowFullscreenImage
+                                    : Analytics.ActionLabelHideFullscreenImage);
+                        });
                 }
 
                 return _showFullscreenImageCommand;
@@ -153,10 +208,63 @@ namespace SmartWalk.Core.ViewModels
                 if (_showHideContactsCommand == null)
                 {
                     _showHideContactsCommand = new MvxCommand<EntityInfo>(
-                        entityInfo => CurrentContactsEntityInfo = entityInfo);
+                        entityInfo => {
+                            CurrentContactsEntityInfo = entityInfo;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                CurrentContactsEntityInfo != null 
+                                    ? Analytics.ActionLabelShowContacts
+                                    : Analytics.ActionLabelHideContacts);
+                        });
                 }
 
                 return _showHideContactsCommand;
+            }
+        }
+
+        public ICommand CallPhoneCommand
+        {
+            get
+            {
+                if (_callPhoneCommand == null)
+                {
+                    _callPhoneCommand = new MvxCommand<PhoneInfo>(
+                        info => {
+                            _phoneCallTask.MakePhoneCall(info.Name, info.Phone);
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCallPhone);
+                        },
+                        info => info != null && info.Phone != null);
+                }
+
+                return _callPhoneCommand;
+            }
+        }
+
+        public ICommand ComposeEmailCommand
+        {
+            get
+            {
+                if (_composeEmailCommand == null)
+                {
+                    _composeEmailCommand = new MvxCommand<EmailInfo>(
+                        info => {
+                            _composeEmailTask.ComposeEmail(info.Email, null, null, null, true);
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelComposeEmail);
+                        },
+                    info => info != null && info.Email != null);
+                }
+
+                return _composeEmailCommand;
             }
         }
 

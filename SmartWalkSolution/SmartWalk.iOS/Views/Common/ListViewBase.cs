@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using Cirrious.MvvmCross.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
@@ -13,7 +12,7 @@ using SmartWalk.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class ListViewBase : MvxViewController
+    public abstract class ListViewBase : ActiveAwareController
     {
         public const double ListViewShowAnimationDuration = 0.15;
 
@@ -57,7 +56,7 @@ namespace SmartWalk.iOS.Views.Common
 
             View.BackgroundColor = Theme.BackgroundPatternColor;
 
-            // override back button if it's visible
+            // override back button if it is visible
             if (NavigationController.ViewControllers.Length > 1)
             {
                 ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
@@ -238,14 +237,16 @@ namespace SmartWalk.iOS.Views.Common
 
         private void ShowContactsView(EntityInfo entityInfo)
         {
-            if (entityInfo != null)
+            var contactsProvider = ViewModel as IContactsEntityProvider;
+            if (entityInfo != null && contactsProvider != null)
             {
                 var contactsView = ContactsView.Create();
                 contactsView.Close += OnContactsViewClose;
                 contactsView.Frame = View.Bounds;
                 contactsView.EntityInfo = entityInfo;
-                contactsView.NavigateWebSiteCommand = 
-                ((IContactsEntityProvider)ViewModel).NavigateWebLinkCommand;
+                contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
+                contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
+                contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;
 
                 contactsView.Alpha = 0;
                 View.Add(contactsView);

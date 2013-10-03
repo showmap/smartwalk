@@ -1,13 +1,22 @@
 using System;
-using SmartWalk.Core.ViewModels.Interfaces;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Core.Constants;
+using SmartWalk.Core.Services;
+using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Core.ViewModels.Common
 {
     public abstract class RefreshableViewModel : ProgressViewModel, IRefreshableViewModel
     {
         private ICommand _refreshCommand;
+
+        private readonly IAnalyticsService _analyticsService;
+
+        protected RefreshableViewModel(IAnalyticsService analyticsService) : base(analyticsService)
+        {
+            _analyticsService = analyticsService;
+        }
 
         public event EventHandler RefreshCompleted;
 
@@ -17,7 +26,14 @@ namespace SmartWalk.Core.ViewModels.Common
             {
                 if (_refreshCommand == null)
                 {
-                    _refreshCommand = new MvxCommand(Refresh);
+                    _refreshCommand = new MvxCommand(() => { 
+                        Refresh();
+
+                        _analyticsService.SendEvent(
+                            Analytics.CategoryUI,
+                            Analytics.ActionPull,
+                            Analytics.ActionLabelRefresh);
+                    });
                 }
 
                 return _refreshCommand;

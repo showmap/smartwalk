@@ -8,5 +8,7 @@ namespace SmartWalk.Core.ViewModels.Interfaces
         EntityInfo CurrentContactsEntityInfo { get; }
         ICommand ShowHideContactsCommand { get; }
         ICommand NavigateWebLinkCommand { get; }
+        ICommand CallPhoneCommand { get; }
+        ICommand ComposeEmailCommand { get; }
     }
 }

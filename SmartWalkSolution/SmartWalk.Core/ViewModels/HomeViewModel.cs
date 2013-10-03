@@ -10,6 +10,7 @@ namespace SmartWalk.Core.ViewModels
 	{
 		private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly ILocationService _locationService;
 
         private LocationIndex _location;
 		private EntityInfo[] _orgInfos;
@@ -17,10 +18,14 @@ namespace SmartWalk.Core.ViewModels
 
         public HomeViewModel(
             ISmartWalkDataService dataService,
-            IExceptionPolicy exceptionPolicy)
+            IExceptionPolicy exceptionPolicy,
+            IAnalyticsService analyticsService,
+            ILocationService locationService) : base(analyticsService)
 		{
 			_dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
+            _locationService = locationService;
+            _locationService.LocationChanged += (s, e) => UpdateOrgInfos();
 		}
 
         public LocationIndex Location
@@ -69,6 +74,11 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
+        protected override object InitParameters
+        {
+            get { return null; }
+        }
+
 		public override void Start()
 		{
 			UpdateOrgInfos();
@@ -83,24 +93,27 @@ namespace SmartWalk.Core.ViewModels
 
 		private void UpdateOrgInfos()
 		{
-            IsLoading = true;
+            if (_locationService.CurrentLocation != null)
+            {
+                IsLoading = true;
 
-            _dataService.GetLocationIndex(DataSource.Server, (location, ex) => 
-          		{
-                    IsLoading = false;
+                _dataService.GetLocationIndex(DataSource.Server, (location, ex) => 
+                    {
+                        IsLoading = false;
 
-					if (ex == null) 
-					{
-                        Location = location;
-					}
-					else 
-					{
-                        _exceptionPolicy.Trace(ex);
-					}
+                        if (ex == null)
+                        {
+                            Location = location;
+                        }
+                        else
+                        {
+                            _exceptionPolicy.Trace(ex);
+                        }
 
-                
-                    RaiseRefreshCompleted();
-				});
+                    
+                        RaiseRefreshCompleted();
+                    });
+            }
 		}
 	}
 }

@@ -42,11 +42,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
         {
             base.ViewDidLoad();
 
-            if (ViewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
-            {
-                ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
-            }
-
             InitializeToolBar();
             InitializeGestures();
 

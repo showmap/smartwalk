@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
 using System.Windows.Input;
+using Cirrious.MvvmCross.Plugins.Email;
+using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Core.Constants;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
 
@@ -10,6 +13,7 @@ namespace SmartWalk.Core.ViewModels
     public class VenueViewModel : EntityViewModel
     {
         private readonly ISmartWalkDataService _dataService;
+        private readonly IAnalyticsService _analyticsService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
@@ -17,9 +21,16 @@ namespace SmartWalk.Core.ViewModels
         private VenueShow _expandedShow;
         private OrgEvent _orgEvent;
 
-        public VenueViewModel(ISmartWalkDataService dataService, IExceptionPolicy exceptionPolicy)
+        public VenueViewModel(
+            ISmartWalkDataService dataService, 
+            IAnalyticsService analyticsService,
+            IMvxPhoneCallTask phoneCallTask,
+            IMvxComposeEmailTask composeEmailTask,
+            IExceptionPolicy exceptionPolicy) : 
+                base(analyticsService, phoneCallTask, composeEmailTask)
         {
             _dataService = dataService;
+            _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
         }
 
@@ -124,6 +135,14 @@ namespace SmartWalk.Core.ViewModels
                             {
                                 ExpandedShow = null;
                             }
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                ExpandedShow != null 
+                                    ? Analytics.ActionLabelExpandVenueShow 
+                                    : Analytics.ActionLabelCollapseVenueShow,
+                                GetExpandedShowNumber());
                         },
                     venue => _parameters != null);
                 }
@@ -140,6 +159,11 @@ namespace SmartWalk.Core.ViewModels
         public override bool CanShowPreviousEntity
         {
             get { return CanShowNextEntity; }
+        }
+
+        protected override object InitParameters
+        {
+            get { return _parameters; }
         }
 
         public void Init(Parameters parameters)
@@ -210,6 +234,16 @@ namespace SmartWalk.Core.ViewModels
             {
                 Venue = null;
             }
+        }
+
+        private int GetExpandedShowNumber()
+        {
+            if (Venue != null && ExpandedShow != null)
+            {
+                return Array.IndexOf(Venue.Shows, ExpandedShow);
+            }
+
+            return 0;
         }
 
         public class Parameters

@@ -69,11 +69,11 @@
     <BuildIpa>true</BuildIpa>
     <CodesignKey>iPhone Developer: Ievgen Tiutiunnyk (J5QYB8CA9R)</CodesignKey>
     <ConsolePause>false</ConsolePause>
-    <CodesignProvision>10E53E16-BA97-4F3E-9D38-D2668FCD1757</CodesignProvision>
+    <CodesignProvision>AC26DDA9-91CA-44D0-9114-6CEB7B893F8B</CodesignProvision>
     <IpaPackageName>me.smartwalk.ios</IpaPackageName>
     <MtouchI18n />
     <MtouchArch>ARMv7</MtouchArch>
-    <MtouchExtraArgs>-nosymbolstrip -nostrip -cxx -gcc_flags "-lgcc_eh -L${ProjectDir}/../Binaries/TestFlight/ -ltestflight -ObjC"</MtouchExtraArgs>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <Optimize>true</Optimize>
@@ -91,7 +91,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
-    <Reference Include="MonoTouch.Dialog-1" />
     <Reference Include="Cirrious.CrossCore.Touch">
       <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.CrossCore.Touch.dll</HintPath>
     </Reference>
@@ -117,9 +116,6 @@
     <Reference Include="Cirrious.MvvmCross.Plugins.File">
       <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
     </Reference>
-    <Reference Include="monotouch-testflight">
-      <HintPath>..\Binaries\TestFlight\monotouch-testflight.dll</HintPath>
-    </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Json">
       <HintPath>..\Binaries\JSON\Cirrious.MvvmCross.Plugins.Json.dll</HintPath>
     </Reference>
@@ -131,6 +127,24 @@
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding.Touch">
       <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="TestFlight">
+      <HintPath>..\Binaries\TestFlight\TestFlight.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleAnalytics">
+      <HintPath>..\Binaries\GAN\GoogleAnalytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Email.Touch">
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.Email.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Email">
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall.Touch">
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +291,8 @@
     <Compile Include="Utils\Map\MapUtil.cs" />
     <Compile Include="Utils\Map\MapViewAnnotation.cs" />
     <Compile Include="Utils\UIViewExtensions.cs" />
+    <Compile Include="Services\GoogleAnalyticsService.cs" />
+    <Compile Include="Views\Common\ActiveAwareController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
