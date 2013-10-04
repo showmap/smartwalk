@@ -1,7 +1,7 @@
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
+using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -10,9 +10,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public ContactCollectionSource(UICollectionView collectionView) : 
             base(collectionView)
         {
-            collectionView.RegisterNibForCell(PhoneCell.Nib, PhoneCell.Key);
-            collectionView.RegisterNibForCell(EmailCell.Nib, EmailCell.Key);
-            collectionView.RegisterNibForCell(WebSiteCell.Nib, WebSiteCell.Key);
+            collectionView.RegisterNibForCell(ContactCell.Nib, ContactCell.Key);
         }
 
         protected override UICollectionViewCell GetOrCreateCellFor(
@@ -22,25 +20,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         {
             var cell = default(UICollectionViewCell);
 
-            var phoneInfo = item as PhoneInfo;
-            if (phoneInfo != null)
+            var contact = item as IContact;
+            if (contact != null)
             {
-                cell = (UICollectionViewCell)collectionView.DequeueReusableCell(PhoneCell.Key, indexPath);
-                ((PhoneCell)cell).DataContext = phoneInfo;
-            }
-
-            var emailInfo = item as EmailInfo;
-            if (emailInfo != null)
-            {
-                cell = (UICollectionViewCell)collectionView.DequeueReusableCell(EmailCell.Key, indexPath);
-                ((EmailCell)cell).DataContext = emailInfo;
-            }
-
-            var webSiteInfo = item as WebSiteInfo;
-            if (webSiteInfo != null)
-            {
-                cell = (UICollectionViewCell)collectionView.DequeueReusableCell(WebSiteCell.Key, indexPath);
-                ((WebSiteCell)cell).DataContext = webSiteInfo;
+                cell = (UICollectionViewCell)collectionView.DequeueReusableCell(ContactCell.Key, indexPath);
+                ((ContactCell)cell).DataContext = contact;
             }
 
             return cell;

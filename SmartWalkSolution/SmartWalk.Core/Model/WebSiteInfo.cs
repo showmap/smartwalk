@@ -3,11 +3,35 @@ using SmartWalk.Core.Model.Interfaces;
 
 namespace SmartWalk.Core.Model
 {
-    public class WebSiteInfo : ISearchable
+    public class WebSiteInfo : ISearchable, IContact
     {
         public string Label { get; set; }
 
         public string URL { get; set; }
+
+        public string Title
+        {
+            get
+            {
+                return Label;
+            }
+        }
+
+        public string Contact
+        {
+            get
+            {
+                return URL;
+            }
+        }
+        
+        public ContactType Type
+        {
+            get
+            {
+                return ContactType.WebSite;
+            } 
+        }
 
         public string SearchableText
         {
