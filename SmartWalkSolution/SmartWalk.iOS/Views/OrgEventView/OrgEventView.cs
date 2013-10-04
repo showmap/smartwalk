@@ -15,6 +15,7 @@ using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Utils.Map;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.OrgEventView;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.OrgEventView
 {
@@ -188,10 +189,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void InitializeToolBar()
         {
-            _modeButtonList = ButtonBarUtil.Create("Icons/NavBarList.png");
+            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarListIcon);
             _modeButtonList.TouchUpInside += OnModeButtonClicked;
 
-            _modeButtonMap = ButtonBarUtil.Create("Icons/NavBarMap.png");
+            _modeButtonMap = ButtonBarUtil.Create(ThemeIcons.NavBarMapIcon);
             _modeButtonMap.TouchUpInside += OnModeButtonClicked;
 
             _modeButton = new UIBarButtonItem(_modeButtonMap);

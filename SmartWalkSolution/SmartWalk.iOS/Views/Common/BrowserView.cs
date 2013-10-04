@@ -6,6 +6,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -44,6 +45,7 @@ namespace SmartWalk.iOS.Views.Common
 
             ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
 
+            InitializeStyle();
             InitializeIndicator();
             UpdateViewTitle();
 
@@ -114,22 +116,22 @@ namespace SmartWalk.iOS.Views.Common
             UpdateViewTitle();
         }
 
-        partial void OnBackButtonClick(NSObject sender)
+        private void OnBackButtonClick(object sender, EventArgs e)
         {
             WebView.GoBack();
         }
 
-        partial void OnForwardButtonClick(NSObject sender)
+        private void OnForwardButtonClick(object sender, EventArgs e)
         {
             WebView.GoForward();
         }
 
-        partial void OnRefreshButtonClick(NSObject sender)
+        private void OnRefreshButtonClick(object sender, EventArgs e)
         {
             WebView.Reload();
         }
 
-        partial void OnActionButtonClick(NSObject sender)
+        private void OnActionButtonClick(object sender, EventArgs e)
         {
             var actionSheet = new UIActionSheet();
             actionSheet.Style = UIActionSheetStyle.BlackTranslucent;
@@ -180,9 +182,15 @@ namespace SmartWalk.iOS.Views.Common
 
         private void UpdateNavButtonsState()
         {
-            BackButton.Enabled = WebView.CanGoBack;
-            ForwardButton.Enabled = WebView.CanGoForward;
-            ActionButton.Enabled = BrowserURL != null;
+            SetButtonEnabled(BackButton, WebView.CanGoBack);
+            SetButtonEnabled(ForwardButton, WebView.CanGoForward);
+            SetButtonEnabled(ActionButton, BrowserURL != null);
+        }
+
+        private static void SetButtonEnabled(UIBarButtonItem buttonItem, bool isEnabled)
+        {
+            buttonItem.Enabled = isEnabled;
+            buttonItem.CustomView.Alpha = isEnabled ? 1f : 0.5f;
         }
 
         private void UpdateViewTitle()
@@ -191,6 +199,29 @@ namespace SmartWalk.iOS.Views.Common
             NavigationItem.Title = pageTitle != null && pageTitle != string.Empty
                 ? pageTitle.ToUpper()
                     : (WebView.CanGoBack ? null: ViewModel.BrowserURL);
+        }
+
+        private void InitializeStyle()
+        {
+            LeftSpacer.Width = ButtonBarUtil.SpacerWidth;
+
+            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBackIcon);
+            button.TouchUpInside += OnBackButtonClick;
+            BackButton.CustomView = button;
+
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserForwardIcon);
+            button.TouchUpInside += OnForwardButtonClick;
+            ForwardButton.CustomView = button;
+
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefreshIcon);
+            button.TouchUpInside += OnRefreshButtonClick;
+            RefreshButton.CustomView = button;
+
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserMenuIcon);
+            button.TouchUpInside += OnActionButtonClick;
+            ActionButton.CustomView = button;
+
+            RightSpacer.Width = ButtonBarUtil.SpacerWidth;
         }
 
         // HACK: This is to keep bottom toolbar proper height on rotation

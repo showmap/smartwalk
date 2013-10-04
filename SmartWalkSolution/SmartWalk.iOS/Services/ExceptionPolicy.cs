@@ -1,6 +1,7 @@
 using System;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Services;
+using System.Net;
 
 namespace SmartWalk.iOS.Services
 {
@@ -17,7 +18,17 @@ namespace SmartWalk.iOS.Services
         {
             _analyticsService.SendException(false, ex.ToString());
 
-            var alert = new UIAlertView("Exception", ex.Message, null, "OK", null);
+            // TODO: To Localize
+            string title = "Error";
+            string message = ex.Message;
+
+            if (ex is WebException)
+            {
+                title = "Network Error";
+                message = "Can't access network content. Please try again later";
+            }
+
+            var alert = new UIAlertView(title, message, null, "OK", null);
             alert.Show();
         }
     }

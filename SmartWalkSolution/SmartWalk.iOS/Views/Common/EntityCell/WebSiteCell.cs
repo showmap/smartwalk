@@ -28,7 +28,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         protected override void OnInitialize()
         {
-            LogoImageView.Image = Theme.ContactWebIcon;
+            LogoImageView.Image = ThemeIcons.ContactWebIcon;
         }
 
         protected override void OnDataContextChanged()

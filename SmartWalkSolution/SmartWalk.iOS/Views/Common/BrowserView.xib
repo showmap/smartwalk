@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1552</int>
-		<string key="IBDocument.SystemVersion">12E55</string>
+		<string key="IBDocument.SystemVersion">12F37</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.39</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
@@ -70,6 +70,11 @@
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<array class="NSMutableArray" key="IBUIItems">
+							<object class="IBUIBarButtonItem" id="1011463460">
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<reference key="IBUIToolbar" ref="17193113"/>
+								<int key="IBUISystemItemIdentifier">6</int>
+							</object>
 							<object class="IBUIBarButtonItem" id="551323652">
 								<string key="IBUITitle">&lt;</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -89,9 +94,9 @@
 								<int key="IBUISystemItemIdentifier">6</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="279295960">
+								<string key="IBUITitle">R</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUIToolbar" ref="17193113"/>
-								<int key="IBUISystemItemIdentifier">13</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="396315142">
 								<bool key="IBUIEnabled">NO</bool>
@@ -104,9 +109,15 @@
 								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="561008055">
+								<string key="IBUITitle">A</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUIToolbar" ref="17193113"/>
-								<int key="IBUISystemItemIdentifier">9</int>
+							</object>
+							<object class="IBUIBarButtonItem" id="807184450">
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<float key="IBUIWidth">42</float>
+								<reference key="IBUIToolbar" ref="17193113"/>
+								<int key="IBUISystemItemIdentifier">6</int>
 							</object>
 						</array>
 						<object class="NSColor" key="IBUITintColor">
@@ -192,36 +203,28 @@
 					<int key="connectionID">34</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">OnBackButtonClick:</string>
-						<reference key="source" ref="551323652"/>
-						<reference key="destination" ref="372490531"/>
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">RefreshButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="279295960"/>
 					</object>
-					<int key="connectionID">22</int>
+					<int key="connectionID">35</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">OnForwardButtonClick:</string>
-						<reference key="source" ref="272869892"/>
-						<reference key="destination" ref="372490531"/>
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">LeftSpacer</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="1011463460"/>
 					</object>
-					<int key="connectionID">23</int>
+					<int key="connectionID">38</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">OnActionButtonClick:</string>
-						<reference key="source" ref="561008055"/>
-						<reference key="destination" ref="372490531"/>
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">RightSpacer</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="807184450"/>
 					</object>
-					<int key="connectionID">25</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">OnRefreshButtonClick:</string>
-						<reference key="source" ref="279295960"/>
-						<reference key="destination" ref="372490531"/>
-					</object>
-					<int key="connectionID">24</int>
+					<int key="connectionID">39</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -268,6 +271,8 @@
 							<reference ref="279295960"/>
 							<reference ref="229548322"/>
 							<reference ref="396315142"/>
+							<reference ref="1011463460"/>
+							<reference ref="807184450"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -306,6 +311,16 @@
 						<reference key="object" ref="396315142"/>
 						<reference key="parent" ref="17193113"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">36</int>
+						<reference key="object" ref="1011463460"/>
+						<reference key="parent" ref="17193113"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">37</int>
+						<reference key="object" ref="807184450"/>
+						<reference key="parent" ref="17193113"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -322,13 +337,15 @@
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="31.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="36.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="37.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">34</int>
+			<int key="maxID">39</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -364,7 +381,10 @@
 						<string key="BackButton">UIBarButtonItem</string>
 						<string key="BottomToolbar">UIToolbar</string>
 						<string key="ForwardButton">UIBarButtonItem</string>
+						<string key="LeftSpacer">UIBarButtonItem</string>
 						<string key="ProgressButton">UIBarButtonItem</string>
+						<string key="RefreshButton">UIBarButtonItem</string>
+						<string key="RightSpacer">UIBarButtonItem</string>
 						<string key="WebView">UIWebView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -384,8 +404,20 @@
 							<string key="name">ForwardButton</string>
 							<string key="candidateClassName">UIBarButtonItem</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="LeftSpacer">
+							<string key="name">LeftSpacer</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="ProgressButton">
 							<string key="name">ProgressButton</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="RefreshButton">
+							<string key="name">RefreshButton</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="RightSpacer">
+							<string key="name">RightSpacer</string>
 							<string key="candidateClassName">UIBarButtonItem</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="WebView">

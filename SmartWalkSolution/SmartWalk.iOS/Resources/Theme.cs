@@ -1,9 +1,9 @@
+using System.Drawing;
 using MonoTouch.UIKit;
 using SmartWalk.iOS.Views.Common;
 using SmartWalk.iOS.Views.Common.EntityCell;
 using SmartWalk.iOS.Views.HomeView;
 using SmartWalk.iOS.Views.OrgEventView;
-using System.Drawing;
 
 namespace SmartWalk.iOS.Resources
 {
@@ -12,6 +12,13 @@ namespace SmartWalk.iOS.Resources
         private const string BrandonBlack = "BrandonGrotesque-Black";
         private const string BrandonBold = "BrandonGrotesque-Bold";
         private const string BrandonRegular = "BrandonGrotesque-Regular";
+
+        public static readonly UIImage NavBarBackgroundImage = UIImage.FromFile("Images/NavBarBackground.png");
+        public static readonly UIImage NavBarLandscapeBackgroundImage = UIImage.FromFile("Images/NavBarLandscapeBackground.png");
+        public static readonly UIImage ShadowImage = UIImage.FromFile("Images/Shadow.png")
+            .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
+        public static readonly UIColor BackgroundPatternColor = UIColor.FromPatternImage(UIImage.FromFile("Images/Background.png"));
+        public static readonly UIImage BlackImage = UIImage.FromFile("Images/Black.png");
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGB(51, 51, 51);
         public static readonly UIColor NavBarText = UIColor.White;
@@ -53,8 +60,6 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIColor VenueShowCellText = UIColor.Black;
         public const int VenueShowTextLineHeight = 20;
 
-        
-        public static readonly UIImage MapPinIcon = UIImage.FromFile("Icons/MapPin.png");
         public static readonly UIColor MapPinText = UIColor.White;
         public static readonly UIFont MapPinFont = UIFont.FromName(BrandonBold, 14);
         public static readonly PointF MapPinOffset = new PointF(-8, -4);
@@ -67,31 +72,16 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIColor MercuryLight = UIColor.FromRGB(240, 240, 240);
         public static readonly UIColor BlackLight = UIColor.FromRGB(49, 49, 49);
 
-        public static readonly UIColor BackgroundPatternColor = UIColor.FromPatternImage(UIImage.FromFile("Images/Background.png"));
-        public static readonly UIImage ShadowImage = UIImage.FromFile("Images/Shadow.png")
-            .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
-
-        public static readonly UIImage SmallMapIcon = UIImage.FromFile("Icons/SmallMap.png");
-        public static readonly UIImage GoRightIcon = UIImage.FromFile("Icons/GoRight.png");
-        public static readonly UIImage ClockRedIcon = UIImage.FromFile("Icons/ClockRed.png");
-        public static readonly UIImage ClockGreenIcon = UIImage.FromFile("Icons/ClockGreen.png");
-        public static readonly UIImage ClockBlueIcon = UIImage.FromFile("Icons/ClockBlue.png");
-
-        public static readonly UIImage ContactEmailIcon = UIImage.FromFile("Icons/ContactEmail.png");
-        public static readonly UIImage ContactPhoneIcon = UIImage.FromFile("Icons/ContactPhone.png");
-        public static readonly UIImage ContactWebIcon = UIImage.FromFile("Icons/ContactWeb.png");
-
         public static void Apply()
         {
             UINavigationBar.Appearance.SetBackgroundImage(
-                UIImage.FromFile("Images/NavBarBackground.png"), 
+                NavBarBackgroundImage,
                 UIBarMetrics.Default);
+            // TODO: bottom line has different color, bug?
             UINavigationBar.Appearance.SetBackgroundImage(
-                UIImage.FromFile("Images/NavBarLandscapeBackground.png"), 
-                UIBarMetrics.LandscapePhone); // TODO: bottom line has different color, bug?
-            UINavigationBar.Appearance.ShadowImage = 
-                UIImage.FromFile("Images/Shadow.png")
-                    .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
+                NavBarLandscapeBackgroundImage,
+                UIBarMetrics.LandscapePhone);
+            UINavigationBar.Appearance.ShadowImage = ShadowImage;
 
             UINavigationBar.Appearance.SetTitleTextAttributes(new UITextAttributes { 
                 Font = Theme.NavBarFont,
@@ -100,6 +90,15 @@ namespace SmartWalk.iOS.Resources
                 TextShadowOffset = new UIOffset(0, 0)
             });
             UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.Default);
+            
+            UIToolbar.Appearance.SetBackgroundImage(
+                NavBarBackgroundImage,
+                UIToolbarPosition.Any,
+                UIBarMetrics.Default);
+            UIToolbar.Appearance.SetBackgroundImage(
+                NavBarLandscapeBackgroundImage,
+                UIToolbarPosition.Any,
+                UIBarMetrics.LandscapePhone);
 
             var cellAp = UICollectionViewCell.AppearanceWhenContainedIn(typeof(HomeView));
             cellAp.BackgroundColor = Theme.CellBackground;

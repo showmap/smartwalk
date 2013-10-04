@@ -5,6 +5,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -103,8 +104,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 UIActivityIndicatorViewStyle.White;
 
             ShadowImageView.Hidden = IsShadowHidden;
-            ShadowImageView.Image = UIImage.FromFile("Images/Shadow.png")
-                .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
+            ShadowImageView.Image = Theme.ShadowImage;
         }
 
         protected override void OnDataContextChanged()

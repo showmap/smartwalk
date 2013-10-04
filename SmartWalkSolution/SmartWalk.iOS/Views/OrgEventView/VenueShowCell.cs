@@ -337,29 +337,29 @@ namespace SmartWalk.iOS.Views.OrgEventView
             DetailsLabel.Font = Theme.VenueShowCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
 
-            ClockImageView.Image = Theme.ClockBlueIcon;
+            ClockImageView.Image = ThemeIcons.ClockBlueIcon;
         }
 
         private void UpdateClockIcon()
         {
             if (DataContext == null)
             {
-                ClockImageView.Image = Theme.ClockBlueIcon;
+                ClockImageView.Image = ThemeIcons.ClockBlueIcon;
                 return;
             }
 
             switch (DataContext.Status)
             {
                 case VenueShowStatus.NotStarted:
-                    ClockImageView.Image = Theme.ClockBlueIcon;
+                    ClockImageView.Image = ThemeIcons.ClockBlueIcon;
                     break;
 
                 case VenueShowStatus.Started:
-                    ClockImageView.Image = Theme.ClockGreenIcon;
+                    ClockImageView.Image = ThemeIcons.ClockGreenIcon;
                     break;
 
                 case VenueShowStatus.Finished:
-                    ClockImageView.Image = Theme.ClockRedIcon;
+                    ClockImageView.Image = ThemeIcons.ClockRedIcon;
                     break;
             }
         }

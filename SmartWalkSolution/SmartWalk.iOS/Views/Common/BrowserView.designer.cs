@@ -25,25 +25,37 @@ namespace SmartWalk.iOS.Views.Common
 		MonoTouch.UIKit.UIBarButtonItem ForwardButton { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem LeftSpacer { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIBarButtonItem ProgressButton { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem RefreshButton { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem RightSpacer { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIWebView WebView { get; set; }
-
-		[Action ("OnActionButtonClick:")]
-		partial void OnActionButtonClick (MonoTouch.Foundation.NSObject sender);
-
-		[Action ("OnBackButtonClick:")]
-		partial void OnBackButtonClick (MonoTouch.Foundation.NSObject sender);
-
-		[Action ("OnForwardButtonClick:")]
-		partial void OnForwardButtonClick (MonoTouch.Foundation.NSObject sender);
-
-		[Action ("OnRefreshButtonClick:")]
-		partial void OnRefreshButtonClick (MonoTouch.Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (LeftSpacer != null) {
+				LeftSpacer.Dispose ();
+				LeftSpacer = null;
+			}
+
+			if (RightSpacer != null) {
+				RightSpacer.Dispose ();
+				RightSpacer = null;
+			}
+
+			if (ActionButton != null) {
+				ActionButton.Dispose ();
+				ActionButton = null;
+			}
+
 			if (BackButton != null) {
 				BackButton.Dispose ();
 				BackButton = null;
@@ -64,9 +76,9 @@ namespace SmartWalk.iOS.Views.Common
 				ProgressButton = null;
 			}
 
-			if (ActionButton != null) {
-				ActionButton.Dispose ();
-				ActionButton = null;
+			if (RefreshButton != null) {
+				RefreshButton.Dispose ();
+				RefreshButton = null;
 			}
 
 			if (WebView != null) {

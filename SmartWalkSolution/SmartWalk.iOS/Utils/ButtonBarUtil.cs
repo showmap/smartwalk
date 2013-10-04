@@ -1,30 +1,43 @@
 using System;
 using System.Drawing;
 using MonoTouch.UIKit;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Utils
 {
     public static class ButtonBarUtil
     {
+        public const int SpacerWidth = -5;
+
         public static UIBarButtonItem CreateSpacer()
         {
             var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FixedSpace);
-            spacer.Width = -5;
+            spacer.Width = SpacerWidth;
             return spacer;
         }
 
-        public static UIButton Create(string iconFile)
+        public static UIButton Create(UIImage icon)
         {
-            return Create(iconFile, new SizeF(44, 44));
+            return Create(icon, new SizeF(44, 44));
         }
 
-        public static UIButton Create(string iconFile, SizeF size)
+        public static UIButton Create(UIImage icon, SizeF size)
         {
             var button = new UIButton(UIButtonType.Custom);
-            button.Frame = new RectangleF(PointF.Empty, size);
-            button.AddSubview(new UIImageView(UIImage.FromFile(iconFile)));
-            button.SetBackgroundImage(UIImage.FromFile("Images/Black.png"), UIControlState.Highlighted);
+            Initialize(button, icon, size);
             return button;
+        }
+
+        public static void Initialize(UIButton button, UIImage icon)
+        {
+            Initialize(button, icon, new SizeF(44, 44));
+        }
+
+        public static void Initialize(UIButton button, UIImage icon, SizeF size)
+        {
+            button.Frame = new RectangleF(PointF.Empty, size);
+            button.AddSubview(new UIImageView(icon));
+            button.SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
         }
 
         public static void OverrideNavigatorBackButton(
@@ -35,7 +48,7 @@ namespace SmartWalk.iOS.Utils
 
             var spacer = CreateSpacer();
 
-            var button = Create("Icons/NavBarBack.png");
+            var button = Create(ThemeIcons.NavBarBackIcon);
             button.TouchUpInside += (sender, e) => 
                 navController.PopViewControllerAnimated(true);
             var barButton = new UIBarButtonItem(button);
@@ -47,11 +60,11 @@ namespace SmartWalk.iOS.Utils
         {
             var spacer = ButtonBarUtil.CreateSpacer();
 
-            var buttonUp = ButtonBarUtil.Create("Icons/NavBarUp.png", new SizeF(34, 44));
+            var buttonUp = ButtonBarUtil.Create(ThemeIcons.NavBarUpIcon, new SizeF(34, 44));
             buttonUp.TouchUpInside += (s, e) => upClickHandler();
             var barButtonUp = new UIBarButtonItem(buttonUp) { Width = 34 };
 
-            var buttonDown = ButtonBarUtil.Create("Icons/NavBarDown.png", new SizeF(34, 44));
+            var buttonDown = ButtonBarUtil.Create(ThemeIcons.NavBarDownIcon, new SizeF(34, 44));
             buttonDown.TouchUpInside += (s, e) => downClickHandler();
             var barButtonDown = new UIBarButtonItem(buttonDown) { Width = 34 };
 

@@ -29,7 +29,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         protected override void OnInitialize()
         {
             ContactNameLabel.TextColor = Theme.HyperlinkText;
-            LogoImageView.Image = Theme.ContactEmailIcon;
+            LogoImageView.Image = ThemeIcons.ContactEmailIcon;
         }
 
         protected override void OnDataContextChanged()
