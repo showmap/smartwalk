@@ -61,7 +61,7 @@ namespace SmartWalk.iOS.Utils.Map
             if (mapAnnotation != null)
             {
                 annotationView.CanShowCallout = CanShowCallout;
-                annotationView.Image = ThemeIcons.MapPinIcon;
+                annotationView.Image = ThemeIcons.MapPin;
                 annotationView.CenterOffset = Theme.MapPinOffset;
                 annotationView.RemoveSubviews();
 

@@ -205,19 +205,19 @@ namespace SmartWalk.iOS.Views.Common
         {
             LeftSpacer.Width = ButtonBarUtil.SpacerWidth;
 
-            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBackIcon);
+            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack);
             button.TouchUpInside += OnBackButtonClick;
             BackButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserForwardIcon);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserForward);
             button.TouchUpInside += OnForwardButtonClick;
             ForwardButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefreshIcon);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefresh);
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserMenuIcon);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserMenu);
             button.TouchUpInside += OnActionButtonClick;
             ActionButton.CustomView = button;
 

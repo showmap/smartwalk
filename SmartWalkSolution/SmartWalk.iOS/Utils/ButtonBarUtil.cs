@@ -48,7 +48,7 @@ namespace SmartWalk.iOS.Utils
 
             var spacer = CreateSpacer();
 
-            var button = Create(ThemeIcons.NavBarBackIcon);
+            var button = Create(ThemeIcons.NavBarBack);
             button.TouchUpInside += (sender, e) => 
                 navController.PopViewControllerAnimated(true);
             var barButton = new UIBarButtonItem(button);
@@ -60,11 +60,11 @@ namespace SmartWalk.iOS.Utils
         {
             var spacer = ButtonBarUtil.CreateSpacer();
 
-            var buttonUp = ButtonBarUtil.Create(ThemeIcons.NavBarUpIcon, new SizeF(34, 44));
+            var buttonUp = ButtonBarUtil.Create(ThemeIcons.NavBarUp, new SizeF(34, 44));
             buttonUp.TouchUpInside += (s, e) => upClickHandler();
             var barButtonUp = new UIBarButtonItem(buttonUp) { Width = 34 };
 
-            var buttonDown = ButtonBarUtil.Create(ThemeIcons.NavBarDownIcon, new SizeF(34, 44));
+            var buttonDown = ButtonBarUtil.Create(ThemeIcons.NavBarDown, new SizeF(34, 44));
             buttonDown.TouchUpInside += (s, e) => downClickHandler();
             var barButtonDown = new UIBarButtonItem(buttonDown) { Width = 34 };
 
