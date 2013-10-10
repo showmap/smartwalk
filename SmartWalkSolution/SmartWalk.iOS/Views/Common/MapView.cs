@@ -2,10 +2,12 @@ using System.ComponentModel;
 using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
+using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Utils.Map;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -21,6 +23,7 @@ namespace SmartWalk.iOS.Views.Common
             base.ViewDidLoad();
 
             ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
+            InitializeToolBar();
 
             MapViewControl.Delegate = new MapDelegate { CanShowDetails = false };
 
@@ -28,6 +31,22 @@ namespace SmartWalk.iOS.Views.Common
             SelectAnnotation();
 
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+        }
+
+        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillAnimateRotation(toInterfaceOrientation, duration);
+
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
         }
 
         protected override void Dispose(bool disposing)
@@ -75,6 +94,23 @@ namespace SmartWalk.iOS.Views.Common
             NavigationItem.Title = ViewModel.Annotation != null
                 ? ViewModel.Annotation.Title.ToUpper()
                 : null;
+        }
+
+        private void InitializeToolBar()
+        {
+            var navigateButton = ButtonBarUtil.Create(ThemeIcons.Navigate, null);
+            navigateButton.TouchUpInside += (sender, e) => 
+                { 
+                    if (ViewModel.Annotation != null &&
+                        ViewModel.Annotation.AddressInfos != null)
+                    {
+                        var addressInfo = ViewModel.Annotation.AddressInfos.FirstOrDefault();
+                        MapUtil.OpenAddressInMaps(addressInfo);
+                    }
+                };
+
+            var barItem = new UIBarButtonItem(navigateButton);
+            NavigationItem.SetRightBarButtonItems(new [] { barItem }, true);  
         }
     }
 }

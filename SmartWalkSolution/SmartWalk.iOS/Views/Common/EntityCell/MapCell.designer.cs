@@ -14,23 +14,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 	{
 		[Outlet]
 		MonoTouch.MapKit.MKMapView MapView { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIButton NavigateButton { get; set; }
-
-		[Action ("OnNavigateButtonClick:forEvent:")]
-		partial void OnNavigateButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
 			if (MapView != null) {
 				MapView.Dispose ();
 				MapView = null;
-			}
-
-			if (NavigateButton != null) {
-				NavigateButton.Dispose ();
-				NavigateButton = null;
 			}
 		}
 	}

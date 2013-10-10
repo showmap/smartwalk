@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
+using SmartWalk.Core.Model;
 
 namespace SmartWalk.iOS.Utils.Map
 {
@@ -50,6 +51,23 @@ namespace SmartWalk.iOS.Utils.Map
         public static string GetAnnotationTitle(int number, string title)
         {
             return (number != 0 ? number + ". " : string.Empty) + title;
+        }
+
+        public static void OpenAddressInMaps(AddressInfo addressInfo)
+        {
+            if (addressInfo != null)
+            {
+                var item = new MKMapItem(
+                    new MKPlacemark(
+                        new CLLocationCoordinate2D(
+                            addressInfo.Latitude, 
+                            addressInfo.Longitude),
+                        null));
+
+                item.OpenInMaps(new MKLaunchOptions {
+                    DirectionsMode = MKDirectionsMode.Walking 
+                });
+            }
         }
     }
 }

@@ -16,6 +16,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.UIView BottomGradientView { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIButton ContactsButton { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionBottomConstraint { get; set; }
 
 		[Outlet]
@@ -50,9 +53,28 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint MapYConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton NavigateButton { get; set; }
+
+		[Action ("OnContactsButtonTouchUpInside:forEvent:")]
+		partial void OnContactsButtonTouchUpInside (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
+
+		[Action ("OnNavigateButtonTouchUpInside:forEvent:")]
+		partial void OnNavigateButtonTouchUpInside (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ContactsButton != null) {
+				ContactsButton.Dispose ();
+				ContactsButton = null;
+			}
+
+			if (NavigateButton != null) {
+				NavigateButton.Dispose ();
+				NavigateButton = null;
+			}
+
 			if (BottomGradientView != null) {
 				BottomGradientView.Dispose ();
 				BottomGradientView = null;

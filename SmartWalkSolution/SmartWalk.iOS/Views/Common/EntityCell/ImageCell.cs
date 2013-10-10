@@ -47,7 +47,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         }
 
         public ICommand ShowImageFullscreenCommand { get; set; }
-        public ICommand ShowContactsViewCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
 
 
@@ -83,7 +82,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             if (newsuper == null)
             {
                 ShowImageFullscreenCommand = null;
-                ShowContactsViewCommand = null;
                 NavigateWebSiteCommand = null;
 
                 DisposeGestures();
@@ -139,15 +137,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 ImageView.RemoveGestureRecognizer(_imageTapGesture);
                 _imageTapGesture.Dispose();
                 _imageTapGesture = null;
-            }
-        }
-
-        partial void OnContactsButtonClick(NSObject sender, UIEvent @event)
-        {
-            if (ShowContactsViewCommand != null &&
-                ShowContactsViewCommand.CanExecute(DataContext))
-            {
-                ShowContactsViewCommand.Execute(DataContext);
             }
         }
     }

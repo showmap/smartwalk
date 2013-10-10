@@ -105,9 +105,5 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 _mapTapGesture = null;
             }
         }
-
-        partial void OnNavigateButtonClick(NSObject sender, UIEvent @event)
-        {
-        }
     }
 }

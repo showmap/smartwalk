@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using MonoTouch.UIKit;
 using SmartWalk.iOS.Resources;
+using SmartWalk.iOS.Controls;
 
 namespace SmartWalk.iOS.Utils
 {
@@ -9,35 +10,33 @@ namespace SmartWalk.iOS.Utils
     {
         public const int SpacerWidth = -5;
 
-        public static UIBarButtonItem CreateSpacer()
+        public static UIBarButtonItem CreateSpacer(int width = SpacerWidth)
         {
             var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FixedSpace);
             spacer.Width = SpacerWidth;
             return spacer;
         }
 
-        public static UIButton Create(UIImage icon)
+        public static ButtonBarButton Create(
+            UIImage verticalIcon,
+            UIImage landscapeIcon)
         {
-            return Create(icon, new SizeF(44, 44));
-        }
-
-        public static UIButton Create(UIImage icon, SizeF size)
-        {
-            var button = new UIButton(UIButtonType.Custom);
-            Initialize(button, icon, size);
+            var button = new ButtonBarButton(verticalIcon, landscapeIcon);
             return button;
         }
 
-        public static void Initialize(UIButton button, UIImage icon)
+        public static ButtonBarButton Create(
+            UIImage verticalIcon,
+            UIImage landscapeIcon,
+            SizeF? verticalSize,
+            SizeF? landscapeSize)
         {
-            Initialize(button, icon, new SizeF(44, 44));
-        }
-
-        public static void Initialize(UIButton button, UIImage icon, SizeF size)
-        {
-            button.Frame = new RectangleF(PointF.Empty, size);
-            button.AddSubview(new UIImageView(icon));
-            button.SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
+            var button = new ButtonBarButton(
+                verticalIcon,
+                landscapeIcon,
+                verticalSize,
+                landscapeSize);
+            return button;
         }
 
         public static void OverrideNavigatorBackButton(
@@ -46,29 +45,39 @@ namespace SmartWalk.iOS.Utils
         {
             navItem.HidesBackButton = true;
 
-            var spacer = CreateSpacer();
-
-            var button = Create(ThemeIcons.NavBarBack);
+            var button = Create(ThemeIcons.NavBarBack, ThemeIcons.NavBarBackLandscape);
             button.TouchUpInside += (sender, e) => 
                 navController.PopViewControllerAnimated(true);
             var barButton = new UIBarButtonItem(button);
 
-            navItem.SetLeftBarButtonItems(new [] { spacer, barButton }, true);
+            navItem.SetLeftBarButtonItems(new [] { CreateSpacer(), barButton }, true);
+        }
+
+        public static void UpdateButtonsFrameOnRotation(UIBarButtonItem[] items)
+        {
+            if (items == null) return;
+
+            foreach (var item in items)
+            {
+                var button = item.CustomView as ButtonBarButton;
+                if (button != null)
+                {
+                    button.UpdateState();
+                }
+            }
         }
 
         public static UIBarButtonItem[] GetUpDownBarItems(Action upClickHandler, Action downClickHandler)
         {
-            var spacer = ButtonBarUtil.CreateSpacer();
-
-            var buttonUp = ButtonBarUtil.Create(ThemeIcons.NavBarUp, new SizeF(34, 44));
+            var buttonUp = ButtonBarUtil.Create(ThemeIcons.NavBarUp, null, new SizeF(34, 44), null);
             buttonUp.TouchUpInside += (s, e) => upClickHandler();
-            var barButtonUp = new UIBarButtonItem(buttonUp) { Width = 34 };
+            var barButtonUp = new UIBarButtonItem(buttonUp);
 
-            var buttonDown = ButtonBarUtil.Create(ThemeIcons.NavBarDown, new SizeF(34, 44));
+            var buttonDown = ButtonBarUtil.Create(ThemeIcons.NavBarDown, null, new SizeF(34, 44), null);
             buttonDown.TouchUpInside += (s, e) => downClickHandler();
-            var barButtonDown = new UIBarButtonItem(buttonDown) { Width = 34 };
+            var barButtonDown = new UIBarButtonItem(buttonDown);
 
-            var result = new [] { spacer, barButtonDown, spacer, barButtonUp };
+            var result = new [] { CreateSpacer(), barButtonDown, barButtonUp };
             return result;
         }
     }

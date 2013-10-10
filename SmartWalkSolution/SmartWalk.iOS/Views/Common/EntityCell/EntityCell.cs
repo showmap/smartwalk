@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Drawing;
 using System.Windows.Input;
 using MonoTouch.CoreAnimation;
@@ -8,6 +9,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Utils.Map;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -216,9 +218,10 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
             if (DataContext != null)
             {
-                ImageCell.IsShadowHidden = !ScreenUtil.IsVerticalOrientation || 
-                    !DataContext.Entity.Info.HasLogo() || 
-                        !DataContext.Entity.Info.HasAddress();
+                ImageCell.IsShadowHidden = 
+                    !ScreenUtil.IsVerticalOrientation || 
+                        !DataContext.Entity.Info.HasLogo() || 
+                            !DataContext.Entity.Info.HasAddress();
             }
 
             if (DataContext != null &&
@@ -253,6 +256,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         protected override void OnInitialize()
         {
+            InitializeStyle();
             InitializeGestures();
             InitializeHeaderCells();
             InitializeBottomGradientState();
@@ -274,6 +278,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     DataContext.Entity.Info.HasAddress()
                 ? DataContext.Entity
                 : null;
+
+            ContactsButton.Hidden = DataContext == null || 
+                (DataContext != null &&
+                    !DataContext.Entity.Info.HasContact());
+
+            NavigateButton.Hidden = DataContext == null || 
+                (DataContext != null &&
+                    !DataContext.Entity.Info.HasAddress());
 
             SetNeedsLayout();
             SetNeedsUpdateConstraints();
@@ -311,7 +323,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             MapCellPlaceholder.Content = MapCell.Create();
 
             ImageCell.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
-            ImageCell.ShowContactsViewCommand = ShowContactsViewCommand;
             ImageCell.NavigateWebSiteCommand = NavigateWebSiteCommand;
             MapCell.NavigateAddressesCommand = NavigateAddressesCommand;
         }
@@ -326,6 +337,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             MapCell.Dispose();
             ImageCellPlaceholder.Content = null;
             MapCellPlaceholder.Content = null;
+        }
+
+        private void InitializeStyle()
+        {
+            ContactsButton.SetTitle(string.Empty, UIControlState.Normal);
+            ContactsButton.SetImage(ThemeIcons.Contacts, UIControlState.Normal);
+
+            NavigateButton.SetTitle(string.Empty, UIControlState.Normal);
+            NavigateButton.SetImage(ThemeIcons.Navigate, UIControlState.Normal);
         }
 
         private void InitializeBottomGradientState()
@@ -370,6 +390,21 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             {
                 _bottomGradient.Hidden = true;
             }
+        }
+
+        partial void OnContactsButtonTouchUpInside(NSObject sender, UIEvent @event)
+        {
+            if (ShowContactsViewCommand != null &&
+                ShowContactsViewCommand.CanExecute(DataContext.Entity.Info))
+            {
+                ShowContactsViewCommand.Execute(DataContext.Entity.Info);
+            }
+        }
+
+        partial void OnNavigateButtonTouchUpInside(NSObject sender, UIEvent @event)
+        {
+            var addressInfo = DataContext.Entity.Info.Addresses.FirstOrDefault();
+            MapUtil.OpenAddressInMaps(addressInfo);
         }
     }
 }

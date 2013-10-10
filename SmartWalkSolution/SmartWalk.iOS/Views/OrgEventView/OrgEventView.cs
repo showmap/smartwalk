@@ -83,6 +83,8 @@ namespace SmartWalk.iOS.Views.OrgEventView
         // HACK: To persist table scroll offset on rotation and appearing
         public override void ViewWillAppear(bool animated)
         {
+            base.ViewWillAppear(animated);
+
             if (_tableContentOffset != PointF.Empty && _timer == null)
             {
                 _timer = NSTimer.CreateRepeatingScheduledTimer(
@@ -189,10 +191,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private void InitializeToolBar()
         {
-            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList);
+            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape);
             _modeButtonList.TouchUpInside += OnModeButtonClicked;
 
-            _modeButtonMap = ButtonBarUtil.Create(ThemeIcons.NavBarMap);
+            _modeButtonMap = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
             _modeButtonMap.TouchUpInside += OnModeButtonClicked;
 
             _modeButton = new UIBarButtonItem(_modeButtonMap);

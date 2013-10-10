@@ -6,6 +6,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -100,6 +101,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 {
                     _entityInfo = value;
 
+                    InitializeStyle();
                     InitializeGestures();
                     InitializeCollectionView();
 
@@ -176,6 +178,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     NavigateSiteLinkCommand = NavigateWebSiteCommand
                 };
             }
+        }
+
+        private void InitializeStyle()
+        {
+            CloseButton.SetImage(ThemeIcons.CloseBlack, UIControlState.Normal);
         }
 
         private void InitializeGestures()

@@ -57,7 +57,15 @@ namespace SmartWalk.iOS.Views.Common
 
             LoadURL();
             UpdateNavButtonsState();
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
             UpdateFrames();
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
         }
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
@@ -65,6 +73,8 @@ namespace SmartWalk.iOS.Views.Common
             base.WillAnimateRotation(toInterfaceOrientation, duration);
 
             UpdateFrames();
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
         }
 
         private void InitializeIndicator()
@@ -203,25 +213,25 @@ namespace SmartWalk.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            LeftSpacer.Width = ButtonBarUtil.SpacerWidth;
+            LeftSpacer.Width = -12;
 
-            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack);
+            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape);
             button.TouchUpInside += OnBackButtonClick;
             BackButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserForward);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserForward, ThemeIcons.BrowserForwardLandscape);
             button.TouchUpInside += OnForwardButtonClick;
             ForwardButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefresh);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefresh, ThemeIcons.BrowserRefreshLandscape);
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserMenu);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserMenu, ThemeIcons.BrowserMenuLandscape);
             button.TouchUpInside += OnActionButtonClick;
             ActionButton.CustomView = button;
 
-            RightSpacer.Width = ButtonBarUtil.SpacerWidth;
+            RightSpacer.Width = -12;
         }
 
         // HACK: This is to keep bottom toolbar proper height on rotation
@@ -235,9 +245,9 @@ namespace SmartWalk.iOS.Views.Common
                 View.Frame.Width,
                 topBarFrame.Height);
 
-            var frame = WebView.Frame;
-            frame.Height = View.Bounds.Height - topBarFrame.Height;
-            WebView.Frame = frame;
+            var webFrame = WebView.Frame;
+            webFrame.Height = View.Bounds.Height - topBarFrame.Height;
+            WebView.Frame = webFrame;
         }
     }
 }

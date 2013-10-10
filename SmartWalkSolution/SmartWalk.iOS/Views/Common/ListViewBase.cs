@@ -110,6 +110,22 @@ namespace SmartWalk.iOS.Views.Common
             }
         }
 
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+        }
+
+        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillAnimateRotation(toInterfaceOrientation, duration);
+
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+        }
+
         protected abstract ListViewDecorator GetListView();
 
         protected abstract UIView GetProgressViewContainer();

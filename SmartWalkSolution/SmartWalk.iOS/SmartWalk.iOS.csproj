@@ -69,7 +69,7 @@
     <BuildIpa>true</BuildIpa>
     <CodesignKey>iPhone Developer: Ievgen Tiutiunnyk (J5QYB8CA9R)</CodesignKey>
     <ConsolePause>false</ConsolePause>
-    <CodesignProvision>AC26DDA9-91CA-44D0-9114-6CEB7B893F8B</CodesignProvision>
+    <CodesignProvision>3D40914D-4FC5-4007-818D-8D7A1FA3362A</CodesignProvision>
     <IpaPackageName>me.smartwalk.ios</IpaPackageName>
     <MtouchI18n />
     <MtouchArch>ARMv7</MtouchArch>
@@ -286,6 +286,7 @@
     <Compile Include="Views\Common\EntityCell\ContactCell.designer.cs">
       <DependentUpon>ContactCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ButtonBarButton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -371,5 +372,27 @@
     <BundleResource Include="Resources\Icons\BrowserMenu%402x.png" />
     <BundleResource Include="Resources\Icons\BrowserRefresh.png" />
     <BundleResource Include="Resources\Icons\BrowserRefresh%402x.png" />
+    <BundleResource Include="Resources\Icons\BrowserBackLandscape.png" />
+    <BundleResource Include="Resources\Icons\BrowserBackLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\BrowserForwardLandscape.png" />
+    <BundleResource Include="Resources\Icons\BrowserForwardLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\BrowserMenuLandscape.png" />
+    <BundleResource Include="Resources\Icons\BrowserMenuLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\BrowserRefreshLandscape.png" />
+    <BundleResource Include="Resources\Icons\BrowserRefreshLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarBackLandscape.png" />
+    <BundleResource Include="Resources\Icons\NavBarBackLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarListLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarMapLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarListLandscape.png" />
+    <BundleResource Include="Resources\Icons\NavBarMapLandscape.png" />
+    <BundleResource Include="Resources\Icons\Contacts.png" />
+    <BundleResource Include="Resources\Icons\Contacts%402x.png" />
+    <BundleResource Include="Resources\Icons\CloseBlack.png" />
+    <BundleResource Include="Resources\Icons\CloseBlack%402x.png" />
+    <BundleResource Include="Resources\Icons\CloseWhite.png" />
+    <BundleResource Include="Resources\Icons\CloseWhite%402x.png" />
+    <BundleResource Include="Resources\Icons\Navigate.png" />
+    <BundleResource Include="Resources\Icons\Navigate%402x.png" />
   </ItemGroup>
 </Project>

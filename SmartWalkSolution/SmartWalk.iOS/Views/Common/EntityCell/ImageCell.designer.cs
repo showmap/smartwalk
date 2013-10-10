@@ -13,24 +13,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 	partial class ImageCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIButton ContactsButton { get; set; }
-
-		[Outlet]
 		SmartWalk.iOS.Controls.ProgressImageView ImageView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIImageView ShadowImageView { get; set; }
-
-		[Action ("OnContactsButtonClick:forEvent:")]
-		partial void OnContactsButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ContactsButton != null) {
-				ContactsButton.Dispose ();
-				ContactsButton = null;
-			}
-
 			if (ImageView != null) {
 				ImageView.Dispose ();
 				ImageView = null;

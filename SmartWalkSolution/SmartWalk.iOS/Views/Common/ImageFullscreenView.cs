@@ -5,6 +5,7 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -81,6 +82,7 @@ namespace SmartWalk.iOS.Views.Common
             _imageHelper.ImageUrl = ImageURL;
 
             InitializeGestures();
+            InitializeStyle();
         }
 
         public void Show()
@@ -157,6 +159,11 @@ namespace SmartWalk.iOS.Views.Common
             ScrollView.AddGestureRecognizer(_singleTapRecognizer);
             ScrollView.AddGestureRecognizer(_doubleTapRecognizer);
             ScrollView.AddGestureRecognizer(_swipeRecognizer);
+        }
+
+        private void InitializeStyle()
+        {
+            CloseButton.SetImage(ThemeIcons.CloseWhite, UIControlState.Normal);
         }
 
         private void ZoomTo()
