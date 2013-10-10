@@ -216,13 +216,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 MapWidthConstraint.Constant,
                 MapHeightConstraint.Constant);
 
-            if (DataContext != null)
-            {
-                ImageCell.IsShadowHidden = 
-                    !ScreenUtil.IsVerticalOrientation || 
-                        !DataContext.Entity.Info.HasLogo() || 
-                            !DataContext.Entity.Info.HasAddress();
-            }
+            UpdateImageCellShadowVisibility();
 
             if (DataContext != null &&
                 DataContext.Entity.Description != null)
@@ -287,6 +281,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 (DataContext != null &&
                     !DataContext.Entity.Info.HasAddress());
 
+            UpdateImageCellShadowVisibility();
             SetNeedsLayout();
             SetNeedsUpdateConstraints();
         }
@@ -389,6 +384,17 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             else
             {
                 _bottomGradient.Hidden = true;
+            }
+        }
+
+        private void UpdateImageCellShadowVisibility()
+        {
+            if (DataContext != null && ImageCell != null)
+            {
+                ImageCell.IsShadowHidden = 
+                    !ScreenUtil.IsVerticalOrientation || 
+                        !DataContext.Entity.Info.HasLogo() || 
+                        !DataContext.Entity.Info.HasAddress();
             }
         }
 
