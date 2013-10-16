@@ -63,6 +63,7 @@ namespace SmartWalk.iOS.Utils.Map
                 annotationView.CanShowCallout = CanShowCallout;
                 annotationView.Image = ThemeIcons.MapPin;
                 annotationView.CenterOffset = Theme.MapPinOffset;
+                annotationView.CalloutOffset = new PointF(0, 0);
                 annotationView.RemoveSubviews();
 
                 var numberLabel = new UILabel { 

@@ -69,7 +69,7 @@ namespace SmartWalk.Core.ViewModels
             {
                 return _isDescriptionExpanded;
             }
-            private set
+            protected set
             {
                 if (_isDescriptionExpanded != value)
                 {

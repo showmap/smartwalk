@@ -113,7 +113,7 @@
 								<bool key="IBUIOn">YES</bool>
 								<object class="NSColor" key="IBUIOnTintColor">
 									<int key="NSColorSpace">1</int>
-									<bytes key="NSRGB">MSAxIDAAA</bytes>
+									<bytes key="NSRGB">MC4yIDAuMiAwLjIAA</bytes>
 								</object>
 							</object>
 						</array>
@@ -134,7 +134,6 @@
 						<string key="NSFrame">{{0, 87}, {320, 1}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>

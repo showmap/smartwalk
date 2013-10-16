@@ -99,6 +99,13 @@ namespace SmartWalk.Core.ViewModels
                     {
                         ExpandedShow = ((Venue)Entity).Shows.First();
                     }
+
+                    if (Entity != null &&
+                        (((Venue)Entity).Shows == null || 
+                        ((Venue)Entity).Shows.Length == 0))
+                    {
+                        IsDescriptionExpanded = true;
+                    }
                 }
             }
         }

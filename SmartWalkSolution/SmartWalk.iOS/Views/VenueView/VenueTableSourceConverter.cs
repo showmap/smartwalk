@@ -29,14 +29,6 @@ namespace SmartWalk.iOS.Views.VenueView
                             Key = "Shows"
                         });
                 }
-                else
-                {
-                    result.Add(
-                        new GroupContainer(new object[] {}) 
-                        {
-                            Key = "No Shows"
-                        });
-                }
 
                 return result.ToArray();
             }

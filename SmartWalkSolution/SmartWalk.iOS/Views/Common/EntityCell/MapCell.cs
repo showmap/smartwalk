@@ -8,6 +8,7 @@ using SmartWalk.Core.Model;
 using SmartWalk.Core.Model.Interfaces;
 using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Utils.Map;
+using MonoTouch.CoreLocation;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -77,6 +78,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 MapView.SetRegion(
                     MapUtil.CoordinateRegionForCoordinates(coordinates, new MKMapSize(2000, 2000)), false);
                 MapView.AddAnnotations(annotations);
+
+                var first = annotations.FirstOrDefault().Coordinate;
+                var centerCoordinate = new CLLocationCoordinate2D(
+                    first.Latitude + 0.0004,
+                    first.Longitude);
+                MapView.SetCenterCoordinate(centerCoordinate, false);
             }
         }
 

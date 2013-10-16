@@ -120,8 +120,8 @@ namespace SmartWalk.iOS.Resources
             labelAp.Font = Theme.OrgEventHeaderFont;
             labelAp.TextColor = Theme.OrgEventHeaderText;
 
-            var switchAp = UISwitch.AppearanceWhenContainedIn(typeof(OrgEventHeaderView));
-            switchAp.TintColor = Theme.CellHighlight;
+            //var switchAp = UISwitch.AppearanceWhenContainedIn(typeof(OrgEventHeaderView));
+            //switchAp.TintColor = NavBarBackground;
         }
     }
 }

@@ -13,9 +13,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 	partial class VenueShowCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIImageView ClockImageView { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
 
 		[Outlet]
@@ -47,9 +44,17 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
 		[Outlet]
 		SmartWalk.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIView TimeBackgroundView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (TimeBackgroundView != null) {
+				TimeBackgroundView.Dispose ();
+				TimeBackgroundView = null;
+			}
+
 			if (DescriptionAndImageSpaceConstraint != null) {
 				DescriptionAndImageSpaceConstraint.Dispose ();
 				DescriptionAndImageSpaceConstraint = null;
@@ -60,14 +65,14 @@ namespace SmartWalk.iOS.Views.OrgEventView
 				DescriptionLabel = null;
 			}
 
-			if (DetailsHeightConstraint != null) {
-				DetailsHeightConstraint.Dispose ();
-				DetailsHeightConstraint = null;
-			}
-
 			if (DescriptionLeftConstraint != null) {
 				DescriptionLeftConstraint.Dispose ();
 				DescriptionLeftConstraint = null;
+			}
+
+			if (DetailsHeightConstraint != null) {
+				DetailsHeightConstraint.Dispose ();
+				DetailsHeightConstraint = null;
 			}
 
 			if (DetailsLabel != null) {
@@ -88,11 +93,6 @@ namespace SmartWalk.iOS.Views.OrgEventView
 			if (ImageHeightConstraint != null) {
 				ImageHeightConstraint.Dispose ();
 				ImageHeightConstraint = null;
-			}
-
-			if (ClockImageView != null) {
-				ClockImageView.Dispose ();
-				ClockImageView = null;
 			}
 
 			if (ImageWidthConstraint != null) {
