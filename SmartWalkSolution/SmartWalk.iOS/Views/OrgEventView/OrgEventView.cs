@@ -27,6 +27,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private UISwipeGestureRecognizer _swipeLeft;
         private bool _isMapViewInitialized;
         private bool _isAnimating;
+        private bool _isBackOverriden;
         private PointF _tableContentOffset;
         private VenueShow _previousExpandedShow;
         private UIButton _modeButtonList;
@@ -105,6 +106,21 @@ namespace SmartWalk.iOS.Views.OrgEventView
             }
         }
 
+        protected override void OnNavigationBackClick()
+        {
+            if (_isBackOverriden)
+            {
+                if (ViewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
+                {
+                    ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
+                }
+            }
+            else
+            {
+                base.OnNavigationBackClick();
+            }
+        }
+
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(VenuesAndShowsTableView);  
@@ -143,6 +159,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
                 UpdateViewState(true);
+
+                if (ViewModel.Mode == OrgEventViewMode.List)
+                {
+                    _isBackOverriden = false;
+                }
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
@@ -151,6 +172,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 {
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
                 }
+
+                _isBackOverriden = _isAnimating && 
+                    ViewModel.Mode == OrgEventViewMode.Map &&
+                    ViewModel.SelectedVenueOnMap != null;
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation))
             {

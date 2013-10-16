@@ -59,7 +59,7 @@ namespace SmartWalk.iOS.Views.Common
             // override back button if it is visible
             if (NavigationController.ViewControllers.Length > 1)
             {
-                ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
+                ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, OnNavigationBackClick);
             }
 
             var notifyableViewModel = ViewModel as INotifyPropertyChanged;
@@ -145,6 +145,11 @@ namespace SmartWalk.iOS.Views.Common
         }
 
         protected abstract IListViewSource CreateListViewSource();
+
+        protected virtual void OnNavigationBackClick()
+        {
+            NavigationController.PopViewControllerAnimated(true);
+        }
 
         protected virtual void OnBeforeSetListViewSource()
         {

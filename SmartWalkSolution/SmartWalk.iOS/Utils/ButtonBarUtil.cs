@@ -41,13 +41,12 @@ namespace SmartWalk.iOS.Utils
 
         public static void OverrideNavigatorBackButton(
             UINavigationItem navItem,
-            UINavigationController navController)
+            Action backButtonClickHandler)
         {
             navItem.HidesBackButton = true;
 
             var button = Create(ThemeIcons.NavBarBack, ThemeIcons.NavBarBackLandscape);
-            button.TouchUpInside += (sender, e) => 
-                navController.PopViewControllerAnimated(true);
+            button.TouchUpInside += (sender, e) => backButtonClickHandler();
             var barButton = new UIBarButtonItem(button);
 
             navItem.SetLeftBarButtonItems(new [] { CreateSpacer(), barButton }, true);

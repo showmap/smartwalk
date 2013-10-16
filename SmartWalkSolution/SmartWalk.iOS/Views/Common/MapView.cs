@@ -22,7 +22,9 @@ namespace SmartWalk.iOS.Views.Common
         {
             base.ViewDidLoad();
 
-            ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
+            ButtonBarUtil.OverrideNavigatorBackButton(
+                NavigationItem,
+                () => NavigationController.PopViewControllerAnimated(true));
             InitializeToolBar();
 
             MapViewControl.Delegate = new MapDelegate { CanShowDetails = false };

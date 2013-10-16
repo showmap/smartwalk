@@ -18,7 +18,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public const int DefaultHeight = Gap + Theme.VenueShowTextLineHeight + Gap + 1;
 
         private const int ImageHeight = 100;
-        private const int TimeBlockWidth = 124;
+        private const int TimeBlockWidth = 107;
         private const int Gap = 8;
 
         private readonly MvxImageViewLoader _imageHelper;

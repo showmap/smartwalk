@@ -43,7 +43,9 @@ namespace SmartWalk.iOS.Views.Common
         {
             base.ViewDidLoad();
 
-            ButtonBarUtil.OverrideNavigatorBackButton(NavigationItem, NavigationController);
+            ButtonBarUtil.OverrideNavigatorBackButton(
+                NavigationItem,
+                () => NavigationController.PopViewControllerAnimated(true));
 
             InitializeStyle();
             InitializeIndicator();
