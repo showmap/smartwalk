@@ -7,10 +7,11 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Resources;
+using System.Globalization;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public partial class BrowserView : ActiveAwareController
+    public partial class BrowserView : ActiveAwareViewController
     {
         private UIActivityIndicatorView _indicatorView;
 
@@ -21,8 +22,8 @@ namespace SmartWalk.iOS.Views.Common
                 if (ViewModel.BrowserURL != null)
                 {
                     var url = ViewModel.BrowserURL;
-                    if (!url.StartsWith(@"http://", true, null) &&
-                        !url.StartsWith(@"https://", true, null))
+                    if (!url.StartsWith(@"http://", true, CultureInfo.InvariantCulture) &&
+                        !url.StartsWith(@"https://", true, CultureInfo.InvariantCulture))
                     {
                         url = "http://" + url;
                     }

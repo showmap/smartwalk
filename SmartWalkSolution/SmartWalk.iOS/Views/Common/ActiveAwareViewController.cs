@@ -3,7 +3,7 @@ using SmartWalk.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class ActiveAwareController : MvxViewController
+    public abstract class ActiveAwareViewController : MvxViewController
     {
         public override void ViewDidAppear(bool animated)
         {

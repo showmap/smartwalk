@@ -8,7 +8,7 @@ namespace SmartWalk.Core.ViewModels.Common
 {
     public abstract class ActiveViewModel : MvxViewModel, IActiveAware
     {
-        private static string ViewModelPostfix = "viewmodel";
+        private static readonly string ViewModelPostfix = "viewmodel";
 
         private readonly IAnalyticsService _analyticsService;
 

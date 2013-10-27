@@ -11,7 +11,8 @@
     <RootNamespace>SmartWalk.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>SmartWalkiOS</AssemblyName>
-    <ReleaseVersion />
+    <ReleaseVersion>
+    </ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +24,8 @@
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchSdkVersion>6.1</MtouchSdkVersion>
   </PropertyGroup>
@@ -34,7 +36,8 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchSdkVersion>6.1</MtouchSdkVersion>
   </PropertyGroup>
@@ -48,8 +51,10 @@
     <ConsolePause>false</ConsolePause>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <IpaPackageName />
-    <MtouchI18n />
+    <IpaPackageName>
+    </IpaPackageName>
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -71,7 +76,8 @@
     <ConsolePause>false</ConsolePause>
     <CodesignProvision>3D40914D-4FC5-4007-818D-8D7A1FA3362A</CodesignProvision>
     <IpaPackageName>me.smartwalk.ios</IpaPackageName>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
@@ -83,7 +89,8 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignProvision>Automatic:AppStore</CodesignProvision>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
@@ -146,6 +153,21 @@
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
       <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
+    <Reference Include="Cirrious.MvvmCross.Dialog.Touch">
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Dialog.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="CrossUI.Touch">
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\CrossUI.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="CrossUI.Core">
+      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\CrossUI.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ceton.mvx.plugins.settings">
+      <HintPath>..\Binaries\Mvx.Plugins.Settings\ceton.mvx.plugins.settings.dll</HintPath>
+    </Reference>
+    <Reference Include="ceton.mvx.plugins.settings.Touch">
+      <HintPath>..\Binaries\Mvx.Plugins.Settings\ceton.mvx.plugins.settings.Touch.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -163,6 +185,7 @@
     <Folder Include="Resources\Images\" />
     <Folder Include="Resources\Icons\" />
     <Folder Include="Utils\Map\" />
+    <Folder Include="Views\SettingsView\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -280,13 +303,18 @@
     <Compile Include="Utils\Map\MapViewAnnotation.cs" />
     <Compile Include="Utils\UIViewExtensions.cs" />
     <Compile Include="Services\GoogleAnalyticsService.cs" />
-    <Compile Include="Views\Common\ActiveAwareController.cs" />
     <Compile Include="Resources\ThemeIcons.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCell.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCell.designer.cs">
       <DependentUpon>ContactCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ButtonBarButton.cs" />
+    <Compile Include="Views\SettingsView\SettingsView.cs" />
+    <Compile Include="Views\SettingsView\SettingsView.designer.cs">
+      <DependentUpon>SettingsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\ActiveAwareDialogController.cs" />
+    <Compile Include="Views\Common\ActiveAwareViewController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -315,6 +343,7 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactsView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
+    <InterfaceDefinition Include="Views\SettingsView\SettingsView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />

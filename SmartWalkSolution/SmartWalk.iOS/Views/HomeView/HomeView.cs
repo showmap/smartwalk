@@ -4,6 +4,8 @@ using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Controls;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Utils;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.HomeView
 {
@@ -12,6 +14,13 @@ namespace SmartWalk.iOS.Views.HomeView
         public new HomeViewModel ViewModel
         {
             get { return (HomeViewModel)base.ViewModel; }
+        }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            InitializeToolBar();
         }
 
         protected override ListViewDecorator GetListView()
@@ -53,6 +62,23 @@ namespace SmartWalk.iOS.Views.HomeView
             {
                 GetViewTitle();
             }
+        }
+
+        private void InitializeToolBar()
+        {
+            // TODO: To replace the icons
+            var settingsButton = ButtonBarUtil.Create(
+                ThemeIcons.Navigate,
+                ThemeIcons.Navigate, null, null);
+            settingsButton.TouchUpInside += (s, e) => {
+                if (ViewModel.NavigateSettingsViewCommand.CanExecute(null))
+                {
+                    ViewModel.NavigateSettingsViewCommand.Execute(null);
+                }
+            };
+            var settingsBarButton = new UIBarButtonItem(settingsButton);
+
+            NavigationItem.SetRightBarButtonItems(new [] {ButtonBarUtil.CreateSpacer(), settingsBarButton}, true);
         }
     }
 }

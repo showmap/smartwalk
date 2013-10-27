@@ -1,5 +1,6 @@
 using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
+using Cirrious.MvvmCross.Dialog.Touch;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
@@ -9,7 +10,7 @@ using SmartWalk.iOS.Services;
 
 namespace SmartWalk.iOS
 {
-	public class Setup : MvxTouchSetup
+    public class Setup : MvxTouchDialogSetup
 	{
 		public Setup (MvxApplicationDelegate appDelegate, IMvxTouchViewPresenter presenter)
 			: base(appDelegate, presenter)
@@ -24,14 +25,15 @@ namespace SmartWalk.iOS
             return new SmartWalkApplication();
 		}
 
-        protected override void AddPluginsLoaders(MvxLoaderPluginRegistry registry)
+        protected override void AddPluginsLoaders(MvxLoaderPluginRegistry loaders)
         {
-            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.DownloadCache.Touch.Plugin>();
-            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.File.Touch.Plugin>();
-            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.PhoneCall.Touch.Plugin>();
-            registry.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.Email.Touch.Plugin>();
+            loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.DownloadCache.Touch.Plugin>();
+            loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.File.Touch.Plugin>();
+            loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.PhoneCall.Touch.Plugin>();
+            loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.Email.Touch.Plugin>();
+            loaders.AddConventionalPlugin<ceton.mvx.plugins.settings.Touch.Plugin>();
 
-            base.AddPluginsLoaders(registry);
+            base.AddPluginsLoaders(loaders);
 
         }
 
@@ -42,6 +44,7 @@ namespace SmartWalk.iOS
             Cirrious.MvvmCross.Plugins.PhoneCall.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Email.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
+            ceton.mvx.plugins.settings.PluginLoader.Instance.EnsureLoaded();
 
             base.InitializeLastChance();
         }

@@ -11,7 +11,7 @@ using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public partial class MapView : ActiveAwareController
+    public partial class MapView : ActiveAwareViewController
     {
         public new MapViewModel ViewModel
         {

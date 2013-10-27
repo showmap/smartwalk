@@ -16,7 +16,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>me.smartwalk.ios</string>
 	<key>CFBundleVersion</key>
-	<string>0.9.7</string>
+	<string>0.9.7.1</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon@2x</string>

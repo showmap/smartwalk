@@ -7,15 +7,18 @@ using MonoTouch.Foundation;
 using MonoTouch.TestFlight;
 using MonoTouch.UIKit;
 using SmartWalk.iOS.Resources;
+#if !DEBUG
+using SmartWalk.Core.Constants;
+#endif
 
 namespace SmartWalk.iOS
 {
 	[Register("AppDelegate")]
-	public partial class AppDelegate : MvxApplicationDelegate
+	public class AppDelegate : MvxApplicationDelegate
 	{
 		private UIWindow _window;
 
-		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+		public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 		{
             // TODO: Must be commented before Release
             TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
@@ -51,9 +54,11 @@ namespace SmartWalk.iOS
                     NSBundle.MainBundle.InfoDictionary[versionString].ToString();
             }
 
-            // TODO: To save user setting for OptOut
 #if DEBUG
             GAI.SharedInstance.OptOut = true;
+#else
+            GAI.SharedInstance.OptOut = !NSUserDefaults.StandardUserDefaults
+                .BoolForKey(SettingKeys.AnonymousStatsEnabled);
 #endif
         }
 	}

@@ -15,6 +15,7 @@ namespace SmartWalk.Core.ViewModels
         private LocationIndex _location;
 		private EntityInfo[] _orgInfos;
         private ICommand _navigateOrgViewCommand;
+        private ICommand _navigateSettingsViewCommand;
 
         public HomeViewModel(
             ISmartWalkDataService dataService,
@@ -71,6 +72,20 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _navigateOrgViewCommand;
+            }
+        }
+
+        public ICommand NavigateSettingsViewCommand
+        {
+            get
+            {
+                if (_navigateSettingsViewCommand == null)
+                {
+                    _navigateSettingsViewCommand = new MvxCommand(
+                        () => ShowViewModel<SettingsViewModel>());
+                }
+
+                return _navigateSettingsViewCommand;
             }
         }
 

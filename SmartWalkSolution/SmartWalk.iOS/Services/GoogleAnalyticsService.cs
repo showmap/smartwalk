@@ -17,6 +17,12 @@ namespace SmartWalk.iOS.Services
             _locationService = locationService;
         }
 
+        public bool IsOptOut
+        {
+            get { return GAI.SharedInstance.OptOut; }
+            set { GAI.SharedInstance.OptOut = value; }
+        }
+
         public void SendView(string name, Dictionary<string, object> parameters = null)
         {
             if (name == null) throw new ArgumentNullException("name");

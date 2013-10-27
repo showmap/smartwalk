@@ -12,7 +12,7 @@ using SmartWalk.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.iOS.Views.Common
 {
-    public abstract class ListViewBase : ActiveAwareController
+    public abstract class ListViewBase : ActiveAwareViewController
     {
         public const double ListViewShowAnimationDuration = 0.15;
 

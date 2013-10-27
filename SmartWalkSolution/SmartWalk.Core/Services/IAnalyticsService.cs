@@ -4,6 +4,8 @@ namespace SmartWalk.Core.Services
 {
     public interface IAnalyticsService
     {
+        bool IsOptOut { get; set; }
+
         void SendView(string name, Dictionary<string, object> parameters = null);
 
         void SendEvent(string category, string action, string label, int value = 0);
