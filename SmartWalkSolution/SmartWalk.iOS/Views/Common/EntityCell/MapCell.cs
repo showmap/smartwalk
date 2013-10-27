@@ -63,8 +63,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         protected override void OnDataContextChanged()
         {
-            // TODO: check current location annotation
-            MapView.RemoveAnnotations(MapView.Annotations);
+            var previousAnnotations = MapView.Annotations.Where(a => !(a is MKUserLocation)).ToArray();
+            var isFirstLoading = previousAnnotations.Length == 0;
+            MapView.RemoveAnnotations(previousAnnotations);
 
             if (DataContext != null && 
                 DataContext.Info.HasAddress())
@@ -75,15 +76,18 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                                 DataContext.Info.Name, 
                                 a)).ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
-                MapView.SetRegion(
-                    MapUtil.CoordinateRegionForCoordinates(coordinates, new MKMapSize(2000, 2000)), false);
-                MapView.AddAnnotations(annotations);
 
-                var first = annotations.FirstOrDefault().Coordinate;
-                var centerCoordinate = new CLLocationCoordinate2D(
-                    first.Latitude + 0.0004,
-                    first.Longitude);
-                MapView.SetCenterCoordinate(centerCoordinate, false);
+                // Adjusting vertical to keep a pin in the cell center
+                for (var i = 0; i < coordinates.Length; i++)
+                {
+                    coordinates[i].Latitude += 0.0002;
+                }
+
+                MapView.SetRegion(
+                    MapUtil.CoordinateRegionForCoordinates(coordinates, new MKMapSize(2000, 2000)),
+                    !isFirstLoading);
+
+                MapView.AddAnnotations(annotations);
             }
         }
 

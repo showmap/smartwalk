@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.OrgView
 		MonoTouch.UIKit.UIView CalendarView { get; set; }
 
 		[Outlet]
-		SmartWalk.iOS.Controls.CopyLabel DateLabel { get; set; }
+		MonoTouch.UIKit.UILabel DateLabel { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel DayLabel { get; set; }

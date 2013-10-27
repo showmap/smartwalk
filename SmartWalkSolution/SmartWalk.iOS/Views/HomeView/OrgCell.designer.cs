@@ -16,7 +16,7 @@ namespace SmartWalk.iOS.Views.HomeView
 		MonoTouch.UIKit.UIImageView OrgImageView { get; set; }
 
 		[Outlet]
-		SmartWalk.iOS.Controls.CopyLabel OrgNameLabel { get; set; }
+		MonoTouch.UIKit.UILabel OrgNameLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
