@@ -119,6 +119,9 @@ namespace SmartWalk.iOS.Resources
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(OrgEventHeaderView));
             labelAp.Font = Theme.OrgEventHeaderFont;
             labelAp.TextColor = Theme.OrgEventHeaderText;
+
+            UISwitch.Appearance.OnTintColor = NavBarBackground;
+            UISwitch.Appearance.TintColor = UIColor.Gray;
         }
     }
 }

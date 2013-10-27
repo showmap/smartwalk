@@ -57,8 +57,11 @@ namespace SmartWalk.iOS
 #if DEBUG
             GAI.SharedInstance.OptOut = true;
 #else
-            GAI.SharedInstance.OptOut = !NSUserDefaults.StandardUserDefaults
-                .BoolForKey(SettingKeys.AnonymousStatsEnabled);
+            if (NSUserDefaults.StandardUserDefaults[SettingKeys.AnonymousStatsEnabled] != null)
+            {
+                GAI.SharedInstance.OptOut = !NSUserDefaults.StandardUserDefaults
+                    .BoolForKey(SettingKeys.AnonymousStatsEnabled);
+            }
 #endif
         }
 	}

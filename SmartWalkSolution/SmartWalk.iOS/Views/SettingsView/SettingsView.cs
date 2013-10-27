@@ -4,6 +4,7 @@ using CrossUI.Touch.Dialog.Elements;
 using SmartWalk.Core.ViewModels;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Views.Common;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.SettingsView
 {
@@ -17,6 +18,9 @@ namespace SmartWalk.iOS.Views.SettingsView
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            TableView.BackgroundView = null;
+            ParentViewController.View.BackgroundColor = Theme.BackgroundPatternColor;
 
             ButtonBarUtil.OverrideNavigatorBackButton(
                 NavigationItem,
@@ -40,7 +44,7 @@ namespace SmartWalk.iOS.Views.SettingsView
                         },
                 };
 
-            // TODO: Add About Privacy section
+            // TODO: Add "About Privacy" section
         }
     }
 }
