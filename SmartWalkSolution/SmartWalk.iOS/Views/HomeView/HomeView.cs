@@ -66,10 +66,8 @@ namespace SmartWalk.iOS.Views.HomeView
 
         private void InitializeToolBar()
         {
-            // TODO: To replace the icons
             var settingsButton = ButtonBarUtil.Create(
-                ThemeIcons.Navigate,
-                ThemeIcons.Navigate, null, null);
+                ThemeIcons.Settings, null, null, null);
             settingsButton.TouchUpInside += (s, e) => {
                 if (ViewModel.NavigateSettingsViewCommand.CanExecute(null))
                 {

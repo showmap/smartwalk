@@ -50,6 +50,10 @@ namespace SmartWalk.iOS.Views.OrgView
                 ? string.Format("{0:d MMMM yyyy}", DataContext.Date) 
                 : null;
 
+            DateLabel.TextColor = DataContext != null && DataContext.HasSchedule 
+                ? Theme.CellText
+                : Theme.CellTextPassive;
+
             HintLabel.Text = DataContext != null && DataContext.HasSchedule 
                 ? null 
                 : "no schedule";
@@ -61,13 +65,13 @@ namespace SmartWalk.iOS.Views.OrgView
         private void InitializeLabelsStyle()
         {
             WeekDayLabel.Font = Theme.OrgEventWeekDayFont;
-            WeekDayLabel.TextColor = Theme.OrgEventDayText;
+            WeekDayLabel.TextColor = Theme.CellTextHighlight;
 
             DayLabel.Font = Theme.OrgEventDayFont;
-            DayLabel.TextColor = Theme.OrgEventDayText;
+            DayLabel.TextColor = Theme.CellTextHighlight;
 
             DateLabel.Font = Theme.OrgEventDateFont;
-            DateLabel.TextColor = Theme.OrgEventDateText;
+            DateLabel.TextColor = Theme.CellText;
 
             HintLabel.Font = Theme.OrgEventHintFont;
             HintLabel.TextColor = Theme.OrgEventHintText;

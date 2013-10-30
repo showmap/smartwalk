@@ -349,11 +349,10 @@ namespace SmartWalk.iOS.Views.Common
             }   
         }
 
-        // TODO: probably upper case only of EN locale
         private void UpdateViewTitle()
         {
             var title = GetViewTitle();
-            NavigationItem.Title = title != null ? title.ToUpper() : string.Empty;
+            NavigationItem.Title = title ?? string.Empty;
         }
 
         private void UpdateViewState()

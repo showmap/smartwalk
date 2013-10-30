@@ -7,13 +7,17 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIImage NavBarBack = UIImage.FromFile("Icons/NavBarBack.png");
         public static readonly UIImage NavBarBackLandscape = UIImage.FromFile("Icons/NavBarBackLandscape.png");
         public static readonly UIImage NavBarUp = UIImage.FromFile("Icons/NavBarUp.png");
-        //public static readonly UIImage NavBarUpLandscape = UIImage.FromFile("Icons/NavBarUpLandscape.png");
+        public static readonly UIImage NavBarUpLandscape = UIImage.FromFile("Icons/NavBarUpLandscape.png");
         public static readonly UIImage NavBarDown = UIImage.FromFile("Icons/NavBarDown.png");
-        //public static readonly UIImage NavBarDownLandscape = UIImage.FromFile("Icons/NavBarDownLandscape.png");
+        public static readonly UIImage NavBarDownLandscape = UIImage.FromFile("Icons/NavBarDownLandscape.png");
         public static readonly UIImage NavBarList = UIImage.FromFile("Icons/NavBarList.png");
         public static readonly UIImage NavBarListLandscape = UIImage.FromFile("Icons/NavBarListLandscape.png");
         public static readonly UIImage NavBarMap = UIImage.FromFile("Icons/NavBarMap.png");
         public static readonly UIImage NavBarMapLandscape = UIImage.FromFile("Icons/NavBarMapLandscape.png");
+        public static readonly UIImage NavBarNavigate = UIImage.FromFile("Icons/NavBarNavigate.png");
+        public static readonly UIImage NavBarNavigateLandscape = UIImage.FromFile("Icons/NavBarNavigate.png"); // TODO: not implemented
+
+        public static readonly UIImage Settings = UIImage.FromFile("Icons/Settings.png");
 
         public static readonly UIImage MapPin = UIImage.FromFile("Icons/MapPin.png");
         public static readonly UIImage SmallMap = UIImage.FromFile("Icons/SmallMap.png");

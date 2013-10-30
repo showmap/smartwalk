@@ -48,7 +48,7 @@ namespace SmartWalk.iOS
             GAI.SharedInstance.DispatchInterval = 20;
             GAI.SharedInstance.GetTracker("UA-44480601-1");
 
-            using (var versionString = new NSString("CFBundleVersion"))
+            using (var versionString = new NSString("CFBundleShortVersionString"))
             {
                 GAI.SharedInstance.DefaultTracker.AppVersion = 
                     NSBundle.MainBundle.InfoDictionary[versionString].ToString();

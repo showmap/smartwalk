@@ -22,14 +22,12 @@ namespace SmartWalk.iOS.Views.HomeView
         {
             var cell = (OrgCell)collectionView.CellForItem(indexPath);
             cell.ContentView.BackgroundColor = Theme.CellHighlight;
-            cell.SetSelected(true);
         }
 
         public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = (OrgCell)collectionView.CellForItem(indexPath);
             cell.ContentView.BackgroundColor = Theme.CellBackground;
-            cell.SetSelected(false);
         }
 
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)

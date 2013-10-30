@@ -103,7 +103,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 ? (DataContext.Number == 0 
                     ? DataContext.Info.Name 
                     : string.Format("{0}. {1}", 
-                        DataContext.Number, DataContext.Info.Name)).ToUpper()
+                        DataContext.Number, DataContext.Info.Name))
                 : null;
 
             // TODO: to support showing more than one address

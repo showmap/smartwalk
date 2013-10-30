@@ -56,6 +56,7 @@
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
+    <BuildIpa>true</BuildIpa>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <Optimize>true</Optimize>
@@ -181,7 +182,6 @@
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Common\EntityCell\" />
     <Folder Include="Controls\" />
-    <Folder Include="Resources\Fonts\" />
     <Folder Include="Resources\Images\" />
     <Folder Include="Resources\Icons\" />
     <Folder Include="Utils\Map\" />
@@ -349,12 +349,6 @@
     <BundleResource Include="Resources\Default-568h%402x.png" />
     <BundleResource Include="Resources\Icon%402x.png" />
     <BundleResource Include="Resources\Icon.png" />
-    <BundleResource Include="Resources\Fonts\Brandon_blk.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </BundleResource>
-    <BundleResource Include="Resources\Fonts\Brandon_reg.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </BundleResource>
     <BundleResource Include="Resources\Images\Background.png" />
     <BundleResource Include="Resources\Images\Background%402x.png" />
     <BundleResource Include="Resources\Images\NavBarBackground.png" />
@@ -378,7 +372,6 @@
     <BundleResource Include="Resources\Icons\SmallMap%402x.png" />
     <BundleResource Include="Resources\Icons\GoRight.png" />
     <BundleResource Include="Resources\Icons\GoRight%402x.png" />
-    <BundleResource Include="Resources\Fonts\Brandon_bld.otf" />
     <BundleResource Include="Resources\Icons\MapPin.png" />
     <BundleResource Include="Resources\Icons\MapPin%402x.png" />
     <BundleResource Include="Resources\Icons\ContactEmail.png" />
@@ -417,5 +410,13 @@
     <BundleResource Include="Resources\Icons\CloseWhite%402x.png" />
     <BundleResource Include="Resources\Icons\Navigate.png" />
     <BundleResource Include="Resources\Icons\Navigate%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarDownLandscape.png" />
+    <BundleResource Include="Resources\Icons\NavBarDownLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarUpLandscape.png" />
+    <BundleResource Include="Resources\Icons\NavBarUpLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\Settings.png" />
+    <BundleResource Include="Resources\Icons\Settings%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarNavigate.png" />
+    <BundleResource Include="Resources\Icons\NavBarNavigate%402x.png" />
   </ItemGroup>
 </Project>

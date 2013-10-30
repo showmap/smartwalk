@@ -15,11 +15,11 @@ namespace SmartWalk.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
-        public const int DefaultHeight = Gap + Theme.VenueShowTextLineHeight + Gap + 1;
+        public const int DefaultHeight = Gap + Theme.VenueShowTextLineHeight + Gap;
 
         private const int ImageHeight = 100;
         private const int TimeBlockWidth = 107;
-        private const int Gap = 8;
+        private const int Gap = 12;
 
         private readonly MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _imageTapGesture;
@@ -79,7 +79,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         private static float CalculateTextHeight(float frameWidth, string text)
         {
-            if (text != null && text != string.Empty)
+            if (!string.IsNullOrEmpty(text))
             {
                 var frameSize = new SizeF(frameWidth, float.MaxValue); 
                 SizeF textSize;

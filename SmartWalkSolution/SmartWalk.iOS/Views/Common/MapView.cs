@@ -94,13 +94,13 @@ namespace SmartWalk.iOS.Views.Common
         private void UpdateViewTitle()
         {
             NavigationItem.Title = ViewModel.Annotation != null
-                ? ViewModel.Annotation.Title.ToUpper()
+                ? ViewModel.Annotation.Title
                 : null;
         }
 
         private void InitializeToolBar()
         {
-            var navigateButton = ButtonBarUtil.Create(ThemeIcons.Navigate, null);
+            var navigateButton = ButtonBarUtil.Create(ThemeIcons.NavBarNavigate, ThemeIcons.NavBarNavigateLandscape);
             navigateButton.TouchUpInside += (sender, e) => 
                 { 
                     if (ViewModel.Annotation != null &&
@@ -111,8 +111,9 @@ namespace SmartWalk.iOS.Views.Common
                     }
                 };
 
-            var barItem = new UIBarButtonItem(navigateButton);
-            NavigationItem.SetRightBarButtonItems(new [] { barItem }, true);  
+            var navigationBarButton = new UIBarButtonItem(navigateButton);
+            NavigationItem.SetRightBarButtonItems(
+                new [] {ButtonBarUtil.CreateSpacer(), navigationBarButton }, true);  
         }
     }
 }

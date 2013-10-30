@@ -9,9 +9,11 @@ namespace SmartWalk.iOS.Resources
 {
     public class Theme
     {
-        private const string BrandonBlack = "BrandonGrotesque-Black";
-        private const string BrandonBold = "BrandonGrotesque-Bold";
-        private const string BrandonRegular = "BrandonGrotesque-Regular";
+        private const string HelveticaBold = "HelveticaNeue-Bold";
+        private const string HelveticaMedium = "HelveticaNeue-Medium";
+        private const string HelveticaRegular = "HelveticaNeue";
+        private const string HelveticaThin = "HelveticaNeue-Thin";
+        private const string HelveticaLight = "HelveticaNeue-Light";
 
         public static readonly UIImage NavBarBackgroundImage = UIImage.FromFile("Images/NavBarBackground.png");
         public static readonly UIImage NavBarLandscapeBackgroundImage = UIImage.FromFile("Images/NavBarLandscapeBackground.png");
@@ -22,46 +24,44 @@ namespace SmartWalk.iOS.Resources
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGB(51, 51, 51);
         public static readonly UIColor NavBarText = UIColor.White;
-        public static readonly UIFont NavBarFont = UIFont.FromName(BrandonBlack, 14);
+        public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 16);
 
         public static readonly UIColor CellBackground = UIColor.White;
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
         public static readonly UIColor CellText = UIColor.Black;
+        public static readonly UIColor CellTextPassive = UIColor.FromRGB(102, 102, 102);
         public static readonly UIColor CellTextHighlight = UIColor.White;
 
-        public static readonly UIFont OrgText = UIFont.FromName(BrandonRegular, 24);
-        public const int OrgTextLineSpacing = -9;
-        public static readonly UIFont GroupHeaderText = UIFont.FromName(BrandonBlack, 14);
+        public static readonly UIFont OrgText = UIFont.FromName(HelveticaRegular, 19);
+        public static readonly UIFont GroupHeaderText = UIFont.FromName(HelveticaMedium, 13);
 
-        public static readonly UIColor OrgEventDayText = UIColor.White;
-        public static readonly UIFont OrgEventDayFont = UIFont.FromName(BrandonRegular, 18);
-        public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(BrandonBlack, 10);
-        public static readonly UIColor OrgEventDateText = UIColor.FromRGB(102, 102, 102);
-        public static readonly UIFont OrgEventDateFont = UIFont.FromName(BrandonRegular, 18);
+        public static readonly UIFont OrgEventDayFont = UIFont.FromName(HelveticaLight, 18);
+        public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(HelveticaMedium, 10);
+        public static readonly UIColor OrgEventDatePassiveText = UIColor.FromRGB(102, 102, 102);
+        public static readonly UIFont OrgEventDateFont = UIFont.FromName(HelveticaLight, 17);
         public static readonly UIColor OrgEventHintText = UIColor.FromRGB(187, 187, 187);
-        public static readonly UIFont OrgEventHintFont = UIFont.FromName(BrandonRegular, 18);
+        public static readonly UIFont OrgEventHintFont = UIFont.FromName(HelveticaLight, 17);
         public static readonly UIColor OrgEventActive = CellHighlight;
         public static readonly UIColor OrgEventPassive = UIColor.FromRGB(187, 187, 187);
 
-        public static readonly UIColor EntityDescrText = UIColor.FromRGB(102, 102, 102);
-        public static readonly UIFont EntityDescrFont = UIFont.FromName(BrandonRegular, 16);
-        public const int EntityDescrTextLineHeight = 24;
+        public static readonly UIFont EntityDescrFont = UIFont.FromName(HelveticaRegular, 15);
+        public const int EntityDescrTextLineHeight = 19;
 
-        public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(BrandonRegular, 16);
+        public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIColor OrgEventHeaderText = UIColor.FromRGB(153, 153, 153);
-        public static readonly UIFont VenueCellTitleFont = UIFont.FromName(BrandonBold, 14);
+        public static readonly UIFont VenueCellTitleFont = UIFont.FromName(HelveticaMedium, 15);
         public static readonly UIColor VenueCellTitleText = UIColor.Black;
-        public static readonly UIFont VenueCellAddressFont = UIFont.FromName(BrandonRegular, 14);
+        public static readonly UIFont VenueCellAddressFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIColor VenueCellAddressText = UIColor.FromRGB(153, 153, 153);
 
-        public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(BrandonRegular, 12);
+        public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIColor VenueShowCellTimeText = UIColor.Black;
-        public static readonly UIFont VenueShowCellFont = UIFont.FromName(BrandonRegular, 14);
+        public static readonly UIFont VenueShowCellFont = UIFont.FromName(HelveticaRegular, 14);
         public static readonly UIColor VenueShowCellText = UIColor.Black;
-        public const int VenueShowTextLineHeight = 20;
+        public const int VenueShowTextLineHeight = 17;
 
         public static readonly UIColor MapPinText = UIColor.White;
-        public static readonly UIFont MapPinFont = UIFont.FromName(BrandonBold, 14);
+        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaMedium, 14);
         public static readonly PointF MapPinOffset = new PointF(-8, -4);
         public static readonly PointF MapPinTextOffset = new PointF(5, 5);
 
@@ -89,7 +89,8 @@ namespace SmartWalk.iOS.Resources
                 TextShadowColor = UIColor.Clear,
                 TextShadowOffset = new UIOffset(0, 0)
             });
-            UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.Default);
+            UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(4, UIBarMetrics.Default);
+            UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.LandscapePhone);
             
             UIToolbar.Appearance.SetBackgroundImage(
                 NavBarBackgroundImage,
@@ -114,13 +115,13 @@ namespace SmartWalk.iOS.Resources
 
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(EntityCell));
             labelAp.Font = Theme.EntityDescrFont;
-            labelAp.TextColor = Theme.EntityDescrText;
+            labelAp.TextColor = Theme.CellText;
 
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(OrgEventHeaderView));
             labelAp.Font = Theme.OrgEventHeaderFont;
             labelAp.TextColor = Theme.OrgEventHeaderText;
 
-            UISwitch.Appearance.OnTintColor = NavBarBackground;
+            UISwitch.Appearance.OnTintColor = UIColor.DarkGray;
             UISwitch.Appearance.TintColor = UIColor.Gray;
         }
     }

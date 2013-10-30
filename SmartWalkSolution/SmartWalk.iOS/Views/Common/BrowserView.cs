@@ -209,9 +209,9 @@ namespace SmartWalk.iOS.Views.Common
         private void UpdateViewTitle()
         {
             var pageTitle = WebView.EvaluateJavascript("document.title");
-            NavigationItem.Title = pageTitle != null && pageTitle != string.Empty
-                ? pageTitle.ToUpper()
-                    : (WebView.CanGoBack ? null: ViewModel.BrowserURL);
+            NavigationItem.Title = !string.IsNullOrEmpty(pageTitle)
+                ? pageTitle
+                : (WebView.CanGoBack ? null : ViewModel.BrowserURL);
         }
 
         private void InitializeStyle()

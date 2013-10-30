@@ -29,7 +29,7 @@ namespace SmartWalk.iOS.Views.SettingsView
             var target = this.CreateInlineBindingTarget<SettingsViewModel>();
 
             // TODO: To Localize
-            Root = new RootElement("Settings".ToUpper())
+            Root = new RootElement("Settings")
                 {
                     new Section("Privacy")
                         {
