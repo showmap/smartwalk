@@ -17,8 +17,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
         public const int DefaultHeight = Gap + Theme.VenueShowTextLineHeight + Gap;
 
+        private static readonly string TimeFormat = "{0:t}";
+        private static readonly string Space = " ";
+        private static readonly char M = 'm';
+
         private const int ImageHeight = 100;
-        private const int TimeBlockWidth = 107;
+        private const int TimeBlockWidth = 109;
         private const int Gap = 12;
 
         private readonly MvxImageViewLoader _imageHelper;
@@ -214,17 +218,15 @@ namespace SmartWalk.iOS.Views.OrgEventView
             ThumbImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
-            StartTimeLabel.Text = DataContext != null && 
+            StartTimeLabel.AttributedText = DataContext != null && 
                     DataContext.Start != DateTime.MinValue
-                ? String.Format("{0:t}", DataContext.Start)
-                    .Replace(" ", "").ToLower() 
-                : null;
+                ? GetTimeText(DataContext.Start)
+                : new NSAttributedString();
 
-            EndTimeLabel.Text = DataContext != null && 
+            EndTimeLabel.AttributedText = DataContext != null && 
                     DataContext.End != DateTime.MaxValue
-                ? String.Format("{0:t}", DataContext.End)
-                    .Replace(" ", "").ToLower() 
-                : null;
+                ? GetTimeText(DataContext.End)
+                : new NSAttributedString();
 
             DescriptionLabel.Text = DataContext != null 
                 ? DataContext.Description : null;
@@ -232,6 +234,31 @@ namespace SmartWalk.iOS.Views.OrgEventView
             UpdateClockIcon();
             UpateImageState();
             SetNeedsUpdateConstraints();
+        }
+
+        private NSAttributedString GetTimeText(DateTime time)
+        {
+            var timeStr = String.Format(TimeFormat, time)
+                .Replace(Space, string.Empty).ToLower();
+
+            var index = timeStr.IndexOf(M);
+            var result = new NSMutableAttributedString(
+                timeStr,
+                Theme.VenueShowCellTimeFont);
+
+            if (index > 0)
+            {
+                var ampmIndex = index - 1;
+
+                result.SetAttributes(
+                    new UIStringAttributes { Font = Theme.VenueShowCellTimeFont }, 
+                    new NSRange(0, ampmIndex));
+                result.SetAttributes(
+                    new UIStringAttributes { Font = Theme.VenueShowCellTimeAmPmFont },
+                    new NSRange(ampmIndex, timeStr.Length - ampmIndex));
+            }
+
+            return result;
         }
 
         private void UpateImageState()

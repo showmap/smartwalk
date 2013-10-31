@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -254,12 +255,12 @@ namespace SmartWalk.Core.Services
 
             result.EventInfos = xml.Descendants("event")
                 .Select(org => 
-                        new OrgEventInfo 
-                        {
-                    OrgId = orgId,
-                    Date = DateTime.Parse(org.Attribute("date").ValueOrNull()),
-                    HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
-                }).ToArray();
+                    new OrgEventInfo 
+                    {
+                        OrgId = orgId,
+                        Date = DateTime.Parse(org.Attribute("date").ValueOrNull(), CultureInfo.InvariantCulture),
+                        HasSchedule = org.Attribute("hasSchedule").ValueOrNull() == "true"
+                    }).ToArray();
 
             return result;
         }
@@ -332,8 +333,16 @@ namespace SmartWalk.Core.Services
 
                 if (points.Length == 2)
                 {
-                    double.TryParse(points[0], out latitude);
-                    double.TryParse(points[1], out longitude);
+                    double.TryParse(
+                        points[0],
+                        NumberStyles.Float,
+                        CultureInfo.InvariantCulture,
+                        out latitude);
+                    double.TryParse(
+                        points[1],
+                        NumberStyles.Float,
+                        CultureInfo.InvariantCulture,
+                        out longitude);
                 }
             }
 
@@ -371,10 +380,17 @@ namespace SmartWalk.Core.Services
             return result;
         }
 
-        private static Tuple<DateTime, DateTime> ParseShowTime(string start, string end, DateTime eventDate)
+        private static Tuple<DateTime, DateTime> ParseShowTime(
+            string start,
+            string end,
+            DateTime eventDate)
         {
             DateTime parsedStartTime;
-            if (start != null && DateTime.TryParse(start, out parsedStartTime))
+            if (start != null && DateTime.TryParse(
+                    start, 
+                    CultureInfo.InvariantCulture, 
+                    DateTimeStyles.None, 
+                    out parsedStartTime))
             {
                 parsedStartTime = new DateTime(
                     eventDate.Year, 
@@ -390,7 +406,11 @@ namespace SmartWalk.Core.Services
             }
 
             DateTime parsedEndTime;
-            if (end != null && DateTime.TryParse(end, out parsedEndTime))
+            if (end != null && DateTime.TryParse(
+                    end, 
+                    CultureInfo.InvariantCulture, 
+                    DateTimeStyles.None, 
+                    out parsedEndTime))
             {
                 parsedEndTime = new DateTime(
                     eventDate.Year, 
