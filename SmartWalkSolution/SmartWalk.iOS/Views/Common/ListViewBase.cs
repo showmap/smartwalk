@@ -208,7 +208,7 @@ namespace SmartWalk.iOS.Views.Common
         private void InitializeRefreshControl()
         {
             _refreshControl = new UIRefreshControl {
-                TintColor = Theme.NavBarBackground
+                TintColor = Theme.RefreshControl
             };
 
             _refreshControl.ValueChanged += OnRefreshControlValueChanged;

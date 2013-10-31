@@ -171,10 +171,10 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private void InitializeStyle()
         {
             NameLabel.Font = Theme.VenueCellTitleFont;
-            NameLabel.TextColor = Theme.VenueCellTitleText;
+            NameLabel.TextColor = Theme.CellText;
 
             AddressLabel.Font = Theme.VenueCellAddressFont;
-            AddressLabel.TextColor = Theme.VenueCellAddressText;
+            AddressLabel.TextColor = Theme.CellTextPassive;
 
             NavigateOnMapButton.SetImage(ThemeIcons.SmallMap, UIControlState.Normal);
             GoRightImageView.Image = ThemeIcons.GoRight;

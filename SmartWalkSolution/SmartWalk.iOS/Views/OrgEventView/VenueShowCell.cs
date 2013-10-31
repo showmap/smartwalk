@@ -326,13 +326,13 @@ namespace SmartWalk.iOS.Views.OrgEventView
         private void InitializeStyle()
         {
             StartTimeLabel.Font = Theme.VenueShowCellTimeFont;
-            StartTimeLabel.TextColor = Theme.VenueShowCellTimeText;
+            StartTimeLabel.TextColor = Theme.CellText;
 
             EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
-            EndTimeLabel.TextColor = Theme.VenueShowCellTimeText;
+            EndTimeLabel.TextColor = Theme.CellText;
 
             DescriptionLabel.Font = Theme.VenueShowCellFont;
-            DescriptionLabel.TextColor = Theme.VenueShowCellText;
+            DescriptionLabel.TextColor = Theme.CellText;
 
             DetailsLabel.Font = Theme.VenueShowCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;

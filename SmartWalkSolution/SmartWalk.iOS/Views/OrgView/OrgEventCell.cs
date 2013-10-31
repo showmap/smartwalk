@@ -40,7 +40,7 @@ namespace SmartWalk.iOS.Views.OrgView
         {
             WeekDayLabel.Text = DataContext != null 
                 ? string.Format("{0:ddd}", DataContext.Date).ToUpper() 
-                : null; // TODO: probably only for EN locale
+                : null;
 
             DayLabel.Text = DataContext != null 
                 ? DataContext.Date.Day.ToString() 
@@ -60,6 +60,8 @@ namespace SmartWalk.iOS.Views.OrgView
 
             CalendarView.BackgroundColor = DataContext != null && !DataContext.HasSchedule 
                 ? Theme.OrgEventPassive : Theme.OrgEventActive;
+
+            UserInteractionEnabled = DataContext != null && DataContext.HasSchedule;
         }
 
         private void InitializeLabelsStyle()
@@ -74,7 +76,7 @@ namespace SmartWalk.iOS.Views.OrgView
             DateLabel.TextColor = Theme.CellText;
 
             HintLabel.Font = Theme.OrgEventHintFont;
-            HintLabel.TextColor = Theme.OrgEventHintText;
+            HintLabel.TextColor = Theme.CellTextHint;
         }
     }
 }

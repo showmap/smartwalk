@@ -73,9 +73,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <BuildIpa>true</BuildIpa>
-    <CodesignKey>iPhone Developer: Ievgen Tiutiunnyk (J5QYB8CA9R)</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <ConsolePause>false</ConsolePause>
-    <CodesignProvision>3D40914D-4FC5-4007-818D-8D7A1FA3362A</CodesignProvision>
     <IpaPackageName>me.smartwalk.ios</IpaPackageName>
     <MtouchI18n>
     </MtouchI18n>

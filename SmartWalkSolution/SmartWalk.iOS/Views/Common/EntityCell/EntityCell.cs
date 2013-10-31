@@ -349,8 +349,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 {
                     Frame = BottomGradientView.Bounds,
                     Colors = new [] { 
-                        Theme.MercuryLight.ColorWithAlpha(0.2f).CGColor, 
-                        Theme.MercuryLight.CGColor 
+                        Theme.TextGradient.ColorWithAlpha(0.2f).CGColor, 
+                        Theme.TextGradient.CGColor 
                     },
                 };
 
