@@ -3,6 +3,8 @@ using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
 using SmartWalk.Core.Model;
+using MonoTouch.AddressBook;
+using MonoTouch.Foundation;
 
 namespace SmartWalk.iOS.Utils.Map
 {
@@ -57,15 +59,18 @@ namespace SmartWalk.iOS.Utils.Map
         {
             if (addressInfo != null)
             {
+                var addressDict = new NSMutableDictionary();
+                addressDict.Add(ABPersonAddressKey.Street, new NSString(addressInfo.Address));
+
                 var item = new MKMapItem(
                     new MKPlacemark(
                         new CLLocationCoordinate2D(
                             addressInfo.Latitude, 
                             addressInfo.Longitude),
-                        null));
+                        addressDict));
 
                 item.OpenInMaps(new MKLaunchOptions {
-                    DirectionsMode = MKDirectionsMode.Walking 
+                    DirectionsMode = MKDirectionsMode.Walking
                 });
             }
         }
