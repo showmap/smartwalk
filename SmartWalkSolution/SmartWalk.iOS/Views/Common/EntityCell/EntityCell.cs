@@ -18,7 +18,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         private const int ImageVerticalHeight = 120;
         private const int MapVerticalHeight = 80;
         private const int CellHorizontalHeight = 100;
-        private const int Gap = 15;
+        private const int Gap = 10;
 
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
@@ -51,7 +51,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private static float CalculateTextHeight(float frameWidth, string text)
         {
-            if (text != null && text != string.Empty)
+            if (!string.IsNullOrEmpty(text))
             {
                 var frameSize = new SizeF(
                     frameWidth,

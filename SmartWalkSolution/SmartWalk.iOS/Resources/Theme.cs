@@ -56,7 +56,8 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIFont VenueCellTitleFont = UIFont.FromName(HelveticaMedium, 15);
         public static readonly UIFont VenueCellAddressFont = UIFont.FromName(HelveticaLight, 14);
 
-        public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(HelveticaLight, 14);
+        public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(HelveticaRegular, 14);
+        public static readonly UIFont VenueShowCellFinishedTimeFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowCellTimeAmPmFont = UIFont.FromName(HelveticaLight, 9);
         public static readonly UIFont VenueShowCellFont = UIFont.FromName(HelveticaRegular, 14);
         public const int VenueShowTextLineHeight = 17;

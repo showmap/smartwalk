@@ -220,12 +220,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
 
             StartTimeLabel.AttributedText = DataContext != null && 
                     DataContext.Start != DateTime.MinValue
-                ? GetTimeText(DataContext.Start)
+                ? GetTimeText(DataContext.Start, DataContext.Status)
                 : new NSAttributedString();
 
             EndTimeLabel.AttributedText = DataContext != null && 
                     DataContext.End != DateTime.MaxValue
-                ? GetTimeText(DataContext.End)
+                ? GetTimeText(DataContext.End, DataContext.Status)
                 : new NSAttributedString();
 
             DescriptionLabel.Text = DataContext != null 
@@ -236,7 +236,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
             SetNeedsUpdateConstraints();
         }
 
-        private NSAttributedString GetTimeText(DateTime time)
+        private static NSAttributedString GetTimeText(DateTime time, VenueShowStatus status)
         {
             var timeStr = String.Format(TimeFormat, time)
                 .Replace(Space, string.Empty).ToLower();
@@ -251,7 +251,12 @@ namespace SmartWalk.iOS.Views.OrgEventView
                 var ampmIndex = index - 1;
 
                 result.SetAttributes(
-                    new UIStringAttributes { Font = Theme.VenueShowCellTimeFont }, 
+                    new UIStringAttributes 
+                    { 
+                        Font = status == VenueShowStatus.Finished 
+                            ? Theme.VenueShowCellFinishedTimeFont 
+                            : Theme.VenueShowCellTimeFont
+                    }, 
                     new NSRange(0, ampmIndex));
                 result.SetAttributes(
                     new UIStringAttributes { Font = Theme.VenueShowCellTimeAmPmFont },
@@ -380,7 +385,7 @@ namespace SmartWalk.iOS.Views.OrgEventView
                     break;
 
                 case VenueShowStatus.Started:
-                    TimeBackgroundView.BackgroundColor = UIColor.Green;
+                    TimeBackgroundView.BackgroundColor = Theme.HyperlinkText;
                     break;
 
                 case VenueShowStatus.Finished:
