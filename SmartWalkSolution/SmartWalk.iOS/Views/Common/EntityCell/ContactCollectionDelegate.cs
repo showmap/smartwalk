@@ -3,6 +3,7 @@ using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -22,7 +23,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = UIColor.FromRGB(245, 245, 245);
+            cell.ContentView.BackgroundColor = Theme.CellHighlight;
         }
 
         public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)

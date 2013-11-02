@@ -33,14 +33,19 @@ namespace SmartWalk.iOS.Resources
 
         public static readonly UIColor CellBackground = UIColor.White;
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
+
         public static readonly UIColor CellText = UIColor.Black;
         public static readonly UIColor CellTextPassive = UIColor.FromRGB(153, 153, 153);
         public static readonly UIColor CellTextHint = UIColor.FromRGB(187, 187, 187);
         public static readonly UIColor CellTextHighlight = UIColor.White;
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 
-        public static readonly UIFont OrgText = UIFont.FromName(HelveticaRegular, 19);
-        public static readonly UIFont GroupHeaderText = UIFont.FromName(HelveticaMedium, 13);
+        public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
+        public static readonly UIFont ContactTextFont = UIFont.FromName(HelveticaRegular, 16);
+
+        public static readonly UIFont OrgTextFont = UIFont.FromName(HelveticaRegular, 19);
+        public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
 
         public static readonly UIFont OrgEventDayFont = UIFont.FromName(HelveticaLight, 18);
         public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(HelveticaBold, 10);
@@ -96,16 +101,23 @@ namespace SmartWalk.iOS.Resources
                 UIToolbarPosition.Any,
                 UIBarMetrics.LandscapePhone);
 
+            UISwitch.Appearance.OnTintColor = UIColor.DarkGray;
+            UISwitch.Appearance.TintColor = UIColor.Gray;
+
+            var buttonLabelAp = UILabel.AppearanceWhenContainedIn(typeof(UIButton));
+            buttonLabelAp.Font = ButtonTextFont;
+            buttonLabelAp.TextColor = CellText;
+
             var cellAp = UICollectionViewCell.AppearanceWhenContainedIn(typeof(HomeView));
             cellAp.BackgroundColor = Theme.CellBackground;
 
             var labelAp = UILabel.AppearanceWhenContainedIn(typeof(OrgCell));
-            labelAp.Font = Theme.OrgText;
+            labelAp.Font = Theme.OrgTextFont;
             labelAp.TextColor = Theme.CellText;
             labelAp.HighlightedTextColor = Theme.CellTextHighlight;
 
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(GroupHeaderCell));
-            labelAp.Font = Theme.GroupHeaderText;
+            labelAp.Font = Theme.GroupHeaderTextFont;
             labelAp.TextColor = Theme.CellText;
 
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(EntityCell));
@@ -115,9 +127,6 @@ namespace SmartWalk.iOS.Resources
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(OrgEventHeaderView));
             labelAp.Font = Theme.OrgEventHeaderFont;
             labelAp.TextColor = Theme.CellTextPassive;
-
-            UISwitch.Appearance.OnTintColor = UIColor.DarkGray;
-            UISwitch.Appearance.TintColor = UIColor.Gray;
         }
     }
 }

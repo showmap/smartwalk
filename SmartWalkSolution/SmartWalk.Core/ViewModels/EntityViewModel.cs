@@ -59,6 +59,11 @@ namespace SmartWalk.Core.ViewModels
                     _entity = value;
                     RaisePropertyChanged(() => Entity);
                     IsDescriptionExpanded = false;
+
+                    if (CurrentContactsEntityInfo != null)
+                    {
+                        CurrentContactsEntityInfo = Entity.Info;
+                    }
                 }
             }
         }

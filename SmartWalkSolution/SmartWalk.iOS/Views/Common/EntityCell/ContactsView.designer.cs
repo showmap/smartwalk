@@ -38,29 +38,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (CloseButton != null) {
-				CloseButton.Dispose ();
-				CloseButton = null;
-			}
-
 			if (BackgroundView != null) {
 				BackgroundView.Dispose ();
 				BackgroundView = null;
 			}
 
-			if (CollectionView != null) {
-				CollectionView.Dispose ();
-				CollectionView = null;
-			}
-
-			if (PlaceholderTopConstraint != null) {
-				PlaceholderTopConstraint.Dispose ();
-				PlaceholderTopConstraint = null;
-			}
-
-			if (PlaceholderBottomConstraint != null) {
-				PlaceholderBottomConstraint.Dispose ();
-				PlaceholderBottomConstraint = null;
+			if (CloseButton != null) {
+				CloseButton.Dispose ();
+				CloseButton = null;
 			}
 
 			if (CollectionBottomConstraint != null) {
@@ -71,6 +56,21 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (CollectionTopConstraint != null) {
 				CollectionTopConstraint.Dispose ();
 				CollectionTopConstraint = null;
+			}
+
+			if (CollectionView != null) {
+				CollectionView.Dispose ();
+				CollectionView = null;
+			}
+
+			if (PlaceholderBottomConstraint != null) {
+				PlaceholderBottomConstraint.Dispose ();
+				PlaceholderBottomConstraint = null;
+			}
+
+			if (PlaceholderTopConstraint != null) {
+				PlaceholderTopConstraint.Dispose ();
+				PlaceholderTopConstraint = null;
 			}
 		}
 	}

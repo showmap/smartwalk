@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
@@ -7,6 +8,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Resources;
+using SmartWalk.iOS.Utils;
 
 namespace SmartWalk.iOS.Views.Common.EntityCell
 {
@@ -14,9 +16,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
     {
         public static readonly UINib Nib = UINib.FromName("ContactsView", NSBundle.MainBundle);
 
-        private const float CellHeight = 40;
         private const float Gap = 8;
         private const float DefaultPlaceholderMargin = 40;
+        private const float DefaultPlaceholderLandscapeMargin = 15;
 
         private EntityInfo _entityInfo;
         private UITapGestureRecognizer _backgroundTapGesture;
@@ -97,13 +99,18 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             }
             set
             {
+                var isInitialized = _entityInfo != null;
+
                 if (!Equals(_entityInfo, value))
                 {
                     _entityInfo = value;
 
-                    InitializeStyle();
-                    InitializeGestures();
-                    InitializeCollectionView();
+                    if (!isInitialized)
+                    {
+                        InitializeStyle();
+                        InitializeGestures();
+                        InitializeCollectionView();
+                    }
 
                     ((ContactCollectionSource)CollectionView.WeakDataSource).ItemsSource =
                         _entityInfo != null 
@@ -135,6 +142,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             UpdateConstraints();
 
             base.LayoutSubviews();
+
+            ((UICollectionViewFlowLayout)CollectionView.CollectionViewLayout).ItemSize = 
+                new SizeF(ScreenUtil.IsVerticalOrientation ? 280 : 376, 50);
         }
 
         public override void UpdateConstraints()
@@ -147,15 +157,19 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 var itemsCount = colletionSource.ItemsSource != null
                     ? colletionSource.ItemsSource.Cast<object>().Count()
                         : 0;
-                var collectionHeight = itemsCount * CellHeight + (itemsCount - 1) * Gap;
+                var collectionHeight = itemsCount * ContactCell.DefaultHeight + (itemsCount - 1) * Gap;
                 var placeholderHeight = 
                     CollectionTopConstraint.Constant +
                         collectionHeight +
                         CollectionBottomConstraint.Constant;
                 var placeholderMargin = (Bounds.Height - placeholderHeight) / 2.0;
 
-                PlaceholderTopConstraint.Constant = Math.Max((float)placeholderMargin, DefaultPlaceholderMargin);
-                PlaceholderBottomConstraint.Constant = Math.Max((float)placeholderMargin, DefaultPlaceholderMargin);
+                var defaultMargin = ScreenUtil.IsVerticalOrientation 
+                    ? DefaultPlaceholderMargin 
+                    : DefaultPlaceholderLandscapeMargin; 
+
+                PlaceholderTopConstraint.Constant = Math.Max((float)placeholderMargin, defaultMargin);
+                PlaceholderBottomConstraint.Constant = Math.Max((float)placeholderMargin, defaultMargin);
             }
         }
 
@@ -182,7 +196,13 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
-            CloseButton.SetImage(ThemeIcons.CloseBlack, UIControlState.Normal);
+            CloseButton.Layer.BorderWidth = 1;
+            CloseButton.Layer.CornerRadius = 4;
+            CloseButton.Layer.BorderColor = UIColor.Gray.CGColor;
+
+            CloseButton.TouchDown += (sender, e) => CloseButton.BackgroundColor = UIColor.DarkGray;
+            CloseButton.TouchUpInside += (sender, e) => CloseButton.BackgroundColor = Theme.CellBackground;
+            CloseButton.TouchUpOutside += (sender, e) => CloseButton.BackgroundColor = Theme.CellBackground;
         }
 
         private void InitializeGestures()

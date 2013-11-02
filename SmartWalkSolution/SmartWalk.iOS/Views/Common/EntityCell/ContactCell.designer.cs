@@ -19,6 +19,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		SmartWalk.iOS.Controls.CopyLabel ContactLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ContactTopConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint TitleHeightConstraint { get; set; }
 
 		[Outlet]
@@ -36,14 +39,19 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				ContactLabel = null;
 			}
 
-			if (TitleLabel != null) {
-				TitleLabel.Dispose ();
-				TitleLabel = null;
+			if (ContactTopConstraint != null) {
+				ContactTopConstraint.Dispose ();
+				ContactTopConstraint = null;
 			}
 
 			if (TitleHeightConstraint != null) {
 				TitleHeightConstraint.Dispose ();
 				TitleHeightConstraint = null;
+			}
+
+			if (TitleLabel != null) {
+				TitleLabel.Dispose ();
+				TitleLabel = null;
 			}
 		}
 	}

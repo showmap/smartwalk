@@ -11,6 +11,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("ContactCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("ContactCell");
 
+        public const float DefaultHeight = 50;
+
         public ContactCell(IntPtr handle) : base (handle)
         {
         }
@@ -28,7 +30,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         protected override void OnInitialize()
         {
-            TitleLabel.TextColor = Theme.HyperlinkText;
+            InitializeStyle();
         }
 
         protected override void OnDataContextChanged()
@@ -36,7 +38,8 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
             ContactLabel.Text = DataContext != null ? DataContext.Contact : null;
 
-            TitleHeightConstraint.Constant = DataContext != null && DataContext.Title != null ? 20 : 0;
+            TitleHeightConstraint.Constant = DataContext != null && DataContext.Title != null ? 22 : 0;
+            ContactTopConstraint.Constant = DataContext != null && DataContext.Title != null ? 19 : 13;
             
             switch (DataContext.Type)
             {
@@ -56,6 +59,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                     ContactIcon.Image = null;
                     break;
             }
+        }
+
+        private void InitializeStyle()
+        {
+            TitleLabel.Font = Theme.ContactTitleTextFont;
+            TitleLabel.TextColor = Theme.HyperlinkText;
+
+            ContactLabel.Font = Theme.ContactTextFont;
+            ContactLabel.TextColor = Theme.CellText;
         }
     }
 }

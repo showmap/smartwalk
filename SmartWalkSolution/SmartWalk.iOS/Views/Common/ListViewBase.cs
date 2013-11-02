@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Model;
@@ -261,19 +262,25 @@ namespace SmartWalk.iOS.Views.Common
             var contactsProvider = ViewModel as IContactsEntityProvider;
             if (entityInfo != null && contactsProvider != null)
             {
-                var contactsView = ContactsView.Create();
-                contactsView.Close += OnContactsViewClose;
-                contactsView.Frame = View.Bounds;
-                contactsView.EntityInfo = entityInfo;
-                contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
-                contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
-                contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;
+                var contactsView = View.Subviews.OfType<ContactsView>().FirstOrDefault();
 
-                contactsView.Alpha = 0;
-                View.Add(contactsView);
-                UIView.BeginAnimations(null);
-                contactsView.Alpha = 1;
-                UIView.CommitAnimations();
+                if (contactsView == null)
+                {
+                    contactsView = ContactsView.Create();
+                    contactsView.Close += OnContactsViewClose;
+                    contactsView.Frame = View.Bounds;
+                    contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
+                    contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
+                    contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;
+
+                    contactsView.Alpha = 0;
+                    View.Add(contactsView);
+                    UIView.BeginAnimations(null);
+                    contactsView.Alpha = 1;
+                    UIView.CommitAnimations();
+                }
+
+                contactsView.EntityInfo = entityInfo;
             }
         }
 
