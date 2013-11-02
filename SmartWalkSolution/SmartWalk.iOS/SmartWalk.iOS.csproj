@@ -417,5 +417,7 @@
     <BundleResource Include="Resources\Icons\Settings%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarNavigate.png" />
     <BundleResource Include="Resources\Icons\NavBarNavigate%402x.png" />
+    <BundleResource Include="Resources\Icons\Details.png" />
+    <BundleResource Include="Resources\Icons\Details%402x.png" />
   </ItemGroup>
 </Project>

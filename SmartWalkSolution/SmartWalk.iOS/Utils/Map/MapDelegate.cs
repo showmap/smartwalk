@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-//using Cirrious.MvvmCross.Binding.Touch.Views;
+using Cirrious.CrossCore.Core;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Utils.Map;
-using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.iOS.Utils.Map
 {
@@ -17,8 +16,7 @@ namespace SmartWalk.iOS.Utils.Map
         private readonly List<MKPinAnnotationView> _viewLinksList = 
             new List<MKPinAnnotationView>(); // to prevent GC
 
-        //private MvxImageViewLoader _imageHelper;
-        private string _annotationIdentifier = "BasicAnnotation";
+        private readonly string _annotationIdentifier = "BasicAnnotation";
 
         public MapDelegate()
         {
@@ -78,7 +76,9 @@ namespace SmartWalk.iOS.Utils.Map
 
                 if (CanShowCallout && CanShowDetails)
                 {
-                    var detailButton = UIButton.FromType(UIButtonType.DetailDisclosure);
+                    var detailButton = UIButton.FromType(UIButtonType.Custom);
+                    detailButton.Frame = new RectangleF(0, 0, 32, 32);
+                    detailButton.SetImage(ThemeIcons.Details, UIControlState.Normal);
                     detailButton.TouchUpInside += (s, e) => 
                         {
                             if (DetailsClick != null)
@@ -90,16 +90,6 @@ namespace SmartWalk.iOS.Utils.Map
                         };
 
                     annotationView.RightCalloutAccessoryView = detailButton;
-
-                    // TODO: It doesn't work, to find out why
-                    /*if (mapAnnotation.Logo != null)
-                    {
-                        var imageView = new UIImageView();
-                        annotationView.LeftCalloutAccessoryView = imageView;
-
-                        _imageHelper = new MvxImageViewLoader(() => imageView);
-                        _imageHelper.ImageUrl = mapAnnotation.Logo;
-                    }*/
                 }
             }
 

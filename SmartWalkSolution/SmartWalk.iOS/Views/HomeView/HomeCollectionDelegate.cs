@@ -27,7 +27,7 @@ namespace SmartWalk.iOS.Views.HomeView
         public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = (OrgCell)collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = Theme.CellBackground;
+            cell.ContentView.BackgroundColor = null;
         }
 
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)

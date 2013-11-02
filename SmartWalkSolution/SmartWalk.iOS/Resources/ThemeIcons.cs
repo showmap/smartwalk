@@ -23,6 +23,7 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIImage SmallMap = UIImage.FromFile("Icons/SmallMap.png");
         public static readonly UIImage GoRight = UIImage.FromFile("Icons/GoRight.png");
         public static readonly UIImage Navigate = UIImage.FromFile("Icons/Navigate.png");
+        public static readonly UIImage Details = UIImage.FromFile("Icons/Details.png");
 
         public static readonly UIImage CloseWhite = UIImage.FromFile("Icons/CloseWhite.png");
         public static readonly UIImage CloseBlack = UIImage.FromFile("Icons/CloseBlack.png");

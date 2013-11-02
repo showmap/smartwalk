@@ -60,7 +60,10 @@ namespace SmartWalk.iOS.Utils.Map
             if (addressInfo != null)
             {
                 var addressDict = new NSMutableDictionary();
-                addressDict.Add(ABPersonAddressKey.Street, new NSString(addressInfo.Address));
+                if (addressInfo.Address != null)
+                {
+                    addressDict.Add(ABPersonAddressKey.Street, new NSString(addressInfo.Address));
+                }
 
                 var item = new MKMapItem(
                     new MKPlacemark(
