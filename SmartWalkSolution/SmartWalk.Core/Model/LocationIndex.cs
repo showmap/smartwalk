@@ -17,5 +17,12 @@ namespace SmartWalk.Core.Model
 
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Initial
+                .CombineHashCode(base.GetHashCode())
+                .CombineHashCodeOrDefault(OrgInfos);
+        }
     }
 }
