@@ -17,8 +17,6 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIImage NavBarNavigate = UIImage.FromFile("Icons/NavBarNavigate.png");
         public static readonly UIImage NavBarNavigateLandscape = UIImage.FromFile("Icons/NavBarNavigate.png"); // TODO: not implemented
 
-        public static readonly UIImage Settings = UIImage.FromFile("Icons/Settings.png");
-
         public static readonly UIImage MapPin = UIImage.FromFile("Icons/MapPin.png");
         public static readonly UIImage SmallMap = UIImage.FromFile("Icons/SmallMap.png");
         public static readonly UIImage GoRight = UIImage.FromFile("Icons/GoRight.png");

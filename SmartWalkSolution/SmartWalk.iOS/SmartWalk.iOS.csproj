@@ -156,18 +156,6 @@
     <Reference Include="Cirrious.MvvmCross.Dialog.Touch">
       <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Dialog.Touch.dll</HintPath>
     </Reference>
-    <Reference Include="CrossUI.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\CrossUI.Touch.dll</HintPath>
-    </Reference>
-    <Reference Include="CrossUI.Core">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\CrossUI.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="ceton.mvx.plugins.settings">
-      <HintPath>..\Binaries\Mvx.Plugins.Settings\ceton.mvx.plugins.settings.dll</HintPath>
-    </Reference>
-    <Reference Include="ceton.mvx.plugins.settings.Touch">
-      <HintPath>..\Binaries\Mvx.Plugins.Settings\ceton.mvx.plugins.settings.Touch.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -184,7 +172,7 @@
     <Folder Include="Resources\Images\" />
     <Folder Include="Resources\Icons\" />
     <Folder Include="Utils\Map\" />
-    <Folder Include="Views\SettingsView\" />
+    <Folder Include="Settings.bundle\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -308,11 +296,6 @@
       <DependentUpon>ContactCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ButtonBarButton.cs" />
-    <Compile Include="Views\SettingsView\SettingsView.cs" />
-    <Compile Include="Views\SettingsView\SettingsView.designer.cs">
-      <DependentUpon>SettingsView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\ActiveAwareDialogController.cs" />
     <Compile Include="Views\Common\ActiveAwareViewController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -342,7 +325,6 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactsView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
-    <InterfaceDefinition Include="Views\SettingsView\SettingsView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -413,11 +395,19 @@
     <BundleResource Include="Resources\Icons\NavBarDownLandscape%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarUpLandscape.png" />
     <BundleResource Include="Resources\Icons\NavBarUpLandscape%402x.png" />
-    <BundleResource Include="Resources\Icons\Settings.png" />
-    <BundleResource Include="Resources\Icons\Settings%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarNavigate.png" />
     <BundleResource Include="Resources\Icons\NavBarNavigate%402x.png" />
     <BundleResource Include="Resources\Icons\Details.png" />
     <BundleResource Include="Resources\Icons\Details%402x.png" />
+    <BundleResource Include="Resources\Icon-60%402x.png" />
+    <BundleResource Include="Resources\Icon-Small.png" />
+    <BundleResource Include="Resources\Icon-Small%402x.png" />
+    <BundleResource Include="Resources\Icon-Small-40%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Settings.bundle\Root.plist" />
+    <Content Include="Settings.bundle\Acknowledgements.plist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

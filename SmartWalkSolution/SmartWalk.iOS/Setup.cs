@@ -31,7 +31,6 @@ namespace SmartWalk.iOS
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.File.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.PhoneCall.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.Email.Touch.Plugin>();
-            loaders.AddConventionalPlugin<ceton.mvx.plugins.settings.Touch.Plugin>();
 
             base.AddPluginsLoaders(loaders);
 
@@ -44,7 +43,6 @@ namespace SmartWalk.iOS
             Cirrious.MvvmCross.Plugins.PhoneCall.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Email.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
-            ceton.mvx.plugins.settings.PluginLoader.Instance.EnsureLoaded();
 
             base.InitializeLastChance();
         }

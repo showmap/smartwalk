@@ -75,20 +75,6 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
-        public ICommand NavigateSettingsViewCommand
-        {
-            get
-            {
-                if (_navigateSettingsViewCommand == null)
-                {
-                    _navigateSettingsViewCommand = new MvxCommand(
-                        () => ShowViewModel<SettingsViewModel>());
-                }
-
-                return _navigateSettingsViewCommand;
-            }
-        }
-
         protected override object InitParameters
         {
             get { return null; }

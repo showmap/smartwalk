@@ -51,9 +51,6 @@
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
       <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
-    <Reference Include="ceton.mvx.plugins.settings">
-      <HintPath>..\Binaries\Mvx.Plugins.Settings\ceton.mvx.plugins.settings.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
@@ -119,7 +116,6 @@
     <Compile Include="ViewModels\Common\ActiveViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IActiveAware.cs" />
     <Compile Include="Model\Interfaces\IContact.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Constants\SettingKeys.cs" />
   </ItemGroup>
 </Project>

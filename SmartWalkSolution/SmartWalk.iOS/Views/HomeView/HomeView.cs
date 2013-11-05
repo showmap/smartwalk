@@ -16,13 +16,6 @@ namespace SmartWalk.iOS.Views.HomeView
             get { return (HomeViewModel)base.ViewModel; }
         }
 
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
-
-            InitializeToolBar();
-        }
-
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(OrgCollectionView);
@@ -62,21 +55,6 @@ namespace SmartWalk.iOS.Views.HomeView
             {
                 GetViewTitle();
             }
-        }
-
-        private void InitializeToolBar()
-        {
-            var settingsButton = ButtonBarUtil.Create(
-                ThemeIcons.Settings, null, null, null);
-            settingsButton.TouchUpInside += (s, e) => {
-                if (ViewModel.NavigateSettingsViewCommand.CanExecute(null))
-                {
-                    ViewModel.NavigateSettingsViewCommand.Execute(null);
-                }
-            };
-            var settingsBarButton = new UIBarButtonItem(settingsButton);
-
-            NavigationItem.SetRightBarButtonItems(new [] {ButtonBarUtil.CreateSpacer(), settingsBarButton}, true);
         }
     }
 }

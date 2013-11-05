@@ -6,10 +6,8 @@ using GoogleAnalytics;
 using MonoTouch.Foundation;
 using MonoTouch.TestFlight;
 using MonoTouch.UIKit;
-using SmartWalk.iOS.Resources;
-#if !DEBUG
 using SmartWalk.Core.Constants;
-#endif
+using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS
 {
@@ -17,12 +15,15 @@ namespace SmartWalk.iOS
 	public class AppDelegate : MvxApplicationDelegate
 	{
 		private UIWindow _window;
+        private static string _version;
 
 		public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 		{
             // TODO: Must be commented before Release
             TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
 
+            InitializeVersion();
+            InitializeSettings();
             InitializeGAI();
 
             Theme.Apply();
@@ -42,17 +43,25 @@ namespace SmartWalk.iOS
 			return true;
 		}
 
+        private static void InitializeVersion()
+        {
+            using (var versionString = new NSString(SettingKeys.CFBundleShortVersionString))
+            {
+                _version = NSBundle.MainBundle.InfoDictionary[versionString].ToString();
+            }
+        }
+
+        private static void InitializeSettings()
+        {
+            NSUserDefaults.StandardUserDefaults[SettingKeys.VersionNumber] = new NSString(_version);
+        }
+
         private static void InitializeGAI()
         {
             GAI.SharedInstance.TrackUncaughtExceptions = true;
             GAI.SharedInstance.DispatchInterval = 20;
             GAI.SharedInstance.GetTracker("UA-44480601-1");
-
-            using (var versionString = new NSString("CFBundleShortVersionString"))
-            {
-                GAI.SharedInstance.DefaultTracker.AppVersion = 
-                    NSBundle.MainBundle.InfoDictionary[versionString].ToString();
-            }
+            GAI.SharedInstance.DefaultTracker.AppVersion = _version;
 
 #if DEBUG
             GAI.SharedInstance.OptOut = true;
