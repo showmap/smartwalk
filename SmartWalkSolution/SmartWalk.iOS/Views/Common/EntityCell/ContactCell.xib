@@ -44,7 +44,7 @@
 							<object class="IBUILabel" id="741106956">
 								<reference key="NSNextResponder" ref="391566389"/>
 								<int key="NSvFlags">1316</int>
-								<string key="NSFrame">{{5, 2}, {260, 22}}</string>
+								<string key="NSFrame">{{16, 2}, {240, 22}}</string>
 								<reference key="NSSuperview" ref="391566389"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="310203164"/>
@@ -79,7 +79,7 @@
 							<object class="IBUILabel" id="310203164">
 								<reference key="NSNextResponder" ref="391566389"/>
 								<int key="NSvFlags">1316</int>
-								<string key="NSFrame">{{5, 19}, {260, 24}}</string>
+								<string key="NSFrame">{{16, 19}, {240, 24}}</string>
 								<reference key="NSSuperview" ref="391566389"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="797728775"/>
@@ -113,9 +113,10 @@
 							<object class="IBUIImageView" id="797728775">
 								<reference key="NSNextResponder" ref="391566389"/>
 								<int key="NSvFlags">1316</int>
-								<string key="NSFrame">{{265, 8}, {35, 35}}</string>
+								<string key="NSFrame">{{255, 8}, {35, 35}}</string>
 								<reference key="NSSuperview" ref="391566389"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -275,12 +276,12 @@
 								<int key="secondAttribute">6</int>
 								<float key="multiplier">1</float>
 								<object class="IBLayoutConstant" key="constant">
-									<double key="value">0.0</double>
+									<double key="value">-10</double>
 								</object>
 								<float key="priority">1000</float>
 								<reference key="containingView" ref="343264656"/>
-								<int key="scoringType">8</int>
-								<float key="scoringTypeFloat">29</float>
+								<int key="scoringType">9</int>
+								<float key="scoringTypeFloat">40</float>
 								<int key="contentType">3</int>
 							</object>
 							<reference ref="390594933"/>
@@ -292,7 +293,7 @@
 								<int key="secondAttribute">6</int>
 								<float key="multiplier">1</float>
 								<object class="IBLayoutConstant" key="constant">
-									<double key="value">35</double>
+									<double key="value">44</double>
 								</object>
 								<float key="priority">1000</float>
 								<reference key="containingView" ref="343264656"/>
@@ -308,7 +309,7 @@
 								<int key="secondAttribute">5</int>
 								<float key="multiplier">1</float>
 								<object class="IBLayoutConstant" key="constant">
-									<double key="value">5</double>
+									<double key="value">16</double>
 								</object>
 								<float key="priority">1000</float>
 								<reference key="containingView" ref="343264656"/>
@@ -340,7 +341,7 @@
 								<int key="secondAttribute">6</int>
 								<float key="multiplier">1</float>
 								<object class="IBLayoutConstant" key="constant">
-									<double key="value">35</double>
+									<double key="value">44</double>
 								</object>
 								<float key="priority">1000</float>
 								<reference key="containingView" ref="343264656"/>
@@ -356,7 +357,7 @@
 								<int key="secondAttribute">5</int>
 								<float key="multiplier">1</float>
 								<object class="IBLayoutConstant" key="constant">
-									<double key="value">5</double>
+									<double key="value">16</double>
 								</object>
 								<float key="priority">1000</float>
 								<reference key="containingView" ref="343264656"/>
@@ -516,7 +517,7 @@
 				<boolean value="NO" key="15.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="16.CustomClassName">CopyLabel</string>
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<array key="16.IBViewMetadataConstraints">
+				<array class="NSMutableArray" key="16.IBViewMetadataConstraints">
 					<reference ref="264432208"/>
 				</array>
 				<boolean value="NO" key="16.IBViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
@@ -555,7 +556,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">67</int>
+			<int key="maxID">86</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
