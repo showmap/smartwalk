@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Linq;
 using MonoTouch.CoreLocation;
@@ -5,9 +6,9 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Core.Utils;
 using SmartWalk.Core.ViewModels;
+using SmartWalk.iOS.Resources;
 using SmartWalk.iOS.Utils;
 using SmartWalk.iOS.Utils.Map;
-using SmartWalk.iOS.Resources;
 
 namespace SmartWalk.iOS.Views.Common
 {
@@ -22,15 +23,14 @@ namespace SmartWalk.iOS.Views.Common
         {
             base.ViewDidLoad();
 
-            ButtonBarUtil.OverrideNavigatorBackButton(
-                NavigationItem,
-                () => NavigationController.PopViewControllerAnimated(true));
-            InitializeToolBar();
+            InitializeTopToolBar();
+            InitializeStyle();
 
             MapViewControl.Delegate = new MapDelegate { CanShowDetails = false };
 
             UpdateViewTitle();
             SelectAnnotation();
+            UpdateBottomToolBarState();
 
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -49,6 +49,7 @@ namespace SmartWalk.iOS.Views.Common
 
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+            UpdateBottomToolBarState();
         }
 
         protected override void Dispose(bool disposing)
@@ -63,6 +64,7 @@ namespace SmartWalk.iOS.Views.Common
             {
                 UpdateViewTitle();
                 SelectAnnotation();
+                UpdateBottomToolBarState();
             }
         }
 
@@ -98,8 +100,33 @@ namespace SmartWalk.iOS.Views.Common
                 : null;
         }
 
-        private void InitializeToolBar()
+        private void UpdateBottomToolBarState()
         {
+            var currentAddress = GetCurrentAddress();
+
+            if (currentAddress != null)
+            {
+                BottomToolBarHeightConstraint.Constant = 
+                    ScreenUtil.IsVerticalOrientation ? 44 : 33;
+
+                AddressLabel.Text = currentAddress;
+            }
+            else
+            {
+                BottomToolBarHeightConstraint.Constant = 0;
+            }
+
+            CopyButton.Font = ScreenUtil.IsVerticalOrientation 
+                ? Theme.ButtonTextFont
+                : Theme.ButtonTextLandscapeFont;
+        }
+
+        private void InitializeTopToolBar()
+        {
+            ButtonBarUtil.OverrideNavigatorBackButton(
+                NavigationItem,
+                () => NavigationController.PopViewControllerAnimated(true));
+
             var navigateButton = ButtonBarUtil.Create(ThemeIcons.NavBarNavigate, ThemeIcons.NavBarNavigateLandscape);
             navigateButton.TouchUpInside += (sender, e) => 
                 { 
@@ -113,7 +140,44 @@ namespace SmartWalk.iOS.Views.Common
 
             var navigationBarButton = new UIBarButtonItem(navigateButton);
             NavigationItem.SetRightBarButtonItems(
-                new [] {ButtonBarUtil.CreateSpacer(), navigationBarButton }, true);  
+                new [] { ButtonBarUtil.CreateSpacer(), navigationBarButton }, true);  
+        }
+
+        private void InitializeStyle()
+        {
+            AddressLabel.Font = Theme.MapViewAddressFont;
+
+            CopyButton.Layer.BorderWidth = 1;
+            CopyButton.Layer.CornerRadius = 4;
+            CopyButton.Layer.BorderColor = UIColor.White.CGColor;
+
+            CopyButton.TouchDown += (sender, e) => CopyButton.BackgroundColor = UIColor.Black;
+            CopyButton.TouchUpInside += (sender, e) => CopyButton.BackgroundColor = UIColor.Clear;
+            CopyButton.TouchUpOutside += (sender, e) => CopyButton.BackgroundColor = UIColor.Clear;
+
+            BottomToolBarView.BackgroundColor = Theme.NavBarBackground;
+        }
+
+        partial void OnCopyButtonClick(UIButton sender, UIEvent @event)
+        {
+            var currentAddress = GetCurrentAddress();
+            if (currentAddress != null)
+            {
+                UIPasteboard.General.String = currentAddress;
+            }
+        }
+
+        private string GetCurrentAddress()
+        {
+            if (ViewModel.Annotation != null &&
+                ViewModel.Annotation.AddressInfos != null)
+            {
+                var info = ViewModel.Annotation.AddressInfos
+                    .FirstOrDefault(ai => !string.IsNullOrWhiteSpace(ai.Address));
+                return info != null && !string.IsNullOrWhiteSpace(info.Address) ? info.Address : null; 
+            }
+
+            return null;
         }
     }
 }

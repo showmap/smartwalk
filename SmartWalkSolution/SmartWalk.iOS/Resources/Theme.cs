@@ -41,6 +41,7 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont ContactTextFont = UIFont.FromName(HelveticaRegular, 16);
 
@@ -56,6 +57,8 @@ namespace SmartWalk.iOS.Resources
 
         public static readonly UIFont EntityDescrFont = UIFont.FromName(HelveticaRegular, 15);
         public const int EntityDescrTextLineHeight = 19;
+
+        public static readonly UIFont MapViewAddressFont = UIFont.FromName(HelveticaLight, 14);
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIFont VenueCellTitleFont = UIFont.FromName(HelveticaMedium, 15);
