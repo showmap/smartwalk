@@ -15,7 +15,6 @@ namespace SmartWalk.Core.ViewModels
         private LocationIndex _location;
 		private EntityInfo[] _orgInfos;
         private ICommand _navigateOrgViewCommand;
-        private ICommand _navigateSettingsViewCommand;
 
         public HomeViewModel(
             ISmartWalkDataService dataService,
