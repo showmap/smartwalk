@@ -297,6 +297,7 @@
     </Compile>
     <Compile Include="Controls\ButtonBarButton.cs" />
     <Compile Include="Views\Common\ActiveAwareViewController.cs" />
+    <Compile Include="Services\ShowDirectionsTask.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -327,9 +328,6 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Default-568h%402x.png" />
-    <BundleResource Include="Resources\Icon%402x.png" />
-    <BundleResource Include="Resources\Icon.png" />
     <BundleResource Include="Resources\Images\Background.png" />
     <BundleResource Include="Resources\Images\Background%402x.png" />
     <BundleResource Include="Resources\Images\NavBarBackground.png" />
@@ -383,14 +381,10 @@
     <BundleResource Include="Resources\Icons\NavBarMapLandscape%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarListLandscape.png" />
     <BundleResource Include="Resources\Icons\NavBarMapLandscape.png" />
-    <BundleResource Include="Resources\Icons\Contacts.png" />
-    <BundleResource Include="Resources\Icons\Contacts%402x.png" />
     <BundleResource Include="Resources\Icons\CloseBlack.png" />
     <BundleResource Include="Resources\Icons\CloseBlack%402x.png" />
     <BundleResource Include="Resources\Icons\CloseWhite.png" />
     <BundleResource Include="Resources\Icons\CloseWhite%402x.png" />
-    <BundleResource Include="Resources\Icons\Navigate.png" />
-    <BundleResource Include="Resources\Icons\Navigate%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarDownLandscape.png" />
     <BundleResource Include="Resources\Icons\NavBarDownLandscape%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarUpLandscape.png" />
@@ -399,10 +393,25 @@
     <BundleResource Include="Resources\Icons\NavBarNavigate%402x.png" />
     <BundleResource Include="Resources\Icons\Details.png" />
     <BundleResource Include="Resources\Icons\Details%402x.png" />
+    <BundleResource Include="Resources\Icons\ToolBarDirections.png" />
+    <BundleResource Include="Resources\Icons\ToolBarDirections%402x.png" />
+    <BundleResource Include="Resources\Icons\ToolBarInfo.png" />
+    <BundleResource Include="Resources\Icons\ToolBarInfo%402x.png" />
+    <BundleResource Include="Resources\Icons\ToolBarDirectionsWhite.png" />
+    <BundleResource Include="Resources\Icons\ToolBarDirectionsWhite%402x.png" />
+    <BundleResource Include="Resources\Icons\ToolBarInfoWhite.png" />
+    <BundleResource Include="Resources\Icons\ToolBarInfoWhite%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarNavigateLandscape.png" />
+    <BundleResource Include="Resources\Icons\NavBarNavigateLandscape%402x.png" />
+    <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="Resources\Default.png" />
+    <BundleResource Include="Resources\Default%402x.png" />
     <BundleResource Include="Resources\Icon-60%402x.png" />
+    <BundleResource Include="Resources\Icon-Small-40%402x.png" />
     <BundleResource Include="Resources\Icon-Small.png" />
     <BundleResource Include="Resources\Icon-Small%402x.png" />
-    <BundleResource Include="Resources\Icon-Small-40%402x.png" />
+    <BundleResource Include="Resources\Icon.png" />
+    <BundleResource Include="Resources\Icon%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

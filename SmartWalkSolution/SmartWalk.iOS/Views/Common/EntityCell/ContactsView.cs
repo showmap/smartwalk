@@ -144,7 +144,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             base.LayoutSubviews();
 
             ((UICollectionViewFlowLayout)CollectionView.CollectionViewLayout).ItemSize = 
-                new SizeF(ScreenUtil.IsVerticalOrientation ? 304 : 400, 50);
+                new SizeF(ScreenUtil.IsVerticalOrientation ? 304 : 400, ContactCell.DefaultHeight);
         }
 
         public override void UpdateConstraints()

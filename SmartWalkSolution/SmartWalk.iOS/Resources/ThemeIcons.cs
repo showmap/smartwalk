@@ -15,18 +15,20 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIImage NavBarMap = UIImage.FromFile("Icons/NavBarMap.png");
         public static readonly UIImage NavBarMapLandscape = UIImage.FromFile("Icons/NavBarMapLandscape.png");
         public static readonly UIImage NavBarNavigate = UIImage.FromFile("Icons/NavBarNavigate.png");
-        public static readonly UIImage NavBarNavigateLandscape = UIImage.FromFile("Icons/NavBarNavigate.png"); // TODO: not implemented
+        public static readonly UIImage NavBarNavigateLandscape = UIImage.FromFile("Icons/NavBarNavigateLandscape.png");
 
+        public static readonly UIImage ToolBarInfo = UIImage.FromFile("Icons/ToolBarInfo.png");
+        public static readonly UIImage ToolBarInfoWhite = UIImage.FromFile("Icons/ToolBarInfoWhite.png");
+        public static readonly UIImage ToolBarDirections = UIImage.FromFile("Icons/ToolBarDirections.png");
+        public static readonly UIImage ToolBarDirectionsWhite = UIImage.FromFile("Icons/ToolBarDirectionsWhite.png");
         public static readonly UIImage MapPin = UIImage.FromFile("Icons/MapPin.png");
         public static readonly UIImage SmallMap = UIImage.FromFile("Icons/SmallMap.png");
         public static readonly UIImage GoRight = UIImage.FromFile("Icons/GoRight.png");
-        public static readonly UIImage Navigate = UIImage.FromFile("Icons/Navigate.png");
         public static readonly UIImage Details = UIImage.FromFile("Icons/Details.png");
 
         public static readonly UIImage CloseWhite = UIImage.FromFile("Icons/CloseWhite.png");
         public static readonly UIImage CloseBlack = UIImage.FromFile("Icons/CloseBlack.png");
 
-        public static readonly UIImage Contacts = UIImage.FromFile("Icons/Contacts.png");
         public static readonly UIImage ContactEmail = UIImage.FromFile("Icons/ContactEmail.png");
         public static readonly UIImage ContactPhone = UIImage.FromFile("Icons/ContactPhone.png");
         public static readonly UIImage ContactWeb = UIImage.FromFile("Icons/ContactWeb.png");

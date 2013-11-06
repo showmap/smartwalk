@@ -1,6 +1,9 @@
 using System;
+using System.Windows.Input;
 using Cirrious.MvvmCross.Platform;
+using Cirrious.MvvmCross.ViewModels;
 using Newtonsoft.Json;
+using SmartWalk.Core.Constants;
 using SmartWalk.Core.Model;
 using SmartWalk.Core.Services;
 using SmartWalk.Core.ViewModels.Common;
@@ -9,11 +12,19 @@ namespace SmartWalk.Core.ViewModels
 {
     public class MapViewModel : ActiveViewModel
     {
+        private readonly IAnalyticsService _analyticsService;
+        private readonly IShowDirectionsTask _showDirectionsTask;
+
         private Parameters _parameters;
         private MapAnnotation _annotation;
+        private MvxCommand<AddressInfo> _showDirectionsCommand;
 
-        public MapViewModel(IAnalyticsService analyticsService) : base(analyticsService)
+        public MapViewModel(
+            IAnalyticsService analyticsService,
+            IShowDirectionsTask showDirectionsTask) : base(analyticsService)
         {
+            _analyticsService = analyticsService;
+            _showDirectionsTask = showDirectionsTask;
         }
 
         public MapAnnotation Annotation
@@ -29,6 +40,28 @@ namespace SmartWalk.Core.ViewModels
                     _annotation = value;
                     RaisePropertyChanged(() => Annotation);
                 }
+            }
+        }
+
+        public ICommand ShowDirectionsCommand
+        {
+            get
+            {
+                if (_showDirectionsCommand == null)
+                {
+                    _showDirectionsCommand = new MvxCommand<AddressInfo>(
+                        info => {
+                        _showDirectionsTask.ShowDirections(info);
+
+                        _analyticsService.SendEvent(
+                            Analytics.CategoryUI,
+                            Analytics.ActionTouch,
+                            Analytics.ActionLabelShowDirections);
+                    },
+                    info => info != null);
+                }
+
+                return _showDirectionsCommand;
             }
         }
 

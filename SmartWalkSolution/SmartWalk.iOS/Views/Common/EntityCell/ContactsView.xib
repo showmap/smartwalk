@@ -82,7 +82,7 @@
 								<bool key="IBUIBouncesZoom">NO</bool>
 								<object class="IBUICollectionViewFlowLayout" key="IBUICollectionViewLayout" id="912350161">
 									<reference key="IBUICollectionView" ref="1037765028"/>
-									<string key="IBUIItemSize">{304, 50}</string>
+									<string key="IBUIItemSize">{304, 40}</string>
 									<float key="IBUIMinimumLineSpacing">8</float>
 								</object>
 								<array key="IBUICells" id="0"/>

@@ -72,6 +72,7 @@ namespace SmartWalk.iOS.Views.Common
             var refreshableViewModel = ViewModel as IRefreshableViewModel;
             if (refreshableViewModel != null)
             {
+                InitializeRefreshControl();
                 refreshableViewModel.RefreshCompleted += OnViewModelRefreshCompleted;
             }
 
@@ -80,11 +81,6 @@ namespace SmartWalk.iOS.Views.Common
 
             InitializeListView();
             InitializeGesture();
-
-            if (refreshableViewModel != null)
-            {
-                InitializeRefreshControl();
-            }
         }
 
         public override void WillMoveToParentViewController(UIViewController parent)

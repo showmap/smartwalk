@@ -11,7 +11,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("ContactCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("ContactCell");
 
-        public const float DefaultHeight = 50;
+        public const float DefaultHeight = 40;
 
         public ContactCell(IntPtr handle) : base (handle)
         {
@@ -39,7 +39,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             ContactLabel.Text = DataContext != null ? DataContext.Contact : null;
 
             TitleHeightConstraint.Constant = DataContext != null && DataContext.Title != null ? 22 : 0;
-            ContactTopConstraint.Constant = DataContext != null && DataContext.Title != null ? 19 : 13;
+            ContactTopConstraint.Constant = DataContext != null && DataContext.Title != null ? 15 : 8;
             
             switch (DataContext.Type)
             {

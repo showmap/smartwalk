@@ -23,8 +23,9 @@ namespace SmartWalk.Core.ViewModels
             IAnalyticsService analyticsService,
             IMvxPhoneCallTask phoneCallTask,
             IMvxComposeEmailTask composeEmailTask,
+            IShowDirectionsTask showDirectionsTask,
             IExceptionPolicy exceptionPolicy) : 
-                base(analyticsService, phoneCallTask, composeEmailTask)
+                base(analyticsService, phoneCallTask, composeEmailTask, showDirectionsTask)
         {
             _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;

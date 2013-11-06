@@ -10,6 +10,7 @@ namespace SmartWalk.Core.Constants
         public static readonly string ActionLabelRefresh = "refresh";
         public static readonly string ActionLabelCallPhone = "call-phone";
         public static readonly string ActionLabelComposeEmail = "compose-email";
+        public static readonly string ActionLabelShowDirections = "show-directions";
         public static readonly string ActionLabelExpandDescription = "expand-description";
         public static readonly string ActionLabelCollapseDescription = "collapsed-description";
         public static readonly string ActionLabelShowPreviousEntity = "show-previous-entity";

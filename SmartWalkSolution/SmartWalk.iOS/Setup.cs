@@ -21,6 +21,7 @@ namespace SmartWalk.iOS
 		{
             Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
             Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
+            Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();
 
             return new SmartWalkApplication();
 		}

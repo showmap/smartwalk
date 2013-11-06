@@ -77,12 +77,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                                 a)).ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 
-                // Adjusting vertical to keep a pin in the cell center
-                for (var i = 0; i < coordinates.Length; i++)
-                {
-                    coordinates[i].Latitude += 0.0002;
-                }
-
                 MapView.SetRegion(
                     MapUtil.CoordinateRegionForCoordinates(coordinates, new MKMapSize(2000, 2000)),
                     !isFirstLoading);

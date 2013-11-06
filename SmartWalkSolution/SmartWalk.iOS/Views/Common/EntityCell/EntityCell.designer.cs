@@ -16,9 +16,6 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.UIView BottomGradientView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton ContactsButton { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionBottomConstraint { get; set; }
 
 		[Outlet]
@@ -26,6 +23,12 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton DirectionsButton { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint DirectionsButtonWidthConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
@@ -38,6 +41,9 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIButton InfoButton { get; set; }
 
 		[Outlet]
 		SmartWalk.iOS.Controls.Placeholder MapCellPlaceholder { get; set; }
@@ -55,26 +61,19 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.NSLayoutConstraint MapYConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton NavigateButton { get; set; }
+		MonoTouch.UIKit.UIView ToolBarView { get; set; }
 
-		[Action ("OnContactsButtonTouchUpInside:forEvent:")]
-		partial void OnContactsButtonTouchUpInside (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ToolBarWidthConstraint { get; set; }
 
-		[Action ("OnNavigateButtonTouchUpInside:forEvent:")]
-		partial void OnNavigateButtonTouchUpInside (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
+		[Action ("OnDirectionsTouchUpInside:forEvent:")]
+		partial void OnDirectionsTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
+
+		[Action ("OnInfoButtonTouchUpInside:forEvent:")]
+		partial void OnInfoButtonTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ContactsButton != null) {
-				ContactsButton.Dispose ();
-				ContactsButton = null;
-			}
-
-			if (NavigateButton != null) {
-				NavigateButton.Dispose ();
-				NavigateButton = null;
-			}
-
 			if (BottomGradientView != null) {
 				BottomGradientView.Dispose ();
 				BottomGradientView = null;
@@ -95,6 +94,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 				DescriptionTopConstraint = null;
 			}
 
+			if (DirectionsButton != null) {
+				DirectionsButton.Dispose ();
+				DirectionsButton = null;
+			}
+
 			if (HeaderHeightConstraint != null) {
 				HeaderHeightConstraint.Dispose ();
 				HeaderHeightConstraint = null;
@@ -113,6 +117,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (ImageWidthConstraint != null) {
 				ImageWidthConstraint.Dispose ();
 				ImageWidthConstraint = null;
+			}
+
+			if (InfoButton != null) {
+				InfoButton.Dispose ();
+				InfoButton = null;
 			}
 
 			if (MapCellPlaceholder != null) {
@@ -138,6 +147,21 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 			if (MapYConstraint != null) {
 				MapYConstraint.Dispose ();
 				MapYConstraint = null;
+			}
+
+			if (ToolBarWidthConstraint != null) {
+				ToolBarWidthConstraint.Dispose ();
+				ToolBarWidthConstraint = null;
+			}
+
+			if (DirectionsButtonWidthConstraint != null) {
+				DirectionsButtonWidthConstraint.Dispose ();
+				DirectionsButtonWidthConstraint = null;
+			}
+
+			if (ToolBarView != null) {
+				ToolBarView.Dispose ();
+				ToolBarView = null;
 			}
 		}
 	}

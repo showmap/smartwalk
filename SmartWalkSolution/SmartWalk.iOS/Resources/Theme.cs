@@ -33,6 +33,8 @@ namespace SmartWalk.iOS.Resources
 
         public static readonly UIColor CellBackground = UIColor.White;
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
+        public static readonly UIColor ToolBarButtonHighlightedBackground = 
+            UIColor.FromRGBA(255, 255, 255, 230);
 
         public static readonly UIColor CellText = UIColor.Black;
         public static readonly UIColor CellTextPassive = UIColor.FromRGB(153, 153, 153);
@@ -40,6 +42,7 @@ namespace SmartWalk.iOS.Resources
         public static readonly UIColor CellTextHighlight = UIColor.White;
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 
+        public static readonly UIFont ToolBarButtonTextFont = UIFont.FromName(HelveticaLight, 12);
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);

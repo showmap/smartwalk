@@ -87,6 +87,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
         public ICommand ExpandCollapseCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand ShowContactsViewCommand { get; set; }
+        public ICommand ShowDirectionsCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
         public ICommand NavigateAddressesCommand { get; set; }
 
@@ -229,6 +230,14 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 DescriptionTopConstraint.Constant = 0;
                 DescriptionBottomConstraint.Constant = 0;
             }
+
+            ToolBarWidthConstraint.Constant = 
+                InfoButton.Hidden || DirectionsButton.Hidden ? 90 : 180;
+
+            // giving it 1px gap in horizontal mode when two buttons are visible
+            DirectionsButtonWidthConstraint.Constant = 
+                (InfoButton.Hidden && !DirectionsButton.Hidden) || 
+                    !ScreenUtil.IsVerticalOrientation ? 90 : 89;
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -240,6 +249,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 ExpandCollapseCommand = null;
                 ShowImageFullscreenCommand = null;
                 ShowContactsViewCommand = null;
+                ShowDirectionsCommand = null;
                 NavigateWebSiteCommand = null;
                 NavigateAddressesCommand = null;
 
@@ -273,11 +283,11 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
                 ? DataContext.Entity
                 : null;
 
-            ContactsButton.Hidden = DataContext == null || 
+            InfoButton.Hidden = DataContext == null || 
                 (DataContext != null &&
                     !DataContext.Entity.Info.HasContact());
 
-            NavigateButton.Hidden = DataContext == null || 
+            DirectionsButton.Hidden = DataContext == null || 
                 (DataContext != null &&
                     !DataContext.Entity.Info.HasAddress());
 
@@ -336,11 +346,25 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
-            ContactsButton.SetTitle(string.Empty, UIControlState.Normal);
-            ContactsButton.SetImage(ThemeIcons.Contacts, UIControlState.Normal);
+            ToolBarView.Layer.CornerRadius = 4;
 
-            NavigateButton.SetTitle(string.Empty, UIControlState.Normal);
-            NavigateButton.SetImage(ThemeIcons.Navigate, UIControlState.Normal);
+            InfoButton.Font = Theme.ToolBarButtonTextFont;
+            InfoButton.SetImage(ThemeIcons.ToolBarInfo, UIControlState.Normal);
+            InfoButton.SetImage(ThemeIcons.ToolBarInfoWhite, UIControlState.Highlighted);
+
+            InfoButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
+            InfoButton.TouchDown += (sender, e) => InfoButton.BackgroundColor = Theme.NavBarBackground;
+            InfoButton.TouchUpInside += (sender, e) => InfoButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
+            InfoButton.TouchUpOutside += (sender, e) => InfoButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
+
+            DirectionsButton.Font = Theme.ToolBarButtonTextFont;
+            DirectionsButton.SetImage(ThemeIcons.ToolBarDirections, UIControlState.Normal);
+            DirectionsButton.SetImage(ThemeIcons.ToolBarDirectionsWhite, UIControlState.Highlighted);
+
+            DirectionsButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
+            DirectionsButton.TouchDown += (sender, e) => DirectionsButton.BackgroundColor = Theme.NavBarBackground;
+            DirectionsButton.TouchUpInside += (sender, e) => DirectionsButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
+            DirectionsButton.TouchUpOutside += (sender, e) => DirectionsButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
         }
 
         private void InitializeBottomGradientState()
@@ -398,7 +422,7 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             }
         }
 
-        partial void OnContactsButtonTouchUpInside(NSObject sender, UIEvent @event)
+        partial void OnInfoButtonTouchUpInside(UIButton sender, UIEvent @event)
         {
             if (ShowContactsViewCommand != null &&
                 ShowContactsViewCommand.CanExecute(DataContext.Entity.Info))
@@ -407,10 +431,15 @@ namespace SmartWalk.iOS.Views.Common.EntityCell
             }
         }
 
-        partial void OnNavigateButtonTouchUpInside(NSObject sender, UIEvent @event)
+        partial void OnDirectionsTouchUpInside(UIButton sender, UIEvent @event)
         {
             var addressInfo = DataContext.Entity.Info.Addresses.FirstOrDefault();
-            MapUtil.OpenAddressInMaps(addressInfo);
+
+            if (ShowDirectionsCommand != null &&
+                ShowDirectionsCommand.CanExecute(addressInfo))
+            {
+                ShowDirectionsCommand.Execute(addressInfo);
+            }
         }
     }
 }

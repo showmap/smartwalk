@@ -134,7 +134,11 @@ namespace SmartWalk.iOS.Views.Common
                         ViewModel.Annotation.AddressInfos != null)
                     {
                         var addressInfo = ViewModel.Annotation.AddressInfos.FirstOrDefault();
-                        MapUtil.OpenAddressInMaps(addressInfo);
+                        
+                        if (ViewModel.ShowDirectionsCommand.CanExecute(addressInfo))
+                        {
+                            ViewModel.ShowDirectionsCommand.Execute(addressInfo);
+                        }
                     }
                 };
 

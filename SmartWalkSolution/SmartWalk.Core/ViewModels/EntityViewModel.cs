@@ -19,6 +19,7 @@ namespace SmartWalk.Core.ViewModels
         private readonly IAnalyticsService _analyticsService;
         private readonly IMvxPhoneCallTask _phoneCallTask;
         private readonly IMvxComposeEmailTask _composeEmailTask;
+        private readonly IShowDirectionsTask _showDirectionsTask;
 
         private Entity _entity;
         private bool _isDescriptionExpanded;
@@ -32,18 +33,21 @@ namespace SmartWalk.Core.ViewModels
         private MvxCommand<EntityInfo> _showHideContactsCommand;
         private MvxCommand<PhoneInfo> _callPhoneCommand;
         private MvxCommand<EmailInfo> _composeEmailCommand;
+        private MvxCommand<AddressInfo> _showDirectionsCommand;
         private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
         private MvxCommand<Entity> _navigateAddressesCommand;
 
         protected EntityViewModel(
             IAnalyticsService analyticsService,
             IMvxPhoneCallTask phoneCallTask,
-            IMvxComposeEmailTask composeEmailTask) : 
+            IMvxComposeEmailTask composeEmailTask,
+            IShowDirectionsTask showDirectionsTask) : 
             base(analyticsService)
         {
             _analyticsService = analyticsService;
             _phoneCallTask = phoneCallTask;
             _composeEmailTask = composeEmailTask;
+            _showDirectionsTask = showDirectionsTask;
         }
 
         public Entity Entity
@@ -288,6 +292,28 @@ namespace SmartWalk.Core.ViewModels
                 }
 
                 return _navigateWebLinkCommand;
+            }
+        }
+
+        public ICommand ShowDirectionsCommand
+        {
+            get
+            {
+                if (_showDirectionsCommand == null)
+                {
+                    _showDirectionsCommand = new MvxCommand<AddressInfo>(
+                        info => {
+                        _showDirectionsTask.ShowDirections(info);
+
+                        _analyticsService.SendEvent(
+                            Analytics.CategoryUI,
+                            Analytics.ActionTouch,
+                            Analytics.ActionLabelShowDirections);
+                    },
+                    info => info != null);
+                }
+
+                return _showDirectionsCommand;
             }
         }
 

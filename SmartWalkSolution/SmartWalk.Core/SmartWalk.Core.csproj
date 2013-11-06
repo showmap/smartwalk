@@ -117,5 +117,6 @@
     <Compile Include="ViewModels\Interfaces\IActiveAware.cs" />
     <Compile Include="Model\Interfaces\IContact.cs" />
     <Compile Include="Constants\SettingKeys.cs" />
+    <Compile Include="Services\IShowDirectionsTask.cs" />
   </ItemGroup>
 </Project>
