@@ -8,7 +8,7 @@
     <ProjectGuid>{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SmartWalk.iOS</RootNamespace>
+    <RootNamespace>SmartWalk.Client.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>SmartWalkiOS</AssemblyName>
     <ReleaseVersion>
@@ -99,29 +99,29 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="Cirrious.CrossCore.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.CrossCore.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.CrossCore.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.CrossCore.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Json">
       <HintPath>..\Binaries\JSON\Cirrious.MvvmCross.Plugins.Json.dll</HintPath>
@@ -130,10 +130,10 @@
       <HintPath>..\Binaries\JSON\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Binding.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Binding.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
     </Reference>
     <Reference Include="TestFlight">
       <HintPath>..\Binaries\TestFlight\TestFlight.dll</HintPath>
@@ -142,19 +142,19 @@
       <HintPath>..\Binaries\GAN\GoogleAnalytics.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.Email.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Dialog.Touch">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Dialog.Touch.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Dialog.Touch.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -301,9 +301,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\SmartWalk.Core\SmartWalk.Core.csproj">
+    <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">
       <Project>{A9012546-5146-407B-BDDB-B6A4FCABCB4A}</Project>
-      <Name>SmartWalk.Core</Name>
+      <Name>SmartWalk.Client.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

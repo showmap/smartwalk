@@ -8,9 +8,9 @@
     <ProjectGuid>{A9012546-5146-407B-BDDB-B6A4FCABCB4A}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>SmartWalk.Core</RootNamespace>
+    <RootNamespace>SmartWalk.Client.Core</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>SmartWalk.Core</AssemblyName>
+    <AssemblyName>SmartWalk.Client.Core</AssemblyName>
     <ReleaseVersion>
     </ReleaseVersion>
   </PropertyGroup>
@@ -36,20 +36,20 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.CrossCore.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Binaries\JSON\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
-      <HintPath>..\..\..\Git\MvvmCross-Binaries\XS-iOS-Mac\bin\Release\Mvx\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
+      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
