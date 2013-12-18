@@ -1,6 +1,12 @@
 SmartWalk Development
 =====================
 
+General Conventions
+-------------------
+Every commit that is pushed to the repo must have a reference to a JIRA (https://smartwalk.atlassian.net) issue. The ID of a correspondent issue should be written in the beginning of a commit description. For example:
+
+git commit -m "SW-555 The brain bug with missing JIRA issue ids in commits was fixed"
+
 Client Solution Setup
 ---------------------
 
