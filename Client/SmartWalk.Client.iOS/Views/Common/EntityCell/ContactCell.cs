@@ -1,10 +1,10 @@
 using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model.Interfaces;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class ContactCell : CollectionCellBase
     {

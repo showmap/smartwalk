@@ -7,28 +7,28 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
-	[Register ("ImageCell")]
-	partial class ImageCell
-	{
-		[Outlet]
-		SmartWalk.iOS.Controls.ProgressImageView ImageView { get; set; }
+    [Register ("ImageCell")]
+    partial class ImageCell
+    {
+        [Outlet]
+        SmartWalk.Client.iOS.Controls.ProgressImageView ImageView { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIImageView ShadowImageView { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (ImageView != null) {
-				ImageView.Dispose ();
-				ImageView = null;
-			}
+        [Outlet]
+        MonoTouch.UIKit.UIImageView ShadowImageView { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (ImageView != null) {
+                ImageView.Dispose ();
+                ImageView = null;
+            }
 
-			if (ShadowImageView != null) {
-				ShadowImageView.Dispose ();
-				ShadowImageView = null;
-			}
-		}
-	}
+            if (ShadowImageView != null) {
+                ShadowImageView.Dispose ();
+                ShadowImageView = null;
+            }
+        }
+    }
 }

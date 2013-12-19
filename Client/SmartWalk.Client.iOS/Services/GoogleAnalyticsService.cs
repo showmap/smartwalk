@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using GoogleAnalytics;
-using SmartWalk.Core.Services;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels;
 
-namespace SmartWalk.iOS.Services
+namespace SmartWalk.Client.iOS.Services
 {
     public class GoogleAnalyticsService : IAnalyticsService
     {

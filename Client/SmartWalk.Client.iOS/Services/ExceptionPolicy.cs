@@ -1,9 +1,9 @@
 using System;
-using MonoTouch.UIKit;
-using SmartWalk.Core.Services;
 using System.Net;
+using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Services;
 
-namespace SmartWalk.iOS.Services
+namespace SmartWalk.Client.iOS.Services
 {
     public class ExceptionPolicy : IExceptionPolicy
     {

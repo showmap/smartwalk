@@ -7,28 +7,28 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.OrgView
+namespace SmartWalk.Client.iOS.Views.OrgView
 {
-	[Register ("OrgView")]
-	partial class OrgView
-	{
-		[Outlet]
-		SmartWalk.iOS.Controls.FixedTableView OrgEventsTableView { get; set; }
+    [Register ("OrgView")]
+    partial class OrgView
+    {
+        [Outlet]
+        SmartWalk.Client.iOS.Controls.FixedTableView OrgEventsTableView { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
-			}
+        [Outlet]
+        MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (ProgressViewContainer != null) {
+                ProgressViewContainer.Dispose ();
+                ProgressViewContainer = null;
+            }
 
-			if (OrgEventsTableView != null) {
-				OrgEventsTableView.Dispose ();
-				OrgEventsTableView = null;
-			}
-		}
-	}
+            if (OrgEventsTableView != null) {
+                OrgEventsTableView.Dispose ();
+                OrgEventsTableView = null;
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-namespace SmartWalk.iOS.Utils.Map
+namespace SmartWalk.Client.iOS.Utils.Map
 {
     public interface IMapAnnotation
     {

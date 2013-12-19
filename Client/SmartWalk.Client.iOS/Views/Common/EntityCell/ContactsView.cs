@@ -5,12 +5,12 @@ using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Resources;
-using SmartWalk.iOS.Utils;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class ContactsView : UIView
     {

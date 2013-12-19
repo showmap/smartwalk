@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace SmartWalk.Core.Utils
+namespace SmartWalk.Client.Core.Utils
 {
     public static class EnumerableExtensions
     {

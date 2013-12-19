@@ -7,20 +7,20 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
-	[Register ("ProgressView")]
-	partial class ProgressView
-	{
-		[Outlet]
-		MonoTouch.UIKit.UILabel ProgressLabel { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (ProgressLabel != null) {
-				ProgressLabel.Dispose ();
-				ProgressLabel = null;
-			}
-		}
-	}
+    [Register ("ProgressView")]
+    partial class ProgressView
+    {
+        [Outlet]
+        MonoTouch.UIKit.UILabel ProgressLabel { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (ProgressLabel != null) {
+                ProgressLabel.Dispose ();
+                ProgressLabel = null;
+            }
+        }
+    }
 }

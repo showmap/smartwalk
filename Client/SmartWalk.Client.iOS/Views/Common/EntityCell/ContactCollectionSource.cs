@@ -1,9 +1,9 @@
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Model.Interfaces;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public class ContactCollectionSource : MvxCollectionViewSource
     {

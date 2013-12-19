@@ -7,55 +7,55 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
-	[Register ("MapView")]
-	partial class MapView
-	{
-		[Outlet]
-		MonoTouch.UIKit.UILabel AddressLabel { get; set; }
+    [Register ("MapView")]
+    partial class MapView
+    {
+        [Outlet]
+        MonoTouch.UIKit.UILabel AddressLabel { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint BottomToolBarHeightConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint BottomToolBarHeightConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIView BottomToolBarView { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UIView BottomToolBarView { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIButton CopyButton { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UIButton CopyButton { get; set; }
 
-		[Outlet]
-		MonoTouch.MapKit.MKMapView MapViewControl { get; set; }
+        [Outlet]
+        MonoTouch.MapKit.MKMapView MapViewControl { get; set; }
 
-		[Action ("OnCopyButtonClick:forEvent:")]
-		partial void OnCopyButtonClick (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (MapViewControl != null) {
-				MapViewControl.Dispose ();
-				MapViewControl = null;
-			}
+        [Action ("OnCopyButtonClick:forEvent:")]
+        partial void OnCopyButtonClick (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (MapViewControl != null) {
+                MapViewControl.Dispose ();
+                MapViewControl = null;
+            }
 
-			if (AddressLabel != null) {
-				AddressLabel.Dispose ();
-				AddressLabel = null;
-			}
+            if (AddressLabel != null) {
+                AddressLabel.Dispose ();
+                AddressLabel = null;
+            }
 
-			if (BottomToolBarView != null) {
-				BottomToolBarView.Dispose ();
-				BottomToolBarView = null;
-			}
+            if (BottomToolBarView != null) {
+                BottomToolBarView.Dispose ();
+                BottomToolBarView = null;
+            }
 
-			if (CopyButton != null) {
-				CopyButton.Dispose ();
-				CopyButton = null;
-			}
+            if (CopyButton != null) {
+                CopyButton.Dispose ();
+                CopyButton = null;
+            }
 
-			if (BottomToolBarHeightConstraint != null) {
-				BottomToolBarHeightConstraint.Dispose ();
-				BottomToolBarHeightConstraint = null;
-			}
-		}
-	}
+            if (BottomToolBarHeightConstraint != null) {
+                BottomToolBarHeightConstraint.Dispose ();
+                BottomToolBarHeightConstraint = null;
+            }
+        }
+    }
 }

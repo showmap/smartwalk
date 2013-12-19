@@ -4,27 +4,27 @@ using Cirrious.MvvmCross.Dialog.Touch;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Core;
-using SmartWalk.Core.Services;
-using SmartWalk.iOS.Services;
+using SmartWalk.Client.Core;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.iOS.Services;
 
-namespace SmartWalk.iOS
+namespace SmartWalk.Client.iOS
 {
     public class Setup : MvxTouchDialogSetup
-	{
-		public Setup (MvxApplicationDelegate appDelegate, IMvxTouchViewPresenter presenter)
-			: base(appDelegate, presenter)
-		{
-		}
+    {
+        public Setup(MvxApplicationDelegate appDelegate, IMvxTouchViewPresenter presenter)
+            : base(appDelegate, presenter)
+        {
+        }
 
-		protected override IMvxApplication CreateApp()
-		{
+        protected override IMvxApplication CreateApp()
+        {
             Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
             Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
             Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();
 
             return new SmartWalkApplication();
-		}
+        }
 
         protected override void AddPluginsLoaders(MvxLoaderPluginRegistry loaders)
         {
@@ -47,5 +47,5 @@ namespace SmartWalk.iOS
 
             base.InitializeLastChance();
         }
-	}
+    }
 }

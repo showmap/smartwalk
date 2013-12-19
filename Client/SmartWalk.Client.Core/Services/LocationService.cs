@@ -1,7 +1,7 @@
 using System;
 using MonoTouch.Foundation;
 
-namespace SmartWalk.Core.Services
+namespace SmartWalk.Client.Core.Services
 {
     public class LocationService : ILocationService
     {

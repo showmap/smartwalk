@@ -1,4 +1,4 @@
-namespace SmartWalk.Core.Services
+namespace SmartWalk.Client.Core.Services
 {
     public enum DataSource
     {

@@ -7,31 +7,31 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-	[Register ("OrgEventHeaderView")]
-	partial class OrgEventHeaderView
-	{
-		[Outlet]
-		MonoTouch.UIKit.UISwitch GroupByLocationSwitch { get; set; }
+    [Register ("OrgEventHeaderView")]
+    partial class OrgEventHeaderView
+    {
+        [Outlet]
+        MonoTouch.UIKit.UISwitch GroupByLocationSwitch { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
 
-		[Action ("OnGroupByLocationTouchUpInside:forEvent:")]
-		partial void OnGroupByLocationTouchUpInside (MonoTouch.UIKit.UISwitch sender, MonoTouch.UIKit.UIEvent @event);
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (SearchBar != null) {
-				SearchBar.Dispose ();
-				SearchBar = null;
-			}
+        [Action ("OnGroupByLocationTouchUpInside:forEvent:")]
+        partial void OnGroupByLocationTouchUpInside (MonoTouch.UIKit.UISwitch sender, MonoTouch.UIKit.UIEvent @event);
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (SearchBar != null) {
+                SearchBar.Dispose ();
+                SearchBar = null;
+            }
 
-			if (GroupByLocationSwitch != null) {
-				GroupByLocationSwitch.Dispose ();
-				GroupByLocationSwitch = null;
-			}
-		}
-	}
+            if (GroupByLocationSwitch != null) {
+                GroupByLocationSwitch.Dispose ();
+                GroupByLocationSwitch = null;
+            }
+        }
+    }
 }

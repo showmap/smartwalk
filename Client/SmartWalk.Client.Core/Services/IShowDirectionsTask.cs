@@ -1,6 +1,6 @@
-using SmartWalk.Core.Model;
+using SmartWalk.Client.Core.Model;
 
-namespace SmartWalk.Core.Services
+namespace SmartWalk.Client.Core.Services
 {
     public interface IShowDirectionsTask
     {

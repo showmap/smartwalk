@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using Cirrious.CrossCore.Converters;
 
-namespace SmartWalk.Core.Converters
+namespace SmartWalk.Client.Core.Converters
 {
     public class DateTimeFormatConverter : IMvxValueConverter
     {

@@ -2,7 +2,7 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
     public partial class GroupHeaderCell : UITableViewHeaderFooterView
     {

@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
-using SmartWalk.Core.Model;
+using SmartWalk.Client.Core.Model;
 using MonoTouch.AddressBook;
 using MonoTouch.Foundation;
 
-namespace SmartWalk.iOS.Utils.Map
+namespace SmartWalk.Client.iOS.Utils.Map
 {
     public static class MapUtil
     {

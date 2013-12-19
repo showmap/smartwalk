@@ -7,71 +7,71 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
-	[Register ("ContactsView")]
-	partial class ContactsView
-	{
-		[Outlet]
-		MonoTouch.UIKit.UIView BackgroundView { get; set; }
+    [Register ("ContactsView")]
+    partial class ContactsView
+    {
+        [Outlet]
+        MonoTouch.UIKit.UIView BackgroundView { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIButton CloseButton { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UIButton CloseButton { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CollectionBottomConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint CollectionBottomConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CollectionTopConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint CollectionTopConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UICollectionView CollectionView { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UICollectionView CollectionView { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint PlaceholderBottomConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint PlaceholderBottomConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint PlaceholderTopConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint PlaceholderTopConstraint { get; set; }
 
-		[Action ("OnCloseButtonClick:forEvent:")]
-		partial void OnCloseButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (BackgroundView != null) {
-				BackgroundView.Dispose ();
-				BackgroundView = null;
-			}
+        [Action ("OnCloseButtonClick:forEvent:")]
+        partial void OnCloseButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (BackgroundView != null) {
+                BackgroundView.Dispose ();
+                BackgroundView = null;
+            }
 
-			if (CloseButton != null) {
-				CloseButton.Dispose ();
-				CloseButton = null;
-			}
+            if (CloseButton != null) {
+                CloseButton.Dispose ();
+                CloseButton = null;
+            }
 
-			if (CollectionBottomConstraint != null) {
-				CollectionBottomConstraint.Dispose ();
-				CollectionBottomConstraint = null;
-			}
+            if (CollectionBottomConstraint != null) {
+                CollectionBottomConstraint.Dispose ();
+                CollectionBottomConstraint = null;
+            }
 
-			if (CollectionTopConstraint != null) {
-				CollectionTopConstraint.Dispose ();
-				CollectionTopConstraint = null;
-			}
+            if (CollectionTopConstraint != null) {
+                CollectionTopConstraint.Dispose ();
+                CollectionTopConstraint = null;
+            }
 
-			if (CollectionView != null) {
-				CollectionView.Dispose ();
-				CollectionView = null;
-			}
+            if (CollectionView != null) {
+                CollectionView.Dispose ();
+                CollectionView = null;
+            }
 
-			if (PlaceholderBottomConstraint != null) {
-				PlaceholderBottomConstraint.Dispose ();
-				PlaceholderBottomConstraint = null;
-			}
+            if (PlaceholderBottomConstraint != null) {
+                PlaceholderBottomConstraint.Dispose ();
+                PlaceholderBottomConstraint = null;
+            }
 
-			if (PlaceholderTopConstraint != null) {
-				PlaceholderTopConstraint.Dispose ();
-				PlaceholderTopConstraint = null;
-			}
-		}
-	}
+            if (PlaceholderTopConstraint != null) {
+                PlaceholderTopConstraint.Dispose ();
+                PlaceholderTopConstraint = null;
+            }
+        }
+    }
 }

@@ -7,52 +7,52 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-	[Register ("OrgEventView")]
-	partial class OrgEventView
-	{
-		[Outlet]
-		MonoTouch.UIKit.UIView MapPanel { get; set; }
+    [Register ("OrgEventView")]
+    partial class OrgEventView
+    {
+        [Outlet]
+        MonoTouch.UIKit.UIView MapPanel { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIView TablePanel { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UIView TablePanel { get; set; }
 
-		[Outlet]
-		SmartWalk.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
+        [Outlet]
+        SmartWalk.Client.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
 
-		[Outlet]
-		MonoTouch.MapKit.MKMapView VenuesMapView { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
-			}
+        [Outlet]
+        MonoTouch.MapKit.MKMapView VenuesMapView { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (ProgressViewContainer != null) {
+                ProgressViewContainer.Dispose ();
+                ProgressViewContainer = null;
+            }
 
-			if (MapPanel != null) {
-				MapPanel.Dispose ();
-				MapPanel = null;
-			}
+            if (MapPanel != null) {
+                MapPanel.Dispose ();
+                MapPanel = null;
+            }
 
-			if (TablePanel != null) {
-				TablePanel.Dispose ();
-				TablePanel = null;
-			}
+            if (TablePanel != null) {
+                TablePanel.Dispose ();
+                TablePanel = null;
+            }
 
-			if (VenuesAndShowsTableView != null) {
-				VenuesAndShowsTableView.Dispose ();
-				VenuesAndShowsTableView = null;
-			}
+            if (VenuesAndShowsTableView != null) {
+                VenuesAndShowsTableView.Dispose ();
+                VenuesAndShowsTableView = null;
+            }
 
-			if (VenuesMapView != null) {
-				VenuesMapView.Dispose ();
-				VenuesMapView = null;
-			}
-		}
-	}
+            if (VenuesMapView != null) {
+                VenuesMapView.Dispose ();
+                VenuesMapView = null;
+            }
+        }
+    }
 }

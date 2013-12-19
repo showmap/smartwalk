@@ -5,12 +5,12 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.iOS.Resources;
-using SmartWalk.iOS.Utils.Map;
-using SmartWalk.iOS.Views.Common;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils.Map;
+using SmartWalk.Client.iOS.Views.Common;
 
-namespace SmartWalk.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class VenueCell : TableHeaderBase
     {

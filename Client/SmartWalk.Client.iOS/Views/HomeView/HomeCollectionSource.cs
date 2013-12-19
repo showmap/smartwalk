@@ -1,10 +1,10 @@
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.iOS.Controls;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.iOS.Controls;
 
-namespace SmartWalk.iOS.Views.HomeView
+namespace SmartWalk.Client.iOS.Views.HomeView
 {
     public class HomeCollectionSource : MvxCollectionViewSource, IListViewSource
     {

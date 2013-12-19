@@ -1,11 +1,11 @@
 using System;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Core.Constants;
-using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.Client.Core.Constants;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 
-namespace SmartWalk.Core.ViewModels.Common
+namespace SmartWalk.Client.Core.ViewModels.Common
 {
     public abstract class RefreshableViewModel : ProgressViewModel, IRefreshableViewModel
     {

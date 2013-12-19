@@ -1,7 +1,7 @@
-using SmartWalk.Core.Model;
+using SmartWalk.Client.Core.Model;
 using System.ComponentModel;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public interface IEntityCellContext : INotifyPropertyChanged
     {

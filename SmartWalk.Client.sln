@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.iOS", "Client\SmartWalk.Client.iOS\SmartWalk.Client.iOS.csproj", "{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Client.iOS", "Client\SmartWalk.Client.iOS\SmartWalk.Client.iOS.csproj", "{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Core", "Client\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj", "{A9012546-5146-407B-BDDB-B6A4FCABCB4A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Client.Core", "Client\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj", "{A9012546-5146-407B-BDDB-B6A4FCABCB4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,11 +41,17 @@ Global
 		{A9012546-5146-407B-BDDB-B6A4FCABCB4A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Client\SmartWalk.iOS\SmartWalk.iOS.csproj
+		StartupItem = Client\SmartWalk.Client.iOS\SmartWalk.Client.iOS.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
 		$1.ResourceNamePolicy = FileFormatDefault
+		$0.TextStylePolicy = $2
+		$2.FileWidth = 120
+		$2.NoTabsAfterNonTabs = True
+		$2.inheritsSet = VisualStudio
+		$2.inheritsScope = text/plain
+		$2.scope = text/plain
 		version = 
 	EndGlobalSection
 EndGlobal

@@ -3,12 +3,12 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Platform;
 using Cirrious.MvvmCross.ViewModels;
 using Newtonsoft.Json;
-using SmartWalk.Core.Constants;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels.Common;
+using SmartWalk.Client.Core.Constants;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.ViewModels.Common;
 
-namespace SmartWalk.Core.ViewModels
+namespace SmartWalk.Client.Core.ViewModels
 {
     public class MapViewModel : ActiveViewModel
     {

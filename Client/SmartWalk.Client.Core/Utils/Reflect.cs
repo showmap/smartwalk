@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Linq.Expressions;
 
-namespace SmartWalk.Core.Utils
+namespace SmartWalk.Client.Core.Utils
 {
     /// <summary>
     ///     Provides strong-typed reflection of the

@@ -2,14 +2,14 @@ using System;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Controls;
-using SmartWalk.iOS.Utils;
-using SmartWalk.iOS.Views.Common;
-using SmartWalk.iOS.Views.OrgEventView;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common;
+using SmartWalk.Client.iOS.Views.OrgEventView;
 
-namespace SmartWalk.iOS.Views.VenueView
+namespace SmartWalk.Client.iOS.Views.VenueView
 {
     public partial class VenueView : ListViewBase
     {

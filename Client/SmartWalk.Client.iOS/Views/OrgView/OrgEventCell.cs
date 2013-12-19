@@ -1,11 +1,11 @@
 using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.iOS.Views.Common;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.iOS.Views.Common;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Views.OrgView
+namespace SmartWalk.Client.iOS.Views.OrgView
 {
     public partial class OrgEventCell : TableCellBase
     {

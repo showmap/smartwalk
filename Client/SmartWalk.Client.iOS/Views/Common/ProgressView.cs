@@ -1,9 +1,9 @@
 using System;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
+using SmartWalk.Client.Core.Utils;
 using MonoTouch.Foundation;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
     public partial class ProgressView : UIView
     {

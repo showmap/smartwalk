@@ -4,13 +4,13 @@ using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Resources;
-using SmartWalk.iOS.Utils;
-using SmartWalk.iOS.Utils.Map;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Utils.Map;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
     public partial class MapView : ActiveAwareViewController
     {

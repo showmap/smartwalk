@@ -2,7 +2,7 @@ using MonoTouch.UIKit;
 using System;
 using System.Collections;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.Client.iOS.Controls
 {
     public class ListViewDecorator
     {

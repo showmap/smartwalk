@@ -1,6 +1,6 @@
 using MonoTouch.UIKit;
 
-namespace SmartWalk.iOS.Resources
+namespace SmartWalk.Client.iOS.Resources
 {
     public class ThemeIcons
     {

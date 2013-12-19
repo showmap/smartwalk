@@ -1,11 +1,11 @@
 using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Views.HomeView
+namespace SmartWalk.Client.iOS.Views.HomeView
 {
     public class HomeCollectionDelegate : UICollectionViewDelegate
     {

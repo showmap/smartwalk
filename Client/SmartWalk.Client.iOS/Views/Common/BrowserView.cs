@@ -3,13 +3,13 @@ using System.ComponentModel;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Utils;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Resources;
 using System.Globalization;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
     public partial class BrowserView : ActiveAwareViewController
     {

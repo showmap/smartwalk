@@ -4,10 +4,10 @@ using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
     public partial class ImageFullscreenView : UIViewController
     {

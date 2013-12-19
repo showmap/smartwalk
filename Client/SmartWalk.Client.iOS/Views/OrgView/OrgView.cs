@@ -1,13 +1,13 @@
 using System;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Controls;
-using SmartWalk.iOS.Utils;
-using SmartWalk.iOS.Views.Common;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common;
 
-namespace SmartWalk.iOS.Views.OrgView
+namespace SmartWalk.Client.iOS.Views.OrgView
 {
     public partial class OrgView : ListViewBase
     {

@@ -7,20 +7,20 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
-	[Register ("MapCell")]
-	partial class MapCell
-	{
-		[Outlet]
-		MonoTouch.MapKit.MKMapView MapView { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (MapView != null) {
-				MapView.Dispose ();
-				MapView = null;
-			}
-		}
-	}
+    [Register ("MapCell")]
+    partial class MapCell
+    {
+        [Outlet]
+        MonoTouch.MapKit.MKMapView MapView { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (MapView != null) {
+                MapView.Dispose ();
+                MapView = null;
+            }
+        }
+    }
 }

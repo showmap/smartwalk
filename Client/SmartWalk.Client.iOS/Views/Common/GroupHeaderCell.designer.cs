@@ -7,28 +7,28 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
-	[Register ("GroupHeaderCell")]
-	partial class GroupHeaderCell
-	{
-		[Outlet]
-		SmartWalk.iOS.Controls.Shadow Shadow { get; set; }
+    [Register ("GroupHeaderCell")]
+    partial class GroupHeaderCell
+    {
+        [Outlet]
+        SmartWalk.Client.iOS.Controls.Shadow Shadow { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (TitleLabel != null) {
-				TitleLabel.Dispose ();
-				TitleLabel = null;
-			}
+        [Outlet]
+        MonoTouch.UIKit.UILabel TitleLabel { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (TitleLabel != null) {
+                TitleLabel.Dispose ();
+                TitleLabel = null;
+            }
 
-			if (Shadow != null) {
-				Shadow.Dispose ();
-				Shadow = null;
-			}
-		}
-	}
+            if (Shadow != null) {
+                Shadow.Dispose ();
+                Shadow = null;
+            }
+        }
+    }
 }

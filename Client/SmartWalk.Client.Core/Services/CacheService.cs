@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using SmartWalk.Core.Services;
+using SmartWalk.Client.Core.Services;
 
-namespace SmartWalk.Core.Services
+namespace SmartWalk.Client.Core.Services
 {
     public class CacheService : ICacheService
     {

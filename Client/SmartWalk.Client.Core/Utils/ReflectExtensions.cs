@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Collections.Generic;
 
-namespace SmartWalk.Core.Utils
+namespace SmartWalk.Client.Core.Utils
 {
     /// <summary>
     ///     Provides strong-typed reflection of the type.

@@ -1,4 +1,4 @@
-namespace SmartWalk.Core.Utils
+namespace SmartWalk.Client.Core.Utils
 {
     public static class HashCode
     {

@@ -1,15 +1,15 @@
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Platform;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.ViewModels;
 
-namespace SmartWalk.Core
+namespace SmartWalk.Client.Core
 {
-	public class SmartWalkApplication : MvxApplication
-	{
-		public SmartWalkApplication()
-		{
+    public class SmartWalkApplication : MvxApplication
+    {
+        public SmartWalkApplication()
+        {
             Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
             Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();
             Mvx.LazyConstructAndRegisterSingleton<ISmartWalkDataService, SmartWalkDataService>();
@@ -18,6 +18,6 @@ namespace SmartWalk.Core
 
             var parserDir = Mvx.Resolve<IMvxFillableStringToTypeParser>();
             parserDir.ExtraParsers.Add(new AddressesParser());
-		}
-	}
+        }
+    }
 }

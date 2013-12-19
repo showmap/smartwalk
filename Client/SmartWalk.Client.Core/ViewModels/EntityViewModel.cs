@@ -2,15 +2,15 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Core.Constants;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Model.Interfaces;
-using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.Core.ViewModels.Common;
-using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.Client.Core.Constants;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 
-namespace SmartWalk.Core.ViewModels
+namespace SmartWalk.Client.Core.ViewModels
 {
     public abstract class EntityViewModel : RefreshableViewModel, 
         IFullscreenImageProvider,

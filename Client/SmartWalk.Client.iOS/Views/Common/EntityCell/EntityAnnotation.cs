@@ -1,8 +1,8 @@
 using MonoTouch.MapKit;
 using MonoTouch.CoreLocation;
-using SmartWalk.Core.Model;
+using SmartWalk.Client.Core.Model;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public class EntityAnnotation : MKAnnotation
     {

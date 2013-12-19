@@ -4,10 +4,10 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Services;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Services;
 
-namespace SmartWalk.Core.ViewModels
+namespace SmartWalk.Client.Core.ViewModels
 {
     public class OrgViewModel : EntityViewModel
     {

@@ -4,13 +4,13 @@ using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Model.Interfaces;
-using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Utils.Map;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Utils.Map;
 using MonoTouch.CoreLocation;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class MapCell : CollectionCellBase
     {

@@ -1,9 +1,9 @@
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
-using SmartWalk.Core.Model;
-using SmartWalk.iOS.Utils.Map;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.iOS.Utils.Map;
 
-namespace SmartWalk.iOS.Utils.Map
+namespace SmartWalk.Client.iOS.Utils.Map
 {
     public class MapViewAnnotation : MKAnnotation, IMapAnnotation
     {

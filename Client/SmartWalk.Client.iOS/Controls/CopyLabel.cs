@@ -3,7 +3,7 @@ using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.Client.iOS.Controls
 {
     [Register("CopyLabel")]
     public class CopyLabel : UILabel

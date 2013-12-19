@@ -7,28 +7,28 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.VenueView
+namespace SmartWalk.Client.iOS.Views.VenueView
 {
-	[Register ("VenueView")]
-	partial class VenueView
-	{
-		[Outlet]
-		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
+    [Register ("VenueView")]
+    partial class VenueView
+    {
+        [Outlet]
+        MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 
-		[Outlet]
-		SmartWalk.iOS.Controls.FixedTableView VenueShowsTableView { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
-			}
+        [Outlet]
+        SmartWalk.Client.iOS.Controls.FixedTableView VenueShowsTableView { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (ProgressViewContainer != null) {
+                ProgressViewContainer.Dispose ();
+                ProgressViewContainer = null;
+            }
 
-			if (VenueShowsTableView != null) {
-				VenueShowsTableView.Dispose ();
-				VenueShowsTableView = null;
-			}
-		}
-	}
+            if (VenueShowsTableView != null) {
+                VenueShowsTableView.Dispose ();
+                VenueShowsTableView = null;
+            }
+        }
+    }
 }

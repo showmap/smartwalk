@@ -2,10 +2,10 @@ using System;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.iOS.Views.Common;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.iOS.Views.Common;
 
-namespace SmartWalk.iOS.Views.HomeView
+namespace SmartWalk.Client.iOS.Views.HomeView
 {
     public partial class OrgCell : CollectionCellBase
     {

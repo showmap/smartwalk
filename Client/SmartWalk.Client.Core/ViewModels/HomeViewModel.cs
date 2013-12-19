@@ -1,19 +1,19 @@
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Services;
-using SmartWalk.Core.ViewModels.Common;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.ViewModels.Common;
 
-namespace SmartWalk.Core.ViewModels
+namespace SmartWalk.Client.Core.ViewModels
 {
     public class HomeViewModel : RefreshableViewModel
-	{
-		private readonly ISmartWalkDataService _dataService;
+    {
+        private readonly ISmartWalkDataService _dataService;
         private readonly IExceptionPolicy _exceptionPolicy;
         private readonly ILocationService _locationService;
 
         private LocationIndex _location;
-		private EntityInfo[] _orgInfos;
+        private EntityInfo[] _orgInfos;
         private ICommand _navigateOrgViewCommand;
 
         public HomeViewModel(
@@ -21,12 +21,12 @@ namespace SmartWalk.Core.ViewModels
             IExceptionPolicy exceptionPolicy,
             IAnalyticsService analyticsService,
             ILocationService locationService) : base(analyticsService)
-		{
-			_dataService = dataService;
+        {
+            _dataService = dataService;
             _exceptionPolicy = exceptionPolicy;
             _locationService = locationService;
             _locationService.LocationChanged += (s, e) => UpdateOrgInfos();
-		}
+        }
 
         public LocationIndex Location
         {
@@ -46,18 +46,18 @@ namespace SmartWalk.Core.ViewModels
             }
         }
 
-		public EntityInfo[] OrgInfos 
-		{
-			get
-			{
-				return _orgInfos;
-			}
-			private set
-			{
-				_orgInfos = value;
-				RaisePropertyChanged(() => OrgInfos);
-			}
-		}
+        public EntityInfo[] OrgInfos 
+        {
+            get
+            {
+                return _orgInfos;
+            }
+            private set
+            {
+                _orgInfos = value;
+                RaisePropertyChanged(() => OrgInfos);
+            }
+        }
 
         public ICommand NavigateOrgViewCommand
         {
@@ -79,20 +79,20 @@ namespace SmartWalk.Core.ViewModels
             get { return null; }
         }
 
-		public override void Start()
-		{
-			UpdateOrgInfos();
+        public override void Start()
+        {
+            UpdateOrgInfos();
 
-			base.Start();
-		}
+            base.Start();
+        }
 
         protected override void Refresh()
         {
             UpdateOrgInfos();
         }
 
-		private void UpdateOrgInfos()
-		{
+        private void UpdateOrgInfos()
+        {
             if (_locationService.CurrentLocation != null)
             {
                 IsLoading = true;
@@ -114,6 +114,6 @@ namespace SmartWalk.Core.ViewModels
                         RaiseRefreshCompleted();
                     });
             }
-		}
-	}
+        }
+    }
 }

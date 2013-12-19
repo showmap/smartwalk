@@ -1,4 +1,4 @@
-namespace SmartWalk.Core.Model
+namespace SmartWalk.Client.Core.Model
 {
     public class OrgEvent
     {

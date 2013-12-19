@@ -1,10 +1,10 @@
 using System;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Core.Services;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels.Interfaces;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 
-namespace SmartWalk.Core.ViewModels.Common
+namespace SmartWalk.Client.Core.ViewModels.Common
 {
     public abstract class ActiveViewModel : MvxViewModel, IActiveAware
     {

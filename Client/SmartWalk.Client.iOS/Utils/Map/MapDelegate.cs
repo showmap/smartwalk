@@ -5,11 +5,11 @@ using Cirrious.CrossCore.Core;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Resources;
-using SmartWalk.iOS.Utils.Map;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils.Map;
 
-namespace SmartWalk.iOS.Utils.Map
+namespace SmartWalk.Client.iOS.Utils.Map
 {
     public class MapDelegate : MKMapViewDelegate
     {

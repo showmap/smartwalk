@@ -1,10 +1,10 @@
 using System.ComponentModel;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
-namespace SmartWalk.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common
 {
     public class EntityViewModelWrapper : IEntityCellContext
     {

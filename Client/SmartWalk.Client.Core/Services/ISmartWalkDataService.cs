@@ -1,10 +1,10 @@
 using System;
-using SmartWalk.Core.Model;
+using SmartWalk.Client.Core.Model;
 
-namespace SmartWalk.Core.Services
+namespace SmartWalk.Client.Core.Services
 {
-	public interface ISmartWalkDataService
-	{
+    public interface ISmartWalkDataService
+    {
         void GetLocationIndex(
             DataSource source,
             Action<LocationIndex, Exception> resultHandler);
@@ -19,5 +19,5 @@ namespace SmartWalk.Core.Services
             DateTime date, 
             DataSource source, 
             Action<OrgEvent, Exception> resultHandler);
-	}
+    }
 }

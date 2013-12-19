@@ -4,10 +4,10 @@ using System.Drawing;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class OrgEventHeaderView : UIView
     {

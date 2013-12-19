@@ -1,9 +1,9 @@
-using SmartWalk.Core.Model;
-using SmartWalk.iOS.Utils;
-using SmartWalk.iOS.Utils.Map;
-using SmartWalk.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Utils.Map;
+using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
-namespace SmartWalk.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public class VenueAnnotation : EntityAnnotation, IMapAnnotation
     {

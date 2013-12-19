@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Utils;
+using SmartWalk.Client.Core.Utils;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.Client.iOS.Controls
 {
     // HACK: taken from http://stackoverflow.com/questions/14307037/bug-in-uitableview-layout-after-orientation-change
     [Register("FixedTableView")]

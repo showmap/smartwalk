@@ -1,9 +1,9 @@
 using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
-using SmartWalk.Core.Utils;
+using SmartWalk.Client.Core.Utils;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.Client.iOS.Controls
 {
     [Register("ProgressImageView")]
     public class ProgressImageView : UIImageView

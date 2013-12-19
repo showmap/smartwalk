@@ -1,7 +1,7 @@
 using System;
-using SmartWalk.Core.Utils;
+using SmartWalk.Client.Core.Utils;
 
-namespace SmartWalk.Core.Model
+namespace SmartWalk.Client.Core.Model
 {
     public class OrgEventInfo
     {

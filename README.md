@@ -7,6 +7,8 @@ Every commit that is pushed to the repo must have a reference to a JIRA (https:/
 
 git commit -m "SW-555 The brain bug with missing JIRA issue ids in commits was fixed"
 
+4-Spaces as a Tab indentation should be used in all source code files. 
+
 Client Solution Setup
 ---------------------
 

@@ -6,10 +6,10 @@ using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 using MonoTouch.Foundation;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Utils;
 
-namespace SmartWalk.Core.Services
+namespace SmartWalk.Client.Core.Services
 {
     public class SmartWalkDataService : ISmartWalkDataService
     {

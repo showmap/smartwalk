@@ -1,6 +1,6 @@
 using System;
 
-namespace SmartWalk.Core.Services
+namespace SmartWalk.Client.Core.Services
 {
     public interface IExceptionPolicy
     {

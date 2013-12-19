@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace SmartWalk.Core.ViewModels.Interfaces
+namespace SmartWalk.Client.Core.ViewModels.Interfaces
 {
     public interface IFullscreenImageProvider
     {

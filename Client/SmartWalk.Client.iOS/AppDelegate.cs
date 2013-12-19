@@ -6,19 +6,19 @@ using GoogleAnalytics;
 using MonoTouch.Foundation;
 using MonoTouch.TestFlight;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Constants;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Constants;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS
+namespace SmartWalk.Client.iOS
 {
-	[Register("AppDelegate")]
-	public class AppDelegate : MvxApplicationDelegate
-	{
-		private UIWindow _window;
+    [Register("AppDelegate")]
+    public class AppDelegate : MvxApplicationDelegate
+    {
+        private UIWindow _window;
         private static string _version;
 
-		public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
-		{
+        public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
+        {
             // TODO: Must be commented before Release
             TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
 
@@ -28,20 +28,20 @@ namespace SmartWalk.iOS
 
             Theme.Apply();
 
-			_window = new UIWindow(UIScreen.MainScreen.Bounds);
+            _window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-			var presenter = new MvxTouchViewPresenter(this, _window);
+            var presenter = new MvxTouchViewPresenter(this, _window);
 
-			var setup = new Setup(this, presenter);
-			setup.Initialize();
+            var setup = new Setup(this, presenter);
+            setup.Initialize();
 
-			var startup = Mvx.Resolve<IMvxAppStart>();
-			startup.Start();
+            var startup = Mvx.Resolve<IMvxAppStart>();
+            startup.Start();
 
-			_window.MakeKeyAndVisible();
-			
-			return true;
-		}
+            _window.MakeKeyAndVisible();
+            
+            return true;
+        }
 
         private static void InitializeVersion()
         {
@@ -73,5 +73,5 @@ namespace SmartWalk.iOS
             }
 #endif
         }
-	}
+    }
 }

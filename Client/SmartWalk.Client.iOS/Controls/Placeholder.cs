@@ -2,7 +2,7 @@ using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.Client.iOS.Controls
 {
     [Register("Placeholder")]
     public class Placeholder : UIView

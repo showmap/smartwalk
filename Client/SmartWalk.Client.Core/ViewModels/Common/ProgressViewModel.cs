@@ -1,7 +1,7 @@
-using SmartWalk.Core.ViewModels.Interfaces;
-using SmartWalk.Core.Services;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
+using SmartWalk.Client.Core.Services;
 
-namespace SmartWalk.Core.ViewModels.Common
+namespace SmartWalk.Client.Core.ViewModels.Common
 {
     public abstract class ProgressViewModel : ActiveViewModel, IProgressViewModel
     {

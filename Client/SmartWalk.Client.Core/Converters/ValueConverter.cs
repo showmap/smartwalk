@@ -2,7 +2,7 @@ using System;
 using Cirrious.CrossCore.Converters;
 using System.Globalization;
 
-namespace SmartWalk.Core.Converters
+namespace SmartWalk.Client.Core.Converters
 {
     public class ValueConverter<TInput> : IMvxValueConverter 
         where TInput : class

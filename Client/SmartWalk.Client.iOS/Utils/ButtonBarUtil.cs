@@ -1,10 +1,10 @@
 using System;
 using System.Drawing;
 using MonoTouch.UIKit;
-using SmartWalk.iOS.Resources;
-using SmartWalk.iOS.Controls;
+using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Controls;
 
-namespace SmartWalk.iOS.Utils
+namespace SmartWalk.Client.iOS.Utils
 {
     public static class ButtonBarUtil
     {

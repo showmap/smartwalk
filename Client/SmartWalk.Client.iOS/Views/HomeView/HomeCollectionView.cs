@@ -2,10 +2,10 @@ using System;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.iOS.Utils;
-using SmartWalk.Core.Utils;
+using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.Core.Utils;
 
-namespace SmartWalk.iOS.Views.HomeView
+namespace SmartWalk.Client.iOS.Views.HomeView
 {
     [Register("HomeCollectionView")]
     public class HomeCollectionView : UICollectionView

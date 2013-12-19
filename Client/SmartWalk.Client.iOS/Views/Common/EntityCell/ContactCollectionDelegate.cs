@@ -2,10 +2,10 @@ using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public class ContactCollectionDelegate : UICollectionViewDelegate
     {

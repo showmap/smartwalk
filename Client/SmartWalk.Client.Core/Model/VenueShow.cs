@@ -1,9 +1,9 @@
 using System;
-using SmartWalk.Core.Utils;
-using SmartWalk.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.Model.Interfaces;
 using System.Collections.Generic;
 
-namespace SmartWalk.Core.Model
+namespace SmartWalk.Client.Core.Model
 {
     public class VenueShow : ISearchable
     {

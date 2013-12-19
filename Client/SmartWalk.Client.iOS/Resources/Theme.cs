@@ -1,11 +1,11 @@
 using System.Drawing;
 using MonoTouch.UIKit;
-using SmartWalk.iOS.Views.Common;
-using SmartWalk.iOS.Views.Common.EntityCell;
-using SmartWalk.iOS.Views.HomeView;
-using SmartWalk.iOS.Views.OrgEventView;
+using SmartWalk.Client.iOS.Views.Common;
+using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.iOS.Views.HomeView;
+using SmartWalk.Client.iOS.Views.OrgEventView;
 
-namespace SmartWalk.iOS.Resources
+namespace SmartWalk.Client.iOS.Resources
 {
     public class Theme
     {

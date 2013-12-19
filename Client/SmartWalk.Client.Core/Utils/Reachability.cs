@@ -3,7 +3,7 @@ using System.Net;
 using MonoTouch.CoreFoundation;
 using MonoTouch.SystemConfiguration;
 
-namespace SmartWalk.Core.Utils
+namespace SmartWalk.Client.Core.Utils
 {
     public enum NetworkStatus {
         NotReachable,

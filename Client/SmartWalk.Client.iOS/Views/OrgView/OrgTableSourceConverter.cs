@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Cirrious.CrossCore.Converters;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Views.Common;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Views.Common;
 
-namespace SmartWalk.iOS.Views.OrgView
+namespace SmartWalk.Client.iOS.Views.OrgView
 {
     public class OrgTableSourceConverter : IMvxValueConverter
     {

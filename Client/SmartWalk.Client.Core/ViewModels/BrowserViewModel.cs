@@ -1,7 +1,7 @@
-using SmartWalk.Core.ViewModels.Common;
-using SmartWalk.Core.Services;
+using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Client.Core.Services;
 
-namespace SmartWalk.Core.ViewModels
+namespace SmartWalk.Client.Core.ViewModels
 {
     public class BrowserViewModel : ActiveViewModel
     {

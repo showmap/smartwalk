@@ -1,7 +1,7 @@
 using System.Windows.Input;
-using SmartWalk.Core.Model;
+using SmartWalk.Client.Core.Model;
 
-namespace SmartWalk.Core.ViewModels.Interfaces
+namespace SmartWalk.Client.Core.ViewModels.Interfaces
 {
     public interface IContactsEntityProvider
     {

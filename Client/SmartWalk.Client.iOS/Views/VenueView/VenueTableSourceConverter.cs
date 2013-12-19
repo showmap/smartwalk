@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Cirrious.CrossCore.Converters;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.iOS.Views.Common;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Views.Common;
 
-namespace SmartWalk.iOS.Views.VenueView
+namespace SmartWalk.Client.iOS.Views.VenueView
 {
     public class VenueTableSourceConverter : IMvxValueConverter
     {

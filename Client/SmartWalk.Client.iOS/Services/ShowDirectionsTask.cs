@@ -1,8 +1,8 @@
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Services;
-using SmartWalk.iOS.Utils.Map;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.iOS.Utils.Map;
 
-namespace SmartWalk.iOS.Services
+namespace SmartWalk.Client.iOS.Services
 {
     public class ShowDirectionsTask : IShowDirectionsTask
     {

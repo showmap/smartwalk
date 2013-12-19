@@ -7,108 +7,108 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-	[Register ("VenueShowCell")]
-	partial class VenueShowCell
-	{
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
+    [Register ("VenueShowCell")]
+    partial class VenueShowCell
+    {
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
 
-		[Outlet]
-		SmartWalk.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
+        [Outlet]
+        SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DescriptionLeftConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint DescriptionLeftConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DetailsHeightConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint DetailsHeightConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UILabel DetailsLabel { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UILabel DetailsLabel { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UILabel EndTimeLabel { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UILabel EndTimeLabel { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
+        [Outlet]
+        MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
 
-		[Outlet]
-		SmartWalk.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
+        [Outlet]
+        SmartWalk.Client.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UIView TimeBackgroundView { get; set; }
-		
-		void ReleaseDesignerOutlets ()
-		{
-			if (TimeBackgroundView != null) {
-				TimeBackgroundView.Dispose ();
-				TimeBackgroundView = null;
-			}
+        [Outlet]
+        MonoTouch.UIKit.UIView TimeBackgroundView { get; set; }
+        
+        void ReleaseDesignerOutlets ()
+        {
+            if (TimeBackgroundView != null) {
+                TimeBackgroundView.Dispose ();
+                TimeBackgroundView = null;
+            }
 
-			if (DescriptionAndImageSpaceConstraint != null) {
-				DescriptionAndImageSpaceConstraint.Dispose ();
-				DescriptionAndImageSpaceConstraint = null;
-			}
+            if (DescriptionAndImageSpaceConstraint != null) {
+                DescriptionAndImageSpaceConstraint.Dispose ();
+                DescriptionAndImageSpaceConstraint = null;
+            }
 
-			if (DescriptionLabel != null) {
-				DescriptionLabel.Dispose ();
-				DescriptionLabel = null;
-			}
+            if (DescriptionLabel != null) {
+                DescriptionLabel.Dispose ();
+                DescriptionLabel = null;
+            }
 
-			if (DescriptionLeftConstraint != null) {
-				DescriptionLeftConstraint.Dispose ();
-				DescriptionLeftConstraint = null;
-			}
+            if (DescriptionLeftConstraint != null) {
+                DescriptionLeftConstraint.Dispose ();
+                DescriptionLeftConstraint = null;
+            }
 
-			if (DetailsHeightConstraint != null) {
-				DetailsHeightConstraint.Dispose ();
-				DetailsHeightConstraint = null;
-			}
+            if (DetailsHeightConstraint != null) {
+                DetailsHeightConstraint.Dispose ();
+                DetailsHeightConstraint = null;
+            }
 
-			if (DetailsLabel != null) {
-				DetailsLabel.Dispose ();
-				DetailsLabel = null;
-			}
+            if (DetailsLabel != null) {
+                DetailsLabel.Dispose ();
+                DetailsLabel = null;
+            }
 
-			if (EndTimeLabel != null) {
-				EndTimeLabel.Dispose ();
-				EndTimeLabel = null;
-			}
+            if (EndTimeLabel != null) {
+                EndTimeLabel.Dispose ();
+                EndTimeLabel = null;
+            }
 
-			if (ImageAndDetailsSpaceConstraint != null) {
-				ImageAndDetailsSpaceConstraint.Dispose ();
-				ImageAndDetailsSpaceConstraint = null;
-			}
+            if (ImageAndDetailsSpaceConstraint != null) {
+                ImageAndDetailsSpaceConstraint.Dispose ();
+                ImageAndDetailsSpaceConstraint = null;
+            }
 
-			if (ImageHeightConstraint != null) {
-				ImageHeightConstraint.Dispose ();
-				ImageHeightConstraint = null;
-			}
+            if (ImageHeightConstraint != null) {
+                ImageHeightConstraint.Dispose ();
+                ImageHeightConstraint = null;
+            }
 
-			if (ImageWidthConstraint != null) {
-				ImageWidthConstraint.Dispose ();
-				ImageWidthConstraint = null;
-			}
+            if (ImageWidthConstraint != null) {
+                ImageWidthConstraint.Dispose ();
+                ImageWidthConstraint = null;
+            }
 
-			if (StartTimeLabel != null) {
-				StartTimeLabel.Dispose ();
-				StartTimeLabel = null;
-			}
+            if (StartTimeLabel != null) {
+                StartTimeLabel.Dispose ();
+                StartTimeLabel = null;
+            }
 
-			if (ThumbImageView != null) {
-				ThumbImageView.Dispose ();
-				ThumbImageView = null;
-			}
-		}
-	}
+            if (ThumbImageView != null) {
+                ThumbImageView.Dispose ();
+                ThumbImageView = null;
+            }
+        }
+    }
 }

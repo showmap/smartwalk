@@ -3,11 +3,11 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.Utils;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Views.Common.EntityCell
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class ImageCell : CollectionCellBase
     {

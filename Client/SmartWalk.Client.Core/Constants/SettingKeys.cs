@@ -1,4 +1,4 @@
-namespace SmartWalk.Core.Constants
+namespace SmartWalk.Client.Core.Constants
 {
     public static class SettingKeys
     {

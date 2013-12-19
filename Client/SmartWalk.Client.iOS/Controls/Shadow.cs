@@ -1,9 +1,9 @@
 using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.iOS.Resources;
+using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.Client.iOS.Controls
 {
     [Register("Shadow")]
     public class Shadow : UIImageView

@@ -2,10 +2,10 @@ using System;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.iOS.Resources;
-using SmartWalk.iOS.Utils;
+using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 
-namespace SmartWalk.iOS.Controls
+namespace SmartWalk.Client.iOS.Controls
 {
     [Register("ButtonBarButton")]
     public class ButtonBarButton : UIButton

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.UIKit;
-using SmartWalk.Core.Model;
-using SmartWalk.Core.ViewModels;
-using SmartWalk.Core.Utils;
+using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.Core.Utils;
 
-namespace SmartWalk.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public class OrgEventSearchDelegate : UISearchDisplayDelegate
     {
