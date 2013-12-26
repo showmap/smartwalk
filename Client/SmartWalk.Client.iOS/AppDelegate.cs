@@ -19,12 +19,16 @@ namespace SmartWalk.Client.iOS
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
-            // TODO: Must be commented before Release
-            TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
+#if ADHOC
+            InitializeTestFlight();
+#endif
 
             InitializeVersion();
             InitializeSettings();
+
+#if APPSTORE
             InitializeGAI();
+#endif
 
             Theme.Apply();
 
@@ -41,6 +45,11 @@ namespace SmartWalk.Client.iOS
             _window.MakeKeyAndVisible();
             
             return true;
+        }
+
+        private static void InitializeTestFlight()
+        {
+            TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
         }
 
         private static void InitializeVersion()
@@ -63,15 +72,11 @@ namespace SmartWalk.Client.iOS
             GAI.SharedInstance.GetTracker("UA-44480601-1");
             GAI.SharedInstance.DefaultTracker.AppVersion = _version;
 
-#if DEBUG
-            GAI.SharedInstance.OptOut = true;
-#else
             if (NSUserDefaults.StandardUserDefaults[SettingKeys.AnonymousStatsEnabled] != null)
             {
                 GAI.SharedInstance.OptOut = !NSUserDefaults.StandardUserDefaults
                     .BoolForKey(SettingKeys.AnonymousStatsEnabled);
             }
-#endif
         }
     }
 }

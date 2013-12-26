@@ -69,6 +69,9 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <BuildIpa>true</BuildIpa>
     <AssemblyName>SmartWalk</AssemblyName>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <Optimize>true</Optimize>
@@ -84,6 +87,7 @@
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <AssemblyName>SmartWalk</AssemblyName>
+    <DefineConstants>ADHOC;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <Optimize>true</Optimize>
@@ -97,6 +101,7 @@
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <AssemblyName>SmartWalk</AssemblyName>
+    <DefineConstants>APPSTORE;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
