@@ -1,0 +1,150 @@
+﻿@{
+    Script.Require("jQuery").AtHead();
+    Script.Require("ko").AtHead();
+}
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+	    <title>Knockout Demo</title>        
+		<style type="text/css">
+			.selected { 
+				border: #FFFF00 3px solid;
+			}
+		</style>
+	</head>
+	<body>
+	<div id="fb-root"></div>
+	<script type="text/javascript">
+	    
+	</script>
+	
+	<div id="resultPane" style="display: none">
+		<img id="resultImage" />
+		<button onclick="location.reload()">Refresh</button>
+	</div>
+	
+	    <div id="container">
+	        <textarea id="tasks" data-bind="value: ko.toJSON(photos)"></textarea>
+	        <div id="title">
+	            Photos of <span class="name" data-bind="text: userName"></span>
+	            <select data-bind="options: albums, optionsCaption: 'Tagged Photos', optionsText: 'name',  value: currentAlbum"></select>
+	        </div>
+	        <div id="body">
+	            <div data-bind="visible: photos().length === 0">There are no photos in this album</div>
+	            <ul data-bind='template: { name: "photosTemplate", foreach: photos() }'></ul>
+	            <div data-bind="visible: loadingPhotos">Loading...</div>
+	            <button data-bind="click: function() { currentPage(currentPage()-1); }, enable: currentPage() > 0">&lt;</button>
+	            <button data-bind="click: function() { currentPage(currentPage()+1); }, enable: nextPage">&gt;</button>                             
+	        </div>
+	        <button data-bind="click: submitImage, enable: currentPhoto">Submit</button>        
+        
+	    </div>        
+        <script type="text/html" id="photosTemplate">
+		    <li data-bind="click: function () { $root.selectPhoto($data); }"><img data-bind="attr: { src: $data.picture }, css: { selected: $root.currentPhoto() === $data }"/></li>
+	    </script>
+
+<script type="text/javascript">
+    (function ($) {
+        
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '165634513647137', // App ID
+                status: true, // check login status
+                cookie: true, // enable cookies to allow the server to access the session
+                oauth: true, // enable OAuth 2.0
+                xfbml: true  // parse XFBML
+            });
+
+            FB.login(function (response) {
+                if (response.authResponse) {
+                    FB.api('/me', function (response) {
+                        $(document).ready(function () { initApp(response) });
+                    });
+                }
+            }, { scope: 'user_photos' });
+
+
+        };
+
+        // Load the SDK Asynchronously
+        (function (d) {
+            var js, id = 'facebook-jssdk'; if (d.getElementById(id)) { return; }
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "http://connect.facebook.net/en_US/all.js";
+            d.getElementsByTagName('head')[0].appendChild(js);
+        }(document));
+
+        function initApp(user) {            
+    	        function viewModel(data) {
+    	            var self = this;
+
+    	            self.userId = user.id;
+    	            self.userName = user.name;
+    	            self.loadingPhotos = ko.observable(true);
+    	            self.albums = ko.observableArray([]);
+    	            self.photos = ko.observableArray([]);
+    	            self.currentPage = ko.observable(0);
+    	            self.nextPage = ko.observable(false);
+    	            self.currentPhoto = ko.observable(undefined);
+    	            self.currentAlbum = ko.observable(undefined);
+			
+    	            self.currentAlbum.subscribe(function () {	            
+    	                self.currentPage(0);
+    	                self.photos([]);
+    	                self.LoadItems();
+    	            });
+
+    	            self.selectPhoto = function(photo) {	            
+    	                self.currentPhoto(photo);
+    	            };
+			
+    	            self.submitImage = function() {
+    	                if (self.currentPhoto()) {
+    	                    $('#resultPane').show();
+    	                    $('#resultImage').attr('src', self.currentPhoto().source);
+    	                    $('#container').hide();
+    	                }
+    	            };
+
+    	            self.LoadItems = function () {
+    	                var id = 'me';	            
+    	                if (self.currentAlbum()) {
+    	                    id = self.currentAlbum().id;
+    	                }
+
+    	                self.loadingPhotos(true);
+	            
+    	                FB.api(id + '/photos', { limit: 11, offset: self.currentPage() * 10 }, function (response) {
+    	                    var truncatedResponse = response.data;
+	                
+    	                    //alert($('#tasks').val());
+    	                    //$('#tasks').val(ko.toJSON(response.data));
+
+    	                    if (truncatedResponse.length > 10) {
+    	                        truncatedResponse.pop(); //remove the excess item
+    	                        self.nextPage(true);
+    	                    } else {
+    	                        self.nextPage(false);
+    	                    }
+
+    	                    self.photos(response.data);
+    	                    self.loadingPhotos(false);
+    	                    //alert(viewModel.photos()[0].id);
+    	                });
+    	            };
+	        
+    	            FB.api('me/albums', function (response) {
+    	                self.albums(response.data);
+    	                self.LoadItems();
+    	                //$('#tasks').val(ko.toJSON(response.data));
+    	            });
+    	        }								
+		
+    	        ko.applyBindings(new viewModel(), $('#container')[0]);
+    	    }
+    })(jQuery);
+    	</script>	
+	</body>
+</html>
