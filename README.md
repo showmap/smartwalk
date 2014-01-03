@@ -9,6 +9,15 @@ git commit -m "SW-555 The brain bug with missing JIRA issue ids in commits was f
 
 4-Spaces as a Tab indentation should be used in all source code files. 
 
+Server Solution Setup
+---------------------
+
+The referenced in solution projects binaries are not included into the repo. It should be downloaded from public sources and extracted into Server/Binaries folder before compilation.
+
+In order to turn on Orchard source code browsing and debugging the compiled in Debug mode Orchard binaries with PDB files should be placed into Binaries/Orchard. ReSharper plugin in VS may be used for easier navigation within external source code.
+
+It's recommened to use directory junction link (mklink /j) to SmartWalk.Server folder from Orchard.Web/Modules folder to sync the last changes of SmartWalk.Server module with Orchard in real-time.
+
 Client Solution Setup
 ---------------------
 
