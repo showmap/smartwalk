@@ -72,6 +72,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\4sqacplugin.js" />
+    <Content Include="Styles\fsquare-autocomplete.css" />
     <Content Include="Styles\google-maps.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
@@ -91,11 +93,42 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Drivers\SmartWalkUserDriver.cs" />
+    <Compile Include="Handlers\SmartWalkUserEventHandler.cs" />
+    <Compile Include="Handlers\SmartWalkUserHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\SmartWalkUserPart.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Records\AddressRecord.cs" />
+    <Compile Include="Records\ContactRecord.cs" />
+    <Compile Include="Records\EntityMappingRecord.cs" />
+    <Compile Include="Records\EntityRecord.cs" />
+    <Compile Include="Records\EventMappingRecord.cs" />
+    <Compile Include="Records\EventMetaDataRecord.cs" />
+    <Compile Include="Records\RegionRecord.cs" />
+    <Compile Include="Records\ShowRecord.cs" />
+    <Compile Include="Records\SmartWalkUserRecord.cs" />
+    <Compile Include="Records\StorageRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Content Include="Views\Test\FSquare.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
+      <Project>{cfea2cf4-c0c6-47a4-9549-2acd230abd01}</Project>
+      <Name>SmartWalk.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

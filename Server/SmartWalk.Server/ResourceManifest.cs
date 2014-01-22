@@ -10,6 +10,9 @@
 
             manifest.DefineStyle("SmartWalk.GoogleMaps").SetUrl("google-maps.css");
             manifest.DefineScript("SmartWalk.GoogleMaps").SetUrl("https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places");
+
+            manifest.DefineStyle("FSquare.Autocomplete").SetUrl("fsquare-autocomplete.css");
+            manifest.DefineScript("FSquare.Autocomplete").SetUrl("4sqacplugin.js");
         }
     }
 }

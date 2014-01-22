@@ -1,0 +1,53 @@
+﻿.ui-autocomplete-loading { background: white url('http://jqueryui.com/demos/autocomplete/images/ui-anim_basic_16x16.gif') right center no-repeat; }
+#venue { width: 25em; }
+#venue-label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+#venue-icon {
+	float: left;
+	height: 32px;
+	width: 32px;
+	vertical-align: middle;
+}
+#venue-address {
+	margin: 0;
+	padding: 0;
+}
+#venue-city {
+	margin: 0;
+	padding: 0;
+}
+	
+.ui-menu-item {
+	min-height:40px;
+}
+	
+.categoryIconContainer {
+	border-radius: 3px 3px 3px 3px;
+    float: left;
+    height: 32px;
+    margin-right: 5px;
+    overflow: hidden;
+    width: 32px;
+    vertical-align: middle;
+}
+.autocomplete-name {
+	color: #333333;
+    font-weight: bold;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }
+.autocomplete-detail {
+  	color: #999999;
+    font-weight: normal;
+    font-size: 13px;
+    margin-left: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }
+	
+article, aside, figure, footer, header, hgroup, 
+menu, nav, section { display: block; }
