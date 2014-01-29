@@ -5,7 +5,7 @@ using System.Web;
 
 namespace SmartWalk.Server.Records
 {
-    public class EventMetaDataRecord
+    public class EventMetadataRecord
     {
         public virtual int Id { get; set; }
         public virtual RegionRecord RegionRecord { get; set; }
