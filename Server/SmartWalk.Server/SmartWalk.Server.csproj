@@ -93,11 +93,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Drivers\SmartWalkUserDriver.cs" />
     <Compile Include="Handlers\SmartWalkUserEventHandler.cs" />
     <Compile Include="Handlers\SmartWalkUserHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\SmartWalkUserPart.cs" />
+    <Compile Include="Models\XmlModel\Address.cs" />
+    <Compile Include="Models\XmlModel\Contact.cs" />
+    <Compile Include="Models\XmlModel\Email.cs" />
+    <Compile Include="Models\XmlModel\Event.cs" />
+    <Compile Include="Models\XmlModel\EventRef.cs" />
+    <Compile Include="Models\XmlModel\Location.cs" />
+    <Compile Include="Models\XmlModel\Organization.cs" />
+    <Compile Include="Models\XmlModel\Phone.cs" />
+    <Compile Include="Models\XmlModel\Show.cs" />
+    <Compile Include="Models\XmlModel\Venue.cs" />
+    <Compile Include="Models\XmlModel\Web.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Records\AddressRecord.cs" />
     <Compile Include="Records\ContactRecord.cs" />
@@ -111,8 +123,12 @@
     <Compile Include="Records\StorageRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\IImportService.cs" />
+    <Compile Include="Services\ImportService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Tools\ImportXmlData.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Test\FSquare.cshtml" />
   </ItemGroup>
