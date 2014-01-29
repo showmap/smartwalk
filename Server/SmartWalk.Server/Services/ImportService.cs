@@ -7,10 +7,9 @@ using System.Xml.Serialization;
 using Orchard;
 using Orchard.Data;
 using SmartWalk.Server.Records;
-using SmartWalk.XmlData.Model;
+using SmartWalk.Server.Models.XmlModel;
 using Orchard.ContentManagement;
 using SmartWalk.Server.Models;
-using SmartWalk.Server.Models.XmlModel;
 
 namespace SmartWalk.Server.Services
 {
