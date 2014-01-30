@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Orchard.Themes;
+﻿using Orchard.Themes;
 using SmartWalk.Server.Services;
+using System;
+using System.Web.Mvc;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -24,7 +21,14 @@ namespace SmartWalk.Server.Controllers
 
         public ActionResult ImportXmlDataAction()
         {
-            _importService.ImportXmlData();
+            try
+            {
+                _importService.ImportXmlData();
+            }
+            catch (Exception ex)
+            {
+                return new ContentResult {Content = ex.Message};
+            }
 
             return new EmptyResult();
         } 

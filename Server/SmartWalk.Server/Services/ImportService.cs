@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 using Orchard;
-using Orchard.Data;
-using SmartWalk.Server.Records;
-using SmartWalk.Server.Models.XmlModel;
 using Orchard.ContentManagement;
+using Orchard.Data;
 using SmartWalk.Server.Models;
+using SmartWalk.Server.Models.XmlModel;
+using SmartWalk.Server.Records;
 
 namespace SmartWalk.Server.Services
 {
     public class ImportService : IImportService
     {
-        private const string XmlDataPath = "../../XmlData";
-
+        private const string XmlDataPath = "http://smartwalk.me/data/us/ca";
 
         private readonly IOrchardServices _orchardServices;
 
