@@ -136,6 +136,7 @@ namespace SmartWalk.Server
 
         public int UpdateFrom1()
         {
+            SchemaBuilder.DropTable("EventMappingRecord");
             SchemaBuilder.DropTable("EventMetaDataRecord");
 
             SchemaBuilder.CreateTable("EventMetadataRecord", table => table
@@ -153,6 +154,17 @@ namespace SmartWalk.Server
               .Column("DateCreated", DbType.DateTime, c => c.NotNull())
               .Column("DateModified", DbType.DateTime, c => c.NotNull())
               );
+
+            SchemaBuilder.CreateTable("EventMappingRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("EventMetadataRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("StorageRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("ShowRecord_Id", DbType.Int32, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_EventMetadataRecord", "EventMappingRecord", new[] { "EventMetadataRecord_Id" }, "EventMetadataRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_StorageRecord", "EventMappingRecord", new[] { "StorageRecord_Id" }, "StorageRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_ShowRecord", "EventMappingRecord", new[] { "ShowRecord_Id" }, "ShowRecord", new[] { "Id" });            
 
             SchemaBuilder.CreateForeignKey("EventMetadataRecord_RegionRecord", "EventMetadataRecord", new[] { "RegionRecord_Id" }, "RegionRecord", new[] { "Id" });
             SchemaBuilder.CreateForeignKey("EventMetadataRecord_EntityRecord", "EventMetadataRecord", new[] { "EntityRecord_Id" }, "EntityRecord", new[] { "Id" });

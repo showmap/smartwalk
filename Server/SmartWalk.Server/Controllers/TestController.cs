@@ -26,5 +26,9 @@ namespace Store.GsmCounters.Controllers
         public ActionResult FSquare() {
             return View();
         }
+
+        public ActionResult Index() {
+            return View();
+        }
     }
 }

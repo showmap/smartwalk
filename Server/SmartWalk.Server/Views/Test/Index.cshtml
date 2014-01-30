@@ -1,0 +1,36 @@
+﻿@{
+    Style.Require("jQueryUI_Orchard");  
+              
+    Script.Require("jQueryUI").AtHead();    
+}
+<div class="ui-widget">
+    <button id="add-place-button">@T("Add place")</button>
+</div>
+
+<div id="add-place" title="@T("Add place")">
+    <p>New place add here</p>
+</div>
+
+<script>   
+    $(function () {
+        $("#add-place").dialog({
+            modal: true,
+            autoOpen: false,
+            width: 300,
+            height: 250,
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            }
+        });
+
+        $("#add-place-button").click(function () {
+            $("#add-place").dialog("open");
+        });
+    });
+
+</script>
