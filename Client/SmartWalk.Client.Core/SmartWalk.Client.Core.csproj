@@ -36,20 +36,20 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.CrossCore.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Binaries\JSON\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\JSON\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

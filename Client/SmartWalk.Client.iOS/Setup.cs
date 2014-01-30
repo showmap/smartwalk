@@ -1,6 +1,5 @@
 using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
-using Cirrious.MvvmCross.Dialog.Touch;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
@@ -10,7 +9,7 @@ using SmartWalk.Client.iOS.Services;
 
 namespace SmartWalk.Client.iOS
 {
-    public class Setup : MvxTouchDialogSetup
+    public class Setup : MvxTouchSetup
     {
         public Setup(MvxApplicationDelegate appDelegate, IMvxTouchViewPresenter presenter)
             : base(appDelegate, presenter)

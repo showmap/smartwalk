@@ -109,62 +109,59 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="Cirrious.CrossCore.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.CrossCore.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.CrossCore.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.CrossCore.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Json">
-      <HintPath>..\Binaries\JSON\Cirrious.MvvmCross.Plugins.Json.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\JSON\Cirrious.MvvmCross.Plugins.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Binaries\JSON\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\JSON\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Binding.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Binding.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Binding.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
     </Reference>
     <Reference Include="TestFlight">
-      <HintPath>..\Binaries\TestFlight\TestFlight.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\TestFlight\TestFlight.dll</HintPath>
     </Reference>
     <Reference Include="GoogleAnalytics">
-      <HintPath>..\Binaries\GAN\GoogleAnalytics.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\GAN\GoogleAnalytics.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross.Dialog.Touch">
-      <HintPath>..\Binaries\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Dialog.Touch.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

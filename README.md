@@ -11,16 +11,16 @@ git commit -m "SW-555 The brain bug with missing JIRA issue ids in commits was f
 
 Server Solution Setup
 ---------------------
-
-The referenced in solution projects binaries are not included into the repo. It should be downloaded from public sources and extracted into Server/Binaries folder before compilation.
-
-In order to turn on Orchard source code browsing and debugging the compiled in Debug mode Orchard binaries with PDB files should be placed into Binaries/Orchard. ReSharper plugin in VS may be used for easier navigation within external source code.
+In order to turn on Orchard source code browsing and debugging the compiled in Debug mode Orchard binaries with PDB files should be placed into binaries folder instead of Release ones. ReSharper plugin in VS may be used for easier navigation within external source code.
 
 It's recommened to use directory junction link (mklink /j) to SmartWalk.Server folder from Orchard.Web/Modules folder to sync the last changes of SmartWalk.Server module with Orchard in real-time.
 
 Client Solution Setup
 ---------------------
-
 The Xamarin Studio for Mac OS or Visual Studio with Xamarin Plugin should be used for opening and compiling SmartWalk.Client.sln solution.
 
-The referenced in solution projects binaries are not included into the repo. It should be downloaded from public storage (https://docs.google.com/file/d/0B4_Y0szw-iF8VTY4dkJTaFdWREk) and extracted into Client/Binaries folder before compilation.
+Server and Client 3rd party Binaries  SETUP
+-------------------------------------------
+The referenced in solution projects binaries are not included into the repo. They should be referenced from another repo smartwalk-binaries (https://github.com/ievgen/smartwalk-binaries). It's recommended to clone this repo next to smartwalk one, so the project links will be valid.
+
+All binaries are complied using Release mode. There are no pdb files stored in the binaries repo. If a debugging session is required the binaries should be overwritten by Debug version ones with PDBs, please refrain from pushing Debug binaries into the repo.
