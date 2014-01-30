@@ -151,7 +151,3 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
-
-# SmartWalk custom
-Client/Binaries/*
-Server/Binaries/*

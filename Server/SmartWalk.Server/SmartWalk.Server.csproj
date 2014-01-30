@@ -48,11 +48,17 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Orchard.Core, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Binaries\Orchard\Orchard.Core.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Core.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Framework, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Binaries\Orchard\Orchard.Framework.dll</HintPath>
+      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Roles">
+      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Roles.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Users">
+      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Users.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -133,17 +139,9 @@
     <Content Include="Views\Test\FSquare.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Git\smartwalk\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
+    <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
       <Project>{cfea2cf4-c0c6-47a4-9549-2acd230abd01}</Project>
       <Name>SmartWalk.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
-      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
-      <Name>Orchard.Roles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
-      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
-      <Name>Orchard.Users</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
