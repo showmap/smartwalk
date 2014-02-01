@@ -16,7 +16,7 @@ namespace SmartWalk.Shared.DataContracts
 
         DateTime EndTime { get; set; }
 
-        bool IsCombined { get; set; }
+        CombineType CombineType { get; set; }
 
         IReference[] Shows { get; set; } 
     }
