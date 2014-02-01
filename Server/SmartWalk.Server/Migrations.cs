@@ -172,5 +172,44 @@ namespace SmartWalk.Server
 
             return 2;
         }
+
+        public int UpdateFrom2()
+        {
+            SchemaBuilder.DropTable("EventMappingRecord");
+            SchemaBuilder.DropTable("EventMetaDataRecord");
+
+            SchemaBuilder.CreateTable("EventMetadataRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("RegionRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("EntityRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("SmartWalkUserRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("Title", DbType.String, c => c.NotNull())
+              .Column("Description", DbType.String, c => c.NotNull())
+              .Column("StartTime", DbType.DateTime, c => c.NotNull())
+              .Column("EndTime", DbType.DateTime, c => c.NotNull())
+              .Column("CombineType", DbType.Byte, c => c.NotNull())
+              .Column("IsMobileReady", DbType.Boolean, c => c.NotNull())
+              .Column("IsWidgetReady", DbType.Boolean, c => c.NotNull())
+              .Column("DateCreated", DbType.DateTime, c => c.NotNull())
+              .Column("DateModified", DbType.DateTime, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateTable("EventMappingRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("EventMetadataRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("StorageRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("ShowRecord_Id", DbType.Int32, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_EventMetadataRecord", "EventMappingRecord", new[] { "EventMetadataRecord_Id" }, "EventMetadataRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_StorageRecord", "EventMappingRecord", new[] { "StorageRecord_Id" }, "StorageRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_ShowRecord", "EventMappingRecord", new[] { "ShowRecord_Id" }, "ShowRecord", new[] { "Id" });
+
+            SchemaBuilder.CreateForeignKey("EventMetadataRecord_RegionRecord", "EventMetadataRecord", new[] { "RegionRecord_Id" }, "RegionRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMetadataRecord_EntityRecord", "EventMetadataRecord", new[] { "EntityRecord_Id" }, "EntityRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMetadataRecord_SmartWalkUserRecord", "EventMetadataRecord", new[] { "SmartWalkUserRecord_Id" }, "SmartWalkUserRecord", new[] { "Id" });
+
+            return 3;
+        }
     }
 }

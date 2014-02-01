@@ -1,5 +1,6 @@
 ﻿#map-canvas {
-    width:500px;height: 300px;
+    width:500px;
+    height: 240px;
     margin: 0px;
     padding: 0px
 }
@@ -23,10 +24,10 @@
     font-size: 15px;
     font-weight: 300;
     text-overflow: ellipsis;
+    margin-bottom: 11px;
 }
 
-#pac-input:focus {
-    border-color: #4d90fe;
+#pac-input:focus {    
     margin-left: -1px;
     padding-left: 14px;  /* Regular padding-left + 1. */
     width: 401px;
@@ -34,6 +35,7 @@
 
 .pac-container {
     font-family: Roboto;
+    z-index: 1200 !important;
 }
 
 #type-selector {
