@@ -79,8 +79,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\4sqacplugin.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-2.1.0.min.js" />
+    <Content Include="Scripts\mappy.js" />
+    <Content Include="Styles\add-places.css" />
     <Content Include="Styles\fsquare-autocomplete.css" />
     <Content Include="Styles\google-maps.css" />
+    <Content Include="Styles\mappy.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -139,7 +145,7 @@
     <Content Include="Views\Test\FSquare.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
+    <ProjectReference Include="..\..\..\..\..\Git\smartwalk\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
       <Project>{cfea2cf4-c0c6-47a4-9549-2acd230abd01}</Project>
       <Name>SmartWalk.Shared</Name>
     </ProjectReference>

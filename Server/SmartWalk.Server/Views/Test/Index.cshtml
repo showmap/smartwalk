@@ -2,109 +2,80 @@
     Style.Require("jQueryUI_Orchard");
     Style.Require("SmartWalk.GoogleMaps");
     Style.Require("SmartWalk.AddPlaces");
-              
+    Style.Require("Mappy");
+
+    //Script.Require("jQuery").AtHead();
     Script.Require("jQueryUI").AtHead();
-    Script.Require("SmartWalk.GoogleMaps").AtHead(); 
+    Script.Require("SmartWalk.GoogleMaps").AtHead();
+    Script.Require("Mappy").AtHead(); 
 }
 <div class="ui-widget">
     <button id="add-place-button">@T("Add place")</button>
 </div>
 
-<div id="add-place" title="@T("Add place")">
-    <div id="place-address">
-        <input id="pac-input" class="controls" type="text" placeholder="@T("Enter a location")">
-        <div id="map-canvas"></div>
-    </div>
-    <div>
-        <textarea id="gLog" style="width: 500px; height:240px"></textarea>
-    </div>    
+<div id="add-place-form" title="@T("Add place")">
+    <div id="add-places" class="small-map"></div>
 </div>
 
 <script>   
     $(function () {
         function initialize() {
-            var mapOptions = {
-                center: new google.maps.LatLng(-33.8688, 151.2195),
-                zoom: 13
-            };
-            
-            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            $("#add-places").mappy({
+                // Adds a predictive search box
+                searchOptions: {
+                    enabled: true,
+                    initSearch: "Football in Leeds",
+                    placeholder: "Search ..."
+                },
 
-            var input = (document.getElementById('pac-input'));            
-            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                // Turn on geo location button
+                allowGeo: true,
+                
+                // allow user to select somewhere
+                onSelect: function (mappy, details) {
+                    var msg =
+                        "name: " + details.name +
+                        "<br/>street: " + details.street + ", " +
+                            details.area + ", " +
+                            details.town + ", " + details.postCode +
+                        "<br/>telNo: " + details.telNo +
+                        "<br/>website: " + details.website +
+                        "<br/>g+: " + details.url
+                    ;
+                    mappy.showMsg("You selected ...", msg);
+                    // indicate tip should be closed
+                    return true;
+                },
 
-            autocomplete_options = {
-                types: ['geocode']
-            };
+                // shows additional instructions to the user	
+                getHelpWindow: function (mappy) {
+                    var html =
+                        "<div class='mappy-help'>" +
+                            "<h3>Find a venue</h3>" +
+                            "<ol>" +
+                                "<li>Simply use the <strong>search</strong> box to find a venue in your area.</li>" +
+                                "<li>On the pop-up, click <strong>Select</strong> to pick a pitch.</li>" +
+                            "</ol>" +
+                            "<h3>New venues</h3>" +
+                            "<ol>" +
+                                "<li>Your venue isn't displayed?  Simply click on the map where your pitch is.</li>" +
+                                "<li>Fill in the details in the dialog.</li>" +
+                                "<li>You can drag the marker around to pinpoint the right location.</li>" +
+                                "<li>Once you're happy, click the <strong>OK</strong> button</li>" +
+                            "</ol>" +
+                        "</div>"
+                    ;
 
-            var autocomplete = new google.maps.places.Autocomplete(input, autocomplete_options);
-            autocomplete.bindTo('bounds', map);
-
-            var infowindow = new google.maps.InfoWindow();
-            var marker = new google.maps.Marker({
-                map: map
+                    return html;
+                }
             });
+        }               
 
-            google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                infowindow.close();
-                marker.setVisible(false);
-                var place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    return;
-                }
-
-                // If the place has a geometry, then present it on a map.
-                if (place.geometry.viewport) {
-                    map.fitBounds(place.geometry.viewport);
-                } else {
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(17);  // Why 17? Because it looks good.
-                }
-                marker.setIcon(({
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(35, 35)
-                }));
-
-                marker.setPosition(place.geometry.location);
-                marker.setVisible(true);
-
-                var address = '';
-                if (place.address_components) {
-                    address = [
-                        (place.address_components[0] && place.address_components[0].short_name || ''),
-                        (place.address_components[1] && place.address_components[1].short_name || ''),
-                        (place.address_components[2] && place.address_components[2].short_name || '')
-                    ].join(' ');
-
-                    $("#gLog").text(JSON.stringify(place));                    
-                }
-
-                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-                infowindow.open(map, marker);
-            });
-
-            // Sets a listener on a radio button to change the filter type on Places
-            // Autocomplete.
-            function setupClickListener(id, types) {
-                var radioButton = document.getElementById(id);
-                google.maps.event.addDomListener(radioButton, 'click', function () {
-                    autocomplete.setTypes(types);
-                });
-            }
-
-            setupClickListener('changetype-all', []);
-            setupClickListener('changetype-establishment', ['establishment']);
-            setupClickListener('changetype-geocode', ['geocode']);
-        }
-        
-        $("#add-place").dialog({
+        $("#add-place-form").dialog({
             modal: true,
             autoOpen: false,
             //dialogClass: 'noTitleStuff',
-            width: 540,
+            width: 640,
             height: 540,
             show: {
                 effect: "blind",
@@ -116,17 +87,17 @@
             },
             buttons: {
                 '@T("Cancel")': function () {
-                    $("#add-place").dialog("close");
+                    $("#add-place-form").dialog("close");
 
                 },
                 '@T("Save")': function () {
-                    $("#add-place").dialog("close");
+                    $("#add-place-form").dialog("close");
                 }
             },
         });
 
         $("#add-place-button").click(function () {
-            $("#add-place").dialog("open");
+            $("#add-place-form").dialog("open");
             initialize();
         });
     });

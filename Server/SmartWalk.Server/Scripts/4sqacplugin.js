@@ -21,62 +21,84 @@
         });
     };
 
-    function updateElement(element, options) {
-        element.autocomplete({
-            source: function (request, response) {
-                var ajData = null;                
-                if (typeof options.oauth_token === "undefined" || options.oauth_token === "") {                    
-                    ajData = {
-                        ll: options.latitude + "," + options.longitude,
-                        v: "20140214",
-                        client_id: options.client_id,
-                        client_secret: options.client_secret,
-                        query: request.term
-                    };
-                } else {
-                    ajData = {
-                        ll: options.latitude + "," + options.longitude,
-                        v: "20140214",
-                        oauth_token: options.oauth_token,
-                        query: request.term
-                    };
+
+    function autocomplete(request, response) {
+
+        switch (options.service) {
+            case "g":
+                return null;
+            case "f":
+                return fqAutocomplete(request, response);
+            default:
+        }
+
+        return null;
+    }
+
+
+    function gAutocomplete(parameters) {
+        var ajData = null;
+        
+    }
+
+    function fqAutocomplete(request, response) {
+        var ajData = null;
+        if (typeof options.oauth_token === "undefined" || options.oauth_token === "") {
+            ajData = {
+                ll: options.latitude + "," + options.longitude,
+                v: "20140114",
+                client_id: options.client_id,
+                client_secret: options.client_secret,
+                query: request.term
+            };
+        } else {
+            ajData = {
+                ll: options.latitude + "," + options.longitude,
+                v: "20140114",
+                oauth_token: options.oauth_token,
+                query: request.term
+            };
+        }
+
+        $.ajax({
+            url: "https://api.foursquare.com/v2/venues/search",
+            dataType: "jsonp",
+            data: ajData,
+            success: function (data) {
+                // Check to see if there was success
+                if (data.meta.code != 200) {
+                    element.removeClass("ui-autocomplete-loading");
+                    options.onError(data.meta.code, data.meta.errorType, data.meta.errorDetail);
+                    return false;
                 }
 
-                $.ajax({
-                    url: "https://api.foursquare.com/v2/venues/search",
-                    dataType: "jsonp",
-                    data: ajData,
-                    success: function (data) {
-                    		// Check to see if there was success
-                    		if (data.meta.code != 200) {
-                    		    element.removeClass("ui-autocomplete-loading");
-                    			options.onError(data.meta.code, data.meta.errorType, data.meta.errorDetail);
-                    			return false;
-                    		}
-                        
-                    		//$("#gLog").text(JSON.stringify(data.response));
+                //$("#gLog").text(JSON.stringify(data.response));
 
-                            var mapData = data.response.minivenues === undefined ? data.response.venues : data.response.minivenues;
-                            $("#gLog").text("");
-                            response($.map(mapData, function (item) {
-                                $("#gLog").text(JSON.stringify(item));
-                    		    //options.onError(0, 0, JSON.stringify(data.response));
-                            return {                                
-                                name: item.name,
-                                id: item.id,
-                                address: (item.location.address == undefined ? "" : item.location.address),
-                                cityLine: (item.location.city == undefined ? "" : item.location.city + ", ") + (item.location.state == undefined ? "" : item.location.state + " ") + (item.location.postalCode == undefined ? "" : item.location.postalCode),
-                                photo: (item.categories == undefined || item.categories.length == 0 ? "" : item.categories[0].icon.prefix + "bg_32" + item.categories[0].icon.suffix),
-                                location: {lat:item.location.lat,lng:item.location.lng},
-                                full: item
-                            };
-                            }));
-                    },
-                    error: function (header, status, errorThrown) {
-                    	  options.onAjaxError(header, status, errorThrown);
-                    }
-                });
+                var mapData = data.response.minivenues === undefined ? data.response.venues : data.response.minivenues;
+                $("#gLog").text("");
+                response($.map(mapData, function (item) {
+                    $("#gLog").text(JSON.stringify(item));
+                    //options.onError(0, 0, JSON.stringify(data.response));
+                    return {
+                        name: item.name,
+                        id: item.id,
+                        address: (item.location.address == undefined ? "" : item.location.address),
+                        cityLine: (item.location.city == undefined ? "" : item.location.city + ", ") + (item.location.state == undefined ? "" : item.location.state + " ") + (item.location.postalCode == undefined ? "" : item.location.postalCode),
+                        photo: (item.categories == undefined || item.categories.length == 0 ? "" : item.categories[0].icon.prefix + "bg_32" + item.categories[0].icon.suffix),
+                        location: { lat: item.location.lat, lng: item.location.lng },
+                        full: item
+                    };
+                }));
             },
+            error: function (header, status, errorThrown) {
+                options.onAjaxError(header, status, errorThrown);
+            }
+        });
+    }
+
+    function updateElement(element, options) {
+        element.autocomplete({
+            source: fqAutocomplete,
             minLength: options.minLength,
             select: function (event, ui) {
                 element.val(ui.item.name);
@@ -104,6 +126,7 @@
         'longitude': -122.2,
         'oauth_token': "",
         'minLength': 3,
+        'service' : "g",
         'select': function (event, ui) {},
         'onError': function (errorCode, errorType, errorDetail) {},
         'onAjaxError' : function (header, status, errorThrown) {}

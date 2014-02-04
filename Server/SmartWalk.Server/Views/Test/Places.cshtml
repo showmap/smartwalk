@@ -95,8 +95,8 @@
                 $("#gLog").text(JSON.stringify(place));
                 
                 $("#venue").foursquareAutocomplete({
-                    'latitude': place.geometry.location.b,
-                    'longitude': place.geometry.location.d,
+                    'latitude': place.geometry.location.b.toFixed(2),
+                    'longitude': place.geometry.location.d.toFixed(2),
                     'client_id': "X23YBMO2PDIY1G3HA1URSGC2BEHLMIATUYLWDJ1ZGY3TXXF4",
                     'client_secret': "H4BX4R13M3XY10XNFMNVEUCH24CYRPFUE0VZXLA0WMONKXZG",
                     'minLength': 3,
@@ -126,7 +126,7 @@
                     },
                     'onError': function (errorCode, errorType, errorDetail) {
                         var message = "Foursquare Error: Code=" + errorCode + ", errorType= " + errorType + ", errorDetail= " + errorDetail;
-                        //$("#gLog").text(message);
+                        $("#gLog").text(message);
                     }
 
                 });
