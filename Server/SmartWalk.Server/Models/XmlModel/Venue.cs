@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SmartWalk.Server.Models.XmlModel
 {
     [Serializable]
-    public class Venue
+    public class Venue : IEntity
     {
         [XmlAttribute("number")]
         public string Number { get; set; }

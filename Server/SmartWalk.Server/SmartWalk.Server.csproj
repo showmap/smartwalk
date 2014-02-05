@@ -116,6 +116,7 @@
     <Compile Include="Models\XmlModel\Email.cs" />
     <Compile Include="Models\XmlModel\Event.cs" />
     <Compile Include="Models\XmlModel\EventRef.cs" />
+    <Compile Include="Models\XmlModel\IEntity.cs" />
     <Compile Include="Models\XmlModel\Location.cs" />
     <Compile Include="Models\XmlModel\Organization.cs" />
     <Compile Include="Models\XmlModel\Phone.cs" />

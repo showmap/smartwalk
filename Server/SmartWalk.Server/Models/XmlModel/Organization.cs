@@ -5,7 +5,7 @@ namespace SmartWalk.Server.Models.XmlModel
 {
     [Serializable]
     [XmlRoot(ElementName = "organization")]
-    public class Organization
+    public class Organization : IEntity
     {
         [XmlAttribute("id")]
         public string Id { get; set; }
@@ -18,6 +18,9 @@ namespace SmartWalk.Server.Models.XmlModel
 
         [XmlElement("description")]
         public string Description { get; set; }
+
+        [XmlIgnore]
+        public Address[] Addresses { get; set; }
 
         [XmlArray("contact")]
         [XmlArrayItem("phone", typeof(Phone))]

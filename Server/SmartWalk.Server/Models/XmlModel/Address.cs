@@ -18,8 +18,12 @@ namespace SmartWalk.Server.Models.XmlModel
             get { return _coordinates; }
             set
             {
-                _coordinates = value;
-                UpdateLatLong();
+                if (_coordinates != value)
+                {
+                    _coordinates = value;
+
+                    UpdateLatLong();
+                }
             }
         }
 

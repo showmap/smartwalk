@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace SmartWalk.Server.Models.XmlModel
 {
@@ -9,7 +10,10 @@ namespace SmartWalk.Server.Models.XmlModel
         public string Organization { get; set; }
 
         [XmlAttribute("start")]
-        public string Start { get; set; }
+        public string StartDate { get; set; }
+
+        [XmlIgnore]
+        public DateTime StartDateObject { get; set; }
 
         [XmlAttribute("modifiedBy")]
         public string ModifiedBy { get; set; }

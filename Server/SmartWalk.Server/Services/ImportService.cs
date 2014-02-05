@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Xml;
 using System.Xml.Serialization;
 using Orchard;
@@ -13,6 +15,7 @@ namespace SmartWalk.Server.Services
 {
     public class ImportService : IImportService
     {
+        private const string SmartWalkStorageKey = "SW";
         private const string XmlDataPath = "http://smartwalk.me/data/us/ca";
 
         private readonly IOrchardServices _orchardServices;
@@ -20,24 +23,29 @@ namespace SmartWalk.Server.Services
         private readonly IRepository<AddressRecord> _addressRepository;
         private readonly IRepository<ContactRecord> _contactRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
-        private readonly IRepository<EntityMappingRecord> _entityMappingRepository;
         private readonly IRepository<EventMappingRecord> _eventMappingRepository;
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<RegionRecord> _regionRepository;
         private readonly IRepository<ShowRecord> _showRepository;
         private readonly IRepository<StorageRecord> _storageRepository;
 
-        public ImportService(   IOrchardServices orchardServices,
-                                IRepository<AddressRecord> addressRepository, IRepository<ContactRecord> contactRepository, 
-                                IRepository<EntityRecord> entityRepository, IRepository<EntityMappingRecord> entityMappingRepository, 
-                                IRepository<EventMappingRecord> eventMappingRepository, IRepository<EventMetadataRecord> eventMetadataRepository, 
-                                IRepository<RegionRecord> regionRepository, IRepository<ShowRecord> showRepository, IRepository<StorageRecord> storageRepository) {
-            _orchardServices = orchardServices;
+        private List<string> _log;
 
+        public ImportService(
+            IOrchardServices orchardServices,
+            IRepository<AddressRecord> addressRepository, 
+            IRepository<ContactRecord> contactRepository, 
+            IRepository<EntityRecord> entityRepository, 
+            IRepository<EventMappingRecord> eventMappingRepository, 
+            IRepository<EventMetadataRecord> eventMetadataRepository, 
+            IRepository<RegionRecord> regionRepository, 
+            IRepository<ShowRecord> showRepository, 
+            IRepository<StorageRecord> storageRepository)
+        {
+            _orchardServices = orchardServices;
             _addressRepository = addressRepository;
             _contactRepository = contactRepository;
             _entityRepository = entityRepository;
-            _entityMappingRepository = entityMappingRepository;
             _eventMappingRepository = eventMappingRepository;
             _eventMetadataRepository = eventMetadataRepository;
             _regionRepository = regionRepository;
@@ -45,79 +53,406 @@ namespace SmartWalk.Server.Services
             _storageRepository = storageRepository;
         }
 
-        public void ImportXmlData() {
+        public void ImportXmlData(List<string> log)
+        {
+            _log = log;
+            _log.Add(string.Format(
+                "Importing production XML data from {0} at {1}", 
+                XmlDataPath, 
+                DateTime.UtcNow));
+
             var location = ParseLocation("sfbay");
 
+            ImportLocation(location);
+
+            _log = null;
+        }
+
+        #region XML parsing
+
+        private Location ParseLocation(string regionName)
+        {
+            var url = string.Format("{0}/{1}/index.xml", XmlDataPath, regionName);
+
+            try
+            {
+                using (var indexXmlReader = XmlReader.Create(url))
+                {
+                    var serializer = new XmlSerializer(typeof(Location));
+                    var location = (Location)serializer.Deserialize(indexXmlReader);
+
+                    location.Organizations = location.Organizations
+                        .Select(org => ParseOrganization(regionName, org.Id))
+                        .ToArray();
+
+                    _log.Add(string.Format("Location {0} parsing finished", location.Name));
+
+                    return location;
+                }
+            }
+            catch (WebException)
+            {
+                _log.Add(string.Format("Error loading from: {0}", url));
+                throw;
+            }
+        }
+
+        private Organization ParseOrganization(string regionName, string orgId)
+        {
+            var url = string.Format("{0}/{1}/{2}/index.xml", XmlDataPath, regionName, orgId);
+
+            try
+            {
+                using (var indexXmlReader = XmlReader.Create(url))
+                {
+                    var serializer = new XmlSerializer(typeof(Organization));
+                    var organization = (Organization)serializer.Deserialize(indexXmlReader);
+
+                    organization.Events = organization.EventRefs
+                        .Where(er => er.HasSchedule)
+                        .Select(er => ParseEvent(regionName, orgId, er.DateObject))
+                        .OrderBy(e => e.StartDateObject)
+                        .ToArray();
+
+                    _log.Add(string.Format("Organization {0} parsing finished", organization.Name));
+
+                    return organization;
+                }
+            }
+            catch (WebException)
+            {
+                _log.Add(string.Format("Error loading from: {0}", url));
+                throw;
+            }
+        }
+
+        private Event ParseEvent(string regionName, string orgId, DateTime eventDate)
+        {
+            var url = string.Format(
+                "{0}/{1}/{2}/events/{2}-{3}.xml",
+                XmlDataPath,
+                regionName,
+                orgId,
+                String.Format("{0:yyyy-MM-dd}", eventDate));
+
+            try
+            {
+                using (var indexXmlReader = XmlReader.Create(url))
+                {
+                    var serializer = new XmlSerializer(typeof(Event));
+                    var eventObj = (Event)serializer.Deserialize(indexXmlReader);
+
+                    eventObj.StartDateObject = eventDate;
+
+                    foreach (var show in eventObj.Venues
+                        .Where(v => v.Shows != null)
+                        .SelectMany(v => v.Shows)
+                        .ToArray())
+                    {
+                        show.ParseShowTime(eventDate);
+                    }
+
+                    _log.Add(string.Format("Event {0} parsing finished", eventObj.StartDate));
+
+                    return eventObj;
+                }
+            }
+            catch (WebException)
+            {
+                _log.Add(string.Format("Error loading from: {0}", url));
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Importing
+
+        private void ImportLocation(Location location)
+        {
             var currentUser = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            #region Example of record creation
-            //_entityRepository.Create(new EntityRecord
-            //{
-            //    Description = "Description",
-            //    Name = "Name",
-            //    Picture = "Picture",
-            //    Type = (int)EntityType.Host,
-            //    SmartWalkUserRecord = currentUser.Record
-            //});
-            #endregion
-        }
-
-        private static Location ParseLocation(string regionName)
-        {
-            using (var indexXmlReader =
-                XmlReader.Create(string.Format("{0}/{1}/index.xml", XmlDataPath, regionName)))
+            var oaklandRegion = _regionRepository.Get(reg => reg.City == "Oakland");
+            if (oaklandRegion == null)
             {
-                var serializer = new XmlSerializer(typeof(Location));
-                var location = (Location)serializer.Deserialize(indexXmlReader);
-
-                location.Organizations = location.Organizations
-                    .Select(org => ParseOrganization(regionName, org.Id))
-                    .ToArray();
-
-                return location;
+                oaklandRegion = new RegionRecord
+                    {
+                        Country = "United States",
+                        State = "California",
+                        City = "Oakland"
+                    };
+                _regionRepository.Create(oaklandRegion);
+                _log.Add("Oakland region created");
             }
-        }
 
-        private static Organization ParseOrganization(string regionName, string orgId)
-        {
-            using (var indexXmlReader =
-                XmlReader.Create(string.Format("{0}/{1}/{2}/index.xml", XmlDataPath, regionName, orgId)))
+            var sfRegion = _regionRepository.Get(reg => reg.City == "San Francisco");
+            if (sfRegion == null)
             {
-                var serializer = new XmlSerializer(typeof(Organization));
-                var organization = (Organization)serializer.Deserialize(indexXmlReader);
-
-                organization.Events = organization.EventRefs
-                    .Where(er => er.HasSchedule)
-                    .Select(er => ParseEvent(regionName, orgId, er.DateObject))
-                    .ToArray();
-
-                return organization;
+                sfRegion = new RegionRecord
+                    {
+                        Country = "United States",
+                        State = "California",
+                        City = "San Francisco"
+                    };
+                _regionRepository.Create(sfRegion);
+                _log.Add("San Francisco region created");
             }
-        }
 
-        private static Event ParseEvent(string regionName, string orgId, DateTime eventDate)
-        {
-            using (var indexXmlReader =
-                XmlReader.Create(string.Format(
-                    "{0}/{1}/{2}/events/{2}-{3}.xml",
-                    XmlDataPath,
-                    regionName,
-                    orgId,
-                    String.Format("{0:yyyy-MM-dd}", eventDate))))
+            var storage = _storageRepository.Get(stor => stor.Key == SmartWalkStorageKey);
+            if (storage == null)
             {
-                var serializer = new XmlSerializer(typeof(Event));
-                var eventObj = (Event)serializer.Deserialize(indexXmlReader);
+                storage = new StorageRecord
+                    {
+                        Key = SmartWalkStorageKey,
+                        Description = "SmartWalk Data Storage"
+                    };
+                _storageRepository.Create(storage);
+                _log.Add("SmartWalk storge record created");
+            }
 
-                foreach (var show in eventObj.Venues
-                    .Where(v => v.Shows != null)
-                    .SelectMany(v => v.Shows)
-                    .ToArray())
+            if (location != null && location.Organizations != null)
+            {
+                foreach (var xmlOrg in location.Organizations)
                 {
-                    show.ParseShowTime(eventDate);
+                    var hostRegion = xmlOrg.Id == "oam" ? oaklandRegion : sfRegion;
+                    var hostEntity =
+                        CreateOrUpdateEntity(
+                            xmlOrg,
+                            EntityType.Host,
+                            hostRegion,
+                            currentUser.Record);
+
+                    if (xmlOrg.Events != null)
+                    {
+                        foreach (var xmlOrgEvent in xmlOrg.Events)
+                        {
+                            var eventMetadata =
+                                CreateEventMetadata(
+                                    xmlOrgEvent,
+                                    hostRegion,
+                                    hostEntity,
+                                    currentUser.Record);
+
+                            if (xmlOrgEvent.Venues != null)
+                            {
+                                foreach (var xmlVenue in xmlOrgEvent.Venues)
+                                {
+                                    var venueEntity =
+                                        CreateOrUpdateEntity(
+                                            xmlVenue,
+                                            EntityType.Venue,
+                                            hostRegion,
+                                            currentUser.Record);
+
+                                    CreateOrUpdateShows(
+                                        storage,
+                                        eventMetadata,
+                                        venueEntity,
+                                        xmlVenue.Shows);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private EntityRecord CreateOrUpdateEntity(
+            IEntity xmlEntity, 
+            EntityType type, 
+            RegionRecord region,
+            SmartWalkUserRecord user)
+        {
+            var result = _entityRepository.Get(ent => ent.Name == xmlEntity.Name);
+            if (result == null)
+            {
+                result = new EntityRecord
+                    {
+                        Name = xmlEntity.Name,
+                        Type = (int)type,
+                        SmartWalkUserRecord = user
+                    };
+
+                _entityRepository.Create(result);
+                _log.Add(string.Format("{0} entity created", result.Name));
+            }
+
+            result.Description = xmlEntity.Description;
+            result.Picture = xmlEntity.Logo;
+
+            _entityRepository.Update(result);
+            _log.Add(string.Format("{0} entity updated", result.Name));
+
+            CreateContacts(result, xmlEntity.Contacts);
+            CreateOrUpdateAddresses(result, xmlEntity.Addresses, region);
+
+            return result;
+        }
+
+        private void CreateContacts(EntityRecord entity, IEnumerable<Contact> xmlContacts)
+        {
+            if (xmlContacts == null) return;
+
+            var contacts = _contactRepository
+                .Fetch(cont => cont.EntityRecord == entity)
+                .ToArray();
+            foreach (var xmlContact in xmlContacts)
+            {
+                var phone = xmlContact as Phone;
+                if (phone != null)
+                {
+                    CreateContact(contacts, entity, ContactType.Phone, phone.Name, phone.Value);
                 }
 
-                return eventObj;
+                var email = xmlContact as Email;
+                if (email != null)
+                {
+                    CreateContact(contacts, entity, ContactType.Email, email.Name, email.Value);
+                }
+
+                var web = xmlContact as Web;
+                if (web != null)
+                {
+                    CreateContact(contacts, entity, ContactType.Url, null, web.Value);
+                }
             }
         }
+
+        private void CreateContact(
+            IEnumerable<ContactRecord> contacts, 
+            EntityRecord entity,
+            ContactType type, 
+            string title, 
+            string value)
+        {
+            if (!contacts.Any(cont => 
+                    cont.Type == (int)type && 
+                    cont.Title == title &&
+                    cont.Contact == value))
+            {
+                var contact = new ContactRecord
+                    {
+                        EntityRecord = entity,
+                        Type = (int)type,
+                        Title = title,
+                        Contact = value
+                    };
+                _contactRepository.Create(contact);
+                _log.Add(string.Format("{0} contact created", contact.Contact));
+            }
+        }
+
+        private void CreateOrUpdateAddresses(
+            EntityRecord entity, 
+            IEnumerable<Address> xmlAddresses,
+            RegionRecord region)
+        {
+            if (xmlAddresses == null) return;
+
+            var addresses = _addressRepository
+                .Fetch(addr => addr.EntityRecord == entity)
+                .ToArray();
+            foreach (var xmlAddress in xmlAddresses)
+            {
+                var address = addresses.FirstOrDefault(addr =>
+                    addr.RegionRecord == region &&
+                    addr.Address == xmlAddress.Text);
+                if (address == null)
+                {
+                    address = new AddressRecord
+                        {
+                            EntityRecord = entity,
+                            RegionRecord = region,
+                            Address = xmlAddress.Text
+                        };
+                    _addressRepository.Create(address);
+                    _log.Add(string.Format("{0} address created", address.Address));
+                }
+
+                address.Latitude = xmlAddress.Latitude;
+                address.Longitude = xmlAddress.Longitude;
+
+                _addressRepository.Update(address);
+                _log.Add(string.Format("{0} address updated", address.Address));
+            }
+        }
+
+        private EventMetadataRecord CreateEventMetadata(
+            Event xmlOrgEvent,
+            RegionRecord region,
+            EntityRecord hostEntity,
+            SmartWalkUserRecord user)
+        {
+            var result = _eventMetadataRepository.Get(evMet => evMet.Title == xmlOrgEvent.StartDate);
+            if (result == null)
+            {
+                result = new EventMetadataRecord
+                    {
+                        RegionRecord = region,
+                        EntityRecord = hostEntity,
+                        Title = xmlOrgEvent.StartDate,
+                        StartTime = xmlOrgEvent.StartDateObject.Date,
+                        EndTime = xmlOrgEvent.StartDateObject.Date.AddDays(1).AddMinutes(-1),
+                        CombineType = (int)CombineType.None,
+                        SmartWalkUserRecord = user,
+                        DateCreated = xmlOrgEvent.StartDateObject.Date,
+                        DateModified = DateTime.UtcNow
+                    };
+                
+                _eventMetadataRepository.Create(result);
+                _log.Add(string.Format("{0} event metadata created", result.Title));
+            }
+
+            return result;
+        }
+
+        private void CreateOrUpdateShows(
+            StorageRecord storage,
+            EventMetadataRecord eventMetadata,
+            EntityRecord venue,
+            IEnumerable<Show> xmlShows)
+        {
+            if (xmlShows == null) return;
+
+            var shows = _showRepository
+                .Fetch(s => s.EntityRecord == venue &&
+                    s.StartTime > eventMetadata.StartTime &&
+                    s.EndTime < eventMetadata.EndTime.AddDays(2))
+                .ToArray();
+            foreach (var xmlShow in xmlShows)
+            {
+                var show = shows.FirstOrDefault(s =>
+                    s.Description == xmlShow.Desciption);
+                if (show == null)
+                {
+                    show = new ShowRecord
+                        {
+                            EntityRecord = venue,
+                            Description = xmlShow.Desciption
+                        };
+                    _showRepository.Create(show);
+                    _log.Add(string.Format("{0} show created", show.Description));
+
+                    var mapping = new EventMappingRecord
+                        {
+                            EventMetaDataRecord = eventMetadata,
+                            StorageRecord = storage,
+                            ShowRecord = show
+                        };
+                    _eventMappingRepository.Create(mapping);
+                    _log.Add(string.Format("{0} show mapping created", show.Description));
+                }
+
+                show.StartTime = xmlShow.StartTimeObject;
+                show.EndTime = xmlShow.EndTimeObject;
+                show.Picture = xmlShow.Logo;
+                show.DetailsUrl = xmlShow.Web;
+
+                _showRepository.Update(show);
+                _log.Add(string.Format("{0} show updated", show.Description));
+            }
+        }
+
+        #endregion
     }
 }
