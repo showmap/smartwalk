@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using Orchard.Themes;
 using SmartWalk.Server.Services;
-using System;
-using System.Web.Mvc;
-using System.Linq;
 
 namespace SmartWalk.Server.Controllers
 {

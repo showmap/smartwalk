@@ -16,7 +16,6 @@ namespace SmartWalk.Server.Services
 {
     public class ImportService : IImportService
     {
-        private const string SmartWalkStorageKey = "SW";
         private const string XmlDataPath = "http://smartwalk.me/data/us/ca";
 
         private readonly IOrchardServices _orchardServices;
@@ -59,7 +58,6 @@ namespace SmartWalk.Server.Services
 
         public void ImportXmlData(List<string> log)
         {
-
             _log = log;
             _log.Add(string.Format(
                 "Importing production XML data from {0} at {1}", 
@@ -203,12 +201,12 @@ namespace SmartWalk.Server.Services
                 _log.Add("San Francisco region created");
             }
 
-            var storage = _storageRepository.Get(stor => stor.StorageKey == SmartWalkStorageKey);
+            var storage = _storageRepository.Get(stor => stor.StorageKey == StorageKeys.SmartWalk);
             if (storage == null)
             {
                 storage = new StorageRecord
                     {
-                        StorageKey = SmartWalkStorageKey,
+                        StorageKey = StorageKeys.SmartWalk,
                         Description = "SmartWalk Data Storage"
                     };
                 _storageRepository.Create(storage);
@@ -415,46 +413,77 @@ namespace SmartWalk.Server.Services
             StorageRecord storage,
             EventMetadataRecord eventMetadata,
             EntityRecord venue,
-            IEnumerable<Show> xmlShows)
+            Show[] xmlShows)
         {
             if (xmlShows == null) return;
 
+            var eventMappings = _eventMappingRepository
+                .Fetch(em => em.EventMetadataRecord == eventMetadata &&
+                             em.StorageRecord == storage);
             var shows = _showRepository
-                .Fetch(s => s.VenueRecord == venue &&
-                    s.StartTime > eventMetadata.StartTime &&
-                    s.EndTime < eventMetadata.EndTime.AddDays(2))
+                .Fetch(s => eventMappings.Any(em => em.ShowRecord == s))
                 .ToArray();
-            foreach (var xmlShow in xmlShows)
+
+            if (xmlShows.Any())
             {
-                var show = shows.FirstOrDefault(s =>
-                    s.Description == xmlShow.Desciption);
-                if (show == null)
+                foreach (var xmlShow in xmlShows)
                 {
-                    show = new ShowRecord
+                    var show = shows.FirstOrDefault(s =>
+                        s.VenueRecord == venue &&
+                        s.Description == xmlShow.Desciption);
+                    if (show == null)
+                    {
+                        show = new ShowRecord
+                            {
+                                VenueRecord = venue,
+                                Description = xmlShow.Desciption
+                            };
+                        _showRepository.Create(show);
+                        _log.Add(string.Format("{0} show created", show.Description));
+
+                        var mapping = new EventMappingRecord
+                            {
+                                EventMetadataRecord = eventMetadata,
+                                StorageRecord = storage,
+                                ShowRecord = show
+                            };
+                        _eventMappingRepository.Create(mapping);
+                        _log.Add(string.Format("{0} show mapping created", show.Description));
+                    }
+
+                    show.StartTime = xmlShow.StartTimeObject;
+                    show.EndTime = xmlShow.EndTimeObject;
+                    show.Picture = xmlShow.Logo;
+                    show.DetailsUrl = xmlShow.Web;
+
+                    _showRepository.Update(show);
+                    _log.Add(string.Format("{0} show updated", show.Description));
+                }
+            }
+            else
+            {
+                var refShow = shows.FirstOrDefault(s =>
+                        s.VenueRecord == venue &&
+                        s.IsReference);
+                if (refShow == null)
+                {
+                    refShow = new ShowRecord
                         {
                             VenueRecord = venue,
-                            Description = xmlShow.Desciption
+                            IsReference = true
                         };
-                    _showRepository.Create(show);
-                    _log.Add(string.Format("{0} show created", show.Description));
+                    _showRepository.Create(refShow);
+                    _log.Add(string.Format("Reference show created"));
 
                     var mapping = new EventMappingRecord
                         {
                             EventMetadataRecord = eventMetadata,
                             StorageRecord = storage,
-                            ShowRecord = show
+                            ShowRecord = refShow
                         };
                     _eventMappingRepository.Create(mapping);
-                    _log.Add(string.Format("{0} show mapping created", show.Description));
+                    _log.Add(string.Format("Reference show mapping created"));
                 }
-
-                show.StartTime = xmlShow.StartTimeObject;
-                show.EndTime = xmlShow.EndTimeObject;
-                show.Picture = xmlShow.Logo;
-                show.DetailsUrl = xmlShow.Web;
-
-                _showRepository.Update(show);
-                _log.Add(string.Format("{0} show updated", show.Description));
             }
         }
 
