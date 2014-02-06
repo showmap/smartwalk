@@ -8,7 +8,7 @@ namespace SmartWalk.Server.Records
     public class StorageRecord
     {
         public virtual int Id { get; set; }
-        public virtual string Key { get; set; }
+        public virtual string StorageKey { get; set; }
         public virtual string Description { get; set; }
     }
 }

@@ -198,12 +198,12 @@ namespace SmartWalk.Server.Services
                 _log.Add("San Francisco region created");
             }
 
-            var storage = _storageRepository.Get(stor => stor.Key == SmartWalkStorageKey);
+            var storage = _storageRepository.Get(stor => stor.StorageKey == SmartWalkStorageKey);
             if (storage == null)
             {
                 storage = new StorageRecord
                     {
-                        Key = SmartWalkStorageKey,
+                        StorageKey = SmartWalkStorageKey,
                         Description = "SmartWalk Data Storage"
                     };
                 _storageRepository.Create(storage);

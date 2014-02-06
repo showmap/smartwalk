@@ -211,5 +211,43 @@ namespace SmartWalk.Server
 
             return 3;
         }
+
+        public int UpdateFrom3() {
+
+            SchemaBuilder.DropTable("EntityMappingRecord");
+            SchemaBuilder.DropTable("EventMappingRecord");
+            SchemaBuilder.DropTable("StorageRecord");
+
+            SchemaBuilder.CreateTable("StorageRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("StorageKey", DbType.String, c => c.NotNull())
+              .Column("Description", DbType.String, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateTable("EntityMappingRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("EntityRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("StorageRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("ExternalEntityId", DbType.Int32, c => c.NotNull())
+              .Column("Type", DbType.Byte, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateTable("EventMappingRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("EventMetadataRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("StorageRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("ShowRecord_Id", DbType.Int32, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateForeignKey("EntityMappingRecord_EntityRecord", "EntityMappingRecord", new[] { "EntityRecord_Id" }, "EntityRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EntityMappingRecord_StorageRecord", "EntityMappingRecord", new[] { "StorageRecord_Id" }, "StorageRecord", new[] { "Id" });
+
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_EventMetadataRecord", "EventMappingRecord", new[] { "EventMetadataRecord_Id" }, "EventMetadataRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_StorageRecord", "EventMappingRecord", new[] { "StorageRecord_Id" }, "StorageRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_ShowRecord", "EventMappingRecord", new[] { "ShowRecord_Id" }, "ShowRecord", new[] { "Id" });
+
+            return 4;
+        }
+
     }
 }
