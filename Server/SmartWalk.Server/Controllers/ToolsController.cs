@@ -21,6 +21,7 @@ namespace SmartWalk.Server.Controllers
             return View();
         }
 
+        [Themed]
         public ActionResult ImportXmlDataAction()
         {
             var log = new List<string>();

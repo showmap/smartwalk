@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Logging;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Models.XmlModel;
 using SmartWalk.Server.Records;
@@ -30,6 +31,7 @@ namespace SmartWalk.Server.Services
         private readonly IRepository<StorageRecord> _storageRepository;
 
         private List<string> _log;
+        public ILogger Logger { get; set; }
 
         public ImportService(
             IOrchardServices orchardServices,
@@ -51,10 +53,13 @@ namespace SmartWalk.Server.Services
             _regionRepository = regionRepository;
             _showRepository = showRepository;
             _storageRepository = storageRepository;
+
+            Logger = NullLogger.Instance;
         }
 
         public void ImportXmlData(List<string> log)
         {
+
             _log = log;
             _log.Add(string.Format(
                 "Importing production XML data from {0} at {1}", 
@@ -389,7 +394,7 @@ namespace SmartWalk.Server.Services
                 result = new EventMetadataRecord
                     {
                         RegionRecord = region,
-                        EntityRecord = hostEntity,
+                        HostRecord = hostEntity,
                         Title = xmlOrgEvent.StartDate,
                         StartTime = xmlOrgEvent.StartDateObject.Date,
                         EndTime = xmlOrgEvent.StartDateObject.Date.AddDays(1).AddMinutes(-1),
@@ -415,7 +420,7 @@ namespace SmartWalk.Server.Services
             if (xmlShows == null) return;
 
             var shows = _showRepository
-                .Fetch(s => s.EntityRecord == venue &&
+                .Fetch(s => s.VenueRecord == venue &&
                     s.StartTime > eventMetadata.StartTime &&
                     s.EndTime < eventMetadata.EndTime.AddDays(2))
                 .ToArray();
@@ -427,7 +432,7 @@ namespace SmartWalk.Server.Services
                 {
                     show = new ShowRecord
                         {
-                            EntityRecord = venue,
+                            VenueRecord = venue,
                             Description = xmlShow.Desciption
                         };
                     _showRepository.Create(show);
@@ -435,7 +440,7 @@ namespace SmartWalk.Server.Services
 
                     var mapping = new EventMappingRecord
                         {
-                            EventMetaDataRecord = eventMetadata,
+                            EventMetadataRecord = eventMetadata,
                             StorageRecord = storage,
                             ShowRecord = show
                         };

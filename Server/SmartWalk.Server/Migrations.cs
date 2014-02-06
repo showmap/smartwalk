@@ -249,5 +249,38 @@ namespace SmartWalk.Server
             return 4;
         }
 
+        public int UpdateFrom4() {
+
+            SchemaBuilder.DropTable("EventMappingRecord");
+            SchemaBuilder.DropTable("ShowRecord");
+
+            SchemaBuilder.CreateTable("ShowRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("EntityRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("IsReference", DbType.Boolean, c => c.NotNull())
+              .Column("Title", DbType.String, c => c.NotNull())
+              .Column("Description", DbType.String, c => c.NotNull())
+              .Column("StartTime", DbType.DateTime, c => c.NotNull())
+              .Column("EndTime", DbType.DateTime, c => c.NotNull())
+              .Column("Picture", DbType.String, c => c.NotNull())
+              .Column("DetailsUrl", DbType.String, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateTable("EventMappingRecord", table => table
+              .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+              .Column("EventMetadataRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("StorageRecord_Id", DbType.Int32, c => c.NotNull())
+              .Column("ShowRecord_Id", DbType.Int32, c => c.NotNull())
+              );
+
+            SchemaBuilder.CreateForeignKey("ShowRecord_EntityRecord", "ShowRecord", new[] { "EntityRecord_Id" }, "EntityRecord", new[] { "Id" });
+
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_EventMetadataRecord", "EventMappingRecord", new[] { "EventMetadataRecord_Id" }, "EventMetadataRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_StorageRecord", "EventMappingRecord", new[] { "StorageRecord_Id" }, "StorageRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventMappingRecord_ShowRecord", "EventMappingRecord", new[] { "ShowRecord_Id" }, "ShowRecord", new[] { "Id" });
+
+            return 5;
+        }
+
     }
 }
