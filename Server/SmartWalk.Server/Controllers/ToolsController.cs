@@ -41,7 +41,7 @@ namespace SmartWalk.Server.Controllers
         private static string GetContent(IEnumerable<string> log, string error = null)
         {
             return log.Aggregate((i, j) => i + "<br/>" + j) +
-                   (error != null ? ("<br/>Error: " + error) : "Import completed!");
+                   (error != null ? ("<br/>Error: " + error) : "<br/>Import completed!");
         }
     }
 }
