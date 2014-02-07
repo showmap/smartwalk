@@ -185,6 +185,7 @@ namespace SmartWalk.Server.Services
                         City = "Oakland"
                     };
                 _regionRepository.Create(oaklandRegion);
+                _regionRepository.Flush();
                 _log.Add("Oakland region created");
             }
 
@@ -198,6 +199,7 @@ namespace SmartWalk.Server.Services
                         City = "San Francisco"
                     };
                 _regionRepository.Create(sfRegion);
+                _regionRepository.Flush();
                 _log.Add("San Francisco region created");
             }
 
@@ -210,6 +212,7 @@ namespace SmartWalk.Server.Services
                         Description = "SmartWalk Data Storage"
                     };
                 _storageRepository.Create(storage);
+                _storageRepository.Flush();
                 _log.Add("SmartWalk storge record created");
             }
 
@@ -284,6 +287,7 @@ namespace SmartWalk.Server.Services
             result.Picture = xmlEntity.Logo;
 
             _entityRepository.Update(result);
+            _entityRepository.Flush();
             _log.Add(string.Format("{0} entity updated", result.Name));
 
             CreateContacts(result, xmlEntity.Contacts);
@@ -341,6 +345,7 @@ namespace SmartWalk.Server.Services
                         Contact = value
                     };
                 _contactRepository.Create(contact);
+                _contactRepository.Flush();
                 _log.Add(string.Format("{0} contact created", contact.Contact));
             }
         }
@@ -376,6 +381,7 @@ namespace SmartWalk.Server.Services
                 address.Longitude = xmlAddress.Longitude;
 
                 _addressRepository.Update(address);
+                _addressRepository.Flush();
                 _log.Add(string.Format("{0} address updated", address.Address));
             }
         }
@@ -403,6 +409,7 @@ namespace SmartWalk.Server.Services
                     };
                 
                 _eventMetadataRepository.Create(result);
+                _eventMetadataRepository.Flush();
                 _log.Add(string.Format("{0} event metadata created", result.Title));
             }
 
@@ -448,6 +455,7 @@ namespace SmartWalk.Server.Services
                                 ShowRecord = show
                             };
                         _eventMappingRepository.Create(mapping);
+                        _eventMappingRepository.Flush();
                         _log.Add(string.Format("{0} show mapping created", show.Description));
                     }
 
@@ -457,6 +465,7 @@ namespace SmartWalk.Server.Services
                     show.DetailsUrl = xmlShow.Web;
 
                     _showRepository.Update(show);
+                    _showRepository.Flush();
                     _log.Add(string.Format("{0} show updated", show.Description));
                 }
             }
@@ -473,6 +482,7 @@ namespace SmartWalk.Server.Services
                             IsReference = true
                         };
                     _showRepository.Create(refShow);
+                    _showRepository.Flush();
                     _log.Add(string.Format("Reference show created"));
 
                     var mapping = new EventMappingRecord
@@ -482,6 +492,7 @@ namespace SmartWalk.Server.Services
                             ShowRecord = refShow
                         };
                     _eventMappingRepository.Create(mapping);
+                    _eventMappingRepository.Flush();
                     _log.Add(string.Format("Reference show mapping created"));
                 }
             }
