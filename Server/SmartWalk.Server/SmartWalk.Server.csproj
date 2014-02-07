@@ -80,8 +80,6 @@
   <ItemGroup>
     <Content Include="Scripts\4sqacplugin.js" />
     <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-2.1.0.min.js" />
     <Content Include="Scripts\mappy.js" />
     <Content Include="Styles\add-places.css" />
     <Content Include="Styles\fsquare-autocomplete.css" />
