@@ -23,10 +23,10 @@ namespace SmartWalk.Server.Models.XmlModel
         public string Web { get; set; }
 
         [XmlIgnore]
-        public DateTime StartTimeObject { get; set; }
+        public DateTime? StartTimeObject { get; set; }
 
         [XmlIgnore]
-        public DateTime EndTimeObject { get; set; }
+        public DateTime? EndTimeObject { get; set; }
 
         public void ParseShowTime(
             DateTime eventDate)
@@ -38,17 +38,13 @@ namespace SmartWalk.Server.Models.XmlModel
                     DateTimeStyles.None,
                     out parsedStartTime))
             {
-                parsedStartTime = new DateTime(
+                StartTimeObject = new DateTime(
                     eventDate.Year,
                     eventDate.Month,
                     eventDate.Day,
                     parsedStartTime.Hour,
                     parsedStartTime.Minute,
                     0);
-            }
-            else
-            {
-                parsedStartTime = DateTime.MinValue;
             }
 
             DateTime parsedEndTime;
@@ -58,7 +54,7 @@ namespace SmartWalk.Server.Models.XmlModel
                     DateTimeStyles.None,
                     out parsedEndTime))
             {
-                parsedEndTime = new DateTime(
+                EndTimeObject = new DateTime(
                     eventDate.Year,
                     eventDate.Month,
                     eventDate.Day,
@@ -67,18 +63,11 @@ namespace SmartWalk.Server.Models.XmlModel
                     0);
 
                 // all night AM time should be set to the next day
-                if (parsedStartTime > parsedEndTime)
+                if ((StartTimeObject ?? DateTime.MinValue) > EndTimeObject.Value)
                 {
-                    parsedEndTime = parsedEndTime.AddDays(1);
+                    EndTimeObject = parsedEndTime.AddDays(1);
                 }
             }
-            else
-            {
-                parsedEndTime = DateTime.MaxValue;
-            }
-
-            StartTimeObject = parsedStartTime;
-            EndTimeObject = parsedEndTime;
         }
     }
 }

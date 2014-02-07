@@ -9,8 +9,8 @@ namespace SmartWalk.Server.Records
         public virtual bool IsReference { get; set; }
         public virtual string Title { get; set; }
         public virtual string Description { get; set; }
-        public virtual DateTime StartTime { get; set; }
-        public virtual DateTime EndTime { get; set; }
+        public virtual DateTime? StartTime { get; set; }
+        public virtual DateTime? EndTime { get; set; }
         public virtual string Picture { get; set; }
         public virtual string DetailsUrl { get; set; }
     }

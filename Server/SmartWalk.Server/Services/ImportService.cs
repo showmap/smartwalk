@@ -392,16 +392,15 @@ namespace SmartWalk.Server.Services
             EntityRecord hostEntity,
             SmartWalkUserRecord user)
         {
-            var result = _eventMetadataRepository.Get(evMet => evMet.Title == xmlOrgEvent.StartDate);
+            var result = _eventMetadataRepository
+                .Get(evMet => evMet.StartTime == xmlOrgEvent.StartDateObject.Date);
             if (result == null)
             {
                 result = new EventMetadataRecord
                     {
                         RegionRecord = region,
                         HostRecord = hostEntity,
-                        Title = xmlOrgEvent.StartDate,
                         StartTime = xmlOrgEvent.StartDateObject.Date,
-                        EndTime = xmlOrgEvent.StartDateObject.Date.AddDays(1).AddMinutes(-1),
                         CombineType = (int)CombineType.None,
                         SmartWalkUserRecord = user,
                         DateCreated = xmlOrgEvent.StartDateObject.Date,
@@ -424,12 +423,12 @@ namespace SmartWalk.Server.Services
         {
             if (xmlShows == null) return;
 
-            var eventMappings = _eventMappingRepository
-                .Fetch(em => em.EventMetadataRecord == eventMetadata &&
-                             em.StorageRecord == storage);
-            var shows = _showRepository
-                .Fetch(s => eventMappings.Any(em => em.ShowRecord == s))
-                .ToArray();
+            var shows = from s in _showRepository.Table
+                        from em in _eventMappingRepository.Table
+                        where em.ShowRecord == s &&
+                              em.EventMetadataRecord == eventMetadata &&
+                              em.StorageRecord == storage
+                        select s;
 
             if (xmlShows.Any())
             {

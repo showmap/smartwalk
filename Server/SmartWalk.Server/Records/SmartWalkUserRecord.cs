@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.ContentManagement.Records;
 
 namespace SmartWalk.Server.Records
@@ -18,6 +16,5 @@ namespace SmartWalk.Server.Records
         public SmartWalkUserRecord() {
             Entities = new List<EntityRecord>();
         }
-
     }
 }
