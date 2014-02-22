@@ -12,11 +12,11 @@ namespace SmartWalk.Shared.DataContracts
 
         string Description { get; set; }
 
-        DateTime StartTime { get; set; }
+        DateTime? StartTime { get; set; }
 
-        DateTime EndTime { get; set; }
+        DateTime? EndTime { get; set; }
 
-        CombineType CombineType { get; set; }
+        CombineType? CombineType { get; set; }
 
         IReference[] Shows { get; set; } 
     }

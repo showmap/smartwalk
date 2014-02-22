@@ -9,10 +9,12 @@
         public virtual int Type { get; set; }
     }
 
-    public enum EntityMappingType {
-        Page = 0,
-        Place = 1,
-        User = 2,
-        Group = 3
+    public enum EntityMappingType
+    {
+        None = 0,
+        Page = 1,
+        Place = 2,
+        User = 3,
+        Group = 4
     }
 }

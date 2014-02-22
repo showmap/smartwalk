@@ -4,7 +4,7 @@ namespace SmartWalk.Shared.DataContracts
     {
         int Id { get; set; }
 
-        EntityType Type { get; set; }
+        EntityType? Type { get; set; }
 
         string Name { get; set; }
 
