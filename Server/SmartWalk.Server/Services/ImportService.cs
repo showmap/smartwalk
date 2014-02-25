@@ -425,7 +425,7 @@ namespace SmartWalk.Server.Services
 
             var shows = from s in _showRepository.Table
                         from em in _eventMappingRepository.Table
-                        where em.ShowRecord == s &&
+                        where em.ShowRecord_Id == s.Id &&
                               em.EventMetadataRecord == eventMetadata &&
                               em.StorageRecord == storage
                         select s;
@@ -451,7 +451,7 @@ namespace SmartWalk.Server.Services
                             {
                                 EventMetadataRecord = eventMetadata,
                                 StorageRecord = storage,
-                                ShowRecord = show
+                                ShowRecord_Id = show.Id
                             };
                         _eventMappingRepository.Create(mapping);
                         _eventMappingRepository.Flush();
@@ -488,7 +488,7 @@ namespace SmartWalk.Server.Services
                         {
                             EventMetadataRecord = eventMetadata,
                             StorageRecord = storage,
-                            ShowRecord = refShow
+                            ShowRecord_Id = refShow.Id
                         };
                     _eventMappingRepository.Create(mapping);
                     _eventMappingRepository.Flush();

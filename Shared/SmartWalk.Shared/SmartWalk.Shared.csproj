@@ -47,18 +47,16 @@
     <Compile Include="DataContracts\IRegion.cs" />
     <Compile Include="DataContracts\IShow.cs" />
     <Compile Include="DataContracts\ReferenceType.cs" />
-    <Compile Include="DataContracts\Protocol\Request.cs" />
+    <Compile Include="DataContracts\Api\Request.cs" />
     <Compile Include="DataContracts\Storage.cs" />
-    <Compile Include="DataContracts\Protocol\Response.cs" />
-    <Compile Include="DataContracts\Protocol\RequestSelectWhere.cs" />
-    <Compile Include="DataContracts\Protocol\RequestSelect.cs" />
-    <Compile Include="DataContracts\Protocol\RequestSelectWhereSelectValue.cs" />
-    <Compile Include="DataContracts\Protocol\RequestSelectWhereOperators.cs" />
-    <Compile Include="DataContracts\Protocol\RequestSelectFromTables.cs" />
+    <Compile Include="DataContracts\Api\Response.cs" />
+    <Compile Include="DataContracts\Api\RequestSelectWhere.cs" />
+    <Compile Include="DataContracts\Api\RequestSelect.cs" />
+    <Compile Include="DataContracts\Api\RequestSelectWhereSelectValue.cs" />
+    <Compile Include="DataContracts\Api\RequestSelectWhereOperators.cs" />
+    <Compile Include="DataContracts\Api\RequestSelectFromTables.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="DataContracts\Protocol\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

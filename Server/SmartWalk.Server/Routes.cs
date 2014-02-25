@@ -25,15 +25,29 @@ namespace SmartWalk.Server
                     Route = new Route(
                         "TestFb",
                         new RouteValueDictionary {
-                            {"area", "Store.GsmCounters"},
+                            {"area", "SmartWalk.Server"},
                             {"controller", "Test"},
                             {"action", "TestFb"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
-                            {"area", "Store.GsmCounters"}
+                            {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {   
+                    Priority = 1,
+                    Route = new Route("api",
+                        new RouteValueDictionary {
+                        {"area", "SmartWalk.Server"},
+                        {"controller", "Api"},
+                        {"action", "Query"},
+                    },
+                    new RouteValueDictionary (),
+                    new RouteValueDictionary {
+                        {"area", "SmartWalk.Server"}
+                    },
+                    new MvcRouteHandler())
                 },
             };
         }

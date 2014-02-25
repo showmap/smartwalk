@@ -1,4 +1,4 @@
-﻿namespace SmartWalk.Shared.DataContracts.Protocol
+﻿namespace SmartWalk.Shared.DataContracts.Api
 {
     public class RequestSelectWhere
     {
@@ -6,6 +6,6 @@
 
         public string Operator { get; set; }
 
-        public object Value { get; set; }
+        public dynamic Value { get; set; }
     }
 }

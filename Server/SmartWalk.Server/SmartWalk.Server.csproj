@@ -46,6 +46,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\Git\smartwalk-binaries\Client\JSON\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Core.dll</HintPath>
@@ -102,9 +105,11 @@
     <Content Include="Views\Test\TestFbE.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Drivers\SmartWalkUserDriver.cs" />
+    <Compile Include="Extension\Reflection.cs" />
     <Compile Include="Handlers\SmartWalkUserEventHandler.cs" />
     <Compile Include="Handlers\SmartWalkUserHandler.cs" />
     <Compile Include="Migrations.cs" />
@@ -136,6 +141,8 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\IImportService.cs" />
     <Compile Include="Services\ImportService.cs" />
+    <Compile Include="Services\IQueryService.cs" />
+    <Compile Include="Services\QueryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Tools\ImportXmlData.cshtml" />

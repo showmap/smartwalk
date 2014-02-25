@@ -1,4 +1,4 @@
-﻿namespace SmartWalk.Shared.DataContracts.Protocol
+﻿namespace SmartWalk.Shared.DataContracts.Api
 {
     public static class RequestSelectWhereOperators
     {

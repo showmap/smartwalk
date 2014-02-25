@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using Newtonsoft.Json;
 using SmartWalk.Shared.DataContracts;
-using SmartWalk.Shared.DataContracts.Protocol;
+using SmartWalk.Shared.DataContracts.Api;
 
 namespace SmartWalk.Labs.Protocol
 {
@@ -43,6 +45,12 @@ namespace SmartWalk.Labs.Protocol
             });
             Console.WriteLine(json);
 
+            using (var client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                //var result = client.UploadString(@"http://smartwalk.com:8091/api", JsonConvert.SerializeObject(new { request = homeViewRequest }));
+                var result = client.UploadString(@"http://smartwalk.com:8091/api", JsonConvert.SerializeObject(homeViewRequest));
+            }
 
             Console.ReadLine();
         }
