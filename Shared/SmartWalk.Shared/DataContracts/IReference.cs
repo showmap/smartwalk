@@ -4,7 +4,7 @@ namespace SmartWalk.Shared.DataContracts
     {
         int Id { get; set; }
 
-        Storage Storage { get; set; }
+        string Storage { get; set; }
 
         /// <summary>
         /// Gets or sets the type of Reference if the entity that's being referenced is a Host or a Venue. 

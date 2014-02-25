@@ -4,6 +4,6 @@
     {
         public RequestSelect[] Selects { get; set; }
 
-        public Storage[] Storages { get; set; }
+        public string[] Storages { get; set; }
     }
 }

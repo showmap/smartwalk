@@ -50,8 +50,11 @@
     <Compile Include="DataContracts\Protocol\Request.cs" />
     <Compile Include="DataContracts\Storage.cs" />
     <Compile Include="DataContracts\Protocol\Response.cs" />
-    <Compile Include="DataContracts\Protocol\RequestSelect.cs" />
     <Compile Include="DataContracts\Protocol\RequestSelectWhere.cs" />
+    <Compile Include="DataContracts\Protocol\RequestSelect.cs" />
+    <Compile Include="DataContracts\Protocol\RequestSelectWhereSelectValue.cs" />
+    <Compile Include="DataContracts\Protocol\RequestSelectWhereOperators.cs" />
+    <Compile Include="DataContracts\Protocol\RequestSelectFromTables.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup />

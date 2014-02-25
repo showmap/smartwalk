@@ -1,11 +1,11 @@
 namespace SmartWalk.Shared.DataContracts
 {
-    public enum Storage
+    public static class Storage
     {
-        SmartWalk = "SW",
-        Facebook = "FB",
-        Foursquare = "FS",
-        GooglePlus = "GP",
-        VKontakte = "VK"
+        public const string SmartWalk = "SW";
+        public const string Facebook = "FB";
+        public const string Foursquare = "FS";
+        public const string GooglePlus = "GP";
+        public const string VKontakte = "VK";
     }
 }
