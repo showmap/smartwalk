@@ -9,6 +9,14 @@
 
     public static class StorageKeys
     {
+        public static readonly string[] All = new [] {
+            SmartWalk,
+            Facebook,
+            Foursquare,
+            GooglePlus,
+            VKontakte
+        };
+
         public const string SmartWalk = "SW";
         public const string Facebook = "FB";
         public const string Foursquare = "FS";
