@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts.Api;
@@ -30,46 +31,40 @@ namespace SmartWalk.Server.Services
         {
             if (request == null || request.Selects == null) return new Response();
 
-            var resultSelects = new Dictionary<string, Tuple<Type, object[]>>();
+            var resultSelects = new Dictionary<string, object[]>();
             var i = 0;
 
             foreach (var select in request.Selects)
             {
-                var tuple = ExecuteSelect(select, resultSelects);
-                resultSelects.Add(select.As ?? string.Format("result_{0}", i++), tuple);
+                var records = ExecuteSelect(select, resultSelects);
+                resultSelects.Add(select.As ?? string.Format("result_{0}", i++), records);
             }
 
             return new Response
                 {
                     Selects = resultSelects
-                        .Select(kvp => new ResponseSelect {Alias = kvp.Key, Records = kvp.Value.Item2})
+                        .Select(kvp => new ResponseSelect {Alias = kvp.Key, Records = kvp.Value})
                         .ToArray()
                 };
         }
 
         // ReSharper disable CoVariantArrayConversion
-        private Tuple<Type, object[]> ExecuteSelect(
+        private object[] ExecuteSelect(
             RequestSelect select, 
-            IDictionary<string, Tuple<Type, object[]>> results)
+            IDictionary<string, object[]> results)
         {
             if (select.From == null) return null;
 
             switch (select.From)
             {
                 case RequestSelectFromTables.EventMetadata:
-                    return new Tuple<Type, object[]>(
-                        typeof(EventMetadataRecord),
-                        ExecuteSelect(_eventMetadataRepository.Table, select, results));
+                    return ExecuteSelect(_eventMetadataRepository.Table, select, results);
 
                 case RequestSelectFromTables.Entity:
-                    return new Tuple<Type, object[]>(
-                        typeof(EntityRecord),
-                        ExecuteSelect(_entityRepository.Table, select, results));
+                    return ExecuteSelect(_entityRepository.Table, select, results);
 
                 case RequestSelectFromTables.Show:
-                    return new Tuple<Type, object[]>(
-                        typeof(ShowRecord),
-                        ExecuteSelect(_showRepository.Table, select, results));
+                    return ExecuteSelect(_showRepository.Table, select, results);
             }
 
             return null;
@@ -79,14 +74,14 @@ namespace SmartWalk.Server.Services
         private TRecord[] ExecuteSelect<TRecord>(
             IQueryable<TRecord> table,
             RequestSelect select,
-            IDictionary<string, Tuple<Type, object[]>> results)
+            IDictionary<string, object[]> results)
         {
-            IQueryable<TRecord> queryable;
+            var queryable = table;
 
             if (select.Where != null && select.Where.Length > 0)
             {
                 var paramExpr = Expression.Parameter(typeof(TRecord), "rec");
-                var whereExpr = GetWhereExpression<TRecord>(select.Where, paramExpr, results);
+                var whereExpr = GetWhereExpression(select.Where, paramExpr, results);
                 if (whereExpr != null)
                 {
                     var whereCallExpression = Expression.Call(
@@ -99,73 +94,58 @@ namespace SmartWalk.Server.Services
                     queryable = _eventMetadataRepository.Table.Provider
                         .CreateQuery<TRecord>(whereCallExpression);
                 }
-                else
-                {
-                    queryable = table;
-                }
-            }
-            else
-            {
-                queryable = table;
             }
 
             var result = queryable.Take(DefaultLimit).ToArray();
             return result;
         }
 
-        private Expression GetWhereExpression<TRecord>(
+        private static Expression GetWhereExpression(
             IEnumerable<RequestSelectWhere> whereItems, 
             ParameterExpression paramExpr,
-            IDictionary<string, Tuple<Type, object[]>> results = null)
-        {
-            return GetWhereExpression(typeof(TRecord), whereItems, paramExpr, results);
-        }
-
-        private Expression GetWhereExpression(
-            Type type,
-            IEnumerable<RequestSelectWhere> whereItems,
-            ParameterExpression paramExpr,
-            IDictionary<string, Tuple<Type, object[]>> results = null)
+            IDictionary<string, object[]> results = null)
         {
             var resultExpr = default(Expression);
 
             foreach (var where in whereItems)
             {
                 var whereExpr = default(Expression);
-                var fields = GetWhereFields(where);
+                var fields = GetWhereFields(where.Field);
                 if (fields != null)
                 {
-                    var fieldExpr = default(Expression);
-                    var lastType = type;
+                    // building field accessing expression
+                    var fieldExpr = fields.Aggregate(
+                        default(Expression), 
+                        (current, field) => 
+                            Expression.Property(
+                                current ?? paramExpr, 
+                                (current ?? paramExpr).Type, 
+                                field));
 
-                    foreach (var field in fields)
-                    {   
-                        fieldExpr = Expression.Property(fieldExpr ?? paramExpr, lastType, field);
-                        lastType = lastType.GetProperty(field).PropertyType;
-                    }
-
+                    // one value case
                     if (fieldExpr != null &&
                         where.Value != null && 
                         where.Operator == RequestSelectWhereOperators.EqualsTo)
                     {
-                        var valueExpr = Expression.Constant(where.Value, typeof(string));
-                        whereExpr = Expression.Equal(fieldExpr, valueExpr);
+                        whereExpr = GetWhereValueExpression(fieldExpr, where.Value);
                     }
 
+                    // array of values case
                     if (fieldExpr != null &&
                         where.Values != null &&
                         where.Operator == RequestSelectWhereOperators.EqualsTo)
                     {
-                        // TODO:
+                        whereExpr = GetWhereValuesExpression(fieldExpr, where.Values);
                     }
 
+                    // lookup to previous dataset value case
                     if (fieldExpr != null &&
                         where.SelectValue != null &&
                         results != null &&
                         results.ContainsKey(where.SelectValue.SelectName) &&
                         where.Operator == RequestSelectWhereOperators.EqualsTo)
                     {
-                        // TODO:
+                        whereExpr = GetWhereSelectValueExpression(fieldExpr, where.SelectValue, results);
                     }
                 }
 
@@ -178,20 +158,76 @@ namespace SmartWalk.Server.Services
             return resultExpr;
         }
 
-        private string[] GetWhereFields(RequestSelectWhere where)
+        private static Expression GetWhereValueExpression(Expression fieldExpr, string value)
         {
-            if (where.Field == null) return null;
+            var valueExpr = Expression.Constant(value);
+            var whereExpr = Expression.Equal(fieldExpr, valueExpr);
+            return whereExpr;
+        }
+
+        private static Expression GetWhereValuesExpression(Expression fieldExpr, IEnumerable<object> values)
+        {
+            var valuesExpr = Expression.Constant(values.ToArray());
+            var whereExpr = Expression.Call(
+                typeof(Enumerable), 
+                "Contains",
+                new[] { typeof(object) }, 
+                valuesExpr,
+                Expression.Convert(fieldExpr, typeof(object)));
+            return whereExpr;
+        }
+
+        private static Expression GetWhereSelectValueExpression(
+            Expression fieldExpr,
+            RequestSelectWhereSelectValue selectValue,
+            IDictionary<string, object[]> results)
+        {
+            var whereExpr = default(Expression);
+            var lookUpRecords = results[selectValue.SelectName];
+            if (lookUpRecords != null && lookUpRecords.Length > 0)
+            {
+                var fields = GetWhereFields(selectValue.Field);
+
+                // filling up the cache of property path reflection info
+                var propInfos = new List<PropertyInfo>();
+
+                // resolving the type of records in look up dataset
+                var lastType = lookUpRecords.First().GetType();
+                foreach (var field in fields)
+                {
+                    var propertyInfo = lastType.GetProperty(field);
+                    propInfos.Add(propertyInfo);
+                    lastType = propertyInfo.PropertyType;
+                }
+                
+                var lookUpValues = lookUpRecords
+                    .Select(rec => propInfos.Aggregate(rec, (cur, pi) => pi.GetValue(cur, null)))
+                    .Where(v => v != null)
+                    .Distinct()
+                    .ToArray();
+
+                whereExpr = GetWhereValuesExpression(fieldExpr, lookUpValues);
+            }
+
+            return whereExpr;
+        }
+
+        private static IEnumerable<string> GetWhereFields(string field)
+        {
+            if (field == null) return null;
 
             string[] fields;
 
-            if (where.Field.Contains("."))
+            if (field.Contains("."))
             {
-                fields = where.Field.Split('.');
-                fields = fields.Select((f, i) => i < fields.Length - 1 ? f + RecordPostfix : f).ToArray();
+                fields = field.Split('.');
+                fields = fields
+                    .Select((f, i) => i < fields.Length - 1 ? f + RecordPostfix : f)
+                    .ToArray();
             }
             else
             {
-                fields = new[] {where.Field};
+                fields = new[] { field };
             }
 
             return fields;

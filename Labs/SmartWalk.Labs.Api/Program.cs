@@ -106,7 +106,7 @@ namespace SmartWalk.Labs.Api
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     SelectValue = new RequestSelectWhereSelectValue
                                                         {
-                                                            Field = "Host",
+                                                            Field = "Host.Id",
                                                             SelectName = "em"
                                                         }
                                                 }
