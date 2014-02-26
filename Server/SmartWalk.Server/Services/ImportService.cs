@@ -174,6 +174,10 @@ namespace SmartWalk.Server.Services
         private void ImportLocation(Location location)
         {
             var currentUser = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+            if (currentUser == null)
+            {
+                throw new InvalidOperationException("Current user is not defined!");
+            }
 
             var oaklandRegion = _regionRepository.Get(reg => reg.City == "Oakland");
             if (oaklandRegion == null)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace SmartWalk.Server.Records
 {
@@ -18,14 +17,6 @@ namespace SmartWalk.Server.Records
         public virtual bool IsWidgetReady { get; set; }
         public virtual DateTime DateCreated { get; set; }
         public virtual DateTime DateModified { get; set; }
-
-
-        public virtual IList<EventMappingRecord> EventMappings { get; set; }
-
-        public EventMetadataRecord()
-        {
-            EventMappings = new List<EventMappingRecord>();
-        }
     }
 
     public enum CombineType {

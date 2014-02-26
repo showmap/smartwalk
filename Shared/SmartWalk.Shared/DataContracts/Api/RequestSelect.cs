@@ -8,6 +8,6 @@
 
         public string From { get; set; }
 
-        public RequestSelectWhere Where { get; set; }
+        public RequestSelectWhere[] Where { get; set; }
     }
 }

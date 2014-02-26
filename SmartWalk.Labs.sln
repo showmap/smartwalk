@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Labs.Protocol", "Labs\SmartWalk.Labs.Protocol\SmartWalk.Labs.Protocol.csproj", "{13D686B8-B576-422F-A5BD-DF8002A4BCBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Labs.Api", "Labs\SmartWalk.Labs.Api\SmartWalk.Labs.Api.csproj", "{13D686B8-B576-422F-A5BD-DF8002A4BCBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Shared", "Shared\SmartWalk.Shared\SmartWalk.Shared.csproj", "{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}"
 EndProject
@@ -20,7 +20,10 @@ Global
 		{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}.Release|x86.ActiveCfg = Release|Any CPU
 		{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Labs\SmartWalk.Labs.Protocol\SmartWalk.Labs.Protocol.csproj
+		StartupItem = Labs\SmartWalk.Labs.Api\SmartWalk.Labs.Api.csproj
 	EndGlobalSection
 EndGlobal
