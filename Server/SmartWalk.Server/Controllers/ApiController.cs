@@ -15,7 +15,8 @@ namespace SmartWalk.Server.Controllers
 
         public ActionResult Query(Request request)
         {
-            return Json(_queryService.ExecuteQuery(request));
+            var response = _queryService.ExecuteQuery(request);
+            return Json(response);
         }
     }
 }

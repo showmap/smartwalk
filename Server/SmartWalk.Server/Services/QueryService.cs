@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts.Api;
 
 namespace SmartWalk.Server.Services
 {
+    [UsedImplicitly]
     public class QueryService : IQueryService
     {
         private const int DefaultLimit = 100;
@@ -78,10 +80,11 @@ namespace SmartWalk.Server.Services
         {
             var queryable = table;
 
+            // if there is where condition then build where expression
             if (select.Where != null && select.Where.Length > 0)
             {
-                var paramExpr = Expression.Parameter(typeof(TRecord), "rec");
-                var whereExpr = GetWhereExpression(select.Where, paramExpr, results);
+                var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
+                var whereExpr = GetWhereExpression(select.Where, recordExpr, results);
                 if (whereExpr != null)
                 {
                     var whereCallExpression = Expression.Call(
@@ -89,7 +92,7 @@ namespace SmartWalk.Server.Services
                         "Where",
                         new[] {typeof(TRecord)},
                         table.Expression,
-                        Expression.Lambda<Func<TRecord, bool>>(whereExpr, new[] {paramExpr}));
+                        Expression.Lambda<Func<TRecord, bool>>(whereExpr, new[] {recordExpr}));
 
                     queryable = _eventMetadataRepository.Table.Provider
                         .CreateQuery<TRecord>(whereCallExpression);
@@ -102,7 +105,7 @@ namespace SmartWalk.Server.Services
 
         private static Expression GetWhereExpression(
             IEnumerable<RequestSelectWhere> whereItems, 
-            ParameterExpression paramExpr,
+            Expression recordExpr,
             IDictionary<string, object[]> results = null)
         {
             var resultExpr = default(Expression);
@@ -118,8 +121,8 @@ namespace SmartWalk.Server.Services
                         default(Expression), 
                         (current, field) => 
                             Expression.Property(
-                                current ?? paramExpr, 
-                                (current ?? paramExpr).Type, 
+                                current ?? recordExpr, 
+                                (current ?? recordExpr).Type, 
                                 field));
 
                     // one value case
@@ -188,11 +191,11 @@ namespace SmartWalk.Server.Services
             {
                 var fields = GetWhereFields(selectValue.Field);
 
-                // filling up the cache of property path reflection info
-                var propInfos = new List<PropertyInfo>();
-
                 // resolving the type of records in look up dataset
                 var lastType = lookUpRecords.First().GetType();
+
+                // filling up the cache of property path reflection info
+                var propInfos = new List<PropertyInfo>();
                 foreach (var field in fields)
                 {
                     var propertyInfo = lastType.GetProperty(field);
@@ -200,6 +203,7 @@ namespace SmartWalk.Server.Services
                     lastType = propertyInfo.PropertyType;
                 }
                 
+                // extracting the values of requested fields path from look up dataset
                 var lookUpValues = lookUpRecords
                     .Select(rec => propInfos.Aggregate(rec, (cur, pi) => pi.GetValue(cur, null)))
                     .Where(v => v != null)
@@ -212,6 +216,10 @@ namespace SmartWalk.Server.Services
             return whereExpr;
         }
 
+        /// <summary>
+        /// Returns the list of fields extracted from raw field string. 
+        /// All fields except the last one are updated with postfix 'Record' assuming that all complex properies are records.
+        /// </summary>
         private static IEnumerable<string> GetWhereFields(string field)
         {
             if (field == null) return null;
