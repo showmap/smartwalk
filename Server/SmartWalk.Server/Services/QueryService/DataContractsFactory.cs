@@ -1,25 +1,30 @@
 ﻿using System.Linq;
-using SmartWalk.Server.DataContracts;
+using SmartWalk.Server.Models.DataContracts;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Extensions;
 using CombineType = SmartWalk.Shared.DataContracts.CombineType;
+using ContactType = SmartWalk.Shared.DataContracts.ContactType;
 using EntityType = SmartWalk.Shared.DataContracts.EntityType;
 
 namespace SmartWalk.Server.Services.QueryService
 {
     public static class DataContractsFactory
     {
-        public static EventMetadata CreateDataContract(EventMetadataRecord record, string[] fields)
+        public static EventMetadata CreateDataContract(
+            EventMetadataRecord record,
+            string[] fields,
+            string[] storages)
         {
             var result = new EventMetadata
                 {
                     Id = record.Id
                 };
 
-            if (fields.Contains(result.GetPropertyName(p => p.Host)))
+            if (fields.Contains(result.GetPropertyName(p => p.Host)) &&
+                record.HostRecord != null)
             {
-                result.Host = new IReference[]{}; // TODO:
+                result.Host = GetEntityReferences(record.HostRecord, storages);
             }
 
             if (fields.Contains(result.GetPropertyName(p => p.Title)))
@@ -44,18 +49,20 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields.Contains(result.GetPropertyName(p => p.CombineType)))
             {
-                result.CombineType = (CombineType)record.CombineType;
+                result.CombineType = (CombineType) record.CombineType;
             }
 
             if (fields.Contains(result.GetPropertyName(p => p.Shows)))
             {
-                result.Shows = new IReference[]{}; // TODO:
+                result.Shows = new IReference[] {}; // TODO:
             }
 
             return result;
         }
 
-        public static Entity CreateDataContract(EntityRecord record, string[] fields)
+        public static Entity CreateDataContract(
+            EntityRecord record,
+            string[] fields)
         {
             var result = new Entity
                 {
@@ -64,7 +71,7 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields.Contains(result.GetPropertyName(p => p.Type)))
             {
-                result.Type = (EntityType)record.Type;
+                result.Type = (EntityType) record.Type;
             }
 
             if (fields.Contains(result.GetPropertyName(p => p.Name)))
@@ -84,18 +91,21 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields.Contains(result.GetPropertyName(p => p.Contacts)))
             {
-                result.Contacts = null; // TODO:
+                result.Contacts = record.ContactRecords.Select(CreateDataContract).ToArray();
             }
 
             if (fields.Contains(result.GetPropertyName(p => p.Addresses)))
             {
-                result.Addresses = null; // TODO:
+                result.Addresses = record.AddressRecords.Select(CreateDataContract).ToArray();
             }
 
             return result;
         }
 
-        public static Show CreateDataContract(ShowRecord record, string[] fields)
+        public static Show CreateDataContract(
+            ShowRecord record,
+            string[] fields,
+            string[] storages)
         {
             var result = new Show
                 {
@@ -104,7 +114,7 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields.Contains(result.GetPropertyName(p => p.Venue)))
             {
-                result.Venue = new IReference[] { }; // TODO:
+                result.Venue = GetEntityReferences(record.VenueRecord, storages);
             }
 
             if (fields.Contains(result.GetPropertyName(p => p.IsReference)))
@@ -141,6 +151,55 @@ namespace SmartWalk.Server.Services.QueryService
             {
                 result.DetailsUrl = record.DetailsUrl;
             }
+
+            return result;
+        }
+
+        public static Contact CreateDataContract(ContactRecord record)
+        {
+            var result = new Contact
+                {
+                    Type = (ContactType) record.Type,
+                    Title = record.Title,
+                    ContactText = record.Contact
+                };
+
+            return result;
+        }
+
+        public static Address CreateDataContract(AddressRecord record)
+        {
+            var result = new Address
+                {
+                    AddressText = record.Address,
+                    Latitude = record.Latitude,
+                    Longitude = record.Longitude
+                };
+
+            return result;
+        }
+
+        private static IReference[] GetEntityReferences(EntityRecord record, string[] storages)
+        {
+            var result = new[]
+                {
+                    new Reference
+                        {
+                            Id = record.Id,
+                            Storage = StorageKeys.SmartWalk
+                        }
+                }.Union(
+                    storages != null
+                        ? record.EntityMappingRecords
+                                .Where(emr => storages.Contains(emr.StorageRecord.StorageKey))
+                                .Select(emr => new Reference
+                                    {
+                                        Id = emr.ExternalEntityId,
+                                        Storage = emr.StorageRecord.StorageKey,
+                                        Type = emr.Type
+                                    })
+                        : Enumerable.Empty<IReference>())
+                 .ToArray();
 
             return result;
         }

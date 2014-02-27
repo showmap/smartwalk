@@ -1,6 +1,6 @@
 ﻿using SmartWalk.Shared.DataContracts;
 
-namespace SmartWalk.Server.DataContracts
+namespace SmartWalk.Server.Models.DataContracts
 {
     public class Entity : IEntity
     {

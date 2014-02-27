@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Text;
+using System.Web.Mvc;
+using Newtonsoft.Json;
+using SmartWalk.Server.Controllers.Results;
 using SmartWalk.Server.Services.QueryService;
 using SmartWalk.Shared.DataContracts.Api;
 
@@ -17,6 +20,25 @@ namespace SmartWalk.Server.Controllers
         {
             var response = _queryService.ExecuteQuery(request);
             return Json(response);
+        }
+
+        // TODO: It doesn't work :-(
+        protected override JsonResult Json(
+            object data, 
+            string contentType, 
+            Encoding contentEncoding)
+        {
+            return new JsonNetResult
+                {
+                    Data = data,
+                    ContentType = contentType,
+                    ContentEncoding = contentEncoding,
+                    JsonSerializerSettings = new JsonSerializerSettings
+                        {
+                            Formatting = Formatting.Indented,
+                            NullValueHandling = NullValueHandling.Ignore
+                        }
+                };
         }
     }
 }

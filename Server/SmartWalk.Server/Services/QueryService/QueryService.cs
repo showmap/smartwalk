@@ -45,7 +45,7 @@ namespace SmartWalk.Server.Services.QueryService
 
                 try
                 {
-                    var result = ExecuteSelect(select, resultSelects);
+                    var result = ExecuteSelect(select, request.Storages, resultSelects);
 
                     resultSelects.Add(alias, result.Records);
                     resultSelectDataContracts.Add(alias, result.DataContracts);
@@ -71,9 +71,9 @@ namespace SmartWalk.Server.Services.QueryService
                 };
         }
 
-        // ReSharper disable CoVariantArrayConversion
         private ExecuteSelectResult ExecuteSelect(
-            RequestSelect select, 
+            RequestSelect select,
+            string[] storages,
             IDictionary<string, object[]> results)
         {
             if (select.From == null) return null;
@@ -83,7 +83,7 @@ namespace SmartWalk.Server.Services.QueryService
                 case RequestSelectFromTables.EventMetadata:
                     var emRecords = ExecuteSelect(_eventMetadataRepository.Table, select, results);
                     var emDataContr = emRecords
-                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
+                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                         .ToArray();
                     return new ExecuteSelectResult(emRecords, emDataContr);
 
@@ -97,14 +97,13 @@ namespace SmartWalk.Server.Services.QueryService
                 case RequestSelectFromTables.Show:
                     var showRecords = ExecuteSelect(_showRepository.Table, select, results);
                     var showDataContr = showRecords
-                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
+                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                         .ToArray();
                     return new ExecuteSelectResult(showRecords, showDataContr);
             }
 
             return null;
         }
-        // ReSharper restore CoVariantArrayConversion
 
         private TRecord[] ExecuteSelect<TRecord>(
             IQueryable<TRecord> table,

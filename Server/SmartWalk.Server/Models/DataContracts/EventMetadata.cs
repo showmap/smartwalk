@@ -1,7 +1,7 @@
 ﻿using System;
 using SmartWalk.Shared.DataContracts;
 
-namespace SmartWalk.Server.DataContracts
+namespace SmartWalk.Server.Models.DataContracts
 {
     public class EventMetadata : IEventMetadata
     {

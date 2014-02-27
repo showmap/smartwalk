@@ -9,7 +9,6 @@
         public virtual string Contact { get; set; }
     }
 
-
     public enum ContactType {
         Email = 0,
         Url = 1,

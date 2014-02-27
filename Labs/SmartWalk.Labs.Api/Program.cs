@@ -38,9 +38,10 @@ namespace SmartWalk.Labs.Api
 
                     var response = JsonConvert.DeserializeObject<Response>(result);
                 }
-// ReSharper disable EmptyGeneralCatchClause
-                catch {}
-// ReSharper restore EmptyGeneralCatchClause
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
 
             Console.WriteLine("\nEvent View");
@@ -65,10 +66,10 @@ namespace SmartWalk.Labs.Api
 
                     var response = JsonConvert.DeserializeObject<Response>(result);
                 }
-// ReSharper disable EmptyGeneralCatchClause
-                catch
-// ReSharper restore EmptyGeneralCatchClause
-                { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
 
             Console.WriteLine("\nVenue View");
@@ -120,7 +121,7 @@ namespace SmartWalk.Labs.Api
                                 },
                             new RequestSelect
                                 {
-                                    Fields = new[] {"Name", "Picture"},
+                                    Fields = new[] {"Name", "Picture", "Addresses", "Contacts"},
                                     From = RequestSelectFromTables.Entity,
                                     Where = new[]
                                         {
