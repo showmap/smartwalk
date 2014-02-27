@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,7 +9,7 @@ using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts.Api;
 
-namespace SmartWalk.Server.Services
+namespace SmartWalk.Server.Services.QueryService
 {
     [UsedImplicitly]
     public class QueryService : IQueryService
@@ -34,24 +35,44 @@ namespace SmartWalk.Server.Services
             if (request == null || request.Selects == null) return new Response();
 
             var resultSelects = new Dictionary<string, object[]>();
+            var resultSelectDataContracts = new Dictionary<string, object[]>();
+            var errors = new Dictionary<string, string>();
             var i = 0;
 
             foreach (var select in request.Selects)
             {
-                var records = ExecuteSelect(select, resultSelects);
-                resultSelects.Add(select.As ?? string.Format("result_{0}", i++), records);
+                var alias = select.As ?? string.Format("result_{0}", i++);
+
+                try
+                {
+                    var result = ExecuteSelect(select, resultSelects);
+
+                    resultSelects.Add(alias, result.Records);
+                    resultSelectDataContracts.Add(alias, result.DataContracts);
+                }
+                catch (InvalidExpressionException ex)
+                {
+                    resultSelectDataContracts.Add(alias, null);
+                    errors.Add(alias, ex.Message);
+                }
             }
 
             return new Response
                 {
-                    Selects = resultSelects
-                        .Select(kvp => new ResponseSelect {Alias = kvp.Key, Records = kvp.Value})
+                    Selects = resultSelectDataContracts
+                        .Select(kvp =>
+                                new ResponseSelect
+                                    {
+                                        Alias = kvp.Key,
+                                        Records = kvp.Value,
+                                        Error = errors.ContainsKey(kvp.Key) ? errors[kvp.Key] : null
+                                    })
                         .ToArray()
                 };
         }
 
         // ReSharper disable CoVariantArrayConversion
-        private object[] ExecuteSelect(
+        private ExecuteSelectResult ExecuteSelect(
             RequestSelect select, 
             IDictionary<string, object[]> results)
         {
@@ -60,13 +81,25 @@ namespace SmartWalk.Server.Services
             switch (select.From)
             {
                 case RequestSelectFromTables.EventMetadata:
-                    return ExecuteSelect(_eventMetadataRepository.Table, select, results);
+                    var emRecords = ExecuteSelect(_eventMetadataRepository.Table, select, results);
+                    var emDataContr = emRecords
+                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
+                        .ToArray();
+                    return new ExecuteSelectResult(emRecords, emDataContr);
 
                 case RequestSelectFromTables.Entity:
-                    return ExecuteSelect(_entityRepository.Table, select, results);
+                    var entityRecords = ExecuteSelect(_entityRepository.Table, select, results);
+                    var entityDataContr = entityRecords
+                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
+                        .ToArray();
+                    return new ExecuteSelectResult(entityRecords, entityDataContr);
 
                 case RequestSelectFromTables.Show:
-                    return ExecuteSelect(_showRepository.Table, select, results);
+                    var showRecords = ExecuteSelect(_showRepository.Table, select, results);
+                    var showDataContr = showRecords
+                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
+                        .ToArray();
+                    return new ExecuteSelectResult(showRecords, showDataContr);
             }
 
             return null;
@@ -108,7 +141,7 @@ namespace SmartWalk.Server.Services
             Expression recordExpr,
             IDictionary<string, object[]> results = null)
         {
-            var resultExpr = default(Expression);
+            var result = default(Expression);
 
             foreach (var where in whereItems)
             {
@@ -145,7 +178,6 @@ namespace SmartWalk.Server.Services
                     if (fieldExpr != null &&
                         where.SelectValue != null &&
                         results != null &&
-                        results.ContainsKey(where.SelectValue.SelectName) &&
                         where.Operator == RequestSelectWhereOperators.EqualsTo)
                     {
                         whereExpr = GetWhereSelectValueExpression(fieldExpr, where.SelectValue, results);
@@ -154,30 +186,30 @@ namespace SmartWalk.Server.Services
 
                 if (whereExpr != null)
                 {
-                    resultExpr = resultExpr == null ? whereExpr : Expression.AndAlso(resultExpr, whereExpr);
+                    result = result == null ? whereExpr : Expression.AndAlso(result, whereExpr);
                 }
             }
 
-            return resultExpr;
+            return result;
         }
 
-        private static Expression GetWhereValueExpression(Expression fieldExpr, string value)
+        private static Expression GetWhereValueExpression(Expression fieldExpr, object value)
         {
             var valueExpr = Expression.Constant(value);
-            var whereExpr = Expression.Equal(fieldExpr, valueExpr);
-            return whereExpr;
+            var result = Expression.Equal(fieldExpr, valueExpr);
+            return result;
         }
 
         private static Expression GetWhereValuesExpression(Expression fieldExpr, IEnumerable<object> values)
         {
             var valuesExpr = Expression.Constant(values.ToArray());
-            var whereExpr = Expression.Call(
+            var result = Expression.Call(
                 typeof(Enumerable), 
                 "Contains",
                 new[] { typeof(object) }, 
                 valuesExpr,
                 Expression.Convert(fieldExpr, typeof(object)));
-            return whereExpr;
+            return result;
         }
 
         private static Expression GetWhereSelectValueExpression(
@@ -185,22 +217,33 @@ namespace SmartWalk.Server.Services
             RequestSelectWhereSelectValue selectValue,
             IDictionary<string, object[]> results)
         {
-            var whereExpr = default(Expression);
+            var result = default(Expression);
+            
+            if (!results.ContainsKey(selectValue.SelectName))
+            {
+                throw new InvalidExpressionException(
+                    string.Format(
+                    "Can not access '{0}' select result items.",
+                    selectValue.SelectName));
+            }
+
             var lookUpRecords = results[selectValue.SelectName];
             if (lookUpRecords != null && lookUpRecords.Length > 0)
             {
                 var fields = GetWhereFields(selectValue.Field);
 
                 // resolving the type of records in look up dataset
-                var lastType = lookUpRecords.First().GetType();
+                var recordType = lookUpRecords.First().GetType();
 
                 // filling up the cache of property path reflection info
-                var propInfos = new List<PropertyInfo>();
-                foreach (var field in fields)
+                var propInfos = GetPropertyPath(recordType, fields);
+                if (propInfos == null)
                 {
-                    var propertyInfo = lastType.GetProperty(field);
-                    propInfos.Add(propertyInfo);
-                    lastType = propertyInfo.PropertyType;
+                    throw new InvalidExpressionException(
+                        string.Format(
+                        "Can not find '{0}' property in '{1}' select result items.",
+                        selectValue.Field,
+                        selectValue.SelectName)); 
                 }
                 
                 // extracting the values of requested fields path from look up dataset
@@ -210,10 +253,27 @@ namespace SmartWalk.Server.Services
                     .Distinct()
                     .ToArray();
 
-                whereExpr = GetWhereValuesExpression(fieldExpr, lookUpValues);
+                result = GetWhereValuesExpression(fieldExpr, lookUpValues);
             }
 
-            return whereExpr;
+            return result;
+        }
+
+        private static IEnumerable<PropertyInfo> GetPropertyPath(Type recordType, IEnumerable<string> fields)
+        {
+            var result = new List<PropertyInfo>();
+            var lastType = recordType;
+
+            foreach (var field in fields)
+            {
+                var propertyInfo = lastType.GetProperty(field);
+                if (propertyInfo == null) return null;
+
+                result.Add(propertyInfo);
+                lastType = propertyInfo.PropertyType;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -224,21 +284,33 @@ namespace SmartWalk.Server.Services
         {
             if (field == null) return null;
 
-            string[] fields;
+            string[] result;
 
             if (field.Contains("."))
             {
-                fields = field.Split('.');
-                fields = fields
+                var fields = field.Split('.');
+                result = fields
                     .Select((f, i) => i < fields.Length - 1 ? f + RecordPostfix : f)
                     .ToArray();
             }
             else
             {
-                fields = new[] { field };
+                result = new[] { field };
             }
 
-            return fields;
+            return result;
+        }
+
+        private class ExecuteSelectResult
+        {
+            public ExecuteSelectResult(object[] records, object[] dataContracts)
+            {
+                Records = records;
+                DataContracts = dataContracts;
+            }
+
+            public object[] Records { get; private set; }
+            public object[] DataContracts { get; private set; }
         }
     }
 }

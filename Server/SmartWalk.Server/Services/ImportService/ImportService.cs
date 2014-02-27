@@ -4,16 +4,17 @@ using System.Linq;
 using System.Net;
 using System.Xml;
 using System.Xml.Serialization;
+using JetBrains.Annotations;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
-using Orchard.Logging;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Models.XmlModel;
 using SmartWalk.Server.Records;
 
-namespace SmartWalk.Server.Services
+namespace SmartWalk.Server.Services.ImportService
 {
+    [UsedImplicitly]
     public class ImportService : IImportService
     {
         private const string XmlDataPath = "http://smartwalk.me/data/us/ca";
@@ -30,7 +31,6 @@ namespace SmartWalk.Server.Services
         private readonly IRepository<StorageRecord> _storageRepository;
 
         private List<string> _log;
-        public ILogger Logger { get; set; }
 
         public ImportService(
             IOrchardServices orchardServices,
@@ -52,8 +52,6 @@ namespace SmartWalk.Server.Services
             _regionRepository = regionRepository;
             _showRepository = showRepository;
             _storageRepository = storageRepository;
-
-            Logger = NullLogger.Instance;
         }
 
         public void ImportXmlData(List<string> log)

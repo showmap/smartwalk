@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using SmartWalk.Server.Services;
+using SmartWalk.Server.Services.QueryService;
 using SmartWalk.Shared.DataContracts.Api;
 
 namespace SmartWalk.Server.Controllers

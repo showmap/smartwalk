@@ -6,6 +6,6 @@ namespace SmartWalk.Shared.DataContracts
 
         string Title { get; set; }
 
-        string Contact { get; set; }
+        string ContactText { get; set; }
     }
 }

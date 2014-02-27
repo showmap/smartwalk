@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Themes;
 using SmartWalk.Server.Services;
+using SmartWalk.Server.Services.ImportService;
 
 namespace SmartWalk.Server.Controllers
 {

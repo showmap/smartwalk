@@ -3,6 +3,7 @@ using System.Net;
 using Newtonsoft.Json;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
+using System.Linq;
 
 namespace SmartWalk.Labs.Api
 {
@@ -30,14 +31,20 @@ namespace SmartWalk.Labs.Api
             {
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
 
-                var result = client.UploadString(
-                    SmartWalkUrl,
-                    json);
+                try
+                {
+                    var result = client.UploadString(SmartWalkUrl, json);
+                    Console.WriteLine(result);
+
+                    var response = JsonConvert.DeserializeObject<Response>(result);
+                }
+// ReSharper disable EmptyGeneralCatchClause
+                catch {}
+// ReSharper restore EmptyGeneralCatchClause
             }
 
-
             Console.WriteLine("\nEvent View");
-            var eventViewRequest = CreateEventViewRequest("111");
+            var eventViewRequest = CreateEventViewRequest(5);
             json = JsonConvert.SerializeObject(
                 eventViewRequest,
                 new JsonSerializerSettings
@@ -47,8 +54,25 @@ namespace SmartWalk.Labs.Api
                     });
             Console.WriteLine(json);
 
+            using (var client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+
+                try
+                {
+                    var result = client.UploadString(SmartWalkUrl, json);
+                    Console.WriteLine(result);
+
+                    var response = JsonConvert.DeserializeObject<Response>(result);
+                }
+// ReSharper disable EmptyGeneralCatchClause
+                catch
+// ReSharper restore EmptyGeneralCatchClause
+                { }
+            }
+
             Console.WriteLine("\nVenue View");
-            var venueViewRequest = CreateVenueViewRequest("222", new[] {"333", "444", "555"});
+            var venueViewRequest = CreateVenueViewRequest(222, new[] {333, 444, 555});
             json = JsonConvert.SerializeObject(
                 venueViewRequest,
                 new JsonSerializerSettings
@@ -119,7 +143,7 @@ namespace SmartWalk.Labs.Api
             return result;
         }
 
-        public static Request CreateEventViewRequest(string eventMetadataId)
+        public static Request CreateEventViewRequest(int eventMetadataId)
         {
             var result = new Request
                 {
@@ -175,7 +199,7 @@ namespace SmartWalk.Labs.Api
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     SelectValue = new RequestSelectWhereSelectValue
                                                         {
-                                                            Field = "Venue",
+                                                            Field = "Venue.Id",
                                                             SelectName = "s"
                                                         }
                                                 }
@@ -188,7 +212,7 @@ namespace SmartWalk.Labs.Api
             return result;
         }
 
-        public static Request CreateVenueViewRequest(string venueId, string[] showIds)
+        public static Request CreateVenueViewRequest(int venueId, int[] showIds)
         {
             var result = new Request
                 {
@@ -219,7 +243,7 @@ namespace SmartWalk.Labs.Api
                                                 {
                                                     Field = "Id",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Values = showIds
+                                                    Values = showIds.Cast<object>().ToArray()
                                                 }
                                         }
                                 }
