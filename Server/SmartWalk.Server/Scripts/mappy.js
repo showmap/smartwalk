@@ -517,8 +517,7 @@
 				// start off with just the minimal info we're given
 				// ... later we'll try and get more details, but if we can't at least
 				// ... we have _something_!
-				normaliseFormattedAddress(marker.details, place.formatted_address);
-
+				normaliseFormattedAddress(marker.details, place.formatted_address);			    
 				// expand the map out so the new places fit
 				bounds.extend(pos);
 				_gMap.fitBounds(bounds);
@@ -548,8 +547,7 @@
 			if (!forMarker.details)
 				return;
 			if (!forMarker.details.reference)
-				return;
-
+				return;		    
 
 			var request = {
 				reference: forMarker.details.reference
@@ -571,7 +569,6 @@
 			);
 
 		} // getPlaceDetails
-
 
 		/// <summary>
 		/// Map boundary change event (moving map, zooming in or out, etc).
@@ -743,6 +740,7 @@
 			tmpl = replaceAll("{SHORT_NAME}", shorten(model.name, 25), tmpl);
 			tmpl = replaceAll("{STREET}", model.street, tmpl);
 			tmpl = replaceAll("{TOWN}", model.town, tmpl);
+			tmpl = replaceAll("{COUNTRY}", model.country, tmpl);
 			tmpl = replaceAll("{AREA}", model.area, tmpl);
 			tmpl = replaceAll("{POSTCODE}", model.postCode, tmpl);
 			tmpl = replaceAll("{TELNO}", model.telNo, tmpl);
@@ -771,6 +769,7 @@
 			$vw.find(".mappy-town").toggle(model.town && model.town.length > 0);
 			$vw.find(".mappy-area").toggle(model.area && model.area.length > 0);
 			$vw.find(".mappy-postCode").toggle(model.postCode && model.postCode.length > 0);
+			$vw.find(".mappy-country").toggle(model.country && model.country.length > 0);
 
 			// these are a little different as we want them block if they're available (they're a tags)
 			var $telNo = $vw.find(".mappy-telNo"),
@@ -1317,6 +1316,7 @@
 			  + "<tr>"
 			  + "<td class='mappy-left'>"
 			  + "<address>"
+		      + "<div class='mappy-country'>{COUNTRY}</div>"
 			  + "<div class='mappy-street'>{STREET}</div>"
 			  + "<div class='mappy-town'>{TOWN}</div>"
 			  + "<div class='mappy-area'>{AREA}</div>"
@@ -1327,7 +1327,7 @@
 			  + "<a class='mappy-url' href='{GPLUS}' title='{GPLUS}'>g+</a>"
 			  + "</td>"
 			  + "<td class='mappy-right'>"
-			  + "<a href='{GPLUS}'>{IMG src='{PHOTOURL}' /></a>"
+			  + "<a href='{GPLUS}'>{IMG class='mappy-photo' src='{PHOTOURL}' /></a>"
 			  + "</td>"
 			  + "</tr>"
 			  + "<tr class='mappy-buttons'>"
@@ -1431,9 +1431,11 @@
 				model.town = $vw.find(".mappy-town").html();
 				model.area = $vw.find(".mappy-area").html();
 				model.postCode = $vw.find(".mappy-postCode").html();
+				model.country = $vw.find(".mappy-country").html();
 				model.telNo = $vw.find(".mappy-telNo").html();
 				model.website = $vw.find(".mappy-website").attr("href");
 				model.url = $vw.find(".mappy-url").attr("href");
+				model.photo = $vw.find(".mappy-photo").attr("src");
 
 			} else {
 				// editor view
@@ -1442,9 +1444,11 @@
 				model.town = $vw.find(".mappy-town").val();
 				model.area = $vw.find(".mappy-area").val();
 				model.postCode = $vw.find(".mappy-postCode").val();
+				model.country = $vw.find(".mappy-country").val();
 				model.telNo = $vw.find(".mappy-telNo").val();
 				model.website = $vw.find(".mappy-website").val();
 				model.url = $vw.find(".mappy-url").val();
+				model.photo = $vw.find(".mappy-photo").val();
 			}
 			// make sure we aren't returning "undefined" somewhere 
 			// ... which can happen if we're in a view that doesn't have a telNo for instance
@@ -1467,6 +1471,7 @@
 			if (!place.town) place.town = "";
 			if (!place.area) place.area = "";
 			if (!place.postCode) place.postCode = "";
+			if (!place.country) place.country = "";
 			if (!place.telNo) place.telNo = "";
 			if (!place.website) place.website = "";
 			if (!place.url) place.url = "";
@@ -1538,6 +1543,7 @@
 				// limit to search to boundary of the map screen
 				bounds: boundary
 			};
+		    
 			_placesApi.textSearch(request, gmPlaceSelected);
 
 			// ensure the search box reflects what's been search for
@@ -1563,9 +1569,11 @@
 
 			var town = findPart(ac, "locality"),
 					area = findPart(ac, "administrative_area_level_1"),
-					postCode = findPart(ac, "postal_code")
-			;
+					postCode = findPart(ac, "postal_code");
 
+			var country = findPart(ac, "country");
+
+		    details.country = country;
 			details.street = street;
 			details.town = town;
 			details.area = area;
@@ -1594,7 +1602,9 @@
 			if (elements.length >= 3)
 				details.area = $.trim(elements[2]);
 			if (elements.length >= 4)
-				details.postCode = $.trim(elements[3]);
+			    details.country = $.trim(elements[3]);			
+		    
+		    //alert(src.address_components[0]);
 		}
 
 

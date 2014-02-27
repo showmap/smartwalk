@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard;
 using Orchard.Themes;
 using SmartWalk.Server.Services;
 using SmartWalk.Server.Services.ImportService;
@@ -12,9 +13,12 @@ namespace SmartWalk.Server.Controllers
     public class ToolsController : Controller {
 
         private readonly IImportService _importService;
+        private readonly IOrchardServices _orchardServices;
 
-        public ToolsController(IImportService importService) {
+        public ToolsController(IImportService importService, IOrchardServices orchardServices) {
             _importService = importService;
+
+            _orchardServices = orchardServices;
         }
 
         public ActionResult ImportXmlData()
@@ -25,6 +29,9 @@ namespace SmartWalk.Server.Controllers
         [Themed]
         public ActionResult ImportXmlDataAction()
         {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+                return new HttpUnauthorizedResult();
+
             var log = new List<string>();
 
             try

@@ -7,25 +7,171 @@
     //Script.Require("jQuery").AtHead();
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.GoogleMaps").AtHead();
-    Script.Require("Mappy").AtHead(); 
+    Script.Require("Mappy").AtHead();
+    Script.Require("ko").AtHead(); 
 }
 <div class="ui-widget">
     <button id="add-place-button">@T("Add place")</button>
 </div>
 
 <div id="add-place-form" title="@T("Add place")">
+    <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
     <div id="add-places" class="small-map"></div>
+    <div id="places-panel">
+        <div id="region-panel">
+            <label for="country">@T("Country")</label><input type="text" id="country" data-bind="value:Country"/>
+            <label for="state">@T("State")</label><input type="text" id="state" data-bind="value: State"/>
+            <label for="city">@T("City")</label><input type="text" id="city" data-bind="value: City"/>    
+        </div>
+        
+        <div id="address-panel">
+            <label for="lattitude">@T("Lattitude")</label><input type="text" id="lattitude" data-bind="value: Lattitude"/>
+            <label for="longitude">@T("Longitude")</label><input type="text" id="longitude" data-bind="value: Longitude"/>
+            <label for="address">@T("Address")</label><input type="text" id="address" data-bind="value: Address"/>    
+        </div>
+        
+        <div id="venue-panel">
+            <label for="name">@T("Name")</label><input type="text" id="name" data-bind="value: Name"/>
+            <label for="description">@T("Description")</label><input type="text" id="description" data-bind="value: Description"/>
+            <label for="picture">@T("Picture")</label><input type="text" id="picture" data-bind="value: Picture"/>
+        </div>
+
+    </div>
 </div>
 
 <script>   
     $(function () {
+
+        function initializeGoogleRaw() {
+            var mapOptions = {
+                center: new google.maps.LatLng(-33.8688, 151.2195),
+                zoom: 13
+            };
+            var map = new google.maps.Map(document.getElementById('add-places'),
+                mapOptions);
+
+            var input = (document.getElementById('pac-input'));
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', map);
+
+            var infowindow = new google.maps.InfoWindow();
+            var marker = new google.maps.Marker({
+                map: map
+            });
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                infowindow.close();
+                marker.setVisible(false);
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17); // Why 17? Because it looks good.
+                }
+                marker.setIcon(({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+
+                marker.setPosition(place.geometry.location);
+                marker.setVisible(true);
+
+                var address = '';
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] && place.address_components[0].short_name || ''),
+                        (place.address_components[1] && place.address_components[1].short_name || ''),
+                        (place.address_components[2] && place.address_components[2].short_name || '')
+                    ].join(' ');
+                }
+
+                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                infowindow.open(map, marker);                
+
+                var ac = place.address_components;
+                var street = findPart(ac, "street_address");
+                
+                if (street === "")
+                    // not present so fallback to "route"
+                    street = findPart(ac, "route");
+
+                var town = findPart(ac, "locality"),
+                        area = findPart(ac, "administrative_area_level_1"),
+                        postCode = findPart(ac, "postal_code");
+
+                var country = findPart(ac, "country");
+
+                vm.Country(country);
+                vm.State(area);
+                vm.City(town);
+
+                vm.Lattitude(place.geometry.location.lat());
+                vm.Longitude(place.geometry.location.lng());
+
+                vm.Name(place.name);
+                
+                if(street != '')
+                    vm.Address(street + ", " + area + ", " + town + ", " + postCode);
+
+
+                vm.Picture(place.icon);
+
+            });
+        }
+
+        /// <summary>
+        /// Convenience function for finding parts of the address
+        /// </summary>
+        function findPart(addressParts, typeName, getShortVersion) {
+            if (addressParts == null || addressParts.length == 0)
+                // address not available
+                return "";
+
+            var value = "";            
+            for (var i = 0; i < addressParts.length; i++) {
+                var item = addressParts[i], found = false;
+
+                for (var j = 0; j < item.types.length; j++) {
+                    var addrType = item.types[j];
+
+                    if (addrType.toLowerCase() == typeName.toLowerCase()) {
+                        found = true;
+                        break;
+                    }
+                } // types                
+
+                if (found) {
+                    value = (getShortVersion
+						? item.short_name
+						: item.long_name
+					);
+                    break;
+                }
+
+            }            
+
+            return value;
+
+        } // findPart
+
         function initialize() {
             $("#add-places").mappy({
                 // Adds a predictive search box
                 searchOptions: {
                     enabled: true,
-                    initSearch: "Football in Leeds",
-                    placeholder: "Search ..."
+                    initSearch: "San Francisco, CA, United States",
+                    placeholder: '@T("Search ...")'
                 },
 
                 // Turn on geo location button
@@ -33,6 +179,24 @@
                 
                 // allow user to select somewhere
                 onSelect: function (mappy, details) {
+                    
+                    vm.Country(details.country);
+                    vm.State(details.area);
+                    vm.City(details.town);
+
+                    vm.Lattitude(details.lat);
+                    vm.Longitude(details.lng);
+
+                    vm.Name(details.name);
+                    vm.Address(details.street + ", " +
+                        details.area + ", " +
+                        details.town + ", " + details.postCode);
+
+
+                    vm.Picture(details.photo);
+
+
+
                     var msg =
                         "name: " + details.name +
                         "<br/>street: " + details.street + ", " +
@@ -75,8 +239,8 @@
             modal: true,
             autoOpen: false,
             //dialogClass: 'noTitleStuff',
-            width: 640,
-            height: 540,
+            width: 780,
+            height: 700,
             show: {
                 effect: "blind",
                 duration: 1000
@@ -98,8 +262,29 @@
 
         $("#add-place-button").click(function () {
             $("#add-place-form").dialog("open");
-            initialize();
+            //initialize();
+            initializeGoogleRaw();
         });
     });
 
+    function ViewModel(data) {
+        var self = this;
+        
+        self.Country = ko.observable(data.Country);
+        self.State = ko.observable(data.State);
+        self.City = ko.observable(data.City);
+        
+        self.Lattitude = ko.observable(data.Lattitude);
+        self.Longitude = ko.observable(data.Longitude);
+        self.Address = ko.observable(data.Address);
+        
+        self.Name = ko.observable(data.Name);
+        self.Description = ko.observable(data.Desctiption);
+        self.Picture = ko.observable(data.Picture);
+    }
+
+    var vm = new ViewModel({ Country: "USA" });
+
+    ko.applyBindings(vm, $('#places-panel')[0]);
+    
 </script>

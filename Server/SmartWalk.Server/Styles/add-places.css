@@ -3,3 +3,8 @@
 	height: 400px;
     margin: 0;
 }
+
+#region-panel, #address-panel, #venue-panel {
+    float: left;
+    padding: 5px;
+}

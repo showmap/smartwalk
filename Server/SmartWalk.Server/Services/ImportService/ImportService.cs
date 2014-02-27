@@ -177,6 +177,7 @@ namespace SmartWalk.Server.Services.ImportService
                 throw new InvalidOperationException("Current user is not defined!");
             }
 
+            #region Oakland Region
             var oaklandRegion = _regionRepository.Get(reg => reg.City == "Oakland");
             if (oaklandRegion == null)
             {
@@ -190,7 +191,9 @@ namespace SmartWalk.Server.Services.ImportService
                 _regionRepository.Flush();
                 _log.Add("Oakland region created");
             }
+            #endregion
 
+            #region San Francisco Region
             var sfRegion = _regionRepository.Get(reg => reg.City == "San Francisco");
             if (sfRegion == null)
             {
@@ -204,7 +207,9 @@ namespace SmartWalk.Server.Services.ImportService
                 _regionRepository.Flush();
                 _log.Add("San Francisco region created");
             }
+            #endregion
 
+            #region SmartWalk Data Storage
             var storage = _storageRepository.Get(stor => stor.StorageKey == StorageKeys.SmartWalk);
             if (storage == null)
             {
@@ -217,6 +222,7 @@ namespace SmartWalk.Server.Services.ImportService
                 _storageRepository.Flush();
                 _log.Add("SmartWalk storge record created");
             }
+            #endregion
 
             if (location != null && location.Organizations != null)
             {
