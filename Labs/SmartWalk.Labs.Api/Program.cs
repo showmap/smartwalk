@@ -121,7 +121,7 @@ namespace SmartWalk.Labs.Api
                                 },
                             new RequestSelect
                                 {
-                                    Fields = new[] {"Name", "Picture", "Addresses", "Contacts"},
+                                    Fields = new[] {"Name", "Picture"},
                                     From = RequestSelectFromTables.Entity,
                                     Where = new[]
                                         {
