@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -828,6 +829,52 @@ namespace SmartWalk.Shared.Extensions
         {
             var propertyInfo = GetProperty(property);
             return propertyInfo.Name;
+        }
+
+        /// The method is taken from http://blogs.msdn.com/b/mattwar/archive/2007/07/30/linq-building-an-iqueryable-provider-part-i.aspx
+        /// <summary>
+        /// Gets a type of elements in Enumerable.
+        /// </summary>
+        public static Type GetElementType(Type seqType)
+        {
+            var ienum = FindIEnumerable(seqType);
+            if (ienum == null) return seqType;
+            return ienum.GetGenericArguments()[0];
+        }
+
+        private static Type FindIEnumerable(Type seqType)
+        {
+            if (seqType == null || seqType == typeof(string)) return null;
+            if (seqType.IsArray) return typeof(IEnumerable<>).MakeGenericType(seqType.GetElementType());
+            if (seqType.IsGenericType)
+            {
+                foreach (var arg in seqType.GetGenericArguments())
+                {
+                    var ienum = typeof(IEnumerable<>).MakeGenericType(arg);
+                    if (ienum.IsAssignableFrom(seqType))
+                    {
+                        return ienum;
+                    }
+                }
+            }
+
+            var ifaces = seqType.GetInterfaces();
+            if (ifaces.Length > 0)
+            {
+                foreach (var iface in ifaces)
+                {
+                    var ienum = FindIEnumerable(iface);
+                    if (ienum != null) return ienum;
+                }
+            }
+
+            if (seqType.BaseType != null &&
+                seqType.BaseType != typeof(object))
+            {
+                return FindIEnumerable(seqType.BaseType);
+            }
+
+            return null;
         }
     }
 }

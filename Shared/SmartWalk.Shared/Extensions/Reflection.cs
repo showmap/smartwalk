@@ -184,8 +184,6 @@ namespace SmartWalk.Shared.Extensions
             return info;
         }
 
-        #region Methods
-
         /// <summary>
         ///     Gets the member info.
         /// </summary>
@@ -279,7 +277,5 @@ namespace SmartWalk.Shared.Extensions
 
             return ((MethodCallExpression) lambda.Body).Method;
         }
-
-        #endregion
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using SmartWalk.Server.Models.DataContracts;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts;
@@ -9,6 +7,7 @@ using SmartWalk.Shared.Extensions;
 using CombineType = SmartWalk.Shared.DataContracts.CombineType;
 using ContactType = SmartWalk.Shared.DataContracts.ContactType;
 using EntityType = SmartWalk.Shared.DataContracts.EntityType;
+using SmartWalk.Server.Extensions;
 
 namespace SmartWalk.Server.Services.QueryService
 {
@@ -24,45 +23,55 @@ namespace SmartWalk.Server.Services.QueryService
                     Id = record.Id
                 };
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Region)))
+            if (fields != null)
             {
-                result.Region = CreateDataContract(record.RegionRecord);
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Region)))
+                {
+                    result.Region = CreateDataContract(record.RegionRecord);
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Host)) &&
-                record.HostRecord != null)
-            {
-                result.Host = GetEntityReferences(record.HostRecord, storages);
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Host)) &&
+                    record.HostRecord != null)
+                {
+                    result.Host = GetEntityReferences(record.HostRecord, storages);
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Title)))
-            {
-                result.Title = record.Title;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Title)))
+                {
+                    result.Title = record.Title;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Description)))
-            {
-                result.Description = record.Description;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Description)))
+                {
+                    result.Description = record.Description;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.StartTime)))
-            {
-                result.StartTime = record.StartTime;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.StartTime)))
+                {
+                    result.StartTime = record.StartTime;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.EndTime)))
-            {
-                result.EndTime = record.EndTime;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.EndTime)))
+                {
+                    result.EndTime = record.EndTime;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.CombineType)))
-            {
-                result.CombineType = (CombineType) record.CombineType;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.CombineType)))
+                {
+                    result.CombineType = (CombineType)record.CombineType;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Shows)))
-            {
-                result.Shows = new IReference[] {}; // TODO:
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Shows)) &&
+                    record.EventMappingRecords != null)
+                {
+                    result.Shows = record.EventMappingRecords
+                                         .Select(mr => new Reference
+                                             {
+                                                 Id = mr.ShowRecord_Id,
+                                                 Storage = mr.StorageRecord.StorageKey
+                                             })
+                                         .ToArray();
+                }
             }
 
             return result;
@@ -77,34 +86,37 @@ namespace SmartWalk.Server.Services.QueryService
                     Id = record.Id
                 };
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Type)))
+            if (fields != null)
             {
-                result.Type = (EntityType) record.Type;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Type)))
+                {
+                    result.Type = (EntityType)record.Type;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Name)))
-            {
-                result.Name = record.Name;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Name)))
+                {
+                    result.Name = record.Name;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Description)))
-            {
-                result.Description = record.Description;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Description)))
+                {
+                    result.Description = record.Description;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Picture)))
-            {
-                result.Picture = record.Picture;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Picture)))
+                {
+                    result.Picture = record.Picture;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Contacts)))
-            {
-                result.Contacts = record.ContactRecords.Select(CreateDataContract).ToArray();
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Contacts)))
+                {
+                    result.Contacts = record.ContactRecords.Select(CreateDataContract).ToArray();
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Addresses)))
-            {
-                result.Addresses = record.AddressRecords.Select(CreateDataContract).ToArray();
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Addresses)))
+                {
+                    result.Addresses = record.AddressRecords.Select(CreateDataContract).ToArray();
+                }
             }
 
             return result;
@@ -120,44 +132,47 @@ namespace SmartWalk.Server.Services.QueryService
                     Id = record.Id
                 };
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Venue)))
+            if (fields != null)
             {
-                result.Venue = GetEntityReferences(record.VenueRecord, storages);
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Venue)))
+                {
+                    result.Venue = GetEntityReferences(record.VenueRecord, storages);
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.IsReference)))
-            {
-                result.IsReference = record.IsReference;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.IsReference)))
+                {
+                    result.IsReference = record.IsReference;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Title)))
-            {
-                result.Title = record.Title;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Title)))
+                {
+                    result.Title = record.Title;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Description)))
-            {
-                result.Description = record.Description;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Description)))
+                {
+                    result.Description = record.Description;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.StartTime)))
-            {
-                result.StartTime = record.StartTime;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.StartTime)))
+                {
+                    result.StartTime = record.StartTime;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.EndTime)))
-            {
-                result.EndTime = record.EndTime;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.EndTime)))
+                {
+                    result.EndTime = record.EndTime;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.Picture)))
-            {
-                result.Picture = record.Picture;
-            }
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Picture)))
+                {
+                    result.Picture = record.Picture;
+                }
 
-            if (fields.Contains(result.GetLowerPropertyName(p => p.DetailsUrl)))
-            {
-                result.DetailsUrl = record.DetailsUrl;
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.DetailsUrl)))
+                {
+                    result.DetailsUrl = record.DetailsUrl;
+                }
             }
 
             return result;
@@ -179,7 +194,7 @@ namespace SmartWalk.Server.Services.QueryService
         {
             var result = new Contact
                 {
-                    Type = (ContactType) record.Type,
+                    Type = (ContactType)record.Type,
                     Title = record.Title,
                     ContactText = record.Contact
                 };
@@ -211,7 +226,7 @@ namespace SmartWalk.Server.Services.QueryService
                 }.Union(
                     storages != null
                         ? record.EntityMappingRecords
-                                .Where(emr => storages.Contains(emr.StorageRecord.StorageKey))
+                                .Where(emr => storages.ContainsIgnoreCase(emr.StorageRecord.StorageKey))
                                 .Select(emr => new Reference
                                     {
                                         Id = emr.ExternalEntityId,
@@ -222,13 +237,6 @@ namespace SmartWalk.Server.Services.QueryService
                  .ToArray();
 
             return result;
-        }
-
-        private static string GetLowerPropertyName<TTarget>(
-            this TTarget obj,
-            Expression<Func<TTarget, object>> property)
-        {
-            return obj.GetPropertyName(property).ToLowerInvariant();
         }
     }
 }

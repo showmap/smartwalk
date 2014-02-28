@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SmartWalk.Server.Records
 {
     public class EventMetadataRecord
     {
+        private IList<EventMappingRecord> _eventMappingRecords;
+
         public virtual int Id { get; set; }
         public virtual RegionRecord RegionRecord { get; set; }
         public virtual EntityRecord HostRecord { get; set; } 
@@ -17,6 +20,17 @@ namespace SmartWalk.Server.Records
         public virtual bool IsWidgetReady { get; set; }
         public virtual DateTime DateCreated { get; set; }
         public virtual DateTime DateModified { get; set; }
+
+        public virtual IList<EventMappingRecord> EventMappingRecords
+        {
+            get { return _eventMappingRecords; }
+            set { _eventMappingRecords = value; }
+        }
+
+        public EventMetadataRecord()
+        {
+            _eventMappingRecords = new List<EventMappingRecord>();
+        }
     }
 
     public enum CombineType {

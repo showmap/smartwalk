@@ -27,13 +27,13 @@ namespace SmartWalk.Labs.Api
                                                 },
                                             new RequestSelectWhere
                                                 {
-                                                    Field = "Region.State",
+                                                    Field = "region.State",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     Value = state
                                                 },
                                             new RequestSelectWhere
                                                 {
-                                                    Field = "Region.City",
+                                                    Field = "Region.city",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     Value = city
                                                 }
@@ -47,11 +47,11 @@ namespace SmartWalk.Labs.Api
                                         {
                                             new RequestSelectWhere
                                                 {
-                                                    Field = "Id",
+                                                    Field = "id",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     SelectValue = new RequestSelectWhereSelectValue
                                                         {
-                                                            Field = "Host.Id",
+                                                            Field = "Host.id",
                                                             SelectName = "em"
                                                         }
                                                 }
@@ -89,7 +89,8 @@ namespace SmartWalk.Labs.Api
                                 {
                                     Fields = new[]
                                         {
-                                            "Venue", "IsReference", "Title", "Description", "StartTime", "EndTime",
+                                            "Venue", "IsReference", "Title", 
+                                            "Description", "StartTime", "EndTime",
                                             "Picture", "DetailsUrl"
                                         },
                                     From = RequestSelectFromTables.Show,
@@ -102,7 +103,7 @@ namespace SmartWalk.Labs.Api
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     SelectValue = new RequestSelectWhereSelectValue
                                                         {
-                                                            Field = "Shows",
+                                                            Field = "Shows.Id",
                                                             SelectName = "em"
                                                         }
                                                 }
@@ -127,7 +128,7 @@ namespace SmartWalk.Labs.Api
                                         }
                                 }
                         },
-                    Storages = new[] {Storage.SmartWalk}
+                    Storages = new[] {Storage.SmartWalk.ToLower()}
                 };
 
             return result;

@@ -116,6 +116,7 @@
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\JsonNetResult.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\DataContracts\Address.cs" />
     <Compile Include="Models\DataContracts\Contact.cs" />
     <Compile Include="Models\DataContracts\Entity.cs" />

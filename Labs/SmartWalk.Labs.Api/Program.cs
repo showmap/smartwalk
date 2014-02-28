@@ -73,7 +73,7 @@ namespace SmartWalk.Labs.Api
             }
 
             Console.WriteLine("\nVenue View");
-            var venueViewRequest = RequestFactory.CreateVenueViewRequest(222, new[] { 333, 444, 555 });
+            var venueViewRequest = RequestFactory.CreateVenueViewRequest(6, new[] { 220, 221, 222, 223, 224 });
             json = JsonConvert.SerializeObject(
                 venueViewRequest,
                 new JsonSerializerSettings
@@ -81,7 +81,25 @@ namespace SmartWalk.Labs.Api
                         Formatting = Formatting.Indented,
                         NullValueHandling = NullValueHandling.Ignore
                     });
-            Console.WriteLine(json);    
+            Console.WriteLine(json);
+
+            using (var client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+
+                try
+                {
+                    var result = client.UploadString(SmartWalkUrl, json);
+                    Console.WriteLine(result);
+
+                    var response = JsonConvert.DeserializeObject<Response>(result);
+                    Console.WriteLine("Response hash code: " + response.GetHashCode());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
 
             Console.ReadLine();
         }
