@@ -3,7 +3,6 @@ namespace SmartWalk.Shared.DataContracts
     public interface IReference
     {
         int Id { get; set; }
-
         string Storage { get; set; }
 
         /// <summary>

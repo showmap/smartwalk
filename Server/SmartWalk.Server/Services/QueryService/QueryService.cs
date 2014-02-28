@@ -76,33 +76,42 @@ namespace SmartWalk.Server.Services.QueryService
             string[] storages,
             IDictionary<string, object[]> results)
         {
-            if (select.From == null) return null;
+            if (select.From == null) throw new InvalidExpressionException("Select.From value can not be null.");
 
-            switch (select.From)
+            var from = select.From.ToLowerInvariant();
+
+            var fields = select.Fields != null
+                ? select.Fields.Select(f => f.ToLowerInvariant()).ToArray()
+                : new string[]{};
+
+            if (from == RequestSelectFromTables.EventMetadata.ToLowerInvariant())
             {
-                case RequestSelectFromTables.EventMetadata:
-                    var emRecords = ExecuteSelect(_eventMetadataRepository.Table, select, results);
-                    var emDataContr = emRecords
-                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
-                        .ToArray();
-                    return new ExecuteSelectResult(emRecords, emDataContr);
-
-                case RequestSelectFromTables.Entity:
-                    var entityRecords = ExecuteSelect(_entityRepository.Table, select, results);
-                    var entityDataContr = entityRecords
-                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
-                        .ToArray();
-                    return new ExecuteSelectResult(entityRecords, entityDataContr);
-
-                case RequestSelectFromTables.Show:
-                    var showRecords = ExecuteSelect(_showRepository.Table, select, results);
-                    var showDataContr = showRecords
-                        .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
-                        .ToArray();
-                    return new ExecuteSelectResult(showRecords, showDataContr);
+                var records = ExecuteSelect(_eventMetadataRepository.Table, select, results);
+                var dataContracts = records
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, fields, storages))
+                    .ToArray();
+                return new ExecuteSelectResult(records, dataContracts);
             }
 
-            return null;
+            if (from == RequestSelectFromTables.Entity.ToLowerInvariant())
+            {
+                var records = ExecuteSelect(_entityRepository.Table, select, results);
+                var dataContracts = records
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, fields))
+                    .ToArray();
+                return new ExecuteSelectResult(records, dataContracts);
+            }
+            
+            if (from == RequestSelectFromTables.Show.ToLowerInvariant())
+            {
+                var records = ExecuteSelect(_showRepository.Table, select, results);
+                var dataContracts = records
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, fields, storages))
+                    .ToArray();
+                return new ExecuteSelectResult(records, dataContracts);
+            }
+
+            throw new InvalidExpressionException(string.Format("Can not find '{0}' table", from));
         }
 
         private TRecord[] ExecuteSelect<TRecord>(
@@ -217,8 +226,10 @@ namespace SmartWalk.Server.Services.QueryService
             IDictionary<string, object[]> results)
         {
             var result = default(Expression);
-            
-            if (!results.ContainsKey(selectValue.SelectName))
+
+            object[] lookUpRecords;
+            if (!results.TryGetValue(selectValue.SelectName, out lookUpRecords) || 
+                lookUpRecords == null)
             {
                 throw new InvalidExpressionException(
                     string.Format(
@@ -226,8 +237,7 @@ namespace SmartWalk.Server.Services.QueryService
                     selectValue.SelectName));
             }
 
-            var lookUpRecords = results[selectValue.SelectName];
-            if (lookUpRecords != null && lookUpRecords.Length > 0)
+            if (lookUpRecords.Length > 0)
             {
                 var fields = GetWhereFields(selectValue.Field);
 

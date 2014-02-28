@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using SmartWalk.Server.Models.DataContracts;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts;
@@ -21,38 +24,43 @@ namespace SmartWalk.Server.Services.QueryService
                     Id = record.Id
                 };
 
-            if (fields.Contains(result.GetPropertyName(p => p.Host)) &&
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Region)))
+            {
+                result.Region = CreateDataContract(record.RegionRecord);
+            }
+
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Host)) &&
                 record.HostRecord != null)
             {
                 result.Host = GetEntityReferences(record.HostRecord, storages);
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Title)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Title)))
             {
                 result.Title = record.Title;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Description)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Description)))
             {
                 result.Description = record.Description;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.StartTime)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.StartTime)))
             {
                 result.StartTime = record.StartTime;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.EndTime)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.EndTime)))
             {
                 result.EndTime = record.EndTime;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.CombineType)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.CombineType)))
             {
                 result.CombineType = (CombineType) record.CombineType;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Shows)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Shows)))
             {
                 result.Shows = new IReference[] {}; // TODO:
             }
@@ -69,32 +77,32 @@ namespace SmartWalk.Server.Services.QueryService
                     Id = record.Id
                 };
 
-            if (fields.Contains(result.GetPropertyName(p => p.Type)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Type)))
             {
                 result.Type = (EntityType) record.Type;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Name)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Name)))
             {
                 result.Name = record.Name;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Description)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Description)))
             {
                 result.Description = record.Description;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Picture)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Picture)))
             {
                 result.Picture = record.Picture;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Contacts)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Contacts)))
             {
                 result.Contacts = record.ContactRecords.Select(CreateDataContract).ToArray();
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Addresses)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Addresses)))
             {
                 result.Addresses = record.AddressRecords.Select(CreateDataContract).ToArray();
             }
@@ -112,45 +120,57 @@ namespace SmartWalk.Server.Services.QueryService
                     Id = record.Id
                 };
 
-            if (fields.Contains(result.GetPropertyName(p => p.Venue)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Venue)))
             {
                 result.Venue = GetEntityReferences(record.VenueRecord, storages);
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.IsReference)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.IsReference)))
             {
                 result.IsReference = record.IsReference;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Title)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Title)))
             {
                 result.Title = record.Title;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Description)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Description)))
             {
                 result.Description = record.Description;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.StartTime)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.StartTime)))
             {
                 result.StartTime = record.StartTime;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.EndTime)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.EndTime)))
             {
                 result.EndTime = record.EndTime;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.Picture)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.Picture)))
             {
                 result.Picture = record.Picture;
             }
 
-            if (fields.Contains(result.GetPropertyName(p => p.DetailsUrl)))
+            if (fields.Contains(result.GetLowerPropertyName(p => p.DetailsUrl)))
             {
                 result.DetailsUrl = record.DetailsUrl;
             }
+
+            return result;
+        }
+
+        public static Region CreateDataContract(RegionRecord record)
+        {
+            var result = new Region
+                {
+                    Country = record.Country,
+                    State = record.State,
+                    City = record.City
+                };
 
             return result;
         }
@@ -179,7 +199,7 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
-        private static IReference[] GetEntityReferences(EntityRecord record, string[] storages)
+        private static IReference[] GetEntityReferences(EntityRecord record, IEnumerable<string> storages)
         {
             var result = new[]
                 {
@@ -202,6 +222,13 @@ namespace SmartWalk.Server.Services.QueryService
                  .ToArray();
 
             return result;
+        }
+
+        private static string GetLowerPropertyName<TTarget>(
+            this TTarget obj,
+            Expression<Func<TTarget, object>> property)
+        {
+            return obj.GetPropertyName(property).ToLowerInvariant();
         }
     }
 }
