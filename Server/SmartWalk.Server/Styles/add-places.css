@@ -1,10 +1,21 @@
 ﻿.small-map {
 	width: 100%;
-	height: 400px;
+	height: 280px;
     margin: 0;
 }
 
-#region-panel, #address-panel, #venue-panel {
-    float: left;
-    padding: 5px;
+#places-panel label:after{ content: ":";}
+
+#places-panel label{
+    display: block;
+    padding: 0 0 0.3em;
 }
+
+#description-panel, #region-panel, #address-panel, #venue-panel{padding: 5px;}
+
+#region-panel, #address-panel, #venue-panel {
+    float: left;    
+}
+
+#description-panel{ clear:both;}
+#description-panel input, #description-panel textarea{ width: 100%;}

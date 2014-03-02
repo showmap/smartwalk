@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Web.Mvc;
-using Newtonsoft.Json;
+﻿using System.Web.Mvc;
 using SmartWalk.Server.Services.QueryService;
 using SmartWalk.Shared.DataContracts.Api;
 

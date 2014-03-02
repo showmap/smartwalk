@@ -49,7 +49,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\bin\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Core, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -113,14 +113,17 @@
   <ItemGroup>
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\JsonNetResult.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\DataContracts\Address.cs" />
     <Compile Include="Models\DataContracts\Contact.cs" />
     <Compile Include="Models\DataContracts\Entity.cs" />
     <Compile Include="Models\DataContracts\EventMetadata.cs" />
     <Compile Include="Models\DataContracts\Reference.cs" />
+    <Compile Include="Models\DataContracts\Region.cs" />
     <Compile Include="Models\DataContracts\Show.cs" />
     <Compile Include="Drivers\SmartWalkUserDriver.cs" />
     <Compile Include="Handlers\SmartWalkUserEventHandler.cs" />
@@ -152,11 +155,15 @@
     <Compile Include="Records\StorageRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\EventService\EventService.cs" />
+    <Compile Include="Services\EventService\IEventService.cs" />
+    <Compile Include="Services\EventService\SmartWalkUserRecord.cs" />
     <Compile Include="Services\ImportService\IImportService.cs" />
     <Compile Include="Services\ImportService\ImportService.cs" />
     <Compile Include="Services\QueryService\DataContractsFactory.cs" />
     <Compile Include="Services\QueryService\IQueryService.cs" />
     <Compile Include="Services\QueryService\QueryService.cs" />
+    <Compile Include="ViewModels\EventMetadataVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Tools\ImportXmlData.cshtml" />
@@ -175,6 +182,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Events\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

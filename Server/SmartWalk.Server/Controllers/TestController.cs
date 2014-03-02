@@ -3,14 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Data;
 using Orchard.Themes;
+using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.EventService;
 
 namespace Store.GsmCounters.Controllers
 {
     [HandleError, Themed]
-    public class TestController : Controller
-    {
+    public class TestController : Controller {
+        private readonly IRepository<EntityRecord> _entityRepository;
+
+
+        public TestController(IRepository<EntityRecord> entityRepository) {
+            _entityRepository = entityRepository;
+        }
+
         public ActionResult TestFb() {
+
+            var res = _entityRepository.Table.Select(e => e.EventMetadataRecords
+                                         .OrderByDescending(em => em.StartTime)
+                                         .FirstOrDefault(em => em.RegionRecord.City == "San Francisco")).ToArray();
+
             return View();
         }
 

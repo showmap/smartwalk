@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server.ViewModels
+
 @{
     Style.Require("jQueryUI_Orchard");
     Style.Require("SmartWalk.GoogleMaps");
@@ -11,35 +12,11 @@
     Script.Require("Mappy").AtHead();
     Script.Require("ko").AtHead();
 
-    var eventItems = (IList<EventMetadataVm>)Model.EventItems;
+    var eventItems = (IList<EventMetadataVm>)Model;
 }
 <div class="ui-widget">
     <button id="add-place-button">@T("Add place")</button>
 </div>
-
-<div id="event-items" data-bind="visible: EventItems().length > 0">
-    <p>@T("Events")</p>    
-    <table class="event-item">
-        <thead>
-            <tr>
-                <th class="string"><span>@T("Title")</span></th>
-                <th class="string"><span>@T("Host Name")</span></th>
-                <th class="string"><span>@T("Start Time")</span></th>
-                <th class="string"><span>@T("Date Created")</span></th>                
-            </tr>
-        </thead>
-        <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems()}'></tbody>
-    </table>    
-</div>
-
-<script type="text/html" id="eventItemTemplate">
-    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
-        <td><span data-bind="text: Title"></span></td>
-        <td><span data-bind="text: HostName"></span></td>
-        <td><span data-bind="text: StartTime"></span></td>
-        <td><span data-bind="text: DateCreated"></span></td>
-    </tr>       
-</script>
 
 <div id="add-place-form" title="@T("Add place")">
     
@@ -75,6 +52,31 @@
 
     </div>
 </div>
+
+<div id="event-items" data-bind="visible: EventItems().length > 0">
+    <p>@T("Events")</p>    
+    <table class="event-item">
+        <thead>
+            <tr>
+                <th class="string"><span>@T("Title")</span></th>
+                <th class="string"><span>@T("Host Name")</span></th>
+                <th class="string"><span>@T("Start Time")</span></th>
+                <th class="string"><span>@T("Date Created")</span></th>                
+            </tr>
+        </thead>
+        <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems() }'></tbody>
+    </table>    
+</div>
+
+<script type="text/html" id="eventItemTemplate">
+    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
+        <td><span data-bind="text: Title"></span></td>
+        <td><span data-bind="text: HostName"></span></td>
+        <td><span data-bind="text: StartTime"></span></td>
+        <td><span data-bind="text: DateCreated"></span></td>
+    </tr>       
+</script>
+
 
 <script>   
     $(function () {        
@@ -174,17 +176,17 @@
 
                 var country = findPart(ac, "country");
 
-                vm.Country(country);
-                vm.State(area);
-                vm.City(town);
+                vmPlace.Country(country);
+                vmPlace.State(area);
+                vmPlace.City(town);
 
-                vm.Lattitude(place.geometry.location.lat());
-                vm.Longitude(place.geometry.location.lng());
+                vmPlace.Lattitude(place.geometry.location.lat());
+                vmPlace.Longitude(place.geometry.location.lng());
 
-                vm.Name(place.name);
+                vmPlace.Name(place.name);
                 
                 if(street != '')
-                    vm.Address(street + ", " + area + ", " + town + ", " + postCode);
+                    vmPlace.Address(street + ", " + area + ", " + town + ", " + postCode);
 
                 //vm.Picture(place.icon);
             });
@@ -225,74 +227,7 @@
             return value;
 
         } // findPart
-
-        function initialize() {
-            $("#add-places").mappy({
-                // Adds a predictive search box
-                searchOptions: {
-                    enabled: true,
-                    initSearch: "San Francisco, CA, United States",
-                    placeholder: '@T("Search ...")'
-                },
-
-                // Turn on geo location button
-                allowGeo: true,
-                
-                // allow user to select somewhere
-                onSelect: function (mappy, details) {
-                    
-                    vm.Country(details.country);
-                    vm.State(details.area);
-                    vm.City(details.town);
-
-                    vm.Lattitude(details.lat);
-                    vm.Longitude(details.lng);
-
-                    vm.Name(details.name);
-                    vm.Address(details.street + ", " +
-                        details.area + ", " +
-                        details.town + ", " + details.postCode);
-
-                    //vm.Picture(details.photo);
-
-                    var msg =
-                        "name: " + details.name +
-                        "<br/>street: " + details.street + ", " +
-                            details.area + ", " +
-                            details.town + ", " + details.postCode +
-                        "<br/>telNo: " + details.telNo +
-                        "<br/>website: " + details.website +
-                        "<br/>g+: " + details.url
-                    ;
-                    mappy.showMsg("You selected ...", msg);
-                    // indicate tip should be closed
-                    return true;
-                },
-
-                // shows additional instructions to the user	
-                getHelpWindow: function (mappy) {
-                    var html =
-                        "<div class='mappy-help'>" +
-                            "<h3>Find a venue</h3>" +
-                            "<ol>" +
-                                "<li>Simply use the <strong>search</strong> box to find a venue in your area.</li>" +
-                                "<li>On the pop-up, click <strong>Select</strong> to pick a pitch.</li>" +
-                            "</ol>" +
-                            "<h3>New venues</h3>" +
-                            "<ol>" +
-                                "<li>Your venue isn't displayed?  Simply click on the map where your pitch is.</li>" +
-                                "<li>Fill in the details in the dialog.</li>" +
-                                "<li>You can drag the marker around to pinpoint the right location.</li>" +
-                                "<li>Once you're happy, click the <strong>OK</strong> button</li>" +
-                            "</ol>" +
-                        "</div>"
-                    ;
-
-                    return html;
-                }
-            });
-        }               
-
+        
         $("#add-place-form").dialog({
             modal: true,
             autoOpen: false,
@@ -323,11 +258,12 @@
             //initialize();
             initializeGoogleRaw();
             autocomplete.setBounds(map.getBounds());
-            
-            var vmPlace = new PlaceViewModel({ Country: "USA" });
-            ko.applyBindings(vmPlace, $('#places-panel')[0]);
+                        
+            ko.applyBindings(vmPlace, document.getElementById('places-panel'));
         });
     });
+
+    var vmPlace = new PlaceViewModel({ Country: "USA" });
 
     function PlaceViewModel(data) {
         var self = this;
@@ -361,16 +297,15 @@
         self.IsMobileReady = ko.observable(data.IsMobileReady);
         self.IsWidgetReady = ko.observable(data.IsWidgetReady);
         self.DateCreated = ko.observable(data.DateCreated);
-        self.DateModified = ko.observable(data.DateModified);
+        self.DateModified = ko.observable(data.DateModified);        
     }
 
     function EventsViewModel() {
         var self = this;
-
-        self.EventItems = ko.observableArray($.map(@Html.Raw(Json.Encode(eventItems)), function(item) { return new EventViewModel(item); }));
+        
+        self.EventItems = ko.observableArray($.map(@Html.Raw(Json.Encode(eventItems)), function(item) { return new EventViewModel(item); }));               
     }
 
-    ko.applyBindings(new EventsViewModel(), document.getElementById('#event-items'));
-
+    ko.applyBindings(new EventsViewModel(), document.getElementById('event-items'));
 
 </script>
