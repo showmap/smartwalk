@@ -7,6 +7,7 @@ namespace SmartWalk.Server.Records
         private IList<EntityMappingRecord> _entityMappingRecords;
         private IList<AddressRecord> _addressRecords;
         private IList<ContactRecord> _contactRecords;
+        private IList<EventMetadataRecord> _eventMetadataRecords;
 
         public virtual int Id { get; set; }
         public virtual SmartWalkUserRecord SmartWalkUserRecord { get; set; }
@@ -33,11 +34,18 @@ namespace SmartWalk.Server.Records
             set { _contactRecords = value; }
         }
 
+        public virtual IList<EventMetadataRecord> EventMetadataRecords
+        {
+            get { return _eventMetadataRecords; }
+            set { _eventMetadataRecords = value; }
+        }
+
         public EntityRecord()
         {
             _entityMappingRecords = new List<EntityMappingRecord>();
             _addressRecords = new List<AddressRecord>();
             _contactRecords = new List<ContactRecord>();
+            _eventMetadataRecords = new List<EventMetadataRecord>();
         }
     }
 
