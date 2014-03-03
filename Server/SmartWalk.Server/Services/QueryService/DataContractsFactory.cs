@@ -31,9 +31,9 @@ namespace SmartWalk.Server.Services.QueryService
                 }
 
                 if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Host)) &&
-                    record.HostRecord != null)
+                    record.EntityRecord != null)
                 {
-                    result.Host = GetEntityReferences(record.HostRecord, storages);
+                    result.Host = GetEntityReferences(record.EntityRecord, storages);
                 }
 
                 if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Title)))
@@ -136,7 +136,7 @@ namespace SmartWalk.Server.Services.QueryService
             {
                 if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Venue)))
                 {
-                    result.Venue = GetEntityReferences(record.VenueRecord, storages);
+                    result.Venue = GetEntityReferences(record.EntityRecord, storages);
                 }
 
                 if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.IsReference)))

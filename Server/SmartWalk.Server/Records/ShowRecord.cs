@@ -5,7 +5,7 @@ namespace SmartWalk.Server.Records
     public class ShowRecord
     {
         public virtual int Id { get; set; }
-        public virtual EntityRecord VenueRecord { get; set; }
+        public virtual EntityRecord EntityRecord { get; set; }
         public virtual bool IsReference { get; set; }
         public virtual string Title { get; set; }
         public virtual string Description { get; set; }

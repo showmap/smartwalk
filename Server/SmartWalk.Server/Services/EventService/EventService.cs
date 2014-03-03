@@ -13,8 +13,8 @@ namespace SmartWalk.Server.Services.EventService
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
             return user.EventMetadataRecords.Select(u => new EventMetadataVm {
                 Id = u.Id,
-                HostId = u.HostRecord.Id,
-                HostName = u.HostRecord.Name,
+                HostId = u.EntityRecord.Id,
+                HostName = u.EntityRecord.Name,
                 Title = u.Title,
                 CombineType = u.CombineType,
                 StartTime = u.StartTime.ToString("d",  CultureInfo.InvariantCulture),

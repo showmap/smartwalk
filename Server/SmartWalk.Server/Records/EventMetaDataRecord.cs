@@ -9,7 +9,7 @@ namespace SmartWalk.Server.Records
 
         public virtual int Id { get; set; }
         public virtual RegionRecord RegionRecord { get; set; }
-        public virtual EntityRecord HostRecord { get; set; } 
+        public virtual EntityRecord EntityRecord { get; set; } 
         public virtual SmartWalkUserRecord SmartWalkUserRecord { get; set; }
         public virtual string Title { get; set; }
         public virtual string Description { get; set; }

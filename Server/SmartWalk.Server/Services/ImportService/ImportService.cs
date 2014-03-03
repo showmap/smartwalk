@@ -407,7 +407,7 @@ namespace SmartWalk.Server.Services.ImportService
                 result = new EventMetadataRecord
                     {
                         RegionRecord = region,
-                        HostRecord = hostEntity,
+                        EntityRecord = hostEntity,
                         StartTime = xmlOrgEvent.StartDateObject.Date,
                         CombineType = (int)CombineType.None,
                         SmartWalkUserRecord = user,
@@ -443,13 +443,13 @@ namespace SmartWalk.Server.Services.ImportService
                 foreach (var xmlShow in xmlShows)
                 {
                     var show = shows.FirstOrDefault(s =>
-                        s.VenueRecord == venue &&
+                        s.EntityRecord == venue &&
                         s.Description == xmlShow.Desciption);
                     if (show == null)
                     {
                         show = new ShowRecord
                             {
-                                VenueRecord = venue,
+                                EntityRecord = venue,
                                 Description = xmlShow.Desciption
                             };
                         _showRepository.Create(show);
@@ -479,13 +479,13 @@ namespace SmartWalk.Server.Services.ImportService
             else
             {
                 var refShow = shows.FirstOrDefault(s =>
-                        s.VenueRecord == venue &&
+                        s.EntityRecord == venue &&
                         s.IsReference);
                 if (refShow == null)
                 {
                     refShow = new ShowRecord
                         {
-                            VenueRecord = venue,
+                            EntityRecord = venue,
                             IsReference = true
                         };
                     _showRepository.Create(refShow);
