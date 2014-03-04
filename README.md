@@ -13,7 +13,7 @@ Server Solution Setup
 ---------------------
 In order to turn on Orchard source code browsing and debugging the compiled in Debug mode Orchard binaries with PDB files should be placed into binaries folder instead of Release ones. ReSharper plugin in VS may be used for easier navigation within external source code.
 
-It's recommened to use directory junction link (mklink /j) to SmartWalk.Server folder from Orchard.Web/Modules folder to sync the last changes of SmartWalk.Server module with Orchard in real-time.
+It's recommened to use directory junction link (mklink /j) to SmartWalk.Server project folder and all dependent projects from Orchard.Web/Modules folder to sync the last changes of SmartWalk.Server module with Orchard in real-time.
 
 Client Solution Setup
 ---------------------
