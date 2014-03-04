@@ -11,6 +11,8 @@
 
 
             manifest.DefineStyle("SmartWalk.AddPlaces").SetUrl("add-places.css");
+            manifest.DefineStyle("SmartWalk.ListEvent").SetUrl("list-event.css");
+            manifest.DefineStyle("SmartWalk.EditEvent").SetUrl("edit-event.css");
             manifest.DefineStyle("Mappy").SetUrl("mappy.css");
 
             manifest.DefineStyle("SmartWalk.GoogleMaps").SetUrl("google-maps.css");

@@ -49,7 +49,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.5.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Core, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -91,6 +91,8 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\mappy.js" />
     <Content Include="Styles\add-places.css" />
+    <Content Include="Styles\edit-event.css" />
+    <Content Include="Styles\list-event.css" />
     <Content Include="Styles\fsquare-autocomplete.css" />
     <Content Include="Styles\google-maps.css" />
     <Content Include="Styles\mappy.css" />
@@ -163,7 +165,10 @@
     <Compile Include="Services\QueryService\ExpressionFactory.cs" />
     <Compile Include="Services\QueryService\IQueryService.cs" />
     <Compile Include="Services\QueryService\QueryService.cs" />
+    <Compile Include="ViewModels\EntityVm.cs" />
+    <Compile Include="ViewModels\EventMetadataFullVm.cs" />
     <Compile Include="ViewModels\EventMetadataVm.cs" />
+    <Compile Include="ViewModels\RegionVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Tools\ImportXmlData.cshtml" />
@@ -185,6 +190,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Events\AddPlaces.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Events\EditEvent.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

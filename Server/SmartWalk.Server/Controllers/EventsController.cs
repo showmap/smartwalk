@@ -9,6 +9,8 @@ using SmartWalk.Server.Services.EventService;
 using Orchard.ContentManagement;
 using SmartWalk.Server.Models;
 using Orchard.Themes;
+using Orchard.DisplayManagement;
+using Orchard.Mvc;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -34,6 +36,18 @@ namespace SmartWalk.Server.Controllers
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             return View(_eventService.GetUserEvents(user.Record));
+        }
+
+        public ActionResult EditEvent(int eventId)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            return View(_eventService.GetUserEventVmById(user.Record, eventId));
         }
 
         [HttpPost]

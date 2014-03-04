@@ -1,0 +1,73 @@
+﻿@using SmartWalk.Server.ViewModels
+
+@{
+    Style.Require("jQueryUI_Orchard");
+    Style.Require("SmartWalk.ListEvent");
+
+    //Script.Require("jQuery").AtHead();
+    Script.Require("jQueryUI").AtHead();
+    Script.Require("ko").AtHead();
+
+    var eventItem = (EventMetadataFullVm)Model;
+}
+<div class="ui-widget">
+    <button id="add-place-button">@T("Add place")</button>
+</div>
+
+@Html.Partial("AddPlaces")
+
+<div id="event-item">
+    <div id="metadata-panel">
+        <label for="region">@T("Region")</label>    
+        @Html.DropDownListFor(m => eventItem.EventMetadata.RegionId, eventItem.Regions.Select(u => new SelectListItem
+                       {
+                           Selected = u.Id == eventItem.EventMetadata.HostId,
+                           Text = u.DisplayName,
+                           Value = u.Id.ToString()
+                       }), new Dictionary<string, object> { { "data-bind", "value: RegionId, event: {blur: RegionIdOnBlur}" } })
+
+        <label for="host">@T("Host")</label>
+        @Html.DropDownListFor(m => eventItem.EventMetadata.HostId, eventItem.Hosts.Select(u => new SelectListItem
+                       {
+                           Selected = u.Id == eventItem.EventMetadata.HostId,
+                           Text = u.DisplayName,
+                           Value = u.Id.ToString()
+                       }), new Dictionary<string, object> { { "data-bind", "value: HostId, event: {blur: HostIdOnBlur}" } })
+        
+        <label for="start-time">@T("Start Time")</label>
+        <input type="text" id="start-time" data-bind="value: StartTime"/>        
+    </div>
+</div>
+
+<script>   
+    function EventViewModel(data) {
+        var self = this;
+
+        self.Id = ko.observable(data.Id);
+        self.HostId = ko.observable(data.HostId);
+        self.RegionId = ko.observable(data.RegionId);
+        self.HostName = ko.observable(data.HostName);
+
+        self.Title = ko.observable(data.Title);
+        self.Description = ko.observable(data.Description);
+        self.StartTime = ko.observable(data.StartTime);
+        self.EndTime = ko.observable(data.EndTime);
+
+        self.CombineType = ko.observable(data.CombineType);
+        self.IsMobileReady = ko.observable(data.IsMobileReady);
+        self.IsWidgetReady = ko.observable(data.IsWidgetReady);
+        self.DateCreated = ko.observable(data.DateCreated);
+        self.DateModified = ko.observable(data.DateModified);
+        
+        self.HostIdOnBlur = function () {
+            //self.save();
+        };
+        
+        self.RegionIdOnBlur = function () {
+            //self.save();
+        };
+    }
+
+    ko.applyBindings(new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata))), document.getElementById('event-item'));
+
+</script>

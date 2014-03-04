@@ -9,6 +9,7 @@ namespace SmartWalk.Server.ViewModels
     {
         public int Id { get; set; }
         public int HostId { get; set; }
+        public int RegionId { get; set; }
         public string HostName { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
