@@ -15,7 +15,7 @@ namespace SmartWalk.Labs.Api
                             new RequestSelect
                                 {
                                     Fields = new[] {"host", "title", "startTime", "region"},
-                                    From = RequestSelectFromTables.EventMetadata.ToLowerInvariant(),
+                                    From = RequestSelectFromTables.GroupedEventMetadata.ToLowerInvariant(),
                                     As = "em",
                                     Where = new[]
                                         {
@@ -31,12 +31,12 @@ namespace SmartWalk.Labs.Api
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     Value = state
                                                 },
-                                            new RequestSelectWhere
+                                            /*new RequestSelectWhere
                                                 {
                                                     Field = "Region.city",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
                                                     Value = city
-                                                }
+                                                }*/
                                         }
                                 },
                             new RequestSelect

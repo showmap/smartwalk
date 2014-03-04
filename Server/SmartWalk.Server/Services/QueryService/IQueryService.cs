@@ -5,6 +5,6 @@ namespace SmartWalk.Server.Services.QueryService
 {
     public interface IQueryService : IDependency 
     {
-        Response ExecuteQuery(Request request);
+        Response ExecuteRequestQuery(Request request);
     }
 }

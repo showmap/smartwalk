@@ -64,13 +64,14 @@ namespace SmartWalk.Server.Services.QueryService
                 if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Shows)) &&
                     record.EventMappingRecords != null)
                 {
-                    result.Shows = record.EventMappingRecords
-                                         .Select(mr => new Reference
-                                             {
-                                                 Id = mr.ShowRecord_Id,
-                                                 Storage = mr.StorageRecord.StorageKey
-                                             })
-                                         .ToArray();
+                    result.Shows =
+                        record.EventMappingRecords
+                              .Select(mr => new Reference
+                                  {
+                                      Id = mr.ShowRecord_Id,
+                                      Storage = mr.StorageRecord.StorageKey
+                                  })
+                              .ToArray();
                 }
             }
 
@@ -178,7 +179,7 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
-        public static Region CreateDataContract(RegionRecord record)
+        private static Region CreateDataContract(RegionRecord record)
         {
             var result = new Region
                 {
@@ -190,7 +191,7 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
-        public static Contact CreateDataContract(ContactRecord record)
+        private static Contact CreateDataContract(ContactRecord record)
         {
             var result = new Contact
                 {
@@ -202,7 +203,7 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
-        public static Address CreateDataContract(AddressRecord record)
+        private static Address CreateDataContract(AddressRecord record)
         {
             var result = new Address
                 {
