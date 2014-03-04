@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Net;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SmartWalk.Labs.Api.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
+using System.Linq;
 
 namespace SmartWalk.Labs.Api
 {
@@ -35,7 +38,16 @@ namespace SmartWalk.Labs.Api
                     Console.WriteLine(result);
 
                     var response = JsonConvert.DeserializeObject<Response>(result);
+
                     Console.WriteLine("Response hash code: " + response.GetHashCode());
+
+                    // extract EventMetadata instances
+                    var eventMetadatas = response
+                        .Selects.First().Records
+                        .Cast<JObject>()
+                        .Select(r => r.ToObject<EventMetadata>()).ToArray();
+
+                    Console.WriteLine("EventMetadatas hash code: " + eventMetadatas.GetHashCode());
                 }
                 catch (Exception ex)
                 {
