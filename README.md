@@ -13,13 +13,15 @@ Server Solution Setup
 ---------------------
 In order to turn on Orchard source code browsing and debugging the compiled in Debug mode Orchard binaries with PDB files should be placed into binaries folder instead of Release ones. ReSharper plugin in VS may be used for easier navigation within external source code.
 
-It's recommened to use directory junction link (mklink /j) to SmartWalk.Server project folder and all dependent projects from Orchard.Web/Modules folder to sync the last changes of SmartWalk.Server module with Orchard in real-time.
+It's recommened to use directory junction link (mklink /j) to SmartWalk.Server project folder from Orchard.Web/Modules folder to sync the last changes of SmartWalk.Server module with Orchard in real-time.
+
+If Orchard solution is used as a main environment for server development using the regular references (not junction links) to SmartWalk.Server and its dependent projects is recommended to avoid paths resolution conflicts. 
 
 Client Solution Setup
 ---------------------
 The Xamarin Studio for Mac OS or Visual Studio with Xamarin Plugin should be used for opening and compiling SmartWalk.Client.sln solution.
 
-Server and Client 3rd party Binaries  SETUP
+Server and Client 3rd party Binaries Setup
 -------------------------------------------
 The referenced in solution projects binaries are not included into the repo. They should be referenced from another repo smartwalk-binaries (https://github.com/ievgen/smartwalk-binaries). It's recommended to clone this repo next to smartwalk one, so the project links will be valid.
 
