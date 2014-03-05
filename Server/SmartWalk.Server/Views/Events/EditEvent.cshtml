@@ -1,4 +1,7 @@
 ﻿@using SmartWalk.Server.ViewModels
+@using SmartWalk.Server.Records
+
+@Display(New.DatePickerLocalization())
 
 @{
     Style.Require("jQueryUI_Orchard");
@@ -6,7 +9,7 @@
 
     //Script.Require("jQuery").AtHead();
     Script.Require("jQueryUI").AtHead();
-    Script.Require("ko").AtHead();
+    Script.Require("ko.datetime").AtHead();
 
     var eventItem = (EventMetadataFullVm)Model;
 }
@@ -18,7 +21,7 @@
 
 <div id="event-item">
     <div id="metadata-panel">
-        <label for="region">@T("Region")</label>    
+        @Html.LabelFor(m => eventItem.EventMetadata.RegionId, @T("Region"))
         @Html.DropDownListFor(m => eventItem.EventMetadata.RegionId, eventItem.Regions.Select(u => new SelectListItem
                        {
                            Selected = u.Id == eventItem.EventMetadata.HostId,
@@ -26,7 +29,7 @@
                            Value = u.Id.ToString()
                        }), new Dictionary<string, object> { { "data-bind", "value: RegionId, event: {blur: RegionIdOnBlur}" } })
 
-        <label for="host">@T("Host")</label>
+        @Html.LabelFor(m => eventItem.EventMetadata.HostId, @T("Host"))
         @Html.DropDownListFor(m => eventItem.EventMetadata.HostId, eventItem.Hosts.Select(u => new SelectListItem
                        {
                            Selected = u.Id == eventItem.EventMetadata.HostId,
@@ -34,12 +37,37 @@
                            Value = u.Id.ToString()
                        }), new Dictionary<string, object> { { "data-bind", "value: HostId, event: {blur: HostIdOnBlur}" } })
         
-        <label for="start-time">@T("Start Time")</label>
-        <input type="text" id="start-time" data-bind="value: StartTime"/>        
+        <label for="title">@T("Title")</label>
+        <input type="text" id="title" data-bind="value: Title"/>
+        
+        <label for="description">@T("Description")</label>
+        <textarea id="description" data-bind="value: Description"></textarea>
+        
+        <label for="start-time">@T("Start time")</label>
+        <input type="text" data-bind="datepicker: StartTime, datepickerOptions: { showAnim: '' }" />
+        
+        <label for="end-time">@T("End time")</label>
+        <input type="text" id="end-time" data-bind="datepicker: EndTime, datepickerOptions: { showAnim: '' }"/>
+        
+        @Html.LabelFor(m => eventItem.EventMetadata.CombineType, @T("Combine type"))
+        @Html.DropDownListFor(m => eventItem.EventMetadata.CombineType,
+                                               Enum.GetNames(typeof(CombineType))
+                                                   .Select(u => new SelectListItem
+                                                   {
+                                                       Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.EventMetadata.CombineType,
+                                                       Text = @T(u).ToString(),
+                                                       Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
+                                                   }), new Dictionary<string, object> { { "data-bind", "value:CombineType, event: {blur: CombineTypeOnBlur}" } })
+        
+        @Html.LabelFor(m => eventItem.EventMetadata.IsMobileReady, @T("Is mobile ready"))
+        @Html.CheckBoxFor(m => eventItem.EventMetadata.IsMobileReady, new Dictionary<string, object> { { "data-bind", "checked: IsMobileReady, event: {blur: IsMobileReadyOnBlur}" } })
+        
+        @Html.LabelFor(m => eventItem.EventMetadata.IsWidgetReady, @T("Is widget ready"))
+        @Html.CheckBoxFor(m => eventItem.EventMetadata.IsWidgetReady, new Dictionary<string, object> { { "data-bind", "checked: IsWidgetReady, event: {blur: IsWidgetReadyOnBlur}" } })
     </div>
 </div>
 
-<script>   
+<script language="javascript">   
     function EventViewModel(data) {
         var self = this;
 
@@ -58,7 +86,19 @@
         self.IsWidgetReady = ko.observable(data.IsWidgetReady);
         self.DateCreated = ko.observable(data.DateCreated);
         self.DateModified = ko.observable(data.DateModified);
-        
+
+        self.IsWidgetReadyOnBlur = function () {
+            //self.save();
+        };
+
+        self.IsMobileReadyOnBlur = function () {
+            //self.save();
+        };
+
+        self.CombineTypeOnBlur = function() {
+            //self.save();
+        };
+
         self.HostIdOnBlur = function () {
             //self.save();
         };
@@ -66,8 +106,11 @@
         self.RegionIdOnBlur = function () {
             //self.save();
         };
-    }
+    }    
 
-    ko.applyBindings(new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata))), document.getElementById('event-item'));
-
+    (function ($) {        
+        $(document).ready(function () {
+            ko.applyBindings(new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata))), document.getElementById('event-item'));
+        });
+    })(jQuery);
 </script>

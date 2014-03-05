@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-	<Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Core, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -89,6 +89,7 @@
   <ItemGroup>
     <Content Include="Scripts\4sqacplugin.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\kodatetime.js" />
     <Content Include="Scripts\mappy.js" />
     <Content Include="Styles\add-places.css" />
     <Content Include="Styles\edit-event.css" />
@@ -159,12 +160,14 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\EventService\EventService.cs" />
     <Compile Include="Services\EventService\IEventService.cs" />
+    <Compile Include="Services\EventService\ViewModelContractFactory.cs" />
     <Compile Include="Services\ImportService\IImportService.cs" />
     <Compile Include="Services\ImportService\ImportService.cs" />
     <Compile Include="Services\QueryService\DataContractsFactory.cs" />
     <Compile Include="Services\QueryService\ExpressionFactory.cs" />
     <Compile Include="Services\QueryService\IQueryService.cs" />
     <Compile Include="Services\QueryService\QueryService.cs" />
+    <Compile Include="ViewModels\ContactVm.cs" />
     <Compile Include="ViewModels\EntityVm.cs" />
     <Compile Include="ViewModels\EventMetadataFullVm.cs" />
     <Compile Include="ViewModels\EventMetadataVm.cs" />

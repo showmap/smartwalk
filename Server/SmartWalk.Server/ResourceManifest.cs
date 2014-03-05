@@ -21,9 +21,12 @@
         
             manifest.DefineScript("Bootstrap").SetUrl("bootstrap.js");
             manifest.DefineScript("JQuery-1-10-2").SetUrl("jquery-1.10.2.js");
-            
+
+            manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetDependencies("ko");
+
             manifest.DefineStyle("FSquare.Autocomplete").SetUrl("fsquare-autocomplete.css");
             manifest.DefineScript("FSquare.Autocomplete").SetUrl("4sqacplugin.js");
+
             manifest.DefineScript("Mappy").SetUrl("mappy.js").SetDependencies("Bootstrap");
         }
     }
