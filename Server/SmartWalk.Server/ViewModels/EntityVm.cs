@@ -15,9 +15,15 @@ namespace SmartWalk.Server.ViewModels
         public string Description { get; set; }
         public string Picture { get; set; }
 
+        public IList<ContactVm> Contacts { get; set; }
+
         public string DisplayName
         {
             get { return Name; }
-        } 
+        }
+
+        public EntityVm() {
+            Contacts = new List<ContactVm>();
+        }
     }
 }

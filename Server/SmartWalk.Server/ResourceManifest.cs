@@ -8,9 +8,8 @@
         {
             var manifest = builder.Add();
 
-
-
-            manifest.DefineStyle("SmartWalk.AddPlaces").SetUrl("add-places.css");
+            manifest.DefineStyle("SmartWalk.AddPlace").SetUrl("add-place.css");
+            manifest.DefineStyle("SmartWalk.AddEntity").SetUrl("add-entity.css");
             manifest.DefineStyle("SmartWalk.ListEvent").SetUrl("list-event.css");
             manifest.DefineStyle("SmartWalk.EditEvent").SetUrl("edit-event.css");
             manifest.DefineStyle("Mappy").SetUrl("mappy.css");
@@ -22,7 +21,9 @@
             manifest.DefineScript("Bootstrap").SetUrl("bootstrap.js");
             manifest.DefineScript("JQuery-1-10-2").SetUrl("jquery-1.10.2.js");
 
-            manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetDependencies("ko");
+            manifest.DefineScript("SmartWalk.AntiForgery").SetUrl("antiforgery.js");
+
+            manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetDependencies("ko", "SmartWalk.AntiForgery");
 
             manifest.DefineStyle("FSquare.Autocomplete").SetUrl("fsquare-autocomplete.css");
             manifest.DefineScript("FSquare.Autocomplete").SetUrl("4sqacplugin.js");

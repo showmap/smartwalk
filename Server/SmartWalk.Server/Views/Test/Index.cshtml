@@ -2,7 +2,7 @@
 @{
     Style.Require("jQueryUI_Orchard");
     Style.Require("SmartWalk.GoogleMaps");
-    Style.Require("SmartWalk.AddPlaces");
+    Style.Require("SmartWalk.AddPlace");
     Style.Require("Mappy");
 
     //Script.Require("jQuery").AtHead();
@@ -13,11 +13,13 @@
 
     var eventItems = (IList<EventMetadataVm>)Model.EventItems;
 }
+
 <div class="ui-widget">
     <button id="add-place-button">@T("Add place")</button>
 </div>
 
 <div id="event-items" data-bind="visible: EventItems().length > 0">
+    @Html.AntiForgeryTokenOrchard()
     <p>@T("Events")</p>    
     <table class="event-item">
         <thead>

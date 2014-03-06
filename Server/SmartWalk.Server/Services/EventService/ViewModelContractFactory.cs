@@ -24,6 +24,21 @@ namespace SmartWalk.Server.Services.EventService
             };
         }
 
+        public static ContactVm CreateViewModelContract(ContactRecord record)
+        {
+            if (record == null)
+                return null;
+
+            return new ContactVm
+            {
+                Id = record.Id,
+                EntityId = record.EntityRecord.Id,
+                Type = record.Type,
+                Title = record.Title,
+                Contact = record.Contact
+            };
+        }
+
         public static EntityVm CreateViewModelContract(EntityRecord record)
         {
             if (record == null)
@@ -36,7 +51,8 @@ namespace SmartWalk.Server.Services.EventService
                 Type = record.Type,
                 Name = record.Name,
                 Picture = record.Picture,
-                Description = record.Description
+                Description = record.Description,
+                Contacts = record.ContactRecords.Select(CreateViewModelContract).ToList()
             };
         }
 

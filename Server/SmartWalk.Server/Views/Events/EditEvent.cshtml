@@ -17,26 +17,33 @@
     <button id="add-place-button">@T("Add place")</button>
 </div>
 
-@Html.Partial("AddPlaces")
+@Html.Partial("AddPlace")
+@Html.Partial("AddHost")
 
 <div id="event-item">
+    @Html.AntiForgeryTokenOrchard()
     <div id="metadata-panel">
         @Html.LabelFor(m => eventItem.EventMetadata.RegionId, @T("Region"))
         @Html.DropDownListFor(m => eventItem.EventMetadata.RegionId, eventItem.Regions.Select(u => new SelectListItem
-                       {
-                           Selected = u.Id == eventItem.EventMetadata.HostId,
-                           Text = u.DisplayName,
-                           Value = u.Id.ToString()
-                       }), new Dictionary<string, object> { { "data-bind", "value: RegionId, event: {blur: RegionIdOnBlur}" } })
+        {
+            Selected = u.Id == eventItem.EventMetadata.HostId,
+            Text = u.DisplayName,
+            Value = u.Id.ToString()
+        }), new Dictionary<string, object> { { "data-bind", "value: RegionId, event: {blur: RegionIdOnBlur}" } })
 
         @Html.LabelFor(m => eventItem.EventMetadata.HostId, @T("Host"))
         @Html.DropDownListFor(m => eventItem.EventMetadata.HostId, eventItem.Hosts.Select(u => new SelectListItem
-                       {
-                           Selected = u.Id == eventItem.EventMetadata.HostId,
-                           Text = u.DisplayName,
-                           Value = u.Id.ToString()
-                       }), new Dictionary<string, object> { { "data-bind", "value: HostId, event: {blur: HostIdOnBlur}" } })
+        {
+            Selected = u.Id == eventItem.EventMetadata.HostId,
+            Text = u.DisplayName,
+            Value = u.Id.ToString()
+        }), new Dictionary<string, object> { { "data-bind", "value: HostId, event: {blur: HostIdOnBlur}" } })
         
+        <div class="ui-widget">
+            <button id="add-host-button">@T("Add host")</button>
+        </div>
+
+
         <label for="title">@T("Title")</label>
         <input type="text" id="title" data-bind="value: Title"/>
         
@@ -51,13 +58,13 @@
         
         @Html.LabelFor(m => eventItem.EventMetadata.CombineType, @T("Combine type"))
         @Html.DropDownListFor(m => eventItem.EventMetadata.CombineType,
-                                               Enum.GetNames(typeof(CombineType))
-                                                   .Select(u => new SelectListItem
-                                                   {
-                                                       Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.EventMetadata.CombineType,
-                                                       Text = @T(u).ToString(),
-                                                       Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
-                                                   }), new Dictionary<string, object> { { "data-bind", "value:CombineType, event: {blur: CombineTypeOnBlur}" } })
+                              Enum.GetNames(typeof(CombineType))
+                                  .Select(u => new SelectListItem
+                                  {
+                                      Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.EventMetadata.CombineType,
+                                      Text = @T(u).ToString(),
+                                      Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
+                                  }), new Dictionary<string, object> { { "data-bind", "value:CombineType, event: {blur: CombineTypeOnBlur}" } })
         
         @Html.LabelFor(m => eventItem.EventMetadata.IsMobileReady, @T("Is mobile ready"))
         @Html.CheckBoxFor(m => eventItem.EventMetadata.IsMobileReady, new Dictionary<string, object> { { "data-bind", "checked: IsMobileReady, event: {blur: IsMobileReadyOnBlur}" } })

@@ -10,11 +10,6 @@
 
     var eventItems = (IList<EventMetadataVm>)Model;
 }
-<div class="ui-widget">
-    <button id="add-place-button">@T("Add place")</button>
-</div>
-
-@Html.Partial("AddPlaces")
 
 <div id="event-items" data-bind="visible: EventItems().length > 0">
     <p>@T("Events")</p>    

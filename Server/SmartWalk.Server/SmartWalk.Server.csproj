@@ -82,16 +82,22 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Source.1.7.2\src\Orchard.Web\bin\System.Web.WebPages.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\4sqacplugin.js" />
+    <Content Include="Scripts\antiforgery.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\kodatetime.js" />
     <Content Include="Scripts\mappy.js" />
-    <Content Include="Styles\add-places.css" />
+    <Content Include="Styles\add-place.css" />
+    <Content Include="Styles\add-entity.css" />
     <Content Include="Styles\edit-event.css" />
     <Content Include="Styles\list-event.css" />
     <Content Include="Styles\fsquare-autocomplete.css" />
@@ -119,6 +125,9 @@
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
+    <Compile Include="Extensions\AntiForgeryRelocation.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Extensions\JsonNetResult.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\DataContracts\Address.cs" />
@@ -195,10 +204,13 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Events\AddPlaces.cshtml" />
+    <Content Include="Views\Events\AddPlace.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Events\EditEvent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Events\AddHost.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

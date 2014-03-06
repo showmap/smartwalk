@@ -11,5 +11,8 @@ namespace SmartWalk.Server.Services.EventService
     public interface IEventService : IDependency {
         IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user);
         EventMetadataFullVm GetUserEventVmById(SmartWalkUserRecord user, int id);
+        EntityVm GetEntityVmById(int entityId);
+        void AddHost(SmartWalkUserRecord user, EntityVm hostVm);
+        ContactRecord AddContact(EntityRecord host, ContactVm contactVm);
     }
 }
