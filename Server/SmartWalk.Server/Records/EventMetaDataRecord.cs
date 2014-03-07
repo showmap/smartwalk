@@ -6,6 +6,7 @@ namespace SmartWalk.Server.Records
     public class EventMetadataRecord
     {
         private IList<EventMappingRecord> _eventMappingRecords;
+        private IList<ShowRecord> _showRecords;
 
         public virtual int Id { get; set; }
         public virtual RegionRecord RegionRecord { get; set; }
@@ -27,9 +28,16 @@ namespace SmartWalk.Server.Records
             set { _eventMappingRecords = value; }
         }
 
+        public virtual IList<ShowRecord> ShowRecords
+        {
+            get { return _showRecords; }
+            set { _showRecords = value; }
+        }
+
         public EventMetadataRecord()
         {
             _eventMappingRecords = new List<EventMappingRecord>();
+            _showRecords = new List<ShowRecord>();
         }
     }
 

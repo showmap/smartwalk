@@ -24,6 +24,25 @@ namespace SmartWalk.Server.Services.EventService
             };
         }
 
+        public static ShowVm CreateViewModelContract(ShowRecord record) {
+            if (record == null)
+                return null;
+
+            return new ShowVm {
+                Id = record.Id,
+                VenueId = record.EntityRecord.Id,
+                Title = record.Title,
+                Description = record.Description,
+                StartDate = record.StartTime.HasValue ? record.StartTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
+                StartTime = record.StartTime.HasValue ? record.StartTime.Value.ToString("t", CultureInfo.InvariantCulture) : "",
+                EndDate = record.EndTime.HasValue ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
+                EndTime = record.EndTime.HasValue ? record.EndTime.Value.ToString("t", CultureInfo.InvariantCulture) : "",
+                IsReference = record.IsReference,
+                Picture = record.Picture,
+                DetailsUrl = record.DetailsUrl
+            };
+        }
+
         public static ContactVm CreateViewModelContract(ContactRecord record)
         {
             if (record == null)

@@ -450,6 +450,7 @@ namespace SmartWalk.Server.Services.ImportService
                         show = new ShowRecord
                             {
                                 EntityRecord = venue,
+                                EventMetadataRecord = eventMetadata,
                                 Description = xmlShow.Desciption
                             };
                         _showRepository.Create(show);
@@ -486,6 +487,7 @@ namespace SmartWalk.Server.Services.ImportService
                     refShow = new ShowRecord
                         {
                             EntityRecord = venue,
+                            EventMetadataRecord = eventMetadata,
                             IsReference = true
                         };
                     _showRepository.Create(refShow);

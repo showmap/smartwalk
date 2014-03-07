@@ -11,7 +11,7 @@
     host.Contacts.Add(new ContactVm {Title = "email", Contact = "test@ukr.net"});
 }
 
-<div id="add-host-form" title="@T("Add Host")" add-host-url="@Url.Action("AddHost", "Events", new {area = "SmartWalk.Server"})">
+<div id="add-host-form" title="@T("Add Host")" add-host-url="@Url.Action("AddHost", "Event", new {area = "SmartWalk.Server"})">
     <div id="host-panel">
         <div id="description-panel">
             <label for="name">@T("Name")</label><input type="text" id="name" data-bind="value: Name"/>            

@@ -14,12 +14,17 @@ namespace SmartWalk.Server.Services.EventService
         private readonly IRepository<RegionRecord> _regionRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
         private readonly IRepository<ContactRecord> _contactRepository;
+        private readonly IRepository<ShowRecord> _showRepository;
+        private readonly IRepository<EventMappingRecord> _eventMappingRepository;
 
-        public EventService(IRepository<RegionRecord> regionRepository, IRepository<EntityRecord> entityRepository, IRepository<ContactRecord> contactRepository)
+        public EventService(IRepository<RegionRecord> regionRepository, IRepository<EntityRecord> entityRepository,
+            IRepository<ContactRecord> contactRepository, IRepository<ShowRecord> showRepository, IRepository<EventMappingRecord> eventMappingRepository)
         {
             _regionRepository = regionRepository;
             _entityRepository = entityRepository;
             _contactRepository = contactRepository;
+            _showRepository = showRepository;
+            _eventMappingRepository = eventMappingRepository;
         }
 
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
@@ -27,11 +32,18 @@ namespace SmartWalk.Server.Services.EventService
         }
 
         public EventMetadataFullVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
-            return new EventMetadataFullVm {
-                EventMetadata = ViewModelContractFactory.CreateViewModelContract(user.EventMetadataRecords.FirstOrDefault(u => u.Id == id)),
-                Hosts = user.Entities.Where(e => e.Type == (int)EntityType.Host).Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
-                Regions = _regionRepository.Table.Select(ViewModelContractFactory.CreateViewModelContract).ToList()
-            };
+            var eventMetadata = user.EventMetadataRecords.FirstOrDefault(u => u.Id == id);
+            if (eventMetadata != null) {
+                return new EventMetadataFullVm {
+                    EventMetadata = ViewModelContractFactory.CreateViewModelContract(eventMetadata),
+                    Hosts = user.Entities.Where(e => e.Type == (int) EntityType.Host).Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
+                    Regions = _regionRepository.Table.Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
+                    Shows = eventMetadata.ShowRecords.Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
+                    Venues = _entityRepository.Table.Where(e => e.Type == (int) EntityType.Venue && (e.SmartWalkUserRecord.Id == user.Id || e.ShowRecords.Any(s => s.EntityRecord.SmartWalkUserRecord.Id == user.Id))).Select(ViewModelContractFactory.CreateViewModelContract).ToList()
+                };
+            }
+
+            return null;
         }
 
         public EntityVm GetEntityVmById(int entityId) {

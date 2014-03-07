@@ -16,18 +16,18 @@ using SmartWalk.Server.ViewModels;
 namespace SmartWalk.Server.Controllers
 {
     [HandleError, Themed]
-    public class EventsController : BaseController {
+    public class EventController : BaseController {
         private readonly IOrchardServices _orchardServices;
 
         private readonly IEventService _eventService;
 
-        public EventsController(IEventService eventService, IOrchardServices orchardServices) {
+        public EventController(IEventService eventService, IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
 
             _eventService = eventService;
         }
 
-        public ActionResult Index()
+        public ActionResult ListEvents()
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
@@ -78,6 +78,18 @@ namespace SmartWalk.Server.Controllers
             catch {
                 return Json(false);
             }
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult SaveEvent(EventMetadataFullVm item) {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             return Json(true);
         }

@@ -20,7 +20,7 @@
 @Html.Partial("AddPlace")
 @Html.Partial("AddHost")
 
-<div id="event-item">
+<div id="event-item" save-event-url="@Url.Action("SaveEvent", "Event", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
     <div id="metadata-panel">
         @Html.LabelFor(m => eventItem.EventMetadata.RegionId, @T("Region"))
@@ -71,28 +71,98 @@
         
         @Html.LabelFor(m => eventItem.EventMetadata.IsWidgetReady, @T("Is widget ready"))
         @Html.CheckBoxFor(m => eventItem.EventMetadata.IsWidgetReady, new Dictionary<string, object> { { "data-bind", "checked: IsWidgetReady, event: {blur: IsWidgetReadyOnBlur}" } })
+        
+        <div id="shows-panel">
+            <ul data-bind="visible: Shows().length > 0, foreach: Shows">
+                <li>
+                    <label data-bind="attr: { for: 'show-title-' + Id() }">@T("Title")</label>
+                    <input type="text" data-bind="attr: {id:'show-title-' + Id()}, value: Title"/>
+        
+                    <label data-bind="attr: { for: 'show-description-' + Id() }">@T("Description")</label>
+                    <textarea data-bind="attr: { id: 'show-description-' + Id() }, value: Description"></textarea>
+                    
+                    <a href="#" data-bind="click: $root.removeShow">Remove</a>                    
+                </li>
+            </ul>
+            <button data-bind="click: addShow">@T("Add show")</button>        
+        </div>
     </div>
 </div>
 
-<script language="javascript">   
+<script language="javascript">
+
+    function ShowViewModel(data) {
+        var self = this;
+        
+        self.Id = ko.observable(data.Id);
+        self.VenueId = ko.observable(data.VenueId);
+        self.IsReference = ko.observable(data.IsReference);
+        self.Title = ko.observable(data.Title);
+        self.Description = ko.observable(data.Description);
+        self.StartDate = ko.observable(data.StartDate);
+        self.StartTime = ko.observable(data.StartTime);
+        self.EndDate = ko.observable(data.EndDate);
+        self.EndTime = ko.observable(data.EndTime);
+        self.Picture = ko.observable(data.Picture);
+        self.DetailsUrl = ko.observable(data.DetailsUrl);
+    }
+
     function EventViewModel(data) {
         var self = this;
 
-        self.Id = ko.observable(data.Id);
-        self.HostId = ko.observable(data.HostId);
-        self.RegionId = ko.observable(data.RegionId);
-        self.HostName = ko.observable(data.HostName);
+        self.Id = ko.observable(data.EventMetadata.Id);
+        self.HostId = ko.observable(data.EventMetadata.HostId);
+        self.RegionId = ko.observable(data.EventMetadata.RegionId);
+        self.HostName = ko.observable(data.EventMetadata.HostName);
 
-        self.Title = ko.observable(data.Title);
-        self.Description = ko.observable(data.Description);
-        self.StartTime = ko.observable(data.StartTime);
-        self.EndTime = ko.observable(data.EndTime);
+        self.Title = ko.observable(data.EventMetadata.Title);
+        self.Description = ko.observable(data.EventMetadata.Description);
+        self.StartTime = ko.observable(data.EventMetadata.StartTime);
+        self.EndTime = ko.observable(data.EventMetadata.EndTime);
 
-        self.CombineType = ko.observable(data.CombineType);
-        self.IsMobileReady = ko.observable(data.IsMobileReady);
-        self.IsWidgetReady = ko.observable(data.IsWidgetReady);
-        self.DateCreated = ko.observable(data.DateCreated);
-        self.DateModified = ko.observable(data.DateModified);
+        self.CombineType = ko.observable(data.EventMetadata.CombineType);
+        self.IsMobileReady = ko.observable(data.EventMetadata.IsMobileReady);
+        self.IsWidgetReady = ko.observable(data.EventMetadata.IsWidgetReady);
+        self.DateCreated = ko.observable(data.EventMetadata.DateCreated);
+        self.DateModified = ko.observable(data.EventMetadata.DateModified);
+
+        self.Shows = ko.observableArray($.map(data.Shows, function(item) { return new ShowViewModel(item); }));
+        
+        // Operations
+        self.addShow = function () {
+            self.Shows.push(new ShowViewModel({ Id: 0, VenueId: 0, IsReference: false, Title: "Title", Description: "Contact" }));
+        };
+
+        self.removeShow = function (item) { self.Shows.remove(item); };
+
+        self.save = function () {
+            var token = '@Html.AntiForgeryTokenValueOrchard()';
+            var headers = {};
+            // other headers omitted
+            headers['__RequestVerificationToken'] = token;
+
+            var ajdata = self ? ko.toJSON(self) : null;
+
+            var urlUpdate = $("#event-item").attr("save-event-url");
+
+            var config = {
+                async: true,
+                url: urlUpdate,
+                type: "POST",
+                headers: headers,
+                data: ajdata,
+                dataType: "json",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                __RequestVerificationToken: token,
+                error: function (e) {
+                },
+                success: function (data) {
+                }
+            };
+            $.ajax(config);
+        };
+
 
         self.IsWidgetReadyOnBlur = function () {
             //self.save();
@@ -117,7 +187,8 @@
 
     (function ($) {        
         $(document).ready(function () {
-            ko.applyBindings(new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata))), document.getElementById('event-item'));
+            var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
+            ko.applyBindings(vm, document.getElementById('event-item'));            
         });
     })(jQuery);
 </script>

@@ -122,7 +122,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\EventsController.cs" />
+    <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
@@ -181,6 +181,7 @@
     <Compile Include="ViewModels\EventMetadataFullVm.cs" />
     <Compile Include="ViewModels\EventMetadataVm.cs" />
     <Compile Include="ViewModels\RegionVm.cs" />
+    <Compile Include="ViewModels\ShowVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Tools\ImportXmlData.cshtml" />
@@ -198,19 +199,19 @@
     <Content Include="Views\Test\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Events\Index.cshtml" />
+    <Content Include="Views\Event\ListEvents.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Events\AddPlace.cshtml" />
+    <Content Include="Views\Event\AddPlace.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Events\EditEvent.cshtml" />
+    <Content Include="Views\Event\EditEvent.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Events\AddHost.cshtml" />
+    <Content Include="Views\Event\AddHost.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
