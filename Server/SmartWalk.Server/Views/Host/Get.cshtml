@@ -1,0 +1,152 @@
+﻿@using SmartWalk.Server.Records
+@using SmartWalk.Server.ViewModels
+
+@{
+    Style.Require("SmartWalk.AddEntity");
+
+    var host = new EntityVm {
+        Name = "Test name",        
+    };
+
+    host.Contacts.Add(new ContactVm {Title = "email", Contact = "test@ukr.net"});
+}
+
+<div id="add-host-form" title="@T("Add Host")" add-host-url="@Url.Action("AddHost", "Event", new {area = "SmartWalk.Server"})">
+    <div id="host-panel">
+        <div id="description-panel">
+            <label for="name">@T("Name")</label><input type="text" id="name" data-bind="value: Name"/>            
+            <label for="picture">@T("Picture")</label><input type="text" id="picture" data-bind="value: Picture"/>
+            <label for="description">@T("Description")</label><textarea id="description" data-bind="value: Description"></textarea>
+        </div>
+        
+        <div id="contacts-panel">
+            <table data-bind="visible: Contacts().length > 0">
+                <thead>
+                    <tr>
+                        <th>Type</th><th>Title</th><th>Contact</th><th></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: Contacts">
+                    <tr>
+                        <td>
+                            @Html.DropDownList("Type", Enum.GetNames(typeof(ContactType))
+                                                           .Select(u => new SelectListItem
+                                                           {                                                       
+                                                               Text = @T(u).ToString(),
+                                                               Value = ((int)Enum.Parse(typeof(ContactType), u)).ToString()
+                                                           }), new Dictionary<string, object> { { "data-bind", "value:Type" } })                        
+                        </td>
+                        <td><input type="text" data-bind="value: Title"/></td>
+                        <td><input type="text" data-bind="value: Contact"/></td>
+                        <td><a href="#" data-bind="click: $root.removeContact">Remove</a></td>
+                    </tr>    
+                </tbody>            
+            </table>
+            <button data-bind="click: addContact, enable: Contacts().length < 5">@T("Add contact")</button>
+        </div>
+    </div>
+</div>
+
+<script>   
+    $(function () {
+        $("#add-host-form").dialog({
+            modal: true,
+            autoOpen: false,
+            //dialogClass: 'noTitleStuff',
+            width: 640,
+            height: 480,
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            },
+            buttons: {
+                '@T("Cancel")': function () {
+                    $("#add-host-form").dialog("close");
+
+                },
+                '@T("Save")': function () {
+                    $("#add-host-form").dialog("close");
+                    vmHost.add();
+                }
+            },
+        });
+
+        $("#add-host-button").click(function () {
+            $("#add-host-form").dialog("open");
+            ko.applyBindings(vmHost, document.getElementById('host-panel'));
+        });
+    });
+
+
+    var vmHost = new HostViewModel(@Html.Raw(Json.Encode(host)));
+
+    function ContactViewModel(data) {
+        var self = this;
+        
+        self.Id = ko.observable(data.Id);
+        self.HostId = ko.observable(data.HostId);
+        self.Type = ko.observable(data.Type);
+
+        self.Title = ko.observable(data.Title);
+        self.Contact = ko.observable(data.Contact);
+    }
+
+    function HostViewModel(data) {
+        var self = this;
+        
+        self.Country = ko.observable(data.Country);
+        self.State = ko.observable(data.State);
+        self.City = ko.observable(data.City);
+        
+        self.Lattitude = ko.observable(data.Lattitude);
+        self.Longitude = ko.observable(data.Longitude);
+        self.Address = ko.observable(data.Address);
+        
+        self.Name = ko.observable(data.Name);
+        self.Description = ko.observable(data.Desctiption);
+        self.Picture = ko.observable(data.Picture);
+
+
+        self.Contacts = ko.observableArray($.map(data.Contacts, function (item) { return new ContactViewModel(item); }));        
+
+        // Operations
+        self.addContact = function() {
+            self.Contacts.push(new ContactViewModel({ Id: 0, HostId: 0, Type: 1, Title: "Title", Contact: "Contact" }));
+        };
+
+        self.removeContact = function (contact) { self.Contacts.remove(contact); };
+
+        self.add = function () {
+            var token = '@Html.AntiForgeryTokenValueOrchard()';
+            var headers = {};
+            // other headers omitted
+            headers['__RequestVerificationToken'] = token;
+
+            var ajdata = self ? ko.toJSON(self) : null;
+
+            var urlUpdate = $("#add-host-form").attr("add-host-url");
+
+            var config = {
+                async: true,
+                url: urlUpdate,
+                type: "POST",
+                headers: headers,
+                data: ajdata,
+                dataType: "json",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                __RequestVerificationToken: token,
+                error: function (e) {                    
+                },
+                success: function (data) {                    
+                }
+            };
+            $.ajax(config);
+        };
+    }
+    
+</script>

@@ -94,11 +94,13 @@
     <Content Include="Scripts\4sqacplugin.js" />
     <Content Include="Scripts\antiforgery.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\host.js" />
     <Content Include="Scripts\kodatetime.js" />
     <Content Include="Scripts\mappy.js" />
     <Content Include="Styles\add-place.css" />
     <Content Include="Styles\add-entity.css" />
-    <Content Include="Styles\edit-event.css" />
+    <Content Include="Styles\Copy of list-event.css" />
+    <Content Include="Styles\host.css" />
     <Content Include="Styles\list-event.css" />
     <Content Include="Styles\fsquare-autocomplete.css" />
     <Content Include="Styles\google-maps.css" />
@@ -123,6 +125,8 @@
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EventController.cs" />
+    <Compile Include="Controllers\HostController.cs" />
+    <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
@@ -170,12 +174,18 @@
     <Compile Include="Services\EventService\EventService.cs" />
     <Compile Include="Services\EventService\IEventService.cs" />
     <Compile Include="Services\EventService\ViewModelContractFactory.cs" />
+    <Compile Include="Services\HostService\HostService.cs" />
+    <Compile Include="Services\HostService\IHostService.cs" />
+    <Compile Include="Services\HostService\ViewModelContractFactory.cs" />
     <Compile Include="Services\ImportService\IImportService.cs" />
     <Compile Include="Services\ImportService\ImportService.cs" />
     <Compile Include="Services\QueryService\DataContractsFactory.cs" />
     <Compile Include="Services\QueryService\ExpressionFactory.cs" />
     <Compile Include="Services\QueryService\IQueryService.cs" />
     <Compile Include="Services\QueryService\QueryService.cs" />
+    <Compile Include="Services\VenueService\IVenueService.cs" />
+    <Compile Include="Services\VenueService\VenueService.cs" />
+    <Compile Include="Services\VenueService\ViewModelContractFactory.cs" />
     <Compile Include="ViewModels\ContactVm.cs" />
     <Compile Include="ViewModels\EntityVm.cs" />
     <Compile Include="ViewModels\EventMetadataFullVm.cs" />
@@ -212,6 +222,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Event\AddHost.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Host\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Venue\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Host\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Host\Get.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

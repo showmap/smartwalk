@@ -1,0 +1,42 @@
+﻿
+@using SmartWalk.Server.ViewModels
+
+@{
+    Style.Require("jQueryUI_Orchard");
+    Style.Require("SmartWalk.Host");
+
+    Script.Require("jQueryUI").AtHead();
+    Script.Require("SmartWalk.Host").AtHead();
+
+    var hostItems = (IList<EntityVm>)Model;
+}
+
+<div id="host-items" data-bind="visible: HostItems().length > 0">
+    <p>@T("Hosts")</p>    
+    <table>
+        <thead>
+            <tr>
+                <th><span>@T("Name")</span></th>
+                <th><span>@T("Action")</span></th>                
+            </tr>
+        </thead>
+        <tbody data-bind='template: {name: "hostItemTemplate", foreach: HostItems() }'></tbody>
+    </table>    
+</div>
+
+<script type="text/html" id="hostItemTemplate">
+    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
+        <td><span data-bind="text: Name"></span></td>        
+        <td><a data-bind="attr: {href: '@Url.Action("Edit")?hostId=' + Id()}">Edit</a></td>
+    </tr>       
+</script>
+
+<script>       
+    function HostsViewModel() {
+        var self = this;
+        
+        self.HostItems = ko.observableArray($.map(@Html.Raw(Json.Encode(hostItems)), function(item) { return new HostViewModel(item); }));
+    }
+
+    ko.applyBindings(new HostsViewModel(), document.getElementById('host-items'));
+</script>

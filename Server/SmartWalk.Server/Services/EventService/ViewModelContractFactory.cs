@@ -8,7 +8,7 @@ using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EventService
 {
-    public class ViewModelContractFactory
+    public static class ViewModelContractFactory
     {
         public static RegionVm CreateViewModelContract(RegionRecord record)
         {
@@ -41,39 +41,7 @@ namespace SmartWalk.Server.Services.EventService
                 Picture = record.Picture,
                 DetailsUrl = record.DetailsUrl
             };
-        }
-
-        public static ContactVm CreateViewModelContract(ContactRecord record)
-        {
-            if (record == null)
-                return null;
-
-            return new ContactVm
-            {
-                Id = record.Id,
-                EntityId = record.EntityRecord.Id,
-                Type = record.Type,
-                Title = record.Title,
-                Contact = record.Contact
-            };
-        }
-
-        public static EntityVm CreateViewModelContract(EntityRecord record)
-        {
-            if (record == null)
-                return null;
-
-            return new EntityVm
-            {
-                Id = record.Id,
-                UserId = record.SmartWalkUserRecord.Id,
-                Type = record.Type,
-                Name = record.Name,
-                Picture = record.Picture,
-                Description = record.Description,
-                Contacts = record.ContactRecords.Select(CreateViewModelContract).ToList()
-            };
-        }
+        }              
 
         public static EventMetadataVm CreateViewModelContract(EventMetadataRecord record)
         {
