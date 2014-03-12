@@ -26,48 +26,92 @@ namespace SmartWalk.Server.Services.HostService
             var host = _entityRepository.Get(hostId);
 
             if (host == null || host.Type != (int) EntityType.Host)
-                return null;
+                return new EntityVm {Id = 0};
 
             return ViewModelContractFactory.CreateViewModelContract(host);
         }
 
-        public EntityRecord AddHost(SmartWalkUserRecord user, EntityVm hostVm)
-        {
-            var host = new EntityRecord
-            {
-                Name = hostVm.Name,
-                Type = (int)EntityType.Host,
-                SmartWalkUserRecord = user,
-                Description = hostVm.Description,
-                Picture = hostVm.Picture,
-            };
+        public EntityRecord SaveOrAddHost(SmartWalkUserRecord user, EntityVm hostVm) {
+            var host = _entityRepository.Get(hostVm.Id);
 
-            _entityRepository.Create(host);
+            if (host == null) {
+                host = new EntityRecord {
+                    Name = hostVm.Name,
+                    Type = (int) EntityType.Host,
+                    SmartWalkUserRecord = user,
+                    Picture = hostVm.Picture,
+                    Description = hostVm.Description,
+                };
+
+                _entityRepository.Create(host);
+            }
+            else {
+                host.Picture = hostVm.Picture;
+                host.Description = hostVm.Description;
+            }
+            
             _entityRepository.Flush();
-
-            foreach (var contact in hostVm.Contacts)
+            
+            foreach (var contact in hostVm.AllContacts)
             {
-                host.ContactRecords.Add(AddContact(host, contact));
+                if (contact.State == ContactState.Deleted)
+                    DeleteContact(contact.Id);
+                else
+                    host.ContactRecords.Add(SaveOrAddContact(host, contact));
             }
 
             return host;
         }
 
-        public ContactRecord AddContact(EntityRecord host, ContactVm contactVm)
-        {
-            var contact = new ContactRecord
-            {
-                EntityRecord = host,
-                Type = contactVm.Type,
-                Title = contactVm.Title,
-                Contact = contactVm.Contact
-            };
+        public void DeleteHost(int hostId) {
+            var host = _entityRepository.Get(hostId);
+
+            if (host == null || host.Type != (int)EntityType.Host)
+                return;
+
+            foreach (var contact in host.ContactRecords) {
+                _contactRepository.Delete(contact); 
+                _contactRepository.Flush();
+            }
+
+            _entityRepository.Delete(host);
+            _entityRepository.Flush();
+        }
 
 
-            _contactRepository.Create(contact);
+        public ContactRecord SaveOrAddContact(EntityRecord host, ContactVm contactVm) {
+            var contact = _contactRepository.Get(contactVm.Id);
+
+            if (contact == null) {
+
+                contact = new ContactRecord {
+                    EntityRecord = host,
+                    Type = contactVm.Type,
+                    Title = contactVm.Title,
+                    Contact = contactVm.Contact
+                };
+
+                _contactRepository.Create(contact);
+            }
+            else {
+                contact.Title = contactVm.Title;
+                contact.Contact = contactVm.Contact;
+            }
+
             _contactRepository.Flush();
 
             return contact;
+        }
+
+        public void DeleteContact(int contactId)
+        {
+            var contact = _contactRepository.Get(contactId);
+
+            if (contact == null)
+                return;
+
+            _contactRepository.Delete(contact);
+            _contactRepository.Flush();            
         }
     }
 }

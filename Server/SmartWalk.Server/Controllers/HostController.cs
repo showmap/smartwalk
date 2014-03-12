@@ -40,9 +40,7 @@ namespace SmartWalk.Server.Controllers
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
-            }
-
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+            }            
 
             return View(_hostService.GetHostVmById(hostId));
         }
@@ -52,15 +50,25 @@ namespace SmartWalk.Server.Controllers
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
-            }
-
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+            }            
 
             return View(_hostService.GetHostVmById(hostId));
         }
 
+        public ActionResult Delete(int hostId)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _hostService.DeleteHost(hostId);
+
+            return RedirectToAction("List");
+        }
+
         [HttpPost]
-        public ActionResult Add(EntityVm host)
+        public ActionResult SaveOrAdd(EntityVm host)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
@@ -71,7 +79,7 @@ namespace SmartWalk.Server.Controllers
 
             try
             {
-                _hostService.AddHost(user.Record, host);
+                _hostService.SaveOrAddHost(user.Record, host);
             }
             catch
             {

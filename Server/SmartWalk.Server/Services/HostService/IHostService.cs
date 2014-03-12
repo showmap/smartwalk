@@ -11,7 +11,10 @@ namespace SmartWalk.Server.Services.HostService
     public interface IHostService : IDependency {
         IList<EntityVm> GetUserHosts(SmartWalkUserRecord user);
         EntityVm GetHostVmById(int hostId);
-        EntityRecord AddHost(SmartWalkUserRecord user, EntityVm hostVm);
-        ContactRecord AddContact(EntityRecord host, ContactVm contactVm);
+        EntityRecord SaveOrAddHost(SmartWalkUserRecord user, EntityVm hostVm);
+        void DeleteHost(int hostId);
+
+        ContactRecord SaveOrAddContact(EntityRecord host, ContactVm contactVm);
+        void DeleteContact(int contactId);
     }
 }

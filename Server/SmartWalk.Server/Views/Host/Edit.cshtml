@@ -10,7 +10,8 @@
     var host = (EntityVm) Model;
 }
 
-<div id="add-host-form" title="@T("Add Host")" add-host-url="@Url.Action("Add", "Host", new {area = "SmartWalk.Server"})">
+<div id="add-host-form" title="@T("Add Host")" add-host-url="@Url.Action("SaveOrAdd", "Host", new {area = "SmartWalk.Server"})">
+    @Html.AntiForgeryTokenOrchard()
     <div id="host-panel">
         <div id="description-panel">
             <label for="name">@T("Name")</label><input type="text" id="name" data-bind="value: Name"/>            
@@ -41,14 +42,67 @@
                     </tr>    
                 </tbody>            
             </table>
-            <button data-bind="click: addContact, enable: Contacts().length < 5">@T("Add contact")</button>
+            <button data-bind="click: addContact">@T("Add contact")</button>
+            <div id="actions-panel">
+                <table>
+                    <tr>
+                        <td>
+                            @{ using(Html.BeginForm("Delete", "Host", FormMethod.Get)) {
+                                    <input type="hidden" name="hostId" value="@host.Id" />
+                                    <input type="submit" value="@T("Delete")" />
+                            }}                            
+                        </td>
+                        <td>
+                            <form method="get" action="@Url.Action("List", "Host", new {area = "SmartWalk.Server"})">
+                                <button type="submit">@T("Cancel")</button>
+                            </form>
+                        </td>
+                        <td>
+                            <button data-bind="click: saveOrAdd">@T("Save")</button>
+                        </td>
+                    </tr>
+                </table>                                                               
+            </div>
+            <!--<textarea id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
         </div>
     </div>
 </div>
 
+
 <script>
     $(function () {
         var vmHost = new HostViewModel(@Html.Raw(Json.Encode(host)));
+        vmHost.saveOrAdd = function () {
+            $("#host-panel").html('<img class="loading" src="@Href("../../Images/loading.gif")"/>');
+            var token = '@Html.AntiForgeryTokenValueOrchard()';
+            var headers = {};
+            // other headers omitted
+            headers['__RequestVerificationToken'] = token;
+
+            var ajdata = self ? ko.toJSON(this) : null;
+
+            var urlUpdate = $("#add-host-form").attr("add-host-url");
+
+            var config = {
+                async: true,
+                url: urlUpdate,
+                type: "POST",
+                headers: headers,
+                data: ajdata,
+                dataType: "json",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                __RequestVerificationToken: token,
+                error: function (e) {
+                    window.location.href = "@Url.Action("List", "Host", new {area = "SmartWalk.Server"})";
+                },
+                success: function (data) {
+                    window.location.href = "@Url.Action("List", "Host", new {area = "SmartWalk.Server"})";
+                }
+            };
+            $.ajax(config);
+        };
+
         ko.applyBindings(vmHost, document.getElementById('host-panel'));
     });
 </script>

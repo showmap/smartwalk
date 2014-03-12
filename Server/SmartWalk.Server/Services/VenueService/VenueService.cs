@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Orchard.Data;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.HostService;
 using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.VenueService
@@ -17,7 +18,7 @@ namespace SmartWalk.Server.Services.VenueService
         }
 
         public IList<EntityVm> GetUserVenues(SmartWalkUserRecord user) {
-            return _entityRepository.Table.Where(e => e.Type == (int) EntityType.Venue && (e.SmartWalkUserRecord.Id == user.Id || e.ShowRecords.Any(s => s.EntityRecord.SmartWalkUserRecord.Id == user.Id))).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+            return _entityRepository.Table.Where(e => e.Type == (int)EntityType.Venue && (e.SmartWalkUserRecord.Id == user.Id || e.ShowRecords.Any(s => s.EntityRecord.SmartWalkUserRecord.Id == user.Id))).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
         }
 
     }

@@ -22,7 +22,7 @@ namespace SmartWalk.Server.Services.HostService
                 Name = record.Name,
                 Picture = record.Picture,
                 Description = record.Description,
-                Contacts = record.ContactRecords.Select(CreateViewModelContract).ToList()
+                AllContacts = record.ContactRecords.Select(CreateViewModelContract).ToList()
             };
         }
 
@@ -35,6 +35,7 @@ namespace SmartWalk.Server.Services.HostService
             {
                 Id = record.Id,
                 EntityId = record.EntityRecord.Id,
+                State = ContactState.Normal,
                 Type = record.Type,
                 Title = record.Title,
                 Contact = record.Contact
