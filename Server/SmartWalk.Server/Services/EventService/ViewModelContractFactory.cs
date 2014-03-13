@@ -18,9 +18,9 @@ namespace SmartWalk.Server.Services.EventService
             return new RegionVm
             {
                 Id = record.Id,
-                Country = record.Country,
-                State = record.State,
-                City = record.City
+                Region = record.Region,
+                Latitude = record.Latitude,
+                Longitude = record.Longitude,
             };
         }
 
@@ -58,8 +58,7 @@ namespace SmartWalk.Server.Services.EventService
                 CombineType = record.CombineType,
                 StartTime = record.StartTime.ToString("d", CultureInfo.InvariantCulture),
                 EndTime = record.EndTime.HasValue ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
-                IsMobileReady = record.IsMobileReady,
-                IsWidgetReady = record.IsWidgetReady,
+                IsPublic = record.IsPublic,
                 Description = record.Description,
                 DateCreated = record.DateCreated.ToString("d", CultureInfo.InvariantCulture),
                 DateModified = record.DateModified.ToString("d", CultureInfo.InvariantCulture),

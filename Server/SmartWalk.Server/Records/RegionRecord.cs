@@ -7,10 +7,9 @@ namespace SmartWalk.Server.Records
 
         public virtual int Id { get; set; }
 
-        public virtual string Country { get; set; }
-        public virtual string State { get; set; }
-        public virtual string City { get; set; }
-
+        public virtual string Region { get; set; }
+        public virtual double Latitude { get; set; }
+        public virtual double Longitude { get; set; }
 
         public virtual IList<AddressRecord> Addresses
         {

@@ -8,12 +8,12 @@ namespace SmartWalk.Server.ViewModels
     public class RegionVm
     {
         public int Id { get; set; }
-        public string Country { get; set; }
-        public string State { get; set; }
-        public string City { get; set; }
+        public string Region { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         public string DisplayName {
-            get { return string.Format("{0}, {1}, {2}", Country, State, City); }
+            get { return Region; }
         }
     }
 }

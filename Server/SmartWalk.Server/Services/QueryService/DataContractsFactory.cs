@@ -65,11 +65,11 @@ namespace SmartWalk.Server.Services.QueryService
                     record.EventMappingRecords != null)
                 {
                     result.Shows =
-                        record.EventMappingRecords
+                        record.ShowRecords
                               .Select(mr => new Reference
                                   {
-                                      Id = mr.ShowRecord_Id,
-                                      Storage = mr.StorageRecord.StorageKey
+                                      Id = mr.Id,
+                                      Storage = StorageKeys.SmartWalk
                                   })
                               .ToArray();
                 }
@@ -179,13 +179,14 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
+        // TODO: Reflect recent db changes
         private static Region CreateDataContract(RegionRecord record)
         {
             var result = new Region
                 {
-                    Country = record.Country,
-                    State = record.State,
-                    City = record.City
+                    //Country = record.Country,
+                    //State = record.State,
+                    //City = record.City
                 };
 
             return result;

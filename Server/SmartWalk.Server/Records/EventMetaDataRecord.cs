@@ -17,8 +17,7 @@ namespace SmartWalk.Server.Records
         public virtual DateTime StartTime { get; set; }
         public virtual DateTime? EndTime { get; set; }
         public virtual int CombineType { get; set; }
-        public virtual bool IsMobileReady { get; set; }
-        public virtual bool IsWidgetReady { get; set; }
+        public virtual bool IsPublic { get; set; }
         public virtual DateTime DateCreated { get; set; }
         public virtual DateTime DateModified { get; set; }
 

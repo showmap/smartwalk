@@ -16,8 +16,7 @@ namespace SmartWalk.Server.ViewModels
         public string StartTime { get; set; }
         public string EndTime { get; set; }
         public int CombineType { get; set; }
-        public bool IsMobileReady { get; set; }
-        public bool IsWidgetReady { get; set; }
+        public bool IsPublic { get; set; }
         public string DateCreated { get; set; }
         public string DateModified { get; set; }
     }

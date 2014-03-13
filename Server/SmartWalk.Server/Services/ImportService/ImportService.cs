@@ -178,14 +178,16 @@ namespace SmartWalk.Server.Services.ImportService
             }
 
             #region Oakland Region
-            var oaklandRegion = _regionRepository.Get(reg => reg.City == "Oakland");
+
+            var regionName = string.Format("{0}, {1}, {2}", "United States", "California", "Oakland");
+            var oaklandRegion = _regionRepository.Get(reg => reg.Region == regionName);
             if (oaklandRegion == null)
             {
                 oaklandRegion = new RegionRecord
                     {
-                        Country = "United States",
-                        State = "California",
-                        City = "Oakland"
+                        Region = regionName,
+                        Latitude = 0,
+                        Longitude = 0,
                     };
                 _regionRepository.Create(oaklandRegion);
                 _regionRepository.Flush();
@@ -194,14 +196,15 @@ namespace SmartWalk.Server.Services.ImportService
             #endregion
 
             #region San Francisco Region
-            var sfRegion = _regionRepository.Get(reg => reg.City == "San Francisco");
+            regionName = string.Format("{0}, {1}, {2}", "United States", "California", "San Francisco");
+            var sfRegion = _regionRepository.Get(reg => reg.Region == regionName);
             if (sfRegion == null)
             {
                 sfRegion = new RegionRecord
                     {
-                        Country = "United States",
-                        State = "California",
-                        City = "San Francisco"
+                        Region = regionName,
+                        Latitude = 0,
+                        Longitude = 0
                     };
                 _regionRepository.Create(sfRegion);
                 _regionRepository.Flush();
@@ -431,12 +434,7 @@ namespace SmartWalk.Server.Services.ImportService
         {
             if (xmlShows == null) return;
 
-            var shows = from s in _showRepository.Table
-                        from em in _eventMappingRepository.Table
-                        where em.ShowRecord_Id == s.Id &&
-                              em.EventMetadataRecord == eventMetadata &&
-                              em.StorageRecord == storage
-                        select s;
+            var shows = eventMetadata.ShowRecords;
 
             if (xmlShows.Any())
             {
@@ -455,16 +453,6 @@ namespace SmartWalk.Server.Services.ImportService
                             };
                         _showRepository.Create(show);
                         _log.Add(string.Format("{0} show created", show.Description));
-
-                        var mapping = new EventMappingRecord
-                            {
-                                EventMetadataRecord = eventMetadata,
-                                StorageRecord = storage,
-                                ShowRecord_Id = show.Id
-                            };
-                        _eventMappingRepository.Create(mapping);
-                        _eventMappingRepository.Flush();
-                        _log.Add(string.Format("{0} show mapping created", show.Description));
                     }
 
                     show.StartTime = xmlShow.StartTimeObject;
@@ -492,17 +480,7 @@ namespace SmartWalk.Server.Services.ImportService
                         };
                     _showRepository.Create(refShow);
                     _showRepository.Flush();
-                    _log.Add(string.Format("Reference show created"));
-
-                    var mapping = new EventMappingRecord
-                        {
-                            EventMetadataRecord = eventMetadata,
-                            StorageRecord = storage,
-                            ShowRecord_Id = refShow.Id
-                        };
-                    _eventMappingRepository.Create(mapping);
-                    _eventMappingRepository.Flush();
-                    _log.Add(string.Format("Reference show mapping created"));
+                    _log.Add(string.Format("Reference show created"));                    
                 }
             }
         }
