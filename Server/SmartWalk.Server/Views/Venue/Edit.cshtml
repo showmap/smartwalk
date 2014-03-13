@@ -7,53 +7,46 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.Entity").AtHead();
     
-    var host = (EntityVm) Model;
+    var venue = (EntityVm) Model;
 }
 
-<div id="add-host-form" title="@T("Add Host")" add-host-url="@Url.Action("SaveOrAdd", "Host", new {area = "SmartWalk.Server"})">
+<div id="add-venue-form" title="@T("Add Host")" add-venue-url="@Url.Action("SaveOrAdd", "Venue", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
-    <div id="host-panel">
+    <div id="venue-panel">
         <div id="description-panel">
             <label for="name">@T("Name")</label><input type="text" id="name" data-bind="value: Name"/>            
             <label for="picture">@T("Picture")</label><input type="text" id="picture" data-bind="value: Picture"/>
             <label for="description">@T("Description")</label><textarea id="description" data-bind="value: Description"></textarea>
         </div>
         
-        <div id="contacts-panel">
-            <table data-bind="visible: Contacts().length > 0">
+        <div id="address-panel">
+            <table data-bind="visible: Addresses().length > 0">
                 <thead>
                     <tr>
-                        <th>Type</th><th>Title</th><th>Contact</th><th></th>
+                        <th>Address</th><th>Lattitude</th><th>Longitude</th><th></th>
                     </tr>
                 </thead>
-                <tbody data-bind="foreach: Contacts">
+                <tbody data-bind="foreach: Addresses">
                     <tr>
-                        <td>
-                            @Html.DropDownList("Type", Enum.GetNames(typeof(ContactType))
-                                                           .Select(u => new SelectListItem
-                                                           {                                                       
-                                                               Text = @T(u).ToString(),
-                                                               Value = ((int)Enum.Parse(typeof(ContactType), u)).ToString()
-                                                           }), new Dictionary<string, object> { { "data-bind", "value:Type" } })                        
-                        </td>
-                        <td><input type="text" data-bind="value: Title"/></td>
-                        <td><input type="text" data-bind="value: Contact"/></td>
-                        <td><a href="#" data-bind="click: $root.removeContact">Remove</a></td>
+                        <td><input type="text" data-bind="value: Address"/></td>
+                        <td><input type="text" data-bind="value: Latitude"/></td>
+                        <td><input type="text" data-bind="value: Longitude"/></td>
+                        <td><a href="#" data-bind="click: $root.removeAddress">Remove</a></td>
                     </tr>    
                 </tbody>            
             </table>
-            <button data-bind="click: addContact">@T("Add contact")</button>
+            <button data-bind="click: addAddress">@T("Add address")</button>
             <div id="actions-panel">
                 <table>
                     <tr>
                         <td>
-                            @{ using(Html.BeginForm("Delete", "Host", FormMethod.Get)) {
-                                    <input type="hidden" name="entityId" value="@host.Id" />
+                            @{ using(Html.BeginForm("Delete", "Venue", FormMethod.Get)) {
+                                    <input type="hidden" name="entityId" value="@venue.Id" />
                                     <input type="submit" value="@T("Delete")" />
-                            }}                            
+                            }}
                         </td>
                         <td>
-                            <form method="get" action="@Url.Action("List", "Host", new {area = "SmartWalk.Server"})">
+                            <form method="get" action="@Url.Action("List")">
                                 <button type="submit">@T("Cancel")</button>
                             </form>
                         </td>
@@ -71,9 +64,9 @@
 
 <script>
     $(function () {
-        var vmHost = new EntityViewModel(@Html.Raw(Json.Encode(host)));
-        vmHost.saveOrAdd = function () {
-            $("#host-panel").html('<img class="loading" src="@Href("../../Images/loading.gif")"/>');
+        var vmVenue = new EntityViewModel(@Html.Raw(Json.Encode(venue)));
+        vmVenue.saveOrAdd = function () {
+            $("#venue-panel").html('<img class="loading" src="@Href("../../Images/loading.gif")"/>');
             var token = '@Html.AntiForgeryTokenValueOrchard()';
             var headers = {};
             // other headers omitted
@@ -81,7 +74,7 @@
 
             var ajdata = self ? ko.toJSON(this) : null;
 
-            var urlUpdate = $("#add-host-form").attr("add-host-url");
+            var urlUpdate = $("#add-venue-form").attr("add-venue-url");
 
             var config = {
                 async: true,
@@ -103,6 +96,6 @@
             $.ajax(config);
         };
 
-        ko.applyBindings(vmHost, document.getElementById('host-panel'));
+        ko.applyBindings(vmVenue, document.getElementById('venue-panel'));
     });
 </script>

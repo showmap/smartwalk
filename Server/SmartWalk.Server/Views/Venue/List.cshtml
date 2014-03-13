@@ -12,11 +12,11 @@
 }
 
 <div id="entity-items" data-bind="visible: Items().length > 0">
-    <p>@T("Hosts")</p>
-    @{ using(Html.BeginForm("Edit", "Host", FormMethod.Get)) {
+    <p>@T("Venues")</p>    
+    @{ using(Html.BeginForm("Edit", "Venue", FormMethod.Get)) {
             <input type="hidden" name="entityId" value="0" />
-            <input type="submit" value="@T("Add host")" />
-    }}    
+            <input type="submit" value="@T("Add venue")" />
+    }}
     <table>
         <thead>
             <tr>
@@ -32,15 +32,15 @@
     <tr data-bind="css: {'alt': $index() % 2 === 1}">        
         <td><span data-bind="text: Name"></span></td>        
         <td><a data-bind="attr: {href: '@Url.Action("Edit")?entityId=' + Id()}">Edit</a></td>
-    </tr>       
+    </tr>           
 </script>
 
 <script>       
-    function HostsViewModel() {
+    function VenuesViewModel() {
         var self = this;
         
         self.Items = ko.observableArray($.map(@Html.Raw(Json.Encode(items)), function(item) { return new EntityViewModel(item); }));
     }
 
-    ko.applyBindings(new HostsViewModel(), document.getElementById('entity-items'));
+    ko.applyBindings(new VenuesViewModel(), document.getElementById('entity-items'));
 </script>

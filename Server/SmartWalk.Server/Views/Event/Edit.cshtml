@@ -17,8 +17,6 @@
     <button id="add-place-button">@T("Add place")</button>
 </div>
 
-@Html.Partial("AddPlace")
-@Html.Partial("AddHost")
 
 <div id="event-item" save-event-url="@Url.Action("SaveEvent", "Event", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
@@ -66,11 +64,9 @@
                                       Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
                                   }), new Dictionary<string, object> { { "data-bind", "value:CombineType, event: {blur: CombineTypeOnBlur}" } })
         
-        @Html.LabelFor(m => eventItem.EventMetadata.IsMobileReady, @T("Is mobile ready"))
-        @Html.CheckBoxFor(m => eventItem.EventMetadata.IsMobileReady, new Dictionary<string, object> { { "data-bind", "checked: IsMobileReady, event: {blur: IsMobileReadyOnBlur}" } })
-        
-        @Html.LabelFor(m => eventItem.EventMetadata.IsWidgetReady, @T("Is widget ready"))
-        @Html.CheckBoxFor(m => eventItem.EventMetadata.IsWidgetReady, new Dictionary<string, object> { { "data-bind", "checked: IsWidgetReady, event: {blur: IsWidgetReadyOnBlur}" } })
+        @Html.LabelFor(m => eventItem.EventMetadata.IsPublic, @T("Is public"))
+        @Html.CheckBoxFor(m => eventItem.EventMetadata.IsPublic, new Dictionary<string, object> { { "data-bind", "checked: IsPublic" } })
+                
         
         <div id="shows-panel">
             <ul data-bind="visible: Shows().length > 0, foreach: Shows">
@@ -121,8 +117,7 @@
         self.EndTime = ko.observable(data.EventMetadata.EndTime);
 
         self.CombineType = ko.observable(data.EventMetadata.CombineType);
-        self.IsMobileReady = ko.observable(data.EventMetadata.IsMobileReady);
-        self.IsWidgetReady = ko.observable(data.EventMetadata.IsWidgetReady);
+        self.IsPublic = ko.observable(data.EventMetadata.IsPublic);
         self.DateCreated = ko.observable(data.EventMetadata.DateCreated);
         self.DateModified = ko.observable(data.EventMetadata.DateModified);
 
@@ -161,15 +156,6 @@
                 }
             };
             $.ajax(config);
-        };
-
-
-        self.IsWidgetReadyOnBlur = function () {
-            //self.save();
-        };
-
-        self.IsMobileReadyOnBlur = function () {
-            //self.save();
         };
 
         self.CombineTypeOnBlur = function() {

@@ -7,8 +7,9 @@ using Orchard;
 using Orchard.Themes;
 using Orchard.ContentManagement;
 using SmartWalk.Server.Models;
+using SmartWalk.Server.Records;
 using SmartWalk.Server.ViewModels;
-using SmartWalk.Server.Services.HostService;
+using SmartWalk.Server.Services.EntityService;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -17,12 +18,12 @@ namespace SmartWalk.Server.Controllers
     {
         private readonly IOrchardServices _orchardServices;
 
-        private readonly IHostService _hostService;
+        private readonly IEntityService _entityService;
 
-        public HostController(IOrchardServices orchardServices, IHostService hostService) {
+        public HostController(IOrchardServices orchardServices, IEntityService entityService) {
             _orchardServices = orchardServices;
 
-            _hostService = hostService;
+            _entityService = entityService;
         }
 
         public ActionResult List() {
@@ -33,36 +34,27 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(_hostService.GetUserHosts(user.Record));
+            return View(_entityService.GetUserEntities(user.Record, EntityType.Host));
         }
 
-        public ActionResult Edit(int hostId) {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }            
-
-            return View(_hostService.GetHostVmById(hostId));
-        }
-
-        public ActionResult Get(int hostId)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }            
-
-            return View(_hostService.GetHostVmById(hostId));
-        }
-
-        public ActionResult Delete(int hostId)
+        public ActionResult Edit(int entityId)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
             }
 
-            _hostService.DeleteHost(hostId);
+            return View(_entityService.GetEntityVmById(entityId, EntityType.Host));
+        }
+        
+        public ActionResult Delete(int entityId)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _entityService.DeleteEntity(entityId);
 
             return RedirectToAction("List");
         }
@@ -79,7 +71,7 @@ namespace SmartWalk.Server.Controllers
 
             try
             {
-                _hostService.SaveOrAddHost(user.Record, host);
+                _entityService.SaveOrAddEntity(user.Record, host);
             }
             catch
             {

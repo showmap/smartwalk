@@ -374,14 +374,12 @@ namespace SmartWalk.Server.Services.ImportService
             foreach (var xmlAddress in xmlAddresses)
             {
                 var address = addresses.FirstOrDefault(addr =>
-                    addr.RegionRecord == region &&
                     addr.Address == xmlAddress.Text);
                 if (address == null)
                 {
                     address = new AddressRecord
                         {
                             EntityRecord = entity,
-                            RegionRecord = region,
                             Address = xmlAddress.Text
                         };
                     _addressRepository.Create(address);

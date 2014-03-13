@@ -27,7 +27,7 @@ namespace SmartWalk.Server.Controllers
             _eventService = eventService;
         }
 
-        public ActionResult ListEvents()
+        public ActionResult List()
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
@@ -39,7 +39,7 @@ namespace SmartWalk.Server.Controllers
             return View(_eventService.GetUserEvents(user.Record));
         }
 
-        public ActionResult EditEvent(int eventId)
+        public ActionResult Edit(int eventId)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {

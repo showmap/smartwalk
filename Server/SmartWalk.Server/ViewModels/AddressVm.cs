@@ -5,13 +5,12 @@ using System.Web;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class ContactVm
+    public class AddressVm
     {
         public int Id { get; set; }
         public VmItemState State { get; set; }
-        public int EntityId { get; set; }
-        public int Type { get; set; }
-        public string Title { get; set; }
-        public string Contact { get; set; }
+        public string Address { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

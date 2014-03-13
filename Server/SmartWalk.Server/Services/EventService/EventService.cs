@@ -5,8 +5,7 @@ using System.Linq;
 using System.Web;
 using Orchard.Data;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.HostService;
-using SmartWalk.Server.Services.VenueService;
+using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EventService
@@ -15,16 +14,14 @@ namespace SmartWalk.Server.Services.EventService
     {
         private readonly IRepository<RegionRecord> _regionRepository;
 
-        private readonly IHostService _hostService;
-        private readonly IVenueService _venueService;
+        private readonly IEntityService _entityService;
 
         public EventService(IRepository<RegionRecord> regionRepository,
-            IHostService hostService, IVenueService venueService)
+            IEntityService entityService)
         {
             _regionRepository = regionRepository;
 
-            _hostService = hostService;
-            _venueService = venueService;
+            _entityService = entityService;
         }
 
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
@@ -36,10 +33,10 @@ namespace SmartWalk.Server.Services.EventService
             if (eventMetadata != null) {
                 return new EventMetadataFullVm {
                     EventMetadata = ViewModelContractFactory.CreateViewModelContract(eventMetadata),
-                    Hosts = _hostService.GetUserHosts(user),
+                    Hosts = _entityService.GetUserEntities(user, EntityType.Host),
                     Regions = _regionRepository.Table.Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
                     Shows = eventMetadata.ShowRecords.Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
-                    Venues = _venueService.GetUserVenues(user)
+                    Venues = _entityService.GetUserEntities(user, EntityType.Venue)
                 };
             }
 

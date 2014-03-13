@@ -16,6 +16,7 @@ namespace SmartWalk.Server.ViewModels
         public string Picture { get; set; }
 
         public IList<ContactVm> AllContacts { get; set; }
+        public IList<AddressVm> AllAddresses { get; set; }
 
         public string DisplayName
         {
@@ -24,6 +25,7 @@ namespace SmartWalk.Server.ViewModels
 
         public EntityVm() {
             AllContacts = new List<ContactVm>();
+            AllAddresses = new List<AddressVm>();
         }
     }
 }
