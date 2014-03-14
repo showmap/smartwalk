@@ -28,7 +28,15 @@ namespace SmartWalk.Server.Services.EntityService
         public EntityVm GetEntityVmById(int hostId, EntityType type) {
             var entity = _entityRepository.Get(hostId);
 
-            return entity == null ? new EntityVm {Id = 0, Type = (int) type} : ViewModelContractFactory.CreateViewModelContract(entity);
+            return entity == null ? new EntityVm {Id = 0, Type = (int) type} : GetEntityVm(entity);
+        }
+
+        public EntityVm GetEntityVm(EntityRecord entity) {
+            return ViewModelContractFactory.CreateViewModelContract(entity);
+        }
+
+        public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata) {
+            return _entityRepository.Table.Where(e => e.ShowRecords.Any(s => s.EventMetadataRecord == metadata)).Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
         }
 
         public EntityRecord SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm) {

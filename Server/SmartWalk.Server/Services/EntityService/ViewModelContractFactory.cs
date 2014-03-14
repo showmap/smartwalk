@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using SmartWalk.Server.Records;
@@ -23,10 +24,42 @@ namespace SmartWalk.Server.Services.EntityService
                 Picture = record.Picture,
                 Description = record.Description,
                 AllContacts = record.ContactRecords.Select(CreateViewModelContract).ToList(),
-                AllAddresses =  record.AddressRecords.Select(CreateViewModelContract).ToList()
+                AllAddresses =  record.AddressRecords.Select(CreateViewModelContract).ToList(),
             };
         }
 
+        public static EntityVm CreateViewModelContract(EntityRecord record, EventMetadataRecord metadata)
+        {
+            if (record == null)
+                return null;
+
+            var res = CreateViewModelContract(record);
+            res.AllShows = record.ShowRecords.Where(s => s.EventMetadataRecord == metadata).Select(CreateViewModelContract).ToList();
+
+            return res;
+        }
+
+        public static ShowVm CreateViewModelContract(ShowRecord record)
+        {
+            if (record == null)
+                return null;
+
+            return new ShowVm
+            {
+                Id = record.Id,
+                VenueId = record.EntityRecord.Id,
+                Title = record.Title,
+                Description = record.Description,
+                StartDate = record.StartTime.HasValue ? record.StartTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
+                StartTime = record.StartTime.HasValue ? record.StartTime.Value.ToString("t", CultureInfo.InvariantCulture) : "",
+                EndDate = record.EndTime.HasValue ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
+                EndTime = record.EndTime.HasValue ? record.EndTime.Value.ToString("t", CultureInfo.InvariantCulture) : "",
+                IsReference = record.IsReference,
+                Picture = record.Picture,
+                DetailsUrl = record.DetailsUrl
+            };
+        }       
+        
         public static AddressVm CreateViewModelContract(AddressRecord record)
         {
             if (record == null)

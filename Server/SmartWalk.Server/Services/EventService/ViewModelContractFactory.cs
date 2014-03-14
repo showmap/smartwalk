@@ -9,26 +9,7 @@ using SmartWalk.Server.ViewModels;
 namespace SmartWalk.Server.Services.EventService
 {
     public static class ViewModelContractFactory
-    {
-        public static ShowVm CreateViewModelContract(ShowRecord record) {
-            if (record == null)
-                return null;
-
-            return new ShowVm {
-                Id = record.Id,
-                VenueId = record.EntityRecord.Id,
-                Title = record.Title,
-                Description = record.Description,
-                StartDate = record.StartTime.HasValue ? record.StartTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
-                StartTime = record.StartTime.HasValue ? record.StartTime.Value.ToString("t", CultureInfo.InvariantCulture) : "",
-                EndDate = record.EndTime.HasValue ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
-                EndTime = record.EndTime.HasValue ? record.EndTime.Value.ToString("t", CultureInfo.InvariantCulture) : "",
-                IsReference = record.IsReference,
-                Picture = record.Picture,
-                DetailsUrl = record.DetailsUrl
-            };
-        }              
-
+    {               
         public static EventMetadataVm CreateViewModelContract(EventMetadataRecord record)
         {
             if (record == null)
@@ -48,7 +29,7 @@ namespace SmartWalk.Server.Services.EventService
                 IsPublic = record.IsPublic,
                 Description = record.Description,
                 DateCreated = record.DateCreated.ToString("d", CultureInfo.InvariantCulture),
-                DateModified = record.DateModified.ToString("d", CultureInfo.InvariantCulture),
+                DateModified = record.DateModified.ToString("d", CultureInfo.InvariantCulture),                
             };
         }
     }

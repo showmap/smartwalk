@@ -9,7 +9,7 @@
 
     //Script.Require("jQuery").AtHead();
     Script.Require("jQueryUI").AtHead();
-    Script.Require("ko.datetime").AtHead();
+    Script.Require("SmartWalk.ViewModels").AtHead();
 
     var eventItem = (EventMetadataFullVm)Model;
 }
@@ -27,7 +27,7 @@
             Selected = u.Id == eventItem.EventMetadata.HostId,
             Text = u.DisplayName,
             Value = u.Id.ToString()
-        }), new Dictionary<string, object> { { "data-bind", "value: HostId, event: {blur: HostIdOnBlur}" } })
+        }), new Dictionary<string, object> { { "data-bind", "value: HostId" } })
         
         <div class="ui-widget">
             <button id="add-host-button">@T("Add host")</button>
@@ -54,12 +54,30 @@
                                       Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.EventMetadata.CombineType,
                                       Text = @T(u).ToString(),
                                       Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
-                                  }), new Dictionary<string, object> { { "data-bind", "value:CombineType, event: {blur: CombineTypeOnBlur}" } })
+                                  }), new Dictionary<string, object> { { "data-bind", "value:CombineType" } })
         
         @Html.LabelFor(m => eventItem.EventMetadata.IsPublic, @T("Is public"))
         @Html.CheckBoxFor(m => eventItem.EventMetadata.IsPublic, new Dictionary<string, object> { { "data-bind", "checked: IsPublic" } })
                 
         
+        <div id="entity-items" data-bind="visible: Venues().length > 0">
+            <p>@T("Venues")</p>    
+            @{ using(Html.BeginForm("Edit", "Venue", FormMethod.Get)) {
+                    <input type="hidden" name="entityId" value="0" />
+                    <input type="submit" value="@T("Add venue")" />
+            }}
+            <table>
+                <thead>
+                    <tr>
+                        <th><span>@T("Name")</span></th>
+                        <th><span>@T("Action")</span></th>                
+                    </tr>
+                </thead>
+                <tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
+            </table>    
+        </div>
+        
+        <!--
         <div id="shows-panel">
             <ul data-bind="visible: Shows().length > 0, foreach: Shows">
                 <li>
@@ -73,100 +91,45 @@
                 </li>
             </ul>
             <button data-bind="click: addShow">@T("Add show")</button>        
-        </div>
+        </div>-->
     </div>
 </div>
 
-<script language="javascript">
+<script type="text/html" id="EntityItemTemplate">
+    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
+        <td><span data-bind="text: Name"></span></td>        
+        <td><a data-bind="attr: {href: '@Url.Action("Edit")?entityId=' + Id()}">Edit</a></td>
+    </tr>  
+    <tr>
+        <td>
+        </td>
+        <td>
+            <table>
+                <thead>
+                    <tr>
+                        <th><span>@T("Show")</span></th>
+                        <th><span>@T("Action")</span></th>                
+                    </tr>
+                </thead>
+                <tbody data-bind='template: {name: "ShowItemTemplate", foreach: Shows() }'></tbody>
+            </table>    
+        </td>
+    </tr>         
+</script>
 
-    function ShowViewModel(data) {
-        var self = this;
-        
-        self.Id = ko.observable(data.Id);
-        self.VenueId = ko.observable(data.VenueId);
-        self.IsReference = ko.observable(data.IsReference);
-        self.Title = ko.observable(data.Title);
-        self.Description = ko.observable(data.Description);
-        self.StartDate = ko.observable(data.StartDate);
-        self.StartTime = ko.observable(data.StartTime);
-        self.EndDate = ko.observable(data.EndDate);
-        self.EndTime = ko.observable(data.EndTime);
-        self.Picture = ko.observable(data.Picture);
-        self.DetailsUrl = ko.observable(data.DetailsUrl);
-    }
+<script type="text/html" id="ShowItemTemplate">
+    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
+        <td><span data-bind="text: Description"></span></td>        
+        <td><a data-bind="attr: {href: '@Url.Action("Edit")?showId=' + Id()}">Edit</a></td>
+    </tr>      
+</script>
 
-    function EventViewModel(data) {
-        var self = this;
-
-        self.Id = ko.observable(data.EventMetadata.Id);
-        self.HostId = ko.observable(data.EventMetadata.HostId);
-        self.HostName = ko.observable(data.EventMetadata.HostName);
-
-        self.Title = ko.observable(data.EventMetadata.Title);
-        self.Description = ko.observable(data.EventMetadata.Description);
-        self.StartTime = ko.observable(data.EventMetadata.StartTime);
-        self.EndTime = ko.observable(data.EventMetadata.EndTime);
-        self.Latitude = ko.observable(data.Latitude);
-        self.Longitude = ko.observable(data.Longitude);
-        
-        self.CombineType = ko.observable(data.EventMetadata.CombineType);
-        self.IsPublic = ko.observable(data.EventMetadata.IsPublic);
-        self.DateCreated = ko.observable(data.EventMetadata.DateCreated);
-        self.DateModified = ko.observable(data.EventMetadata.DateModified);
-
-        self.Shows = ko.observableArray($.map(data.Shows, function(item) { return new ShowViewModel(item); }));
-        
-        // Operations
-        self.addShow = function () {
-            self.Shows.push(new ShowViewModel({ Id: 0, VenueId: 0, IsReference: false, Title: "Title", Description: "Contact" }));
-        };
-
-        self.removeShow = function (item) { self.Shows.remove(item); };
-
-        self.save = function () {
-            var token = '@Html.AntiForgeryTokenValueOrchard()';
-            var headers = {};
-            // other headers omitted
-            headers['__RequestVerificationToken'] = token;
-
-            var ajdata = self ? ko.toJSON(self) : null;
-
-            var urlUpdate = $("#event-item").attr("save-event-url");
-
-            var config = {
-                async: true,
-                url: urlUpdate,
-                type: "POST",
-                headers: headers,
-                data: ajdata,
-                dataType: "json",
-                cache: false,
-                contentType: "application/json; charset=utf-8",
-                __RequestVerificationToken: token,
-                error: function (e) {
-                },
-                success: function (data) {
-                }
-            };
-            $.ajax(config);
-        };
-
-        self.CombineTypeOnBlur = function() {
-            //self.save();
-        };
-
-        self.HostIdOnBlur = function () {
-            //self.save();
-        };
-        
-        self.RegionIdOnBlur = function () {
-            //self.save();
-        };
-    }    
+<script language="javascript">        
+    
 
     (function ($) {        
         $(document).ready(function () {
-            var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
+            var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata)));
             ko.applyBindings(vm, document.getElementById('event-item'));            
         });
     })(jQuery);

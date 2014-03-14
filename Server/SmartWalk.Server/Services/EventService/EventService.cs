@@ -12,7 +12,7 @@ namespace SmartWalk.Server.Services.EventService
 {
     public class EventService : IEventService
     {
-        private readonly IEntityService _entityService;
+        private readonly IEntityService _entityService;        
 
         public EventService(IEntityService entityService)
         {
@@ -20,21 +20,33 @@ namespace SmartWalk.Server.Services.EventService
         }
 
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
-            return user.EventMetadataRecords.Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+            return user.EventMetadataRecords.Select(CreateViewModelContract).ToList();
         }
 
         public EventMetadataFullVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
             var eventMetadata = user.EventMetadataRecords.FirstOrDefault(u => u.Id == id);
             if (eventMetadata != null) {
                 return new EventMetadataFullVm {
-                    EventMetadata = ViewModelContractFactory.CreateViewModelContract(eventMetadata),
-                    Hosts = _entityService.GetUserEntities(user, EntityType.Host),
-                    Shows = eventMetadata.ShowRecords.Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
+                    EventMetadata = CreateViewModelContract(eventMetadata),
+                    Hosts = _entityService.GetUserEntities(user, EntityType.Host),                    
                     Venues = _entityService.GetUserEntities(user, EntityType.Venue)
                 };
             }
 
             return null;
-        }        
+        }
+
+        private EventMetadataVm CreateViewModelContract(EventMetadataRecord record)
+        {
+            if (record == null)
+                return null;
+
+            var res = ViewModelContractFactory.CreateViewModelContract(record);
+
+            res.Host = _entityService.GetEntityVm(record.EntityRecord);
+            res.AllVenues = _entityService.GetEventEntities(record);
+
+            return res;
+        }
     }
 }

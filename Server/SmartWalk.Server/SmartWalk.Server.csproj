@@ -95,7 +95,7 @@
     <Content Include="Scripts\4sqacplugin.js" />
     <Content Include="Scripts\antiforgery.js" />
     <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\entity.js" />
+    <Content Include="Scripts\viewmodels.js" />
     <Content Include="Scripts\kodatetime.js" />
     <Content Include="Scripts\mappy.js" />
     <Content Include="Styles\add-place.css" />
@@ -140,7 +140,6 @@
     <Compile Include="Models\DataContracts\Entity.cs" />
     <Compile Include="Models\DataContracts\EventMetadata.cs" />
     <Compile Include="Models\DataContracts\Reference.cs" />
-    <Compile Include="Models\DataContracts\Region.cs" />
     <Compile Include="Models\DataContracts\Show.cs" />
     <Compile Include="Drivers\SmartWalkUserDriver.cs" />
     <Compile Include="Handlers\SmartWalkUserEventHandler.cs" />
@@ -189,7 +188,6 @@
     <Compile Include="ViewModels\EntityVm.cs" />
     <Compile Include="ViewModels\EventMetadataFullVm.cs" />
     <Compile Include="ViewModels\EventMetadataVm.cs" />
-    <Compile Include="ViewModels\RegionVm.cs" />
     <Compile Include="ViewModels\ShowVm.cs" />
     <Compile Include="ViewModels\VmItemState.cs" />
   </ItemGroup>

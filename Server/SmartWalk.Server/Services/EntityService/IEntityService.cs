@@ -10,7 +10,9 @@ namespace SmartWalk.Server.Services.EntityService
 {
     public interface IEntityService : IDependency {
         IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type);
+        IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord);
         EntityVm GetEntityVmById(int entityId, EntityType type);
+        EntityVm GetEntityVm(EntityRecord entity);
         EntityRecord SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm);
         void DeleteEntity(int hostId);
 

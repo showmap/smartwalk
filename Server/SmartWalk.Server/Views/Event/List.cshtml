@@ -6,7 +6,7 @@
 
     //Script.Require("jQuery").AtHead();
     Script.Require("jQueryUI").AtHead();
-    Script.Require("ko").AtHead();
+    Script.Require("SmartWalk.ViewModels").AtHead();
 
     var eventItems = (IList<EventMetadataVm>)Model;
 }
@@ -38,28 +38,7 @@
 </script>
 
 
-<script>   
-    function EventViewModel(data) {
-        var self = this;
-
-        self.Id = ko.observable(data.Id);
-        self.HostId = ko.observable(data.HostId);
-        self.HostName = ko.observable(data.HostName);
-
-        self.Title = ko.observable(data.Title);
-        self.Description = ko.observable(data.Description);
-        self.StartTime = ko.observable(data.StartTime);
-        self.EndTime = ko.observable(data.EndTime);
-        self.Latitude = ko.observable(data.Latitude);
-        self.Longitude = ko.observable(data.Longitude);
-        
-        self.CombineType = ko.observable(data.CombineType);
-        self.IsMobileReady = ko.observable(data.IsMobileReady);
-        self.IsWidgetReady = ko.observable(data.IsWidgetReady);
-        self.DateCreated = ko.observable(data.DateCreated);
-        self.DateModified = ko.observable(data.DateModified);        
-    }
-
+<script>
     function EventsViewModel() {
         var self = this;
         
@@ -67,5 +46,4 @@
     }
 
     ko.applyBindings(new EventsViewModel(), document.getElementById('event-items'));
-
 </script>

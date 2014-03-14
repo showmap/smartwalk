@@ -40,6 +40,7 @@
             #region Host
             manifest.DefineStyle("SmartWalk.Host").SetUrl("host.css");
             manifest.DefineScript("SmartWalk.Entity").SetUrl("entity.js").SetVersion("1.1").SetDependencies("ko.datetime");
+            manifest.DefineScript("SmartWalk.ViewModels").SetUrl("viewmodels.js").SetVersion("1.6").SetDependencies("ko.datetime");
             #endregion
 
             #endregion
