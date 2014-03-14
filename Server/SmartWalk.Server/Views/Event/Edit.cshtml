@@ -21,14 +21,6 @@
 <div id="event-item" save-event-url="@Url.Action("SaveEvent", "Event", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
     <div id="metadata-panel">
-        @Html.LabelFor(m => eventItem.EventMetadata.RegionId, @T("Region"))
-        @Html.DropDownListFor(m => eventItem.EventMetadata.RegionId, eventItem.Regions.Select(u => new SelectListItem
-        {
-            Selected = u.Id == eventItem.EventMetadata.HostId,
-            Text = u.DisplayName,
-            Value = u.Id.ToString()
-        }), new Dictionary<string, object> { { "data-bind", "value: RegionId, event: {blur: RegionIdOnBlur}" } })
-
         @Html.LabelFor(m => eventItem.EventMetadata.HostId, @T("Host"))
         @Html.DropDownListFor(m => eventItem.EventMetadata.HostId, eventItem.Hosts.Select(u => new SelectListItem
         {
@@ -108,14 +100,15 @@
 
         self.Id = ko.observable(data.EventMetadata.Id);
         self.HostId = ko.observable(data.EventMetadata.HostId);
-        self.RegionId = ko.observable(data.EventMetadata.RegionId);
         self.HostName = ko.observable(data.EventMetadata.HostName);
 
         self.Title = ko.observable(data.EventMetadata.Title);
         self.Description = ko.observable(data.EventMetadata.Description);
         self.StartTime = ko.observable(data.EventMetadata.StartTime);
         self.EndTime = ko.observable(data.EventMetadata.EndTime);
-
+        self.Latitude = ko.observable(data.Latitude);
+        self.Longitude = ko.observable(data.Longitude);
+        
         self.CombineType = ko.observable(data.EventMetadata.CombineType);
         self.IsPublic = ko.observable(data.EventMetadata.IsPublic);
         self.DateCreated = ko.observable(data.EventMetadata.DateCreated);

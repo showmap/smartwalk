@@ -26,7 +26,6 @@ namespace SmartWalk.Server.Services.ImportService
         private readonly IRepository<EntityRecord> _entityRepository;
         private readonly IRepository<EventMappingRecord> _eventMappingRepository;
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
-        private readonly IRepository<RegionRecord> _regionRepository;
         private readonly IRepository<ShowRecord> _showRepository;
         private readonly IRepository<StorageRecord> _storageRepository;
 
@@ -39,7 +38,6 @@ namespace SmartWalk.Server.Services.ImportService
             IRepository<EntityRecord> entityRepository, 
             IRepository<EventMappingRecord> eventMappingRepository, 
             IRepository<EventMetadataRecord> eventMetadataRepository, 
-            IRepository<RegionRecord> regionRepository, 
             IRepository<ShowRecord> showRepository, 
             IRepository<StorageRecord> storageRepository)
         {
@@ -49,7 +47,6 @@ namespace SmartWalk.Server.Services.ImportService
             _entityRepository = entityRepository;
             _eventMappingRepository = eventMappingRepository;
             _eventMetadataRepository = eventMetadataRepository;
-            _regionRepository = regionRepository;
             _showRepository = showRepository;
             _storageRepository = storageRepository;
         }
@@ -175,42 +172,7 @@ namespace SmartWalk.Server.Services.ImportService
             if (currentUser == null)
             {
                 throw new InvalidOperationException("Current user is not defined!");
-            }
-
-            #region Oakland Region
-
-            var regionName = string.Format("{0}, {1}, {2}", "United States", "California", "Oakland");
-            var oaklandRegion = _regionRepository.Get(reg => reg.Region == regionName);
-            if (oaklandRegion == null)
-            {
-                oaklandRegion = new RegionRecord
-                    {
-                        Region = regionName,
-                        Latitude = 0,
-                        Longitude = 0,
-                    };
-                _regionRepository.Create(oaklandRegion);
-                _regionRepository.Flush();
-                _log.Add("Oakland region created");
-            }
-            #endregion
-
-            #region San Francisco Region
-            regionName = string.Format("{0}, {1}, {2}", "United States", "California", "San Francisco");
-            var sfRegion = _regionRepository.Get(reg => reg.Region == regionName);
-            if (sfRegion == null)
-            {
-                sfRegion = new RegionRecord
-                    {
-                        Region = regionName,
-                        Latitude = 0,
-                        Longitude = 0
-                    };
-                _regionRepository.Create(sfRegion);
-                _regionRepository.Flush();
-                _log.Add("San Francisco region created");
-            }
-            #endregion
+            }            
 
             #region SmartWalk Data Storage
             var storage = _storageRepository.Get(stor => stor.StorageKey == StorageKeys.SmartWalk);
@@ -231,12 +193,10 @@ namespace SmartWalk.Server.Services.ImportService
             {
                 foreach (var xmlOrg in location.Organizations)
                 {
-                    var hostRegion = xmlOrg.Id == "oam" ? oaklandRegion : sfRegion;
                     var hostEntity =
                         CreateOrUpdateEntity(
                             xmlOrg,
                             EntityType.Host,
-                            hostRegion,
                             currentUser.Record);
 
                     if (xmlOrg.Events != null)
@@ -246,7 +206,6 @@ namespace SmartWalk.Server.Services.ImportService
                             var eventMetadata =
                                 CreateEventMetadata(
                                     xmlOrgEvent,
-                                    hostRegion,
                                     hostEntity,
                                     currentUser.Record);
 
@@ -258,7 +217,6 @@ namespace SmartWalk.Server.Services.ImportService
                                         CreateOrUpdateEntity(
                                             xmlVenue,
                                             EntityType.Venue,
-                                            hostRegion,
                                             currentUser.Record);
 
                                     CreateOrUpdateShows(
@@ -277,7 +235,6 @@ namespace SmartWalk.Server.Services.ImportService
         private EntityRecord CreateOrUpdateEntity(
             IEntity xmlEntity, 
             EntityType type, 
-            RegionRecord region,
             SmartWalkUserRecord user)
         {
             var result = _entityRepository.Get(ent => ent.Name == xmlEntity.Name);
@@ -302,7 +259,7 @@ namespace SmartWalk.Server.Services.ImportService
             _log.Add(string.Format("{0} entity updated", result.Name));
 
             CreateContacts(result, xmlEntity.Contacts);
-            CreateOrUpdateAddresses(result, xmlEntity.Addresses, region);
+            CreateOrUpdateAddresses(result, xmlEntity.Addresses);
 
             return result;
         }
@@ -363,8 +320,7 @@ namespace SmartWalk.Server.Services.ImportService
 
         private void CreateOrUpdateAddresses(
             EntityRecord entity, 
-            IEnumerable<Address> xmlAddresses,
-            RegionRecord region)
+            IEnumerable<Address> xmlAddresses)
         {
             if (xmlAddresses == null) return;
 
@@ -397,7 +353,6 @@ namespace SmartWalk.Server.Services.ImportService
 
         private EventMetadataRecord CreateEventMetadata(
             Event xmlOrgEvent,
-            RegionRecord region,
             EntityRecord hostEntity,
             SmartWalkUserRecord user)
         {
@@ -407,7 +362,6 @@ namespace SmartWalk.Server.Services.ImportService
             {
                 result = new EventMetadataRecord
                     {
-                        RegionRecord = region,
                         EntityRecord = hostEntity,
                         StartTime = xmlOrgEvent.StartDateObject.Date,
                         CombineType = (int)CombineType.None,

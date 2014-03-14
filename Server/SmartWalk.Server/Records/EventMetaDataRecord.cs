@@ -8,14 +8,15 @@ namespace SmartWalk.Server.Records
         private IList<EventMappingRecord> _eventMappingRecords;
         private IList<ShowRecord> _showRecords;
 
-        public virtual int Id { get; set; }
-        public virtual RegionRecord RegionRecord { get; set; }
+        public virtual int Id { get; set; }        
         public virtual EntityRecord EntityRecord { get; set; } 
         public virtual SmartWalkUserRecord SmartWalkUserRecord { get; set; }
         public virtual string Title { get; set; }
         public virtual string Description { get; set; }
         public virtual DateTime StartTime { get; set; }
         public virtual DateTime? EndTime { get; set; }
+        public virtual double Latitude { get; set; }
+        public virtual double Longitude { get; set; }
         public virtual int CombineType { get; set; }
         public virtual bool IsPublic { get; set; }
         public virtual DateTime DateCreated { get; set; }

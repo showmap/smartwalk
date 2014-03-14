@@ -25,11 +25,6 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields != null)
             {
-                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Region)))
-                {
-                    result.Region = CreateDataContract(record.RegionRecord);
-                }
-
                 if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Host)) &&
                     record.EntityRecord != null)
                 {
@@ -175,19 +170,6 @@ namespace SmartWalk.Server.Services.QueryService
                     result.DetailsUrl = record.DetailsUrl;
                 }
             }
-
-            return result;
-        }
-
-        // TODO: Reflect recent db changes
-        private static Region CreateDataContract(RegionRecord record)
-        {
-            var result = new Region
-                {
-                    //Country = record.Country,
-                    //State = record.State,
-                    //City = record.City
-                };
 
             return result;
         }

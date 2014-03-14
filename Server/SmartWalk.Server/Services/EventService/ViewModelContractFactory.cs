@@ -10,20 +10,6 @@ namespace SmartWalk.Server.Services.EventService
 {
     public static class ViewModelContractFactory
     {
-        public static RegionVm CreateViewModelContract(RegionRecord record)
-        {
-            if (record == null)
-                return null;
-
-            return new RegionVm
-            {
-                Id = record.Id,
-                Region = record.Region,
-                Latitude = record.Latitude,
-                Longitude = record.Longitude,
-            };
-        }
-
         public static ShowVm CreateViewModelContract(ShowRecord record) {
             if (record == null)
                 return null;
@@ -52,12 +38,13 @@ namespace SmartWalk.Server.Services.EventService
             {
                 Id = record.Id,
                 HostId = record.EntityRecord.Id,
-                RegionId = record.RegionRecord.Id,
                 HostName = record.EntityRecord.Name,
                 Title = record.Title,
                 CombineType = record.CombineType,
                 StartTime = record.StartTime.ToString("d", CultureInfo.InvariantCulture),
                 EndTime = record.EndTime.HasValue ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
+                Latitude = record.Latitude,
+                Longitude = record.Longitude,
                 IsPublic = record.IsPublic,
                 Description = record.Description,
                 DateCreated = record.DateCreated.ToString("d", CultureInfo.InvariantCulture),

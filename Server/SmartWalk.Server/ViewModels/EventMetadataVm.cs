@@ -15,6 +15,8 @@ namespace SmartWalk.Server.ViewModels
         public string Description { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public int CombineType { get; set; }
         public bool IsPublic { get; set; }
         public string DateCreated { get; set; }

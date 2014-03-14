@@ -166,7 +166,6 @@
     <Compile Include="Records\EntityRecord.cs" />
     <Compile Include="Records\EventMappingRecord.cs" />
     <Compile Include="Records\EventMetadataRecord.cs" />
-    <Compile Include="Records\RegionRecord.cs" />
     <Compile Include="Records\ShowMappingRecord.cs" />
     <Compile Include="Records\ShowRecord.cs" />
     <Compile Include="Records\SmartWalkUserRecord.cs" />

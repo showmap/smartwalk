@@ -50,7 +50,9 @@
         self.Description = ko.observable(data.Description);
         self.StartTime = ko.observable(data.StartTime);
         self.EndTime = ko.observable(data.EndTime);
-
+        self.Latitude = ko.observable(data.Latitude);
+        self.Longitude = ko.observable(data.Longitude);
+        
         self.CombineType = ko.observable(data.CombineType);
         self.IsMobileReady = ko.observable(data.IsMobileReady);
         self.IsWidgetReady = ko.observable(data.IsWidgetReady);

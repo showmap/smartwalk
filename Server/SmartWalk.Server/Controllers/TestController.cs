@@ -23,7 +23,7 @@ namespace Store.GsmCounters.Controllers
 
             var res = _entityRepository.Table.Select(e => e.EventMetadataRecords
                                          .OrderByDescending(em => em.StartTime)
-                                         .FirstOrDefault(em => em.RegionRecord.Region.Contains("San Francisco"))).ToArray();
+                                         .FirstOrDefault()).ToArray();
 
             return View();
         }

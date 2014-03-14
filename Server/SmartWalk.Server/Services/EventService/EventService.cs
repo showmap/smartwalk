@@ -12,15 +12,10 @@ namespace SmartWalk.Server.Services.EventService
 {
     public class EventService : IEventService
     {
-        private readonly IRepository<RegionRecord> _regionRepository;
-
         private readonly IEntityService _entityService;
 
-        public EventService(IRepository<RegionRecord> regionRepository,
-            IEntityService entityService)
+        public EventService(IEntityService entityService)
         {
-            _regionRepository = regionRepository;
-
             _entityService = entityService;
         }
 
@@ -34,7 +29,6 @@ namespace SmartWalk.Server.Services.EventService
                 return new EventMetadataFullVm {
                     EventMetadata = ViewModelContractFactory.CreateViewModelContract(eventMetadata),
                     Hosts = _entityService.GetUserEntities(user, EntityType.Host),
-                    Regions = _regionRepository.Table.Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
                     Shows = eventMetadata.ShowRecords.Select(ViewModelContractFactory.CreateViewModelContract).ToList(),
                     Venues = _entityService.GetUserEntities(user, EntityType.Venue)
                 };
