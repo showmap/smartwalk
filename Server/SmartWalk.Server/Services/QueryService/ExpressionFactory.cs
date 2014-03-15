@@ -139,13 +139,25 @@ namespace SmartWalk.Server.Services.QueryService
                 if (fields != null)
                 {
                     // building field accessing expression
-                    var fieldExpr = fields.Aggregate(
-                        default(Expression),
-                        (current, field) =>
-                        Expression.Property(
-                            current ?? recordExpr,
-                            (current ?? recordExpr).Type,
-                            field));
+                    Expression fieldExpr;
+
+                    try
+                    {
+                        fieldExpr = fields.Aggregate(
+                            default(Expression),
+                            (current, field) =>
+                            Expression.Property(
+                                current ?? recordExpr,
+                                (current ?? recordExpr).Type,
+                                field));
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        throw new InvalidExpressionException(
+                            string.Format(
+                                "Can not find '{0}' field in the requested items",
+                                where.Field));
+                    }
 
                     // one value case
                     if (fieldExpr != null &&
@@ -184,8 +196,20 @@ namespace SmartWalk.Server.Services.QueryService
 
         private static Expression GetWhereValueExpression(Expression fieldExpr, object value)
         {
+            Expression equalsTo;
             var valueExpr = Expression.Constant(value);
-            var result = Expression.Equal(fieldExpr, valueExpr);
+
+            if (fieldExpr.Type == typeof(double) && 
+                valueExpr.Type == typeof(int))
+            {
+                equalsTo = Expression.Convert(valueExpr, typeof(double));
+            }
+            else
+            {
+                equalsTo = valueExpr;
+            }
+
+            var result = Expression.Equal(fieldExpr, equalsTo);
             return result;
         }
 

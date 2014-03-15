@@ -18,7 +18,7 @@ namespace SmartWalk.Labs.Api
 
             Console.WriteLine("\nHome View");
 
-            var homeViewRequest = RequestFactory.CreateHomeViewRequest("United States", "California", "San Francisco");
+            var homeViewRequest = RequestFactory.CreateHomeViewRequest(37.7784568, -122.4174026);
             var json = JsonConvert.SerializeObject(
                 homeViewRequest,
                 new JsonSerializerSettings

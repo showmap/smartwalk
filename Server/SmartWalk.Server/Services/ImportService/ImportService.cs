@@ -24,10 +24,8 @@ namespace SmartWalk.Server.Services.ImportService
         private readonly IRepository<AddressRecord> _addressRepository;
         private readonly IRepository<ContactRecord> _contactRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
-        private readonly IRepository<EventMappingRecord> _eventMappingRepository;
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<ShowRecord> _showRepository;
-        private readonly IRepository<StorageRecord> _storageRepository;
 
         private List<string> _log;
 
@@ -36,19 +34,15 @@ namespace SmartWalk.Server.Services.ImportService
             IRepository<AddressRecord> addressRepository, 
             IRepository<ContactRecord> contactRepository, 
             IRepository<EntityRecord> entityRepository, 
-            IRepository<EventMappingRecord> eventMappingRepository, 
             IRepository<EventMetadataRecord> eventMetadataRepository, 
-            IRepository<ShowRecord> showRepository, 
-            IRepository<StorageRecord> storageRepository)
+            IRepository<ShowRecord> showRepository)
         {
             _orchardServices = orchardServices;
             _addressRepository = addressRepository;
             _contactRepository = contactRepository;
             _entityRepository = entityRepository;
-            _eventMappingRepository = eventMappingRepository;
             _eventMetadataRepository = eventMetadataRepository;
             _showRepository = showRepository;
-            _storageRepository = storageRepository;
         }
 
         public void ImportXmlData(List<string> log)
@@ -172,22 +166,7 @@ namespace SmartWalk.Server.Services.ImportService
             if (currentUser == null)
             {
                 throw new InvalidOperationException("Current user is not defined!");
-            }            
-
-            #region SmartWalk Data Storage
-            var storage = _storageRepository.Get(stor => stor.StorageKey == StorageKeys.SmartWalk);
-            if (storage == null)
-            {
-                storage = new StorageRecord
-                    {
-                        StorageKey = StorageKeys.SmartWalk,
-                        Description = "SmartWalk Data Storage"
-                    };
-                _storageRepository.Create(storage);
-                _storageRepository.Flush();
-                _log.Add("SmartWalk storge record created");
             }
-            #endregion
 
             if (location != null && location.Organizations != null)
             {
@@ -220,7 +199,6 @@ namespace SmartWalk.Server.Services.ImportService
                                             currentUser.Record);
 
                                     CreateOrUpdateShows(
-                                        storage,
                                         eventMetadata,
                                         venueEntity,
                                         xmlVenue.Shows);
@@ -269,7 +247,7 @@ namespace SmartWalk.Server.Services.ImportService
             if (xmlContacts == null) return;
 
             var contacts = _contactRepository
-                .Fetch(cont => cont.EntityRecord == entity)
+                .Fetch(cont => cont.EntityRecord.Id == entity.Id)
                 .ToArray();
             foreach (var xmlContact in xmlContacts)
             {
@@ -325,7 +303,7 @@ namespace SmartWalk.Server.Services.ImportService
             if (xmlAddresses == null) return;
 
             var addresses = _addressRepository
-                .Fetch(addr => addr.EntityRecord == entity)
+                .Fetch(addr => addr.EntityRecord.Id == entity.Id)
                 .ToArray();
             foreach (var xmlAddress in xmlAddresses)
             {
@@ -357,7 +335,9 @@ namespace SmartWalk.Server.Services.ImportService
             SmartWalkUserRecord user)
         {
             var result = _eventMetadataRepository
-                .Get(evMet => evMet.StartTime == xmlOrgEvent.StartDateObject.Date);
+                .Get(evMet => 
+                    evMet.EntityRecord.Id == hostEntity.Id &&
+                    evMet.StartTime == xmlOrgEvent.StartDateObject.Date);
             if (result == null)
             {
                 result = new EventMetadataRecord
@@ -379,7 +359,6 @@ namespace SmartWalk.Server.Services.ImportService
         }
 
         private void CreateOrUpdateShows(
-            StorageRecord storage,
             EventMetadataRecord eventMetadata,
             EntityRecord venue,
             Show[] xmlShows)
@@ -393,7 +372,7 @@ namespace SmartWalk.Server.Services.ImportService
                 foreach (var xmlShow in xmlShows)
                 {
                     var show = shows.FirstOrDefault(s =>
-                        s.EntityRecord == venue &&
+                        s.EntityRecord.Id == venue.Id &&
                         s.Description == xmlShow.Desciption);
                     if (show == null)
                     {
@@ -420,7 +399,7 @@ namespace SmartWalk.Server.Services.ImportService
             else
             {
                 var refShow = shows.FirstOrDefault(s =>
-                        s.EntityRecord == venue &&
+                        s.EntityRecord.Id == venue.Id &&
                         s.IsReference);
                 if (refShow == null)
                 {

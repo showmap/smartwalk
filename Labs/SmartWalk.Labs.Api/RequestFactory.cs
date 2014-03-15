@@ -6,7 +6,7 @@ namespace SmartWalk.Labs.Api
 {
     public static class RequestFactory
     {
-        public static Request CreateHomeViewRequest(string country, string state, string city)
+        public static Request CreateHomeViewRequest(double latitude, double longitude)
         {
             var result = new Request
                 {
@@ -21,22 +21,16 @@ namespace SmartWalk.Labs.Api
                                         {
                                             new RequestSelectWhere
                                                 {
-                                                    Field = "Region.Country",
+                                                    Field = "Latitude",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = country
+                                                    Value = 0 // TODO latitude
                                                 },
                                             new RequestSelectWhere
                                                 {
-                                                    Field = "region.State",
+                                                    Field = "Longitude",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = state
-                                                },
-                                            /*new RequestSelectWhere
-                                                {
-                                                    Field = "Region.city",
-                                                    Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = city
-                                                }*/
+                                                    Value = 0 // TODO longitude
+                                                }
                                         }
                                 },
                             new RequestSelect
