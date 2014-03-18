@@ -13,10 +13,6 @@
 
     var eventItem = (EventMetadataFullVm)Model;
 }
-<div class="ui-widget">
-    <button id="add-place-button">@T("Add place")</button>
-</div>
-
 
 <div id="event-item" save-event-url="@Url.Action("SaveEvent", "Event", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
@@ -30,9 +26,9 @@
         }), new Dictionary<string, object> { { "data-bind", "value: HostId" } })
         
         <div class="ui-widget">
+            <button id="add-place-button">@T("Add place")</button>
             <button id="add-host-button">@T("Add host")</button>
         </div>
-
 
         <label for="title">@T("Title")</label>
         <input type="text" id="title" data-bind="value: Title"/>
@@ -59,20 +55,13 @@
         @Html.LabelFor(m => eventItem.EventMetadata.IsPublic, @T("Is public"))
         @Html.CheckBoxFor(m => eventItem.EventMetadata.IsPublic, new Dictionary<string, object> { { "data-bind", "checked: IsPublic" } })
                 
-        
         <div id="entity-items" data-bind="visible: Venues().length > 0">
             <p>@T("Venues")</p>    
             @{ using(Html.BeginForm("Edit", "Venue", FormMethod.Get)) {
                     <input type="hidden" name="entityId" value="0" />
                     <input type="submit" value="@T("Add venue")" />
             }}
-            <table>
-                <thead>
-                    <tr>
-                        <th><span>@T("Name")</span></th>
-                        <th><span>@T("Action")</span></th>                
-                    </tr>
-                </thead>
+            <table>                
                 <tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
             </table>    
         </div>
@@ -96,7 +85,7 @@
 </div>
 
 <script type="text/html" id="EntityItemTemplate">
-    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
+    <tr>
         <td><span data-bind="text: Name"></span></td>        
         <td><a data-bind="attr: {href: '@Url.Action("Edit")?entityId=' + Id()}">Edit</a></td>
     </tr>  
@@ -111,7 +100,7 @@
                         <th><span>@T("Action")</span></th>                
                     </tr>
                 </thead>
-                <tbody data-bind='template: {name: "ShowItemTemplate", foreach: Shows() }'></tbody>
+                <tbody data-bind='template: {name: $root.getShowView, foreach: Shows() }'></tbody>
             </table>    
         </td>
     </tr>         
@@ -120,7 +109,36 @@
 <script type="text/html" id="ShowItemTemplate">
     <tr data-bind="css: {'alt': $index() % 2 === 1}">        
         <td><span data-bind="text: Description"></span></td>        
-        <td><a data-bind="attr: {href: '@Url.Action("Edit")?showId=' + Id()}">Edit</a></td>
+        <td><a href="#" data-bind="click: $root.selectedShow">Edit</a></td>
+    </tr>      
+</script>
+
+<script type="text/html" id="ShowItemTemplateEdit">
+    <tr>
+        <td colspan="2">
+            <table>
+                <tr>
+                    <td>
+                        <label for="show-title">@T("Title")</label>
+                        <input type="text" id="show-title" data-bind="value: Title"/>                                                                
+                    </td>
+                    <td>
+                        <label for="show-description">@T("Description")</label>
+                        <textarea id="show-description" data-bind="value: Description"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="show-start-time">@T("Start time")</label>
+                        <input id="show-start-time" type="text" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />                                
+                    </td>
+                    <td>
+                        <label for="show-end-time">@T("End time")</label>
+                        <input id="show-end-time" type="text" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
     </tr>      
 </script>
 
@@ -130,6 +148,11 @@
     (function ($) {        
         $(document).ready(function () {
             var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata)));
+
+            vm.getShowView = function(item) {
+                return item === vm.selectedShow() ? 'ShowItemTemplateEdit' : "ShowItemTemplate";
+            };
+
             ko.applyBindings(vm, document.getElementById('event-item'));            
         });
     })(jQuery);

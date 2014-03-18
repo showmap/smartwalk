@@ -128,4 +128,6 @@ function EventViewModel(data) {
     self.removeVenue = function (item) {
         item.State(2);
     };
+
+    self.selectedShow = ko.observable();
 }

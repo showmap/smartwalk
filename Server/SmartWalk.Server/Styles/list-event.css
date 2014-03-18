@@ -8,11 +8,11 @@
     height: 32px;
 }
 
-.event-item tr.alt {
+tr.alt {
     background-color: #E6E6E6;
 }
 
-.event-item th {
+th {
     padding: 7px;
     vertical-align: middle;
     text-align: center;
@@ -20,7 +20,7 @@
     font-weight: bold;    
 }
  
-.event-item td {
+td {
     padding: 4px;
     vertical-align: middle;
 }
