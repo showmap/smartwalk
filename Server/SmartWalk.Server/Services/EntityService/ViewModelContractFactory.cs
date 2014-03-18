@@ -34,7 +34,7 @@ namespace SmartWalk.Server.Services.EntityService
                 return null;
 
             var res = CreateViewModelContract(record);
-            res.AllShows = record.ShowRecords.Where(s => s.EventMetadataRecord == metadata).Select(CreateViewModelContract).ToList();
+            res.AllShows = record.ShowRecords.Where(s => s.EventMetadataRecord.Id == metadata.Id).Select(CreateViewModelContract).ToList();
 
             return res;
         }
