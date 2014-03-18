@@ -14,7 +14,7 @@ namespace SmartWalk.Labs.Api
                         {
                             new RequestSelect
                                 {
-                                    Fields = new[] {"host", "title", "startTime", "region"},
+                                    Fields = new[] {"host", "title", "startTime", "latitude", "longitude"},
                                     From = RequestSelectFromTables.GroupedEventMetadata.ToLowerInvariant(),
                                     As = "em",
                                     Where = new[]
@@ -83,7 +83,7 @@ namespace SmartWalk.Labs.Api
                                 {
                                     Fields = new[]
                                         {
-                                            "Venue", "IsReference", "Title", 
+                                            "Venue", "IsReference", "Title",
                                             "Description", "StartTime", "EndTime",
                                             "Picture", "DetailsUrl"
                                         },

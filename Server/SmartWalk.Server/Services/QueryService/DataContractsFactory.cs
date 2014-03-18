@@ -51,6 +51,16 @@ namespace SmartWalk.Server.Services.QueryService
                     result.EndTime = record.EndTime;
                 }
 
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Latitude)))
+                {
+                    result.Latitude = record.Latitude;
+                }
+
+                if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.Longitude)))
+                {
+                    result.Longitude = record.Longitude;
+                }
+
                 if (fields.ContainsIgnoreCase(result.GetPropertyName(p => p.CombineType)))
                 {
                     result.CombineType = (CombineType)record.CombineType;

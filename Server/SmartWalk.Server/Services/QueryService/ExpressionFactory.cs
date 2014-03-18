@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using SmartWalk.Server.Records;
+using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Shared.Extensions;
 using EntityType = SmartWalk.Server.Records.EntityType;
@@ -151,7 +152,7 @@ namespace SmartWalk.Server.Services.QueryService
                                 (current ?? recordExpr).Type,
                                 field));
                     }
-                    catch (ArgumentException ex)
+                    catch (ArgumentException)
                     {
                         throw new InvalidExpressionException(
                             string.Format(
@@ -279,6 +280,10 @@ namespace SmartWalk.Server.Services.QueryService
         /// </summary>
         private static IEnumerable<object> GetLookUpValues(object item, IEnumerable<PropertyInfo> propertyInfos)
         {
+            // skipping all references to externa storages
+            var reference = item as IReference;
+            if (reference != null && reference.Storage != StorageKeys.SmartWalk) return Enumerable.Empty<object>();
+
             var result = new List<object>();
             var pathStack = new Stack<PropertyInfo>(propertyInfos.Reverse());
             var lastValue = item;

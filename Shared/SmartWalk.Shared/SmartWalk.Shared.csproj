@@ -48,7 +48,6 @@
     <Compile Include="DataContracts\IEntity.cs" />
     <Compile Include="DataContracts\IEventMetadata.cs" />
     <Compile Include="DataContracts\IReference.cs" />
-    <Compile Include="DataContracts\IRegion.cs" />
     <Compile Include="DataContracts\IShow.cs" />
     <Compile Include="DataContracts\ReferenceType.cs" />
     <Compile Include="DataContracts\Api\Request.cs" />
