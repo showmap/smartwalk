@@ -13,12 +13,14 @@ namespace SmartWalk.Server.Services.EntityService
         IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord);
         EntityVm GetEntityVmById(int entityId, EntityType type);
         EntityVm GetEntityVm(EntityRecord entity);
-        EntityRecord SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm);
+        EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm);
         void DeleteEntity(int hostId);
 
-        AddressRecord SaveOrAddAddress(EntityRecord entity, AddressVm addressVm);
+        AddressVm SaveOrAddAddress(EntityRecord entity, AddressVm addressVm);
         void DeleteAddress(int addressId);
-        ContactRecord SaveOrAddContact(EntityRecord entity, ContactVm contactVm);
+        ContactVm SaveOrAddContact(EntityRecord entity, ContactVm contactVm);
         void DeleteContact(int contactId);
+
+        ShowVm SaveOrAddShow(ShowVm item);
     }
 }

@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using Orchard;
 using Orchard.Data;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EventService
 {
-    public class EventService : IEventService
-    {
+    public class EventService : IEventService {
         private readonly IEntityService _entityService;        
 
-        public EventService(IEntityService entityService)
-        {
+        public EventService(IEntityService entityService) {
             _entityService = entityService;
         }
 
@@ -34,7 +34,7 @@ namespace SmartWalk.Server.Services.EventService
             }
 
             return null;
-        }
+        }        
 
         private EventMetadataVm CreateViewModelContract(EventMetadataRecord record)
         {

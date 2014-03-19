@@ -47,6 +47,7 @@ namespace SmartWalk.Server.Services.EntityService
             return new ShowVm
             {
                 Id = record.Id,
+                EventMetedataId = record.EventMetadataRecord.Id,
                 VenueId = record.EntityRecord.Id,
                 Title = record.Title,
                 Description = record.Description,

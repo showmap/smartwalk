@@ -12,6 +12,7 @@ using Orchard.Themes;
 using Orchard.DisplayManagement;
 using Orchard.Mvc;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Services.EntityService;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -20,11 +21,13 @@ namespace SmartWalk.Server.Controllers
         private readonly IOrchardServices _orchardServices;
 
         private readonly IEventService _eventService;
+        private readonly IEntityService _entityService;
 
-        public EventController(IEventService eventService, IOrchardServices orchardServices) {
+        public EventController(IEventService eventService, IEntityService entityService, IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
 
             _eventService = eventService;
+            _entityService = entityService;
         }
 
         public ActionResult List()
@@ -71,6 +74,19 @@ namespace SmartWalk.Server.Controllers
             }
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult SaveShow(ShowVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _entityService.SaveOrAddShow(item);
 
             return Json(true);
         }

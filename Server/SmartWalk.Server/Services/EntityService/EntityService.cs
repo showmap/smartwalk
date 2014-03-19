@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using Orchard.Data;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EntityService
@@ -13,14 +15,73 @@ namespace SmartWalk.Server.Services.EntityService
         private readonly IRepository<ContactRecord> _contactRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
         private readonly IRepository<AddressRecord> _addressRepository;
+        private readonly IRepository<ShowRecord> _showRepository;
+        private readonly IRepository<EventMetadataRecord> _metadataRepository;
 
-        public EntityService(IRepository<ContactRecord> contactRepository, IRepository<EntityRecord> entityRepository, IRepository<AddressRecord> addressRepository)
-        {
+        private readonly Lazy<CultureInfo> _cultureInfo;
+
+        public EntityService(ICultureService cultureService, 
+            IRepository<ContactRecord> contactRepository, IRepository<EntityRecord> entityRepository, 
+            IRepository<AddressRecord> addressRepository, IRepository<ShowRecord> showRepository, IRepository<EventMetadataRecord> metadataRepository) {
+            _metadataRepository = metadataRepository;
+            _showRepository = showRepository;
             _entityRepository = entityRepository;
             _contactRepository = contactRepository;
             _addressRepository = addressRepository;
+
+            _cultureInfo = new Lazy<CultureInfo>(cultureService.GetCurrentCulture);
         }
 
+        public ShowVm SaveOrAddShow(ShowVm item)
+        {
+            var show = _showRepository.Get(item.Id);
+            var metadata = _metadataRepository.Get(item.EventMetedataId);
+            var venue = _entityRepository.Get(item.VenueId);
+
+            if (metadata == null || venue == null)
+                return null;
+
+            DateTime dtFrom;
+            DateTime dtTo;
+
+            if (!DateTime.TryParse(item.StartDateTime, _cultureInfo.Value, DateTimeStyles.None, out dtFrom))
+                return null;
+
+            DateTime.TryParse(item.EndDateTime, _cultureInfo.Value, DateTimeStyles.None, out dtTo);
+
+            if (show == null)
+            {
+                show = new ShowRecord
+                {
+                    EventMetadataRecord = metadata,
+                    EntityRecord = venue,
+                    IsReference = false,
+                    Title = item.Title,
+                    Description = item.Description,
+                    StartTime = dtFrom,
+                    EndTime = dtTo,
+                    Picture = item.Picture,
+                    DetailsUrl = item.DetailsUrl
+                };
+
+                _showRepository.Create(show);
+            }
+            else
+            {
+                show.Title = item.Title;
+                show.Description = item.Description;
+                show.StartTime = dtFrom;
+                show.EndTime = dtTo;
+                show.Picture = item.Picture;
+                show.DetailsUrl = item.DetailsUrl;
+            }
+
+            _showRepository.Flush();
+
+            return ViewModelContractFactory.CreateViewModelContract(show);
+        }
+
+        #region Entities
         public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type) {
             return user.Entities.Where(e => e.Type == (int) type).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
         }
@@ -39,7 +100,7 @@ namespace SmartWalk.Server.Services.EntityService
             return _entityRepository.Table.Where(e => e.ShowRecords.Any(s => s.EventMetadataRecord.Id == metadata.Id)).Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
         }
 
-        public EntityRecord SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm) {
+        public EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm) {
             var entity = _entityRepository.Get(entityVm.Id);
 
             if (entity == null)
@@ -67,17 +128,17 @@ namespace SmartWalk.Server.Services.EntityService
                 if (contact.State == VmItemState.Deleted)
                     DeleteContact(contact.Id);
                 else
-                    entity.ContactRecords.Add(SaveOrAddContact(entity, contact));
+                    entity.ContactRecords.Add(SaveOrAddContactInner(entity, contact));
             }
 
             foreach (var address in entityVm.AllAddresses) {
                 if (address.State == VmItemState.Deleted)
                     DeleteAddress(address.Id);
                 else
-                    entity.AddressRecords.Add(SaveOrAddAddress(entity, address));
+                    entity.AddressRecords.Add(SaveOrAddAddressInner(entity, address));
             }
 
-            return entity;
+            return GetEntityVm(entity);
         }
 
         public void DeleteEntity(int entityId) {
@@ -100,9 +161,15 @@ namespace SmartWalk.Server.Services.EntityService
             _entityRepository.Delete(entity);
             _entityRepository.Flush();
         }
+        #endregion
 
+        #region Addresses
+        public AddressVm SaveOrAddAddress(EntityRecord entity, AddressVm addressVm)
+        {
+            return ViewModelContractFactory.CreateViewModelContract(SaveOrAddAddressInner(entity, addressVm));
+        }
 
-        public AddressRecord SaveOrAddAddress(EntityRecord entity, AddressVm addressVm)
+        private AddressRecord SaveOrAddAddressInner(EntityRecord entity, AddressVm addressVm)
         {
             var address = _addressRepository.Get(addressVm.Id);
 
@@ -141,14 +208,22 @@ namespace SmartWalk.Server.Services.EntityService
             _addressRepository.Delete(address);
             _addressRepository.Flush();
         }
+        #endregion
 
-        public ContactRecord SaveOrAddContact(EntityRecord host, ContactVm contactVm)
+        #region Contacts
+        public ContactVm SaveOrAddContact(EntityRecord host, ContactVm contactVm)
         {
+            return ViewModelContractFactory.CreateViewModelContract(SaveOrAddContactInner(host, contactVm));
+        }
+
+        private ContactRecord SaveOrAddContactInner(EntityRecord host, ContactVm contactVm) {
             var contact = _contactRepository.Get(contactVm.Id);
 
-            if (contact == null) {
+            if (contact == null)
+            {
 
-                contact = new ContactRecord {
+                contact = new ContactRecord
+                {
                     EntityRecord = host,
                     Type = contactVm.Type,
                     Title = contactVm.Title,
@@ -157,7 +232,8 @@ namespace SmartWalk.Server.Services.EntityService
 
                 _contactRepository.Create(contact);
             }
-            else {
+            else
+            {
                 contact.Title = contactVm.Title;
                 contact.Contact = contactVm.Contact;
             }
@@ -177,5 +253,6 @@ namespace SmartWalk.Server.Services.EntityService
             _contactRepository.Delete(contact);
             _contactRepository.Flush();            
         }
+        #endregion
     }
 }

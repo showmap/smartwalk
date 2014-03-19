@@ -2,6 +2,7 @@
 @using SmartWalk.Server.Records
 
 @Display(New.DatePickerLocalization())
+@Display(New.TimePickerLocalization())
 
 @{
     Style.Require("jQueryUI_Orchard");
@@ -14,7 +15,7 @@
     var eventItem = (EventMetadataFullVm)Model;
 }
 
-<div id="event-item" save-event-url="@Url.Action("SaveEvent", "Event", new {area = "SmartWalk.Server"})">
+<div id="event-item" save-event-url="@Url.Action("SaveEvent", "Event", new {area = "SmartWalk.Server"})" save-show-url="@Url.Action("SaveShow", "Event")">
     @Html.AntiForgeryTokenOrchard()
     <div id="metadata-panel">
         @Html.LabelFor(m => eventItem.EventMetadata.HostId, @T("Host"))
@@ -120,7 +121,7 @@
                 <tr>
                     <td>
                         <label for="show-title">@T("Title")</label>
-                        <input type="text" id="show-title" data-bind="value: Title"/>                                                                
+                        <input id="show-title" type="text" data-bind="value: Title"/>
                     </td>
                     <td>
                         <label for="show-description">@T("Description")</label>
@@ -129,12 +130,37 @@
                 </tr>
                 <tr>
                     <td>
+                        <label for="show-start-date">@T("Start date")</label>
+                        <input id="show-start-date" type="text" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />   
+                    </td>
+                    <td>
                         <label for="show-start-time">@T("Start time")</label>
-                        <input id="show-start-time" type="text" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />                                
+                        <input id="show-start-time" type="text" data-bind="timepicker: StartTime, timepickerOptions: { stepMinute: 5 }" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="show-end-date">@T("End date")</label>
+                        <input id="show-end-date" type="text" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }"/>
                     </td>
                     <td>
                         <label for="show-end-time">@T("End time")</label>
-                        <input id="show-end-time" type="text" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }"/>
+                        <input id="show-end-time" type="text" data-bind="timepicker: EndTime, timepickerOptions: { stepMinute: 5 }" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="show-picture">@T("Picture")</label>
+                        <input type="text" id="show-picture" data-bind="value: Picture"/>
+                    </td>
+                    <td>
+                        <label for="show-detailsurl">@T("Details URL")</label>
+                        <input id="show-detailsurl" type="text" data-bind="value: DetailsUrl"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="save-show-button" data-bind="click: $root.saveShow">@T("Save show")</button>
                     </td>
                 </tr>
             </table>
@@ -143,7 +169,6 @@
 </script>
 
 <script language="javascript">        
-    
 
     (function ($) {        
         $(document).ready(function () {
@@ -151,6 +176,36 @@
 
             vm.getShowView = function(item) {
                 return item === vm.selectedShow() ? 'ShowItemTemplateEdit' : "ShowItemTemplate";
+            };
+            
+            vm.saveShow = function(item) {
+                var token = '@Html.AntiForgeryTokenValueOrchard()';
+                var headers = {};
+                // other headers omitted
+                headers['__RequestVerificationToken'] = token;
+
+                var ajdata = self ? ko.toJSON(item) : null;
+
+                var urlUpdate = $("#event-item").attr("save-show-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    headers: headers,
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    __RequestVerificationToken: token,
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                },
+                success: function (data) {
+                    vm.selectedShow(null);
+                }
+            };
+                $.ajax(config);                
             };
 
             ko.applyBindings(vm, document.getElementById('event-item'));            

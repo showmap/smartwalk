@@ -8,6 +8,7 @@ namespace SmartWalk.Server.ViewModels
     public class ShowVm
     {
         public int Id { get; set; }
+        public int EventMetedataId { get; set; }
         public int VenueId { get; set; }
         public bool IsReference { get; set; }
         public string Title { get; set; }
@@ -18,5 +19,13 @@ namespace SmartWalk.Server.ViewModels
         public string EndTime { get; set; }
         public string Picture { get; set; }
         public string DetailsUrl { get; set; }
+
+        public string StartDateTime {
+            get { return string.Concat(StartDate, " ", StartTime); }
+        }
+
+        public string EndDateTime {
+            get { return string.Concat(EndDate, " ", EndTime); }
+        }
     }
 }

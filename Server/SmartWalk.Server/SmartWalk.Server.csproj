@@ -171,6 +171,8 @@
     <Compile Include="Records\StorageRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\CultureService\CultureService.cs" />
+    <Compile Include="Services\CultureService\ICultureService.cs" />
     <Compile Include="Services\EntityService\EntityService.cs" />
     <Compile Include="Services\EntityService\IEntityService.cs" />
     <Compile Include="Services\EntityService\ViewModelContractFactory.cs" />

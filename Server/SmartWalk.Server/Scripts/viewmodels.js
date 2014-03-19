@@ -25,6 +25,7 @@ function ShowViewModel(data) {
     var self = this;
 
     self.Id = ko.observable(data.Id);
+    self.EventMetedataId = ko.observable(data.EventMetedataId);
     self.VenueId = ko.observable(data.VenueId);
     self.IsReference = ko.observable(data.IsReference);
     self.Title = ko.observable(data.Title);
