@@ -211,12 +211,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             var pageTitle = WebView.EvaluateJavascript("document.title");
             NavigationItem.Title = !string.IsNullOrEmpty(pageTitle)
                 ? pageTitle
-                : (WebView.CanGoBack ? null : ViewModel.BrowserURL);
+                : (WebView.CanGoBack ? string.Empty : ViewModel.BrowserURL);
         }
 
         private void InitializeStyle()
         {
-            LeftSpacer.Width = -12;
+            LeftSpacer.Width = Theme.ToolBarPaddingCompensate;
 
             var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape);
             button.TouchUpInside += OnBackButtonClick;
@@ -234,7 +234,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             button.TouchUpInside += OnActionButtonClick;
             ActionButton.CustomView = button;
 
-            RightSpacer.Width = -12;
+            RightSpacer.Width = Theme.ToolBarPaddingCompensate;
         }
 
         // HACK: This is to keep bottom toolbar proper height on rotation

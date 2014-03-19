@@ -44,6 +44,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewDidLoad();
 
+            InitializeConstraints();
             InitializeToolBar();
             InitializeGestures();
 
@@ -148,7 +149,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel);
 
             this.CreateBinding(tableSource)
-                .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
+                .To<OrgEventViewModel>(vm => vm.OrgEvent.Venues)
                 .Apply();
 
             return tableSource;
@@ -206,11 +207,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnLoadedViewStateUpdate()
         {
-            var tableSource = (HiddenHeaderTableSource)VenuesAndShowsTableView.Source;
-
+            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource;
             if (tableSource == null || tableSource.IsHeaderViewHidden)
             {
                 base.OnLoadedViewStateUpdate();
+            }
+        }
+
+        private void InitializeConstraints()
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                View.RemoveConstraint(TablePanelTopConstaint);
+
+                var views = new NSDictionary("topGuide", TopLayoutGuide, "view", TablePanel);
+                var constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
+                View.AddConstraints(constraint);
+
+                View.RemoveConstraint(MapPanelTopConstraint);
+
+                views = new NSDictionary("topGuide", TopLayoutGuide, "view", MapPanel);
+                constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
+                View.AddConstraints(constraint);
             }
         }
 
@@ -275,7 +293,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             this.CreateBinding(searchDelegate)
                 .For(p => p.ItemsSource)
-                    .To((OrgEventViewModel vm) => vm.OrgEvent.Venues)
+                    .To<OrgEventViewModel>(vm => vm.OrgEvent.Venues)
                     .Apply();
         }
 
@@ -407,7 +425,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.NavigateVenueCommand.CanExecute(venueAnnotation.Venue))
             {
                 ViewModel.NavigateVenueCommand.Execute(venueAnnotation.Venue);
-            };
+            }
         }
        
         private void UpdateViewState(bool isAnimated)

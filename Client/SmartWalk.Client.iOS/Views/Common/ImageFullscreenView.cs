@@ -19,7 +19,6 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         public ImageFullscreenView() : base("ImageFullscreenView", null)
         {
-            WantsFullScreenLayout = true;
             ModalTransitionStyle = UIModalTransitionStyle.CrossDissolve;
         }
 

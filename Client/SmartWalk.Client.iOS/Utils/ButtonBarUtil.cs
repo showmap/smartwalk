@@ -8,12 +8,10 @@ namespace SmartWalk.Client.iOS.Utils
 {
     public static class ButtonBarUtil
     {
-        public const int SpacerWidth = -5;
-
-        public static UIBarButtonItem CreateSpacer(int width = SpacerWidth)
+        public static UIBarButtonItem CreateSpacer()
         {
             var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FixedSpace);
-            spacer.Width = SpacerWidth;
+            spacer.Width = Theme.NavBarPaddingCompensate;
             return spacer;
         }
 

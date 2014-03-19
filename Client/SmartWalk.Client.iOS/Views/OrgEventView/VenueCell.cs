@@ -31,15 +31,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper = new MvxImageViewLoader(() => LogoImageView);
         }
 
+        public static VenueCell Create()
+        {
+            return (VenueCell)Nib.Instantiate(null, null)[0];
+        }
+
         public new Venue DataContext
         {
             get { return (Venue)base.DataContext; }
             set { base.DataContext = value; }
-        }
-
-        public static VenueCell Create()
-        {
-            return (VenueCell)Nib.Instantiate(null, null)[0];
         }
 
         public ICommand NavigateVenueCommand { get; set; }
@@ -99,12 +99,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 MapView.RemoveAnnotations(MapView.Annotations);
             }
 
-            NameLabel.Text = DataContext != null 
-                ? (DataContext.Number == 0 
-                    ? DataContext.Info.Name 
-                    : string.Format("{0}. {1}", 
-                        DataContext.Number, DataContext.Info.Name))
-                : null;
+            NameLabel.Text = DataContext.Info.Name;
 
             // TODO: to support showing more than one address
             AddressLabel.Text = DataContext != null && 

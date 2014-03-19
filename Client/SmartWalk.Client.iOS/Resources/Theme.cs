@@ -7,7 +7,7 @@ using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Resources
 {
-    public class Theme
+    public static class Theme
     {
         private const string HelveticaBold = "HelveticaNeue-Bold";
         private const string HelveticaMedium = "HelveticaNeue-Medium";
@@ -25,8 +25,11 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage BlackImage = UIImage.FromFile("Images/Black.png");
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGB(51, 51, 51);
+        public static readonly UIColor NavBarBackgroundiOS7 = UIColor.FromRGB(41, 41, 41);
         public static readonly UIColor NavBarText = UIColor.White;
-        public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 16);
+        public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
+        public static int NavBarPaddingCompensate = -5;
+        public static int ToolBarPaddingCompensate = -12;
 
         public static readonly UIColor RefreshControl = UIColor.FromRGB(200, 200, 200);
         public static readonly UIColor TextGradient = UIColor.FromRGB(240, 240, 240);
@@ -80,14 +83,29 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static void Apply()
         {
-            UINavigationBar.Appearance.SetBackgroundImage(
-                NavBarBackgroundImage,
-                UIBarMetrics.Default);
-            // TODO: bottom line has different color, bug?
-            UINavigationBar.Appearance.SetBackgroundImage(
-                NavBarLandscapeBackgroundImage,
-                UIBarMetrics.LandscapePhone);
-            UINavigationBar.Appearance.ShadowImage = ShadowImage;
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                NavBarPaddingCompensate = -16;
+
+                UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
+
+                UINavigationBar.Appearance.BarTintColor = NavBarBackgroundiOS7;
+            }
+            else
+            {
+                UINavigationBar.Appearance.SetBackgroundImage(
+                    NavBarBackgroundImage,
+                    UIBarMetrics.Default);
+                // TODO: bottom line has different color, bug?
+                UINavigationBar.Appearance.SetBackgroundImage(
+                    NavBarLandscapeBackgroundImage,
+                    UIBarMetrics.LandscapePhone);
+
+                UINavigationBar.Appearance.ShadowImage = ShadowImage;
+
+                UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(4, UIBarMetrics.Default);
+                UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.LandscapePhone);
+            }
 
             UINavigationBar.Appearance.SetTitleTextAttributes(new UITextAttributes { 
                 Font = Theme.NavBarFont,
@@ -95,17 +113,24 @@ namespace SmartWalk.Client.iOS.Resources
                 TextShadowColor = UIColor.Clear,
                 TextShadowOffset = new UIOffset(0, 0)
             });
-            UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(4, UIBarMetrics.Default);
-            UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.LandscapePhone);
-            
-            UIToolbar.Appearance.SetBackgroundImage(
-                NavBarBackgroundImage,
-                UIToolbarPosition.Any,
-                UIBarMetrics.Default);
-            UIToolbar.Appearance.SetBackgroundImage(
-                NavBarLandscapeBackgroundImage,
-                UIToolbarPosition.Any,
-                UIBarMetrics.LandscapePhone);
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                ToolBarPaddingCompensate = -16;
+
+                UIToolbar.Appearance.BarTintColor = NavBarBackgroundiOS7;
+            }
+            else
+            {
+                UIToolbar.Appearance.SetBackgroundImage(
+                    NavBarBackgroundImage,
+                    UIToolbarPosition.Any,
+                    UIBarMetrics.Default);
+                UIToolbar.Appearance.SetBackgroundImage(
+                    NavBarLandscapeBackgroundImage,
+                    UIToolbarPosition.Any,
+                    UIBarMetrics.LandscapePhone);
+            }
 
             UISwitch.Appearance.OnTintColor = UIColor.DarkGray;
             UISwitch.Appearance.TintColor = UIColor.Gray;

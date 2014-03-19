@@ -58,7 +58,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private Venue[] VenueItemsSource
         {
-            get { return ItemsSource != null ? (Venue[])ItemsSource : null; }
+            get { return (Venue[])ItemsSource; }
         }
 
         private Venue[] FlattenItemsSource
@@ -134,7 +134,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return CurrentItemsSource != null ? CurrentItemsSource.Count() : 0;
+            return CurrentItemsSource != null ? CurrentItemsSource.Length : 0;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
@@ -142,9 +142,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var emptyRow = IsSearchSource &&
                 section == NumberOfSections(tableview) - 1 ? 1 : 0; // empty row for search
 
-            return (CurrentItemsSource != null && 
-                CurrentItemsSource[section].Shows != null 
-                    ? CurrentItemsSource[section].Shows.Count() 
+            return (CurrentItemsSource != null &&
+            CurrentItemsSource[section].Shows != null 
+                    ? CurrentItemsSource[section].Shows.Length 
                     : 0) + emptyRow;
         }
 
@@ -225,7 +225,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 // Asumming that there may be an empty row for search
                 return indexPath.Row < CurrentItemsSource[indexPath.Section].Shows.Length
-                    ? CurrentItemsSource[indexPath.Section].Shows.ElementAt(indexPath.Row) 
+                    ? CurrentItemsSource[indexPath.Section].Shows[indexPath.Row] 
                     : null;
             }
            

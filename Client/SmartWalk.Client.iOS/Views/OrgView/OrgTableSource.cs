@@ -74,7 +74,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return GroupItemsSource != null ? GroupItemsSource.Count() : 0;
+            return GroupItemsSource != null ? GroupItemsSource.Length : 0;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
