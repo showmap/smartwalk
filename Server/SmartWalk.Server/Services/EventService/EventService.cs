@@ -13,10 +13,13 @@ using SmartWalk.Server.ViewModels;
 namespace SmartWalk.Server.Services.EventService
 {
     public class EventService : IEventService {
-        private readonly IEntityService _entityService;        
+        private readonly IEntityService _entityService;
+        private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
 
-        public EventService(IEntityService entityService) {
+        public EventService(IEntityService entityService, IRepository<EventMetadataRecord> eventMetadataRepository)
+        {
             _entityService = entityService;
+            _eventMetadataRepository = eventMetadataRepository;
         }
 
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
@@ -47,6 +50,21 @@ namespace SmartWalk.Server.Services.EventService
             res.AllVenues = _entityService.GetEventEntities(record);
 
             return res;
+        }
+
+        public void DeleteEvent(EventMetadataVm item) {
+            foreach (var venue in item.AllVenues)
+            {
+                _entityService.DeleteEventVenue(venue);
+            }
+
+            var metadata = _eventMetadataRepository.Get(item.Id);
+
+            if (metadata == null)
+                return;
+
+            _eventMetadataRepository.Delete(metadata);
+            _eventMetadataRepository.Flush();
         }
     }
 }

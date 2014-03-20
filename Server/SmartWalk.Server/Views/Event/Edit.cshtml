@@ -15,8 +15,15 @@
     var eventItem = (EventMetadataFullVm)Model;
 }
 
-<div id="event-item" save-event-url="@Url.Action("SaveEvent", "Event", new {area = "SmartWalk.Server"})" save-show-url="@Url.Action("SaveShow", "Event")">
+<div id="event-item" 
+    save-event-url="@Url.Action("SaveEvent", "Event")" 
+    save-show-url="@Url.Action("SaveShow", "Event")"
+    delete-show-url="@Url.Action("DeleteShow", "Event")"
+    delete-event-url="@Url.Action("DeleteEvent", "Event")"
+    delete-event-venue-url="@Url.Action("DeleteEventVenue", "Event")">
     @Html.AntiForgeryTokenOrchard()
+    <textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>
+
     <div id="metadata-panel">
         @Html.LabelFor(m => eventItem.EventMetadata.HostId, @T("Host"))
         @Html.DropDownListFor(m => eventItem.EventMetadata.HostId, eventItem.Hosts.Select(u => new SelectListItem
@@ -64,7 +71,8 @@
             }}
             <table>                
                 <tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
-            </table>    
+            </table> 
+            <button id="delete-event-button" data-bind="click: $root.deleteEvent">@T("Delete")</button>   
         </div>
         
         <!--
@@ -88,7 +96,7 @@
 <script type="text/html" id="EntityItemTemplate">
     <tr>
         <td><span data-bind="text: Name"></span></td>        
-        <td><a data-bind="attr: {href: '@Url.Action("Edit")?entityId=' + Id()}">Edit</a></td>
+        <td><a href="#" data-bind="click:$root.addShow">Add show</a> &nbsp; <a href="#" data-bind="click:$root.deleteVenue">Delete</a></td>
     </tr>  
     <tr>
         <td>
@@ -104,7 +112,7 @@
                 <tbody data-bind='template: {name: $root.getShowView, foreach: Shows() }'></tbody>
             </table>    
         </td>
-    </tr>         
+    </tr>   
 </script>
 
 <script type="text/html" id="ShowItemTemplate">
@@ -159,8 +167,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <button id="save-show-button" data-bind="click: $root.saveShow">@T("Save show")</button>
+                    <td>
+                        <button id="save-show-button" data-bind="click: $root.saveShow">@T("Save")</button>
+                        <button id="cancel-show-button" data-bind="click: $root.cancelShow">@T("Cancel")</button>
+                    </td>
+                    <td>
+                        <button id="delete-show-button" data-bind="click: $root.deleteShow">@T("Delete")</button>
                     </td>
                 </tr>
             </table>
@@ -174,38 +186,101 @@
         $(document).ready(function () {
             var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata)));
 
-            vm.getShowView = function(item) {
+            vm.getShowView = function (item) {
                 return item === vm.selectedShow() ? 'ShowItemTemplateEdit' : "ShowItemTemplate";
             };
+
+            vm.addShow = function (item) {
+                vm.selectedShow(item.addShow()); 
+                //item.addShow();
+            };
+           
+            vm.deleteEvent = function (item) {
+                var ajdata = ko.toJSON(item);
+                var urlUpdate = $("#event-item").attr("delete-event-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        window.location.href = "@Url.Action("List")";
+                    }
+                };
+                $.ajax(config);
+            };
+
+            vm.deleteShow = function(item) {                
+                var ajdata = ko.toJSON(item);
+                var urlUpdate = $("#event-item").attr("delete-show-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        item.State(2);
+                    }
+                };
+                $.ajax(config);
+            };
             
+            vm.deleteVenue = function(item) {                
+                var ajdata = ko.toJSON(item);
+                var urlUpdate = $("#event-item").attr("delete-event-venue-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        item.State(2);
+                    }
+                };
+                $.ajax(config);
+            };
+
             vm.saveShow = function(item) {
-                var token = '@Html.AntiForgeryTokenValueOrchard()';
-                var headers = {};
-                // other headers omitted
-                headers['__RequestVerificationToken'] = token;
-
-                var ajdata = self ? ko.toJSON(item) : null;
-
+                var ajdata = ko.toJSON(item);
                 var urlUpdate = $("#event-item").attr("save-show-url");
 
                 var config = {
                     async: true,
                     url: urlUpdate,
                     type: "POST",
-                    headers: headers,
                     data: ajdata,
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    __RequestVerificationToken: token,
                     error: function (e) {
                         //window.location.href = "@Url.Action("List")";
-                },
-                success: function (data) {
-                    vm.selectedShow(null);
-                }
-            };
-                $.ajax(config);                
+                    },
+                    success: function (data) {
+                        vm.selectedShow(null);
+                    }
+                };
+                $.ajax(config);
             };
 
             ko.applyBindings(vm, document.getElementById('event-item'));            

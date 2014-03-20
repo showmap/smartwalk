@@ -48,6 +48,7 @@ namespace SmartWalk.Server.Services.EntityService
             {
                 Id = record.Id,
                 EventMetedataId = record.EventMetadataRecord.Id,
+                State = record.IsReference ? VmItemState.Hidden : VmItemState.Normal,
                 VenueId = record.EntityRecord.Id,
                 Title = record.Title,
                 Description = record.Description,

@@ -43,6 +43,8 @@ function EntityViewModel(data) {
     var self = this;
 
     self.Id = ko.observable(data.Id);
+    self.EventMetedataId = ko.observable(data.EventMetedataId);
+
     self.Type = ko.observable(data.Type);
 
     self.Name = ko.observable(data.Name);
@@ -84,11 +86,12 @@ function EntityViewModel(data) {
     self.AllShows = ko.observableArray($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
     self.Shows = ko.computed(function () {
         return ko.utils.arrayFilter(this.AllShows(), function (item) {
-            return item.State() != 2;
+            return item.State() != 2 && item.State() != 3;
         });
     }, this);
     self.addShow = function () {
-        self.AllShows.push(new ShowViewModel({ Id: 0, VenueId: self.Id(), State: 1 }));
+        self.AllShows.push(new ShowViewModel({ Id: 0, EventMetedataId: self.EventMetedataId(), VenueId: self.Id(), State: 1, StartDate: '', EndDate: '' }));
+        return self.AllShows()[self.AllShows().length - 1];
     };
     self.removeShow = function (item) {
         item.State(2);
@@ -117,7 +120,8 @@ function EventViewModel(data) {
     self.Host = ko.observable(new EntityViewModel(data.Host));
 
     // Venues
-    self.AllVenues = ko.observableArray($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
+    self.AllVenues = ko.observableArray($.map(data.AllVenues, function (item) {
+        item.EventMetedataId = self.Id(); return new EntityViewModel(item); }));
     self.Venues = ko.computed(function () {
         return ko.utils.arrayFilter(this.AllVenues(), function (item) {
             return item.State() != 2;

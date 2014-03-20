@@ -9,6 +9,7 @@ namespace SmartWalk.Server.ViewModels
     {
         Normal = 0,
         Added = 1,
-        Deleted = 2
+        Deleted = 2,
+        Hidden = 3
     }
 }

@@ -90,5 +90,43 @@ namespace SmartWalk.Server.Controllers
 
             return Json(true);
         }
+
+        [HttpPost]
+        public ActionResult DeleteShow(ShowVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _entityService.DeleteShow(item);
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteEventVenue(EntityVm item) {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _entityService.DeleteEventVenue(item);
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteEvent(EventMetadataVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _eventService.DeleteEvent(item);
+
+            return Json(true);
+        }
     }
 }

@@ -74,25 +74,18 @@
         var vmHost = new EntityViewModel(@Html.Raw(Json.Encode(host)));
         vmHost.saveOrAdd = function () {
             $("#host-panel").html('<img class="loading" src="@Href("../../Images/loading.gif")"/>');
-            var token = '@Html.AntiForgeryTokenValueOrchard()';
-            var headers = {};
-            // other headers omitted
-            headers['__RequestVerificationToken'] = token;
-
+            
             var ajdata = self ? ko.toJSON(this) : null;
-
             var urlUpdate = $("#add-host-form").attr("add-host-url");
 
             var config = {
                 async: true,
                 url: urlUpdate,
                 type: "POST",
-                headers: headers,
                 data: ajdata,
                 dataType: "json",
                 cache: false,
                 contentType: "application/json; charset=utf-8",
-                __RequestVerificationToken: token,
                 error: function (e) {
                     window.location.href = "@Url.Action("List")";
                 },

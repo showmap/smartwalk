@@ -32,7 +32,7 @@
             #region SmartWalk
             manifest.DefineScript("SmartWalk.AntiForgery").SetUrl("antiforgery.js");
 
-            manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetDependencies("ko", "SmartWalk.AntiForgery");
+            manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetVersion("1.0").SetDependencies("ko", "SmartWalk.AntiForgery");
 
             manifest.DefineScript("Bootstrap").SetUrl("bootstrap.js");
             manifest.DefineScript("JQuery-1-10-2").SetUrl("jquery-1.10.2.js");

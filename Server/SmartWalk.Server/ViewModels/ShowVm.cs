@@ -8,6 +8,7 @@ namespace SmartWalk.Server.ViewModels
     public class ShowVm
     {
         public int Id { get; set; }
+        public VmItemState State { get; set; }
         public int EventMetedataId { get; set; }
         public int VenueId { get; set; }
         public bool IsReference { get; set; }

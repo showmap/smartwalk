@@ -32,6 +32,55 @@ namespace SmartWalk.Server.Services.EntityService
             _cultureInfo = new Lazy<CultureInfo>(cultureService.GetCurrentCulture);
         }
 
+        #region Shows
+        public void DeleteShow(ShowVm item) {
+            var show = _showRepository.Get(item.Id);
+
+            if (show == null)
+                return;
+
+            _showRepository.Delete(show);
+            _showRepository.Flush();
+
+            CheckIsReferenceShow(item);
+        }
+
+
+        public void DeleteEventVenue(EntityVm item) {
+            if (item.AllShows.Count == 0)
+                return;
+
+            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == item.AllShows.First().EventMetedataId && s.EntityRecord.Id == item.Id).ToList();
+
+            foreach (var showRecord in shows) {
+                _showRepository.Delete(showRecord);
+                _showRepository.Flush();
+            }
+        }
+
+        private void CheckIsReferenceShow(ShowVm item) {
+            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == item.EventMetedataId && s.EntityRecord.Id == item.VenueId).ToList();
+            if (shows.Any()) {
+                if (shows.Count(s => !s.IsReference) > 0 && shows.Count(s => s.IsReference) > 0) {
+                    foreach (var showRecord in shows.Where(s => s.IsReference)) {
+                        _showRepository.Delete(showRecord);
+                        _showRepository.Flush();
+                    }
+                }
+            }
+            else {
+                var show = new ShowRecord
+                {
+                    EventMetadataRecord = _metadataRepository.Get(item.EventMetedataId),
+                    EntityRecord = _entityRepository.Get(item.VenueId),
+                    IsReference = true,
+                };
+                _showRepository.Create(show);
+                _showRepository.Flush();
+            }
+        }
+
+
         public ShowVm SaveOrAddShow(ShowVm item)
         {
             var show = _showRepository.Get(item.Id);
@@ -41,13 +90,8 @@ namespace SmartWalk.Server.Services.EntityService
             if (metadata == null || venue == null)
                 return null;
 
-            DateTime dtFrom;
-            DateTime dtTo;
-
-            if (!DateTime.TryParse(item.StartDateTime, _cultureInfo.Value, DateTimeStyles.None, out dtFrom))
-                return null;
-
-            DateTime.TryParse(item.EndDateTime, _cultureInfo.Value, DateTimeStyles.None, out dtTo);
+            var dtFrom = ParseDateTime(item.StartDateTime);
+            var dtTo = ParseDateTime(item.EndDateTime);
 
             if (show == null)
             {
@@ -65,6 +109,9 @@ namespace SmartWalk.Server.Services.EntityService
                 };
 
                 _showRepository.Create(show);
+                _showRepository.Flush();
+
+                CheckIsReferenceShow(item);
             }
             else
             {
@@ -74,12 +121,22 @@ namespace SmartWalk.Server.Services.EntityService
                 show.EndTime = dtTo;
                 show.Picture = item.Picture;
                 show.DetailsUrl = item.DetailsUrl;
-            }
 
-            _showRepository.Flush();
+                _showRepository.Flush();
+            }
 
             return ViewModelContractFactory.CreateViewModelContract(show);
         }
+
+        private DateTime? ParseDateTime(string dtValue) {
+            DateTime dtParse;
+
+            if (DateTime.TryParse(dtValue, _cultureInfo.Value, DateTimeStyles.None, out dtParse))
+                return dtParse;
+
+            return null;
+        }
+        #endregion
 
         #region Entities
         public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type) {
