@@ -18,8 +18,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly NSString Key = new NSString("VenueCell");
 
         public const float DefaultHeight = 63;
-        private const float ImageTextGap = 74;
-        private const float TextGap = 10;
 
         private MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _cellTapGesture;
@@ -72,31 +70,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Logo : null;
 
-            /*NameLeftConstraint.Constant = DataContext != null && 
-                DataContext.Info.Logo != null 
-                    ? ImageTextGap : TextGap;*/
-
             if (DataContext != null && DataContext.Info.Logo == null)
             {
                 LogoImageView.Hidden = true;
-                MapViewContainer.Hidden = false;
+                ImageLabelView.Hidden = false;
 
-                var annotations = DataContext.Info.Addresses
-                    .Select(a => new VenueAnnotation(DataContext, a))
-                    .ToArray();
-                var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
-                MapView.SetRegion(
-                    MapUtil.CoordinateRegionForCoordinates(
-                        coordinates,
-                        new MKMapSize(5000, 5000)), 
-                    false);
+                ImageLabel.Text = DataContext.Info.Name.FirstOrDefault().ToString();
             }
             else
             {
                 LogoImageView.Hidden = false;
-                MapViewContainer.Hidden = true;
-
-                MapView.RemoveAnnotations(MapView.Annotations);
+                ImageLabelView.Hidden = true;
             }
 
             NameLabel.Text = DataContext.Info.Name;

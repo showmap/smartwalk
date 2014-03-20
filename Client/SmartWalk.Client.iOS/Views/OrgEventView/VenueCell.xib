@@ -22,18 +22,10 @@
                             <constraint firstAttribute="height" constant="1" id="420"/>
                         </constraints>
                     </view>
-                    <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="503" userLabel="Map">
+                    <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="503" userLabel="Image Label View">
                         <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="473">
-                                <rect key="frame" x="-32" y="-32" width="128" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="491"/>
-                                    <constraint firstAttribute="width" constant="128" id="520"/>
-                                </constraints>
-                            </mapView>
                             <view userInteractionEnabled="NO" alpha="0.20000000298023224" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="639" userLabel="RightBorder">
                                 <rect key="frame" x="63" y="0.0" width="1" height="64"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -43,13 +35,18 @@
                                     <constraint firstAttribute="height" constant="64" id="658"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b4J-MQ-bYF" userLabel="Image Label">
+                                <rect key="frame" x="11" y="22" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="64" id="623"/>
                             <constraint firstAttribute="height" constant="64" id="624"/>
-                            <constraint firstItem="473" firstAttribute="centerX" secondItem="503" secondAttribute="centerX" id="647"/>
-                            <constraint firstItem="639" firstAttribute="centerY" secondItem="473" secondAttribute="centerY" id="654"/>
                             <constraint firstItem="639" firstAttribute="trailing" secondItem="503" secondAttribute="trailing" id="655"/>
                             <constraint firstItem="639" firstAttribute="leading" secondItem="503" secondAttribute="leading" constant="63" id="656"/>
                             <constraint firstItem="639" firstAttribute="top" secondItem="503" secondAttribute="top" id="659"/>
@@ -65,10 +62,10 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="Name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="217" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="Title" customClass="CopyLabel">
-                        <rect key="frame" x="74" y="15" width="217" height="16"/>
+                        <rect key="frame" x="74" y="14" width="217" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="16" id="714"/>
+                            <constraint firstAttribute="height" constant="18" id="714"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -123,13 +120,15 @@
                         </constraints>
                     </imageView>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="25" secondAttribute="trailing" constant="29" id="adH-U1-FFa"/>
+                </constraints>
             </tableViewCellContentView>
             <constraints>
                 <constraint firstAttribute="centerY" secondItem="666" secondAttribute="centerY" id="2P0-Mj-6VT"/>
                 <constraint firstItem="458" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="4ki-kM-S5L"/>
-                <constraint firstItem="6" firstAttribute="top" secondItem="2" secondAttribute="top" constant="15" id="7Xr-pf-MRh"/>
+                <constraint firstItem="6" firstAttribute="top" secondItem="2" secondAttribute="top" constant="14" id="7Xr-pf-MRh"/>
                 <constraint firstItem="419" firstAttribute="top" secondItem="2" secondAttribute="top" constant="-1" id="8ys-AR-Bv3"/>
-                <constraint firstItem="6" firstAttribute="trailing" secondItem="25" secondAttribute="trailing" id="DH3-xC-68l"/>
                 <constraint firstItem="523" firstAttribute="top" secondItem="2" secondAttribute="top" constant="25" id="GhU-et-dLI"/>
                 <constraint firstItem="25" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="90" id="GmH-hY-Nqn"/>
                 <constraint firstItem="6" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="74" id="MrV-fi-bYc"/>
@@ -149,9 +148,9 @@
             <connections>
                 <outlet property="AddressLabel" destination="25" id="135"/>
                 <outlet property="GoRightImageView" destination="666" id="683"/>
+                <outlet property="ImageLabel" destination="b4J-MQ-bYF" id="HVh-yJ-2aB"/>
+                <outlet property="ImageLabelView" destination="503" id="bwU-D4-ABu"/>
                 <outlet property="LogoImageView" destination="152" id="198"/>
-                <outlet property="MapView" destination="473" id="488"/>
-                <outlet property="MapViewContainer" destination="503" id="522"/>
                 <outlet property="NameLabel" destination="6" id="12"/>
                 <outlet property="NavigateOnMapButton" destination="523" id="635"/>
                 <outlet property="Shadow" destination="458" id="470"/>

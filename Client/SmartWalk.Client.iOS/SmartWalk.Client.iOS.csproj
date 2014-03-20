@@ -39,7 +39,7 @@
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
-    <MtouchSdkVersion>6.1</MtouchSdkVersion>
+    <MtouchSdkVersion>7.1</MtouchSdkVersion>
     <AssemblyName>SmartWalkiOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -88,6 +88,7 @@
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <AssemblyName>SmartWalk</AssemblyName>
     <DefineConstants>ADHOC;</DefineConstants>
+    <MtouchSdkVersion>7.1</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <Optimize>true</Optimize>
@@ -102,6 +103,7 @@
     <MtouchArch>ARMv7</MtouchArch>
     <AssemblyName>SmartWalk</AssemblyName>
     <DefineConstants>APPSTORE;</DefineConstants>
+    <MtouchSdkVersion>7.1</MtouchSdkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

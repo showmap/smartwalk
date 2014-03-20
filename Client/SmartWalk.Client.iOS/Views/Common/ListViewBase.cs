@@ -183,9 +183,8 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeGesture()
         {
-            _swipeRight = new UISwipeGestureRecognizer(() => {
-                NavigationController.PopViewControllerAnimated(true);
-            });
+            _swipeRight = new UISwipeGestureRecognizer(() => 
+                NavigationController.PopViewControllerAnimated(true));
 
             _swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
 
@@ -207,6 +206,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             _refreshControl = new UIRefreshControl {
                 TintColor = Theme.RefreshControl
             };
+
+            // make sure that it's under all other views
+            _refreshControl.Layer.ZPosition = -1;
 
             _refreshControl.ValueChanged += OnRefreshControlValueChanged;
 

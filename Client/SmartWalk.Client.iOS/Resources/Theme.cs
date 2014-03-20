@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage BlackImage = UIImage.FromFile("Images/Black.png");
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGB(51, 51, 51);
-        public static readonly UIColor NavBarBackgroundiOS7 = UIColor.FromRGB(41, 41, 41);
+        public static readonly UIColor NavBarBackgroundiOS7 = UIColor.FromRGB(16, 16, 16);
         public static readonly UIColor NavBarText = UIColor.White;
         public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
         public static int NavBarPaddingCompensate = -5;

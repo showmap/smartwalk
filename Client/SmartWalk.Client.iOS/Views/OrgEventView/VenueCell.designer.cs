@@ -9,85 +9,85 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    [Register ("VenueCell")]
-    partial class VenueCell
-    {
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
+	[Register ("VenueCell")]
+	partial class VenueCell
+	{
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIImageView GoRightImageView { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIImageView GoRightImageView { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UILabel ImageLabel { get; set; }
 
-        [Outlet]
-        MonoTouch.MapKit.MKMapView MapView { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIView ImageLabelView { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIView MapViewContainer { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
 
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.CopyLabel NameLabel { get; set; }
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.CopyLabel NameLabel { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.NSLayoutConstraint NameLeftConstraint { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint NameLeftConstraint { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIButton NavigateOnMapButton { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIButton NavigateOnMapButton { get; set; }
 
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.Shadow Shadow { get; set; }
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.Shadow Shadow { get; set; }
 
-        [Action ("OnNavigateOnMapClick:")]
-        partial void OnNavigateOnMapClick (MonoTouch.UIKit.UIButton sender);
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (AddressLabel != null) {
-                AddressLabel.Dispose ();
-                AddressLabel = null;
-            }
+		[Action ("OnNavigateOnMapClick:")]
+		partial void OnNavigateOnMapClick (MonoTouch.UIKit.UIButton sender);
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (ImageLabelView != null) {
+				ImageLabelView.Dispose ();
+				ImageLabelView = null;
+			}
 
-            if (LogoImageView != null) {
-                LogoImageView.Dispose ();
-                LogoImageView = null;
-            }
+			if (ImageLabel != null) {
+				ImageLabel.Dispose ();
+				ImageLabel = null;
+			}
 
-            if (MapView != null) {
-                MapView.Dispose ();
-                MapView = null;
-            }
+			if (AddressLabel != null) {
+				AddressLabel.Dispose ();
+				AddressLabel = null;
+			}
 
-            if (MapViewContainer != null) {
-                MapViewContainer.Dispose ();
-                MapViewContainer = null;
-            }
+			if (GoRightImageView != null) {
+				GoRightImageView.Dispose ();
+				GoRightImageView = null;
+			}
 
-            if (NameLabel != null) {
-                NameLabel.Dispose ();
-                NameLabel = null;
-            }
+			if (LogoImageView != null) {
+				LogoImageView.Dispose ();
+				LogoImageView = null;
+			}
 
-            if (NameLeftConstraint != null) {
-                NameLeftConstraint.Dispose ();
-                NameLeftConstraint = null;
-            }
+			if (NameLabel != null) {
+				NameLabel.Dispose ();
+				NameLabel = null;
+			}
 
-            if (NavigateOnMapButton != null) {
-                NavigateOnMapButton.Dispose ();
-                NavigateOnMapButton = null;
-            }
+			if (NameLeftConstraint != null) {
+				NameLeftConstraint.Dispose ();
+				NameLeftConstraint = null;
+			}
 
-            if (Shadow != null) {
-                Shadow.Dispose ();
-                Shadow = null;
-            }
+			if (NavigateOnMapButton != null) {
+				NavigateOnMapButton.Dispose ();
+				NavigateOnMapButton = null;
+			}
 
-            if (GoRightImageView != null) {
-                GoRightImageView.Dispose ();
-                GoRightImageView = null;
-            }
-        }
-    }
+			if (Shadow != null) {
+				Shadow.Dispose ();
+				Shadow = null;
+			}
+		}
+	}
 }
