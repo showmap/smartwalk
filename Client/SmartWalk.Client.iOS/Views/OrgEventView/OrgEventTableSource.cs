@@ -217,6 +217,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
+                ((VenueShowCell)cell).IsSeparatorVisible = 
+                    indexPath.Row < CurrentItemsSource[indexPath.Section].Shows.Length - 1 ||
+                    indexPath.Section == CurrentItemsSource.Length - 1;
             }
 
             return cell;

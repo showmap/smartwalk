@@ -75,7 +75,20 @@
                         </attributedString>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
+                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K9o-xv-nfu" userLabel="Separator">
+                        <rect key="frame" x="0.0" y="301" width="320" height="1"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" red="0.86274509799999999" green="0.86274509799999999" blue="0.86274509799999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="leb-9w-1Ar"/>
+                        </constraints>
+                    </view>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="K9o-xv-nfu" secondAttribute="trailing" id="Saq-Ut-4Ls"/>
+                    <constraint firstAttribute="bottom" secondItem="K9o-xv-nfu" secondAttribute="bottom" id="ZUK-hY-8aQ"/>
+                    <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="fLo-Av-da9"/>
+                </constraints>
             </tableViewCellContentView>
             <constraints>
                 <constraint firstItem="181" firstAttribute="leading" secondItem="9" secondAttribute="leading" id="5mB-cZ-z0P"/>
@@ -106,6 +119,7 @@
                 <outlet property="ImageAndDetailsSpaceConstraint" destination="H0t-fT-ezL" id="3e4-L4-wPc"/>
                 <outlet property="ImageHeightConstraint" destination="139" id="383"/>
                 <outlet property="ImageWidthConstraint" destination="173" id="387"/>
+                <outlet property="Separator" destination="K9o-xv-nfu" id="7ox-7Q-xIt"/>
                 <outlet property="StartTimeLabel" destination="3" id="379"/>
                 <outlet property="ThumbImageView" destination="50" id="389"/>
                 <outlet property="TimeBackgroundView" destination="592" id="625"/>

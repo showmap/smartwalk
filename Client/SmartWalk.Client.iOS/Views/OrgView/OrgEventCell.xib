@@ -72,7 +72,20 @@
                         <color key="shadowColor" white="1" alpha="0.93999999999999995" colorSpace="calibratedWhite"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
+                    <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pNm-x7-SWB" userLabel="Separator">
+                        <rect key="frame" x="0.0" y="43" width="320" height="1"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" red="0.86274509799999999" green="0.86274509799999999" blue="0.86274509799999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="9Dg-Hd-nCG"/>
+                        </constraints>
+                    </view>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="pNm-x7-SWB" secondAttribute="trailing" id="6GD-Ak-zPo"/>
+                    <constraint firstItem="pNm-x7-SWB" firstAttribute="leading" secondItem="nxw-DI-2A9" secondAttribute="leading" id="Sum-BJ-MDA"/>
+                    <constraint firstAttribute="bottom" secondItem="pNm-x7-SWB" secondAttribute="bottom" id="yDm-pj-q1w"/>
+                </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
@@ -90,11 +103,13 @@
                 <constraint firstItem="36" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="1" id="y0Z-FZ-Vva"/>
                 <constraint firstItem="36" firstAttribute="centerX" secondItem="9" secondAttribute="centerX" id="yVQ-v1-ZnO"/>
             </constraints>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="CalendarView" destination="63" id="164"/>
                 <outlet property="DateLabel" destination="3" id="35"/>
                 <outlet property="DayLabel" destination="9" id="34"/>
                 <outlet property="HintLabel" destination="44" id="51"/>
+                <outlet property="Separator" destination="pNm-x7-SWB" id="2hd-4u-GLO"/>
                 <outlet property="WeekDayLabel" destination="36" id="42"/>
             </connections>
         </tableViewCell>

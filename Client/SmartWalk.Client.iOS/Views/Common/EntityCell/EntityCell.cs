@@ -9,7 +9,6 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.iOS.Utils.Map;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {

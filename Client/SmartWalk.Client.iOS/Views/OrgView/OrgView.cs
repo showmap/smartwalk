@@ -23,6 +23,14 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             InitializeToolBar();
         }
 
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            OrgEventsTableView.BeginUpdates();
+            OrgEventsTableView.EndUpdates();
+        }
+
         protected override string GetViewTitle()
         {
             if (ViewModel.Org != null && ViewModel.Org.Info != null)
@@ -48,7 +56,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             var tableSource = new OrgTableSource(OrgEventsTableView, ViewModel);
 
             this.CreateBinding(tableSource)
-                .To((OrgViewModel vm) => vm.Org)
+                .To<OrgViewModel>(vm => vm.Org)
                 .WithConversion(new OrgTableSourceConverter(), ViewModel)
                 .Apply();
 

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -73,7 +72,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return GroupItemsSource != null ? GroupItemsSource.Count() : 0;
+            return GroupItemsSource != null ? GroupItemsSource.Length : 0;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
@@ -132,6 +131,9 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
+                ((VenueShowCell)cell).IsSeparatorVisible = 
+                    indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
+                    indexPath.Section == GroupItemsSource.Length - 1;
             }
 
             return cell;

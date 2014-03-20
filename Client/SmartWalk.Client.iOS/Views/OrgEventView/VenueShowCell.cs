@@ -129,6 +129,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        public bool IsSeparatorVisible
+        {
+            get
+            {
+                return !Separator.Hidden;
+            }
+            set
+            {
+                Separator.Hidden = !value;
+            }
+        }
+
         public override void PrepareForReuse()
         {
             base.PrepareForReuse();

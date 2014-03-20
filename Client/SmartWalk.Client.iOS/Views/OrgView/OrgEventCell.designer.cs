@@ -9,50 +9,58 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {
-    [Register ("OrgEventCell")]
-    partial class OrgEventCell
-    {
-        [Outlet]
-        MonoTouch.UIKit.UIView CalendarView { get; set; }
+	[Register ("OrgEventCell")]
+	partial class OrgEventCell
+	{
+		[Outlet]
+		MonoTouch.UIKit.UIView CalendarView { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UILabel DateLabel { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UILabel DateLabel { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UILabel DayLabel { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UILabel DayLabel { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UILabel HintLabel { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UILabel HintLabel { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UILabel WeekDayLabel { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (CalendarView != null) {
-                CalendarView.Dispose ();
-                CalendarView = null;
-            }
+		[Outlet]
+		MonoTouch.UIKit.UIView Separator { get; set; }
 
-            if (DateLabel != null) {
-                DateLabel.Dispose ();
-                DateLabel = null;
-            }
+		[Outlet]
+		MonoTouch.UIKit.UILabel WeekDayLabel { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (CalendarView != null) {
+				CalendarView.Dispose ();
+				CalendarView = null;
+			}
 
-            if (DayLabel != null) {
-                DayLabel.Dispose ();
-                DayLabel = null;
-            }
+			if (DateLabel != null) {
+				DateLabel.Dispose ();
+				DateLabel = null;
+			}
 
-            if (HintLabel != null) {
-                HintLabel.Dispose ();
-                HintLabel = null;
-            }
+			if (DayLabel != null) {
+				DayLabel.Dispose ();
+				DayLabel = null;
+			}
 
-            if (WeekDayLabel != null) {
-                WeekDayLabel.Dispose ();
-                WeekDayLabel = null;
-            }
-        }
-    }
+			if (HintLabel != null) {
+				HintLabel.Dispose ();
+				HintLabel = null;
+			}
+
+			if (WeekDayLabel != null) {
+				WeekDayLabel.Dispose ();
+				WeekDayLabel = null;
+			}
+
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
+			}
+		}
+	}
 }

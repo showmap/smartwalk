@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -128,6 +127,9 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             {
                 cell = tableView.DequeueReusableCell(OrgEventCell.Key, indexPath);
                 ((OrgEventCell)cell).DataContext = orgEventInfo;
+                ((OrgEventCell)cell).IsSeparatorVisible = 
+                    indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
+                    indexPath.Section == GroupItemsSource.Length - 1;
             }
 
             return cell;

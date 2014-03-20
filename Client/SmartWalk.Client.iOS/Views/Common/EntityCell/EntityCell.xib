@@ -146,6 +146,7 @@
                 <constraint firstItem="1056" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="nTy-Lf-iO8"/>
                 <constraint firstItem="802" firstAttribute="bottom" secondItem="19" secondAttribute="bottom" id="svZ-58-FpB"/>
             </constraints>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="BottomGradientView" destination="802" id="870"/>
                 <outlet property="DescriptionBottomConstraint" destination="RDO-zl-A0H" id="eGV-yp-KwA"/>
