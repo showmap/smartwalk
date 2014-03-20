@@ -9,41 +9,59 @@ using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Extensions;
 
 namespace SmartWalk.Server.Services.EventService
 {
     public class EventService : IEventService {
         private readonly IEntityService _entityService;
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
+        private readonly IRepository<EntityRecord> _entityRepository;
+        private readonly IRepository<SmartWalkUserRecord> _userRepository;
+        private readonly IRepository<ShowRecord> _showRepository;
 
-        public EventService(IEntityService entityService, IRepository<EventMetadataRecord> eventMetadataRepository)
+        private readonly Lazy<CultureInfo> _cultureInfo;
+
+        public EventService(ICultureService cultureService, IEntityService entityService, 
+            IRepository<EventMetadataRecord> eventMetadataRepository, IRepository<EntityRecord> entityRepository,
+            IRepository<SmartWalkUserRecord> userRepository, IRepository<ShowRecord> showRepository)
         {
             _entityService = entityService;
             _eventMetadataRepository = eventMetadataRepository;
+            _entityRepository = entityRepository;
+            _showRepository = showRepository;
+            _userRepository = userRepository;
+
+            _cultureInfo = new Lazy<CultureInfo>(cultureService.GetCurrentCulture);
         }
 
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
             return user.EventMetadataRecords.Select(CreateViewModelContract).ToList();
         }
 
-        public EventMetadataFullVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
+        public EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
             var eventMetadata = user.EventMetadataRecords.FirstOrDefault(u => u.Id == id);
-            if (eventMetadata != null) {
-                return new EventMetadataFullVm {
-                    EventMetadata = CreateViewModelContract(eventMetadata),
-                    Hosts = _entityService.GetUserEntities(user, EntityType.Host),                    
-                    Venues = _entityService.GetUserEntities(user, EntityType.Venue)
-                };
-            }
 
-            return null;
-        }        
+            var vm = CreateViewModelContract(user, eventMetadata);
+            vm.AllHosts = _entityService.GetUserEntities(user, EntityType.Host);
+
+            return vm;
+        }
+
+        private EventMetadataVm CreateViewModelContract(SmartWalkUserRecord user, EventMetadataRecord record) {
+            if (record != null)
+                return CreateViewModelContract(record);
+
+            var res = new EventMetadataVm {
+                Id = 0,
+                UserId = user.Id
+            };
+
+            return res;
+        }
 
         private EventMetadataVm CreateViewModelContract(EventMetadataRecord record)
         {
-            if (record == null)
-                return null;
-
             var res = ViewModelContractFactory.CreateViewModelContract(record);
 
             res.Host = _entityService.GetEntityVm(record.EntityRecord);
@@ -53,18 +71,64 @@ namespace SmartWalk.Server.Services.EventService
         }
 
         public void DeleteEvent(EventMetadataVm item) {
-            foreach (var venue in item.AllVenues)
-            {
-                _entityService.DeleteEventVenue(venue);
-            }
-
             var metadata = _eventMetadataRepository.Get(item.Id);
 
             if (metadata == null)
                 return;
 
+            foreach (var show in metadata.ShowRecords) {
+                _showRepository.Delete(show);
+                _showRepository.Flush();
+            }
+
             _eventMetadataRepository.Delete(metadata);
             _eventMetadataRepository.Flush();
+        }
+
+        public EventMetadataVm SaveOrAddEvent(EventMetadataVm item) {
+            var host = _entityRepository.Get(item.Host.Id);
+            var dtFrom = item.StartTime.ParseDateTime(_cultureInfo.Value);
+            var user = _userRepository.Get(item.UserId);
+
+            if (user == null || host == null || dtFrom == null)
+                return null;
+
+            var metadata =_eventMetadataRepository.Get(item.Id);
+            var dtTo = item.EndTime.ParseDateTime(_cultureInfo.Value);
+
+            if (metadata == null)
+            {
+                metadata = new EventMetadataRecord
+                {
+                    EntityRecord = host,
+                    SmartWalkUserRecord = user,
+                    Title = item.Title,
+                    Description = item.Description,
+                    StartTime = dtFrom.Value,
+                    EndTime = dtTo,
+                    CombineType = item.CombineType,
+                    IsPublic = item.IsPublic,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now,
+                };
+
+                _eventMetadataRepository.Create(metadata);
+                _eventMetadataRepository.Flush();
+            }
+            else
+            {
+                metadata.Title = item.Title;
+                metadata.Description = item.Description;
+                metadata.StartTime = dtFrom.Value;
+                metadata.EndTime = dtTo;
+                metadata.CombineType = item.CombineType;
+                metadata.IsPublic = item.IsPublic;
+                metadata.DateModified = DateTime.Now;
+
+                _eventMetadataRepository.Flush();
+            }
+
+            return CreateViewModelContract(metadata);
         }
     }
 }

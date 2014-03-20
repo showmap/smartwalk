@@ -7,6 +7,7 @@ using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Extensions;
 
 namespace SmartWalk.Server.Services.EntityService
 {
@@ -33,8 +34,14 @@ namespace SmartWalk.Server.Services.EntityService
         }
 
         #region Shows
-        public void DeleteShow(ShowVm item) {
-            var show = _showRepository.Get(item.Id);
+
+        public ShowVm GetShow(int showId) {
+            var show = _showRepository.Get(showId);
+            return show == null ? null : ViewModelContractFactory.CreateViewModelContract(show);
+        }
+
+        public void DeleteShow(int showId) {
+            var show = _showRepository.Get(showId);
 
             if (show == null)
                 return;
@@ -42,7 +49,7 @@ namespace SmartWalk.Server.Services.EntityService
             _showRepository.Delete(show);
             _showRepository.Flush();
 
-            CheckIsReferenceShow(item);
+            CheckIsReferenceShow(ViewModelContractFactory.CreateViewModelContract(show));
         }
 
 
@@ -56,6 +63,19 @@ namespace SmartWalk.Server.Services.EntityService
                 _showRepository.Delete(showRecord);
                 _showRepository.Flush();
             }
+        }
+
+        public ShowVm AddEventVenue(EntityVm item) {
+            var show = new ShowRecord
+            {
+                EventMetadataRecord = _metadataRepository.Get(item.EventMetedataId),
+                EntityRecord = _entityRepository.Get(item.Id),
+                IsReference = true,
+            };
+            _showRepository.Create(show);
+            _showRepository.Flush();
+
+            return ViewModelContractFactory.CreateViewModelContract(show);
         }
 
         private void CheckIsReferenceShow(ShowVm item) {
@@ -90,8 +110,8 @@ namespace SmartWalk.Server.Services.EntityService
             if (metadata == null || venue == null)
                 return null;
 
-            var dtFrom = ParseDateTime(item.StartDateTime);
-            var dtTo = ParseDateTime(item.EndDateTime);
+            var dtFrom = item.StartDateTime.ParseDateTime(_cultureInfo.Value);
+            var dtTo = item.EndDateTime.ParseDateTime(_cultureInfo.Value);
 
             if (show == null)
             {
@@ -128,14 +148,7 @@ namespace SmartWalk.Server.Services.EntityService
             return ViewModelContractFactory.CreateViewModelContract(show);
         }
 
-        private DateTime? ParseDateTime(string dtValue) {
-            DateTime dtParse;
-
-            if (DateTime.TryParse(dtValue, _cultureInfo.Value, DateTimeStyles.None, out dtParse))
-                return dtParse;
-
-            return null;
-        }
+        
         #endregion
 
         #region Entities
@@ -154,7 +167,7 @@ namespace SmartWalk.Server.Services.EntityService
         }
 
         public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata) {
-            return _entityRepository.Table.Where(e => e.ShowRecords.Any(s => s.EventMetadataRecord.Id == metadata.Id)).Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
+            return _entityRepository.Table.Where(e => e.Type == (int) EntityType.Venue).Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
         }
 
         public EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm) {

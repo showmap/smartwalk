@@ -18,6 +18,7 @@ namespace SmartWalk.Server.Services.EntityService
             return new EntityVm
             {
                 Id = record.Id,
+                State = VmItemState.Normal,
                 UserId = record.SmartWalkUserRecord.Id,
                 Type = record.Type,
                 Name = record.Name,
@@ -34,6 +35,11 @@ namespace SmartWalk.Server.Services.EntityService
                 return null;
 
             var res = CreateViewModelContract(record);
+
+            if (record.ShowRecords.All(s => s.EventMetadataRecord.Id != metadata.Id))
+                res.State = VmItemState.Hidden;
+
+            res.EventMetedataId = metadata.Id;
             res.AllShows = record.ShowRecords.Where(s => s.EventMetadataRecord.Id == metadata.Id).Select(CreateViewModelContract).ToList();
 
             return res;

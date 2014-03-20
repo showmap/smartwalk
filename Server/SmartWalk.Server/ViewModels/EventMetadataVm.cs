@@ -8,6 +8,7 @@ namespace SmartWalk.Server.ViewModels
     public class EventMetadataVm
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
         public int HostId { get; set; }
         public string HostName { get; set; }
         public string Title { get; set; }
@@ -23,9 +24,11 @@ namespace SmartWalk.Server.ViewModels
 
         public EntityVm Host { get; set; }
         public IList<EntityVm> AllVenues { get; set; }
+        public IList<EntityVm> AllHosts { get; set; }        
 
         public EventMetadataVm() {
             AllVenues = new List<EntityVm>();
+            AllHosts = new List<EntityVm>();
         }
     }
 }

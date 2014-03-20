@@ -64,18 +64,17 @@ namespace SmartWalk.Server.Controllers
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             return Json(_eventService.GetUserEvents(user.Record));
-        }        
+        }                
 
         [HttpPost]
-        public ActionResult SaveEvent(EventMetadataFullVm item) {
+        public ActionResult GetShow(ShowVm item)
+        {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
             }
 
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-
-            return Json(true);
+            return Json(_entityService.GetShow(item.Id));
         }
 
         [HttpPost]
@@ -86,9 +85,7 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            _entityService.SaveOrAddShow(item);
-
-            return Json(true);
+            return Json(_entityService.SaveOrAddShow(item).Id);
         }
 
         [HttpPost]
@@ -99,7 +96,7 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            _entityService.DeleteShow(item);
+            _entityService.DeleteShow(item.Id);
 
             return Json(true);
         }
@@ -117,6 +114,17 @@ namespace SmartWalk.Server.Controllers
         }
 
         [HttpPost]
+        public ActionResult AddEventVenue(EntityVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+            
+            return Json(_entityService.AddEventVenue(item));
+        }        
+
+        [HttpPost]
         public ActionResult DeleteEvent(EventMetadataVm item)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
@@ -128,5 +136,18 @@ namespace SmartWalk.Server.Controllers
 
             return Json(true);
         }
+
+        [HttpPost]
+        public ActionResult SaveEvent(EventMetadataVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _eventService.SaveOrAddEvent(item);
+
+            return Json(_eventService.SaveOrAddEvent(item));
+        } 
     }
 }

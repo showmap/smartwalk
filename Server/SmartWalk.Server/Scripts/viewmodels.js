@@ -24,19 +24,37 @@ function AddressViewModel(data) {
 function ShowViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable(data.Id);
-    self.EventMetedataId = ko.observable(data.EventMetedataId);
-    self.VenueId = ko.observable(data.VenueId);
-    self.IsReference = ko.observable(data.IsReference);
-    self.Title = ko.observable(data.Title);
-    self.Description = ko.observable(data.Description);
-    self.StartDate = ko.observable(data.StartDate);
-    self.StartTime = ko.observable(data.StartTime);
-    self.EndDate = ko.observable(data.EndDate);
-    self.EndTime = ko.observable(data.EndTime);
-    self.Picture = ko.observable(data.Picture);
-    self.DetailsUrl = ko.observable(data.DetailsUrl);
-    self.State = ko.observable(data.State);
+    self.Id = ko.observable();
+    self.EventMetedataId = ko.observable();
+    self.VenueId = ko.observable();
+    self.IsReference = ko.observable();
+    self.Title = ko.observable();
+    self.Description = ko.observable();
+    self.StartDate = ko.observable();
+    self.StartTime = ko.observable();
+    self.EndDate = ko.observable();
+    self.EndTime = ko.observable();
+    self.Picture = ko.observable();
+    self.DetailsUrl = ko.observable();
+    self.State = ko.observable();
+
+    self.loadData = function(data) {
+        self.Id(data.Id);
+        self.EventMetedataId(data.EventMetedataId);
+        self.VenueId(data.VenueId);
+        self.IsReference(data.IsReference);
+        self.Title(data.Title);
+        self.Description(data.Description);
+        self.StartDate(data.StartDate ? data.StartDate : '');
+        self.StartTime(data.StartTime ? data.StartTime : '');
+        self.EndDate(data.EndDate ? data.EndDate : '');
+        self.EndTime(data.EndTime ? data.EndTime : '');
+        self.Picture(data.Picture);
+        self.DetailsUrl(data.DetailsUrl);
+        self.State(data.State);
+    };
+
+    self.loadData(data);
 }
 
 function EntityViewModel(data) {
@@ -48,6 +66,8 @@ function EntityViewModel(data) {
     self.Type = ko.observable(data.Type);
 
     self.Name = ko.observable(data.Name);
+    self.DisplayName = ko.observable(data.DisplayName);
+
     self.Description = ko.observable(data.Description);
     self.Picture = ko.observable(data.Picture);
     self.State = ko.observable(data.State);
@@ -101,30 +121,64 @@ function EntityViewModel(data) {
 function EventViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable(data.Id);
-    self.HostId = ko.observable(data.HostId);
-    self.HostName = ko.observable(data.HostName);
+    self.Id = ko.observable();
+    self.UserId = ko.observable();
+    self.HostId = ko.observable();
+    self.HostName = ko.observable();
 
-    self.Title = ko.observable(data.Title);
-    self.Description = ko.observable(data.Description);
-    self.StartTime = ko.observable(data.StartTime);
-    self.EndTime = ko.observable(data.EndTime);
-    self.Latitude = ko.observable(data.Latitude);
-    self.Longitude = ko.observable(data.Longitude);
+    self.Title = ko.observable();
+    self.Description = ko.observable();
+    self.StartTime = ko.observable();
+    self.EndTime = ko.observable();
+    self.Latitude = ko.observable();
+    self.Longitude = ko.observable();
 
-    self.CombineType = ko.observable(data.CombineType);
-    self.IsPublic = ko.observable(data.IsPublic);
-    self.DateCreated = ko.observable(data.DateCreated);
-    self.DateModified = ko.observable(data.DateModified);
+    self.CombineType = ko.observable();
+    self.IsPublic = ko.observable();
+    self.DateCreated = ko.observable();
+    self.DateModified = ko.observable();
 
-    self.Host = ko.observable(new EntityViewModel(data.Host));
+    self.Host = ko.observable();
+    self.AllVenues = ko.observableArray();
+    self.AllHosts = ko.observableArray();
+    
+    self.loadData = function (data) {
+        self.Id(data.Id);
+        self.UserId(data.UserId);
+        self.HostId(data.HostId);
+        self.HostName(data.HostName);
 
-    // Venues
-    self.AllVenues = ko.observableArray($.map(data.AllVenues, function (item) {
-        item.EventMetedataId = self.Id(); return new EntityViewModel(item); }));
+        self.Title(data.Title);
+        self.Description(data.Description);
+
+        self.StartTime(data.StartTime?data.StartTime:'');
+        self.EndTime(data.EndTime?data.EndTime:'');
+        
+        self.Latitude(data.Latitude);
+        self.Longitude(data.Longitude);
+
+        self.CombineType(data.CombineType);
+        self.IsPublic(data.IsPublic);
+        self.DateCreated(data.DateCreated);
+        self.DateModified(data.DateModified);
+
+        if(data.Host != null)
+            self.Host(new EntityViewModel(data.Host));
+
+        self.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
+        self.AllHosts($.map(data.AllHosts, function(item) { return new EntityViewModel(item); }));
+    };
+
+    self.loadData(data);
+
     self.Venues = ko.computed(function () {
         return ko.utils.arrayFilter(this.AllVenues(), function (item) {
-            return item.State() != 2;
+            return item.State() != 2 && item.State() != 3;
+        });
+    }, this);
+    self.OtherVenues = ko.computed(function () {
+        return ko.utils.arrayFilter(this.AllVenues(), function (item) {
+            return item.State() == 3;
         });
     }, this);
     self.addVenue = function () {
@@ -135,4 +189,13 @@ function EventViewModel(data) {
     };
 
     self.selectedShow = ko.observable();
+    self.selectedVenue = ko.observable();
+
+    self.toJSON = function() {
+        var copy = ko.toJS(self); //just a quick way to get a clean copy
+        delete copy.AllVenues;
+        delete copy.Venues;
+        delete copy.OtherVenues;
+        return copy;
+    };
 }

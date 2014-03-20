@@ -10,14 +10,14 @@ namespace SmartWalk.Server.Services.EventService
 {
     public static class ViewModelContractFactory
     {               
-        public static EventMetadataVm CreateViewModelContract(EventMetadataRecord record)
-        {
+        public static EventMetadataVm CreateViewModelContract(EventMetadataRecord record) {
             if (record == null)
                 return null;
 
             return new EventMetadataVm
             {
                 Id = record.Id,
+                UserId = record.SmartWalkUserRecord.Id,
                 HostId = record.EntityRecord.Id,
                 HostName = record.EntityRecord.Name,
                 Title = record.Title,

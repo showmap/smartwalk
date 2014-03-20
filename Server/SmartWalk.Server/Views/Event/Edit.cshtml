@@ -12,27 +12,24 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
 
-    var eventItem = (EventMetadataFullVm)Model;
+    var eventItem = (EventMetadataVm)Model;
 }
 
 <div id="event-item" 
     save-event-url="@Url.Action("SaveEvent", "Event")" 
     save-show-url="@Url.Action("SaveShow", "Event")"
+    get-show-url="@Url.Action("GetShow", "Event")"
     delete-show-url="@Url.Action("DeleteShow", "Event")"
     delete-event-url="@Url.Action("DeleteEvent", "Event")"
-    delete-event-venue-url="@Url.Action("DeleteEventVenue", "Event")">
+    delete-event-venue-url="@Url.Action("DeleteEventVenue", "Event")"
+    add-event-venue-url="@Url.Action("AddEventVenue", "Event")"
+    save-event-url="@Url.Action("SaveEvent", "Event")">
     @Html.AntiForgeryTokenOrchard()
-    <textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>
+    <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
 
     <div id="metadata-panel">
-        @Html.LabelFor(m => eventItem.EventMetadata.HostId, @T("Host"))
-        @Html.DropDownListFor(m => eventItem.EventMetadata.HostId, eventItem.Hosts.Select(u => new SelectListItem
-        {
-            Selected = u.Id == eventItem.EventMetadata.HostId,
-            Text = u.DisplayName,
-            Value = u.Id.ToString()
-        }), new Dictionary<string, object> { { "data-bind", "value: HostId" } })
-        
+        <label for="hosts">@T("Host")</label>
+        <select id="hosts" data-bind="options: AllHosts, optionsText: 'DisplayName', value: Host, optionsCaption: '@T("Select Host...")'"></select>
         <div class="ui-widget">
             <button id="add-place-button">@T("Add place")</button>
             <button id="add-host-button">@T("Add host")</button>
@@ -50,25 +47,33 @@
         <label for="end-time">@T("End time")</label>
         <input type="text" id="end-time" data-bind="datepicker: EndTime, datepickerOptions: { showAnim: '' }"/>
         
-        @Html.LabelFor(m => eventItem.EventMetadata.CombineType, @T("Combine type"))
-        @Html.DropDownListFor(m => eventItem.EventMetadata.CombineType,
+        @Html.LabelFor(m => eventItem.CombineType, @T("Combine type"))
+        @Html.DropDownListFor(m => eventItem.CombineType,
                               Enum.GetNames(typeof(CombineType))
                                   .Select(u => new SelectListItem
                                   {
-                                      Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.EventMetadata.CombineType,
+                                      Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.CombineType,
                                       Text = @T(u).ToString(),
                                       Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
                                   }), new Dictionary<string, object> { { "data-bind", "value:CombineType" } })
         
-        @Html.LabelFor(m => eventItem.EventMetadata.IsPublic, @T("Is public"))
-        @Html.CheckBoxFor(m => eventItem.EventMetadata.IsPublic, new Dictionary<string, object> { { "data-bind", "checked: IsPublic" } })
-                
-        <div id="entity-items" data-bind="visible: Venues().length > 0">
-            <p>@T("Venues")</p>    
-            @{ using(Html.BeginForm("Edit", "Venue", FormMethod.Get)) {
-                    <input type="hidden" name="entityId" value="0" />
-                    <input type="submit" value="@T("Add venue")" />
-            }}
+        @Html.LabelFor(m => eventItem.IsPublic, @T("Is public"))
+        @Html.CheckBoxFor(m => eventItem.IsPublic, new Dictionary<string, object> { { "data-bind", "checked: IsPublic" } })
+           
+        <p>
+            <button id="save-event-button" data-bind="click: $root.saveEvent">@T("Save event")</button>
+            @{ using(Html.BeginForm("List", "Event", FormMethod.Get)) {                                
+                                <input type="submit" value="@T("Cancel")" />
+            }} 
+        </p>
+        
+        <div data-bind="visible: Id() > 0">
+            <p>@T("Venues")</p>
+            <select id="other-venues" data-bind="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")    '"></select>
+            <button id="add-event-venue-button" data-bind="click: $root.addVenue, enable: selectedVenue">@T("Add venue")</button>    
+        </div>
+
+        <div id="entity-items" data-bind="visible: Venues().length > 0 && Id() > 0">
             <table>                
                 <tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
             </table> 
@@ -96,7 +101,7 @@
 <script type="text/html" id="EntityItemTemplate">
     <tr>
         <td><span data-bind="text: Name"></span></td>        
-        <td><a href="#" data-bind="click:$root.addShow">Add show</a> &nbsp; <a href="#" data-bind="click:$root.deleteVenue">Delete</a></td>
+        <td><a href="#" data-bind="click: $root.addShow, visible: $root.selectedShow() == null || $root.selectedShow().Id() != 0 || $root.selectedShow().VenueId() != Id()">Add show</a> &nbsp; <a href="#" data-bind="    click: $root.deleteVenue">Delete</a></td>
     </tr>  
     <tr>
         <td>
@@ -172,7 +177,7 @@
                         <button id="cancel-show-button" data-bind="click: $root.cancelShow">@T("Cancel")</button>
                     </td>
                     <td>
-                        <button id="delete-show-button" data-bind="click: $root.deleteShow">@T("Delete")</button>
+                        <button id="delete-show-button" data-bind="click: $root.deleteShow">@T("Delete")</button>                        
                     </td>
                 </tr>
             </table>
@@ -184,10 +189,38 @@
 
     (function ($) {        
         $(document).ready(function () {
-            var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem.EventMetadata)));
+            var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
 
             vm.getShowView = function (item) {
                 return item === vm.selectedShow() ? 'ShowItemTemplateEdit' : "ShowItemTemplate";
+            };
+
+            vm.cancelShow = function (item) {
+                if (item.Id() == 0) {
+                    item.State(2);
+                    vm.selectedShow(null);
+                } else {
+                    var ajdata = ko.toJSON(item);
+                    var urlUpdate = $("#event-item").attr("get-show-url");
+
+                    var config = {
+                        async: true,
+                        url: urlUpdate,
+                        type: "POST",
+                        data: ajdata,
+                        dataType: "json",
+                        cache: false,
+                        contentType: "application/json; charset=utf-8",
+                        error: function(e) {
+                            //window.location.href = "@Url.Action("List")";
+                        },
+                        success: function(data) {
+                            item.loadData(data);
+                            vm.selectedShow(null);
+                        }
+                    };
+                    $.ajax(config);
+                }
             };
 
             vm.addShow = function (item) {
@@ -255,7 +288,31 @@
                         //window.location.href = "@Url.Action("List")";
                     },
                     success: function (data) {
-                        item.State(2);
+                        item.State(3);
+                    }
+                };
+                $.ajax(config);
+            };
+
+            vm.addVenue = function() {
+                var item = vm.selectedVenue();
+                var ajdata = ko.toJSON(item);
+                var urlUpdate = $("#event-item").attr("add-event-venue-url");
+                
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        item.AllShows.push(new ShowViewModel(data));
+                        item.State(0);
                     }
                 };
                 $.ajax(config);
@@ -276,12 +333,39 @@
                     error: function (e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function (data) {                        
+                        if (item.Id() == 0 || item.Id() != data)
+                            item.Id(data);
+                        
                         vm.selectedShow(null);
                     }
                 };
                 $.ajax(config);
             };
+
+            vm.saveEvent = function(item) {
+                var ajdata = ko.toJSON(item);                
+                var urlUpdate = $("#event-item").attr("save-event-url");
+                
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {                        
+                        if (item.Id() == 0)
+                            item.loadData(data);
+                    }
+                };
+                $.ajax(config);                
+            };
+
 
             ko.applyBindings(vm, document.getElementById('event-item'));            
         });

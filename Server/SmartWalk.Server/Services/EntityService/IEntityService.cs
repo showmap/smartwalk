@@ -22,7 +22,9 @@ namespace SmartWalk.Server.Services.EntityService
         void DeleteContact(int contactId);
 
         ShowVm SaveOrAddShow(ShowVm item);
-        void DeleteShow(ShowVm item);
+        void DeleteShow(int showId);
         void DeleteEventVenue(EntityVm item);
+        ShowVm AddEventVenue(EntityVm item);
+        ShowVm GetShow(int showId);
     }
 }

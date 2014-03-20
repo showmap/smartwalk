@@ -13,6 +13,10 @@
 
 <div id="event-items" data-bind="visible: EventItems().length > 0">
     <p>@T("Events")</p>    
+    @{ using(Html.BeginForm("Edit", "Event", FormMethod.Get)) {
+            <input type="hidden" name="eventId" value="0" />
+            <input type="submit" value="@T("Add event")" />
+    }} 
     <table class="event-item">
         <thead>
             <tr>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SmartWalk.Server.Extensions
@@ -14,6 +15,16 @@ namespace SmartWalk.Server.Extensions
         public static bool ContainsIgnoreCase(this IEnumerable<string> strings, string str)
         {
             return strings.Contains(str, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public static DateTime? ParseDateTime(this string dtValue, CultureInfo culture)
+        {
+            DateTime dtParse;
+
+            if (DateTime.TryParse(dtValue, culture, DateTimeStyles.None, out dtParse))
+                return dtParse;
+
+            return null;
         }
     }
 }
