@@ -7,11 +7,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="GroupHeaderCell" rowHeight="25" id="2" customClass="GroupHeaderCell">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="25"/>
+        <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="GroupHeaderCell" rowHeight="26" id="2" customClass="GroupHeaderCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="26"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" contentMode="center" tableViewCell="2" id="b3g-BB-fd1">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="24"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="25"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="21">
@@ -22,18 +22,13 @@
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Header Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                         <rect key="frame" x="10" y="1" width="300" height="24"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="Lu9-Qm-JXH"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <size key="shadowOffset" width="0.0" height="0.0"/>
                     </label>
-                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="118" userLabel="BottomBorder">
-                        <rect key="frame" x="0.0" y="25" width="320" height="1"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="1" id="137"/>
-                        </constraints>
-                    </view>
                     <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98" customClass="Shadow">
                         <rect key="frame" x="0.0" y="26" width="320" height="2"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -42,22 +37,20 @@
                         </constraints>
                     </imageView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="3" firstAttribute="top" secondItem="b3g-BB-fd1" secondAttribute="top" constant="1" id="0mC-em-otT"/>
+                    <constraint firstItem="98" firstAttribute="top" secondItem="21" secondAttribute="bottom" id="sdN-It-X7L"/>
+                </constraints>
             </tableViewCellContentView>
             <constraints>
                 <constraint firstItem="21" firstAttribute="top" secondItem="2" secondAttribute="top" id="0uB-ym-Yh5"/>
                 <constraint firstItem="98" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="5hP-f2-NQK"/>
-                <constraint firstItem="3" firstAttribute="bottom" secondItem="2" secondAttribute="bottom" id="9gJ-a1-n5R"/>
-                <constraint firstItem="3" firstAttribute="centerY" secondItem="21" secondAttribute="centerY" id="FdS-IA-8jP"/>
-                <constraint firstAttribute="bottom" secondItem="118" secondAttribute="bottom" constant="-1" id="WDE-Dl-ixL"/>
                 <constraint firstItem="98" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="Wkf-bW-gLU"/>
                 <constraint firstItem="21" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="cSv-Ct-gLV"/>
-                <constraint firstItem="118" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="hAU-OI-7Ku"/>
-                <constraint firstAttribute="bottom" secondItem="98" secondAttribute="bottom" constant="-3" id="hrX-4X-CAV"/>
+                <constraint firstAttribute="bottom" secondItem="98" secondAttribute="bottom" constant="-2" id="hrX-4X-CAV"/>
                 <constraint firstItem="3" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="10" id="kXn-fq-BoS"/>
                 <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" constant="10" id="lSb-z0-eRN"/>
                 <constraint firstItem="21" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="lTU-2T-DIY"/>
-                <constraint firstItem="118" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="nyg-CL-nLc"/>
-                <constraint firstItem="21" firstAttribute="bottom" secondItem="118" secondAttribute="bottom" id="utj-PY-6I4"/>
             </constraints>
             <connections>
                 <outlet property="Shadow" destination="98" id="110"/>

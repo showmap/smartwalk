@@ -9,7 +9,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         public static readonly UINib Nib = UINib.FromName("GroupHeaderCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("GroupHeaderCell");
 
-        public const float DefaultHeight = 25;
+        public const float DefaultHeight = 26;
 
         public GroupHeaderCell(IntPtr handle) : base(handle)
         {

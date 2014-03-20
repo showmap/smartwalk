@@ -54,11 +54,6 @@
                         <constraint firstItem="10" firstAttribute="centerY" secondItem="35" secondAttribute="centerY" id="70"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="71">
-                    <rect key="frame" x="0.0" y="87" width="320" height="1"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="0.86364072089999999" alpha="1" colorSpace="calibratedWhite"/>
-                </view>
             </subviews>
             <constraints>
                 <constraint firstItem="3" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="6"/>
@@ -68,10 +63,6 @@
                 <constraint firstItem="35" firstAttribute="top" secondItem="3" secondAttribute="bottom" id="42"/>
                 <constraint firstItem="35" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="44"/>
                 <constraint firstItem="35" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="46"/>
-                <constraint firstItem="71" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="76"/>
-                <constraint firstItem="71" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="80"/>
-                <constraint firstItem="71" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="84"/>
-                <constraint firstItem="71" firstAttribute="top" secondItem="1" secondAttribute="top" constant="87" id="85"/>
             </constraints>
             <connections>
                 <outlet property="GroupByLocationSwitch" destination="4" id="16"/>
