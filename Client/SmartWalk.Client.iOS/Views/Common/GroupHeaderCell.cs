@@ -1,10 +1,11 @@
 using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class GroupHeaderCell : UITableViewHeaderFooterView
+    public partial class GroupHeaderCell : TableHeaderBase
     {
         public static readonly UINib Nib = UINib.FromName("GroupHeaderCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("GroupHeaderCell");
@@ -13,7 +14,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         public GroupHeaderCell(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView();
+            BackgroundView = new UIView { BackgroundColor = Theme.HeaderCellBackground };
         }
 
         public static GroupHeaderCell Create()
@@ -21,10 +22,15 @@ namespace SmartWalk.Client.iOS.Views.Common
             return (GroupHeaderCell)Nib.Instantiate(null, null)[0];
         }
 
-        public string Text
+        protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            get { return TitleLabel.Text; }
-            set { TitleLabel.Text = value != null ? value.ToUpper() : null; }
+            var text = newContext as string;
+            TitleLabel.Text = text != null ? text.ToUpper() : null;
+        }
+
+        protected override void OnInitialize()
+        {
+            BottomSeparator.IsLineOnTop = true;
         }
     }
 }

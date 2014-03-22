@@ -81,13 +81,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return DefaultHeight;
         }
 
-        private static float CalculateTextHeight(float frameWidth, string text)
+        private static int CalculateTextHeight(float frameWidth, string text)
         {
             if (!string.IsNullOrEmpty(text))
             {
                 var frameSize = new SizeF(frameWidth, float.MaxValue); 
                 SizeF textSize;
 
+                // TODO: to complete iOS7 text measuring some day
                 using (var ns = new NSString(text))
                 {
                     textSize = ns.StringSize(
@@ -96,7 +97,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         UILineBreakMode.TailTruncation);
                 }
 
-                return textSize.Height;
+                return (int)Math.Ceiling(textSize.Height);
             }
 
             return 0;

@@ -9,26 +9,34 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    [Register ("GroupHeaderCell")]
-    partial class GroupHeaderCell
-    {
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.Shadow Shadow { get; set; }
+	[Register ("GroupHeaderCell")]
+	partial class GroupHeaderCell
+	{
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line BottomSeparator { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UILabel TitleLabel { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (TitleLabel != null) {
-                TitleLabel.Dispose ();
-                TitleLabel = null;
-            }
+		[Outlet]
+		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
 
-            if (Shadow != null) {
-                Shadow.Dispose ();
-                Shadow = null;
-            }
-        }
-    }
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (BottomSeparator != null) {
+				BottomSeparator.Dispose ();
+				BottomSeparator = null;
+			}
+
+			if (TitleLabel != null) {
+				TitleLabel.Dispose ();
+				TitleLabel = null;
+			}
+
+			if (TopSeparator != null) {
+				TopSeparator.Dispose ();
+				TopSeparator = null;
+			}
+		}
+	}
 }

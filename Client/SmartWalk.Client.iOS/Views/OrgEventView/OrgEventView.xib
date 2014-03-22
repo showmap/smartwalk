@@ -10,6 +10,7 @@
                 <outlet property="MapPanel" destination="4" id="31"/>
                 <outlet property="MapPanelTopConstraint" destination="11" id="9d0-1X-qq2"/>
                 <outlet property="ProgressViewContainer" destination="45" id="57"/>
+                <outlet property="ProgressViewTopConstraint" destination="53" id="jLH-7i-74i"/>
                 <outlet property="TablePanel" destination="5" id="32"/>
                 <outlet property="TablePanelTopConstaint" destination="7" id="XrH-iQ-dhH"/>
                 <outlet property="VenuesAndShowsTableView" destination="19" id="25"/>

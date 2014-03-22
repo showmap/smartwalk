@@ -16,6 +16,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
 
 		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line BottomSeparator { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIImageView GoRightImageView { get; set; }
 
 		[Outlet]
@@ -31,16 +34,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.CopyLabel NameLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint NameLeftConstraint { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UIButton NavigateOnMapButton { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
-
-		[Outlet]
-		SmartWalk.Client.iOS.Controls.Shadow Shadow { get; set; }
+		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
 
 		[Action ("OnNavigateOnMapClick:")]
 		partial void OnNavigateOnMapClick (MonoTouch.UIKit.UIButton sender);
@@ -50,6 +47,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (AddressLabel != null) {
 				AddressLabel.Dispose ();
 				AddressLabel = null;
+			}
+
+			if (BottomSeparator != null) {
+				BottomSeparator.Dispose ();
+				BottomSeparator = null;
 			}
 
 			if (GoRightImageView != null) {
@@ -77,24 +79,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				NameLabel = null;
 			}
 
-			if (NameLeftConstraint != null) {
-				NameLeftConstraint.Dispose ();
-				NameLeftConstraint = null;
-			}
-
 			if (NavigateOnMapButton != null) {
 				NavigateOnMapButton.Dispose ();
 				NavigateOnMapButton = null;
 			}
 
-			if (Separator != null) {
-				Separator.Dispose ();
-				Separator = null;
-			}
-
-			if (Shadow != null) {
-				Shadow.Dispose ();
-				Shadow = null;
+			if (TopSeparator != null) {
+				TopSeparator.Dispose ();
+				TopSeparator = null;
 			}
 		}
 	}

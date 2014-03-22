@@ -94,7 +94,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 var headerView = (GroupHeaderCell)tableView
                     .DequeueReusableHeaderFooterView(GroupHeaderCell.Key);
 
-                headerView.Text = title;
+                headerView.DataContext = title;
 
                 return headerView;
             }

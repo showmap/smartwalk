@@ -51,6 +51,11 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             return ProgressViewContainer;  
         }
 
+        protected override NSLayoutConstraint GetProgressViewTopConstraint()
+        {
+            return ProgressViewTopConstraint;
+        }
+
         protected override IListViewSource CreateListViewSource()
         {
             var tableSource = new VenueTableSource(VenueShowsTableView, ViewModel);

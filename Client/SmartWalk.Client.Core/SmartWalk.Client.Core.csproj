@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A9012546-5146-407B-BDDB-B6A4FCABCB4A}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,21 +35,22 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
-    <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.CrossCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\smartwalk-binaries\Client\JSON\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Cirrious.CrossCore">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.1.1\lib\MonoTouch\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email">
-      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Email.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
-      <HintPath>..\..\..\smartwalk-binaries\Client\MvvmCross-Binaries\Touch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.PhoneCall.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.1\lib\portable-net40+sl5+wp80+win8+monotouch+monoandroid\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -118,5 +119,8 @@
     <Compile Include="Model\Interfaces\IContact.cs" />
     <Compile Include="Constants\SettingKeys.cs" />
     <Compile Include="Services\IShowDirectionsTask.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

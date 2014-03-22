@@ -9,26 +9,34 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
-    [Register ("VenueView")]
-    partial class VenueView
-    {
-        [Outlet]
-        MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
+	[Register ("VenueView")]
+	partial class VenueView
+	{
+		[Outlet]
+		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.FixedTableView VenueShowsTableView { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (ProgressViewContainer != null) {
-                ProgressViewContainer.Dispose ();
-                ProgressViewContainer = null;
-            }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 
-            if (VenueShowsTableView != null) {
-                VenueShowsTableView.Dispose ();
-                VenueShowsTableView = null;
-            }
-        }
-    }
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.FixedTableView VenueShowsTableView { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (ProgressViewContainer != null) {
+				ProgressViewContainer.Dispose ();
+				ProgressViewContainer = null;
+			}
+
+			if (VenueShowsTableView != null) {
+				VenueShowsTableView.Dispose ();
+				VenueShowsTableView = null;
+			}
+
+			if (ProgressViewTopConstraint != null) {
+				ProgressViewTopConstraint.Dispose ();
+				ProgressViewTopConstraint = null;
+			}
+		}
+	}
 }

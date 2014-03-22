@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VenueView">
             <connections>
                 <outlet property="ProgressViewContainer" destination="10" id="22"/>
+                <outlet property="ProgressViewTopConstraint" destination="17" id="FDJ-R6-T9S"/>
                 <outlet property="VenueShowsTableView" destination="4" id="9"/>
                 <outlet property="view" destination="1" id="3"/>
             </connections>

@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="OrgCollectionView" destination="12" id="15"/>
                 <outlet property="ProgressViewContainer" destination="34" id="53"/>
+                <outlet property="ProgressViewTopConstraint" destination="46" id="ixR-6z-Oye"/>
                 <outlet property="view" destination="1" id="3"/>
             </connections>
         </placeholder>

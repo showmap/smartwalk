@@ -9,26 +9,34 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {
-    [Register ("OrgView")]
-    partial class OrgView
-    {
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.FixedTableView OrgEventsTableView { get; set; }
+	[Register ("OrgView")]
+	partial class OrgView
+	{
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.FixedTableView OrgEventsTableView { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (ProgressViewContainer != null) {
-                ProgressViewContainer.Dispose ();
-                ProgressViewContainer = null;
-            }
+		[Outlet]
+		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 
-            if (OrgEventsTableView != null) {
-                OrgEventsTableView.Dispose ();
-                OrgEventsTableView = null;
-            }
-        }
-    }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (OrgEventsTableView != null) {
+				OrgEventsTableView.Dispose ();
+				OrgEventsTableView = null;
+			}
+
+			if (ProgressViewContainer != null) {
+				ProgressViewContainer.Dispose ();
+				ProgressViewContainer = null;
+			}
+
+			if (ProgressViewTopConstraint != null) {
+				ProgressViewTopConstraint.Dispose ();
+				ProgressViewTopConstraint = null;
+			}
+		}
+	}
 }

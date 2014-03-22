@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="OrgEventsTableView" destination="5" id="11"/>
                 <outlet property="ProgressViewContainer" destination="16" id="28"/>
+                <outlet property="ProgressViewTopConstraint" destination="24" id="Tme-zV-0h5"/>
                 <outlet property="view" destination="1" id="3"/>
             </connections>
         </placeholder>

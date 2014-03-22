@@ -14,6 +14,7 @@ namespace SmartWalk.Client.iOS.Controls
 
         public Line(IntPtr p) : base(p)
         {
+            ContentMode = UIViewContentMode.Redraw;
         }
 
         public UIColor Color

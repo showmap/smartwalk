@@ -9,7 +9,13 @@ namespace SmartWalk.Client.iOS.Views.Common
         private bool _isInitialized;
         private object _dataContext;
 
-        protected TableCellBase(IntPtr handle) : base(handle) {}
+        protected TableCellBase(IntPtr handle) : base(handle) 
+        {
+            // HACK: http://stackoverflow.com/questions/19132908/auto-layout-constraints-issue-on-ios7-in-uitableviewcell
+            ContentView.AutoresizingMask = 
+                UIViewAutoresizing.FlexibleWidth | 
+                UIViewAutoresizing.FlexibleHeight;
+        }
 
         public object DataContext
         {

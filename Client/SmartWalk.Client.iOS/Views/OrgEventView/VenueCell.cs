@@ -146,6 +146,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         
         private void InitializeStyle()
         {
+            BottomSeparator.IsLineOnTop = true;
+
             NameLabel.Font = Theme.VenueCellTitleFont;
             NameLabel.TextColor = Theme.CellText;
 

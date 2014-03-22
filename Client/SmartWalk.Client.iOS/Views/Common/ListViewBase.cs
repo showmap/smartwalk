@@ -10,6 +10,7 @@ using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using System.Drawing;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -22,6 +23,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         private ListViewDecorator _listView;
         private UIView _progressView;
         private ImageFullscreenView _imageFullscreenView;
+        private ContactsView _contactsView;
 
         private ListViewDecorator ListView 
         { 
@@ -79,6 +81,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             UpdateViewTitle();
             UpdateViewState();
 
+            InitializeConstraints();
             InitializeListView();
             InitializeGesture();
         }
@@ -104,6 +107,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                 DisposeGesture();
                 DisposeRefreshControl();
                 DisposeFullscreenView();
+                DisposeContactsView();
             }
         }
 
@@ -113,6 +117,11 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+
+            if (_contactsView != null)
+            {
+                SetContactsViewFrame(_contactsView);
+            }
         }
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
@@ -121,11 +130,18 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+
+            if (_contactsView != null)
+            {
+                SetContactsViewFrame(_contactsView);
+            }
         }
 
         protected abstract ListViewDecorator GetListView();
 
         protected abstract UIView GetProgressViewContainer();
+
+        protected abstract NSLayoutConstraint GetProgressViewTopConstraint();
 
         protected virtual string GetViewTitle()
         {
@@ -260,25 +276,26 @@ namespace SmartWalk.Client.iOS.Views.Common
             var contactsProvider = ViewModel as IContactsEntityProvider;
             if (entityInfo != null && contactsProvider != null)
             {
-                var contactsView = View.Subviews.OfType<ContactsView>().FirstOrDefault();
-
-                if (contactsView == null)
+                _contactsView = View.Subviews.OfType<ContactsView>().FirstOrDefault();
+                if (_contactsView == null)
                 {
-                    contactsView = ContactsView.Create();
-                    contactsView.Close += OnContactsViewClose;
-                    contactsView.Frame = View.Bounds;
-                    contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
-                    contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
-                    contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;
+                    _contactsView = ContactsView.Create();
 
-                    contactsView.Alpha = 0;
-                    View.Add(contactsView);
+                    SetContactsViewFrame(_contactsView);
+
+                    _contactsView.Close += OnContactsViewClose;
+                    _contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
+                    _contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
+                    _contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;
+
+                    _contactsView.Alpha = 0;
+                    View.Add(_contactsView);
                     UIView.BeginAnimations(null);
-                    contactsView.Alpha = 1;
+                    _contactsView.Alpha = 1;
                     UIView.CommitAnimations();
                 }
 
-                contactsView.EntityInfo = entityInfo;
+                _contactsView.EntityInfo = entityInfo;
             }
         }
 
@@ -291,12 +308,30 @@ namespace SmartWalk.Client.iOS.Views.Common
                 new NSAction(() => contactsView.Alpha = 0),
                 new NSAction(contactsView.RemoveFromSuperview));
 
-            contactsView.Close -= OnContactsViewClose;
-            var contactsProvider = ((IContactsEntityProvider)ViewModel);
+            DisposeContactsView(contactsView);
 
+            var contactsProvider = ((IContactsEntityProvider)ViewModel);
             if (contactsProvider.ShowHideContactsCommand.CanExecute(null))
             {
                 contactsProvider.ShowHideContactsCommand.Execute(null);
+            }
+        }
+
+        private void DisposeContactsView(UIView contactsView = null)
+        {
+            if (contactsView == null)
+            {
+                contactsView = _contactsView;
+            }
+
+            if (contactsView != null)
+            {
+                _contactsView.Close -= OnContactsViewClose;
+                _contactsView.CallPhoneCommand = null;
+                _contactsView.ComposeEmailCommand = null;
+                _contactsView.NavigateWebSiteCommand = null;
+                _contactsView.Dispose();
+                _contactsView = null;
             }
         }
 
@@ -354,6 +389,24 @@ namespace SmartWalk.Client.iOS.Views.Common
             }   
         }
 
+        private void InitializeConstraints()
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                var progressViewTopConstraint = GetProgressViewTopConstraint();
+
+                if (ProgressViewContainer != null &&
+                    progressViewTopConstraint != null)
+                {
+                    View.RemoveConstraint(progressViewTopConstraint);
+
+                    var views = new NSDictionary("topGuide", TopLayoutGuide, "view", ProgressViewContainer);
+                    var constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
+                    View.AddConstraints(constraint);
+                }
+            }
+        }
+
         private void UpdateViewTitle()
         {
             var title = GetViewTitle();
@@ -374,6 +427,22 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 ProgressViewContainer.Hidden = true;
                 OnLoadedViewStateUpdate();
+            }
+        }
+
+        private void SetContactsViewFrame(UIView contactsView)
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                contactsView.Frame = new RectangleF(
+                    View.Bounds.Left,
+                    View.Bounds.Top + TopLayoutGuide.Length,
+                    View.Bounds.Width, 
+                    View.Bounds.Height - TopLayoutGuide.Length);
+            }
+            else
+            {
+                contactsView.Frame = View.Bounds;
             }
         }
     }

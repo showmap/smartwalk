@@ -164,16 +164,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
                 headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
 
-                // HACK: to overlap shadow from previous header
-                headerView.Layer.ZPosition = section;
-
-                // HACK: put all scrollbars to the very front to do not overlap header cells
-                var scrollBars = tableView.Subviews.OfType<UIImageView>().ToArray();
-                foreach (var scrollBar in scrollBars)
-                {
-                    scrollBar.Layer.ZPosition = 500;
-                }
-
                 return headerView;
             }
 
@@ -218,6 +208,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
                 ((VenueShowCell)cell).IsSeparatorVisible = 
+                    !_viewModel.IsGroupedByLocation ||
                     indexPath.Row < CurrentItemsSource[indexPath.Section].Shows.Length - 1 ||
                     indexPath.Section == CurrentItemsSource.Length - 1;
             }

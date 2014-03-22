@@ -9,26 +9,34 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
-    [Register ("HomeView")]
-    partial class HomeView
-    {
-        [Outlet]
-        SmartWalk.Client.iOS.Views.HomeView.HomeCollectionView OrgCollectionView { get; set; }
+	[Register ("HomeView")]
+	partial class HomeView
+	{
+		[Outlet]
+		SmartWalk.Client.iOS.Views.HomeView.HomeCollectionView OrgCollectionView { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (OrgCollectionView != null) {
-                OrgCollectionView.Dispose ();
-                OrgCollectionView = null;
-            }
+		[Outlet]
+		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 
-            if (ProgressViewContainer != null) {
-                ProgressViewContainer.Dispose ();
-                ProgressViewContainer = null;
-            }
-        }
-    }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (OrgCollectionView != null) {
+				OrgCollectionView.Dispose ();
+				OrgCollectionView = null;
+			}
+
+			if (ProgressViewContainer != null) {
+				ProgressViewContainer.Dispose ();
+				ProgressViewContainer = null;
+			}
+
+			if (ProgressViewTopConstraint != null) {
+				ProgressViewTopConstraint.Dispose ();
+				ProgressViewTopConstraint = null;
+			}
+		}
+	}
 }

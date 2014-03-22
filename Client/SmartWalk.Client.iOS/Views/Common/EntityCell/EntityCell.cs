@@ -35,7 +35,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return (EntityCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static float CalculateCellHeight(
+        public static int CalculateCellHeight(
             float frameWidth,
             bool isExpanded, 
             Entity entity)
@@ -43,12 +43,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             var textHeight = CalculateTextHeight(frameWidth - Gap * 2, entity.Description);
             var result = 
                 GetHeaderHeight(entity) + 
-                ((int)textHeight != 0 ? Gap * 2 : 0) + 
+                (textHeight != 0 ? Gap * 2 : 0) + 
                     (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrTextLineHeight * 3));
             return result;
         }
 
-        private static float CalculateTextHeight(float frameWidth, string text)
+        private static int CalculateTextHeight(float frameWidth, string text)
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -57,21 +57,45 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     float.MaxValue); 
 
                 SizeF textSize;
-                using (var ns = new NSString(text))
+
+                // TODO: iOS 7 text measuring is a broken shit
+                /*if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                 {
-                    textSize = ns.StringSize(
-                        Theme.EntityDescrFont,
-                        frameSize,
-                        UILineBreakMode.TailTruncation);
+                    using (var ns = new NSMutableAttributedString(
+                        text, 
+                        new UIStringAttributes { 
+                            Font = Theme.EntityDescrFont,
+                            ParagraphStyle = new NSMutableParagraphStyle {
+                                Alignment = UITextAlignment.Left,
+                                LineBreakMode = UILineBreakMode.TailTruncation,
+                            }
+                        }))
+                    {
+                        textSize = ns.GetBoundingRect(
+                            frameSize,
+                            NSStringDrawingOptions.UsesLineFragmentOrigin |
+                            NSStringDrawingOptions.UsesFontLeading,
+                            null).Size;
+                    }
+                }
+                else*/
+                {
+                    using (var ns = new NSString(text))
+                    {
+                        textSize = ns.StringSize(
+                            Theme.EntityDescrFont,
+                            frameSize,
+                            UILineBreakMode.TailTruncation);
+                    }
                 }
 
-                return textSize.Height;
+                return (int)Math.Ceiling(textSize.Height);
             }
 
             return 0;
         }
 
-        private static float GetHeaderHeight(Entity entity)
+        private static int GetHeaderHeight(Entity entity)
         {
             if (entity.Info.HasLogo() || entity.Info.HasAddress())
             {

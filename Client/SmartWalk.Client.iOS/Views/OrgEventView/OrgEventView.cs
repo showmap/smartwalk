@@ -132,6 +132,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return ProgressViewContainer;  
         }
 
+        protected override NSLayoutConstraint GetProgressViewTopConstraint()
+        {
+            return ProgressViewTopConstraint;
+        }
+
         protected override string GetViewTitle()
         {
             if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.Info != null)

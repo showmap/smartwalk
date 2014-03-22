@@ -37,6 +37,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellBackground = UIColor.White;
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
         public static readonly UIColor CellSeparator = UIColor.FromRGB(220, 220, 220);
+        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(255, 255, 255, 250);
         public static readonly UIColor ToolBarButtonHighlightedBackground = 
             UIColor.FromRGBA(255, 255, 255, 230);
 
@@ -102,8 +103,6 @@ namespace SmartWalk.Client.iOS.Resources
                 UINavigationBar.Appearance.SetBackgroundImage(
                     NavBarLandscapeBackgroundImage,
                     UIBarMetrics.LandscapePhone);
-
-                UINavigationBar.Appearance.ShadowImage = ShadowImage;
 
                 UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(4, UIBarMetrics.Default);
                 UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.LandscapePhone);

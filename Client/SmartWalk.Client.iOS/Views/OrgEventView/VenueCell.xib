@@ -7,14 +7,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VenueCell" rowHeight="64" id="2" customClass="VenueCell">
+        <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="VenueCell" rowHeight="64" id="2" customClass="VenueCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" contentMode="center" tableViewCell="2" id="JK2-hq-RUF">
+            <tableViewCellContentView key="contentView" opaque="NO" contentMode="scaleToFill" tableViewCell="2" id="JK2-hq-RUF">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EGV-aM-aYN" userLabel="Separator" customClass="Line">
+                    <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="EGV-aM-aYN" userLabel="TopSeparator" customClass="Line">
                         <rect key="frame" x="0.0" y="-1" width="320" height="1"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -100,49 +100,51 @@
                             <action selector="OnNavigateOnMapClick:" destination="2" eventType="touchUpInside" id="636"/>
                         </connections>
                     </button>
-                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="458" customClass="Shadow">
-                        <rect key="frame" x="0.0" y="65" width="320" height="2"/>
+                    <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ere-N5-Fx3" userLabel="BottomSeparator" customClass="Line">
+                        <rect key="frame" x="0.0" y="64" width="320" height="1"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="2" id="468"/>
+                            <constraint firstAttribute="height" constant="1" id="eyg-i1-VlC"/>
                         </constraints>
-                    </imageView>
+                    </view>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="6" firstAttribute="leading" secondItem="JK2-hq-RUF" secondAttribute="leading" constant="74" id="3aE-Qy-ghv"/>
+                    <constraint firstItem="6" firstAttribute="top" secondItem="JK2-hq-RUF" secondAttribute="top" constant="14" id="4vv-P6-1fD"/>
+                    <constraint firstItem="ere-N5-Fx3" firstAttribute="leading" secondItem="JK2-hq-RUF" secondAttribute="leading" id="BBH-Qz-Vuc"/>
+                    <constraint firstAttribute="bottom" secondItem="ere-N5-Fx3" secondAttribute="bottom" constant="-2" id="MHV-yH-4Eu"/>
                     <constraint firstItem="EGV-aM-aYN" firstAttribute="leading" secondItem="JK2-hq-RUF" secondAttribute="leading" id="UMU-6c-hIk"/>
                     <constraint firstItem="EGV-aM-aYN" firstAttribute="top" secondItem="JK2-hq-RUF" secondAttribute="top" constant="-1" id="Xip-dC-M44"/>
                     <constraint firstAttribute="trailing" secondItem="25" secondAttribute="trailing" constant="29" id="adH-U1-FFa"/>
                     <constraint firstAttribute="trailing" secondItem="EGV-aM-aYN" secondAttribute="trailing" id="dk1-pX-Sox"/>
+                    <constraint firstAttribute="trailing" secondItem="ere-N5-Fx3" secondAttribute="trailing" id="mQc-X7-qPR"/>
+                    <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="29" id="rGt-pV-S9U"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
                 <constraint firstAttribute="centerY" secondItem="666" secondAttribute="centerY" id="2P0-Mj-6VT"/>
-                <constraint firstItem="458" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="4ki-kM-S5L"/>
-                <constraint firstItem="6" firstAttribute="top" secondItem="2" secondAttribute="top" constant="14" id="7Xr-pf-MRh"/>
                 <constraint firstItem="523" firstAttribute="top" secondItem="2" secondAttribute="top" constant="25" id="GhU-et-dLI"/>
                 <constraint firstItem="25" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="90" id="GmH-hY-Nqn"/>
-                <constraint firstItem="6" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="74" id="MrV-fi-bYc"/>
                 <constraint firstItem="503" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="WYd-5B-y71"/>
-                <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="29" id="YPD-OW-zgt"/>
-                <constraint firstAttribute="bottom" secondItem="458" secondAttribute="bottom" constant="-2" id="Z9y-vx-Bm7"/>
                 <constraint firstItem="152" firstAttribute="top" secondItem="2" secondAttribute="top" id="fXA-yj-71a"/>
                 <constraint firstItem="25" firstAttribute="top" secondItem="2" secondAttribute="top" constant="31" id="hBu-xn-gjE"/>
                 <constraint firstItem="152" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="jgb-5P-xWX"/>
-                <constraint firstItem="458" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="lJ9-f3-rE9"/>
                 <constraint firstItem="523" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="63" id="ldb-gD-I9V"/>
                 <constraint firstItem="503" firstAttribute="top" secondItem="2" secondAttribute="top" id="uZ7-FB-eJb"/>
                 <constraint firstItem="666" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" constant="7" id="zgP-h1-y49"/>
             </constraints>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="AddressLabel" destination="25" id="135"/>
+                <outlet property="BottomSeparator" destination="ere-N5-Fx3" id="acw-7X-zNJ"/>
                 <outlet property="GoRightImageView" destination="666" id="683"/>
                 <outlet property="ImageLabel" destination="b4J-MQ-bYF" id="HVh-yJ-2aB"/>
                 <outlet property="ImageLabelView" destination="503" id="bwU-D4-ABu"/>
                 <outlet property="LogoImageView" destination="152" id="198"/>
                 <outlet property="NameLabel" destination="6" id="12"/>
                 <outlet property="NavigateOnMapButton" destination="523" id="635"/>
-                <outlet property="Separator" destination="EGV-aM-aYN" id="KmO-W4-N4p"/>
-                <outlet property="Shadow" destination="458" id="470"/>
+                <outlet property="TopSeparator" destination="EGV-aM-aYN" id="jj1-GK-3ev"/>
             </connections>
         </tableViewCell>
     </objects>
