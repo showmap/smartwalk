@@ -40,7 +40,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView Separator { get; set; }
+		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
@@ -98,6 +98,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				ImageWidthConstraint = null;
 			}
 
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
+			}
+
 			if (StartTimeLabel != null) {
 				StartTimeLabel.Dispose ();
 				StartTimeLabel = null;
@@ -111,11 +116,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TimeBackgroundView != null) {
 				TimeBackgroundView.Dispose ();
 				TimeBackgroundView = null;
-			}
-
-			if (Separator != null) {
-				Separator.Dispose ();
-				Separator = null;
 			}
 		}
 	}

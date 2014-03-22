@@ -27,8 +27,12 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         {
             base.ViewWillAppear(animated);
 
-            OrgEventsTableView.BeginUpdates();
-            OrgEventsTableView.EndUpdates();
+            // HACK: to fix the bug with floating tableview
+            if (OrgEventsTableView.VisibleCells.Length > 0)
+            {
+                OrgEventsTableView.BeginUpdates();
+                OrgEventsTableView.EndUpdates();
+            }
         }
 
         protected override string GetViewTitle()

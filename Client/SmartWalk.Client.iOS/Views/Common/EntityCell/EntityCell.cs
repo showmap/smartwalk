@@ -345,6 +345,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
+            Separator.Color = Theme.EntitySeparator;
             ToolBarView.Layer.CornerRadius = 4;
 
             InfoButton.Font = Theme.ToolBarButtonTextFont;

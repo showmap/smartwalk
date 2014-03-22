@@ -14,6 +14,8 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         private readonly MvxImageViewLoader _imageHelper;
 
+        public const float DefaultHeight = 74;
+
         public OrgCell(IntPtr handle) : base(handle)
         {
             _imageHelper = new MvxImageViewLoader(() => OrgImageView);
@@ -28,6 +30,11 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         public static OrgCell Create()
         {
             return (OrgCell)Nib.Instantiate(null, null)[0];
+        }
+
+        protected override void OnInitialize()
+        {
+            Separator.IsLineOnTop = true;
         }
 
         protected override void OnDataContextChanged()

@@ -7,34 +7,25 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VenueCell" rowHeight="65" id="2" customClass="VenueCell">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
+        <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VenueCell" rowHeight="64" id="2" customClass="VenueCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" contentMode="center" tableViewCell="2" id="JK2-hq-RUF">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="419" userLabel="TopBorder">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                    <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EGV-aM-aYN" userLabel="Separator" customClass="Line">
+                        <rect key="frame" x="0.0" y="-1" width="320" height="1"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="0.86274509799999999" green="0.86274509799999999" blue="0.86274509799999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="1" id="420"/>
+                            <constraint firstAttribute="height" constant="1" id="xbH-Np-61W"/>
                         </constraints>
                     </view>
                     <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="503" userLabel="Image Label View">
-                        <rect key="frame" x="0.0" y="1" width="64" height="64"/>
+                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view userInteractionEnabled="NO" alpha="0.20000000298023224" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="639" userLabel="RightBorder">
-                                <rect key="frame" x="63" y="0.0" width="1" height="64"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.58632093559999998" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="1" id="657"/>
-                                    <constraint firstAttribute="height" constant="64" id="658"/>
-                                </constraints>
-                            </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b4J-MQ-bYF" userLabel="Image Label">
                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -47,13 +38,10 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="64" id="623"/>
                             <constraint firstAttribute="height" constant="64" id="624"/>
-                            <constraint firstItem="639" firstAttribute="trailing" secondItem="503" secondAttribute="trailing" id="655"/>
-                            <constraint firstItem="639" firstAttribute="leading" secondItem="503" secondAttribute="leading" constant="63" id="656"/>
-                            <constraint firstItem="639" firstAttribute="top" secondItem="503" secondAttribute="top" id="659"/>
                         </constraints>
                     </view>
                     <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="152">
-                        <rect key="frame" x="0.0" y="1" width="64" height="64"/>
+                        <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -112,7 +100,7 @@
                             <action selector="OnNavigateOnMapClick:" destination="2" eventType="touchUpInside" id="636"/>
                         </connections>
                     </button>
-                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="458" customClass="Shadow">
+                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="458" customClass="Shadow">
                         <rect key="frame" x="0.0" y="65" width="320" height="2"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
@@ -121,8 +109,10 @@
                     </imageView>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="EGV-aM-aYN" firstAttribute="leading" secondItem="JK2-hq-RUF" secondAttribute="leading" id="UMU-6c-hIk"/>
+                    <constraint firstItem="EGV-aM-aYN" firstAttribute="top" secondItem="JK2-hq-RUF" secondAttribute="top" constant="-1" id="Xip-dC-M44"/>
                     <constraint firstAttribute="trailing" secondItem="25" secondAttribute="trailing" constant="29" id="adH-U1-FFa"/>
-                    <constraint firstItem="419" firstAttribute="top" secondItem="JK2-hq-RUF" secondAttribute="top" id="iFG-qk-Xi4"/>
+                    <constraint firstAttribute="trailing" secondItem="EGV-aM-aYN" secondAttribute="trailing" id="dk1-pX-Sox"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
@@ -135,14 +125,12 @@
                 <constraint firstItem="503" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="WYd-5B-y71"/>
                 <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="29" id="YPD-OW-zgt"/>
                 <constraint firstAttribute="bottom" secondItem="458" secondAttribute="bottom" constant="-2" id="Z9y-vx-Bm7"/>
-                <constraint firstItem="152" firstAttribute="top" secondItem="2" secondAttribute="top" constant="1" id="fXA-yj-71a"/>
+                <constraint firstItem="152" firstAttribute="top" secondItem="2" secondAttribute="top" id="fXA-yj-71a"/>
                 <constraint firstItem="25" firstAttribute="top" secondItem="2" secondAttribute="top" constant="31" id="hBu-xn-gjE"/>
-                <constraint firstItem="419" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="i55-wF-sDU"/>
-                <constraint firstItem="419" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="j7z-JO-EQA"/>
                 <constraint firstItem="152" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="jgb-5P-xWX"/>
                 <constraint firstItem="458" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="lJ9-f3-rE9"/>
                 <constraint firstItem="523" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="63" id="ldb-gD-I9V"/>
-                <constraint firstItem="503" firstAttribute="top" secondItem="2" secondAttribute="top" constant="1" id="uZ7-FB-eJb"/>
+                <constraint firstItem="503" firstAttribute="top" secondItem="2" secondAttribute="top" id="uZ7-FB-eJb"/>
                 <constraint firstItem="666" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" constant="7" id="zgP-h1-y49"/>
             </constraints>
             <connections>
@@ -153,6 +141,7 @@
                 <outlet property="LogoImageView" destination="152" id="198"/>
                 <outlet property="NameLabel" destination="6" id="12"/>
                 <outlet property="NavigateOnMapButton" destination="523" id="635"/>
+                <outlet property="Separator" destination="EGV-aM-aYN" id="KmO-W4-N4p"/>
                 <outlet property="Shadow" destination="458" id="470"/>
             </connections>
         </tableViewCell>

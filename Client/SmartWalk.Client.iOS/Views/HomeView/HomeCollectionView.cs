@@ -10,8 +10,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
     [Register("HomeCollectionView")]
     public class HomeCollectionView : UICollectionView
     {
-        private const float CellHeight = 75;
-
         public HomeCollectionView(IntPtr handle) : base(handle)
         {
         }
@@ -42,7 +40,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
                             flowLayout.SectionInset.Right - 
                             flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
-            flowLayout.ItemSize = new SizeF(cellWith, CellHeight);
+            flowLayout.ItemSize = new SizeF(cellWith, OrgCell.DefaultHeight);
         }
     }
 }

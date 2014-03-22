@@ -55,8 +55,10 @@ namespace SmartWalk.Client.iOS.Views.VenueView
         {
             var tableSource = new VenueTableSource(VenueShowsTableView, ViewModel);
 
-            this.CreateBinding(tableSource).To((VenueViewModel vm) => vm.Venue)
-                .WithConversion(new VenueTableSourceConverter(), ViewModel).Apply();
+            this.CreateBinding(tableSource)
+                .To<VenueViewModel>(vm => vm.Venue)
+                .WithConversion(new VenueTableSourceConverter(), ViewModel)
+                .Apply();
 
             return tableSource;
         }

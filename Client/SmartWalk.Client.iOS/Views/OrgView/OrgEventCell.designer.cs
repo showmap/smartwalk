@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 		MonoTouch.UIKit.UILabel HintLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView Separator { get; set; }
+		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel WeekDayLabel { get; set; }
@@ -52,14 +52,14 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 				HintLabel = null;
 			}
 
-			if (WeekDayLabel != null) {
-				WeekDayLabel.Dispose ();
-				WeekDayLabel = null;
-			}
-
 			if (Separator != null) {
 				Separator.Dispose ();
 				Separator = null;
+			}
+
+			if (WeekDayLabel != null) {
+				WeekDayLabel.Dispose ();
+				WeekDayLabel = null;
 			}
 		}
 	}

@@ -308,6 +308,7 @@
     <Compile Include="Controls\ButtonBarButton.cs" />
     <Compile Include="Views\Common\ActiveAwareViewController.cs" />
     <Compile Include="Services\ShowDirectionsTask.cs" />
+    <Compile Include="Controls\Line.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -36,6 +36,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor CellBackground = UIColor.White;
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
+        public static readonly UIColor CellSeparator = UIColor.FromRGB(220, 220, 220);
         public static readonly UIColor ToolBarButtonHighlightedBackground = 
             UIColor.FromRGBA(255, 255, 255, 230);
 
@@ -61,6 +62,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor OrgEventActive = CellHighlight;
         public static readonly UIColor OrgEventPassive = UIColor.FromRGB(187, 187, 187);
 
+        public static readonly UIColor EntitySeparator = UIColor.FromRGBA(120, 120, 120, 127);
         public static readonly UIFont EntityDescrFont = UIFont.FromName(HelveticaRegular, 15);
         public const int EntityDescrTextLineHeight = 19;
 

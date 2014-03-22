@@ -37,6 +37,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UIButton NavigateOnMapButton { get; set; }
 
 		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.Shadow Shadow { get; set; }
 
 		[Action ("OnNavigateOnMapClick:")]
@@ -44,16 +47,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ImageLabelView != null) {
-				ImageLabelView.Dispose ();
-				ImageLabelView = null;
-			}
-
-			if (ImageLabel != null) {
-				ImageLabel.Dispose ();
-				ImageLabel = null;
-			}
-
 			if (AddressLabel != null) {
 				AddressLabel.Dispose ();
 				AddressLabel = null;
@@ -62,6 +55,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (GoRightImageView != null) {
 				GoRightImageView.Dispose ();
 				GoRightImageView = null;
+			}
+
+			if (ImageLabel != null) {
+				ImageLabel.Dispose ();
+				ImageLabel = null;
+			}
+
+			if (ImageLabelView != null) {
+				ImageLabelView.Dispose ();
+				ImageLabelView = null;
 			}
 
 			if (LogoImageView != null) {
@@ -82,6 +85,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (NavigateOnMapButton != null) {
 				NavigateOnMapButton.Dispose ();
 				NavigateOnMapButton = null;
+			}
+
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
 			}
 
 			if (Shadow != null) {

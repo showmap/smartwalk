@@ -15,7 +15,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueCell");
 
-        public const float DefaultHeight = 65;
+        public const float DefaultHeight = 64;
 
         private MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _cellTapGesture;
@@ -143,7 +143,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 _cellTapGesture = null;
             }
         }
-
         
         private void InitializeStyle()
         {
