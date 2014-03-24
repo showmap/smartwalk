@@ -30,7 +30,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
-            tableView.RegisterNibForHeaderFooterViewReuse(VenueCell.Nib, VenueCell.Key);
+            tableView.RegisterNibForHeaderFooterViewReuse(VenueHeaderView.Nib, VenueHeaderView.Key);
         }
 
         public bool IsSearchSource { get; set; }
@@ -111,7 +111,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return _viewModel.IsGroupedByLocation || 
                 (_viewModel.ExpandedShow != null && 
                 CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)) 
-                    ? VenueCell.DefaultHeight : 0;
+                    ? VenueHeaderView.DefaultHeight : 0;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -158,7 +158,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 (_viewModel.ExpandedShow != null && 
                     CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)))
             {
-                var headerView = (VenueCell)tableView.DequeueReusableHeaderFooterView(VenueCell.Key);
+                var headerView = (VenueHeaderView)tableView.DequeueReusableHeaderFooterView(VenueHeaderView.Key);
 
                 headerView.DataContext = CurrentItemsSource[section];
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;

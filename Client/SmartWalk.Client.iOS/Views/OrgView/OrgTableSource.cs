@@ -92,7 +92,8 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
             if (title != null)
             {
-                var headerView = (GroupHeaderCell)tableView.DequeueReusableHeaderFooterView(GroupHeaderCell.Key);
+                var headerView = (GroupHeaderCell)tableView
+                    .DequeueReusableHeaderFooterView(GroupHeaderCell.Key);
 
                 headerView.DataContext = title;
 

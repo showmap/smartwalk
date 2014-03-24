@@ -396,11 +396,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (venue != null)
             {
-                var annotation = VenuesMapView.Annotations
-                .OfType<VenueAnnotation>()
-                    .FirstOrDefault(an => 
-                        an.Venue.Number == venue.Number &&
-                        an.Venue.Description == venue.Description); // don't use Equals, venues have different shows (un-grouped mode)
+                var annotation = 
+                    VenuesMapView.Annotations
+                        .OfType<VenueAnnotation>()
+                            .FirstOrDefault(an => 
+                                an.Venue.Number == venue.Number &&
+                                an.Venue.Description == venue.Description); // don't use Equals, venues have different shows (un-grouped mode)
 
                 if (annotation != null)
                 {

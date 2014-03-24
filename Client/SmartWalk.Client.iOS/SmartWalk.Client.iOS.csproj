@@ -225,10 +225,6 @@
     </Compile>
     <Compile Include="Views\Common\TableCellBase.cs" />
     <Compile Include="Views\Common\GroupContainer.cs" />
-    <Compile Include="Views\OrgEventView\VenueCell.cs" />
-    <Compile Include="Views\OrgEventView\VenueCell.designer.cs">
-      <DependentUpon>VenueCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\OrgView\OrgTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.cs" />
     <Compile Include="Views\OrgEventView\VenueAnnotation.cs" />
@@ -308,6 +304,14 @@
     <Compile Include="Views\Common\ActiveAwareViewController.cs" />
     <Compile Include="Services\ShowDirectionsTask.cs" />
     <Compile Include="Controls\Line.cs" />
+    <Compile Include="Views\OrgEventView\VenueHeaderView.cs" />
+    <Compile Include="Views\OrgEventView\VenueHeaderView.designer.cs">
+      <DependentUpon>VenueHeaderView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\GroupHeaderView.cs" />
+    <Compile Include="Views\Common\GroupHeaderView.designer.cs">
+      <DependentUpon>GroupHeaderView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -324,7 +328,6 @@
     <InterfaceDefinition Include="Views\HomeView\OrgCell.xib" />
     <InterfaceDefinition Include="Views\OrgView\OrgEventCell.xib" />
     <InterfaceDefinition Include="Views\Common\GroupHeaderCell.xib" />
-    <InterfaceDefinition Include="Views\OrgEventView\VenueCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\EntityCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
@@ -336,6 +339,8 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactsView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderView.xib" />
+    <InterfaceDefinition Include="Views\Common\GroupHeaderView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />

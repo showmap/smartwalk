@@ -14,7 +14,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="63">
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="63" userLabel="CalendarView">
                         <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="1" green="0.84705882349999995" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -22,7 +22,7 @@
                             <constraint firstAttribute="width" constant="44" id="171"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="25" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="25" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Day">
                         <rect key="frame" x="6" y="12" width="30" height="30"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
@@ -35,7 +35,7 @@
                         <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36">
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36" userLabel="Weekday">
                         <rect key="frame" x="1" y="6" width="40" height="15"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
@@ -48,7 +48,7 @@
                         <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Event Title">
                         <rect key="frame" x="54" y="10" width="148" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
@@ -60,7 +60,7 @@
                         <color key="shadowColor" white="1" alpha="0.94999999999999996" colorSpace="calibratedWhite"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="hint comment" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="44">
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="hint comment" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="44" userLabel="Hint">
                         <rect key="frame" x="210" y="10" width="100" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
@@ -82,25 +82,25 @@
                     </view>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="63" firstAttribute="top" secondItem="nxw-DI-2A9" secondAttribute="top" id="0O0-Ra-0f0"/>
                     <constraint firstAttribute="trailing" secondItem="pNm-x7-SWB" secondAttribute="trailing" id="6GD-Ak-zPo"/>
+                    <constraint firstAttribute="bottom" secondItem="63" secondAttribute="bottom" id="Sbr-td-cVd"/>
                     <constraint firstItem="pNm-x7-SWB" firstAttribute="leading" secondItem="nxw-DI-2A9" secondAttribute="leading" id="Sum-BJ-MDA"/>
+                    <constraint firstItem="9" firstAttribute="top" secondItem="nxw-DI-2A9" secondAttribute="top" constant="12" id="ZsA-B7-eDE"/>
+                    <constraint firstAttribute="centerY" secondItem="3" secondAttribute="centerY" id="iV4-VF-wwR"/>
+                    <constraint firstItem="63" firstAttribute="leading" secondItem="nxw-DI-2A9" secondAttribute="leading" id="lBH-rb-KLo"/>
+                    <constraint firstItem="36" firstAttribute="top" secondItem="nxw-DI-2A9" secondAttribute="top" constant="6" id="rHf-8y-mkv"/>
+                    <constraint firstAttribute="trailing" secondItem="44" secondAttribute="trailing" constant="10" id="s3w-tR-N4k"/>
+                    <constraint firstItem="36" firstAttribute="leading" secondItem="nxw-DI-2A9" secondAttribute="leading" constant="1" id="sPR-HZ-RAx"/>
                     <constraint firstAttribute="bottom" secondItem="pNm-x7-SWB" secondAttribute="bottom" id="yDm-pj-q1w"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="63" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="9aQ-7m-WaN"/>
-                <constraint firstItem="63" firstAttribute="bottom" secondItem="2" secondAttribute="bottom" id="Ctf-Ui-WPc"/>
                 <constraint firstItem="44" firstAttribute="top" secondItem="3" secondAttribute="top" id="J42-Pg-O2p"/>
                 <constraint firstItem="44" firstAttribute="baseline" secondItem="3" secondAttribute="baseline" id="Kja-WJ-QuW"/>
-                <constraint firstItem="3" firstAttribute="centerY" secondItem="63" secondAttribute="centerY" id="NJd-7O-mc1"/>
-                <constraint firstItem="9" firstAttribute="top" secondItem="2" secondAttribute="top" constant="12" id="U7J-Vs-dlA"/>
-                <constraint firstItem="36" firstAttribute="top" secondItem="2" secondAttribute="top" constant="6" id="VNU-B6-lPx"/>
                 <constraint firstItem="44" firstAttribute="leading" secondItem="3" secondAttribute="trailing" constant="8" symbolic="YES" id="Wio-JI-0Wr"/>
-                <constraint firstItem="63" firstAttribute="top" secondItem="2" secondAttribute="top" id="YIB-ba-jqA"/>
-                <constraint firstAttribute="trailing" secondItem="44" secondAttribute="trailing" constant="10" id="eXg-e3-XCr"/>
                 <constraint firstItem="3" firstAttribute="leading" secondItem="63" secondAttribute="trailing" constant="10" id="shI-iD-RtQ"/>
-                <constraint firstItem="36" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="1" id="y0Z-FZ-Vva"/>
                 <constraint firstItem="36" firstAttribute="centerX" secondItem="9" secondAttribute="centerX" id="yVQ-v1-ZnO"/>
             </constraints>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>

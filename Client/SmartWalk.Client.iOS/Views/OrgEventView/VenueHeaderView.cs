@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
@@ -10,10 +10,10 @@ using SmartWalk.Client.iOS.Views.Common;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    public partial class VenueCell : TableHeaderBase
+    public partial class VenueHeaderView : TableHeaderBase
     {
-        public static readonly UINib Nib = UINib.FromName("VenueCell", NSBundle.MainBundle);
-        public static readonly NSString Key = new NSString("VenueCell");
+        public static readonly UINib Nib = UINib.FromName("VenueHeaderView", NSBundle.MainBundle);
+        public static readonly NSString Key = new NSString("VenueHeaderView");
 
         public const float DefaultHeight = 64;
 
@@ -21,15 +21,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UITapGestureRecognizer _cellTapGesture;
         private UILongPressGestureRecognizer _cellPressGesture;
 
-        public VenueCell(IntPtr handle) : base(handle)
+        public VenueHeaderView(IntPtr handle) : base(handle)
         {
             BackgroundView = new UIView { BackgroundColor = Theme.BackgroundPatternColor };
             _imageHelper = new MvxImageViewLoader(() => LogoImageView);
         }
 
-        public static VenueCell Create()
+        public static VenueHeaderView Create()
         {
-            return (VenueCell)Nib.Instantiate(null, null)[0];
+            return (VenueHeaderView)Nib.Instantiate(null, null)[0];
         }
 
         public new Venue DataContext
@@ -73,7 +73,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 LogoImageView.Hidden = true;
                 ImageLabelView.Hidden = false;
 
-                ImageLabel.Text = DataContext.Info.Name.FirstOrDefault().ToString();
+                ImageLabel.Text = DataContext.Info.Name != null 
+                    ? DataContext.Info.Name.FirstOrDefault().ToString()
+                    : null;
             }
             else
             {
@@ -85,8 +87,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             // TODO: to support showing more than one address
             AddressLabel.Text = DataContext != null && 
-                    DataContext.Info.Addresses != null && 
-                    DataContext.Info.Addresses.Length > 0 
+                DataContext.Info.Addresses != null && 
+                DataContext.Info.Addresses.Length > 0 
                 ? DataContext.Info.Addresses[0].Address 
                 : null;
         }
@@ -94,32 +96,32 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeGestures()
         {
             var selectedAction = new NSAction(() => 
+            {
+                SetSelectedState(true);
+
+                if (NavigateVenueCommand != null &&
+                    NavigateVenueCommand.CanExecute(DataContext))
                 {
-                    SetSelectedState(true);
+                    NavigateVenueCommand.Execute(DataContext);
+                }
 
-                    if (NavigateVenueCommand != null &&
-                        NavigateVenueCommand.CanExecute(DataContext))
-                    {
-                        NavigateVenueCommand.Execute(DataContext);
-                    }
-
-                    NSTimer.CreateScheduledTimer(
-                        TimeSpan.MinValue,
-                        () => SetSelectedState(false));
-                });
+                NSTimer.CreateScheduledTimer(
+                    TimeSpan.MinValue,
+                    () => SetSelectedState(false));
+            });
 
             // TODO: fail if it's ended outside of the cell
             _cellPressGesture = new UILongPressGestureRecognizer(rec => 
+            {
+                if (rec.State == UIGestureRecognizerState.Began)
                 {
-                    if (rec.State == UIGestureRecognizerState.Began)
-                    {
-                        SetSelectedState(true);
-                    }
-                    else if (rec.State == UIGestureRecognizerState.Ended)
-                    {
-                        selectedAction();
-                    }
-                });
+                    SetSelectedState(true);
+                }
+                else if (rec.State == UIGestureRecognizerState.Ended)
+                {
+                    selectedAction();
+                }
+            });
 
             _cellTapGesture = new UITapGestureRecognizer(selectedAction);
 
@@ -143,7 +145,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 _cellTapGesture = null;
             }
         }
-        
+
         private void InitializeStyle()
         {
             BottomSeparator.IsLineOnTop = true;
@@ -157,7 +159,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             NavigateOnMapButton.SetImage(ThemeIcons.SmallMap, UIControlState.Normal);
             GoRightImageView.Image = ThemeIcons.GoRight;
         }
-
 
         partial void OnNavigateOnMapClick(UIButton sender)
         {
@@ -185,3 +186,4 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         }
     }
 }
+

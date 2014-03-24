@@ -104,7 +104,7 @@
                             <constraint firstAttribute="centerX" secondItem="1277" secondAttribute="centerX" id="1359"/>
                         </constraints>
                     </view>
-                    <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1056" userLabel="Border" customClass="Line">
+                    <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1056" userLabel="PlaceholderSeparator" customClass="Line">
                         <rect key="frame" x="0.0" y="199" width="320" height="1"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -112,7 +112,7 @@
                             <constraint firstAttribute="height" constant="1" id="1070"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description Description Description Description Description Description Description Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="Description Description Description Description Description Description Description Description" customClass="CopyLabel">
+                    <label opaque="NO" clipsSubviews="YES" contentMode="top" misplaced="YES" text="Description Description Description Description Description Description Description Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="Description" customClass="CopyLabel">
                         <rect key="frame" x="10" y="210" width="300" height="323"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <gestureRecognizers/>
@@ -120,7 +120,7 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="802" userLabel="BottomGradientView">
+                    <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="802" userLabel="BottomGradientView">
                         <rect key="frame" x="10" y="495" width="300" height="38"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -128,28 +128,41 @@
                             <constraint firstAttribute="height" constant="38" id="869"/>
                         </constraints>
                     </view>
+                    <view hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U3N-hC-GE0" userLabel="Separator" customClass="Line">
+                        <rect key="frame" x="0.0" y="542" width="320" height="1"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="1m8-zH-3st"/>
+                        </constraints>
+                    </view>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="U3N-hC-GE0" secondAttribute="bottom" id="28D-Tg-OlE"/>
+                    <constraint firstAttribute="trailing" secondItem="1056" secondAttribute="trailing" id="AaP-99-NVm"/>
+                    <constraint firstItem="19" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" priority="800" constant="10" id="Cuo-fo-L5r"/>
+                    <constraint firstItem="999" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="Fcf-bu-ehO"/>
+                    <constraint firstItem="U3N-hC-GE0" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="FfR-dD-NUg"/>
+                    <constraint firstAttribute="trailing" secondItem="999" secondAttribute="trailing" id="RZc-C1-wQF"/>
+                    <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" priority="800" constant="10" id="bd6-1O-KDF"/>
+                    <constraint firstAttribute="bottom" secondItem="802" secondAttribute="bottom" constant="10" id="dAK-oO-4uk"/>
+                    <constraint firstAttribute="trailing" secondItem="U3N-hC-GE0" secondAttribute="trailing" id="duc-Mt-2Gg"/>
+                    <constraint firstItem="999" firstAttribute="top" secondItem="Q3o-AI-f2B" secondAttribute="top" id="erS-LN-8ki"/>
+                    <constraint firstItem="1056" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="r3T-QA-hJg"/>
+                    <constraint firstAttribute="bottom" secondItem="19" secondAttribute="bottom" priority="800" constant="10" id="sU9-x5-c4S"/>
+                </constraints>
             </tableViewCellContentView>
             <constraints>
                 <constraint firstItem="802" firstAttribute="leading" secondItem="19" secondAttribute="leading" id="Bcy-JV-mip"/>
                 <constraint firstItem="19" firstAttribute="top" secondItem="999" secondAttribute="bottom" priority="800" constant="10" id="DQK-qT-KNl"/>
                 <constraint firstItem="802" firstAttribute="trailing" secondItem="19" secondAttribute="trailing" id="Gwp-v8-uFn"/>
-                <constraint firstItem="1056" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="LE7-Ve-1VE"/>
-                <constraint firstAttribute="bottom" secondItem="802" secondAttribute="bottom" constant="10" id="MmQ-qJ-mcr"/>
-                <constraint firstAttribute="bottom" secondItem="19" secondAttribute="bottom" priority="800" constant="10" id="RDO-zl-A0H"/>
-                <constraint firstItem="19" firstAttribute="leading" secondItem="2" secondAttribute="leading" priority="800" constant="10" id="Rpz-Mj-iZS"/>
-                <constraint firstItem="999" firstAttribute="top" secondItem="2" secondAttribute="top" id="Up4-Y0-hB2"/>
-                <constraint firstItem="999" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="VIL-E4-NnV"/>
-                <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" priority="800" constant="10" id="YXb-gD-5ZI"/>
-                <constraint firstItem="999" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="gaD-hq-gaW"/>
                 <constraint firstItem="999" firstAttribute="bottom" secondItem="1056" secondAttribute="bottom" id="kGd-35-sJO"/>
-                <constraint firstItem="1056" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="nTy-Lf-iO8"/>
                 <constraint firstItem="802" firstAttribute="bottom" secondItem="19" secondAttribute="bottom" id="svZ-58-FpB"/>
             </constraints>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="BottomGradientView" destination="802" id="870"/>
-                <outlet property="DescriptionBottomConstraint" destination="RDO-zl-A0H" id="eGV-yp-KwA"/>
+                <outlet property="DescriptionBottomConstraint" destination="sU9-x5-c4S" id="HqL-Tt-pBc"/>
                 <outlet property="DescriptionLabel" destination="19" id="45"/>
                 <outlet property="DescriptionTopConstraint" destination="DQK-qT-KNl" id="SYM-5n-K2N"/>
                 <outlet property="DirectionsButton" destination="1306" id="1344"/>
@@ -164,7 +177,8 @@
                 <outlet property="MapWidthConstraint" destination="1032" id="1039"/>
                 <outlet property="MapXConstraint" destination="1024" id="1040"/>
                 <outlet property="MapYConstraint" destination="1025" id="1041"/>
-                <outlet property="Separator" destination="1056" id="HG4-oW-5kW"/>
+                <outlet property="PlaceholderSeparator" destination="1056" id="5KK-bg-0xI"/>
+                <outlet property="Separator" destination="U3N-hC-GE0" id="Mfe-CC-8vU"/>
                 <outlet property="ToolBarView" destination="1277" id="1345"/>
                 <outlet property="ToolBarWidthConstraint" destination="1374" id="1382"/>
             </connections>

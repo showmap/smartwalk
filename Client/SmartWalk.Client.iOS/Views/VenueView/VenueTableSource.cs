@@ -23,7 +23,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
-            tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderCell.Nib, GroupHeaderCell.Key);
+            tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderView.Nib, GroupHeaderView.Key);
         }
 
         public GroupContainer[] GroupItemsSource
@@ -38,7 +38,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return TitleForHeader(tableView, section) != null ? GroupHeaderCell.DefaultHeight : 0f;
+            return TitleForHeader(tableView, section) != null ? GroupHeaderView.DefaultHeight : 0f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -91,8 +91,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
             if (title != null)
             {
-                var headerView = (GroupHeaderCell)tableView
-                    .DequeueReusableHeaderFooterView(GroupHeaderCell.Key);
+                var headerView = (GroupHeaderView)tableView
+                    .DequeueReusableHeaderFooterView(GroupHeaderView.Key);
 
                 headerView.DataContext = title;
 

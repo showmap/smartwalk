@@ -32,14 +32,14 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="5" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="12"/>
-                <constraint firstItem="5" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="13"/>
-                <constraint firstItem="5" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="14"/>
-                <constraint firstItem="5" firstAttribute="top" secondItem="1" secondAttribute="top" id="15"/>
                 <constraint firstItem="16" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="22"/>
                 <constraint firstItem="16" firstAttribute="top" secondItem="1" secondAttribute="top" id="24"/>
                 <constraint firstItem="16" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="25"/>
                 <constraint firstItem="16" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="26"/>
+                <constraint firstItem="5" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="SCV-7n-vCb"/>
+                <constraint firstAttribute="trailing" secondItem="5" secondAttribute="trailing" id="TS3-6a-rpS"/>
+                <constraint firstItem="5" firstAttribute="top" secondItem="1" secondAttribute="top" id="jO6-BP-Zw0"/>
+                <constraint firstAttribute="bottom" secondItem="5" secondAttribute="bottom" id="vXR-yX-fJv"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
         </view>

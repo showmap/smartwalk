@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Utils;
 
@@ -12,15 +11,6 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         protected TableHeaderBase(IntPtr handle) : base(handle)
         {
-            // HACK: http://stackoverflow.com/questions/19132908/auto-layout-constraints-issue-on-ios7-in-uitableviewcell
-            // HACK: getting contentView manually because ContentView property is always null
-            var contentView = Subviews.FirstOrDefault(v => v.Bounds.Height > 1);
-            if (contentView != null)
-            {
-                contentView.AutoresizingMask = 
-                    UIViewAutoresizing.FlexibleWidth | 
-                    UIViewAutoresizing.FlexibleHeight;
-            }
         }
 
         public object DataContext

@@ -61,6 +61,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.NSLayoutConstraint MapYConstraint { get; set; }
 
 		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line PlaceholderSeparator { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
@@ -77,11 +80,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (Separator != null) {
-				Separator.Dispose ();
-				Separator = null;
-			}
-
 			if (BottomGradientView != null) {
 				BottomGradientView.Dispose ();
 				BottomGradientView = null;
@@ -160,6 +158,16 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 			if (MapYConstraint != null) {
 				MapYConstraint.Dispose ();
 				MapYConstraint = null;
+			}
+
+			if (PlaceholderSeparator != null) {
+				PlaceholderSeparator.Dispose ();
+				PlaceholderSeparator = null;
+			}
+
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
 			}
 
 			if (ToolBarView != null) {

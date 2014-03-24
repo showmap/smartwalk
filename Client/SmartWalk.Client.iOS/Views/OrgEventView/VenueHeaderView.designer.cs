@@ -9,8 +9,8 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-	[Register ("VenueCell")]
-	partial class VenueCell
+	[Register ("VenueHeaderView")]
+	partial class VenueHeaderView
 	{
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
