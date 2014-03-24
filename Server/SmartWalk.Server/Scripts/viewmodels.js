@@ -162,11 +162,13 @@ function EventViewModel(data) {
         self.DateCreated(data.DateCreated);
         self.DateModified(data.DateModified);
 
-        if(data.Host != null)
-            self.Host(new EntityViewModel(data.Host));
-
         self.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
-        self.AllHosts($.map(data.AllHosts, function(item) { return new EntityViewModel(item); }));
+        self.AllHosts($.map(data.AllHosts, function(item) {
+            var vmItem = new EntityViewModel(item);
+            if (data.Host != null && vmItem.Id() == data.Host.Id)
+                self.Host(vmItem);
+            return vmItem;
+        }));
     };
 
     self.loadData(data);
