@@ -219,10 +219,6 @@
     <Compile Include="Views\OrgView\OrgEventCell.designer.cs">
       <DependentUpon>OrgEventCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Common\GroupHeaderCell.cs" />
-    <Compile Include="Views\Common\GroupHeaderCell.designer.cs">
-      <DependentUpon>GroupHeaderCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Common\TableCellBase.cs" />
     <Compile Include="Views\Common\GroupContainer.cs" />
     <Compile Include="Views\OrgView\OrgTableSourceConverter.cs" />
@@ -305,13 +301,16 @@
     <Compile Include="Services\ShowDirectionsTask.cs" />
     <Compile Include="Controls\Line.cs" />
     <Compile Include="Views\OrgEventView\VenueHeaderView.cs" />
-    <Compile Include="Views\OrgEventView\VenueHeaderView.designer.cs">
-      <DependentUpon>VenueHeaderView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Common\GroupHeaderView.cs" />
-    <Compile Include="Views\Common\GroupHeaderView.designer.cs">
-      <DependentUpon>GroupHeaderView.cs</DependentUpon>
+    <Compile Include="Views\Common\GroupHeaderContentView.cs" />
+    <Compile Include="Views\Common\GroupHeaderContentView.designer.cs">
+      <DependentUpon>GroupHeaderContentView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\OrgEventView\VenueHeaderContentView.cs" />
+    <Compile Include="Views\OrgEventView\VenueHeaderContentView.designer.cs">
+      <DependentUpon>VenueHeaderContentView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\ContentViewBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -327,7 +326,6 @@
     <InterfaceDefinition Include="Views\VenueView\VenueView.xib" />
     <InterfaceDefinition Include="Views\HomeView\OrgCell.xib" />
     <InterfaceDefinition Include="Views\OrgView\OrgEventCell.xib" />
-    <InterfaceDefinition Include="Views\Common\GroupHeaderCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\EntityCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
@@ -339,8 +337,8 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactsView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
-    <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderView.xib" />
-    <InterfaceDefinition Include="Views\Common\GroupHeaderView.xib" />
+    <InterfaceDefinition Include="Views\Common\GroupHeaderContentView.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderContentView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />

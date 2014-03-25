@@ -9,8 +9,8 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-	[Register ("GroupHeaderCell")]
-	partial class GroupHeaderCell
+    [Register ("GroupHeaderContentView")]
+    partial class GroupHeaderContentView
 	{
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line BottomSeparator { get; set; }

@@ -28,9 +28,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             UseAnimations = true;
 
+            tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
             tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
-            tableView.RegisterNibForHeaderFooterViewReuse(VenueHeaderView.Nib, VenueHeaderView.Key);
         }
 
         public bool IsSearchSource { get; set; }

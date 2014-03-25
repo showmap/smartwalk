@@ -148,7 +148,7 @@ namespace SmartWalk.Client.iOS.Resources
             labelAp.TextColor = Theme.CellText;
             labelAp.HighlightedTextColor = Theme.CellTextHighlight;
 
-            labelAp = UILabel.AppearanceWhenContainedIn(typeof(GroupHeaderCell));
+            labelAp = UILabel.AppearanceWhenContainedIn(typeof(GroupHeaderContentView));
             labelAp.Font = Theme.GroupHeaderTextFont;
             labelAp.TextColor = Theme.CellText;
 

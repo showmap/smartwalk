@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         {
             _viewModel = viewModel;
 
-            tableView.RegisterNibForHeaderFooterViewReuse(GroupHeaderCell.Nib, GroupHeaderCell.Key);
+            tableView.RegisterClassForHeaderFooterViewReuse(typeof(GroupHeaderView), GroupHeaderView.Key);
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
         }
@@ -45,7 +45,11 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return TitleForHeader(tableView, section) != null ? GroupHeaderCell.DefaultHeight : 0f;
+            return 
+                GroupItemsSource != null &&
+                    GroupItemsSource[section].Key != null 
+                        ? GroupHeaderView.DefaultHeight 
+                        : 0f;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -83,19 +87,18 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         public override string TitleForHeader(UITableView tableView, int section)
         {
-            return GroupItemsSource != null ? GroupItemsSource[section].Key : null;
+            return null;
         }
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
-            var title = TitleForHeader(tableView, section);
-
-            if (title != null)
+            var dataContext = GroupItemsSource != null ? GroupItemsSource[section].Key : null;
+            if (dataContext != null)
             {
-                var headerView = (GroupHeaderCell)tableView
-                    .DequeueReusableHeaderFooterView(GroupHeaderCell.Key);
+                var headerView = (GroupHeaderView)tableView
+                    .DequeueReusableHeaderFooterView(GroupHeaderView.Key);
 
-                headerView.DataContext = title;
+                headerView.DataContext = dataContext;
 
                 return headerView;
             }
