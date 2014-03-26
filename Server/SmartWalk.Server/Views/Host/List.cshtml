@@ -13,8 +13,7 @@
 
 <div id="entity-items" data-bind="visible: Items().length > 0">
     <p>@T("Hosts")</p>
-    @{ using(Html.BeginForm("Edit", "Host", FormMethod.Get)) {
-            <input type="hidden" name="entityId" value="0" />
+    @{ using(Html.BeginRouteForm("CreateHost", FormMethod.Get)) {
             <input type="submit" value="@T("Add host")" />
     }}    
     <table>
@@ -31,7 +30,7 @@
 <script type="text/html" id="EntityItemTemplate">
     <tr data-bind="css: {'alt': $index() % 2 === 1}">        
         <td><span data-bind="text: Name"></span></td>        
-        <td><a data-bind="attr: {href: '@Url.Action("Edit")?entityId=' + Id()}">Edit</a></td>
+        <td><a data-bind="attr: {href: '@Url.Action("Edit")/' + Id()}">Edit</a></td>
     </tr>       
 </script>
 

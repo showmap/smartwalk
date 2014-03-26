@@ -19,6 +19,31 @@
             <label for="description">@T("Description")</label><textarea id="description" data-bind="value: Description"></textarea>
         </div>
         
+        <div id="contacts-panel">
+            <table data-bind="visible: Contacts().length > 0">
+                <thead>
+                    <tr>
+                        <th>Type</th><th>Title</th><th>Contact</th><th></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: Contacts">
+                    <tr>
+                        <td>
+                            @Html.DropDownList("Type", Enum.GetNames(typeof(ContactType))
+                                                           .Select(u => new SelectListItem
+                                                           {                                                       
+                                                               Text = @T(u).ToString(),
+                                                               Value = ((int)Enum.Parse(typeof(ContactType), u)).ToString()
+                                                           }), new Dictionary<string, object> { { "data-bind", "value:Type" } })                        
+                        </td>
+                        <td><input type="text" data-bind="value: Title"/></td>
+                        <td><input type="text" data-bind="value: Contact"/></td>
+                        <td><a href="#" data-bind="click: $root.removeContact">Remove</a></td>
+                    </tr>    
+                </tbody>            
+            </table>
+            <button data-bind="click: addContact">@T("Add contact")</button>
+
         <div id="address-panel">
             <table data-bind="visible: Addresses().length > 0">
                 <thead>
