@@ -33,6 +33,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor RefreshControl = UIColor.FromRGB(200, 200, 200);
         public static readonly UIColor TextGradient = UIColor.FromRGB(240, 240, 240);
+        public static readonly UIColor SearchControl = UIColor.FromRGB(230, 230, 230);
 
         public static readonly UIColor CellBackground = UIColor.White;
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);

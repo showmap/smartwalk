@@ -11,6 +11,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class OrgEventHeaderView : UIView
     {
+        public const int DefaultHeight = 88;
+
         public static readonly UINib Nib = UINib.FromName("OrgEventHeaderView", NSBundle.MainBundle);
 
         private bool _isStyleInitialized;
@@ -37,7 +39,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             set
             {
                 // HACK reseting height to fix weird view size on rotation
-                value.Height = 88;
+                value.Height = DefaultHeight;
                 base.Frame = value;
             }
         }
@@ -63,8 +65,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (textField != null)
             {
                 textField.Font = Theme.OrgEventHeaderFont;
-                _isStyleInitialized = true;
             }
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                SearchBar.TranslatesAutoresizingMaskIntoConstraints = true;
+            }
+
+            _isStyleInitialized = true;
         }
 
         partial void OnGroupByLocationTouchUpInside(UISwitch sender, UIEvent @event)

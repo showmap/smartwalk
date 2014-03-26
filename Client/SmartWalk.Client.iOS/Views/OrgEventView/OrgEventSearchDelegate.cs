@@ -5,6 +5,8 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Resources;
+using System.Drawing;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -64,6 +66,44 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        public override void WillBeginSearch(UISearchDisplayController controller)
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                controller.SearchBar.BarTintColor = Theme.NavBarBackgroundiOS7;
+            }
+            else
+            {
+                controller.SearchBar.TintColor = Theme.NavBarBackground;
+            }
+        }
+
+        public override void WillEndSearch(UISearchDisplayController controller)
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                controller.SearchBar.BarTintColor = null;
+
+            }
+            else
+            {
+                controller.SearchBar.TintColor = Theme.SearchControl;
+            }
+        }
+
+        // HACK: In iOS7 SearchBar is returned as a child of TableView (sick!) and not HeaderView
+        // so the Frame is reset to default because it's has height of HeaderView which is 88
+        public override void DidEndSearch(UISearchDisplayController controller)
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                controller.SearchBar.Frame = 
+                    new RectangleF(
+                        controller.SearchBar.Frame.Location,
+                        new SizeF(controller.SearchBar.Frame.Width, OrgEventHeaderView.DefaultHeight / 2));
+            }
+        }
+
         public override bool ShouldReloadForSearchString(
             UISearchDisplayController controller,
             string forSearchString)
@@ -115,6 +155,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void WillShowSearchResults(UISearchDisplayController controller, UITableView tableView)
         {
+            tableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+
             if (tableView.Source == null)
             {
                 var tableSource = new OrgEventTableSource(tableView, _viewModel);

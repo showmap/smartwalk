@@ -270,9 +270,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeTableHeader()
         {
             _headerView = OrgEventHeaderView.Create();
-
             _headerView.GroupByLocationCommand = ViewModel.GroupByLocationCommand;
-            _headerView.SearchBarControl.WeakDelegate = this;
 
             VenuesAndShowsTableView.TableHeaderView = _headerView;
         }
@@ -281,7 +279,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (_headerView != null)
             {
-                _headerView.SearchBarControl.WeakDelegate = null;
                 _headerView.SearchBarControl.Dispose();
                 _headerView.Dispose();
                 _headerView = null;
