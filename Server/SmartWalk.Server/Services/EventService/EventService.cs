@@ -36,7 +36,7 @@ namespace SmartWalk.Server.Services.EventService
         }
 
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
-            return user.EventMetadataRecords.Select(CreateViewModelContract).ToList();
+            return user.EventMetadataRecords.Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
         }
 
         public EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
@@ -60,12 +60,13 @@ namespace SmartWalk.Server.Services.EventService
             return res;
         }
 
-        private EventMetadataVm CreateViewModelContract(EventMetadataRecord record)
-        {
+        private EventMetadataVm CreateViewModelContract(EventMetadataRecord record, EventLoadMode mode = EventLoadMode.Full) {
             var res = ViewModelContractFactory.CreateViewModelContract(record);
 
-            res.Host = _entityService.GetEntityVm(record.EntityRecord);
-            res.AllVenues = _entityService.GetEventEntities(record);
+            if (mode == EventLoadMode.Full) {
+                res.Host = _entityService.GetEntityVm(record.EntityRecord);
+                res.AllVenues = _entityService.GetEventEntities(record);
+            }
 
             return res;
         }
@@ -130,5 +131,10 @@ namespace SmartWalk.Server.Services.EventService
 
             return CreateViewModelContract(metadata);
         }
+    }
+
+    public enum EventLoadMode {
+        Full,
+        MetadataOnly
     }
 }
