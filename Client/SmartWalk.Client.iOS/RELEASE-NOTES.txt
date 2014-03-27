@@ -1,3 +1,4 @@
-First update after version 1.0!
-Integration with iOS 7.
-Updating and simplifying UI look and feel.
+Polishing UI for iOS7
+Shadow removed
+Search bar was fixed
+Refactoring
