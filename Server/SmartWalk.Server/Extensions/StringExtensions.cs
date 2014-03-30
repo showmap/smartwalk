@@ -26,5 +26,10 @@ namespace SmartWalk.Server.Extensions
 
             return null;
         }
+
+        public static string TrimIt(this string str)
+        {
+            return str != null ? str.Trim() : null;
+        }
     }
 }

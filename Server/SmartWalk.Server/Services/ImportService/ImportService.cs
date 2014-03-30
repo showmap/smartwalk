@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Xml;
@@ -8,9 +9,11 @@ using JetBrains.Annotations;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Models.XmlModel;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Utils;
 
 namespace SmartWalk.Server.Services.ImportService
 {
@@ -197,7 +200,6 @@ namespace SmartWalk.Server.Services.ImportService
                                             xmlVenue,
                                             EntityType.Venue,
                                             currentUser.Record);
-
                                     CreateOrUpdateShows(
                                         eventMetadata,
                                         venueEntity,
@@ -220,7 +222,7 @@ namespace SmartWalk.Server.Services.ImportService
             {
                 result = new EntityRecord
                     {
-                        Name = xmlEntity.Name,
+                        Name = xmlEntity.Name.TrimIt(),
                         Type = (int)type,
                         SmartWalkUserRecord = user
                     };
@@ -229,7 +231,7 @@ namespace SmartWalk.Server.Services.ImportService
                 _log.Add(string.Format("{0} entity created", result.Name));
             }
 
-            result.Description = xmlEntity.Description;
+            result.Description = xmlEntity.Description.TrimIt();
             result.Picture = xmlEntity.Logo;
 
             _entityRepository.Update(result);
@@ -287,8 +289,8 @@ namespace SmartWalk.Server.Services.ImportService
                     {
                         EntityRecord = entity,
                         Type = (int)type,
-                        Title = title,
-                        Contact = value
+                        Title = title.TrimIt(),
+                        Contact = value.TrimIt()
                     };
                 _contactRepository.Create(contact);
                 _contactRepository.Flush();
@@ -314,7 +316,7 @@ namespace SmartWalk.Server.Services.ImportService
                     address = new AddressRecord
                         {
                             EntityRecord = entity,
-                            Address = xmlAddress.Text
+                            Address = xmlAddress.Text.TrimIt()
                         };
                     _addressRepository.Create(address);
                     _log.Add(string.Format("{0} address created", address.Address));
@@ -347,15 +349,42 @@ namespace SmartWalk.Server.Services.ImportService
                         CombineType = (int)CombineType.None,
                         SmartWalkUserRecord = user,
                         DateCreated = xmlOrgEvent.StartDateObject.Date,
-                        DateModified = DateTime.UtcNow
+                        DateModified = DateTime.UtcNow,
+                        IsPublic = true
                     };
                 
                 _eventMetadataRepository.Create(result);
-                _eventMetadataRepository.Flush();
                 _log.Add(string.Format("{0} event metadata created", result.Title));
             }
 
+            SetEventMetadataCoordinate(result, xmlOrgEvent.Venues);
+
+            _eventMetadataRepository.Update(result);
+            _eventMetadataRepository.Flush();
+            _log.Add(string.Format(
+                "{0} event metadata coordinates updated to ({1}, {2})", 
+                result.Title, 
+                result.Latitude, 
+                result.Longitude));
+
             return result;
+        }
+
+        private static void SetEventMetadataCoordinate(
+            EventMetadataRecord eventMetadata,
+            IEnumerable<Venue> venues)
+        {
+            var coordinates = venues.SelectMany(
+                v =>
+                v.Addresses != null
+                    ? v.Addresses.Select(
+                        a => new PointF((float)a.Latitude, (float)a.Longitude))
+                    : Enumerable.Empty<PointF>()).ToArray();
+
+            var middle = MapUtil.GetMiddleCoordinate(coordinates);
+
+            eventMetadata.Latitude = middle.X;
+            eventMetadata.Longitude = middle.Y;
         }
 
         private void CreateOrUpdateShows(
@@ -373,14 +402,14 @@ namespace SmartWalk.Server.Services.ImportService
                 {
                     var show = shows.FirstOrDefault(s =>
                         s.EntityRecord.Id == venue.Id &&
-                        s.Description == xmlShow.Desciption);
+                        s.Description == xmlShow.Desciption.TrimIt());
                     if (show == null)
                     {
                         show = new ShowRecord
                             {
                                 EntityRecord = venue,
                                 EventMetadataRecord = eventMetadata,
-                                Description = xmlShow.Desciption
+                                Description = xmlShow.Desciption.TrimIt()
                             };
                         _showRepository.Create(show);
                         _log.Add(string.Format("{0} show created", show.Description));
@@ -388,8 +417,8 @@ namespace SmartWalk.Server.Services.ImportService
 
                     show.StartTime = xmlShow.StartTimeObject;
                     show.EndTime = xmlShow.EndTimeObject;
-                    show.Picture = xmlShow.Logo;
-                    show.DetailsUrl = xmlShow.Web;
+                    show.Picture = xmlShow.Logo.TrimIt();
+                    show.DetailsUrl = xmlShow.Web.TrimIt();
 
                     _showRepository.Update(show);
                     _showRepository.Flush();
