@@ -60,7 +60,7 @@ namespace SmartWalk.Server.Services.EntityService
             var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == item.AllShows.First().EventMetedataId && s.EntityRecord.Id == item.Id).ToList();
 
             foreach (var showRecord in shows) {
-                _showRepository.Delete(showRecord);
+                showRecord.IsDeleted = true;
                 _showRepository.Flush();
             }
         }
@@ -71,6 +71,9 @@ namespace SmartWalk.Server.Services.EntityService
                 EventMetadataRecord = _metadataRepository.Get(item.EventMetedataId),
                 EntityRecord = _entityRepository.Get(item.Id),
                 IsReference = true,
+                IsDeleted = false,
+                DateCreated = DateTime.Now,
+                DateModified = DateTime.Now
             };
             _showRepository.Create(show);
             _showRepository.Flush();
@@ -94,6 +97,9 @@ namespace SmartWalk.Server.Services.EntityService
                     EventMetadataRecord = _metadataRepository.Get(item.EventMetedataId),
                     EntityRecord = _entityRepository.Get(item.VenueId),
                     IsReference = true,
+                    IsDeleted = false,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now
                 };
                 _showRepository.Create(show);
                 _showRepository.Flush();
@@ -125,7 +131,10 @@ namespace SmartWalk.Server.Services.EntityService
                     StartTime = dtFrom,
                     EndTime = dtTo,
                     Picture = item.Picture,
-                    DetailsUrl = item.DetailsUrl
+                    DetailsUrl = item.DetailsUrl,
+                    IsDeleted = false,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now
                 };
 
                 _showRepository.Create(show);
@@ -141,6 +150,7 @@ namespace SmartWalk.Server.Services.EntityService
                 show.EndTime = dtTo;
                 show.Picture = item.Picture;
                 show.DetailsUrl = item.DetailsUrl;
+                show.DateModified = DateTime.Now;
 
                 _showRepository.Flush();
             }
@@ -153,7 +163,7 @@ namespace SmartWalk.Server.Services.EntityService
 
         #region Entities
         public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type) {
-            return user.Entities.Where(e => e.Type == (int) type).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+            return user.Entities.Where(e => e.Type == (int) type && !e.IsDeleted).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
         }
 
         public EntityVm GetEntityVmById(int hostId, EntityType type) {
@@ -167,7 +177,7 @@ namespace SmartWalk.Server.Services.EntityService
         }
 
         public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata) {
-            return _entityRepository.Table.Where(e => e.Type == (int) EntityType.Venue).Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
+            return _entityRepository.Table.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted).Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
         }
 
         public EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm) {
@@ -182,6 +192,9 @@ namespace SmartWalk.Server.Services.EntityService
                     SmartWalkUserRecord = user,
                     Picture = entityVm.Picture,
                     Description = entityVm.Description,
+                    IsDeleted = false,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now
                 };
 
                 _entityRepository.Create(entity);
@@ -189,6 +202,7 @@ namespace SmartWalk.Server.Services.EntityService
             else {
                 entity.Picture = entityVm.Picture;
                 entity.Description = entityVm.Description;
+                entity.DateModified = DateTime.Now;
             }
             
             _entityRepository.Flush();
@@ -217,18 +231,7 @@ namespace SmartWalk.Server.Services.EntityService
             if (entity == null)
                 return;
 
-            foreach (var contact in entity.ContactRecords) {
-                _contactRepository.Delete(contact); 
-                _contactRepository.Flush();
-            }
-
-            foreach (var address in entity.AddressRecords)
-            {
-                _addressRepository.Delete(address);
-                _addressRepository.Flush();
-            }
-
-            _entityRepository.Delete(entity);
+            entity.IsDeleted = true;
             _entityRepository.Flush();
         }
         #endregion

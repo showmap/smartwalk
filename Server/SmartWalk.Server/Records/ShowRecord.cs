@@ -14,5 +14,8 @@ namespace SmartWalk.Server.Records
         public virtual DateTime? EndTime { get; set; }
         public virtual string Picture { get; set; }
         public virtual string DetailsUrl { get; set; }
+        public virtual bool IsDeleted { get; set; }
+        public virtual DateTime DateCreated { get; set; }
+        public virtual DateTime DateModified { get; set; }
     }
 }

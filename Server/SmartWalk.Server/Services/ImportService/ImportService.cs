@@ -224,7 +224,10 @@ namespace SmartWalk.Server.Services.ImportService
                     {
                         Name = xmlEntity.Name.TrimIt(),
                         Type = (int)type,
-                        SmartWalkUserRecord = user
+                        SmartWalkUserRecord = user,
+                        IsDeleted = false,
+                        DateCreated = DateTime.Now,
+                        DateModified = DateTime.Now
                     };
 
                 _entityRepository.Create(result);
@@ -348,6 +351,7 @@ namespace SmartWalk.Server.Services.ImportService
                         StartTime = xmlOrgEvent.StartDateObject.Date,
                         CombineType = (int)CombineType.None,
                         SmartWalkUserRecord = user,
+                        IsDeleted = false,
                         DateCreated = xmlOrgEvent.StartDateObject.Date,
                         DateModified = DateTime.UtcNow,
                         IsPublic = true
@@ -409,7 +413,10 @@ namespace SmartWalk.Server.Services.ImportService
                             {
                                 EntityRecord = venue,
                                 EventMetadataRecord = eventMetadata,
-                                Description = xmlShow.Desciption.TrimIt()
+                                Description = xmlShow.Desciption.TrimIt(),
+                                IsDeleted = false,
+                                DateCreated = DateTime.Now,
+                                DateModified = DateTime.Now,
                             };
                         _showRepository.Create(show);
                         _log.Add(string.Format("{0} show created", show.Description));
@@ -436,7 +443,10 @@ namespace SmartWalk.Server.Services.ImportService
                         {
                             EntityRecord = venue,
                             EventMetadataRecord = eventMetadata,
-                            IsReference = true
+                            IsReference = true,
+                            IsDeleted = false,
+                            DateCreated = DateTime.Now,
+                            DateModified = DateTime.Now,
                         };
                     _showRepository.Create(refShow);
                     _showRepository.Flush();

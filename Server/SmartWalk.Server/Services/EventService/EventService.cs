@@ -36,7 +36,7 @@ namespace SmartWalk.Server.Services.EventService
         }
 
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
-            return user.EventMetadataRecords.Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
+            return user.EventMetadataRecords.Where(e => !e.IsDeleted).Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
         }
 
         public EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
@@ -78,11 +78,11 @@ namespace SmartWalk.Server.Services.EventService
                 return;
 
             foreach (var show in metadata.ShowRecords) {
-                _showRepository.Delete(show);
+                show.IsDeleted = true;
                 _showRepository.Flush();
             }
 
-            _eventMetadataRepository.Delete(metadata);
+            metadata.IsDeleted = true;
             _eventMetadataRepository.Flush();
         }
 
@@ -108,7 +108,9 @@ namespace SmartWalk.Server.Services.EventService
                     StartTime = dtFrom.Value,
                     EndTime = dtTo,
                     CombineType = item.CombineType,
+                    Picture = item.Picture,
                     IsPublic = item.IsPublic,
+                    IsDeleted = false,
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
                 };
@@ -123,6 +125,7 @@ namespace SmartWalk.Server.Services.EventService
                 metadata.StartTime = dtFrom.Value;
                 metadata.EndTime = dtTo;
                 metadata.CombineType = item.CombineType;
+                metadata.Picture = item.Picture;
                 metadata.IsPublic = item.IsPublic;
                 metadata.DateModified = DateTime.Now;
 

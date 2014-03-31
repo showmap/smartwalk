@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SmartWalk.Server.Records
 {
@@ -16,6 +17,9 @@ namespace SmartWalk.Server.Records
         public virtual string Name { get; set; }
         public virtual string Description { get; set; }
         public virtual string Picture { get; set; }
+        public virtual bool IsDeleted { get; set; }
+        public virtual DateTime DateCreated { get; set; }
+        public virtual DateTime DateModified { get; set; }
 
         public virtual IList<EntityMappingRecord> EntityMappingRecords
         {

@@ -2,7 +2,7 @@
 @using SmartWalk.Server.ViewModels
 
 @{
-    Style.Require("SmartWalk.Host");
+    //Style.Require("SmartWalk.Host");
     
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
@@ -12,7 +12,8 @@
 
 <div id="add-venue-form" title="@T("Add Host")" add-venue-url="@Url.Action("SaveOrAdd", "Venue", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
-    <div id="venue-panel">
+    <div id="venue-panel" data-bind='template: { name: $root.getView }'>
+        <!--        
         <div id="description-panel">
             <label for="name">@T("Name")</label><input type="text" id="name" data-bind="value: Name"/>            
             <label for="picture">@T("Picture")</label><input type="text" id="picture" data-bind="value: Picture"/>
@@ -44,52 +45,69 @@
             </table>
             <button data-bind="click: addContact">@T("Add contact")</button>
 
-        <div id="address-panel">
-            <table data-bind="visible: Addresses().length > 0">
-                <thead>
-                    <tr>
-                        <th>Address</th><th>Lattitude</th><th>Longitude</th><th></th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: Addresses">
-                    <tr>
-                        <td><input type="text" data-bind="value: Address"/></td>
-                        <td><input type="text" data-bind="value: Latitude"/></td>
-                        <td><input type="text" data-bind="value: Longitude"/></td>
-                        <td><a href="#" data-bind="click: $root.removeAddress">Remove</a></td>
-                    </tr>    
-                </tbody>            
-            </table>
-            <button data-bind="click: addAddress">@T("Add address")</button>
-            <div id="actions-panel">
-                <table>
-                    <tr>
-                        <td>
-                            @{ using(Html.BeginForm("Delete", "Venue", FormMethod.Get)) {
-                                    <input type="hidden" name="entityId" value="@venue.Id" />
-                                    <input type="submit" value="@T("Delete")" />
-                            }}
-                        </td>
-                        <td>
-                            <form method="get" action="@Url.Action("List")">
-                                <button type="submit">@T("Cancel")</button>
-                            </form>
-                        </td>
-                        <td>
-                            <button data-bind="click: saveOrAdd">@T("Save")</button>
-                        </td>
-                    </tr>
-                </table>                                                               
+            <div id="address-panel">
+                <table data-bind="visible: Addresses().length > 0">
+                    <thead>
+                        <tr>
+                            <th>Address</th><th>Lattitude</th><th>Longitude</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: Addresses">
+                        <tr>
+                            <td><input type="text" data-bind="value: Address"/></td>
+                            <td><input type="text" data-bind="value: Latitude"/></td>
+                            <td><input type="text" data-bind="value: Longitude"/></td>
+                            <td><a href="#" data-bind="click: $root.removeAddress">Remove</a></td>
+                        </tr>    
+                    </tbody>            
+                </table>
+                <button data-bind="click: addAddress">@T("Add address")</button>
+                <div id="actions-panel">
+                    <table>
+                        <tr>
+                            <td>
+                                @{ using(Html.BeginForm("Delete", "Venue", FormMethod.Get)) {
+                                       <input type="hidden" name="entityId" value="@venue.Id" />
+                                       <input type="submit" value="@T("Delete")" />
+                                   }}
+                            </td>
+                            <td>
+                                <form method="get" action="@Url.Action("List")">
+                                    <button type="submit">@T("Cancel")</button>
+                                </form>
+                            </td>
+                            <td>
+                                <button data-bind="click: saveOrAdd">@T("Save")</button>
+                            </td>
+                        </tr>
+                    </table>                                                               
+                </div>
+                <textarea id="tasks" data-bind="value: ko.toJSON($root)"></textarea>
             </div>
-            <!--<textarea id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
-        </div>
+        </div>-->
     </div>
 </div>
 
 
+<script type="text/html" id="ViewTemplateName">
+    <div class="row">
+		<div class="col-xs-8">
+			<h2 data-bind="text: Name"></h2>
+		</div>
+		<div class="col-xs-4 text-right">
+			<button type="button" class="btn btn-primary">@T("Edit Venue")</button>
+		</div>
+	</div>
+</script>
+
 <script>
     $(function () {
         var vmVenue = new EntityViewModel(@Html.Raw(Json.Encode(venue)));
+        
+        vmVenue.getView = function (item) {
+            return item === vmVenue.ViewMode() == 'edit' ? 'EditTemplateName' : 'ViewTemplateName';
+        };
+
         vmVenue.saveOrAdd = function () {
             $("#venue-panel").html('<img class="loading" src="@Href("../../Images/loading.gif")"/>');
             var token = '@Html.AntiForgeryTokenValueOrchard()';

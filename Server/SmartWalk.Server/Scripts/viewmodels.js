@@ -71,6 +71,7 @@ function EntityViewModel(data) {
     self.Description = ko.observable(data.Description);
     self.Picture = ko.observable(data.Picture);
     self.State = ko.observable(data.State);
+    self.ViewMode = ko.observable('view');
 
     // Contacts
     self.AllContacts = ko.observableArray($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
@@ -130,6 +131,7 @@ function EventViewModel(data) {
     self.Description = ko.observable();
     self.StartTime = ko.observable();
     self.EndTime = ko.observable();
+    self.Picture = ko.observable();
     self.Latitude = ko.observable();
     self.Longitude = ko.observable();
 
@@ -153,7 +155,9 @@ function EventViewModel(data) {
 
         self.StartTime(data.StartTime?data.StartTime:'');
         self.EndTime(data.EndTime?data.EndTime:'');
-        
+
+        self.Picture(data.Picture);
+
         self.Latitude(data.Latitude);
         self.Longitude(data.Longitude);
 
