@@ -1,14 +1,45 @@
 ﻿using System;
 using System.Data;
+using Orchard;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
 using SmartWalk.Server.Models;
+using SmartWalk.Server.Records;
+using Orchard.ContentManagement;
+using Orchard.Core.Settings.Models;
+using Orchard.Users.Models;
+using System.Linq;
+
 
 namespace SmartWalk.Server
 {
-    public class Migrations : DataMigrationImpl
-    {
+    public class Migrations : DataMigrationImpl {
+
+        private readonly IOrchardServices _orchardServices;
+        private readonly IRepository<SmartWalkUserRecord> _userRepository;
+
+        public Migrations(IRepository<SmartWalkUserRecord> userRepository, IOrchardServices orchardServices) {
+            _orchardServices = orchardServices;
+            _userRepository = userRepository;
+        }
+
+        private void PopulateData() {
+            var siteSettings = _orchardServices.WorkContext.CurrentSite.As<SiteSettingsPart>();
+            var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.UserName == siteSettings.SuperUser).List().FirstOrDefault();
+
+            if (user != null) {
+                _userRepository.Create(new SmartWalkUserRecord {
+                    ContentItemRecord = user.ContentItem.Record,
+                    CreatedAt = DateTime.Now,
+                    LastLoginAt = DateTime.Now,
+                    FirstName = user.UserName,
+                    LastName = user.UserName
+                });
+            }
+        }
+
         public int Create()
         {
 
@@ -143,7 +174,9 @@ namespace SmartWalk.Server
 
             ContentDefinitionManager.AlterTypeDefinition("User", t => t
                 .WithPart(typeof(SmartWalkUserPart).Name)
-            );
+            );            
+
+            PopulateData();
 
             return 1;
         }

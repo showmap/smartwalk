@@ -35,6 +35,20 @@ namespace SmartWalk.Server.Services.EventService
             _cultureInfo = new Lazy<CultureInfo>(cultureService.GetCurrentCulture);
         }
 
+        public IList<EventMetadataVm> GetEntityEvents(int entityId) {
+            var entity = _entityRepository.Get(entityId);
+
+            if(entity == null)
+                return new List<EventMetadataVm>();
+
+            IEnumerable<EventMetadataRecord> data = entity.EventMetadataRecords;
+
+            if ((EntityType)entity.Type == EntityType.Venue)
+                data = _eventMetadataRepository.Table.Where(md => md.ShowRecords.Any(s => s.EntityRecord.Id == entityId));
+
+            return data.Where(e => !e.IsDeleted).OrderByDescending(e => e.DateCreated).Take(5).Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
+        }
+
         public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user) {
             return user.EventMetadataRecords.Where(e => !e.IsDeleted).Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
         }

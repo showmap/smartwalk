@@ -10,6 +10,7 @@ using SmartWalk.Server.Models;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Services.EventService;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -19,12 +20,14 @@ namespace SmartWalk.Server.Controllers
         private readonly IOrchardServices _orchardServices;
 
         private readonly IEntityService _entityService;
+        private readonly IEventService _eventService;
 
-        public VenueController(IOrchardServices orchardServices, IEntityService entityService)
+        public VenueController(IOrchardServices orchardServices, IEntityService entityService, IEventService eventService)
         {
             _orchardServices = orchardServices;
 
             _entityService = entityService;
+            _eventService = eventService;
         }
 
         public ActionResult List() {
@@ -36,6 +39,15 @@ namespace SmartWalk.Server.Controllers
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             return View(_entityService.GetUserEntities(user.Record, EntityType.Venue));
+        }
+
+        public ActionResult View(int entityId) {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            return View(_entityService.GetEntityVmById(entityId, EntityType.Venue));
         }
 
         public ActionResult Edit(int entityId) {
@@ -57,6 +69,12 @@ namespace SmartWalk.Server.Controllers
             _entityService.DeleteEntity(entityId);
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult GetEvents(int entityId) {
+            var res = _eventService.GetEntityEvents(entityId);
+            return Json(res);
         }
 
         [HttpPost]

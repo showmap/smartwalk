@@ -13,5 +13,6 @@ namespace SmartWalk.Server.Services.EventService
         EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id);
         void DeleteEvent(EventMetadataVm item);
         EventMetadataVm SaveOrAddEvent(EventMetadataVm item);
+        IList<EventMetadataVm> GetEntityEvents(int entityId);
     }
 }

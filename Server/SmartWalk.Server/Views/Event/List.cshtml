@@ -42,11 +42,14 @@
 
 
 <script>
-    function EventsViewModel() {
-        var self = this;
-        
-        self.EventItems = ko.observableArray($.map(@Html.Raw(Json.Encode(eventItems)), function(item) { return new EventViewModel(item); }));               
-    }
+    $(document).ready(function() {
 
-    ko.applyBindings(new EventsViewModel(), document.getElementById('event-items'));
+        function EventsViewModel() {
+            var self = this;
+
+            self.EventItems = ko.observableArray($.map(@Html.Raw(Json.Encode(eventItems)), function(item) { return new EventViewModel(item); }));
+        }
+
+        ko.applyBindings(new EventsViewModel(), document.getElementById('event-items'));
+    });
 </script>
