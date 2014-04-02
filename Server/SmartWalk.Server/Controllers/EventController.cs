@@ -54,18 +54,111 @@ namespace SmartWalk.Server.Controllers
             return View(_eventService.GetUserEventVmById(user.Record, eventId));
         }
 
+        #region Addresses
         [HttpPost]
-        public ActionResult GetEvents() {
+        public ActionResult GetAddress(AddressVm item)
+        {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
             }
 
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+            return Json(_entityService.GetAddress(item.Id));
+        }
 
-            return Json(_eventService.GetUserEvents(user.Record));
-        }                
+        [HttpPost]
+        public ActionResult SaveAddress(AddressVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
 
+            return Json(_entityService.SaveOrAddAddress(item).Id);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteAddress(AddressVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _entityService.DeleteAddress(item.Id);
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteAddresses(IList<AddressVm> items)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            foreach (var item in items) {
+                _entityService.DeleteAddress(item.Id);
+            }
+
+            return Json(true);
+        }
+        #endregion
+
+        #region Contacts
+        [HttpPost]
+        public ActionResult GetContact(ContactVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            return Json(_entityService.GetContact(item.Id));
+        }
+
+        [HttpPost]
+        public ActionResult SaveContact(ContactVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            return Json(_entityService.SaveOrAddContact(item).Id);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteContact(ContactVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _entityService.DeleteContact(item.Id);
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteContacts(ContactVm[] items)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            foreach (var item in items) {
+                _entityService.DeleteContact(item.Id);
+            }
+
+            return Json(true);
+        }
+        #endregion
+
+        #region Shows
         [HttpPost]
         public ActionResult GetShow(ShowVm item)
         {
@@ -100,6 +193,19 @@ namespace SmartWalk.Server.Controllers
 
             return Json(true);
         }
+        #endregion
+
+        #region Venues
+        [HttpPost]
+        public ActionResult AddEventVenue(EntityVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            return Json(_entityService.AddEventVenue(item));
+        }
 
         [HttpPost]
         public ActionResult DeleteEventVenue(EntityVm item) {
@@ -112,29 +218,20 @@ namespace SmartWalk.Server.Controllers
 
             return Json(true);
         }
+        #endregion
 
+        #region Events
         [HttpPost]
-        public ActionResult AddEventVenue(EntityVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-            
-            return Json(_entityService.AddEventVenue(item));
-        }        
-
-        [HttpPost]
-        public ActionResult DeleteEvent(EventMetadataVm item)
+        public ActionResult GetEvents()
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
             }
 
-            _eventService.DeleteEvent(item);
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return Json(true);
+            return Json(_eventService.GetUserEvents(user.Record));
         }
 
         [HttpPost]
@@ -149,5 +246,19 @@ namespace SmartWalk.Server.Controllers
 
             return Json(_eventService.SaveOrAddEvent(item));
         } 
+
+        [HttpPost]
+        public ActionResult DeleteEvent(EventMetadataVm item)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            _eventService.DeleteEvent(item);
+
+            return Json(true);
+        }
+        #endregion
     }
 }

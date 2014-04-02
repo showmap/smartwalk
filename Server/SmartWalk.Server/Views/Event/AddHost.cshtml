@@ -8,7 +8,7 @@
         Name = "Test name",        
     };
 
-    host.Contacts.Add(new ContactVm {Title = "email", Contact = "test@ukr.net"});
+    host.AllContacts.Add(new ContactVm {Title = "email", Contact = "test@ukr.net"});
 }
 
 <div id="add-host-form" title="@T("Add Host")" add-host-url="@Url.Action("AddHost", "Event", new {area = "SmartWalk.Server"})">

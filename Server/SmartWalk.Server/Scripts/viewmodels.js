@@ -1,24 +1,64 @@
 ﻿function ContactViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable(data.Id);
-    self.HostId = ko.observable(data.HostId);
-    self.Type = ko.observable(data.Type);
-    self.State = ko.observable(data.State);
+    self.Id = ko.observable();
+    self.EntityId = ko.observable();
+    self.Type = ko.observable();
+    self.State = ko.observable();
+    self.IsChecked = ko.observable();
 
-    self.Title = ko.observable(data.Title);
-    self.Contact = ko.observable(data.Contact);
+    self.Title = ko.observable();
+    self.Contact = ko.observable();
+    
+    self.DisplayContact = ko.computed(function () {
+        return (self.Title() ? self.Title() : "") + (self.Contact() ? ' [' +  self.Contact() + ']' : "");
+    }, self);
+
+    self.loadData = function (data) {
+        self.Id(data.Id);
+        self.EntityId(data.EntityId);
+        self.Type(data.Type);
+        self.State(data.State);
+        self.IsChecked(false);
+
+        self.Title(data.Title);
+        self.Contact(data.Contact);
+    };
+
+    self.loadData(data);
 }
 
 function AddressViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable(data.Id);
-    self.Address = ko.observable(data.Address);
-    self.State = ko.observable(data.State);
+    self.Id = ko.observable();
+    self.EntityId = ko.observable();
+    self.Address = ko.observable();
+    self.State = ko.observable();
+    self.IsChecked = ko.observable();
 
-    self.Latitude = ko.observable(data.Latitude);
-    self.Longitude = ko.observable(data.Longitude);
+    self.Latitude = ko.observable();
+    self.Longitude = ko.observable();
+
+    self.GetMapLink = function () {
+        if (!self.Address())
+            return "";
+        var res = self.Address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
+        return "https://www.google.com/maps/embed/v1/place?q=" + res + "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
+    };
+    
+    self.loadData = function (data) {
+        self.Id(data.Id);
+        self.EntityId(data.EntityId);
+        self.Address(data.Address);
+        self.State(data.State);
+        self.IsChecked(false);
+
+        self.Latitude(data.Latitude);
+        self.Longitude(data.Longitude);
+    };
+
+    self.loadData(data);
 }
 
 function ShowViewModel(data) {
@@ -71,7 +111,6 @@ function EntityViewModel(data) {
     self.Description = ko.observable(data.Description);
     self.Picture = ko.observable(data.Picture);
     self.State = ko.observable(data.State);
-    self.ViewMode = ko.observable('view');
 
     // Contacts
     self.AllContacts = ko.observableArray($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
@@ -79,34 +118,130 @@ function EntityViewModel(data) {
         return ko.utils.arrayFilter(this.AllContacts(), function (item) {
             return item.State() != 2;
         });
+    }, this);    
+    self.DeletedContacts = ko.computed(function () {
+        return ko.utils.arrayFilter(this.AllContacts(), function (item) {
+            return item.State() == 2;
+        });
     }, this);
+    self.CheckedContacts = ko.computed(function () {
+        return ko.utils.arrayFilter(self.Contacts(), function (item) {
+            return item.IsChecked();
+        });
+    }, this);
+
+
     self.addContact = function () {
-        self.AllContacts.push(new ContactViewModel({ Id: 0, HostId: 0, Type: 1, State: 1 }));
+        self.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: self.Id(), Type: 1, State: 1 }));
+        self.selectedContact(self.AllContacts()[self.AllContacts().length - 1]);
     };
 
-    self.removeContact = function (item) {
+    self.deleteContact = function (item) {
         item.State(2);
     };
+
+    self.IsAllContactsSelected = ko.computed(function () {
+        if (self.Contacts().length == 0)
+            return false;
+
+        for (var i = 0; i < self.Contacts().length; i++) {
+            if (!self.Contacts()[i].IsChecked()) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    self.IsAnyContactSelected = ko.computed(function () {
+        if (self.Contacts().length == 0)
+            return false;
+
+        for (var i = 0; i < self.Contacts().length; i++) {
+            if (self.Contacts()[i].IsChecked()) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    self.AllContactsChecked = ko.computed({
+        read: self.IsAllContactsSelected,
+        write: function (value) {
+            for (var i = 0; i < self.Contacts().length; i++) {
+                self.Contacts()[i].IsChecked(value);
+            }
+        },
+        owner: this
+    });
+
+    self.selectedContact = ko.observable();
 
     // Addresses
     self.AllAddresses = ko.observableArray($.map(data.AllAddresses, function (item) { return new AddressViewModel(item); }));
     self.Addresses = ko.computed(function () {
-        return ko.utils.arrayFilter(this.AllAddresses(), function (item) {
+        return ko.utils.arrayFilter(self.AllAddresses(), function (item) {
             return item.State() != 2;
         });
     }, this);
+    self.DeletedAddresses = ko.computed(function () {
+        return ko.utils.arrayFilter(self.AllAddresses(), function (item) {
+            return item.State() == 2;
+        });
+    }, this);    
+    self.CheckedAddresses = ko.computed(function () {
+        return ko.utils.arrayFilter(self.Addresses(), function (item) {
+            return item.IsChecked();
+        });
+    }, this);
+
     self.addAddress = function () {
-        self.AllAddresses.push(new AddressViewModel({ Id: 0, State: 1 }));
+        self.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: self.Id(), State: 1, Address: "" }));
+        self.selectedAddress(self.AllAddresses()[self.AllAddresses().length - 1]);
     };
 
-    self.removeAddress = function (item) {
+    self.deleteAddress = function (item) {
         item.State(2);
     };
 
+    self.IsAllAddressSelected = ko.computed(function () {
+        if (self.Addresses().length == 0)
+            return false;
+
+        for (var i = 0; i < self.Addresses().length; i++) {
+            if (!self.Addresses()[i].IsChecked()) {
+                return false;
+            }
+        }
+        return true;
+    });
+    
+    self.IsAnyAddressSelected = ko.computed(function () {
+        if (self.Addresses().length == 0)
+            return false;
+
+        for (var i = 0; i < self.Addresses().length; i++) {
+            if (self.Addresses()[i].IsChecked()) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    self.AllAddressesChecked = ko.computed({
+        read: self.IsAllAddressSelected,
+        write: function (value) {
+            for (var i = 0; i < self.Addresses().length; i++) {
+                self.Addresses()[i].IsChecked(value);
+            }
+        },
+        owner: this
+    });
+
+    self.selectedAddress = ko.observable();
     // Shows
     self.AllShows = ko.observableArray($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
     self.Shows = ko.computed(function () {
-        return ko.utils.arrayFilter(this.AllShows(), function (item) {
+        return ko.utils.arrayFilter(self.AllShows(), function (item) {
             return item.State() != 2 && item.State() != 3;
         });
     }, this);
@@ -116,7 +251,7 @@ function EntityViewModel(data) {
     };
     self.removeShow = function (item) {
         item.State(2);
-    };
+    };   
 }
 
 function EventViewModel(data) {

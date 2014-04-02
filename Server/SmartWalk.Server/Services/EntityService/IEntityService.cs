@@ -16,10 +16,13 @@ namespace SmartWalk.Server.Services.EntityService
         EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm);
         void DeleteEntity(int hostId);
 
-        AddressVm SaveOrAddAddress(EntityRecord entity, AddressVm addressVm);
+        AddressVm SaveOrAddAddress(AddressVm addressVm);
         void DeleteAddress(int addressId);
-        ContactVm SaveOrAddContact(EntityRecord entity, ContactVm contactVm);
+        AddressVm GetAddress(int addressId);
+
+        ContactVm SaveOrAddContact(ContactVm contactVm);
         void DeleteContact(int contactId);
+        ContactVm GetContact(int contactId);
 
         ShowVm SaveOrAddShow(ShowVm item);
         void DeleteShow(int showId);

@@ -76,6 +76,7 @@ namespace SmartWalk.Server.Services.EntityService
             return new AddressVm
             {
                 Id = record.Id,
+                EntityId = record.EntityRecord.Id,
                 State = VmItemState.Normal,
                 Address = record.Address,
                 Latitude = record.Latitude,

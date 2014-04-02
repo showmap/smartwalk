@@ -207,19 +207,22 @@ namespace SmartWalk.Server.Services.EntityService
             
             _entityRepository.Flush();
             
-            foreach (var contact in entityVm.AllContacts)
-            {
+            foreach (var contact in entityVm.AllContacts) {
+                contact.EntityId = entity.Id;
+
                 if (contact.State == VmItemState.Deleted)
                     DeleteContact(contact.Id);
                 else
-                    entity.ContactRecords.Add(SaveOrAddContactInner(entity, contact));
+                    entity.ContactRecords.Add(SaveOrAddContactInner(contact));
             }
 
             foreach (var address in entityVm.AllAddresses) {
+                address.EntityId = entity.Id;
+
                 if (address.State == VmItemState.Deleted)
                     DeleteAddress(address.Id);
                 else
-                    entity.AddressRecords.Add(SaveOrAddAddressInner(entity, address));
+                    entity.AddressRecords.Add(SaveOrAddAddressInner(address));
             }
 
             return GetEntityVm(entity);
@@ -237,17 +240,17 @@ namespace SmartWalk.Server.Services.EntityService
         #endregion
 
         #region Addresses
-        public AddressVm SaveOrAddAddress(EntityRecord entity, AddressVm addressVm)
+        public AddressVm SaveOrAddAddress(AddressVm addressVm)
         {
-            return ViewModelContractFactory.CreateViewModelContract(SaveOrAddAddressInner(entity, addressVm));
+            return ViewModelContractFactory.CreateViewModelContract(SaveOrAddAddressInner(addressVm));
         }
 
-        private AddressRecord SaveOrAddAddressInner(EntityRecord entity, AddressVm addressVm)
+        private AddressRecord SaveOrAddAddressInner(AddressVm addressVm)
         {
             var address = _addressRepository.Get(addressVm.Id);
 
-            if (address == null)
-            {
+            if (address == null) {
+                var entity = _entityRepository.Get(addressVm.EntityId);
 
                 address = new AddressRecord
                 {
@@ -281,23 +284,35 @@ namespace SmartWalk.Server.Services.EntityService
             _addressRepository.Delete(address);
             _addressRepository.Flush();
         }
+
+        public AddressVm GetAddress(int addressId)
+        {
+            var address = _addressRepository.Get(addressId);
+            return address == null ? null : ViewModelContractFactory.CreateViewModelContract(address);
+        }
         #endregion
 
         #region Contacts
-        public ContactVm SaveOrAddContact(EntityRecord host, ContactVm contactVm)
+        public ContactVm GetContact(int contactId)
         {
-            return ViewModelContractFactory.CreateViewModelContract(SaveOrAddContactInner(host, contactVm));
+            var contact = _contactRepository.Get(contactId);
+            return contact == null ? null : ViewModelContractFactory.CreateViewModelContract(contact); 
         }
 
-        private ContactRecord SaveOrAddContactInner(EntityRecord host, ContactVm contactVm) {
+        public ContactVm SaveOrAddContact(ContactVm contactVm)
+        {
+            return ViewModelContractFactory.CreateViewModelContract(SaveOrAddContactInner(contactVm));
+        }
+
+        private ContactRecord SaveOrAddContactInner(ContactVm contactVm) {
             var contact = _contactRepository.Get(contactVm.Id);
 
-            if (contact == null)
-            {
+            if (contact == null) {
+                var entity = _entityRepository.Get(contactVm.EntityId);
 
                 contact = new ContactRecord
                 {
-                    EntityRecord = host,
+                    EntityRecord = entity,
                     Type = contactVm.Type,
                     Title = contactVm.Title,
                     Contact = contactVm.Contact
