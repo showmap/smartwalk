@@ -17,7 +17,10 @@ namespace SmartWalk.Server.Services.QueryService
     {
         private const string SelectMethod = "Select";
         private const string WhereMethod = "Where";
+        private const string OrderByMethod = "OrderBy";
         private const string OrderByDescendingMethod = "OrderByDescending";
+        private const string ThenByMethod = "ThenBy";
+        private const string ThenByDescendingMethod = "ThenByDescending";
         private const string FirstOrDefaultMethod = "FirstOrDefault";
         private const string ContainsMethod = "Contains";
 
@@ -123,6 +126,43 @@ namespace SmartWalk.Server.Services.QueryService
             var queryable = table.Provider
                                  .CreateQuery<EventMetadataRecord>(expression)
                                  .Where(emr => emr != null);
+            return queryable;
+        }
+
+        /// <summary>
+        /// Generates an expression for a generic query accross table's records with sorting and limiting.
+        /// </summary>
+        public static IQueryable<TRecord> SortBy<TRecord>(
+            this IQueryable<TRecord> table,
+            RequestSelect select)
+        {
+            var queryable = table;
+
+            // if there is sort by condition then build sort by expression
+            if (select.SortBy != null && select.SortBy.Length > 0)
+            {
+                var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
+                var expression = queryable.Expression;
+
+                foreach (var sortBy in select.SortBy)
+                {
+                    var sortByExpr = Expression.Property(recordExpr, recordExpr.Type, sortBy.Field);
+                    var method =
+                        expression == queryable.Expression
+                            ? (sortBy.IsDescending ? OrderByDescendingMethod : OrderByMethod)
+                            : (sortBy.IsDescending ? ThenByDescendingMethod : ThenByMethod);
+
+                    expression = Expression.Call(
+                        typeof(Queryable),
+                        method,
+                        new[] { typeof(TRecord) },
+                        expression,
+                        Expression.Lambda<Func<TRecord, bool>>(sortByExpr, new[] { recordExpr }));
+                }
+
+                return (IQueryable<TRecord>)expression;
+            }
+
             return queryable;
         }
 

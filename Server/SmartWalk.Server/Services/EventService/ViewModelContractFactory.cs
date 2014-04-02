@@ -28,6 +28,7 @@ namespace SmartWalk.Server.Services.EventService
                 Longitude = record.Longitude,
                 IsPublic = record.IsPublic,
                 Description = record.Description,
+                Picture = record.Picture,
                 DateCreated = record.DateCreated.ToString("d", CultureInfo.InvariantCulture),
                 DateModified = record.DateModified.ToString("d", CultureInfo.InvariantCulture),                
             };

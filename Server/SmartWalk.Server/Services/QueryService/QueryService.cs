@@ -94,7 +94,7 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.EventMetadata))
             {
                 var queryable = ExpressionFactory.CreateGenericQuery(_eventMetadataRepository.Table, select, results);
-                var records = queryable.Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
@@ -104,7 +104,7 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.GroupedEventMetadata))
             {
                 var queryable = ExpressionFactory.CreateGroupedEventsQuery(_entityRepository.Table, select, results);
-                var records = queryable.Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
@@ -114,7 +114,7 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Entity))
             {
                 var queryable = ExpressionFactory.CreateGenericQuery(_entityRepository.Table, select, results);
-                var records = queryable.Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
                     .ToArray();
@@ -124,7 +124,7 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Show))
             {
                 var queryable = ExpressionFactory.CreateGenericQuery(_showRepository.Table, select, results);
-                var records = queryable.Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();

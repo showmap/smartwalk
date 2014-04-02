@@ -35,6 +35,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DataContracts\Api\RequestSelectSortBy.cs" />
     <Compile Include="DataContracts\Api\ResponseSelect.cs" />
     <Compile Include="Extensions\Reflection.cs" />
     <Compile Include="Properties\Annotations.cs" />

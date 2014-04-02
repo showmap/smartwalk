@@ -225,7 +225,6 @@ namespace SmartWalk.Server.Services.ImportService
                         Name = xmlEntity.Name.TrimIt(),
                         Type = (int)type,
                         SmartWalkUserRecord = user,
-                        IsDeleted = false,
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now
                     };
@@ -351,7 +350,6 @@ namespace SmartWalk.Server.Services.ImportService
                         StartTime = xmlOrgEvent.StartDateObject.Date,
                         CombineType = (int)CombineType.None,
                         SmartWalkUserRecord = user,
-                        IsDeleted = false,
                         DateCreated = xmlOrgEvent.StartDateObject.Date,
                         DateModified = DateTime.UtcNow,
                         IsPublic = true

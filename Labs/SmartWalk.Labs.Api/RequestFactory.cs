@@ -14,7 +14,7 @@ namespace SmartWalk.Labs.Api
                         {
                             new RequestSelect
                                 {
-                                    Fields = new[] {"host", "title", "startTime", "latitude", "longitude"},
+                                    Fields = new[] {"host", "title", "picture", "startTime", "latitude", "longitude"},
                                     From = RequestSelectFromTables.GroupedEventMetadata.ToLowerInvariant(),
                                     As = "em",
                                     Where = new[]
@@ -23,13 +23,13 @@ namespace SmartWalk.Labs.Api
                                                 {
                                                     Field = "Latitude",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = 0 // TODO latitude
+                                                    Value = 37.7577
                                                 },
                                             new RequestSelectWhere
                                                 {
                                                     Field = "Longitude",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = 0 // TODO longitude
+                                                    Value = -122.4376
                                                 }
                                         }
                                 },
@@ -118,6 +118,17 @@ namespace SmartWalk.Labs.Api
                                                             Field = "Venue.Id",
                                                             SelectName = "s"
                                                         }
+                                                }
+                                        },
+                                    SortBy = new[]
+                                        {
+                                            new RequestSelectSortBy
+                                                {
+                                                    Field = "Name"
+                                                },
+                                            new RequestSelectSortBy
+                                                {
+                                                    Field = "Picture"
                                                 }
                                         }
                                 }
