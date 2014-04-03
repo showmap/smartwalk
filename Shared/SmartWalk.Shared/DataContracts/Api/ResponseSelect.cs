@@ -1,5 +1,6 @@
 ﻿namespace SmartWalk.Shared.DataContracts.Api
 {
+    [UsedImplicitly]
     public class ResponseSelect
     {
         public string Alias { get; set; }

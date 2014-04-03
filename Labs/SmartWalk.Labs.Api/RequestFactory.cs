@@ -17,19 +17,17 @@ namespace SmartWalk.Labs.Api
                                     Fields = new[] {"host", "title", "picture", "startTime", "latitude", "longitude"},
                                     From = RequestSelectFromTables.GroupedEventMetadata.ToLowerInvariant(),
                                     As = "em",
-                                    Where = new[]
+                                    SortBy = new[]
                                         {
-                                            new RequestSelectWhere
+                                            new RequestSelectSortBy
                                                 {
                                                     Field = "Latitude",
-                                                    Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = 37.7577
+                                                    OfDistance = 37.7577
                                                 },
-                                            new RequestSelectWhere
+                                            new RequestSelectSortBy
                                                 {
                                                     Field = "Longitude",
-                                                    Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = -122.4376
+                                                    OfDistance = -122.4376
                                                 }
                                         }
                                 },
@@ -124,11 +122,7 @@ namespace SmartWalk.Labs.Api
                                         {
                                             new RequestSelectSortBy
                                                 {
-                                                    Field = "Name"
-                                                },
-                                            new RequestSelectSortBy
-                                                {
-                                                    Field = "Picture"
+                                                    Field = "name"
                                                 }
                                         }
                                 }

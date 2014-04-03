@@ -1,5 +1,6 @@
 ﻿namespace SmartWalk.Shared.DataContracts.Api
 {
+    [UsedImplicitly]
     public class RequestSelect
     {
         public string[] Fields { get; set; }

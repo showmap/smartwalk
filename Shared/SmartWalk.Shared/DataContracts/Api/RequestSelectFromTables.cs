@@ -1,5 +1,6 @@
 ﻿namespace SmartWalk.Shared.DataContracts.Api
 {
+    [UsedImplicitly]
     public static class RequestSelectFromTables
     {
         public const string EventMetadata = "EventMetadata";

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
@@ -103,16 +104,25 @@ namespace SmartWalk.Server.Services.QueryService
                 whereExpr = GetWhereExpression(select.Where, eventMetadataExpr, results);
             }
 
-            selectExpr = Expression.Call(
-                typeof(Enumerable),
-                FirstOrDefaultMethod,
-                new[] { typeof(EventMetadataRecord) },
-                selectExpr,
-                whereExpr != null
-                    ? Expression.Lambda<Func<EventMetadataRecord, bool>>(
+            if (whereExpr != null)
+            {
+                selectExpr = Expression.Call(
+                    typeof(Enumerable),
+                    FirstOrDefaultMethod,
+                    new[] { typeof(EventMetadataRecord) },
+                    selectExpr,
+                    Expression.Lambda<Func<EventMetadataRecord, bool>>(
                         whereExpr,
-                        eventMetadataExpr)
-                    : null);
+                        eventMetadataExpr));
+            }
+            else
+            {
+                selectExpr = Expression.Call(
+                    typeof(Enumerable),
+                    FirstOrDefaultMethod,
+                    new[] { typeof(EventMetadataRecord) },
+                    selectExpr);
+            }
 
             expression = Expression.Call(
                 typeof(Queryable),
@@ -144,23 +154,43 @@ namespace SmartWalk.Server.Services.QueryService
                 var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
                 var expression = queryable.Expression;
 
-                foreach (var sortBy in select.SortBy)
+                double[] latLong;
+                if (IsLatLongSorting(select.SortBy, out latLong))
                 {
-                    var sortByExpr = Expression.Property(recordExpr, recordExpr.Type, sortBy.Field);
-                    var method =
-                        expression == queryable.Expression
-                            ? (sortBy.IsDescending ? OrderByDescendingMethod : OrderByMethod)
-                            : (sortBy.IsDescending ? ThenByDescendingMethod : ThenByMethod);
-
                     expression = Expression.Call(
                         typeof(Queryable),
-                        method,
-                        new[] { typeof(TRecord) },
+                        OrderByMethod,
+                        new[] { typeof(EventMetadataRecord), typeof(double) },
                         expression,
-                        Expression.Lambda<Func<TRecord, bool>>(sortByExpr, new[] { recordExpr }));
+                        (Expression<Func<EventMetadataRecord, double>>)(emr => 
+                            Math.Abs(emr.Latitude - latLong[0]) + 
+                            Math.Abs(emr.Longitude - latLong[1])));
+                }
+                else
+                {
+                    foreach (var sortBy in select.SortBy)
+                    {
+                        var sortByExpr = Expression.Property(recordExpr, recordExpr.Type, sortBy.Field);
+                        var method =
+                            expression == queryable.Expression
+                                ? (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
+                                       ? OrderByDescendingMethod
+                                       : OrderByMethod)
+                                : (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
+                                       ? ThenByDescendingMethod
+                                       : ThenByMethod);
+                        var methodType = typeof(Func<,>).MakeGenericType(typeof(TRecord), sortByExpr.Type);
+
+                        expression = Expression.Call(
+                            typeof(Queryable),
+                            method,
+                            new[] { typeof(TRecord), typeof(string) },
+                            expression,
+                            Expression.Lambda(methodType, sortByExpr, new[] { recordExpr }));
+                    }
                 }
 
-                return (IQueryable<TRecord>)expression;
+                return queryable.Provider.CreateQuery<TRecord>(expression);
             }
 
             return queryable;
@@ -237,20 +267,8 @@ namespace SmartWalk.Server.Services.QueryService
 
         private static Expression GetWhereValueExpression(Expression fieldExpr, object value)
         {
-            Expression equalsTo;
-            var valueExpr = Expression.Constant(value);
-
-            if (fieldExpr.Type == typeof(double) && 
-                valueExpr.Type == typeof(int))
-            {
-                equalsTo = Expression.Convert(valueExpr, typeof(double));
-            }
-            else
-            {
-                equalsTo = valueExpr;
-            }
-
-            var result = Expression.Equal(fieldExpr, equalsTo);
+            var valueExpr = Expression.Convert(Expression.Constant(value), fieldExpr.Type);
+            var result = Expression.Equal(fieldExpr, valueExpr);
             return result;
         }
 
@@ -271,7 +289,7 @@ namespace SmartWalk.Server.Services.QueryService
             RequestSelectWhereSelectValue selectValue,
             IDictionary<string, object[]> results)
         {
-            var result = default(Expression);
+            Expression result;
 
             object[] lookUpRecords;
             if (!results.TryGetValue(selectValue.SelectName, out lookUpRecords) ||
@@ -309,6 +327,10 @@ namespace SmartWalk.Server.Services.QueryService
                     .ToArray();
 
                 result = GetWhereValuesExpression(fieldExpr, lookUpValues);
+            }
+            else
+            {
+                result = Expression.Constant(false);
             }
 
             return result;
@@ -409,6 +431,24 @@ namespace SmartWalk.Server.Services.QueryService
             }
 
             return result;
+        }
+
+        private static bool IsLatLongSorting(RequestSelectSortBy[] sortBy, out double[] latLong)
+        {
+            var latitudeFieldName = Reflection<IEventMetadata>.GetProperty(p => p.Latitude).Name;
+            var longitudeFieldName = Reflection<IEventMetadata>.GetProperty(p => p.Longitude).Name;
+            var latitude = sortBy.FirstOrDefault(sb => sb.Field.EqualsIgnoreCase(latitudeFieldName));
+            var longitude = sortBy.FirstOrDefault(sb => sb.Field.EqualsIgnoreCase(longitudeFieldName));
+
+            if (latitude != null && latitude.OfDistance.HasValue &&
+                longitude != null && longitude.OfDistance.HasValue)
+            {
+                latLong = new[] { latitude.OfDistance.Value, longitude.OfDistance.Value };
+                return true;
+            }
+
+            latLong = null;
+            return false;
         }
     }
 }
