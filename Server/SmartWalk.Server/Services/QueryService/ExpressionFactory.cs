@@ -73,8 +73,7 @@ namespace SmartWalk.Server.Services.QueryService
                 .Select(e => 
                     e.EventMetadataRecords
                         .OrderByDescending(emr => emr.DateCreated)
-                        .FirstOrDefault(
-                            emr => emr.RegionRecord.City == "San Francisco" && ...)) */
+                        .FirstOrDefault()) */
 
             var expression = Expression.Call(
                 typeof(Queryable),

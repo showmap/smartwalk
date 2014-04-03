@@ -19,7 +19,8 @@ namespace SmartWalk.Server.Services.QueryService
         private readonly IRepository<EntityRecord> _entityRepository;
         private readonly IRepository<ShowRecord> _showRepository;
 
-        public QueryService(IRepository<EventMetadataRecord> eventMetadataRepository,
+        public QueryService(
+            IRepository<EventMetadataRecord> eventMetadataRepository,
             IRepository<EntityRecord> entityRepository,
             IRepository<ShowRecord> showRepository)
         {
