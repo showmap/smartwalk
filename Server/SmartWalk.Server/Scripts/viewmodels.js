@@ -112,6 +112,8 @@ function EntityViewModel(data) {
     self.Picture = ko.observable(data.Picture);
     self.State = ko.observable(data.State);
 
+    self.selectedItem = ko.observable();
+    
     // Contacts
     self.AllContacts = ko.observableArray($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
     self.Contacts = ko.computed(function () {
@@ -126,14 +128,14 @@ function EntityViewModel(data) {
     }, this);
     self.CheckedContacts = ko.computed(function () {
         return ko.utils.arrayFilter(self.Contacts(), function (item) {
-            return item.IsChecked();
+            return item.IsChecked() && item != self.selectedItem();
         });
     }, this);
 
 
     self.addContact = function () {
         self.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: self.Id(), Type: 1, State: 1 }));
-        self.selectedContact(self.AllContacts()[self.AllContacts().length - 1]);
+        self.selectedItem(self.AllContacts()[self.AllContacts().length - 1]);
     };
 
     self.deleteContact = function (item) {
@@ -174,7 +176,7 @@ function EntityViewModel(data) {
         owner: this
     });
 
-    self.selectedContact = ko.observable();
+    //self.selectedContact = ko.observable();
 
     // Addresses
     self.AllAddresses = ko.observableArray($.map(data.AllAddresses, function (item) { return new AddressViewModel(item); }));
@@ -190,13 +192,13 @@ function EntityViewModel(data) {
     }, this);    
     self.CheckedAddresses = ko.computed(function () {
         return ko.utils.arrayFilter(self.Addresses(), function (item) {
-            return item.IsChecked();
+            return item.IsChecked() && item != self.selectedItem();
         });
     }, this);
 
     self.addAddress = function () {
         self.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: self.Id(), State: 1, Address: "" }));
-        self.selectedAddress(self.AllAddresses()[self.AllAddresses().length - 1]);
+        self.selectedItem(self.AllAddresses()[self.AllAddresses().length - 1]);
     };
 
     self.deleteAddress = function (item) {
@@ -237,7 +239,7 @@ function EntityViewModel(data) {
         owner: this
     });
 
-    self.selectedAddress = ko.observable();
+    //self.selectedAddress = ko.observable();
     // Shows
     self.AllShows = ko.observableArray($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
     self.Shows = ko.computed(function () {

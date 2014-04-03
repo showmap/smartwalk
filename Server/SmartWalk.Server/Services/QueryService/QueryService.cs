@@ -7,6 +7,8 @@ using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Server.Extensions;
+using Orchard.Environment.Configuration;
+using NHibernate;
 
 namespace SmartWalk.Server.Services.QueryService
 {
@@ -19,15 +21,53 @@ namespace SmartWalk.Server.Services.QueryService
         private readonly IRepository<EntityRecord> _entityRepository;
         private readonly IRepository<ShowRecord> _showRepository;
 
+        private readonly ISessionLocator _sessionLocator;
+        private readonly ShellSettings _shellSettings;
+
         public QueryService(
             IRepository<EventMetadataRecord> eventMetadataRepository,
+            ISessionLocator sessionLocator, ShellSettings shellSettings,
             IRepository<EntityRecord> entityRepository,
             IRepository<ShowRecord> showRepository)
         {
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
             _showRepository = showRepository;
+
+            _sessionLocator = sessionLocator;
+            _shellSettings = shellSettings;
         }
+
+        #region Execute raw sql example
+        public void Test()
+        {
+            var session = _sessionLocator.For(typeof(EventMetadataRecord));
+
+            var query = session.CreateSQLQuery(string.Format(@"
+                        SELECT Id as myId, Description, StartTime
+                        FROM {0}SmartWalk_Server_EventMetadataRecord
+                        WHERE EntityRecord_Id = :entityid AND DTime >= :dtfrom
+                    ", !string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? _shellSettings.DataTablePrefix + "_" : ""))
+                           .AddScalar("myId", NHibernateUtil.Int32)
+                           .AddScalar("Description", NHibernateUtil.String)
+                           .AddScalar("StartTime", NHibernateUtil.DateTime)
+                           .SetParameter("entityid", 1)
+                           .SetParameter("dtfrom", DateTime.Now.AddMonths(-3));
+            var result = query.List<object[]>().Select(r => new TestResult
+            {
+                Id = (int)r[0],
+                Description = (string)r[1],
+                MyDate = (DateTime)r[23]
+            }); //.UniqueResult<Int32>(); If query returns one value
+        }
+
+        private class TestResult
+        {
+            public int Id { get; set; }
+            public string Description { get; set; }
+            public DateTime MyDate { get; set; }
+        }
+        #endregion   
 
         public Response ExecuteRequestQuery(Request request)
         {

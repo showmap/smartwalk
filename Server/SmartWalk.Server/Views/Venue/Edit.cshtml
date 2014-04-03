@@ -8,6 +8,7 @@
     Script.Require("SmartWalk.ViewModels").AtHead();
     
     var venue = (EntityVm) Model;
+    var cancelAction = venue.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @venue.Id });
 }
 
 <div id="edit-venue-form" 
@@ -113,8 +114,8 @@
                 }}
                 
             </div>
-            <div class="col-xs-8 text-right">
-                <form method="get" action="@Url.Action("List")">
+            <div class="col-xs-8 text-right">                
+                <form method="get" action="@cancelAction">
                     <button type="submit" class="btn btn-default" >@T("Cancel")</button>
                     <button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@T("Save Venue")</button>
                 </form>
@@ -127,7 +128,7 @@
 
 <script type="text/html" id="ViewAddressTemplate">
     <tr>
-		<td data-bind="text: Address, click: $root.selectedAddress"></td>
+		<td data-bind="text: Address, click: $root.selectedItem"></td>
 		<td class="td-align"><input type="checkbox" data-bind="checked: IsChecked"></td>
 	</tr>
 </script>
@@ -175,8 +176,8 @@
 
 <script type="text/html" id="ViewContactTemplate">
     <tr>
-		<td data-bind="text: $root.GetContactType($data), click: $root.selectedContact"></td>
-		<td data-bind="text: DisplayContact, click: $root.selectedContact"></td>
+		<td data-bind="text: $root.GetContactType($data), click: $root.selectedItem"></td>
+		<td data-bind="text: DisplayContact, click: $root.selectedItem"></td>
 		<td class="td-align"><input type="checkbox" data-bind="checked: IsChecked"></td>
 	</tr>
 </script>
@@ -226,7 +227,7 @@
         var vmVenue = new EntityViewModel(@Html.Raw(Json.Encode(venue)));
 
         vmVenue.getContactView = function (item) {
-            return item === vmVenue.selectedContact() ? 'EditContactTemplate' : "ViewContactTemplate";
+            return item === vmVenue.selectedItem() ? 'EditContactTemplate' : "ViewContactTemplate";
         };
 
         vmVenue.GetContactTypeById = function(id) {
@@ -249,7 +250,7 @@
         vmVenue.cancelContact = function (item) {
             if (item.Id() == 0) {
                 //item.State(2);
-                vmVenue.selectedContact(null);
+                vmVenue.selectedItem(null);
                 vmVenue.AllContacts.remove(item);
             } else {
                 var ajdata = ko.toJSON(item);
@@ -264,11 +265,11 @@
                     cache: false,
                     contentType: "application/json; charset=utf-8",
                     error: function (e) {
-                        vmVenue.selectedContact(null);
+                        vmVenue.selectedItem(null);
                     },
                     success: function (data) {
                         item.loadData(data);
-                        vmVenue.selectedContact(null);
+                        vmVenue.selectedItem(null);
                     }
                 };
                 $.ajax(config);
@@ -288,20 +289,20 @@
                 cache: false,
                 contentType: "application/json; charset=utf-8",
                 error: function (e) {
-                    vmVenue.selectedContact(null);
+                    vmVenue.selectedItem(null);
                 },
                 success: function (data) {
                     if (item.Id() == 0 || item.Id() != data)
                         item.Id(data);
 
-                    vmVenue.selectedContact(null);
+                    vmVenue.selectedItem(null);
                 }
             };
             $.ajax(config);
         };
 
         vmVenue.deleteContacts = function () {
-            vmVenue.selectedContact(null);
+            vmVenue.selectedItem(null);
 
             var ajdata = ko.toJSON(vmVenue.CheckedContacts);
             var urlUpdate = $("#edit-venue-form").attr("delete-contacts-url");
@@ -326,13 +327,13 @@
         };
 
         vmVenue.getAddressView = function (item) {
-            return item === vmVenue.selectedAddress() ? 'EditAddressTemplate' : "ViewAddressTemplate";
+            return item === vmVenue.selectedItem() ? 'EditAddressTemplate' : "ViewAddressTemplate";
         };
 
         vmVenue.cancelAddress = function (item) {
             if (item.Id() == 0) {
                 //item.State(2);
-                vmVenue.selectedAddress(null);
+                vmVenue.selectedItem(null);
                 vmVenue.AllAddresses.remove(item);
             } else {
                 var ajdata = ko.toJSON(item);
@@ -347,11 +348,11 @@
                     cache: false,
                     contentType: "application/json; charset=utf-8",
                     error: function (e) {
-                            vmVenue.selectedAddress(null);
+                        vmVenue.selectedItem(null);
                         },
                         success: function (data) {
                             item.loadData(data);
-                            vmVenue.selectedAddress(null);
+                            vmVenue.selectedItem(null);
                         }
                     };
                     $.ajax(config);
@@ -371,20 +372,20 @@
                 cache: false,
                 contentType: "application/json; charset=utf-8",
                 error: function (e) {
-                        vmVenue.selectedAddress(null);
+                    vmVenue.selectedItem(null);
                     },
                     success: function (data) {
                         if (item.Id() == 0 || item.Id() != data)
                             item.Id(data);
 
-                        vmVenue.selectedAddress(null);
+                        vmVenue.selectedItem(null);
                     }
                 };
             $.ajax(config);
         };
 
         vmVenue.deleteAddresses = function () {
-            vmVenue.selectedAddress(null);            
+            vmVenue.selectedItem(null);
             
             var ajdata = ko.toJSON(vmVenue.CheckedAddresses);
             var urlUpdate = $("#edit-venue-form").attr("delete-addresses-url");
