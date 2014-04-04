@@ -73,7 +73,7 @@ namespace SmartWalk.Server
                         new RouteValueDictionary {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Event"},
-                            {"action", "Edit"},
+                            {"action", "View"},
                             {"eventId", "{eventId}"}
                         },
                         new RouteValueDictionary(),
@@ -81,7 +81,23 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },                
+                },  
+                new RouteDescriptor {
+                    Priority = 2,
+                    Route = new Route(
+                        "event/{eventId}/edit",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Event"},
+                            {"action", "Edit"},
+                            {"entityId", "{eventId}"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },  
                 new RouteDescriptor {
                     Priority = 1,
                     Route = new Route(
@@ -118,6 +134,22 @@ namespace SmartWalk.Server
                     Priority = 2,
                     Route = new Route(
                         "organizer/{entityId}",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Host"},
+                            {"action", "View"},
+                            {"entityId", "{entityId}"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },  
+                new RouteDescriptor {
+                    Priority = 2,
+                    Route = new Route(
+                        "organizer/{entityId}/edit",
                         new RouteValueDictionary {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Host"},

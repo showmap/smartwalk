@@ -8,36 +8,53 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
 
-    var eventItems = (IList<EventMetadataVm>)Model;
+    var items = (IList<EventMetadataVm>)Model;
 }
 
 <div id="event-items" data-bind="visible: EventItems().length > 0">
-    <p>@T("Events")</p>    
-    @{ using(Html.BeginRouteForm("CreateEvent", FormMethod.Get)) {
-            <input type="submit" value="@T("Add event")" />
-    }} 
-    <table class="event-item">
-        <thead>
-            <tr>
-                <th class="string"><span>@T("Title")</span></th>
-                <th class="string"><span>@T("Host Name")</span></th>
-                <th class="string"><span>@T("Start Time")</span></th>
-                <th class="string"><span>@T("Date Created")</span></th>                
-                <th class="string"><span>@T("Action")</span></th>                
-            </tr>
-        </thead>
-        <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems() }'></tbody>
-    </table>    
+   <div class="container">
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="@T("Type event name...")">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">@T("Search")</button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-4 text-right">
+                @{ 
+                    using (Html.BeginRouteForm("CreateEvent", FormMethod.Get)){
+                        <button type="submit" class="btn btn-primary">@T("Create event")</button>
+                    }
+                }
+            </div>
+        </div>
+        
+        <div class="gap">
+            <small>
+                <a href="#/events">@T("All Events")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("My Events")</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                @T("Sort By"):&nbsp;<a href="#/events">@T("Date")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("Title")</a>
+            </small>
+        </div>
+
+        <div class="floating-container small-gap">
+            @foreach (var item in items) {
+                <a class="thumbnail floating" href="@Url.Action("View", new {eventId = item.Id})/edit">
+                    <img src="@item.Picture">
+                    <div class="caption">
+                        <h3>@item.Title</h3>
+                        <h5>@item.DisplayDate</h5>
+                    </div>
+                </a>
+            }
+            <div class="clearfix"/>
+        </div>           
+    </div>
 </div>
 
-<script type="text/html" id="eventItemTemplate">
-    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
-        <td><span data-bind="text: Title"></span></td>
-        <td><span data-bind="text: HostName"></span></td>
-        <td><span data-bind="text: StartTime"></span></td>
-        <td><span data-bind="text: DateCreated"></span></td>
-        <td><a data-bind="attr: {href: '@Url.Action("Edit")/' + Id()}">Edit</a></td>
-    </tr>       
+<script type="text/html" id="eventItemTemplate">      
 </script>
 
 
@@ -47,9 +64,9 @@
         function EventsViewModel() {
             var self = this;
 
-            self.EventItems = ko.observableArray($.map(@Html.Raw(Json.Encode(eventItems)), function(item) { return new EventViewModel(item); }));
+            //self.EventItems = ko.observableArray($.map(@Html.Raw(Json.Encode(items)), function(item) { return new EventViewModel(item); }));
         }
 
-        ko.applyBindings(new EventsViewModel(), document.getElementById('event-items'));
+        //ko.applyBindings(new EventsViewModel(), document.getElementById('event-items'));
     });
 </script>

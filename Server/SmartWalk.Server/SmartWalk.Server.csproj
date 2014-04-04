@@ -248,6 +248,15 @@
   <ItemGroup>
     <Content Include="Views\Venue\View.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Host\View.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Templates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Event\View.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -34,6 +34,7 @@ function AddressViewModel(data) {
     self.Id = ko.observable();
     self.EntityId = ko.observable();
     self.Address = ko.observable();
+    self.Tip = ko.observable();
     self.State = ko.observable();
     self.IsChecked = ko.observable();
 
@@ -51,6 +52,7 @@ function AddressViewModel(data) {
         self.Id(data.Id);
         self.EntityId(data.EntityId);
         self.Address(data.Address);
+        self.Tip(data.Tip);
         self.State(data.State);
         self.IsChecked(false);
 

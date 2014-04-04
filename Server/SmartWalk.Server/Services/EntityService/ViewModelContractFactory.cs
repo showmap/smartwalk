@@ -79,6 +79,7 @@ namespace SmartWalk.Server.Services.EntityService
                 EntityId = record.EntityRecord.Id,
                 State = VmItemState.Normal,
                 Address = record.Address,
+                Tip = record.Tip,
                 Latitude = record.Latitude,
                 Longitude = record.Longitude,
             };

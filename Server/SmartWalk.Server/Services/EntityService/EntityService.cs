@@ -256,6 +256,7 @@ namespace SmartWalk.Server.Services.EntityService
                 {
                     EntityRecord = entity,
                     Address = addressVm.Address,
+                    Tip = addressVm.Tip,
                     Latitude = addressVm.Latitude,
                     Longitude = addressVm.Longitude
                 };
@@ -265,6 +266,7 @@ namespace SmartWalk.Server.Services.EntityService
             else
             {
                 address.Address = addressVm.Address;
+                address.Tip = addressVm.Tip;
                 address.Latitude = addressVm.Latitude;
                 address.Longitude = addressVm.Longitude;
             }

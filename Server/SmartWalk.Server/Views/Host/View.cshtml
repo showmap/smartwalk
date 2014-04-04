@@ -6,36 +6,36 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
     
-    var venue = (EntityVm) Model;
+    var host = (EntityVm) Model;
 }
 
-<div id="view-venue-form" title="@T("Add Host")" get-venue-events="@Url.Action("GetEvents", "Venue", new {area = "SmartWalk.Server"})">
+<div id="view-host-form" get-host-events="@Url.Action("GetEvents", "Host", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
     <div id="venue-panel">
         <div class="row">
             <div class="col-xs-8">
-                <h2>@venue.DisplayName</h2>
+                <h2>@host.DisplayName</h2>
             </div>
             <div class="col-xs-4 text-right">
-                <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Venue")</button>
+                <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Host")</button>
             </div>
         </div>
         
-        @if (!string.IsNullOrEmpty(venue.Picture)) {
+        @if (!string.IsNullOrEmpty(host.Picture)) {
             <div class="image-container">
-                <img src="@venue.Picture" />
+                <img src="@host.Picture" />
             </div>
         }
         
-        @if (venue.AllAddresses.Any()) {
-            var addressFirst = venue.AllAddresses.First();
+        @if (host.AllAddresses.Any()) {
+            var addressFirst = host.AllAddresses.First();
             var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
             query = Regex.Replace(query, @"\s+", "+");
             <iframe class="map-container" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe>
             
             <div class="row">
                 <div class="col-md-8 addresses-container">
-                    @foreach (var address in venue.AllAddresses) {
+                    @foreach (var address in host.AllAddresses) {
                         <div>                            				
                             <h4>
                                 @T("Address"):&nbsp;1:&nbsp;<address>@Regex.Replace(address.Address, @"\s+", " ");</address>
@@ -51,13 +51,13 @@
                   
         
         <div class="row gap">
-            <div class="col-md-7"><p>@venue.Description</p></div>
+            <div class="col-md-7"><p>@host.Description</p></div>
             <div class="col-md-5 contact-container">
-                @if (venue.AllContacts.Any()) {
+                @if (host.AllContacts.Any()) {
                     <div class="well">
                         <h4 class="text-center">@T("Contacts and Links")</h4>
                         <dl class="dl-horizontal">
-                            @foreach (var contact in venue.AllContacts) {
+                            @foreach (var contact in host.AllContacts) {
                                 var title = contact.Title ?? contact.Contact;                             
                              
                                 switch ((ContactType)contact.Type) {
@@ -123,8 +123,8 @@
             };
 
             self.loadData = function() {
-                var ajdata = ko.toJSON({ entityId: @venue.Id });
-                var urlUpdate = $("#view-venue-form").attr("get-venue-events");
+                var ajdata = ko.toJSON({ entityId: @host.Id });
+                var urlUpdate = $("#view-host-form").attr("get-host-events");
 
                 var config = {
                     async: true,

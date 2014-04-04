@@ -19,6 +19,7 @@ namespace SmartWalk.Server.ViewModels
         public bool IsPublic { get; set; }
         public string DateCreated { get; set; }
         public string DateModified { get; set; }
+        public string DisplayDate { get; set; }
 
         public EntityVm Host { get; set; }
         public IList<EntityVm> AllVenues { get; set; }

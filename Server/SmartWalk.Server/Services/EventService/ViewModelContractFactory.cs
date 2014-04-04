@@ -30,7 +30,8 @@ namespace SmartWalk.Server.Services.EventService
                 Description = record.Description,
                 Picture = record.Picture,
                 DateCreated = record.DateCreated.ToString("d", CultureInfo.InvariantCulture),
-                DateModified = record.DateModified.ToString("d", CultureInfo.InvariantCulture),                
+                DateModified = record.DateModified.ToString("d", CultureInfo.InvariantCulture),
+                DisplayDate = record.StartTime.ToString("D", CultureInfo.InvariantCulture)
             };
         }
     }

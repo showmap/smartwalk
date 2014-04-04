@@ -42,6 +42,18 @@ namespace SmartWalk.Server.Controllers
             return View(_eventService.GetUserEvents(user.Record));
         }
 
+        public ActionResult View(int eventId)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            return View(_eventService.GetUserEventVmById(user.Record, eventId));
+        }
+
         public ActionResult Edit(int eventId)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
