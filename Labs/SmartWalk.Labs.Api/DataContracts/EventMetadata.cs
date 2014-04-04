@@ -11,8 +11,8 @@ namespace SmartWalk.Labs.Api.DataContracts
         public string Description { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
         public CombineType? CombineType { get; set; }
         public Reference[] Shows { get; set; }
 
