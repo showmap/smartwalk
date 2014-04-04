@@ -326,6 +326,7 @@ namespace SmartWalk.Server.Services.ImportService
 
                 address.Latitude = xmlAddress.Latitude;
                 address.Longitude = xmlAddress.Longitude;
+                address.Tip = xmlAddress.Tip;
 
                 _addressRepository.Update(address);
                 _addressRepository.Flush();
@@ -359,6 +360,9 @@ namespace SmartWalk.Server.Services.ImportService
                 _log.Add(string.Format("{0} event metadata created", result.Title));
             }
 
+            result.Title = xmlOrgEvent.Title;
+            result.Description = xmlOrgEvent.Description;
+            result.Picture = xmlOrgEvent.Logo;
             SetEventMetadataCoordinate(result, xmlOrgEvent.Venues);
 
             _eventMetadataRepository.Update(result);

@@ -6,6 +6,15 @@ namespace SmartWalk.Server.Models.XmlModel
     [XmlRoot(ElementName = "event")]
     public class Event
     {
+        [XmlAttribute("title")]
+        public string Title { get; set; }
+
+        [XmlAttribute("description")]
+        public string Description { get; set; }
+
+        [XmlAttribute("logo")]
+        public string Logo { get; set; }
+
         [XmlAttribute("organization")]
         public string Organization { get; set; }
 
