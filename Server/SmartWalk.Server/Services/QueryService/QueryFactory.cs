@@ -5,24 +5,23 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NHibernate;
+using Orchard.Environment.Configuration;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Shared.Extensions;
-using EntityType = SmartWalk.Server.Records.EntityType;
 
 namespace SmartWalk.Server.Services.QueryService
 {
-    public static class ExpressionFactory
+    public static class QueryFactory
     {
-        private const string SelectMethod = "Select";
         private const string WhereMethod = "Where";
         private const string OrderByMethod = "OrderBy";
         private const string OrderByDescendingMethod = "OrderByDescending";
         private const string ThenByMethod = "ThenBy";
         private const string ThenByDescendingMethod = "ThenByDescending";
-        private const string FirstOrDefaultMethod = "FirstOrDefault";
         private const string ContainsMethod = "Contains";
 
         private const string RecordPostfix = "Record";
@@ -59,83 +58,37 @@ namespace SmartWalk.Server.Services.QueryService
         }
 
         /// <summary>
-        /// Generates an expression for a query accross grouped by Host 
-        /// EventMetadata table's records with a where filter condition.
+        /// Generates an SQL query for a query accross grouped by Host 
+        /// EventMetadata table's records with a where condition and order by clause.
         /// </summary>
-        public static IQueryable<EventMetadataRecord> CreateGroupedEventsQuery(
-            IQueryable<EntityRecord> table,
+        public static ISQLQuery CreateGroupedEventsQuery(
+            ISession session,
+            ShellSettings shellSettings,
             RequestSelect select,
             IDictionary<string, object[]> results)
         {
-            // building an expression tree for the query:
-            /* table
-                .Where(e => (EntityType)e.Type == EntityType.Host)
-                .Select(e => 
-                    e.EventMetadataRecords
-                        .OrderByDescending(emr => emr.DateCreated)
-                        .FirstOrDefault()) */
+            var dbPrefix = !string.IsNullOrEmpty(shellSettings.DataTablePrefix)
+                               ? shellSettings.DataTablePrefix + "_"
+                               : string.Empty;
 
-            var expression = Expression.Call(
-                typeof(Queryable),
-                WhereMethod,
-                new[] { typeof(EntityRecord) },
-                table.Expression,
-                (Expression<Func<EntityRecord, bool>>)(e => (EntityType)e.Type == EntityType.Host));
+            var result = session.CreateSQLQuery(
+                string.Format(
+                    @"  SELECT TOP(100) EMR.*
+                        FROM
+	                        (SELECT 
+		                        MAX(StartTime) AS StartTime, MAX(Id) AS Id
+	                        FROM 
+		                        {0}SmartWalk_Server_EventMetadataRecord
+	                        GROUP BY
+		                        EntityRecord_Id) Grouped
+                        INNER JOIN
+	                        {0}SmartWalk_Server_EventMetadataRecord EMR ON Grouped.Id = EMR.Id
+                        ORDER BY 
+	                        ABS(EMR.Latitude - 37.7577) + ABS(EMR.Longitude + 122.4376) ASC
+                    ", dbPrefix))
+                                .AddEntity(typeof(EventMetadataRecord));
 
-            var entityExpr = Expression.Parameter(typeof(EntityRecord), "e");
-            var eventMetadataExpr = Expression.Parameter(typeof(EventMetadataRecord), "emr");
-
-            var selectExpr = Expression.Call(
-                typeof(Enumerable),
-                OrderByDescendingMethod,
-                new[] { typeof(EventMetadataRecord), typeof(DateTime) },
-                Expression.Property(
-                    entityExpr,
-                    entityExpr.Type,
-                    Reflection<EntityRecord>.GetProperty(p => p.EventMetadataRecords).Name),
-                (Expression<Func<EventMetadataRecord, DateTime>>)(emr => emr.StartTime));
-
-            var whereExpr = default(Expression);
-
-            // if there is a "where" condition then build where expression
-            if (select.Where != null && select.Where.Length > 0)
-            {
-                whereExpr = GetWhereExpression(select.Where, eventMetadataExpr, results);
-            }
-
-            if (whereExpr != null)
-            {
-                selectExpr = Expression.Call(
-                    typeof(Enumerable),
-                    FirstOrDefaultMethod,
-                    new[] { typeof(EventMetadataRecord) },
-                    selectExpr,
-                    Expression.Lambda<Func<EventMetadataRecord, bool>>(
-                        whereExpr,
-                        eventMetadataExpr));
-            }
-            else
-            {
-                selectExpr = Expression.Call(
-                    typeof(Enumerable),
-                    FirstOrDefaultMethod,
-                    new[] { typeof(EventMetadataRecord) },
-                    selectExpr);
-            }
-
-            expression = Expression.Call(
-                typeof(Queryable),
-                SelectMethod,
-                new[] { typeof(EntityRecord), typeof(EventMetadataRecord) },
-                expression,
-                Expression.Lambda<Func<EntityRecord, EventMetadataRecord>>(
-                    selectExpr,
-                    new[] { entityExpr }));
-
-            var queryable = table.Provider
-                                 .CreateQuery<EventMetadataRecord>(expression)
-                                 .Where(emr => emr != null);
-            return queryable;
+            return result;
         }
 
         /// <summary>

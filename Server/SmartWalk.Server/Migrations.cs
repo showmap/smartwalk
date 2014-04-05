@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using JetBrains.Annotations;
 using Orchard;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
@@ -15,6 +16,7 @@ using System.Linq;
 
 namespace SmartWalk.Server
 {
+    [UsedImplicitly]
     public class Migrations : DataMigrationImpl {
 
         private readonly IOrchardServices _orchardServices;
@@ -40,6 +42,7 @@ namespace SmartWalk.Server
             }
         }
 
+        [UsedImplicitly]
         public int Create()
         {
 
@@ -181,6 +184,7 @@ namespace SmartWalk.Server
             return 1;
         }
 
+        [UsedImplicitly]
         public int UpdateFrom1()
         {
             SchemaBuilder.DropTable("ShowMappingRecord");
@@ -302,6 +306,7 @@ namespace SmartWalk.Server
             return 2;
         }
 
+        [UsedImplicitly]
         public int UpdateFrom2()
         {
             SchemaBuilder.DropTable("ShowMappingRecord");
@@ -431,6 +436,7 @@ namespace SmartWalk.Server
             return 3;
         }
 
+        [UsedImplicitly]
         public int UpdateFrom3()
         {
             SchemaBuilder.DropTable("ShowMappingRecord");
@@ -560,6 +566,7 @@ namespace SmartWalk.Server
             return 4;
         }
 
+        [UsedImplicitly]
         public int UpdateFrom4()
         {
             SchemaBuilder.DropTable("ShowMappingRecord");

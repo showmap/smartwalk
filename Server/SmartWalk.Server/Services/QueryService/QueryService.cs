@@ -8,7 +8,6 @@ using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Server.Extensions;
 using Orchard.Environment.Configuration;
-using NHibernate;
 
 namespace SmartWalk.Server.Services.QueryService
 {
@@ -37,37 +36,6 @@ namespace SmartWalk.Server.Services.QueryService
             _sessionLocator = sessionLocator;
             _shellSettings = shellSettings;
         }
-
-        #region Execute raw sql example
-        public void Test()
-        {
-            var session = _sessionLocator.For(typeof(EventMetadataRecord));
-
-            var query = session.CreateSQLQuery(string.Format(@"
-                        SELECT Id as myId, Description, StartTime
-                        FROM {0}SmartWalk_Server_EventMetadataRecord
-                        WHERE EntityRecord_Id = :entityid AND DTime >= :dtfrom
-                    ", !string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? _shellSettings.DataTablePrefix + "_" : ""))
-                           .AddScalar("myId", NHibernateUtil.Int32)
-                           .AddScalar("Description", NHibernateUtil.String)
-                           .AddScalar("StartTime", NHibernateUtil.DateTime)
-                           .SetParameter("entityid", 1)
-                           .SetParameter("dtfrom", DateTime.Now.AddMonths(-3));
-            var result = query.List<object[]>().Select(r => new TestResult
-            {
-                Id = (int)r[0],
-                Description = (string)r[1],
-                MyDate = (DateTime)r[23]
-            }); //.UniqueResult<Int32>(); If query returns one value
-        }
-
-        private class TestResult
-        {
-            public int Id { get; set; }
-            public string Description { get; set; }
-            public DateTime MyDate { get; set; }
-        }
-        #endregion   
 
         public Response ExecuteRequestQuery(Request request)
         {
@@ -134,7 +102,7 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.EventMetadata))
             {
-                var queryable = ExpressionFactory.CreateGenericQuery(_eventMetadataRepository.Table, select, results);
+                var queryable = QueryFactory.CreateGenericQuery(_eventMetadataRepository.Table, select, results);
                 var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
@@ -144,8 +112,12 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.GroupedEventMetadata))
             {
-                var queryable = ExpressionFactory.CreateGroupedEventsQuery(_entityRepository.Table, select, results);
-                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
+                var queryable = QueryFactory.CreateGroupedEventsQuery(
+                    _sessionLocator.For(typeof(EventMetadataRecord)),
+                    _shellSettings,
+                    select,
+                    results);
+                var records = queryable.List<EventMetadataRecord>();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
@@ -154,7 +126,7 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Entity))
             {
-                var queryable = ExpressionFactory.CreateGenericQuery(_entityRepository.Table, select, results);
+                var queryable = QueryFactory.CreateGenericQuery(_entityRepository.Table, select, results);
                 var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
@@ -164,7 +136,7 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Show))
             {
-                var queryable = ExpressionFactory.CreateGenericQuery(_showRepository.Table, select, results);
+                var queryable = QueryFactory.CreateGenericQuery(_showRepository.Table, select, results);
                 var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
