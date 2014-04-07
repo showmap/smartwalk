@@ -18,7 +18,7 @@ namespace SmartWalk.Shared.Extensions
         public static bool HasProperty(this object objectToCheck, string propertyName)
         {
             var type = objectToCheck.GetType();
-            return type.GetProperties().Any(p => p.Name.Equals(propertyName));
+            return type.GetProperties().Any(p => p.Name.EqualsIgnoreCase(propertyName));
         }
 
         /// <summary>

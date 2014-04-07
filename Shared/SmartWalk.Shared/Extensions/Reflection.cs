@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using SmartWalk.Shared.Resources;
 
 namespace SmartWalk.Shared.Extensions
 {
@@ -29,7 +31,7 @@ namespace SmartWalk.Shared.Extensions
             var info = GetMemberInfo(field) as FieldInfo;
             if (info == null)
             {
-                throw new ArgumentException("Member is not a field");
+                throw new ArgumentException(Localization.MemberIsNotAField);
             }
 
             return info;
@@ -178,10 +180,15 @@ namespace SmartWalk.Shared.Extensions
             var info = GetMemberInfo(property) as PropertyInfo;
             if (info == null)
             {
-                throw new ArgumentException("Member is not a property");
+                throw new ArgumentException(Localization.MemberIsNotAProperty);
             }
 
             return info;
+        }
+
+        public static bool HasProperty(string propertyName)
+        {
+            return typeof(TTarget).GetProperties().Any(p => p.Name.EqualsIgnoreCase(propertyName));
         }
 
         /// <summary>
@@ -212,7 +219,7 @@ namespace SmartWalk.Shared.Extensions
             var lambda = member as LambdaExpression;
             if (lambda == null)
             {
-                throw new ArgumentException("Not a lambda expression", "member");
+                throw new ArgumentException(Localization.NotALambdaExpression, "member");
             }
 
             MemberExpression memberExpr = null;
@@ -232,7 +239,7 @@ namespace SmartWalk.Shared.Extensions
 
             if (memberExpr == null)
             {
-                throw new ArgumentException("Not a member access", "member");
+                throw new ArgumentException(Localization.NotAMemberAccess, "member");
             }
 
             return memberExpr.Member;
@@ -267,12 +274,12 @@ namespace SmartWalk.Shared.Extensions
             var lambda = method as LambdaExpression;
             if (lambda == null)
             {
-                throw new ArgumentException("Not a lambda expression", "method");
+                throw new ArgumentException(Localization.NotALambdaExpression, "method");
             }
 
             if (lambda.Body.NodeType != ExpressionType.Call)
             {
-                throw new ArgumentException("Not a method call", "method");
+                throw new ArgumentException(Localization.NotAMethodCall, "method");
             }
 
             return ((MethodCallExpression) lambda.Body).Method;

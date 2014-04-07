@@ -5,5 +5,6 @@ namespace SmartWalk.Shared.DataContracts
         string AddressText { get; set; }
         double Latitude { get; set; }
         double Longitude { get; set; }
+        string Tip { get; set; }
     }
 }

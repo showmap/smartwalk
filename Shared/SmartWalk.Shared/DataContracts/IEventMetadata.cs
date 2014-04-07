@@ -8,6 +8,7 @@ namespace SmartWalk.Shared.DataContracts
         IReference[] Host { get; set; }
         string Title { get; set; }
         string Description { get; set; }
+        string Picture { get; set; }
         DateTime? StartTime { get; set; }
         DateTime? EndTime { get; set; }
         double? Latitude { get; set; }

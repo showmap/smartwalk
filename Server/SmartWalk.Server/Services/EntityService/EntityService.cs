@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.ViewModels;
-using SmartWalk.Server.Extensions;
+using SmartWalk.Shared.Extensions;
 
 namespace SmartWalk.Server.Services.EntityService
 {

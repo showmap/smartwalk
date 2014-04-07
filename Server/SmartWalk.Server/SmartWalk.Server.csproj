@@ -141,7 +141,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Extensions\JsonNetResult.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\DataContracts\Address.cs" />
     <Compile Include="Models\DataContracts\Contact.cs" />
     <Compile Include="Models\DataContracts\Entity.cs" />
@@ -177,6 +176,11 @@
     <Compile Include="Records\SmartWalkUserRecord.cs" />
     <Compile Include="Records\StorageRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Resources\Localization.Designer.cs">
+      <DependentUpon>Localization.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Routes.cs" />
     <Compile Include="Services\CultureService\CultureService.cs" />
     <Compile Include="Services\CultureService\ICultureService.cs" />
@@ -191,6 +195,7 @@
     <Compile Include="Services\QueryService\DataContractsFactory.cs" />
     <Compile Include="Services\QueryService\QueryFactory.cs" />
     <Compile Include="Services\QueryService\IQueryService.cs" />
+    <Compile Include="Services\QueryService\QueryContext.cs" />
     <Compile Include="Services\QueryService\QueryService.cs" />
     <Compile Include="Utils\MapUtil.cs" />
     <Compile Include="ViewModels\AddressVm.cs" />
@@ -256,6 +261,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Event\View.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Localization.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

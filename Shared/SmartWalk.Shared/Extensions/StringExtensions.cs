@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace SmartWalk.Server.Extensions
+namespace SmartWalk.Shared.Extensions
 {
     public static class StringExtensions
     {

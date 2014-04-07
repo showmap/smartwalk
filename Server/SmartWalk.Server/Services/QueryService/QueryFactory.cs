@@ -6,17 +6,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NHibernate;
-using Orchard.Environment.Configuration;
-using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Resources;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Shared.Extensions;
 
 namespace SmartWalk.Server.Services.QueryService
 {
+    // TODO: To support Where for SQL queries
     public static class QueryFactory
     {
+        private const string Coma = ", ";
+        private const string Dot = ".";
+        private const char DotChar = '.';
+
         private const string WhereMethod = "Where";
         private const string OrderByMethod = "OrderBy";
         private const string OrderByDescendingMethod = "OrderByDescending";
@@ -24,6 +28,13 @@ namespace SmartWalk.Server.Services.QueryService
         private const string ThenByDescendingMethod = "ThenByDescending";
         private const string ContainsMethod = "Contains";
 
+        private const string Asc = "ASC";
+        private const string Desc = "DESC";
+        private const string OrderBy = " ORDER BY ";
+
+        private const string Rec = "rec";
+        private const string Lat = "lat";
+        private const string Long = "long";
         private const string RecordPostfix = "Record";
 
         /// <summary>
@@ -39,7 +50,7 @@ namespace SmartWalk.Server.Services.QueryService
             // if there is where condition then build where expression
             if (select.Where != null && select.Where.Length > 0)
             {
-                var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
+                var recordExpr = Expression.Parameter(typeof(TRecord), Rec);
                 var whereExpr = GetWhereExpression(select.Where, recordExpr, results);
                 if (whereExpr != null)
                 {
@@ -63,39 +74,57 @@ namespace SmartWalk.Server.Services.QueryService
         /// </summary>
         public static ISQLQuery CreateGroupedEventsQuery(
             ISession session,
-            ShellSettings shellSettings,
+            QueryContext context,
+            int limit,
             RequestSelect select,
             IDictionary<string, object[]> results)
         {
-            var dbPrefix = !string.IsNullOrEmpty(shellSettings.DataTablePrefix)
-                               ? shellSettings.DataTablePrefix + "_"
-                               : string.Empty;
+            double[] latLong;
 
-            var result = session.CreateSQLQuery(
-                string.Format(
-                    @"  SELECT TOP(100) EMR.*
+            var result =
+                session.CreateSQLQuery(
+                    string.Format(
+                        @"SELECT TOP({6}) {2}.*
                         FROM
 	                        (SELECT 
-		                        MAX(StartTime) AS StartTime, MAX(Id) AS Id
+		                        MAX({4}) AS {4}, MAX({3}) AS {3}
 	                        FROM 
-		                        {0}SmartWalk_Server_EventMetadataRecord
+		                        {0}{1}
 	                        GROUP BY
-		                        EntityRecord_Id) Grouped
+		                        {5}) {2}Groupped
                         INNER JOIN
-	                        {0}SmartWalk_Server_EventMetadataRecord EMR ON Grouped.Id = EMR.Id
-                        ORDER BY 
-	                        ABS(EMR.Latitude - 37.7577) + ABS(EMR.Longitude + 122.4376) ASC
-                    ", dbPrefix))
-                                .AddEntity(typeof(EventMetadataRecord));
+	                        {0}{1} {2} ON {2}Groupped.{3} = {2}.{3}
+                        {7}",
+                        context.DbPrefix,
+                        context.EventMetadataTable,
+                        context.EventMetadataTableAlias,
+                        context.EventMetadataId,
+                        context.EventMetadataStartTime,
+                        context.EventMetadataEntityRecordId,
+                        limit,
+                        SortBy<EventMetadataRecord>(
+                            context,
+                            context.EventMetadataTableAlias, 
+                            select,
+                            out latLong)))
+                       .AddEntity(typeof(EventMetadataRecord));
+
+            if (latLong != null)
+            {
+                result = (ISQLQuery)result
+                    .SetDouble(Lat, latLong[0])
+                    .SetDouble(Long, latLong[1]);
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Generates an expression for a generic query accross table's records with sorting and limiting.
+        /// Generates an expression for a generic query accross table's records with sorting.
         /// </summary>
         public static IQueryable<TRecord> SortBy<TRecord>(
             this IQueryable<TRecord> table,
+            QueryContext context,
             RequestSelect select)
         {
             var queryable = table;
@@ -103,11 +132,11 @@ namespace SmartWalk.Server.Services.QueryService
             // if there is sort by condition then build sort by expression
             if (select.SortBy != null && select.SortBy.Length > 0)
             {
-                var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
+                var recordExpr = Expression.Parameter(typeof(TRecord), Rec);
                 var expression = queryable.Expression;
 
                 double[] latLong;
-                if (IsLatLongSorting(select.SortBy, out latLong))
+                if (IsLatLongSorting(context, select.SortBy, out latLong))
                 {
                     expression = Expression.Call(
                         typeof(Queryable),
@@ -118,34 +147,85 @@ namespace SmartWalk.Server.Services.QueryService
                             Math.Abs(emr.Latitude - latLong[0]) + 
                             Math.Abs(emr.Longitude - latLong[1])));
                 }
-                else
-                {
-                    foreach (var sortBy in select.SortBy)
-                    {
-                        var sortByExpr = Expression.Property(recordExpr, recordExpr.Type, sortBy.Field);
-                        var method =
-                            expression == queryable.Expression
-                                ? (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
-                                       ? OrderByDescendingMethod
-                                       : OrderByMethod)
-                                : (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
-                                       ? ThenByDescendingMethod
-                                       : ThenByMethod);
-                        var methodType = typeof(Func<,>).MakeGenericType(typeof(TRecord), sortByExpr.Type);
 
-                        expression = Expression.Call(
-                            typeof(Queryable),
-                            method,
-                            new[] { typeof(TRecord), typeof(string) },
-                            expression,
-                            Expression.Lambda(methodType, sortByExpr, new[] { recordExpr }));
-                    }
+                foreach (var sortBy in select.SortBy)
+                {
+                    var sortByExpr = Expression.Property(recordExpr, recordExpr.Type, sortBy.Field);
+                    var method =
+                        expression == queryable.Expression
+                            ? (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
+                                    ? OrderByDescendingMethod
+                                    : OrderByMethod)
+                            : (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
+                                    ? ThenByDescendingMethod
+                                    : ThenByMethod);
+                    var methodType = typeof(Func<,>).MakeGenericType(typeof(TRecord), sortByExpr.Type);
+
+                    expression = Expression.Call(
+                        typeof(Queryable),
+                        method,
+                        new[] { typeof(TRecord), typeof(string) },
+                        expression,
+                        Expression.Lambda(methodType, sortByExpr, new[] { recordExpr }));
                 }
 
                 return queryable.Provider.CreateQuery<TRecord>(expression);
             }
 
             return queryable;
+        }
+
+        /// <summary>
+        /// Generates a string for a generic query accross table's records with sorting.
+        /// </summary>
+        private static string SortBy<TRecord>(
+            QueryContext context,
+            string alias,
+            RequestSelect select,
+            out double[] latLong)
+        {
+            var result = string.Empty;
+            latLong = null;
+
+            // if there is sort by condition then build sort by expression
+            if (select.SortBy != null && select.SortBy.Length > 0)
+            {
+                if (typeof(TRecord) == typeof(EventMetadataRecord) &&
+                    IsLatLongSorting(context, select.SortBy, out latLong))
+                {
+                    result = string.Format(
+                        "ABS({0}.{1} - :lat) + ABS({0}.{2} + :long) ASC",
+                        alias,
+                        context.EventMetadataLatitude,
+                        context.EventMetadataLongitude);
+                }
+
+                foreach (var sortBy in select.SortBy)
+                {
+                    if (!Reflection<EventMetadataRecord>.HasProperty(sortBy.Field))
+                    {
+                        throw new InvalidExpressionException(
+                            string.Format(
+                                Localization.CantFindFieldInRequestedItems,
+                                sortBy.Field));
+                    }
+
+                    result +=
+                        (result != string.Empty ? Coma : string.Empty) +
+                        string.Format(
+                            "{0}.{1} {2}",
+                            alias,
+                            sortBy.Field,
+                            sortBy.IsDescending.HasValue &&
+                            sortBy.IsDescending.Value
+                                ? Desc
+                                : Asc);
+                }
+            }
+
+            return result != string.Empty
+                ? OrderBy + result
+                : string.Empty;
         }
 
         private static Expression GetWhereExpression(
@@ -178,7 +258,7 @@ namespace SmartWalk.Server.Services.QueryService
                     {
                         throw new InvalidExpressionException(
                             string.Format(
-                                "Can not find '{0}' field in the requested items",
+                                Localization.CantFindFieldInRequestedItems,
                                 where.Field));
                     }
 
@@ -210,7 +290,10 @@ namespace SmartWalk.Server.Services.QueryService
 
                 if (whereExpr != null)
                 {
-                    result = result == null ? whereExpr : Expression.AndAlso(result, whereExpr);
+                    result =
+                        result == null
+                            ? whereExpr
+                            : Expression.AndAlso(result, whereExpr);
                 }
             }
 
@@ -249,7 +332,7 @@ namespace SmartWalk.Server.Services.QueryService
             {
                 throw new InvalidExpressionException(
                     string.Format(
-                        "Can not access '{0}' select result items.",
+                        Localization.CantAccessSelectResultItems,
                         selectValue.SelectName));
             }
 
@@ -266,7 +349,7 @@ namespace SmartWalk.Server.Services.QueryService
                 {
                     throw new InvalidExpressionException(
                         string.Format(
-                            "Can not find '{0}' field in '{1}' select result items.",
+                            Localization.CantFineFieldInSelectResultItems,
                             selectValue.Field,
                             selectValue.SelectName));
                 }
@@ -367,9 +450,9 @@ namespace SmartWalk.Server.Services.QueryService
 
             string[] result;
 
-            if (fieldsPath.Contains("."))
+            if (fieldsPath.Contains(Dot))
             {
-                var properties = fieldsPath.Split('.');
+                var properties = fieldsPath.Split(DotChar);
                 result =
                     pathToRecordMode
                         ? properties
@@ -385,12 +468,17 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
-        private static bool IsLatLongSorting(RequestSelectSortBy[] sortBy, out double[] latLong)
+        private static bool IsLatLongSorting(
+            QueryContext context,
+            RequestSelectSortBy[] sortBy,
+            out double[] latLong)
         {
-            var latitudeFieldName = Reflection<IEventMetadata>.GetProperty(p => p.Latitude).Name;
-            var longitudeFieldName = Reflection<IEventMetadata>.GetProperty(p => p.Longitude).Name;
-            var latitude = sortBy.FirstOrDefault(sb => sb.Field.EqualsIgnoreCase(latitudeFieldName));
-            var longitude = sortBy.FirstOrDefault(sb => sb.Field.EqualsIgnoreCase(longitudeFieldName));
+            var latitude = sortBy
+                .FirstOrDefault(
+                    sb => sb.Field.EqualsIgnoreCase(context.EventMetadataLatitude));
+            var longitude = sortBy
+                .FirstOrDefault(
+                    sb => sb.Field.EqualsIgnoreCase(context.EventMetadataLongitude));
 
             if (latitude != null && latitude.OfDistance.HasValue &&
                 longitude != null && longitude.OfDistance.HasValue)
