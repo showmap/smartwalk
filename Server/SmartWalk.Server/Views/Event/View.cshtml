@@ -6,149 +6,89 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
     
-    var venue = (EntityVm) Model;
+    var eventMetadata = (EventMetadataVm) Model;
 }
 
-<div id="view-venue-form" title="@T("Add Host")" get-venue-events="@Url.Action("GetEvents", "Venue", new {area = "SmartWalk.Server"})">
+<div id="view-event-form" get-venue-events="@Url.Action("GetEvents", "Venue", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
-    <div id="venue-panel">
+    <div id="event-panel">
         <div class="row">
-            <div class="col-xs-8">
-                <h2>@venue.DisplayName</h2>
-            </div>
+			<div class="col-xs-8">
+				<h2>@eventMetadata.Title</h2>
+			</div>
             <div class="col-xs-4 text-right">
-                <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Venue")</button>
+                
+                <button type="button" class="btn btn-primary" id="btn-edit-event">@T("Edit Event")</button>
             </div>
-        </div>
+		</div>
         
-        @if (!string.IsNullOrEmpty(venue.Picture)) {
+        @if (!string.IsNullOrEmpty(eventMetadata.Picture)) {
             <div class="image-container">
-                <img src="@venue.Picture" />
+                <img src="@eventMetadata.Picture" />
             </div>
         }
         
-        @if (venue.AllAddresses.Any()) {
+        @if (eventMetadata.AllVenues.Any() && eventMetadata.AllVenues.First().AllAddresses.Any()) {
+            var venue = eventMetadata.AllVenues.First();
             var addressFirst = venue.AllAddresses.First();
             var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
             query = Regex.Replace(query, @"\s+", "+");
-            <iframe class="map-container" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe>
-            
-            <div class="row">
-                <div class="col-md-8 addresses-container">
-                    @foreach (var address in venue.AllAddresses) {
-                        <div>                            				
-                            <h4>
-                                @T("Address"):&nbsp;1:&nbsp;<address>@Regex.Replace(address.Address, @"\s+", " ");</address>
-                                @if (!string.IsNullOrEmpty(address.Tip)) {
-                                    <i class="description">@address.Tip</i>
-                                }
-                            </h4>
-                        </div>                        
-                    }
-                </div>
-            </div>
+            <iframe class="map-container" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe>                        
         }
                   
         
+        <div class="row">
+			<div class="col-md-8">
+				<div><h4>@T("Date"):&nbsp;@eventMetadata.DisplayDate</h4></div>
+				<div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new {entityId = eventMetadata.HostId})">@eventMetadata.Host.DisplayName</a></h4></div>
+			</div>
+			<div class="col-md-4">
+				<div class="text-center pull-right" style="margin-top: 10px; border-radius: 4px; width:100px; height: 30px; background-color:#ccc; border:1px solid #444;">@T("Add Event Widget")</div>
+			</div>
+		</div>
+        
         <div class="row gap">
-            <div class="col-md-7"><p>@venue.Description</p></div>
-            <div class="col-md-5 contact-container">
-                @if (venue.AllContacts.Any()) {
-                    <div class="well">
-                        <h4 class="text-center">@T("Contacts and Links")</h4>
-                        <dl class="dl-horizontal">
-                            @foreach (var contact in venue.AllContacts) {
-                                var title = contact.Title ?? contact.Contact;                             
-                             
-                                switch ((ContactType)contact.Type) {
-                                    case ContactType.Url:
-                                        var url = contact.Contact.StartsWith("http") ? contact.Contact : string.Format("http://{0}", contact.Contact);
-                                        <dt>@T("web"):</dt>
-                                        <dd><a href="@url">@title</a></dd>
-                                        break;
-                                    case ContactType.Phone:
-                                        <dt>@T("phone"):</dt>
-                                        <dd>@contact.Contact</dd>
-                                        break;
-                                    case ContactType.Email:
-                                        <dt>@T("email"):</dt>
-                                        <dd><a href="mailto:@contact.Contact">@title</a></dd>
-                                        break;
-                                }
-                            }
-                        </dl>
-                    </div>   
+            <div class="col-md-8"><p>@eventMetadata.Description</p></div>
+		</div>
+         
+        
+        <table class="table gap">
+			<thead>
+				<tr><th><h4>@T("Venues and Shows")</h4></th><th>@T("Time")</th></tr>
+			</thead>
+            <tbody>
+                @foreach (var venue in eventMetadata.AllVenues.Where(v => v.State == VmItemState.Normal)) {
+                    <tr>
+                        <td colspan="2" class="venue">
+                            <a href="@Url.Action("View", "Venue", new {entityId = venue.Id})"><img src="@venue.Picture" /></a>
+                            <a href="@Url.Action("View", "Venue", new {entityId = venue.Id})"><h4>@venue.DisplayName</h4></a>
+                            @if (venue.AllAddresses.Any()) {
+                                <address>@venue.AllAddresses.First().Address</address>
+                            }                            
+                        </td>
+                    </tr>
+                    foreach (var show in venue.AllShows) {
+                     <tr>
+                        <td>@show.Title<br/><span class="description">@show.Description</span></td>
+                        <!-- It's important to have &nbsp; between "start-time" and "-", to keep them on the same row -->
+                        @if (string.IsNullOrEmpty(show.EndTime)) {
+                            <td>@show.StartTime</td>
+                        }
+                        else {
+                            <td>@show.StartTime&nbsp;-&nbsp;@show.EndTime</td>
+                        }
+                    </tr>   
+                    }
                 }                
-            </div>
-        </div>     
-
-        <table class="table gap" data-bind="visible: EventItems().length > 0">
-            <thead>
-                <tr><th><h4>@T("Recent Events")</h4></th><th>@T("Date")</th></tr>
-            </thead>
-            <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems() }'></tbody>
-        </table>
-                
+            </tbody>
+		</table>                        
     </div>
 </div>
 
-<script type="text/html" id="eventItemTemplate">
-    <tr>
-        <td>
-            <a data-bind="attr: {href: '/event/'+Id()}, text:$root.GetLinkTitle($data)"></a><br/>
-            <span class="description" data-bind="text: Description"></span>
-        </td>
-        <td data-bind="text: DateCreated"></td>        
-    </tr>       
-</script>
-
 <script>
     $(document).ready(function() {
-
-        $( "#btn-edit-venue" ).click(function() {
+        $( "#btn-edit-event" ).click(function() {
             window.location.href = "@Url.Action("View")" + "/edit";
         });
-
-        function EventsViewModel() {
-            var self = this;
-
-            self.EventItems = ko.observableArray();
-
-            self.GetLinkTitle = function(item) {
-                
-                if (!item.Title())
-                    return '@T("View")';
-                
-                return item.Title();
-            };
-
-            self.loadData = function() {
-                var ajdata = ko.toJSON({ entityId: @venue.Id });
-                var urlUpdate = $("#view-venue-form").attr("get-venue-events");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                    },
-                    success: function(data) {
-                        if (data) {
-                            self.EventItems($.map(data, function(item) { return new EventViewModel(item); }));                            
-                        }
-                    }
-                };
-                $.ajax(config);
-            };
-
-            self.loadData();            
-        }
-
-
-        ko.applyBindings(new EventsViewModel(), document.getElementById('view-venue-form'));
     });
 </script>

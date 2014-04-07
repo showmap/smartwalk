@@ -23,12 +23,9 @@
                 </div>
             </div>
             <div class="col-xs-4 text-right">
-                @{ 
-                    using (Html.BeginRouteForm("CreateHost", FormMethod.Get))
-                    {
-                        <button type="submit" class="btn btn-primary">@T("Create organizer")</button>
-                    }
-                }
+                <form action="/organizers/create">
+                    <button type="submit" class="btn btn-primary">@T("Create organizer")</button>
+                </form>                
             </div>
         </div>
         

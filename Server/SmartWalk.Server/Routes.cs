@@ -183,6 +183,7 @@ namespace SmartWalk.Server
                     Route = new Route(
                         "venues/create",
                         new RouteValueDictionary {
+                            {"Name" , "CreateVenue"},
                             {"area", "SmartWalk.Server"},
                             {"controller", "Venue"},
                             {"action", "Edit"},
