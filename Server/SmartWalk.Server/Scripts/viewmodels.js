@@ -80,6 +80,14 @@ function ShowViewModel(data) {
     self.DetailsUrl = ko.observable();
     self.State = ko.observable();
 
+    self.TimeText = ko.computed(function () {
+        if (self.EndTime()) {
+            return self.StartTime() + ' - ' + self.EndTime();
+        }
+
+        return self.StartTime();
+    }, this);
+
     self.loadData = function(data) {
         self.Id(data.Id);
         self.EventMetedataId(data.EventMetedataId);

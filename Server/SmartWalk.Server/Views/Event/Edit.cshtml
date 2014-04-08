@@ -6,13 +6,14 @@
 
 @{
     Style.Require("jQueryUI_Orchard");
-    Style.Require("SmartWalk.ListEvent");
+    //Style.Require("SmartWalk.ListEvent");
 
     //Script.Require("jQuery").AtHead();
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
 
     var eventItem = (EventMetadataVm)Model;
+    var cancelAction = eventItem.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @eventItem.Id });
 }
 
 <div id="event-item" 
@@ -28,78 +29,148 @@
     <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
 
     <div id="metadata-panel">
-        <label for="hosts">@T("Host")</label>
-        <select id="hosts" data-bind="options: AllHosts, optionsText: 'DisplayName', value: Host, optionsCaption: '@T("Select Host...")'"></select>
-        <div class="ui-widget">
-            <button id="add-place-button">@T("Add place")</button>
-            <button id="add-host-button">@T("Add host")</button>
-        </div>
-
-        <label for="title">@T("Title")</label>
-        <input type="text" id="title" data-bind="value: Title"/>
+        <div class="row">
+			<div class="col-xs-8">
+				<div class="form-group">
+					<input class="form-control" type="text" placeholder="@T("Type event name...")" data-bind="value: Title" />
+				</div>
+			</div>
+			<div class="col-xs-4 text-right">
+				<button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save Event")</button>
+			</div>
+		</div>
         
-        <label for="description">@T("Description")</label>
-        <textarea id="description" data-bind="value: Description"></textarea>
+        <div class="row">
+			<div class="col-sm-4">
+				<div class="form-group">
+					<label for="startDateInput">@T("Start Date"):</label>
+					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: StartTime, datepickerOptions: { showAnim: '' }">
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="form-group">
+					<label for="endDateInput">@T("End Date"):</label>
+					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: EndTime, datepickerOptions: { showAnim: '' }">
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="form-group">
+					<label for="visibilityButtonsGroup">@T("Visibility"):</label><br/>
+					<div class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: IsPublic"></div>
+				</div>
+			</div>
+		</div>	    
         
-        <label for="start-time">@T("Start time")</label>
-        <input type="text" data-bind="datepicker: StartTime, datepickerOptions: { showAnim: '' }" />
-        
-        <label for="end-time">@T("End time")</label>
-        <input type="text" id="end-time" data-bind="datepicker: EndTime, datepickerOptions: { showAnim: '' }"/>
-        
-        @Html.LabelFor(m => eventItem.CombineType, @T("Combine type"))
-        @Html.DropDownListFor(m => eventItem.CombineType,
+        <div class="row">
+			<div class="col-sm-8">
+				<div class="form-group">
+					<label for="organizedByComboBox">@T("Organized By"):</label>
+				    <div class="input-group">
+				        <!--<input type="text" class="form-control" id="organizedByComboBox" >-->
+                        <select class="form-control" id="organizedByComboBox" data-bind="options: AllHosts, optionsText: 'DisplayName', value: Host, optionsCaption: '@T("Select Organizer...")'"></select>
+				        <span class="input-group-btn">
+				            <button type="button" class="btn btn-default" id="createOrganizerButton">@T("Create Organizer...")</button>
+				        </span>
+				    </div>
+					
+				</div>
+			</div>
+		</div>
+		
+        <div class="row">
+			<div class="col-sm-8">
+				<div class="form-group">
+					@Html.LabelFor(m => eventItem.CombineType, @T("Combine type"))
+                    @Html.DropDownListFor(m => eventItem.CombineType,
                               Enum.GetNames(typeof(CombineType))
                                   .Select(u => new SelectListItem
                                   {
                                       Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.CombineType,
                                       Text = @T(u).ToString(),
                                       Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
-                                  }), new Dictionary<string, object> { { "data-bind", "value:CombineType" } })
+                                  }), new Dictionary<string, object> { { "data-bind", "value:CombineType" }, {"class", "form-control"} })					
+				</div>
+			</div>
+		</div>
+
+        <div class="row">
+			<div class="col-sm-8">
+				<div class="form-group">
+					<label for="pictureTextInput">@T("Picture"):</label>
+					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture"/>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="form-group">
+					<label for="descriptionTextArea">@T("Description"):</label>
+					<textarea class="form-control" id="descriptionTextArea" data-bind="value: Description"></textarea>
+				</div>
+			</div>
+		</div>                                                               
         
-        @Html.LabelFor(m => eventItem.IsPublic, @T("Is public"))
-        @Html.CheckBoxFor(m => eventItem.IsPublic, new Dictionary<string, object> { { "data-bind", "checked: IsPublic" } })
-           
-        <p>
-            <button id="save-event-button" data-bind="click: $root.saveEvent">@T("Save event")</button>
-            @{ using(Html.BeginForm("List", "Event", FormMethod.Get)) {                                
-                                <input type="submit" value="@T("Cancel")" />
-            }} 
-        </p>
+        <table class="table table-hover">
+			<thead>
+				<tr>
+					<th><h4>@T("Venues and Shows")</h4></th>
+					<th>@T("Show Time")</th>
+					<th class="td-align">
+						<div class="input-group-btn" style="display:inline">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<input type="checkbox" value="" /> <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#">@T("Duplicate")</a></li>
+								<li><a href="#">@T("Delete")</a></li>
+							</ul>
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
+		</table>
         
+        <button type="button" class="btn btn-default">@T("Add Venue")</button>
+		
+		<div class="row double-gap">
+			<div class="col-xs-4">
+				<button type="button" class="btn btn-danger" data-bind="click: $root.deleteEvent">@T("Delete Event")</button>
+			</div>
+		    <div class="col-xs-8 text-right">
+		        <form method="get" action="@cancelAction">
+		            <button type="submit" class="btn btn-default" >@T("Cancel")</button>
+		            <button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save Event")</button>
+		        </form>		        
+		    </div>
+		</div>
+
         <div data-bind="visible: Id() > 0">
             <p>@T("Venues")</p>
             <select id="other-venues" data-bind="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")    '"></select>
             <button id="add-event-venue-button" data-bind="click: $root.addVenue, enable: selectedVenue">@T("Add venue")</button>    
-        </div>
-
-        <div id="entity-items" data-bind="visible: Venues().length > 0 && Id() > 0">
-            <table>                
-                <tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
-            </table> 
-            <button id="delete-event-button" data-bind="click: $root.deleteEvent">@T("Delete")</button>   
-        </div>
-        
-        <!--
-        <div id="shows-panel">
-            <ul data-bind="visible: Shows().length > 0, foreach: Shows">
-                <li>
-                    <label data-bind="attr: { for: 'show-title-' + Id() }">@T("Title")</label>
-                    <input type="text" data-bind="attr: {id:'show-title-' + Id()}, value: Title"/>
-        
-                    <label data-bind="attr: { for: 'show-description-' + Id() }">@T("Description")</label>
-                    <textarea data-bind="attr: { id: 'show-description-' + Id() }, value: Description"></textarea>
-                    
-                    <a href="#" data-bind="click: $root.removeShow">Remove</a>                    
-                </li>
-            </ul>
-            <button data-bind="click: addShow">@T("Add show")</button>        
-        </div>-->
+        </div>        
     </div>
 </div>
 
 <script type="text/html" id="EntityItemTemplate">
     <tr>
+        <td class="venue" colspan="2">
+            <div>
+                <a href="#/venue/567"><img data-bind="attr: {src: Picture }"/></a>
+                <a href="#/venue/567"><h4 data-bind="text: DisplayName"></h4></a>
+                <address>2698 Folsom St, San Francisco, CA 94110</address>
+            </div>
+            <div class="clearfix"></div>
+            <button type="button" class="btn btn-default gap" data-bind="click: $root.addShow">@T("Create Show")</button>
+        </td>
+        <td class="td-valign td-align"><input type="checkbox" value=""></td>
+    </tr>
+    <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
+    <!-- /ko -->
+
+    @*<tr>
         <td><span data-bind="text: Name"></span></td>        
         <td><a href="#" data-bind="click: $root.addShow, visible: $root.selectedShow() == null || $root.selectedShow().Id() != 0 || $root.selectedShow().VenueId() != Id()">Add show</a> &nbsp; <a href="#" data-bind="    click: $root.deleteVenue">Delete</a></td>
     </tr>  
@@ -117,77 +188,159 @@
                 <tbody data-bind='template: {name: $root.getShowView, foreach: Shows() }'></tbody>
             </table>    
         </td>
-    </tr>   
+    </tr>   *@
 </script>
 
 <script type="text/html" id="ShowItemTemplate">
-    <tr data-bind="css: {'alt': $index() % 2 === 1}">        
-        <td><span data-bind="text: Description"></span></td>        
-        <td><a href="#" data-bind="click: $root.selectedShow">Edit</a></td>
-    </tr>      
+    <tr data-bind="click: $root.selectedShow">
+        <td data-bind="text: Title"><br/><span class="description" data-bind="text: Description"></span></td>
+        <td data-bind="text: TimeText"></td>
+        <td class="td-align"><input type="checkbox" value=""></td>
+    </tr>    
 </script>
 
 <script type="text/html" id="ShowItemTemplateEdit">
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <td>
-                        <label for="show-title">@T("Title")</label>
-                        <input id="show-title" type="text" data-bind="value: Title"/>
-                    </td>
-                    <td>
-                        <label for="show-description">@T("Description")</label>
-                        <textarea id="show-description" data-bind="value: Description"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="show-start-date">@T("Start date")</label>
-                        <input id="show-start-date" type="text" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />   
-                    </td>
-                    <td>
-                        <label for="show-start-time">@T("Start time")</label>
-                        <input id="show-start-time" type="text" data-bind="timepicker: StartTime, timepickerOptions: { stepMinute: 5 }" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="show-end-date">@T("End date")</label>
-                        <input id="show-end-date" type="text" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }"/>
-                    </td>
-                    <td>
-                        <label for="show-end-time">@T("End time")</label>
-                        <input id="show-end-time" type="text" data-bind="timepicker: EndTime, timepickerOptions: { stepMinute: 5 }" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="show-picture">@T("Picture")</label>
-                        <input type="text" id="show-picture" data-bind="value: Picture"/>
-                    </td>
-                    <td>
-                        <label for="show-detailsurl">@T("Details URL")</label>
-                        <input id="show-detailsurl" type="text" data-bind="value: DetailsUrl"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="save-show-button" data-bind="click: $root.saveShow">@T("Save")</button>
-                        <button id="cancel-show-button" data-bind="click: $root.cancelShow">@T("Cancel")</button>
-                    </td>
-                    <td>
-                        <button id="delete-show-button" data-bind="click: $root.deleteShow">@T("Delete")</button>                        
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>      
+		<td colspan="3" class="editing-container">
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-8">
+						<div class="form-group">
+							<label for="venueComboBox">@T("Organized By"):</label>
+							<div class="input-group">
+								<input type="text" class="form-control pull-left" id="venueComboBox" value="Red Poppy Art House">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default pull-right" id="createVenueButton">@T("Create Venue...")</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+							
+				<div class="row">
+					<div class="col-sm-8">
+						<div class="form-group">
+							<label for="titleTextInput">@T("Title"):</label>
+							<input type="text" class="form-control" id="titleTextInput" data-bind="value: Title">
+						</div>
+									
+						<div class="form-group">
+							<label for="showDescriptionTextArea">@T("Description"):</label>
+							<textarea class="form-control" id="showDescriptionTextArea" data-bind="value: Description"></textarea>
+						</div>
+					</div>
+							
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="showStartTimeInput">@T("Start Time"):</label></br>
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: StartTime, timepickerOptions: { stepMinute: 5 }" />
+						</div>
+									
+						<div class="form-group">
+							<label for="showStartDateInput">@T("Start Date"):</label></br>
+							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />
+						</div>
+					</div>
+							
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="showStartTimeInput">@T("End Time"):</label></br>
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: EndTime, timepickerOptions: { stepMinute: 5 }" />
+						</div>
+									
+						<div class="form-group">
+							<label for="showEndDateInput">@T("End Date"):</label></br>
+							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }" />
+						</div>
+					</div>
+				</div>
+							
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="pictureTextInput">@T("Picture"):</label>
+							<input type="text" class="form-control" id="pictureTextInput" data-bind="value: Picture">
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="detailsURLTextInput">@T("Details URL"):</label></br>
+							<input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: DetailsUrl" />
+						</div>
+					</div>
+					<div class="col-sm-4 text-right">
+						<div class="form-group">
+							<label for="saveShowButton">&nbsp;</label></br>
+							<button type="button" class="btn btn-default" data-bind="click: $root.cancelShow">@T("Cancel")</button>
+							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: $root.saveShow">@T("Save Show")</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</td>
+	</tr>         
 </script>
 
 <script language="javascript">        
 
-    (function ($) {        
+    (function ($) {
+        ko.bindingHandlers.switcher = {
+            init: function(element, valueAccessor) {
+                var value = valueAccessor();
+                
+                var btnPrimary = $("<button type='button' class='btn btn-primary active'>@T("Public")</button>");
+                var btnDefault = $("<button type='button' class='btn btn-default'>@T("Private")</button>");
+                
+                $(element).append(btnPrimary);
+                $(element).append(btnDefault);
+
+                btnPrimary.click(function() {
+                    if (btnPrimary.hasClass("btn-default")) {
+                        btnPrimary.toggleClass("btn-primary active");
+                        btnPrimary.toggleClass("btn-default");
+                        btnDefault.toggleClass("btn-primary active");
+                        btnDefault.toggleClass("btn-default");
+                    }
+                    value(true);
+                });
+                
+                btnDefault.click(function() {
+                    if (btnDefault.hasClass("btn-default")) {
+                        btnPrimary.toggleClass("btn-primary active");
+                        btnPrimary.toggleClass("btn-default");
+                        btnDefault.toggleClass("btn-primary active");
+                        btnDefault.toggleClass("btn-default");
+                    }
+                    value(false);
+                });
+            },
+            update: function(element, valueAccessor) {
+                var value = valueAccessor();
+                
+                var btnPrimary = $($(element).children()[0]);
+                var btnDefault = $($(element).children()[1]);
+
+                if (ko.unwrap(value) && btnDefault.hasClass("btn-default"))
+                    return;
+
+                if (ko.unwrap(value)) {
+                    if (btnPrimary.hasClass("btn-default")) {
+                        btnPrimary.toggleClass("btn-primary active");
+                        btnPrimary.toggleClass("btn-default");
+                        btnDefault.toggleClass("btn-primary active");
+                        btnDefault.toggleClass("btn-default");
+                    }                                        
+                } else {
+                    if (btnDefault.hasClass("btn-default")) {
+                        btnPrimary.toggleClass("btn-primary active");
+                        btnPrimary.toggleClass("btn-default");
+                        btnDefault.toggleClass("btn-primary active");
+                        btnDefault.toggleClass("btn-default");
+                    }                   
+                }
+            }
+        };
+
         $(document).ready(function () {
             var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
 
