@@ -406,22 +406,37 @@ namespace SmartWalk.Server.Services.ImportService
             {
                 foreach (var xmlShow in xmlShows)
                 {
+                    string title;
+                    string description = null;
+                    var xmlDescription = xmlShow.Desciption.TrimIt();
+
+                    if (xmlDescription.Length >= 255)
+                    {
+                        title = xmlDescription.Substring(0, 50);
+                        description = xmlDescription;
+                    }
+                    else
+                    {
+                        title = xmlDescription;
+                    }
+
                     var show = shows.FirstOrDefault(s =>
                         s.EntityRecord.Id == venue.Id &&
-                        s.Description == xmlShow.Desciption.TrimIt());
+                        s.Title == title);
                     if (show == null)
                     {
                         show = new ShowRecord
                             {
                                 EntityRecord = venue,
                                 EventMetadataRecord = eventMetadata,
-                                Description = xmlShow.Desciption.TrimIt(),
+                                Title = title,
+                                Description = description,
                                 IsDeleted = false,
                                 DateCreated = DateTime.Now,
                                 DateModified = DateTime.Now,
                             };
                         _showRepository.Create(show);
-                        _log.Add(string.Format("{0} show created", show.Description));
+                        _log.Add(string.Format("{0} show created", show.Title));
                     }
 
                     show.StartTime = xmlShow.StartTimeObject;
@@ -431,7 +446,7 @@ namespace SmartWalk.Server.Services.ImportService
 
                     _showRepository.Update(show);
                     _showRepository.Flush();
-                    _log.Add(string.Format("{0} show updated", show.Description));
+                    _log.Add(string.Format("{0} show updated", show.Title));
                 }
             }
             else
