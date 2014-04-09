@@ -1,14 +1,15 @@
 using System;
 using System.Linq;
 using System.Windows.Input;
+using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.Interfaces;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
-using MonoTouch.CoreLocation;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {

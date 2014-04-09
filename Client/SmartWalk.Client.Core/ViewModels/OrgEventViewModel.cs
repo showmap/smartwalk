@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
-using SmartWalk.Client.Core.ViewModels.Interfaces;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
-using SmartWalk.Client.Core.Constants;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -330,39 +332,38 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEvent();
+            UpdateOrgEvent().ContinueWithExceptionRethrown();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgEvent();
+            UpdateOrgEvent().ContinueWithExceptionRethrown();
         }
 
-        private void UpdateOrgEvent()
+        private async Task UpdateOrgEvent()
         {
             if (_parameters != null)
             {
                 IsLoading = true;
 
-                _dataService.GetOrgEvent(
-                    _parameters.OrgId, 
-                    _parameters.Date, 
-                    DataSource.Server, 
-                    (orgEvent, ex) => 
-                {
-                    IsLoading = false;
+                var orgEvent = default(OrgEvent);
 
-                    if (ex == null)
-                    {
-                        OrgEvent = orgEvent;
-                    }
-                    else
-                    {
-                        _exceptionPolicy.Trace(ex);
-                    }
-                    
-                    RaiseRefreshCompleted();
-                });
+                try 
+                {
+                    orgEvent = await _dataService.GetOrgEvent(
+                        _parameters.OrgId, 
+                        _parameters.Date, 
+                        DataSource.Server);
+                }
+                catch (Exception ex)
+                {
+                    _exceptionPolicy.Trace(ex);
+                }
+
+                IsLoading = false;
+
+                OrgEvent = orgEvent;
+                RaiseRefreshCompleted();
             }
             else
             {

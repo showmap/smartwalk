@@ -1,12 +1,15 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Shared.Extensions;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -52,7 +55,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     {
                         Venue = _orgEvent.Venues.FirstOrDefault(v => 
                             v.Number == _parameters.VenueNumber &&
-                                string.Compare(v.Info.Name, _parameters.VenueName, true) == 0);
+                            v.Info.Name.EqualsIgnoreCase(_parameters.VenueName));
                     }
                     else
                     {
@@ -98,7 +101,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         ((Venue)Entity).Shows != null && 
                         ((Venue)Entity).Shows.Length == 1)
                     {
-                        ExpandedShow = ((Venue)Entity).Shows.First();
+                        ExpandedShow = ((Venue)Entity).Shows[0];
                     }
 
                     if (Entity != null &&
@@ -178,12 +181,14 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEventAndVenue(DataSource.Cache);
+            UpdateOrgEventAndVenue(DataSource.Cache)
+                .ContinueWithExceptionRethrown();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgEventAndVenue(DataSource.Server);
+            UpdateOrgEventAndVenue(DataSource.Server)
+                .ContinueWithExceptionRethrown();
         }
 
         protected override void OnShowPreviousEntity()
@@ -210,33 +215,32 @@ namespace SmartWalk.Client.Core.ViewModels
             }
             else
             {
-                Venue = OrgEvent.Venues.First();
+                Venue = OrgEvent.Venues[0];
             }
 
             RaiseRefreshCompleted();
         }
 
-        private void UpdateOrgEventAndVenue(DataSource source)
+        private async Task UpdateOrgEventAndVenue(DataSource source)
         {
             if (_parameters != null)
             {
-                _dataService.GetOrgEvent(
-                    _parameters.OrgId,
-                    _parameters.EventDate,
-                    source,
-                    (orgEvent, ex) => 
-                        {
-                            if (ex == null)
-                            {
-                                OrgEvent = orgEvent;
-                            }
-                            else
-                            {
-                                _exceptionPolicy.Trace(ex);
-                            }
+                var orgEvent = default(OrgEvent);
+
+                try 
+                {
+                    orgEvent = await _dataService.GetOrgEvent(
+                        _parameters.OrgId,
+                        _parameters.EventDate,
+                        source);
+                }
+                catch (Exception ex)
+                {
+                    _exceptionPolicy.Trace(ex);
+                }
                     
-                            RaiseRefreshCompleted();
-                        });
+                OrgEvent = orgEvent;
+                RaiseRefreshCompleted();
             }
             else
             {

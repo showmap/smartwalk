@@ -1,7 +1,10 @@
+using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 
 namespace SmartWalk.Client.Core.ViewModels
@@ -81,38 +84,37 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override void Start()
         {
-            UpdateOrgInfos();
+            UpdateOrgInfos().ContinueWithExceptionRethrown();
 
             base.Start();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgInfos();
+            UpdateOrgInfos().ContinueWithExceptionRethrown();
         }
 
-        private void UpdateOrgInfos()
+        private async Task UpdateOrgInfos()
         {
             if (_locationService.CurrentLocation != null)
             {
                 IsLoading = true;
 
-                _dataService.GetLocationIndex(DataSource.Server, (location, ex) => 
-                    {
-                        IsLoading = false;
+                var location = default(LocationIndex);
 
-                        if (ex == null)
-                        {
-                            Location = location;
-                        }
-                        else
-                        {
-                            _exceptionPolicy.Trace(ex);
-                        }
-
+                try
+                {
+                    location = await _dataService.GetLocationIndex(DataSource.Server); 
+                }
+                catch (Exception ex)
+                {
+                    _exceptionPolicy.Trace(ex);
+                }
                     
-                        RaiseRefreshCompleted();
-                    });
+                IsLoading = false;
+
+                Location = location;
+                RaiseRefreshCompleted();
             }
         }
     }

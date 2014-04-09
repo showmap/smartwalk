@@ -1,5 +1,4 @@
 using System;
-using MonoTouch.Foundation;
 
 namespace SmartWalk.Client.Core.Services
 {
@@ -7,9 +6,7 @@ namespace SmartWalk.Client.Core.Services
     {
         public LocationService()
         {
-            NSTimer.CreateScheduledTimer(
-                TimeSpan.MinValue,
-                new NSAction(SetCurrentLocation));
+            SetCurrentLocation();
         }
 
         public event EventHandler LocationChanged;

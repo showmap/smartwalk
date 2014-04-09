@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using SmartWalk.Client.Core.Services;
 
-namespace SmartWalk.Client.Core.Services
+namespace SmartWalk.Client.iOS.Services
 {
     public class CacheService : ICacheService
     {

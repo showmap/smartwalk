@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -101,13 +103,13 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrg();
-            UpdateOrgInfos();
+            UpdateOrg().ContinueWithExceptionRethrown();
+            UpdateOrgInfos().ContinueWithExceptionRethrown();
         }
 
         protected override void Refresh()
         {
-            UpdateOrg();
+            UpdateOrg().ContinueWithExceptionRethrown();
         }
 
         protected override void OnShowPreviousEntity()
@@ -123,7 +125,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 _parameters.OrgId = OrgInfos.Last().Id;
             }
 
-            UpdateOrg(DataSource.Cache);
+            UpdateOrg(DataSource.Cache).ContinueWithExceptionRethrown();
         }
 
         protected override void OnShowNextEntity()
@@ -136,33 +138,33 @@ namespace SmartWalk.Client.Core.ViewModels
             }
             else
             {
-                _parameters.OrgId = OrgInfos.First().Id;
+                _parameters.OrgId = OrgInfos[0].Id;
             }
 
-            UpdateOrg(DataSource.Cache);
+            UpdateOrg(DataSource.Cache).ContinueWithExceptionRethrown();
         }
 
-        private void UpdateOrg(DataSource source = DataSource.Server)
+        private async Task UpdateOrg(DataSource source = DataSource.Server)
         {
             if (_parameters != null)
             {
                 IsLoading = true;
 
-                _dataService.GetOrg(_parameters.OrgId, source, (org, ex) => 
-                    {
-                        IsLoading = false;
+                var org = default(Org);
 
-                        if (ex == null)
-                        {
-                            Org = org;
-                        }
-                        else
-                        {
-                            _exceptionPolicy.Trace(ex);
-                        }
+                try 
+                {
+                    org = await _dataService.GetOrg(_parameters.OrgId, source);
+                }
+                catch (Exception ex)
+                {
+                    _exceptionPolicy.Trace(ex);
+                }
 
-                        RaiseRefreshCompleted();
-                    });
+                IsLoading = false;
+
+                Org = org;
+                RaiseRefreshCompleted();
             }
             else
             {
@@ -170,25 +172,23 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        private void UpdateOrgInfos()
+        private async Task UpdateOrgInfos()
         {
             if (_parameters != null)
             {
-                _dataService.GetLocationIndex(
-                    DataSource.Cache,
-                    (index, ex) => 
-                        {
-                            if (ex == null)
-                            {
-                                OrgInfos = index != null ? index.OrgInfos : null;
-                            }
-                            else
-                            {
-                                _exceptionPolicy.Trace(ex);
-                            }
+                var index = default(LocationIndex);
 
-                            RaiseRefreshCompleted();
-                        });
+                try 
+                {
+                    index = await _dataService.GetLocationIndex(DataSource.Cache);
+                }
+                catch (Exception ex)
+                {
+                    _exceptionPolicy.Trace(ex);
+                }
+
+                OrgInfos = index != null ? index.OrgInfos : null;
+                RaiseRefreshCompleted();
             }
             else
             {

@@ -4,7 +4,7 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell

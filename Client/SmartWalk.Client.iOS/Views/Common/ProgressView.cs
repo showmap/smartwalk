@@ -1,7 +1,7 @@
 using System;
-using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Utils;
 using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {

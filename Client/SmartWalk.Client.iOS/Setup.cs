@@ -18,6 +18,8 @@ namespace SmartWalk.Client.iOS
 
         protected override IMvxApplication CreateApp()
         {
+            Mvx.LazyConstructAndRegisterSingleton<IReachabilityService, ReachabilityService>();
+            Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
             Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
             Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
             Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using GoogleAnalytics;
 using SmartWalk.Client.Core.Services;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Services
 {

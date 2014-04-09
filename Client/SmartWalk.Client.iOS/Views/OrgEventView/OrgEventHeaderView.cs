@@ -1,11 +1,11 @@
 using System;
-using System.Linq;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {

@@ -1,23 +1,15 @@
 using System;
+using System.Threading.Tasks;
 using SmartWalk.Client.Core.Model;
 
 namespace SmartWalk.Client.Core.Services
 {
     public interface ISmartWalkDataService
     {
-        void GetLocationIndex(
-            DataSource source,
-            Action<LocationIndex, Exception> resultHandler);
+        Task<LocationIndex> GetLocationIndex(DataSource source);
 
-        void GetOrg(
-            string orgId,
-            DataSource source,
-            Action<Org, Exception> resultHandler);
+        Task<Org> GetOrg(string orgId, DataSource source);
 
-        void GetOrgEvent(
-            string orgId, 
-            DateTime date, 
-            DataSource source, 
-            Action<OrgEvent, Exception> resultHandler);
+        Task<OrgEvent> GetOrgEvent(string orgId, DateTime date, DataSource source);
     }
 }

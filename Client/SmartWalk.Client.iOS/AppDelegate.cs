@@ -1,3 +1,4 @@
+using System.Threading;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
@@ -7,6 +8,7 @@ using MonoTouch.Foundation;
 using MonoTouch.TestFlight;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Constants;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS
@@ -19,6 +21,8 @@ namespace SmartWalk.Client.iOS
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
+            UISynchronizationContext.Current = SynchronizationContext.Current;
+
 #if ADHOC
             InitializeTestFlight();
 #endif

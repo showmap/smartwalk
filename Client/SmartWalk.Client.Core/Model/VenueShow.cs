@@ -1,7 +1,7 @@
 using System;
-using SmartWalk.Client.Core.Utils;
-using SmartWalk.Client.Core.Model.Interfaces;
 using System.Collections.Generic;
+using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.Model
 {
@@ -21,8 +21,8 @@ namespace SmartWalk.Client.Core.Model
         {
             get
             {
-                return (Start != DateTime.MinValue ? " " + Start.ToShortTimeString() : string.Empty) + 
-                    (End != DateTime.MaxValue ? " " + End.ToShortTimeString() : string.Empty) +
+                return (Start != DateTime.MinValue ? " " + Start : string.Empty) + 
+                    (End != DateTime.MaxValue ? " " + End : string.Empty) +
                     (Site != null ? " " + Site.SearchableText : string.Empty) +
                         (Description != null ? " " + Description :  string.Empty);
             }

@@ -2,12 +2,11 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using MonoTouch.Foundation;
+using RestSharp.Portable;
 using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.Services
 {
@@ -18,89 +17,79 @@ namespace SmartWalk.Client.Core.Services
 
         private readonly ICacheService _cacheService;
         private readonly ILocationService _locationService;
+        private readonly IReachabilityService _reachabilityService;
 
         public SmartWalkDataService(
             ICacheService cacheService,
-            ILocationService locationService)
+            ILocationService locationService,
+            IReachabilityService reachabilityService)
         {
             _cacheService = cacheService;
             _locationService = locationService;
+            _reachabilityService = reachabilityService;
         }
 
-        public void GetLocationIndex(
-            DataSource source,
-            Action<LocationIndex, Exception> resultHandler)
+        public async Task<LocationIndex> GetLocationIndex(DataSource source)
         {
             var location = _locationService.CurrentLocation;
             var key = GenerateKey(location);
-
-            GetGenericContract<LocationIndex>(
+            var result = await GetGenericContract<LocationIndex>(
                 key,
                 dataUrl + location + "index.xml",
                 CreateLocation,
-                source,
-                resultHandler);
+                source);
+            return result;
         }
 
-        public void GetOrg(
-            string orgId,
-            DataSource source,
-            Action<Org, Exception> resultHandler)
+        public async Task<Org> GetOrg(string orgId, DataSource source)
         {
             var location = _locationService.CurrentLocation;
             var key = GenerateKey(location, orgId);
-
-            GetGenericContract<Org>(
+            var result = await GetGenericContract<Org>(
                 key,
                 dataUrl + location + orgId + "/index.xml",
                 new Func<XDocument, Org>(doc => CreateOrg(orgId, doc)),
-                source,
-                resultHandler);
+                source);
+            return result;
         }
 
-        public void GetOrgEvent(
-            string orgId,
-            DateTime date,
-            DataSource source,
-            Action<OrgEvent, Exception> resultHandler)
+        public async Task<OrgEvent> GetOrgEvent(string orgId, DateTime date, DataSource source)
         {
             var location = _locationService.CurrentLocation;
             var key = GenerateKey(
                 location,
                 orgId,
                 String.Format("{0:yyyy-MM-dd}", date));
-
-            GetGenericContract<OrgEvent>(
+            var result = await GetGenericContract<OrgEvent>(
                 key,
                 dataUrl + location + orgId + "/events/" + 
                     orgId + "-" + String.Format("{0:yyyy-MM-dd}", date) + ".xml",
                 new Func<XDocument, OrgEvent>(doc => CreateOrgEvent(orgId, date, doc)),
-                source,
-                resultHandler);
+                source);
+            return result;
         }
 
-        private void GetGenericContract<T>(
+        private async Task<T> GetGenericContract<T>(
             string key,
             string url,
             Func<XDocument, T> createContract,
-            DataSource source, Action<T, Exception> resultHandler)
+            DataSource source)
                 where T : class
         {
             var xml = default(XDocument);
             var isConnected = GetIsConnected();
-            var processXmlHandler = new Action<XDocument>(doc => {
+            var processXmlHandler = new Func<XDocument, T>(doc =>
+            {
                 if (doc != null)
                 {
                     var contract = createContract(doc);
 
                     _cacheService.SetString(key, doc.ToString());
 
-                    resultHandler(contract, null);
+                    return contract;
                 }
-                else
-                {
-                    resultHandler(null, null);
-                }
+
+                return null;
             });
 
             if (!isConnected || source == DataSource.Cache)
@@ -108,95 +97,48 @@ namespace SmartWalk.Client.Core.Services
                 var data = _cacheService.GetString(key);
                 if (data != null)
                 {
-                    try
-                    {
-                        xml = XDocument.Parse(data);
-                    }
-                    catch (Exception xmlEx)
-                    {
-                        resultHandler(null, xmlEx);
-                        return;
-                    }
+                    xml = XDocument.Parse(data);
                 }
             }
 
             if (isConnected && xml == null)
             {
-                DownloadString(
-                    url,
-                    (result, ex) =>
-                    {
-                    if (ex == null && result != null)
-                        {
-                            XDocument xmlDoc;
+                var result = await DownloadString(url);
+                if (result != null)
+                {
+                    var xmlDoc = 
+                        XDocument.Load(
+                            XmlReader.Create(
+                                new MemoryStream(result)));
 
-                            try
-                            {
-                                xmlDoc = XDocument.Load(
-                                    XmlReader.Create(
-                                        new MemoryStream(result)));
-                            }
-                            catch (Exception xmlEx)
-                            {
-                                resultHandler(null, xmlEx);
-                                return;
-                            }
-
-                            processXmlHandler(xmlDoc);
-                        }
-                        else
-                        {
-                            resultHandler(null, ex);
-                        }
-                    });
+                    return processXmlHandler(xmlDoc);
+                }
             }
             else
             {
-                processXmlHandler(xml);
+                return processXmlHandler(xml);
             }
+
+            return null;
         }
 
-        private static bool GetIsConnected()
+        private bool GetIsConnected()
         {
-            return Reachability.IsHostReachable(host);
+            return _reachabilityService.IsHostReachable(host);
         }
 
-        private static void DownloadString(string url, Action<byte[], Exception> resultHandler)
+        private async Task<byte[]> DownloadString(string url)
         {
-            var client = new WebClient();
-            client.DownloadDataCompleted += (s, e) => 
-                HoldOnABit(() => 
-                    InvokeOnMainThread(() => 
-                        resultHandler(e.Result, e.Error)));
-            client.DownloadDataAsync(new Uri(url));
-        }
-
-        /// <summary>
-        /// A debug only trick to simulate slower network connection,
-        /// for testing loading progress indication.
-        /// </summary>
-        private static void HoldOnABit(Action handler)
-        {
-#if DEBUG
-            NSThread.SleepFor(0.5);
-            handler();
-#else
-            handler();
-#endif
-        }
-
-        private static void InvokeOnMainThread(Action handler)
-        {
-            using (var obj = new NSObject())
-            {
-                obj.InvokeOnMainThread(new NSAction(handler));
-            }
+            var client = new RestClient(new Uri(url));
+            var request = new RestRequest(string.Empty);
+            var result = await client.Execute(request);
+            return result != null ? result.RawBytes : null;
         }
 
         private static string GenerateKey(params string[] args)
         {
             var key = default(string);
-            var comp = StringComparison.InvariantCultureIgnoreCase;
+            var comp = StringComparison.OrdinalIgnoreCase;
 
             if (args != null)
             {

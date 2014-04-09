@@ -1,6 +1,6 @@
 using System;
 
-namespace SmartWalk.Client.Core.Utils
+namespace SmartWalk.Client.iOS.Utils
 {
     public static class ConsoleUtil
     {
