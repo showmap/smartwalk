@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace SmartWalk.Shared.Extensions
+namespace SmartWalk.Shared.Utils
 {
     public static class ReflectionExtensions
     {
@@ -19,6 +19,29 @@ namespace SmartWalk.Shared.Extensions
         {
             var type = objectToCheck.GetType();
             return type.GetProperties().Any(p => p.Name.EqualsIgnoreCase(propertyName));
+        }
+
+        /// <summary>
+        /// Extracts property value and tries to cast it to specified type.
+        /// </summary>        
+        public static T GetValue<T>(this object that, string propertyName)
+        {
+            if (that != null && !string.IsNullOrWhiteSpace(propertyName))
+            {
+                var property = that.GetType().GetProperty(propertyName);
+                if (property != null)
+                {
+                    var value = property.GetValue(that, null);
+                    if (value is T)
+                    {
+                        var result1 = (T)value;
+                        return result1;
+                    }
+                }
+            }
+
+            var result = default(T);
+            return result;
         }
 
         /// <summary>
@@ -875,6 +898,21 @@ namespace SmartWalk.Shared.Extensions
             }
 
             return null;
+        }
+
+        public static Dictionary<string, object> ToDictionary(this object obj)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+
+            var result = new Dictionary<string, object>();
+            var properties = obj.GetType().GetProperties();
+
+            foreach (var property in properties)
+            {
+                result[property.Name.ToLowerInvariant()] = obj.GetValue<object>(property.Name);
+            }
+
+            return result;
         }
     }
 }

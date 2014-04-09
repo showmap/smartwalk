@@ -1,5 +1,5 @@
 using System;
-using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.Model
 {

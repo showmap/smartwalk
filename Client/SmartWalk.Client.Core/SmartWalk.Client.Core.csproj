@@ -101,8 +101,6 @@
     <Compile Include="Services\SmartWalkDataService.cs" />
     <Compile Include="Model\Org.cs" />
     <Compile Include="Services\IExceptionPolicy.cs" />
-    <Compile Include="Utils\ReflectExtensions.cs" />
-    <Compile Include="Utils\Reflect.cs" />
     <Compile Include="Model\EntityInfo.cs" />
     <Compile Include="ViewModels\EntityViewModel.cs" />
     <Compile Include="Model\Entity.cs" />
@@ -113,11 +111,9 @@
     <Compile Include="Services\DataSource.cs" />
     <Compile Include="ViewModels\VenueViewModel.cs" />
     <Compile Include="Converters\ValueConverter.cs" />
-    <Compile Include="Utils\HashCode.cs" />
     <Compile Include="Model\WebSiteInfo.cs" />
     <Compile Include="Model\PhoneInfo.cs" />
     <Compile Include="Model\EmailInfo.cs" />
-    <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="ViewModels\BrowserViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IRefreshableViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IFullscreenImageProvider.cs" />

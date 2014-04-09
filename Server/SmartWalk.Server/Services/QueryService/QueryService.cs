@@ -8,7 +8,7 @@ using Orchard.Environment.Configuration;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Resources;
 using SmartWalk.Shared.DataContracts.Api;
-using SmartWalk.Shared.Extensions;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.QueryService
 {

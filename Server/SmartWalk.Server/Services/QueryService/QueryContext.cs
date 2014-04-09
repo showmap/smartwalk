@@ -1,7 +1,7 @@
 ﻿using Orchard.Environment.Configuration;
 using SmartWalk.Server.Models.DataContracts;
 using SmartWalk.Server.Records;
-using SmartWalk.Shared.Extensions;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.QueryService
 {

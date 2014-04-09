@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model.Interfaces;
-using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.Model
 {

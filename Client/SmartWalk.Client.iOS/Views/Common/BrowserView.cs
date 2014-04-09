@@ -5,9 +5,9 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
-using System.Globalization;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -22,8 +22,8 @@ namespace SmartWalk.Client.iOS.Views.Common
                 if (ViewModel.BrowserURL != null)
                 {
                     var url = ViewModel.BrowserURL;
-                    if (!url.StartsWith(@"http://", true, CultureInfo.InvariantCulture) &&
-                        !url.StartsWith(@"https://", true, CultureInfo.InvariantCulture))
+                    if (!url.StartsWith(@"http://", StringComparison.OrdinalIgnoreCase) &&
+                        !url.StartsWith(@"https://", StringComparison.OrdinalIgnoreCase))
                     {
                         url = "http://" + url;
                     }

@@ -1,4 +1,4 @@
-using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model.Interfaces;
 
 namespace SmartWalk.Client.Core.Model

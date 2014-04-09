@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using SmartWalk.Shared.Resources;
 
-namespace SmartWalk.Shared.Extensions
+namespace SmartWalk.Shared.Utils
 {
     /// <summary>
     ///     Provides strong-typed reflection of the

@@ -84,14 +84,14 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override void Start()
         {
-            UpdateOrgInfos().ContinueWithExceptionRethrown();
+            UpdateOrgInfos().ContinueWithThrow();
 
             base.Start();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgInfos().ContinueWithExceptionRethrown();
+            UpdateOrgInfos().ContinueWithThrow();
         }
 
         private async Task UpdateOrgInfos()

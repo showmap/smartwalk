@@ -103,13 +103,13 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrg().ContinueWithExceptionRethrown();
-            UpdateOrgInfos().ContinueWithExceptionRethrown();
+            UpdateOrg().ContinueWithThrow();
+            UpdateOrgInfos().ContinueWithThrow();
         }
 
         protected override void Refresh()
         {
-            UpdateOrg().ContinueWithExceptionRethrown();
+            UpdateOrg().ContinueWithThrow();
         }
 
         protected override void OnShowPreviousEntity()
@@ -125,7 +125,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 _parameters.OrgId = OrgInfos.Last().Id;
             }
 
-            UpdateOrg(DataSource.Cache).ContinueWithExceptionRethrown();
+            UpdateOrg(DataSource.Cache).ContinueWithThrow();
         }
 
         protected override void OnShowNextEntity()
@@ -141,7 +141,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 _parameters.OrgId = OrgInfos[0].Id;
             }
 
-            UpdateOrg(DataSource.Cache).ContinueWithExceptionRethrown();
+            UpdateOrg(DataSource.Cache).ContinueWithThrow();
         }
 
         private async Task UpdateOrg(DataSource source = DataSource.Server)

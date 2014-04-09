@@ -1,16 +1,16 @@
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
-using System.Drawing;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {

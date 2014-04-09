@@ -13,7 +13,7 @@ using SmartWalk.Server.Models;
 using SmartWalk.Server.Models.XmlModel;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
-using SmartWalk.Shared.Extensions;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.ImportService
 {

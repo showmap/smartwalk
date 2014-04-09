@@ -7,7 +7,7 @@ using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.ViewModels;
-using SmartWalk.Shared.Extensions;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.EventService
 {

@@ -3,7 +3,7 @@ using System.Linq;
 using SmartWalk.Server.Models.DataContracts;
 using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts;
-using SmartWalk.Shared.Extensions;
+using SmartWalk.Shared.Utils;
 using CombineType = SmartWalk.Shared.DataContracts.CombineType;
 using ContactType = SmartWalk.Shared.DataContracts.ContactType;
 using EntityType = SmartWalk.Shared.DataContracts.EntityType;

@@ -1,7 +1,7 @@
 using System;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Services;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.Core.ViewModels.Common

@@ -5,7 +5,7 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Shared.Extensions;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
@@ -182,13 +182,13 @@ namespace SmartWalk.Client.Core.ViewModels
             _parameters = parameters;
 
             UpdateOrgEventAndVenue(DataSource.Cache)
-                .ContinueWithExceptionRethrown();
+                .ContinueWithThrow();
         }
 
         protected override void Refresh()
         {
             UpdateOrgEventAndVenue(DataSource.Server)
-                .ContinueWithExceptionRethrown();
+                .ContinueWithThrow();
         }
 
         protected override void OnShowPreviousEntity()

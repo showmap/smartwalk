@@ -332,12 +332,12 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEvent().ContinueWithExceptionRethrown();
+            UpdateOrgEvent().ContinueWithThrow();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgEvent().ContinueWithExceptionRethrown();
+            UpdateOrgEvent().ContinueWithThrow();
         }
 
         private async Task UpdateOrgEvent()

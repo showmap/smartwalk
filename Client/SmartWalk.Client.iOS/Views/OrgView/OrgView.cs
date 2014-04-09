@@ -1,8 +1,8 @@
 using System;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common;

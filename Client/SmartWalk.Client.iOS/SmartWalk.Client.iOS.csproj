@@ -338,6 +338,10 @@
       <Project>{A9012546-5146-407B-BDDB-B6A4FCABCB4A}</Project>
       <Name>SmartWalk.Client.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
+      <Project>{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}</Project>
+      <Name>SmartWalk.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\HomeView\HomeView.xib" />
