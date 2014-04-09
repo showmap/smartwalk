@@ -56,42 +56,32 @@
 			<div class="col-sm-4">
 				<div class="form-group">
 					<label for="visibilityButtonsGroup">@T("Visibility"):</label><br/>
-					<div class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: IsPublic"></div>
+					<div class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: IsPublic, switcherOptions: { values: [{'val':true, 'disp':'@T("Public")'}, {'val':false, 'disp':'@T("Private")'}]}"></div>
 				</div>
 			</div>
 		</div>	    
-        
+
         <div class="row">
-			<div class="col-sm-8">
-				<div class="form-group">
-					<label for="organizedByComboBox">@T("Organized By"):</label>
-				    <div class="input-group">
-				        <!--<input type="text" class="form-control" id="organizedByComboBox" >-->
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <label for="organizedByComboBox">@T("Organized By"):</label>
+                    <div class="input-group">
+                        <!--<input type="text" class="form-control" id="organizedByComboBox" >-->
                         <select class="form-control" id="organizedByComboBox" data-bind="options: AllHosts, optionsText: 'DisplayName', value: Host, optionsCaption: '@T("Select Organizer...")'"></select>
-				        <span class="input-group-btn">
-				            <button type="button" class="btn btn-default" id="createOrganizerButton">@T("Create Organizer...")</button>
-				        </span>
-				    </div>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" id="createOrganizerButton">@T("Create Organizer...")</button>
+                        </span>
+                    </div>
 					
-				</div>
-			</div>
-		</div>
-		
-        <div class="row">
-			<div class="col-sm-8">
+                </div>
+            </div>
+            <div class="col-sm-4">
 				<div class="form-group">
-					@Html.LabelFor(m => eventItem.CombineType, @T("Combine type"))
-                    @Html.DropDownListFor(m => eventItem.CombineType,
-                              Enum.GetNames(typeof(CombineType))
-                                  .Select(u => new SelectListItem
-                                  {
-                                      Selected = (int)Enum.Parse(typeof(CombineType), u) == eventItem.CombineType,
-                                      Text = @T(u).ToString(),
-                                      Value = ((int)Enum.Parse(typeof(CombineType), u)).ToString()
-                                  }), new Dictionary<string, object> { { "data-bind", "value:CombineType" }, {"class", "form-control"} })					
+					<label for="combineTypeButtonsGroup">@T("Combine Type"):</label><br/>
+					<div class="btn-group" id="combineTypeButtonsGroup" data-bind="switcher: CombineType, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}]}"></div>
 				</div>
 			</div>
-		</div>
+		</div>		       
 
         <div class="row">
 			<div class="col-sm-8">
@@ -148,7 +138,7 @@
 
         <div data-bind="visible: Id() > 0">
             <p>@T("Venues")</p>
-            <select id="other-venues" data-bind="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")    '"></select>
+            <select id="other-venues" data-bind="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
             <button id="add-event-venue-button" data-bind="click: $root.addVenue, enable: selectedVenue">@T("Add venue")</button>    
         </div>        
     </div>
@@ -285,10 +275,31 @@
 
     (function ($) {
         ko.bindingHandlers.switcher = {
-            init: function(element, valueAccessor) {
-                var value = valueAccessor();
-                
-                var btnPrimary = $("<button type='button' class='btn btn-primary active'>@T("Public")</button>");
+            init: function(element, valueAccessor, allBindingsAccessor) {
+                var options = allBindingsAccessor().switcherOptions || {};                
+                var value = valueAccessor();                
+                if (options && options.values) {
+                    for (var i = 0; i < options.values.length; i++) {
+                        var opt = options.values[i];
+                        var btn = (i == 0) ? $("<button type='button' class='btn btn-primary active'>" + opt.disp + "</button>") : $("<button type='button' class='btn btn-default'>" + opt.disp + "</button>");
+                        btn.data('val', opt.val);
+                        $(element).append(btn);
+                        
+                        btn.click(function() {
+                            //alert('btn val = ' + $(this).data('val') + '; val = ' + value());
+                            if (value() != $(this).data('val')) {
+                                $(element).find(" > button").each(function() {
+                                    $(this).toggleClass("btn-primary active");
+                                    $(this).toggleClass("btn-default");
+                                });
+                                
+                                value($(this).data('val'));
+                            }
+                        });
+                    }
+                }
+
+                @*var btnPrimary = $("<button type='button' class='btn btn-primary active'>@T("Public")</button>");
                 var btnDefault = $("<button type='button' class='btn btn-default'>@T("Private")</button>");
                 
                 $(element).append(btnPrimary);
@@ -312,32 +323,23 @@
                         btnDefault.toggleClass("btn-default");
                     }
                     value(false);
-                });
+                });*@
             },
             update: function(element, valueAccessor) {
                 var value = valueAccessor();
                 
-                var btnPrimary = $($(element).children()[0]);
-                var btnDefault = $($(element).children()[1]);
+                $(element).find(" > button").each(function() {
+                    if ($(this).data('val') == value() && $(this).hasClass("btn-default")) {
+                        $(this).toggleClass("btn-primary active");
+                        $(this).toggleClass("btn-default");    
+                    }
+                    
+                    if ($(this).data('val') != value() && $(this).hasClass("btn-primary active")) {
+                        $(this).toggleClass("btn-primary active");
+                        $(this).toggleClass("btn-default");    
+                    }
 
-                if (ko.unwrap(value) && btnDefault.hasClass("btn-default"))
-                    return;
-
-                if (ko.unwrap(value)) {
-                    if (btnPrimary.hasClass("btn-default")) {
-                        btnPrimary.toggleClass("btn-primary active");
-                        btnPrimary.toggleClass("btn-default");
-                        btnDefault.toggleClass("btn-primary active");
-                        btnDefault.toggleClass("btn-default");
-                    }                                        
-                } else {
-                    if (btnDefault.hasClass("btn-default")) {
-                        btnPrimary.toggleClass("btn-primary active");
-                        btnPrimary.toggleClass("btn-default");
-                        btnDefault.toggleClass("btn-primary active");
-                        btnDefault.toggleClass("btn-default");
-                    }                   
-                }
+                });
             }
         };
 
