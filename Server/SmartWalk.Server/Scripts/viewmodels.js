@@ -110,22 +110,44 @@ function ShowViewModel(data) {
 function EntityViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable(data.Id);
-    self.EventMetedataId = ko.observable(data.EventMetedataId);
+    self.Id = ko.observable();
+    self.EventMetedataId = ko.observable();
 
-    self.Type = ko.observable(data.Type);
+    self.Type = ko.observable();
 
-    self.Name = ko.observable(data.Name);
-    self.DisplayName = ko.observable(data.DisplayName);
+    self.Name = ko.observable();
+    self.DisplayName = ko.observable();
 
-    self.Description = ko.observable(data.Description);
-    self.Picture = ko.observable(data.Picture);
-    self.State = ko.observable(data.State);
+    self.Description = ko.observable();
+    self.Picture = ko.observable();
+    self.State = ko.observable();
 
     self.selectedItem = ko.observable();
     
-    // Contacts
-    self.AllContacts = ko.observableArray($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
+    self.AllContacts = ko.observableArray();
+    self.AllAddresses = ko.observableArray();
+    self.AllShows = ko.observableArray();
+
+    self.loadData = function (data) {
+        self.Id(data.Id);
+        self.EventMetedataId(data.EventMetedataId);
+        self.Type(data.Type);
+
+        self.Name(data.Name);
+        self.DisplayName(data.DisplayName);
+
+        self.Description(data.Description);
+        self.Picture(data.Picture);
+        self.State(data.State);
+
+        self.AllContacts($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
+        self.AllAddresses($.map(data.AllAddresses, function (item) { return new AddressViewModel(item); }));
+        self.AllShows($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
+    };
+
+    self.loadData(data);
+
+    // Contacts    
     self.Contacts = ko.computed(function () {
         return ko.utils.arrayFilter(this.AllContacts(), function (item) {
             return item.State() != 2;
@@ -189,12 +211,19 @@ function EntityViewModel(data) {
     //self.selectedContact = ko.observable();
 
     // Addresses
-    self.AllAddresses = ko.observableArray($.map(data.AllAddresses, function (item) { return new AddressViewModel(item); }));
     self.Addresses = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllAddresses(), function (item) {
             return item.State() != 2;
         });
     }, this);
+    self.IsMapVisible = ko.computed(function () {
+        if (self.Addresses().length > 1)
+            return true;
+        if (self.Addresses().length == 1 && self.Addresses()[0] != self.selectedItem())
+            return true;
+
+        return false;
+    });
     self.DeletedAddresses = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllAddresses(), function (item) {
             return item.State() == 2;
@@ -251,7 +280,6 @@ function EntityViewModel(data) {
 
     //self.selectedAddress = ko.observable();
     // Shows
-    self.AllShows = ko.observableArray($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
     self.Shows = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllShows(), function (item) {
             return item.State() != 2 && item.State() != 3;
@@ -271,8 +299,6 @@ function EventViewModel(data) {
 
     self.Id = ko.observable();
     self.UserId = ko.observable();
-    self.HostId = ko.observable();
-    self.HostName = ko.observable();
 
     self.Title = ko.observable();
     self.Description = ko.observable();
@@ -294,8 +320,6 @@ function EventViewModel(data) {
     self.loadData = function (data) {
         self.Id(data.Id);
         self.UserId(data.UserId);
-        self.HostId(data.HostId);
-        self.HostName(data.HostName);
 
         self.Title(data.Title);
         self.Description(data.Description);

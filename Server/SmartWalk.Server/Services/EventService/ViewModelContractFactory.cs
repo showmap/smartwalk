@@ -18,8 +18,6 @@ namespace SmartWalk.Server.Services.EventService
             {
                 Id = record.Id,
                 UserId = record.SmartWalkUserRecord.Id,
-                HostId = record.EntityRecord.Id,
-                HostName = record.EntityRecord.Name,
                 Title = record.Title,
                 CombineType = record.CombineType,
                 StartTime = record.StartTime.ToString("d", CultureInfo.InvariantCulture),

@@ -75,12 +75,12 @@
 					
                 </div>
             </div>
-            <div class="col-sm-4">
+            @*<div class="col-sm-4">
 				<div class="form-group">
 					<label for="combineTypeButtonsGroup">@T("Combine Type"):</label><br/>
 					<div class="btn-group" id="combineTypeButtonsGroup" data-bind="switcher: CombineType, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}]}"></div>
 				</div>
-			</div>
+			</div>*@
 		</div>		       
 
         <div class="row">
@@ -144,6 +144,8 @@
     </div>
 </div>
 
+@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetedataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal})
+
 <script type="text/html" id="EntityItemTemplate">
     <tr>
         <td class="venue" colspan="2">
@@ -183,7 +185,12 @@
 
 <script type="text/html" id="ShowItemTemplate">
     <tr data-bind="click: $root.selectedShow">
-        <td data-bind="text: Title"><br/><span class="description" data-bind="text: Description"></span></td>
+        <td>
+            <span data-bind="text: Title"></span>
+            <br/>
+            <span class="description" data-bind="text: Description"></span>
+        </td>
+        
         <td data-bind="text: TimeText"></td>
         <td class="td-align"><input type="checkbox" value=""></td>
     </tr>    
@@ -274,6 +281,37 @@
 <script language="javascript">        
 
     (function ($) {
+        
+        $("#edit-host-form").dialog({
+            modal: true,
+            autoOpen: false,
+            dialogClass: 'noTitleStuff',
+            width: 640,
+            height: 480,
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            },
+            @*buttons: {
+                '@T("Cancel")': function () {
+                    $("#edit-host-form").dialog("close");
+
+                },
+                '@T("Save")': function () {
+                    $("#edit-host-form").dialog("close");                    
+                }
+            },*@
+        });
+        $(".ui-dialog-titlebar").hide();
+        $("#createOrganizerButton").click(function () {
+            $("#edit-host-form").dialog("open");
+            //ko.applyBindings(vmHost, document.getElementById('host-panel'));
+        });
+
         ko.bindingHandlers.switcher = {
             init: function(element, valueAccessor, allBindingsAccessor) {
                 var options = allBindingsAccessor().switcherOptions || {};                
@@ -521,6 +559,15 @@
                 $.ajax(config);                
             };
 
+            $("#edit-host-form").bind('OnHostCancelled', function (event) {
+                $("#edit-host-form").dialog("close");
+            });
+        
+            $("#edit-host-form").bind('OnHostSaved', function (event) {
+                vm.AllHosts.push(event.item);
+                vm.Host(event.item);
+                $("#edit-host-form").dialog("close");
+            });
 
             ko.applyBindings(vm, document.getElementById('event-item'));            
         });

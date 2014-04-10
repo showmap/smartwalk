@@ -1,0 +1,391 @@
+﻿@using SmartWalk.Server.Records
+@using SmartWalk.Server.ViewModels
+
+@{
+    Style.Require("SmartWalk.Common");
+    
+    Script.Require("jQueryUI").AtHead();
+    Script.Require("SmartWalk.ViewModels").AtHead();
+    
+    var host = (EntityVm) Model;
+    var cancelAction = host.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @host.Id });
+    var actionCaption = host.Id == 0 ? T("Add Organizer") : T("Save Organizer");
+}
+
+<div id="edit-host-form"  
+     save-host-url="@Url.Action("SaveOrAdd", "Host", new {area = "SmartWalk.Server"})" 
+     get-address-url ="@Url.Action("GetAddress", "Event", new {area = "SmartWalk.Server"})"
+     save-address-url ="@Url.Action("SaveAddress", "Event", new {area = "SmartWalk.Server"})"
+     delete-addresses-url ="@Url.Action("DeleteAddresses", "Event", new {area = "SmartWalk.Server"})"
+     get-contact-url ="@Url.Action("GetContact", "Event", new {area = "SmartWalk.Server"})"
+     save-contact-url ="@Url.Action("SaveContact", "Event", new {area = "SmartWalk.Server"})"
+     delete-contacts-url ="@Url.Action("DeleteContacts", "Event", new {area = "SmartWalk.Server"})">
+    @Html.AntiForgeryTokenOrchard()
+    <div id="venue-panel">
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="@T("Type organizer name...")" data-bind="value: Name" />
+                </div>
+            </div>
+            <div class="col-xs-4 text-right">
+                <button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@actionCaption</button>
+            </div>
+        </div>
+        
+        <div class="row">
+			<div class="col-sm-8">
+				<div class="form-group">
+					<label for="pictureTextInput">@T("Picture"):</label>
+					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture" />
+				</div>
+			</div>
+		</div>
+        
+        <div class="row">
+			<div class="col-sm-8">
+				<div class="form-group">
+					<label for="descriptionTextArea">@T("Description"):</label>
+					<textarea class="form-control" id="descriptionTextArea" data-bind="value: Description"></textarea>
+				</div>
+			</div>
+		</div>
+        
+        <iframe data-bind="attr: { src: GetMapLink() }, visible: IsMapVisible" class="map-container" frameborder="0"></iframe>
+        
+        <div class="row">
+			<div class="col-sm-8">
+				<table class="table table-hover addresses-table" data-bind="visible: Addresses().length > 0">
+					<thead>
+						<tr>
+							<th><h4>@T("Addresses")</h4></th>
+							<th class="td-align">
+								<div class="input-group-btn" style="display:inline">
+								    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								        <input type="checkbox" data-bind="checked: AllAddressesChecked"/><span class="caret"></span>
+								    </button>
+									<ul class="dropdown-menu">
+										<li><a href="#">@T("Duplicate")</a></li>
+										<li data-bind="visible: IsAnyAddressSelected"><a href="#" data-bind="    click: $root.deleteAddresses">@T("Delete")</a></li>
+									</ul>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody data-bind="template: { name: getAddressView, foreach: Addresses() }"></tbody>
+				</table>
+				
+				<button type="button" class="btn btn-default" data-bind="click: addAddress">@T("Add Address")</button>
+			</div>
+		</div>
+        
+        <div class="row gap">
+			<div class="col-sm-8">
+				<table class="table table-hover" data-bind="visible: Contacts().length > 0">
+					<thead>
+						<tr>
+							<th>@T("Contact Type")</th>
+							<th><h4>@T("E-mail, Phone or Web-Site")</h4></th>
+							<th class="td-align">
+								<div class="input-group-btn" style="display:inline">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+										<input type="checkbox" data-bind="checked: AllContactsChecked"/> <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu">
+										<li><a href="#">@T("Duplicate")</a></li>
+										<li data-bind="visible: IsAnyContactSelected"><a href="#" data-bind="    click: $root.deleteContacts">@T("Delete")</a></li>
+									</ul>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody data-bind="template: { name: getContactView, foreach: Contacts() }"></tbody>
+				</table>
+				
+				<button type="button" class="btn btn-default" data-bind="click: addContact">Add Contact</button>
+			</div>
+		</div>
+
+        <div class="row double-gap">
+            <div class="col-xs-4">
+                @if (host.Id != 0) {
+                   using(Html.BeginForm("Delete", "Host", FormMethod.Get)) {
+                       <input type="hidden" name="entityId" value="@host.Id" />
+                       <button type="submit" class="btn btn-danger" >@T("Delete Organizer")</button>
+                   } 
+                }
+            </div>
+            <div class="col-xs-8 text-right">                
+                <button type="submit" class="btn btn-default" data-bind="click: cancel">@T("Cancel")</button>
+                <button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@actionCaption</button>
+            </div>
+        </div>   
+    </div> 
+</div>
+
+@Html.Partial("Templates")
+
+<script>
+    $(function () {
+        var vmHost = new EntityViewModel(@Html.Raw(Json.Encode(host)));
+        
+        vmHost.getContactView = function (item) {
+            return item === vmHost.selectedItem() ? 'EditContactTemplate' : "ViewContactTemplate";
+        };
+
+        vmHost.GetContactTypeById = function (id) {
+            switch (id) {
+                case "0":
+                    return "@T("E-mail")";
+                case "1":
+                    return "@T("Web")";
+                case "2":
+                    return "@T("Phone")";
+                default:
+                    return "@T("Contact")";
+            }
+        };
+
+        vmHost.GetContactType = function (item) {
+            return vmHost.GetContactTypeById(item.Type());
+        };
+
+        vmHost.cancelContact = function (item) {
+            if (item.Id() == 0) {
+                //item.State(2);
+                vmHost.selectedItem(null);
+                vmHost.AllContacts.remove(item);
+            } else {
+                if (vmHost.Id() != 0) {
+                    var ajdata = ko.toJSON(item);
+                    var urlUpdate = $("#edit-host-form").attr("get-contact-url");
+
+                    var config = {
+                        async: true,
+                        url: urlUpdate,
+                        type: "POST",
+                        data: ajdata,
+                        dataType: "json",
+                        cache: false,
+                        contentType: "application/json; charset=utf-8",
+                        error: function(e) {
+                            vmHost.selectedItem(null);
+                        },
+                        success: function(data) {
+                            item.loadData(data);
+                            vmHost.selectedItem(null);
+                        }
+                    };
+                    $.ajax(config);
+                } else {
+                    vmHost.selectedItem(null);
+                }
+            }
+        };
+
+        vmHost.saveContact = function (item) {
+            if (vmHost.Id() != 0) {
+                var ajdata = ko.toJSON(item);
+                var urlUpdate = $("#edit-host-form").attr("save-contact-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function(e) {
+                        vmHost.selectedItem(null);
+                    },
+                    success: function(data) {
+                        if (item.Id() == 0 || item.Id() != data)
+                            item.Id(data);
+
+                        vmHost.selectedItem(null);
+                    }
+                };
+                $.ajax(config);
+            } else {
+                vmHost.selectedItem(null);
+            }
+        };
+
+        vmHost.deleteContacts = function () {
+            vmHost.selectedItem(null);
+
+            if (vmHost.Id() != 0) {
+                var ajdata = ko.toJSON(vmHost.CheckedContacts);
+                var urlUpdate = $("#edit-host-form").attr("delete-contacts-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function(e) {
+                    },
+                    success: function(data) {
+                        for (var i = 0; i < vmHost.CheckedContacts().length; i++) {
+                            vmHost.AllContacts.remove(vmHost.CheckedContacts()[i]);
+                        }
+                    }
+                };
+                $.ajax(config);
+            } else {
+                for (var i = 0; i < vmHost.CheckedContacts().length; i++) {
+                    vmHost.AllContacts.remove(vmHost.CheckedContacts()[i]);
+                }
+            }
+        };
+
+        vmHost.getAddressView = function (item) {
+            return item === vmHost.selectedItem() ? 'EditAddressTemplate' : "ViewAddressTemplate";
+        };
+
+        vmHost.cancelAddress = function (item) {
+
+            if (item.Id() == 0) {
+                //item.State(2);
+                vmHost.selectedItem(null);
+                vmHost.AllAddresses.remove(item);
+            } else {
+                if (vmHost.Id() != 0) {
+                    var ajdata = ko.toJSON(item);
+                    var urlUpdate = $("#edit-host-form").attr("get-address-url");
+
+                    var config = {
+                        async: true,
+                        url: urlUpdate,
+                        type: "POST",
+                        data: ajdata,
+                        dataType: "json",
+                        cache: false,
+                        contentType: "application/json; charset=utf-8",
+                        error: function(e) {
+                            vmHost.selectedItem(null);
+                        },
+                        success: function(data) {
+                            item.loadData(data);
+                            vmHost.selectedItem(null);
+                        }
+                    };
+                    $.ajax(config);
+                } else {
+                    vmHost.selectedItem(null);
+                }
+            }
+        };
+
+        vmHost.saveAddress = function (item) {
+            if (vmHost.Id() != 0) {
+                var ajdata = ko.toJSON(item);
+                var urlUpdate = $("#edit-host-form").attr("save-address-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function(e) {
+                        vmHost.selectedItem(null);
+                    },
+                    success: function(data) {
+                        if (item.Id() == 0 || item.Id() != data)
+                            item.Id(data);
+
+                        vmHost.selectedItem(null);
+                    }
+                };
+                $.ajax(config);
+            } else {
+                vmHost.selectedItem(null);
+            }
+        };
+
+        vmHost.deleteAddresses = function () {
+            vmHost.selectedItem(null);
+
+            if (vmHost.Id() != 0) {
+                var ajdata = ko.toJSON(vmHost.CheckedAddresses);
+                var urlUpdate = $("#edit-host-form").attr("delete-addresses-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function(e) {
+                    },
+                    success: function(data) {
+                        for (var i = 0; i < vmHost.CheckedAddresses().length; i++) {
+                            vmHost.AllAddresses.remove(vmHost.CheckedAddresses()[i]);
+                        }
+                    }
+                };
+                $.ajax(config);
+            } else {
+                for (var i = 0; i < vmHost.CheckedAddresses().length; i++) {
+                    vmHost.AllAddresses.remove(vmHost.CheckedAddresses()[i]);
+                }
+            }
+        };
+
+        vmHost.GetMapLink = function () {
+            var res = "";
+
+            if (vmHost.Addresses().length > 0) {
+                var addr = vmHost.Addresses()[0];
+                return addr.GetMapLink();
+            }
+
+            return res;
+        };
+
+        vmHost.cancel = function() {
+            $("#edit-host-form").trigger({
+                type: "OnHostCancelled"
+            });
+        };
+
+        vmHost.saveOrAdd = function () {
+            //$("#host-panel").html('<img class="loading" src="@Href("../../Images/loading.gif")"/>');
+            
+            var ajdata = self ? ko.toJSON(this) : null;
+            var urlUpdate = $("#edit-host-form").attr("save-host-url");
+
+            var config = {
+                async: true,
+                url: urlUpdate,
+                type: "POST",
+                data: ajdata,
+                dataType: "json",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                error: function (e) {
+                    //window.location.href = "@Url.Action("List")";
+                },
+                success: function (data) {
+                    vmHost.loadData(data);
+                    $("#edit-host-form").trigger({
+                        type: "OnHostSaved",                        
+                        item: vmHost
+                    });                    
+                }
+            };
+            $.ajax(config);
+        };
+
+        ko.applyBindings(vmHost, document.getElementById('edit-host-form'));
+    });
+</script>

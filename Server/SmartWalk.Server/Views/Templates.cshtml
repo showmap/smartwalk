@@ -7,7 +7,7 @@
 
 <script type="text/html" id="EditAddressTemplate">
     <tr>
-        <td colspan="2" class="editing-container">
+        <td colspan="2" class="editing-container dialog-dynamic-fix">
             <div class="well">
                 <div class="row">
                     <div class="col-sm-6">
@@ -61,40 +61,42 @@
 
 <script type="text/html" id="EditContactTemplate">
     <tr>
-	    <td colspan="3" class="editing-container">
-		    <div class="well">
-			    <div class="row">
-				    <div class="col-sm-3">
-					    <div class="form-group">
-						    <label for="addressTextInput">@T("Type"):</label>
-						    <select class="form-control" data-bind="value: Type">
-							    <option value="0" data-bind="text: $root.GetContactTypeById('0')"></option>
-							    <option value="1" data-bind="text: $root.GetContactTypeById('1')"></option>
-							    <option value="2" data-bind="text: $root.GetContactTypeById('2')"></option>
-						    </select>
-					    </div>
-				    </div>
+        <td colspan="3" class="editing-container">
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="addressTextInput">@T("Type"):</label>
+                            <select class="form-control" data-bind="value: Type">
+                                <option value="0" data-bind="text: $root.GetContactTypeById('0')"></option>
+                                <option value="1" data-bind="text: $root.GetContactTypeById('1')"></option>
+                                <option value="2" data-bind="text: $root.GetContactTypeById('2')"></option>
+                            </select>
+                        </div>
+                    </div>
 								
-				    <div class="col-sm-9">	
-					    <div class="form-group">
-						    <label for="contactTitleTextInput">@T("Title"):</label>
-						    <input type="text" class="form-control" id="contactTitleTextInput" data-bind="value: Title" />
-					    </div>
+                    <div class="col-sm-9">	
+                        <div class="form-group">
+                            <label for="contactTitleTextInput">@T("Title"):</label>
+                            <input type="text" class="form-control" id="contactTitleTextInput" data-bind="value: Title" />
+                        </div>
 									
-					    <div class="form-group">
-						    <label for="contactValueTextInput">@T("Contact"):</label>
-						    <input type="text" class="form-control" id="contactValueTextInput" data-bind="value: Contact" />
-					    </div>
-				    </div>
-			    </div>
+                        <div class="form-group">
+                            <label for="contactValueTextInput">@T("Contact"):</label>
+                            <input type="text" class="form-control" id="contactValueTextInput" data-bind="value: Contact" />
+                        </div>
+                    </div>
+                </div>
 							
-			    <div class="text-right">
-				    <div class="form-group">
-					    <button type="button" class="btn btn-default" data-bind="click: $root.cancelContact">@T("Cancel")</button>
-					    <button type="button" class="btn btn-success" data-bind="click: $root.saveContact">@T("Save Contact")</button>
-				    </div>
-			    </div>
-		    </div>
+                <div class="text-right">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" data-bind="click: $root.cancelContact">@T("Cancel")</button>
+                        <button type="button" class="btn btn-success" data-bind="click: $root.saveContact">@T("Save Contact")</button>
+                    </div>
+                </div>
+            </div>
+						
+
 	    </td>
     </tr>
 </script>

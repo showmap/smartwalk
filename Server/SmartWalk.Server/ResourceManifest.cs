@@ -7,9 +7,9 @@
         public void BuildManifests(ResourceManifestBuilder builder)
         {
             var manifest = builder.Add();
-            
 
-            manifest.DefineStyle("SmartWalk.AddPlace").SetUrl("add-place.css");
+
+            manifest.DefineStyle("SmartWalk.Common").SetUrl("common.css");
             manifest.DefineStyle("SmartWalk.AddEntity").SetUrl("add-entity.css");
             manifest.DefineStyle("SmartWalk.ListEvent").SetUrl("list-event.css");
             manifest.DefineStyle("SmartWalk.EditEvent").SetUrl("edit-event.css");           
