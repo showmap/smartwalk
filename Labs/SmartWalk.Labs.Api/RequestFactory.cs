@@ -22,12 +22,12 @@ namespace SmartWalk.Labs.Api
                                             new RequestSelectSortBy
                                                 {
                                                     Field = "Latitude",
-                                                    OfDistance = 37.7599047,
+                                                    OfDistance = latitude,
                                                 },
                                             new RequestSelectSortBy
                                                 {
                                                     Field = "Longitude",
-                                                    OfDistance = -122.4168468
+                                                    OfDistance = longitude
                                                 }
                                         }
                                 },

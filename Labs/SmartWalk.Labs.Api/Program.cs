@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SmartWalk.Labs.Api.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
-using System.Linq;
 
 namespace SmartWalk.Labs.Api
 {
+    // ReSharper disable LocalizableElement
     public class MainClass
     {
         private const string SmartWalkUrl = @"http://smartwalk.com:8091/api";
@@ -15,10 +16,9 @@ namespace SmartWalk.Labs.Api
         public static void Main(string[] args)
         {
             Console.WriteLine("SmartWalk Protocol JSON objects demo");
-
             Console.WriteLine("\nHome View");
 
-            var homeViewRequest = RequestFactory.CreateHomeViewRequest(37.7784568, -122.4174026);
+            var homeViewRequest = RequestFactory.CreateHomeViewRequest(37.757671, -122.408406);
             var json = JsonConvert.SerializeObject(
                 homeViewRequest,
                 new JsonSerializerSettings
@@ -43,7 +43,7 @@ namespace SmartWalk.Labs.Api
 
                     // extract EventMetadata instances
                     var eventMetadatas = response
-                        .Selects.First().Records
+                        .Selects[0].Records
                         .Cast<JObject>()
                         .Select(r => r.ToObject<EventMetadata>()).ToArray();
 
@@ -116,4 +116,5 @@ namespace SmartWalk.Labs.Api
             Console.ReadLine();
         }
     }
+    // ReSharper restore LocalizableElement
 }
