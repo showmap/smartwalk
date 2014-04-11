@@ -8,7 +8,6 @@
     Script.Require("SmartWalk.ViewModels").AtHead();
     
     var host = (EntityVm) Model;
-    var cancelAction = host.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @host.Id });
     var actionCaption = host.Id == 0 ? T("Add Organizer") : T("Save Organizer");
 }
 
@@ -29,7 +28,7 @@
                 </div>
             </div>
             <div class="col-xs-4 text-right">
-                <button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@actionCaption</button>
+                <!--<button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@actionCaption</button>-->
             </div>
         </div>
         

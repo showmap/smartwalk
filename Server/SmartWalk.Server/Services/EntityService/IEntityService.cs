@@ -27,7 +27,7 @@ namespace SmartWalk.Server.Services.EntityService
         ShowVm SaveOrAddShow(ShowVm item);
         void DeleteShow(int showId);
         void DeleteEventVenue(EntityVm item);
-        ShowVm AddEventVenue(EntityVm item);
+        ShowVm SaveEventVenue(EntityVm item);
         ShowVm GetShow(int showId);
     }
 }
