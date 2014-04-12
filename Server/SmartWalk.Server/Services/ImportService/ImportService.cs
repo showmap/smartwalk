@@ -398,11 +398,9 @@ namespace SmartWalk.Server.Services.ImportService
             EntityRecord venue,
             Show[] xmlShows)
         {
-            if (xmlShows == null) return;
-
             var shows = eventMetadata.ShowRecords;
 
-            if (xmlShows.Any())
+            if (xmlShows != null && xmlShows.Any())
             {
                 foreach (var xmlShow in xmlShows)
                 {

@@ -65,7 +65,7 @@ namespace SmartWalk.Server.Models.XmlModel
                 // all night AM time should be set to the next day
                 if ((StartTimeObject ?? DateTime.MinValue) > EndTimeObject.Value)
                 {
-                    EndTimeObject = parsedEndTime.AddDays(1);
+                    EndTimeObject = EndTimeObject.Value.AddDays(1);
                 }
             }
         }
