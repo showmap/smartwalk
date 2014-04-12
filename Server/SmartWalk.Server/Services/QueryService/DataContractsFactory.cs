@@ -71,8 +71,7 @@ namespace SmartWalk.Server.Services.QueryService
                     result.CombineType = (CombineType)record.CombineType;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataShows) &&
-                    record.EventMappingRecords != null)
+                if (fields.ContainsIgnoreCase(context.EventMetadataShows))
                 {
                     result.Shows =
                         record.ShowRecords

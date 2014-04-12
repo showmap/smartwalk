@@ -225,8 +225,8 @@ namespace SmartWalk.Server.Services.ImportService
                         Name = xmlEntity.Name.TrimIt(),
                         Type = (int)type,
                         SmartWalkUserRecord = user,
-                        DateCreated = DateTime.Now,
-                        DateModified = DateTime.Now
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow
                     };
 
                 _entityRepository.Create(result);
@@ -351,7 +351,7 @@ namespace SmartWalk.Server.Services.ImportService
                         StartTime = xmlOrgEvent.StartDateObject.Date,
                         CombineType = (int)CombineType.None,
                         SmartWalkUserRecord = user,
-                        DateCreated = xmlOrgEvent.StartDateObject.Date,
+                        DateCreated = DateTime.UtcNow,
                         DateModified = DateTime.UtcNow,
                         IsPublic = true
                     };
@@ -432,8 +432,8 @@ namespace SmartWalk.Server.Services.ImportService
                                 Title = title,
                                 Description = description,
                                 IsDeleted = false,
-                                DateCreated = DateTime.Now,
-                                DateModified = DateTime.Now,
+                                DateCreated = DateTime.UtcNow,
+                                DateModified = DateTime.UtcNow,
                             };
                         _showRepository.Create(show);
                         _log.Add(string.Format("{0} show created", show.Title));
@@ -462,8 +462,8 @@ namespace SmartWalk.Server.Services.ImportService
                             EventMetadataRecord = eventMetadata,
                             IsReference = true,
                             IsDeleted = false,
-                            DateCreated = DateTime.Now,
-                            DateModified = DateTime.Now,
+                            DateCreated = DateTime.UtcNow,
+                            DateModified = DateTime.UtcNow,
                         };
                     _showRepository.Create(refShow);
                     _showRepository.Flush();
