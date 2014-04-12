@@ -1,0 +1,26 @@
+﻿@using SmartWalk.Server.Records
+@using SmartWalk.Server.ViewModels
+
+@{
+    Style.Require("SmartWalk.Host");
+    
+    Script.Require("jQueryUI").AtHead();
+    Script.Require("SmartWalk.ViewModels").AtHead();
+    
+    var host = (EntityVm) Model;
+    var cancelAction = host.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @host.Id });    
+}
+
+@Html.Partial("EditTemplate", host)    
+
+<script>
+    $(function () {
+        $("#edit-host-form").bind('OnHostCancelled', function (event) {
+            window.location.href = "@cancelAction";
+        });
+        
+        $("#edit-host-form").bind('OnHostSaved', function (event) {
+            window.location.href = "@Url.Action("List")";
+        });
+    });
+</script>
