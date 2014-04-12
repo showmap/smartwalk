@@ -209,14 +209,14 @@ namespace SmartWalk.Server.Controllers
 
         #region Venues
         [HttpPost]
-        public ActionResult AddEventVenue(EntityVm item)
+        public ActionResult SaveEventVenue(EntityVm item)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
             }
 
-            return Json(_entityService.AddEventVenue(item));
+            return Json(_entityService.SaveEventVenue(item));
         }
 
         [HttpPost]

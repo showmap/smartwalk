@@ -97,7 +97,7 @@
     <Content Include="Styles\add-place.css" />
     <Content Include="Styles\add-entity.css" />
     <Content Include="Styles\Copy of list-event.css" />
-    <Content Include="Styles\host.css" />
+    <Content Include="Styles\common.css" />
     <Content Include="Styles\list-event.css" />
     <Content Include="Styles\fsquare-autocomplete.css" />
     <Content Include="Styles\google-maps.css" />
@@ -225,7 +225,7 @@
     <Content Include="Views\Venue\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Host\Edit.cshtml" />
+    <Content Include="Views\Host\EditTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Web.config" />
@@ -306,5 +306,8 @@
       <Project>{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}</Project>
       <Name>SmartWalk.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Host\Edit.cshtml" />
   </ItemGroup>
 </Project>

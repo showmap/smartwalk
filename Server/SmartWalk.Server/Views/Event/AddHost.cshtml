@@ -88,7 +88,6 @@
         var self = this;
         
         self.Id = ko.observable(data.Id);
-        self.HostId = ko.observable(data.HostId);
         self.Type = ko.observable(data.Type);
 
         self.Title = ko.observable(data.Title);
@@ -115,7 +114,7 @@
 
         // Operations
         self.addContact = function() {
-            self.Contacts.push(new ContactViewModel({ Id: 0, HostId: 0, Type: 1, Title: "Title", Contact: "Contact" }));
+            self.Contacts.push(new ContactViewModel({ Id: 0, Type: 1, Title: "Title", Contact: "Contact" }));
         };
 
         self.removeContact = function (contact) { self.Contacts.remove(contact); };

@@ -91,7 +91,7 @@ namespace SmartWalk.Server.Controllers
 
             try
             {
-                _entityService.SaveOrAddEntity(user.Record, host);
+                return Json(_entityService.SaveOrAddEntity(user.Record, host));
             }
             catch
             {

@@ -130,8 +130,8 @@ namespace SmartWalk.Server.Services.EventService
                 _eventMetadataRepository.Create(metadata);
                 _eventMetadataRepository.Flush();
             }
-            else
-            {
+            else {
+                metadata.EntityRecord = host;
                 metadata.Title = item.Title;
                 metadata.Description = item.Description;
                 metadata.StartTime = dtFrom.Value;

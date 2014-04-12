@@ -110,22 +110,47 @@ function ShowViewModel(data) {
 function EntityViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable(data.Id);
-    self.EventMetedataId = ko.observable(data.EventMetedataId);
+    self.Id = ko.observable();
+    self.EventMetedataId = ko.observable();
 
-    self.Type = ko.observable(data.Type);
+    self.Type = ko.observable();
 
-    self.Name = ko.observable(data.Name);
-    self.DisplayName = ko.observable(data.DisplayName);
+    self.Name = ko.observable();
+    self.DisplayName = ko.observable();
 
-    self.Description = ko.observable(data.Description);
-    self.Picture = ko.observable(data.Picture);
-    self.State = ko.observable(data.State);
+    self.Description = ko.observable();
+    self.Picture = ko.observable();
+    self.State = ko.observable();
 
     self.selectedItem = ko.observable();
     
-    // Contacts
-    self.AllContacts = ko.observableArray($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
+    self.AllContacts = ko.observableArray();
+    self.AllAddresses = ko.observableArray();
+    self.AllShows = ko.observableArray();
+
+    self.loadData = function (data) {
+        self.Id(data.Id);
+        self.EventMetedataId(data.EventMetedataId);
+        self.Type(data.Type);
+
+        self.Name(data.Name);
+        self.DisplayName(data.DisplayName);
+
+        self.Description(data.Description);
+        self.Picture(data.Picture);
+        self.State(data.State);
+
+        if (data.AllContacts)
+            self.AllContacts($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
+        if (data.AllAddresses)
+            self.AllAddresses($.map(data.AllAddresses, function (item) { return new AddressViewModel(item); }));
+        if (data.AllShows)
+            self.AllShows($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
+    };
+
+    self.loadData(data);
+
+    // Contacts    
     self.Contacts = ko.computed(function () {
         return ko.utils.arrayFilter(this.AllContacts(), function (item) {
             return item.State() != 2;
@@ -188,13 +213,25 @@ function EntityViewModel(data) {
 
     //self.selectedContact = ko.observable();
 
-    // Addresses
-    self.AllAddresses = ko.observableArray($.map(data.AllAddresses, function (item) { return new AddressViewModel(item); }));
+    // Addresses    
     self.Addresses = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllAddresses(), function (item) {
             return item.State() != 2;
         });
     }, this);
+    self.DisplayAddress = ko.computed(function () {
+        if (self.Addresses().length <= 0)
+            return null;
+        return self.Addresses()[0];
+    });
+    self.IsMapVisible = ko.computed(function () {
+        if (self.Addresses().length > 1)
+            return true;
+        if (self.Addresses().length == 1 && self.Addresses()[0] != self.selectedItem())
+            return true;
+
+        return false;
+    });
     self.DeletedAddresses = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllAddresses(), function (item) {
             return item.State() == 2;
@@ -251,7 +288,6 @@ function EntityViewModel(data) {
 
     //self.selectedAddress = ko.observable();
     // Shows
-    self.AllShows = ko.observableArray($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
     self.Shows = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllShows(), function (item) {
             return item.State() != 2 && item.State() != 3;
@@ -271,8 +307,6 @@ function EventViewModel(data) {
 
     self.Id = ko.observable();
     self.UserId = ko.observable();
-    self.HostId = ko.observable();
-    self.HostName = ko.observable();
 
     self.Title = ko.observable();
     self.Description = ko.observable();
@@ -291,11 +325,12 @@ function EventViewModel(data) {
     self.AllVenues = ko.observableArray();
     self.AllHosts = ko.observableArray();
     
+    self.selectedItem = ko.observable();
+    self.selectedVenue = ko.observable();
+
     self.loadData = function (data) {
         self.Id(data.Id);
         self.UserId(data.UserId);
-        self.HostId(data.HostId);
-        self.HostName(data.HostName);
 
         self.Title(data.Title);
         self.Description(data.Description);
@@ -325,24 +360,42 @@ function EventViewModel(data) {
     self.loadData(data);
 
     self.Venues = ko.computed(function () {
-        return ko.utils.arrayFilter(this.AllVenues(), function (item) {
+        return ko.utils.arrayFilter(self.AllVenues(), function (item) {
             return item.State() != 2 && item.State() != 3;
         });
     }, this);
     self.OtherVenues = ko.computed(function () {
-        return ko.utils.arrayFilter(this.AllVenues(), function (item) {
+        return ko.utils.arrayFilter(self.AllVenues(), function (item) {
             return item.State() == 3;
         });
     }, this);
-    self.addVenue = function () {
-        self.AllVenues.push(new EntityViewModel({ Id: 0, Type: 1, State: 1 }));
+    self.ComputedVenues = ko.computed(function () {
+        return self.AllVenues();
+        if (self.selectedItem() != null && self.selectedItem()  && self.selectedItem().Id() == 0) {
+            
+        }
+        
+        if (self.selectedItem() != null && self.selectedItem() && self.selectedItem().Id() != 0) {
+            return ko.utils.arrayFilter(self.AllVenues(), function (item) {
+                return item.State() != 2 && item.State() != 3 && item.Id() != 0;
+            });
+        }        
+    }, this);
+    self.addVenue = function (){
+        var newVenue = new EntityViewModel({ Id: 0, Type: 1, State: 1 });
+        self.AllVenues.push(newVenue);
+        self.selectedItem(newVenue);
     };
     self.removeVenue = function (item) {
         item.State(2);
     };
-
-    self.selectedShow = ko.observable();
-    self.selectedVenue = ko.observable();
+    self.cancelVenue = function (item) {
+        alert("item=" + item + " sel item = " + self.selectedItem());
+        if (self.selectedItem() && self.selectedItem().Id() == 0) {
+            self.removeVenue(self.selectedItem());
+        }
+        self.selectedItem(null);
+    };    
 
     self.toJSON = function() {
         var copy = ko.toJS(self); //just a quick way to get a clean copy

@@ -39,7 +39,7 @@
         <div class="row">
 			<div class="col-md-8">
 				<div><h4>@T("Date"):&nbsp;@eventMetadata.DisplayDate</h4></div>
-				<div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new {entityId = eventMetadata.HostId})">@eventMetadata.Host.DisplayName</a></h4></div>
+				<div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new {entityId = eventMetadata.Host.Id})">@eventMetadata.Host.DisplayName</a></h4></div>
 			</div>
 			<div class="col-md-4">
 				<div class="text-center pull-right" style="margin-top: 10px; border-radius: 4px; width:100px; height: 30px; background-color:#ccc; border:1px solid #444;">@T("Add Event Widget")</div>

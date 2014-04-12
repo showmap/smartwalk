@@ -136,7 +136,8 @@ namespace SmartWalk.Server.Services.QueryService
                 var expression = queryable.Expression;
 
                 double[] latLong;
-                if (IsLatLongSorting(context, select.SortBy, out latLong))
+                if (typeof(TRecord) == typeof(EventMetadataRecord) && 
+                    IsLatLongDistanceSorting(context, select.SortBy, out latLong))
                 {
                     expression = Expression.Call(
                         typeof(Queryable),
@@ -150,6 +151,8 @@ namespace SmartWalk.Server.Services.QueryService
 
                 foreach (var sortBy in select.SortBy)
                 {
+                    if (SkipLatLongDistanceSorting(context, sortBy)) continue;
+
                     var sortByExpr = Expression.Property(recordExpr, recordExpr.Type, sortBy.Field);
                     var method =
                         expression == queryable.Expression
@@ -191,10 +194,10 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.SortBy != null && select.SortBy.Length > 0)
             {
                 if (typeof(TRecord) == typeof(EventMetadataRecord) &&
-                    IsLatLongSorting(context, select.SortBy, out latLong))
+                    IsLatLongDistanceSorting(context, select.SortBy, out latLong))
                 {
                     result = string.Format(
-                        "ABS({0}.{1} - :lat) + ABS({0}.{2} + :long) ASC",
+                        "ABS({0}.{1} - :lat) + ABS({0}.{2} - :long) ASC",
                         alias,
                         context.EventMetadataLatitude,
                         context.EventMetadataLongitude);
@@ -202,7 +205,9 @@ namespace SmartWalk.Server.Services.QueryService
 
                 foreach (var sortBy in select.SortBy)
                 {
-                    if (!Reflection<EventMetadataRecord>.HasProperty(sortBy.Field))
+                    if (SkipLatLongDistanceSorting(context, sortBy)) continue;
+
+                    if (!Reflection<TRecord>.HasProperty(sortBy.Field))
                     {
                         throw new InvalidExpressionException(
                             string.Format(
@@ -468,7 +473,7 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
-        private static bool IsLatLongSorting(
+        private static bool IsLatLongDistanceSorting(
             QueryContext context,
             RequestSelectSortBy[] sortBy,
             out double[] latLong)
@@ -489,6 +494,15 @@ namespace SmartWalk.Server.Services.QueryService
 
             latLong = null;
             return false;
+        }
+
+        private static bool SkipLatLongDistanceSorting(
+            QueryContext context,
+            RequestSelectSortBy sortBy)
+        {
+            return (sortBy.Field == context.EventMetadataLatitude ||
+                    sortBy.Field == context.EventMetadataLongitude) && 
+                    sortBy.OfDistance.HasValue;
         }
     }
 }

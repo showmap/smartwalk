@@ -37,7 +37,7 @@
 <script type="text/html" id="eventItemTemplate">
     <tr data-bind="css: {'alt': $index() % 2 === 1}">        
         <td><span data-bind="text: Title"></span></td>
-        <td><span data-bind="text: HostName"></span></td>
+        <td><span data-bind="text: Host().Title()"></span></td>
         <td><span data-bind="text: StartTime"></span></td>
         <td><span data-bind="text: DateCreated"></span></td>
     </tr>       
@@ -351,8 +351,6 @@
         var self = this;
 
         self.Id = ko.observable(data.Id);
-        self.HostId = ko.observable(data.HostId);
-        self.HostName = ko.observable(data.HostName);
 
         self.Title = ko.observable(data.Title);
         self.Description = ko.observable(data.Description);

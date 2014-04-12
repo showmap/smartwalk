@@ -48,7 +48,7 @@ namespace SmartWalk.Server.Services.EntityService
             _showRepository.Delete(show);
             _showRepository.Flush();
 
-            CheckIsReferenceShow(ViewModelContractFactory.CreateViewModelContract(show));
+            CheckShowVenue(show.EventMetadataRecord.Id, show.EntityRecord.Id);
         }
 
 
@@ -64,37 +64,30 @@ namespace SmartWalk.Server.Services.EntityService
             }
         }
 
-        public ShowVm AddEventVenue(EntityVm item) {
-            var show = new ShowRecord
-            {
-                EventMetadataRecord = _metadataRepository.Get(item.EventMetedataId),
-                EntityRecord = _entityRepository.Get(item.Id),
-                IsReference = true,
-                IsDeleted = false,
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now
-            };
-            _showRepository.Create(show);
-            _showRepository.Flush();
+        public ShowVm SaveEventVenue(EntityVm item) {
+            foreach (var showVm in item.AllShows) {
+                SaveOrAddShow(showVm);
+            }
 
-            return ViewModelContractFactory.CreateViewModelContract(show);
+            return CheckShowVenue(item.EventMetedataId, item.Id);
         }
 
-        private void CheckIsReferenceShow(ShowVm item) {
-            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == item.EventMetedataId && s.EntityRecord.Id == item.VenueId).ToList();
+        private ShowVm CheckShowVenue(int eventId, int venueId)
+        {
+            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == eventId && s.EntityRecord.Id == venueId).ToList();
             if (shows.Any()) {
                 if (shows.Count(s => !s.IsReference) > 0 && shows.Count(s => s.IsReference) > 0) {
                     foreach (var showRecord in shows.Where(s => s.IsReference)) {
                         _showRepository.Delete(showRecord);
                         _showRepository.Flush();
                     }
-                }
+                }                
             }
             else {
                 var show = new ShowRecord
                 {
-                    EventMetadataRecord = _metadataRepository.Get(item.EventMetedataId),
-                    EntityRecord = _entityRepository.Get(item.VenueId),
+                    EventMetadataRecord = _metadataRepository.Get(eventId),
+                    EntityRecord = _entityRepository.Get(venueId),
                     IsReference = true,
                     IsDeleted = false,
                     DateCreated = DateTime.Now,
@@ -102,7 +95,11 @@ namespace SmartWalk.Server.Services.EntityService
                 };
                 _showRepository.Create(show);
                 _showRepository.Flush();
+
+                return ViewModelContractFactory.CreateViewModelContract(show);
             }
+
+            return null;
         }
 
 
@@ -139,10 +136,10 @@ namespace SmartWalk.Server.Services.EntityService
                 _showRepository.Create(show);
                 _showRepository.Flush();
 
-                CheckIsReferenceShow(item);
+                CheckShowVenue(metadata.Id, venue.Id);
             }
-            else
-            {
+            else {
+                show.EntityRecord = venue;
                 show.Title = item.Title;
                 show.Description = item.Description;
                 show.StartTime = dtFrom;
