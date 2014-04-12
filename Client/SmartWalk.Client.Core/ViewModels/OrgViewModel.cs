@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
@@ -13,15 +12,15 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public class OrgViewModel : EntityViewModel
     {
-        private readonly ISmartWalkDataService _dataService;
+        private readonly ISmartWalkApiService _apiService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
-        private EntityInfo[] _orgInfos;
+        private Org _org;
         private ICommand _navigateOrgEventViewCommand;
 
         public OrgViewModel(
-            ISmartWalkDataService dataService,
+            ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
             IMvxPhoneCallTask phoneCallTask,
             IMvxComposeEmailTask composeEmailTask,
@@ -29,7 +28,7 @@ namespace SmartWalk.Client.Core.ViewModels
             IExceptionPolicy exceptionPolicy) : 
                 base(analyticsService, phoneCallTask, composeEmailTask, showDirectionsTask)
         {
-            _dataService = dataService;
+            _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
         }
 
@@ -37,30 +36,15 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             get
             {
-                return (Org)Entity;
+                return _org;
             }
             private set
             {
-                if (!Equals(Entity, value))
+                if (!Equals(_org, value))
                 {
-                    Entity = value;
+                    _org = value;
+                    Entity = _org != null ? _org.Info : null;
                     RaisePropertyChanged(() => Org);
-                }
-            }
-        }
-
-        public EntityInfo[] OrgInfos
-        {
-            get
-            {
-                return _orgInfos;
-            }
-            private set
-            {
-                if (!Equals(_orgInfos, value))
-                {
-                    _orgInfos = value;
-                    RaisePropertyChanged(() => OrgInfos);
                 }
             }
         }
@@ -71,27 +55,16 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_navigateOrgEventViewCommand == null)
                 {
-                    _navigateOrgEventViewCommand = new MvxCommand<OrgEventInfo>(
-                        evenInfo => ShowViewModel<OrgEventViewModel>(
+                    _navigateOrgEventViewCommand = new MvxCommand<OrgEvent>(
+                        orgEvent => ShowViewModel<OrgEventViewModel>(
                         new OrgEventViewModel.Parameters {  
-                            OrgId = evenInfo.OrgId, 
-                            Date = evenInfo.Date
+                            OrgEventId = orgEvent.Id
                         }),
-                        eventInfo => eventInfo.HasSchedule);
+                        orgEvent => orgEvent != null);
                 }
 
                 return _navigateOrgEventViewCommand;
             }
-        }
-
-        public override bool CanShowNextEntity
-        {
-            get { return OrgInfos != null && OrgInfos.Length > 0 && Org != null; }
-        }
-
-        public override bool CanShowPreviousEntity
-        {
-            get { return CanShowNextEntity; }
         }
 
         protected override object InitParameters
@@ -103,45 +76,12 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrg().ContinueWithThrow();
-            UpdateOrgInfos().ContinueWithThrow();
+            UpdateOrg(DataSource.Cache).ContinueWithThrow();
         }
 
         protected override void Refresh()
         {
             UpdateOrg().ContinueWithThrow();
-        }
-
-        protected override void OnShowPreviousEntity()
-        {
-            var currentOrg = OrgInfos.FirstOrDefault(oi => oi.Id == Org.Info.Id);
-            var currentIndex = Array.IndexOf(OrgInfos, currentOrg);
-            if (currentIndex > 0)
-            {
-                _parameters.OrgId = OrgInfos[currentIndex - 1].Id;
-            }
-            else
-            {
-                _parameters.OrgId = OrgInfos.Last().Id;
-            }
-
-            UpdateOrg(DataSource.Cache).ContinueWithThrow();
-        }
-
-        protected override void OnShowNextEntity()
-        {
-            var currentOrg = OrgInfos.FirstOrDefault(oi => oi.Id == Org.Info.Id);
-            var currentIndex = Array.IndexOf(OrgInfos, currentOrg);
-            if (currentIndex < OrgInfos.Length - 1)
-            {
-                _parameters.OrgId = OrgInfos[currentIndex + 1].Id;
-            }
-            else
-            {
-                _parameters.OrgId = OrgInfos[0].Id;
-            }
-
-            UpdateOrg(DataSource.Cache).ContinueWithThrow();
         }
 
         private async Task UpdateOrg(DataSource source = DataSource.Server)
@@ -154,7 +94,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
                 try 
                 {
-                    org = await _dataService.GetOrg(_parameters.OrgId, source);
+                    org = await _apiService.GetHost(_parameters.OrgId, source);
                 }
                 catch (Exception ex)
                 {
@@ -172,33 +112,9 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        private async Task UpdateOrgInfos()
-        {
-            if (_parameters != null)
-            {
-                var index = default(LocationIndex);
-
-                try 
-                {
-                    index = await _dataService.GetLocationIndex(DataSource.Cache);
-                }
-                catch (Exception ex)
-                {
-                    _exceptionPolicy.Trace(ex);
-                }
-
-                OrgInfos = index != null ? index.OrgInfos : null;
-                RaiseRefreshCompleted();
-            }
-            else
-            {
-                OrgInfos = null;
-            }
-        }
-
         public class Parameters
         {
-            public string OrgId { get; set; }
+            public int OrgId { get; set; }
         }
     }
 }

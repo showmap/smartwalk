@@ -4,13 +4,13 @@ using System.Drawing;
 using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -271,10 +271,10 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        private void ShowContactsView(EntityInfo entityInfo)
+        private void ShowContactsView(Entity entity)
         {
             var contactsProvider = ViewModel as IContactsEntityProvider;
-            if (entityInfo != null && contactsProvider != null)
+            if (entity != null && contactsProvider != null)
             {
                 _contactsView = View.Subviews.OfType<ContactsView>().FirstOrDefault();
                 if (_contactsView == null)
@@ -295,7 +295,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                     UIView.CommitAnimations();
                 }
 
-                _contactsView.EntityInfo = entityInfo;
+                _contactsView.Entity = entity;
             }
         }
 

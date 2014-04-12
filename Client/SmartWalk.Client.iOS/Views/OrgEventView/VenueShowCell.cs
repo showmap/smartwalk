@@ -4,7 +4,8 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common;
 
@@ -61,17 +62,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return (VenueShowCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static float CalculateCellHeight(float frameWidth, bool isExpanded, VenueShow show)
+        public static float CalculateCellHeight(float frameWidth, bool isExpanded, Show show)
         {
             if (isExpanded)
             {
                 var cellHeight = default(float);
 
-                if (show.Description != null)
+                var showText = show.GetText();
+                if (showText != null)
                 {
-                    var logoHeight = show.Logo != null ? Gap + ImageHeight : 0;
-                    var detailsHeight = show.Site != null ? Gap + Theme.VenueShowTextLineHeight : 0;
-                    var textHeight = CalculateTextHeight(frameWidth - TimeBlockWidth, show.Description);
+                    var logoHeight = show.Picture != null ? Gap + ImageHeight : 0;
+                    var detailsHeight = show.DetailsUrl != null ? Gap + Theme.VenueShowTextLineHeight : 0;
+                    var textHeight = CalculateTextHeight(
+                        frameWidth - TimeBlockWidth, 
+                        showText);
                     cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
                 }
 
@@ -107,9 +111,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public ICommand ExpandCollapseShowCommand { get; set; }
         public ICommand NavigateDetailsLinkCommand { get; set; }
 
-        public new VenueShow DataContext
+        public new Show DataContext
         {
-            get { return (VenueShow)base.DataContext; }
+            get { return (Show)base.DataContext; }
             set { base.DataContext = value; }
         }
 
@@ -157,7 +161,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.LayoutSubviews();
 
             ThumbImageView.Hidden = !IsExpanded || 
-                DataContext == null || DataContext.Logo == null;
+                DataContext == null || DataContext.Picture == null;
 
             UpdateConstraints();
         }
@@ -168,7 +172,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (IsExpanded &&
                 DataContext != null && 
-                DataContext.Logo != null &&
+                DataContext.Picture != null &&
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
                 ImageHeightConstraint.Constant = ImageHeight;
@@ -184,7 +188,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (IsExpanded && 
                 DataContext != null && 
-                DataContext.Site != null &&
+                DataContext.DetailsUrl != null &&
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
                 DetailsHeightConstraint.Constant = Theme.VenueShowTextLineHeight;
@@ -232,24 +236,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper.ImageUrl = null;
 
             StartTimeLabel.AttributedText = DataContext != null && 
-                    DataContext.Start != DateTime.MinValue
-                ? GetTimeText(DataContext.Start, DataContext.Status)
+                    DataContext.StartTime.HasValue
+                ? GetTimeText(DataContext.StartTime.Value, DataContext.GetStatus())
                 : new NSAttributedString();
 
             EndTimeLabel.AttributedText = DataContext != null && 
-                    DataContext.End != DateTime.MaxValue
-                ? GetTimeText(DataContext.End, DataContext.Status)
+                    DataContext.EndTime.HasValue
+                ? GetTimeText(DataContext.EndTime.Value, DataContext.GetStatus())
                 : new NSAttributedString();
 
             DescriptionLabel.Text = DataContext != null 
-                ? DataContext.Description : null;
+                ? DataContext.GetText() : null;
 
             UpdateClockIcon();
             UpateImageState();
             SetNeedsUpdateConstraints();
         }
 
-        private static NSAttributedString GetTimeText(DateTime time, VenueShowStatus status)
+        private static NSAttributedString GetTimeText(DateTime time, ShowStatus status)
         {
             var timeStr = String.Format(TimeFormat, time)
                 .Replace(Space, string.Empty).ToLower();
@@ -266,7 +270,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 result.SetAttributes(
                     new UIStringAttributes 
                     { 
-                        Font = status == VenueShowStatus.Finished 
+                        Font = status == ShowStatus.Finished 
                             ? Theme.VenueShowCellFinishedTimeFont 
                             : Theme.VenueShowCellTimeFont
                     }, 
@@ -283,7 +287,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             _imageHelper.ImageUrl = 
                 IsExpanded && DataContext != null 
-                    ? DataContext.Logo : null;
+                ? DataContext.Picture : null;
         }
 
         private float GetImageProportionalWidth()
@@ -316,9 +320,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _imageTapGesture = new UITapGestureRecognizer(() => {
                 if (ShowImageFullscreenCommand != null &&
-                    ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
+                    ShowImageFullscreenCommand.CanExecute(DataContext.Picture))
                 {
-                    ShowImageFullscreenCommand.Execute(DataContext.Logo);
+                    ShowImageFullscreenCommand.Execute(DataContext.Picture);
                 }
             }) {
                 NumberOfTouchesRequired = (uint)1,
@@ -327,9 +331,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _detailsTapGesture = new UITapGestureRecognizer(() => {
                 if (NavigateDetailsLinkCommand != null &&
-                    NavigateDetailsLinkCommand.CanExecute(DataContext.Site))
+                    NavigateDetailsLinkCommand.CanExecute(DataContext.DetailsUrl))
                 {
-                    NavigateDetailsLinkCommand.Execute(DataContext.Site);
+                    NavigateDetailsLinkCommand.Execute(DataContext.DetailsUrl);
                 }
             }) {
                 NumberOfTouchesRequired = (uint)1,
@@ -391,17 +395,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return;
             }
 
-            switch (DataContext.Status)
+            switch (DataContext.GetStatus())
             {
-                case VenueShowStatus.NotStarted:
+                case ShowStatus.NotStarted:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
                     break;
 
-                case VenueShowStatus.Started:
+                case ShowStatus.Started:
                     TimeBackgroundView.BackgroundColor = Theme.HyperlinkText;
                     break;
 
-                case VenueShowStatus.Finished:
+                case ShowStatus.Finished:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
                     break;
             }

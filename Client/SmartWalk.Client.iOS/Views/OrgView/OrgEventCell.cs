@@ -2,8 +2,8 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Views.Common;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {
@@ -25,9 +25,9 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             return (OrgEventCell)Nib.Instantiate(null, null)[0];
         }
 
-        public new OrgEventInfo DataContext
+        public new OrgEvent DataContext
         {
-            get { return (OrgEventInfo)base.DataContext; }
+            get { return (OrgEvent)base.DataContext; }
             set { base.DataContext = value; }
         }
 
@@ -50,30 +50,17 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            WeekDayLabel.Text = DataContext != null 
-                ? string.Format("{0:ddd}", DataContext.Date).ToUpper() 
+            WeekDayLabel.Text = DataContext != null && DataContext.StartTime.HasValue
+                ? string.Format("{0:ddd}", DataContext.StartTime.Value).ToUpper() 
                 : null;
 
-            DayLabel.Text = DataContext != null 
-                ? DataContext.Date.Day.ToString() 
+            DayLabel.Text = DataContext != null && DataContext.StartTime.HasValue
+                ? DataContext.StartTime.Value.Day.ToString() 
                 : null;
 
-            DateLabel.Text = DataContext != null 
-                ? string.Format("{0:d MMMM yyyy}", DataContext.Date) 
+            DateLabel.Text = DataContext != null  && DataContext.StartTime.HasValue
+                ? string.Format("{0:d MMMM yyyy}", DataContext.StartTime.Value) 
                 : null;
-
-            DateLabel.TextColor = DataContext != null && DataContext.HasSchedule 
-                ? Theme.CellText
-                : Theme.CellTextPassive;
-
-            HintLabel.Text = DataContext != null && DataContext.HasSchedule 
-                ? null 
-                : "no schedule";
-
-            CalendarView.BackgroundColor = DataContext != null && !DataContext.HasSchedule 
-                ? Theme.OrgEventPassive : Theme.OrgEventActive;
-
-            UserInteractionEnabled = DataContext != null && DataContext.HasSchedule;
         }
 
         private void InitializeLabelsStyle()

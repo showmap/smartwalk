@@ -5,10 +5,10 @@ using System.Windows.Input;
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -97,7 +97,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private static int GetHeaderHeight(Entity entity)
         {
-            if (entity.Info.HasLogo() || entity.Info.HasAddress())
+            if (entity.HasPicture() || entity.HasAddresses())
             {
                 return ScreenUtil.IsVerticalOrientation 
                     ? ImageVerticalHeight + MapVerticalHeight 
@@ -120,9 +120,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             set { base.DataContext = value; }
         }
 
-        private EntityInfo DataContextEntityInfo
+        private Entity DataContextEntity
         {
-            get { return DataContext != null ? DataContext.Entity.Info : null; }
+            get { return DataContext != null ? DataContext.Entity : null; }
         }
 
         private ImageCell ImageCell
@@ -162,18 +162,18 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             if (DataContext != null &&
                 Frame.Height >= headerHeight)
             {
-                if (DataContext.Entity.Info.HasLogo())
+                if (DataContext.Entity.HasPicture())
                 {
                     if (ScreenUtil.IsVerticalOrientation)
                     {
                         ImageWidthConstraint.Constant = Bounds.Width;
-                        ImageHeightConstraint.Constant = DataContext.Entity.Info.HasAddress()
+                        ImageHeightConstraint.Constant = DataContext.Entity.HasAddresses()
                             ? ImageVerticalHeight
                             : ImageVerticalHeight + MapVerticalHeight;
                     }
                     else
                     {
-                        ImageWidthConstraint.Constant = DataContext.Entity.Info.HasAddress()
+                        ImageWidthConstraint.Constant = DataContext.Entity.HasAddresses()
                             ? Bounds.Width / 2
                             : Bounds.Width;
                         ImageHeightConstraint.Constant = CellHorizontalHeight;
@@ -185,28 +185,28 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     ImageHeightConstraint.Constant = 0;
                 }
 
-                if (DataContext.Entity.Info.HasAddress())
+                if (DataContext.Entity.HasAddresses())
                 {
                     if (ScreenUtil.IsVerticalOrientation)
                     {
                         MapXConstraint.Constant = 0;
-                        MapYConstraint.Constant = DataContext.Entity.Info.HasLogo()
+                        MapYConstraint.Constant = DataContext.Entity.HasPicture()
                             ? ImageVerticalHeight
                             : 0;
 
                         MapWidthConstraint.Constant = Bounds.Width;
-                        MapHeightConstraint.Constant = DataContext.Entity.Info.HasLogo()
+                        MapHeightConstraint.Constant = DataContext.Entity.HasPicture()
                             ? MapVerticalHeight
                             : ImageVerticalHeight + MapVerticalHeight;
                     }
                     else
                     {
-                        MapXConstraint.Constant = DataContext.Entity.Info.HasLogo()
+                        MapXConstraint.Constant = DataContext.Entity.HasPicture()
                             ? Bounds.Width / 2
                             : 0;
                         MapYConstraint.Constant = 0;
 
-                        MapWidthConstraint.Constant = DataContext.Entity.Info.HasLogo()
+                        MapWidthConstraint.Constant = DataContext.Entity.HasPicture()
                             ? Bounds.Width / 2
                             : Bounds.Width;
                         MapHeightConstraint.Constant = CellHorizontalHeight;
@@ -297,22 +297,22 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 ? DataContext.Entity.Description : null;
 
             ImageCell.DataContext = DataContext != null &&
-                    DataContext.Entity.Info.HasLogo()
-                ? DataContext.Entity.Info
-                : null;
+                DataContext.Entity.HasPicture()
+                    ? DataContext.Entity
+                    : null;
 
             MapCell.DataContext = DataContext != null &&
-                    DataContext.Entity.Info.HasAddress()
-                ? DataContext.Entity
-                : null;
+                DataContext.Entity.HasAddresses()
+                    ? DataContext.Entity
+                    : null;
 
-            InfoButton.Hidden = DataContext == null || 
+            InfoButton.Hidden = DataContext == null ||
                 (DataContext != null &&
-                    !DataContext.Entity.Info.HasContact());
+                !DataContext.Entity.HasContacts());
 
-            DirectionsButton.Hidden = DataContext == null || 
+            DirectionsButton.Hidden = DataContext == null ||
                 (DataContext != null &&
-                    !DataContext.Entity.Info.HasAddress());
+                    !DataContext.Entity.HasAddresses());
 
             UpdateImageCellShadowVisibility();
             SetNeedsLayout();
@@ -441,23 +441,23 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             {
                 ImageCell.IsShadowHidden = 
                     !ScreenUtil.IsVerticalOrientation || 
-                        !DataContext.Entity.Info.HasLogo() || 
-                        !DataContext.Entity.Info.HasAddress();
+                        !DataContext.Entity.HasPicture() || 
+                        !DataContext.Entity.HasAddresses();
             }
         }
 
         partial void OnInfoButtonTouchUpInside(UIButton sender, UIEvent @event)
         {
             if (ShowContactsViewCommand != null &&
-                ShowContactsViewCommand.CanExecute(DataContext.Entity.Info))
+                ShowContactsViewCommand.CanExecute(DataContext.Entity))
             {
-                ShowContactsViewCommand.Execute(DataContext.Entity.Info);
+                ShowContactsViewCommand.Execute(DataContext.Entity);
             }
         }
 
         partial void OnDirectionsTouchUpInside(UIButton sender, UIEvent @event)
         {
-            var addressInfo = DataContext.Entity.Info.Addresses.FirstOrDefault();
+            var addressInfo = DataContext.Entity.Addresses.FirstOrDefault();
 
             if (ShowDirectionsCommand != null &&
                 ShowDirectionsCommand.CanExecute(addressInfo))

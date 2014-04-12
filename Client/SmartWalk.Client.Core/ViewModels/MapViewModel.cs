@@ -7,6 +7,7 @@ using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -17,7 +18,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private Parameters _parameters;
         private MapAnnotation _annotation;
-        private MvxCommand<AddressInfo> _showDirectionsCommand;
+        private MvxCommand<Address> _showDirectionsCommand;
 
         public MapViewModel(
             IAnalyticsService analyticsService,
@@ -49,16 +50,17 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_showDirectionsCommand == null)
                 {
-                    _showDirectionsCommand = new MvxCommand<AddressInfo>(
-                        info => {
-                        _showDirectionsTask.ShowDirections(info);
+                    _showDirectionsCommand = new MvxCommand<Address>(
+                        address =>
+                        {
+                            _showDirectionsTask.ShowDirections(address);
 
-                        _analyticsService.SendEvent(
-                            Analytics.CategoryUI,
-                            Analytics.ActionTouch,
-                            Analytics.ActionLabelShowDirections);
-                    },
-                    info => info != null);
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShowDirections);
+                        },
+                        address => address != null);
                 }
 
                 return _showDirectionsCommand;
@@ -97,7 +99,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
     public class Addresses
     {
-        public AddressInfo[] Items { get; set; }
+        public Address[] Items { get; set; }
 
         public override string ToString()
         {
@@ -123,15 +125,15 @@ namespace SmartWalk.Client.Core.ViewModels
         public MapAnnotation(
             string title,
             int number,
-            AddressInfo[] addressInfos)
+            Address[] addresses)
         {
             Number = number;
             Title = title;
-            AddressInfos = addressInfos;
+            Addresses = addresses;
         }
 
         public int Number { get; private set; }
         public string Title { get; private set; }
-        public AddressInfo[] AddressInfos { get; private set; }
+        public Address[] Addresses { get; private set; }
     }
 }

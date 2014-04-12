@@ -11,69 +11,71 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public class HomeViewModel : RefreshableViewModel
     {
-        private readonly ISmartWalkDataService _dataService;
+        private readonly ISmartWalkApiService _apiService;
         private readonly IExceptionPolicy _exceptionPolicy;
         private readonly ILocationService _locationService;
 
-        private LocationIndex _location;
-        private EntityInfo[] _orgInfos;
-        private ICommand _navigateOrgViewCommand;
+        private string _locationString;
+        private OrgEvent[] _eventInfos;
+        private ICommand _navigateOrgEventViewCommand;
 
         public HomeViewModel(
-            ISmartWalkDataService dataService,
+            ISmartWalkApiService apiService,
             IExceptionPolicy exceptionPolicy,
             IAnalyticsService analyticsService,
             ILocationService locationService) : base(analyticsService)
         {
-            _dataService = dataService;
+            _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
             _locationService = locationService;
-            _locationService.LocationChanged += (s, e) => UpdateOrgInfos();
+
+            _locationService.LocationChanged += (s, e) => UpdateEventInfos();
+            _locationService.LocationStringChanged += (s, e) => UpdateLocationString();
+
+            UpdateLocationString();
         }
 
-        public LocationIndex Location
+        public string LocationString
         {
             get
             {
-                return _location;
+                return _locationString;
             }
             private set
             {
-                if (!Equals(_location, value))
+                if (!Equals(_locationString, value))
                 {
-                    _location = value;
-                    RaisePropertyChanged(() => Location);
-
-                    OrgInfos = _location != null ? _location.OrgInfos : null;
+                    _locationString = value;
+                    RaisePropertyChanged(() => LocationString);
                 }
             }
         }
 
-        public EntityInfo[] OrgInfos 
+        public OrgEvent[] EventInfos 
         {
             get
             {
-                return _orgInfos;
+                return _eventInfos;
             }
             private set
             {
-                _orgInfos = value;
-                RaisePropertyChanged(() => OrgInfos);
+                _eventInfos = value;
+                RaisePropertyChanged(() => EventInfos);
             }
         }
 
-        public ICommand NavigateOrgViewCommand
+        public ICommand NavigateOrgEventViewCommand
         {
             get
             {
-                if (_navigateOrgViewCommand == null)
+                if (_navigateOrgEventViewCommand == null)
                 {
-                    _navigateOrgViewCommand = new MvxCommand<EntityInfo>(
-                        orgInfo => ShowViewModel<OrgViewModel>(
-                            new OrgViewModel.Parameters { OrgId = orgInfo.Id }));
+                    _navigateOrgEventViewCommand = new MvxCommand<OrgEvent>(
+                        orgEvent => ShowViewModel<OrgEventViewModel>(
+                            new OrgEventViewModel.Parameters { OrgEventId = orgEvent.Id }));
                 }
 
-                return _navigateOrgViewCommand;
+                return _navigateOrgEventViewCommand;
             }
         }
 
@@ -84,38 +86,42 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override void Start()
         {
-            UpdateOrgInfos().ContinueWithThrow();
+            UpdateEventInfos().ContinueWithThrow();
 
             base.Start();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgInfos().ContinueWithThrow();
+            UpdateEventInfos().ContinueWithThrow();
         }
 
-        private async Task UpdateOrgInfos()
+        private async Task UpdateEventInfos()
         {
-            if (_locationService.CurrentLocation != null)
+            IsLoading = true;
+
+            var eventInfos = default(OrgEvent[]);
+
+            try
             {
-                IsLoading = true;
-
-                var location = default(LocationIndex);
-
-                try
-                {
-                    location = await _dataService.GetLocationIndex(DataSource.Server); 
-                }
-                catch (Exception ex)
-                {
-                    _exceptionPolicy.Trace(ex);
-                }
-                    
-                IsLoading = false;
-
-                Location = location;
-                RaiseRefreshCompleted();
+                eventInfos = await _apiService.GetOrgEvents(
+                    _locationService.CurrentLocation,
+                    DataSource.Server); 
             }
+            catch (Exception ex)
+            {
+                _exceptionPolicy.Trace(ex);
+            }
+                
+            IsLoading = false;
+
+            EventInfos = eventInfos;
+            RaiseRefreshCompleted();
+        }
+
+        private void UpdateLocationString()
+        {
+            LocationString = _locationService.CurrentLocationString;
         }
     }
 }

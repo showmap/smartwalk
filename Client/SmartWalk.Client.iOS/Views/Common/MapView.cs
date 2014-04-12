@@ -73,10 +73,10 @@ namespace SmartWalk.Client.iOS.Views.Common
             MapViewControl.RemoveAnnotations(MapViewControl.Annotations);
 
             if (ViewModel.Annotation != null &&
-                ViewModel.Annotation.AddressInfos != null &&
-                ViewModel.Annotation.AddressInfos.Length > 0)
+                ViewModel.Annotation.Addresses != null &&
+                ViewModel.Annotation.Addresses.Length > 0)
             {
-                var annotations = ViewModel.Annotation.AddressInfos
+                var annotations = ViewModel.Annotation.Addresses
                     .Select(address => new MapViewAnnotation(
                         ViewModel.Annotation.Number,
                         ViewModel.Annotation.Title,
@@ -131,9 +131,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             navigateButton.TouchUpInside += (sender, e) => 
                 { 
                     if (ViewModel.Annotation != null &&
-                        ViewModel.Annotation.AddressInfos != null)
+                        ViewModel.Annotation.Addresses != null)
                     {
-                        var addressInfo = ViewModel.Annotation.AddressInfos.FirstOrDefault();
+                        var addressInfo = ViewModel.Annotation.Addresses.FirstOrDefault();
                         
                         if (ViewModel.ShowDirectionsCommand.CanExecute(addressInfo))
                         {
@@ -174,11 +174,11 @@ namespace SmartWalk.Client.iOS.Views.Common
         private string GetCurrentAddress()
         {
             if (ViewModel.Annotation != null &&
-                ViewModel.Annotation.AddressInfos != null)
+                ViewModel.Annotation.Addresses != null)
             {
-                var info = ViewModel.Annotation.AddressInfos
-                    .FirstOrDefault(ai => !string.IsNullOrWhiteSpace(ai.Address));
-                return info != null && !string.IsNullOrWhiteSpace(info.Address) ? info.Address : null; 
+                var info = ViewModel.Annotation.Addresses
+                    .FirstOrDefault(ai => !string.IsNullOrWhiteSpace(ai.AddressText));
+                return info != null && !string.IsNullOrWhiteSpace(info.AddressText) ? info.AddressText : null; 
             }
 
             return null;

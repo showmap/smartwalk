@@ -1,5 +1,5 @@
 using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
@@ -7,8 +7,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public class VenueAnnotation : EntityAnnotation, IMapAnnotation
     {
-        public VenueAnnotation(Venue venue, AddressInfo addressInfo)
-            : base(venue, addressInfo)
+        public VenueAnnotation(Venue venue, Address address)
+            : base(venue.Info, address)
         {
             Venue = venue;
         }
@@ -27,7 +27,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             get
             {
-                return Venue.Number;
+                return 0; // TODO: To support showing of letter
             }
         }
 
@@ -35,7 +35,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             get
             {
-                return Venue.Info.Logo;
+                return Venue.Info.Picture;
             }
         }
     }

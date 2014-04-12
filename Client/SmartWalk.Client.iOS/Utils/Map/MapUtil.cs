@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.CoreLocation;
-using MonoTouch.MapKit;
-using SmartWalk.Client.Core.Model;
 using MonoTouch.AddressBook;
+using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
+using MonoTouch.MapKit;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Utils.Map
 {
@@ -55,21 +55,21 @@ namespace SmartWalk.Client.iOS.Utils.Map
             return (number != 0 ? number + ". " : string.Empty) + title;
         }
 
-        public static void OpenAddressInMaps(AddressInfo addressInfo)
+        public static void OpenAddressInMaps(Address address)
         {
-            if (addressInfo != null)
+            if (address != null)
             {
                 var addressDict = new NSMutableDictionary();
-                if (addressInfo.Address != null)
+                if (address.AddressText != null)
                 {
-                    addressDict.Add(ABPersonAddressKey.Street, new NSString(addressInfo.Address));
+                    addressDict.Add(ABPersonAddressKey.Street, new NSString(address.AddressText));
                 }
 
                 var item = new MKMapItem(
                     new MKPlacemark(
                         new CLLocationCoordinate2D(
-                            addressInfo.Latitude, 
-                            addressInfo.Longitude),
+                            address.Latitude, 
+                            address.Longitude),
                         addressDict));
 
                 item.OpenInMaps(new MKLaunchOptions {

@@ -18,6 +18,7 @@ namespace SmartWalk.Client.iOS
 
         protected override IMvxApplication CreateApp()
         {
+            Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();
             Mvx.LazyConstructAndRegisterSingleton<IReachabilityService, ReachabilityService>();
             Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
             Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
@@ -35,7 +36,6 @@ namespace SmartWalk.Client.iOS
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.Email.Touch.Plugin>();
 
             base.AddPluginsLoaders(loaders);
-
         }
 
         protected override void InitializeLastChance()

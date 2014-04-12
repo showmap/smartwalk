@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using GoogleAnalytics;
+using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Utils;
@@ -83,7 +84,7 @@ namespace SmartWalk.Client.iOS.Services
                 }
             }
 
-            var locationParam = _locationService.CurrentLocation != null 
+            var locationParam = _locationService.CurrentLocation != Location.Empty 
                 ? "loc=" + _locationService.CurrentLocation 
                 : string.Empty;
 

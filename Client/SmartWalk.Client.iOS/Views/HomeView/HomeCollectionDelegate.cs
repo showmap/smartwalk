@@ -32,11 +32,11 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            var org = _collectionSource.ItemsSource.Cast<EntityInfo>().ElementAt(indexPath.Row);
+            var eventInfo = _collectionSource.ItemsSource.Cast<OrgEvent>().ElementAt(indexPath.Row);
 
-            if (_viewModel.NavigateOrgViewCommand.CanExecute(org))
+            if (_viewModel.NavigateOrgEventViewCommand.CanExecute(eventInfo))
             {
-                _viewModel.NavigateOrgViewCommand.Execute(org);
+                _viewModel.NavigateOrgEventViewCommand.Execute(eventInfo);
             }
 
             collectionView.DeselectItem(indexPath, false);

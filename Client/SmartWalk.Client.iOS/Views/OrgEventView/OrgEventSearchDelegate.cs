@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
@@ -46,7 +48,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     foreach (var venue in ItemsSource)
                     {
-                        var text = venue.SearchableText;
+                        var text = venue.GetSearchableText();
                         _searchableTexts[new SearchKey(venue)] = 
                             text != null ? text.ToLower() : null;
 
@@ -54,7 +56,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         {
                             foreach (var show in venue.Shows)
                             {
-                                text = show.SearchableText;
+                                text = show.GetSearchableText();
                                 _searchableTexts[new SearchKey(venue, show)] = 
                                     text != null ? text.ToLower() : null;
                             }
@@ -121,10 +123,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var venue = searchResults.FirstOrDefault(v => Equals(v.Info, match.Key.Item1.Info));
                 if (venue == null)
                 {
-                    venue = match.Key.Item1.Clone();
-                    venue.Shows = match.Key.Item2 != null 
+                    var shows = match.Key.Item2 != null 
                         ? new [] { match.Key.Item2 } 
-                        : new VenueShow[0];
+                        : new Show[0];
+                    venue = new Venue(match.Key.Item1.Info) { Shows = shows };
                     searchResults.Add(venue);
                 }
                 else
@@ -172,10 +174,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ConsoleUtil.LogDisposed(this);
         }
 
-        private class SearchKey : Tuple<Venue, VenueShow>
+        private class SearchKey : Tuple<Venue, Show>
         {
             public SearchKey(Venue venue) : base(venue, null) {}
-            public SearchKey(Venue venue, VenueShow show) : base(venue, show) {}
+            public SearchKey(Venue venue, Show show) : base(venue, show) {}
         }
     }
 }

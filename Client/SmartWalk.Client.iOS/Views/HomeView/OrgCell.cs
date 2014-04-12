@@ -21,9 +21,9 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             _imageHelper = new MvxImageViewLoader(() => OrgImageView);
         }
 
-        public new EntityInfo DataContext
+        public new OrgEvent DataContext
         {
-            get { return (EntityInfo)base.DataContext; }
+            get { return (OrgEvent)base.DataContext; }
             set { base.DataContext = value; }
         }
 
@@ -41,8 +41,8 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             OrgImageView.Image = null;
 
-            _imageHelper.ImageUrl = DataContext != null ? DataContext.Logo : null;
-            OrgNameLabel.Text = DataContext != null ? DataContext.Name : null;
+            _imageHelper.ImageUrl = DataContext != null ? DataContext.Picture : null;
+            OrgNameLabel.Text = DataContext != null ? DataContext.Title : null;
         }
     }
 }

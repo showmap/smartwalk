@@ -31,7 +31,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         protected override string GetViewTitle()
         {
-            return ViewModel.Location != null ? ViewModel.Location.Name : null;
+            return ViewModel.LocationString;
         }
 
         protected override void InitializeListView()
@@ -47,14 +47,14 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             var collectionSource = new HomeCollectionSource(OrgCollectionView);
 
-            this.CreateBinding(collectionSource).To((HomeViewModel vm) => vm.OrgInfos).Apply();
+            this.CreateBinding(collectionSource).To((HomeViewModel vm) => vm.EventInfos).Apply();
 
             return collectionSource;
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (propertyName == ViewModel.GetPropertyName(p => p.Location))
+            if (propertyName == ViewModel.GetPropertyName(p => p.LocationString))
             {
                 GetViewTitle();
             }

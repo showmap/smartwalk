@@ -10,7 +10,7 @@ namespace SmartWalk.Labs.Api
 {
     public class MainClass
     {
-        private const string SmartWalkUrl = @"http://smartwalk.com:8091/api";
+        private const string SmartWalkUrl = "http://smartwalk.azurewebsites.net/api";
 
         public static void Main(string[] args)
         {
@@ -18,7 +18,7 @@ namespace SmartWalk.Labs.Api
 
             Console.WriteLine("\nHome View");
 
-            var homeViewRequest = RequestFactory.CreateHomeViewRequest(37.7784568, -122.4174026);
+            var homeViewRequest = RequestFactory.CreateHomeViewRequest(37.757671, -122.408406);
             var json = JsonConvert.SerializeObject(
                 homeViewRequest,
                 new JsonSerializerSettings
@@ -42,8 +42,7 @@ namespace SmartWalk.Labs.Api
                     Console.WriteLine("Response hash code: " + response.GetHashCode());
 
                     // extract EventMetadata instances
-                    var eventMetadatas = response
-                        .Selects.First().Records
+                    var eventMetadatas = response.Selects[0].Records
                         .Cast<JObject>()
                         .Select(r => r.ToObject<EventMetadata>()).ToArray();
 
@@ -56,7 +55,7 @@ namespace SmartWalk.Labs.Api
             }
 
             Console.WriteLine("\nEvent View");
-            var eventViewRequest = RequestFactory.CreateEventViewRequest(5);
+            var eventViewRequest = RequestFactory.CreateEventViewRequest(36);
             json = JsonConvert.SerializeObject(
                 eventViewRequest,
                 new JsonSerializerSettings

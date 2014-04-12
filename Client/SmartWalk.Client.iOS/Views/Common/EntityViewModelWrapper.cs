@@ -1,6 +1,5 @@
 using System.ComponentModel;
-using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;

@@ -5,9 +5,9 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 
@@ -15,17 +15,18 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public class VenueViewModel : EntityViewModel
     {
-        private readonly ISmartWalkDataService _dataService;
+        private readonly ISmartWalkApiService _apiService;
         private readonly IAnalyticsService _analyticsService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
-        private MvxCommand<VenueShow> _expandCollapseShowCommand;
-        private VenueShow _expandedShow;
-        private OrgEvent _orgEvent;
+        private MvxCommand<Show> _expandCollapseShowCommand;
+        private Show _expandedShow;
+        private Venue _venue;
+        private Venue[] _orgEventVenues;
 
         public VenueViewModel(
-            ISmartWalkDataService dataService, 
+            ISmartWalkApiService apiService, 
             IAnalyticsService analyticsService,
             IMvxPhoneCallTask phoneCallTask,
             IMvxComposeEmailTask composeEmailTask,
@@ -33,29 +34,28 @@ namespace SmartWalk.Client.Core.ViewModels
             IExceptionPolicy exceptionPolicy) : 
                 base(analyticsService, phoneCallTask, composeEmailTask, showDirectionsTask)
         {
-            _dataService = dataService;
+            _apiService = apiService;
             _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
         }
 
-        public OrgEvent OrgEvent
+        public Venue[] OrgEventVenues
         {
             get
             {
-                return _orgEvent;
+                return _orgEventVenues;
             }
             private set
             {
-                if (!Equals(_orgEvent, value))
+                if (!Equals(_orgEventVenues, value))
                 {
-                    _orgEvent = value;
-                    RaisePropertyChanged(() => OrgEvent);
+                    _orgEventVenues = value;
+                    RaisePropertyChanged(() => OrgEventVenues);
 
-                    if (_orgEvent != null && _parameters != null)
+                    if (_orgEventVenues != null && _parameters != null)
                     {
-                        Venue = _orgEvent.Venues.FirstOrDefault(v => 
-                            v.Number == _parameters.VenueNumber &&
-                            v.Info.Name.EqualsIgnoreCase(_parameters.VenueName));
+                        Venue = _orgEventVenues
+                            .FirstOrDefault(v => v.Info.Id == _parameters.VenueId);
                     }
                     else
                     {
@@ -69,44 +69,43 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             get
             {
-                return (Venue)Entity;
+                return _venue;
             }
             private set
             {
-                if (!Equals(Entity, value))
+                if (!Equals(_venue, value))
                 {
-                    Entity = value;
+                    _venue = value;
+                    Entity = _venue != null ? _venue.Info : null;
                     RaisePropertyChanged(() => Venue);
 
-                    if (Entity != null)
+                    if (_venue != null)
                     {
-                        _parameters.VenueNumber = ((Venue)Entity).Number;
-                        _parameters.VenueName = Entity.Info.Name;
+                        _parameters.VenueId = _venue.Info.Id;
                     }
                     else
                     {
-                        _parameters.VenueNumber = 0;
-                        _parameters.VenueName = null;
+                        _parameters.VenueId = 0;
                     }
 
                     if (ExpandedShow != null && 
-                        Entity != null &&
-                        ((Venue)Entity).Shows != null &&
-                        !((Venue)Entity).Shows.Contains(ExpandedShow))
+                        _venue != null &&
+                        _venue.Shows != null &&
+                        !_venue.Shows.Contains(ExpandedShow))
                     {
                         ExpandedShow = null;
                     }
 
-                    if (Entity != null &&
-                        ((Venue)Entity).Shows != null && 
-                        ((Venue)Entity).Shows.Length == 1)
+                    if (_venue != null &&
+                        _venue.Shows != null && 
+                        _venue.Shows.Length == 1)
                     {
-                        ExpandedShow = ((Venue)Entity).Shows[0];
+                        ExpandedShow = _venue.Shows[0];
                     }
 
-                    if (Entity != null &&
-                        (((Venue)Entity).Shows == null || 
-                        ((Venue)Entity).Shows.Length == 0))
+                    if (_venue != null &&
+                        _venue.Shows == null || 
+                        _venue.Shows.Length == 0)
                     {
                         IsDescriptionExpanded = true;
                     }
@@ -114,7 +113,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public VenueShow ExpandedShow
+        public Show ExpandedShow
         {
             get
             {
@@ -136,7 +135,7 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_expandCollapseShowCommand == null)
                 {
-                    _expandCollapseShowCommand = new MvxCommand<VenueShow>(show => 
+                    _expandCollapseShowCommand = new MvxCommand<Show>(show => 
                         {
                             if (ExpandedShow != show)
                             {
@@ -164,7 +163,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override bool CanShowNextEntity
         {
-            get { return OrgEvent != null && OrgEvent.Venues.Length > 0 && Venue != null; }
+            get { return OrgEventVenues != null && OrgEventVenues.Length > 0 && Venue != null; }
         }
 
         public override bool CanShowPreviousEntity
@@ -181,26 +180,26 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEventAndVenue(DataSource.Cache)
+            UpdateOrgEventVenues(DataSource.Cache)
                 .ContinueWithThrow();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgEventAndVenue(DataSource.Server)
+            UpdateOrgEventVenues(DataSource.Server)
                 .ContinueWithThrow();
         }
 
         protected override void OnShowPreviousEntity()
         {
-            var currentIndex = Array.IndexOf(OrgEvent.Venues, Venue);
+            var currentIndex = Array.IndexOf(OrgEventVenues, Venue);
             if (currentIndex > 0)
             {
-                Venue = OrgEvent.Venues[currentIndex - 1];
+                Venue = OrgEventVenues[currentIndex - 1];
             }
             else
             {
-                Venue = OrgEvent.Venues.Last();
+                Venue = OrgEventVenues.Last();
             }
 
             RaiseRefreshCompleted();
@@ -208,38 +207,41 @@ namespace SmartWalk.Client.Core.ViewModels
 
         protected override void OnShowNextEntity()
         {
-            var currentIndex = Array.IndexOf(OrgEvent.Venues, Venue);
-            if (currentIndex < OrgEvent.Venues.Length - 1)
+            var currentIndex = Array.IndexOf(OrgEventVenues, Venue);
+            if (currentIndex < OrgEventVenues.Length - 1)
             {
-                Venue = OrgEvent.Venues[currentIndex + 1];
+                Venue = OrgEventVenues[currentIndex + 1];
             }
             else
             {
-                Venue = OrgEvent.Venues[0];
+                Venue = OrgEventVenues[0];
             }
 
             RaiseRefreshCompleted();
         }
 
-        private async Task UpdateOrgEventAndVenue(DataSource source)
+        private async Task UpdateOrgEventVenues(DataSource source)
         {
             if (_parameters != null)
             {
-                var orgEvent = default(OrgEvent);
+                IsLoading = true;
+
+                var venues = default(Venue[]);
 
                 try 
                 {
-                    orgEvent = await _dataService.GetOrgEvent(
-                        _parameters.OrgId,
-                        _parameters.EventDate,
+                    venues = await _apiService.GetOrgEventVenues(
+                        _parameters.OrgEventId,
                         source);
                 }
                 catch (Exception ex)
                 {
                     _exceptionPolicy.Trace(ex);
                 }
+
+                IsLoading = false;
                     
-                OrgEvent = orgEvent;
+                OrgEventVenues = venues;
                 RaiseRefreshCompleted();
             }
             else
@@ -260,10 +262,8 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public class Parameters
         {
-            public string OrgId { get; set; }
-            public DateTime EventDate { get; set; }
-            public int VenueNumber { get; set; }
-            public string VenueName { get; set; }
+            public int VenueId { get; set; }
+            public int OrgEventId { get; set; }
         }
     }
 }

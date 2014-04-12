@@ -1,9 +1,9 @@
-using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.Core.Services
 {
     public interface IShowDirectionsTask
     {
-        void ShowDirections(AddressInfo addressInfo);
+        void ShowDirections(Address address);
     }
 }

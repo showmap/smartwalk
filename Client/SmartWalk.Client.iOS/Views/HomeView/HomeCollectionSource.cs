@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             object item)
         {
             var cell = (OrgCell)collectionView.DequeueReusableCell(OrgCell.Key, indexPath);
-            cell.DataContext = (EntityInfo)item;
+            cell.DataContext = (OrgEvent)item;
             return cell;
         }
     }

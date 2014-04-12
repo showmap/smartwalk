@@ -10,8 +10,7 @@ namespace SmartWalk.Client.Core
     {
         public SmartWalkApplication()
         {
-            Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();
-            Mvx.LazyConstructAndRegisterSingleton<ISmartWalkDataService, SmartWalkDataService>();
+            Mvx.LazyConstructAndRegisterSingleton<ISmartWalkApiService, SmartWalkApiService>();
 
             Mvx.RegisterSingleton<IMvxAppStart>(new MvxAppStart<HomeViewModel>());
 

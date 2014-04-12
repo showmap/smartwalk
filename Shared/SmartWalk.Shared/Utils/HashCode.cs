@@ -2,8 +2,8 @@ namespace SmartWalk.Shared.Utils
 {
     public static class HashCode
     {
-        public static int Initial = 17;
-        public static int Multiplier = 23;
+        public const int Initial = 17;
+        public const int Multiplier = 23;
 
         public static int CombineHashCode<T>(this int hashCode, T arg)
         {

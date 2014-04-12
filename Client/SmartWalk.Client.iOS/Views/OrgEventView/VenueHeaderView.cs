@@ -23,6 +23,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.ContentView.Add(ContentView);
         }
 
+        public new Venue DataContext
+        {
+            get { return (Venue)base.DataContext; }
+            set { base.DataContext = value; }
+        }
+
         public ICommand NavigateVenueCommand 
         { 
             get { return ContentView.NavigateVenueCommand; }

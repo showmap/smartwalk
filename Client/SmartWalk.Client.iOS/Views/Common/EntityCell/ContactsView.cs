@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 
@@ -20,7 +18,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private const float DefaultPlaceholderMargin = 40;
         private const float DefaultPlaceholderLandscapeMargin = 15;
 
-        private EntityInfo _entityInfo;
+        private Entity _entity;
         private UITapGestureRecognizer _backgroundTapGesture;
         private ICommand _callPhoneCommand;
         private ICommand _composeEmailCommand;
@@ -91,19 +89,19 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        public EntityInfo EntityInfo
+        public Entity Entity
         {
             get
             {
-                return _entityInfo;
+                return _entity;
             }
             set
             {
-                var isInitialized = _entityInfo != null;
+                var isInitialized = _entity != null;
 
-                if (!Equals(_entityInfo, value))
+                if (!Equals(_entity, value))
                 {
-                    _entityInfo = value;
+                    _entity = value;
 
                     if (!isInitialized)
                     {
@@ -113,10 +111,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     }
 
                     ((ContactCollectionSource)CollectionView.WeakDataSource).ItemsSource =
-                        _entityInfo != null 
-                            ? (IEnumerable)new ContactCollectionSourceConverter()
-                            .Convert(_entityInfo.Contact, typeof(IEnumerable), null, null) 
-                            : null;
+                        _entity != null ? _entity.Contacts : null;
 
                     SetNeedsUpdateConstraints();
                 }

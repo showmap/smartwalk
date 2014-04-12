@@ -1,7 +1,7 @@
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             var cell = default(UICollectionViewCell);
 
-            var contact = item as IContact;
+            var contact = item as Contact;
             if (contact != null)
             {
                 cell = (UICollectionViewCell)collectionView.DequeueReusableCell(ContactCell.Key, indexPath);

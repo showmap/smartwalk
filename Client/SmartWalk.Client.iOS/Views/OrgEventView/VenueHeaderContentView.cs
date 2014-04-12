@@ -14,7 +14,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         public static readonly UINib Nib = UINib.FromName("VenueHeaderContentView", NSBundle.MainBundle);
 
-        private MvxImageViewLoader _imageHelper;
+        private readonly MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _cellTapGesture;
         private UILongPressGestureRecognizer _cellPressGesture;
 
@@ -64,9 +64,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper.ImageUrl = null;
 
             _imageHelper.ImageUrl = DataContext != null 
-                ? DataContext.Info.Logo : null;
+                ? DataContext.Info.Picture : null;
 
-            if (DataContext != null && DataContext.Info.Logo == null)
+            if (DataContext != null && DataContext.Info.Picture == null)
             {
                 LogoImageView.Hidden = true;
                 ImageLabelView.Hidden = false;
@@ -87,7 +87,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             AddressLabel.Text = DataContext != null && 
                 DataContext.Info.Addresses != null && 
                 DataContext.Info.Addresses.Length > 0 
-                ? DataContext.Info.Addresses[0].Address 
+                ? DataContext.Info.Addresses[0].AddressText 
                 : null;
         }
 

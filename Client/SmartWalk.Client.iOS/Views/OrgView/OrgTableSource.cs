@@ -32,7 +32,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            var eventInfo = GetItemAt(indexPath) as OrgEventInfo;
+            var eventInfo = GetItemAt(indexPath) as OrgEvent;
 
             if (eventInfo != null &&
                 _viewModel.NavigateOrgEventViewCommand.CanExecute(eventInfo))
@@ -67,7 +67,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                 return height;
             }
 
-            if (item is OrgEventInfo)
+            if (item is OrgEvent)
             {
                 return OrgEventCell.DefaultHeight;
             }
@@ -126,11 +126,11 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                 ((EntityCell)cell).DataContext = entityCellContext;
             }
 
-            var orgEventInfo = item as OrgEventInfo;
-            if (orgEventInfo != null)
+            var orgEvent = item as OrgEvent;
+            if (orgEvent != null)
             {
                 cell = tableView.DequeueReusableCell(OrgEventCell.Key, indexPath);
-                ((OrgEventCell)cell).DataContext = orgEventInfo;
+                ((OrgEventCell)cell).DataContext = orgEvent;
                 ((OrgEventCell)cell).IsSeparatorVisible = 
                     indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
                     indexPath.Section == GroupItemsSource.Length - 1;

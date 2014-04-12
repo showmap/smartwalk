@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Views.Common;
 
@@ -21,8 +22,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
                 result.Add(new GroupContainer(new [] { new EntityViewModelWrapper(orgViewModel) }));
 
-                var currentEvents = org.EventInfos
-                    .Where(ei => ei.TimeStatus == 0).OrderBy(ei => ei.Date).ToArray();
+                var currentEvents = org.OrgEvents
+                    .Where(ei => ei.GetStatus() == 0)
+                    .OrderBy(ei => ei.StartTime)
+                    .ToArray();
                 if (currentEvents.Length > 0)
                 {
                     result.Add(
@@ -32,8 +35,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                         });
                 }
 
-                var futureEvents = org.EventInfos
-                    .Where(ei => ei.TimeStatus > 0).OrderBy(ei => ei.Date).ToArray();
+                var futureEvents = org.OrgEvents
+                    .Where(ei => ei.GetStatus() > 0)
+                    .OrderBy(ei => ei.StartTime)
+                    .ToArray();
                 if (futureEvents.Length > 0)
                 {
                     result.Add(
@@ -43,8 +48,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                         });
                 }
 
-                var pastEvents = org.EventInfos
-                    .Where(ei => ei.TimeStatus < 0).OrderByDescending(ei => ei.Date).ToArray();
+                var pastEvents = org.OrgEvents
+                    .Where(ei => ei.GetStatus() < 0)
+                    .OrderByDescending(ei => ei.StartTime)
+                    .ToArray();
                 if (pastEvents.Length > 0)
                 {
                     result.Add(

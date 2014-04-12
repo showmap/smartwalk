@@ -1,11 +1,11 @@
 using System.Windows.Input;
-using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.Core.ViewModels.Interfaces
 {
     public interface IContactsEntityProvider
     {
-        EntityInfo CurrentContactsEntityInfo { get; }
+        Entity CurrentContactsEntityInfo { get; }
         ICommand ShowHideContactsCommand { get; }
         ICommand NavigateWebLinkCommand { get; }
         ICommand CallPhoneCommand { get; }

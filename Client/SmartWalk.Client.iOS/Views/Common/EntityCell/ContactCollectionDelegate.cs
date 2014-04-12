@@ -2,7 +2,8 @@ using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
@@ -36,33 +37,34 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             var item = _collectionSource.ItemsSource.Cast<object>().ElementAt(indexPath.Row);
 
-            var phoneInfo = item as PhoneInfo;
-            if (phoneInfo != null)
+            var contact = item as Contact;
+            if (contact != null)
             {
-                if (CallPhoneCommand != null &&
-                    CallPhoneCommand.CanExecute(phoneInfo))
+                if (contact.Type == ContactType.Phone)
                 {
-                    CallPhoneCommand.Execute(phoneInfo);
+                    if (CallPhoneCommand != null &&
+                        CallPhoneCommand.CanExecute(contact))
+                    {
+                        CallPhoneCommand.Execute(contact);
+                    }
                 }
-            }
 
-            var emailInfo = item as EmailInfo;
-            if (emailInfo != null)
-            {
-                if (ComposeEmailCommand != null &&
-                    ComposeEmailCommand.CanExecute(emailInfo))
+                if (contact.Type == ContactType.Email)
                 {
-                    ComposeEmailCommand.Execute(emailInfo);
+                    if (ComposeEmailCommand != null &&
+                        ComposeEmailCommand.CanExecute(contact))
+                    {
+                        ComposeEmailCommand.Execute(contact);
+                    }
                 }
-            }
 
-            var webSiteInfo = item as WebSiteInfo;
-            if (webSiteInfo != null)
-            {
-                if (NavigateSiteLinkCommand != null &&
-                    NavigateSiteLinkCommand.CanExecute(webSiteInfo))
+                if (contact.Type == ContactType.Url)
                 {
-                    NavigateSiteLinkCommand.Execute(webSiteInfo);
+                    if (NavigateSiteLinkCommand != null &&
+                        NavigateSiteLinkCommand.CanExecute(contact))
+                    {
+                        NavigateSiteLinkCommand.Execute(contact);
+                    }
                 }
             }
 

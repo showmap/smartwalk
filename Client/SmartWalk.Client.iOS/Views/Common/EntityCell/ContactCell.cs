@@ -1,7 +1,8 @@
 using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
@@ -17,9 +18,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
         }
 
-        public new IContact DataContext
+        public new Contact DataContext
         {
-            get { return (IContact)base.DataContext; }
+            get { return (Contact)base.DataContext; }
             set { base.DataContext = value; }
         }
 
@@ -36,7 +37,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         protected override void OnDataContextChanged()
         {
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
-            ContactLabel.Text = DataContext != null ? DataContext.Contact : null;
+            ContactLabel.Text = DataContext != null ? DataContext.ContactText : null;
 
             TitleHeightConstraint.Constant = DataContext != null && DataContext.Title != null ? 22 : 0;
             ContactTopConstraint.Constant = DataContext != null && DataContext.Title != null ? 15 : 8;
@@ -51,7 +52,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     ContactIcon.Image = ThemeIcons.ContactEmail;
                     break;
 
-                case ContactType.WebSite:
+                case ContactType.Url:
                     ContactIcon.Image = ThemeIcons.ContactWeb;
                     break;
 

@@ -5,8 +5,7 @@ using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
@@ -69,12 +68,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             MapView.RemoveAnnotations(previousAnnotations);
 
             if (DataContext != null && 
-                DataContext.Info.HasAddress())
+                DataContext.HasAddresses())
             {
-                var annotations = DataContext.Info.Addresses.Select(
-                        a => new MapViewAnnotation(
-                            DataContext is INumberEntity ? ((INumberEntity)DataContext).Number : 0,
-                                DataContext.Info.Name, 
+                var annotations = DataContext.Addresses.Select(
+                        a => new MapViewAnnotation(0, // TODO: To pass letters
+                                DataContext.Name, 
                                 a)).ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 

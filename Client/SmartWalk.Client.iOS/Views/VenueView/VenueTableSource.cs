@@ -2,13 +2,13 @@ using System;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.OrgEventView;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
@@ -60,7 +60,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 return height;
             }
 
-            var venueShow = item as VenueShow;
+            var venueShow = item as Show;
             if (venueShow != null)
             {
                 var height = VenueShowCell.CalculateCellHeight(
@@ -125,7 +125,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((EntityCell)cell).DataContext = entityCellContext;
             }
 
-            var venueShow = item as VenueShow;
+            var venueShow = item as Show;
             if (venueShow != null)
             {
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);

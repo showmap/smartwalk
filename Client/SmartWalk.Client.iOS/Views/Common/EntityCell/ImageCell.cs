@@ -3,9 +3,9 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -40,9 +40,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 });
         }
 
-        public new EntityInfo DataContext
+        public new Entity DataContext
         {
-            get { return (EntityInfo)base.DataContext; }
+            get { return (Entity)base.DataContext; }
             set { base.DataContext = value; }
         }
 
@@ -111,16 +111,16 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             _imageHelper.ImageUrl = null; // we have to reset it, since Image is reset too
 
             _imageHelper.ImageUrl = DataContext != null 
-                ? DataContext.Logo : null;
+                ? DataContext.Picture : null;
         }
 
         private void InitializeGestures()
         {
             _imageTapGesture = new UITapGestureRecognizer(() => {
                 if (ShowImageFullscreenCommand != null &&
-                    ShowImageFullscreenCommand.CanExecute(DataContext.Logo))
+                    ShowImageFullscreenCommand.CanExecute(DataContext.Picture))
                 {
-                    ShowImageFullscreenCommand.Execute(DataContext.Logo);
+                    ShowImageFullscreenCommand.Execute(DataContext.Picture);
                 }
             }) {
                 NumberOfTouchesRequired = (uint)1,

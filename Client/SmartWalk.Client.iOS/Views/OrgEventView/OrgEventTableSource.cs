@@ -6,6 +6,7 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
@@ -69,13 +70,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     _flattenItemsSource = 
                         VenueItemsSource
-                            .SelectMany(v => v.Shows.Select(s => 
+                            .SelectMany(v => v.Shows.Select(
+                                s =>
                                 { 
-                                    var venue = v.Clone(); 
-                                    venue.Shows = new [] { s };
+                                var venue = new Venue(v.Info) { Shows = new [] { s } }; 
                                     return venue;
                                 }))
-                            .OrderBy(v => v.Shows[0], new VenueShowComparer())
+                            .OrderBy(v => v.Shows[0], new ShowComparer())
                             .ToArray();
                 }
 
@@ -88,7 +89,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get { return _viewModel.IsGroupedByLocation ? VenueItemsSource : FlattenItemsSource; }
         }
 
-        public int GetSectionIndexByShow(VenueShow show)
+        public int GetSectionIndexByShow(Show show)
         {
             for (var i = 0; i < CurrentItemsSource.Length; i++)
             {
@@ -117,7 +118,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var item = GetItemAt(indexPath);
-            var venueShow = item as VenueShow;
+            var venueShow = item as Show;
             if (venueShow != null)
             {
                 var height = VenueShowCell.CalculateCellHeight(
@@ -198,14 +199,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var cell = default(UITableViewCell);
 
-            var venueShow = item as VenueShow;
-            if (venueShow != null)
+            var show = item as Show;
+            if (show != null)
             {
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
                 ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
-                ((VenueShowCell)cell).DataContext = venueShow;
+                ((VenueShowCell)cell).DataContext = show;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     !_viewModel.IsGroupedByLocation ||

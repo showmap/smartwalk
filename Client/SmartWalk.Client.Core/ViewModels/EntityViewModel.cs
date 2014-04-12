@@ -3,8 +3,7 @@ using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Constants;
-using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Model.Interfaces;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.Core.ViewModels.Common;
@@ -23,18 +22,18 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private Entity _entity;
         private bool _isDescriptionExpanded;
-        private EntityInfo _currentContactsEntityInfo;
+        private Entity _currentContactsEntityInfo;
         private string _currentFullscreenImage;
 
         private MvxCommand _expandCollapseCommand;
         private MvxCommand _showPreviousEntityCommand;
         private MvxCommand _showNextEntityCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
-        private MvxCommand<EntityInfo> _showHideContactsCommand;
-        private MvxCommand<PhoneInfo> _callPhoneCommand;
-        private MvxCommand<EmailInfo> _composeEmailCommand;
-        private MvxCommand<AddressInfo> _showDirectionsCommand;
-        private MvxCommand<WebSiteInfo> _navigateWebLinkCommand;
+        private MvxCommand<Entity> _showHideContactsCommand;
+        private MvxCommand<Contact> _callPhoneCommand;
+        private MvxCommand<Contact> _composeEmailCommand;
+        private MvxCommand<Address> _showDirectionsCommand;
+        private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<Entity> _navigateAddressesCommand;
 
         protected EntityViewModel(
@@ -66,7 +65,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
                     if (CurrentContactsEntityInfo != null)
                     {
-                        CurrentContactsEntityInfo = Entity.Info;
+                        CurrentContactsEntityInfo = Entity;
                     }
                 }
             }
@@ -104,7 +103,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public EntityInfo CurrentContactsEntityInfo
+        public Entity CurrentContactsEntityInfo
         {
             get
             {
@@ -216,9 +215,10 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_showHideContactsCommand == null)
                 {
-                    _showHideContactsCommand = new MvxCommand<EntityInfo>(
-                        entityInfo => {
-                            CurrentContactsEntityInfo = entityInfo;
+                    _showHideContactsCommand = new MvxCommand<Entity>(
+                        entity => 
+                        {
+                            CurrentContactsEntityInfo = entity;
 
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
@@ -239,16 +239,20 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_callPhoneCommand == null)
                 {
-                    _callPhoneCommand = new MvxCommand<PhoneInfo>(
-                        info => {
-                            _phoneCallTask.MakePhoneCall(info.Name, info.Phone);
+                    _callPhoneCommand = new MvxCommand<Contact>(
+                        contact =>
+                        {
+                            _phoneCallTask.MakePhoneCall(contact.Title, contact.ContactText);
 
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCallPhone);
                         },
-                        info => info != null && info.Phone != null);
+                        contact => 
+                            contact != null && 
+                            contact.Type == SmartWalk.Shared.DataContracts.ContactType.Phone && 
+                            contact.ContactText != null);
                 }
 
                 return _callPhoneCommand;
@@ -261,16 +265,20 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_composeEmailCommand == null)
                 {
-                    _composeEmailCommand = new MvxCommand<EmailInfo>(
-                        info => {
-                            _composeEmailTask.ComposeEmail(info.Email, null, null, null, true);
+                    _composeEmailCommand = new MvxCommand<Contact>(
+                        contact =>
+                        {
+                            _composeEmailTask.ComposeEmail(contact.ContactText, null, null, null, true);
 
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelComposeEmail);
                         },
-                    info => info != null && info.Email != null);
+                        contact => 
+                            contact != null &&
+                            contact.Type == SmartWalk.Shared.DataContracts.ContactType.Email &&
+                            contact.ContactText != null);
                 }
 
                 return _composeEmailCommand;
@@ -283,12 +291,15 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_navigateWebLinkCommand == null)
                 {
-                    _navigateWebLinkCommand = new MvxCommand<WebSiteInfo>(
-                        info => ShowViewModel<BrowserViewModel>(
+                    _navigateWebLinkCommand = new MvxCommand<Contact>(
+                        contact => ShowViewModel<BrowserViewModel>(
                             new BrowserViewModel.Parameters {  
-                                URL = info.URL
+                                URL = contact.ContactText
                             }),
-                        info => info != null);
+                        contact => 
+                            contact != null &&
+                            contact.Type == SmartWalk.Shared.DataContracts.ContactType.Url &&
+                            contact.ContactText != null);
                 }
 
                 return _navigateWebLinkCommand;
@@ -301,16 +312,17 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_showDirectionsCommand == null)
                 {
-                    _showDirectionsCommand = new MvxCommand<AddressInfo>(
-                        info => {
-                        _showDirectionsTask.ShowDirections(info);
+                    _showDirectionsCommand = new MvxCommand<Address>(
+                        address =>
+                        {
+                            _showDirectionsTask.ShowDirections(address);
 
-                        _analyticsService.SendEvent(
-                            Analytics.CategoryUI,
-                            Analytics.ActionTouch,
-                            Analytics.ActionLabelShowDirections);
-                    },
-                    info => info != null);
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShowDirections);
+                        },
+                        address => address != null);
                 }
 
                 return _showDirectionsCommand;
@@ -326,15 +338,14 @@ namespace SmartWalk.Client.Core.ViewModels
                     _navigateAddressesCommand = new MvxCommand<Entity>(
                         entity => ShowViewModel<MapViewModel>(
                             new MapViewModel.Parameters {
-                                Title = entity.Info.Name,
-                                Number = entity is INumberEntity ? ((INumberEntity)entity).Number : 0,
-                                Addresses = new Addresses { Items = entity.Info.Addresses }
+                                Title = entity.Name,
+                                Number = 0, // TODO: To support letters
+                                Addresses = new Addresses { Items = entity.Addresses }
                             }),
                         entity => 
                             entity != null && 
-                            entity.Info != null && 
-                            entity.Info.Addresses != null &&
-                            entity.Info.Addresses.Length > 0);
+                            entity.Addresses != null &&
+                            entity.Addresses.Length > 0);
                 }
 
                 return _navigateAddressesCommand;

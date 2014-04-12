@@ -245,7 +245,6 @@
       <DependentUpon>EntityCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\EntityCell\ContactCollectionSource.cs" />
-    <Compile Include="Views\Common\EntityCell\ContactCollectionSourceConverter.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionDelegate.cs" />
     <Compile Include="Controls\ListViewDecorator.cs" />
     <Compile Include="Views\Common\ListViewBase.cs" />
@@ -331,6 +330,7 @@
     <Compile Include="Services\ReachabilityService.cs" />
     <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\LocationService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

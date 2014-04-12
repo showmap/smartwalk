@@ -1,19 +1,30 @@
 using SmartWalk.Shared.Utils;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.Core.Model
 {
-    public class Org : Entity
+    public class Org
     {
-        public OrgEventInfo[] EventInfos { get; set; }
+        private readonly Entity _entity;
+
+        public Org(Entity entity)
+        {
+            _entity = entity;
+        }
+
+        public Entity Info
+        {
+            get { return _entity; }
+        }
+
+        public OrgEvent[] OrgEvents { get; set; }
 
         public override bool Equals(object obj)
         {
             var org = obj as Org;
             if (org != null)
             {
-                return Equals(Info, org.Info) &&
-                    Description == org.Description &&
-                        EventInfos.EnumerableEquals(org.EventInfos);
+                return Info.Id == org.Info.Id;
             }
 
             return false;
@@ -22,9 +33,16 @@ namespace SmartWalk.Client.Core.Model
         public override int GetHashCode()
         {
             return HashCode.Initial
-                .CombineHashCodeOrDefault(Info)
-                    .CombineHashCodeOrDefault(Description)
-                        .CombineHashCodeOrDefault(EventInfos);
+                    .CombineHashCode(Info.GetHashCode())
+                    .CombineHashCodeOrDefault(OrgEvents);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "Id={0}, EventsCount={1}", 
+                Info.Id, 
+                OrgEvents != null ? OrgEvents.Length : 0);
         }
     }
 }

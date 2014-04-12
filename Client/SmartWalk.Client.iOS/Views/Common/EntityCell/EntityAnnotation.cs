@@ -1,19 +1,19 @@
 using MonoTouch.MapKit;
 using MonoTouch.CoreLocation;
-using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public class EntityAnnotation : MKAnnotation
     {
-        private readonly AddressInfo _addressInfo;
+        private readonly Address _address;
 
-        public EntityAnnotation(Entity entity, AddressInfo addressInfo)
+        public EntityAnnotation(Entity entity, Address address)
         {
             Entity = entity;
-            _addressInfo = addressInfo;
+            _address = address;
 
-            Coordinate = new CLLocationCoordinate2D(_addressInfo.Latitude, _addressInfo.Longitude);
+            Coordinate = new CLLocationCoordinate2D(_address.Latitude, _address.Longitude);
         }
 
         public Entity Entity { get; set; }
@@ -24,7 +24,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             get
             {
-                return Entity.Info.Name;
+                return Entity.Name;
             }
         }
 
@@ -32,7 +32,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             get
             {
-                return _addressInfo.Address;
+                return _address.AddressText;
             }
         }
     }

@@ -8,6 +8,7 @@ using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
@@ -29,7 +30,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private bool _isAnimating;
         private bool _isBackOverriden;
         private PointF _tableContentOffset;
-        private VenueShow _previousExpandedShow;
+        private Show _previousExpandedShow;
         private UIButton _modeButtonList;
         private UIButton _modeButtonMap;
 
@@ -139,9 +140,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override string GetViewTitle()
         {
-            if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.Info != null)
+            if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.StartTime.HasValue)
             {
-                return string.Format("{0:d MMMM yyyy}", ViewModel.OrgEvent.Info.Date);
+                return string.Format("{0:d MMMM yyyy}", ViewModel.OrgEvent.StartTime.Value);
             }
 
             return null;
@@ -397,8 +398,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenuesMapView.Annotations
                         .OfType<VenueAnnotation>()
                             .FirstOrDefault(an => 
-                                an.Venue.Number == venue.Number &&
-                                an.Venue.Description == venue.Description); // don't use Equals, venues have different shows (un-grouped mode)
+                                an.Venue.Info.Id == venue.Info.Id);
 
                 if (annotation != null)
                 {
