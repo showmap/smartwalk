@@ -84,9 +84,10 @@ ko.bindingHandlers.timepicker = {
     },
     //update the control when the view model changes
     update: function (element, valueAccessor) {
-        var value = ko.utils.unwrapObservable(valueAccessor());
-        if (!value)
-            value = "00:00";
+        var observable = valueAccessor();        
+        if (!observable())
+            observable("00:00");
+        var value = ko.utils.unwrapObservable(observable);
         var valueDate = new Date(myDate + " " + value);
         var current = $(element).datepicker("getDate");
         //if (value.getTime() - current.getTime() !== 0) {

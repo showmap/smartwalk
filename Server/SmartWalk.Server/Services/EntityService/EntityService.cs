@@ -56,7 +56,7 @@ namespace SmartWalk.Server.Services.EntityService
             if (item.AllShows.Count == 0)
                 return;
 
-            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == item.AllShows.First().EventMetedataId && s.EntityRecord.Id == item.Id).ToList();
+            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == item.AllShows.First().EventMetadataId && s.EntityRecord.Id == item.Id).ToList();
 
             foreach (var showRecord in shows) {
                 showRecord.IsDeleted = true;
@@ -69,7 +69,7 @@ namespace SmartWalk.Server.Services.EntityService
                 SaveOrAddShow(showVm);
             }
 
-            return CheckShowVenue(item.EventMetedataId, item.Id);
+            return CheckShowVenue(item.EventMetadataId, item.Id);
         }
 
         private ShowVm CheckShowVenue(int eventId, int venueId)
@@ -106,7 +106,7 @@ namespace SmartWalk.Server.Services.EntityService
         public ShowVm SaveOrAddShow(ShowVm item)
         {
             var show = _showRepository.Get(item.Id);
-            var metadata = _metadataRepository.Get(item.EventMetedataId);
+            var metadata = _metadataRepository.Get(item.EventMetadataId);
             var venue = _entityRepository.Get(item.VenueId);
 
             if (metadata == null || venue == null)

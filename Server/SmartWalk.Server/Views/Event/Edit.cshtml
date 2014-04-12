@@ -25,9 +25,7 @@
     delete-event-venue-url="@Url.Action("DeleteEventVenue", "Event")"
     save-event-venue-url="@Url.Action("SaveEventVenue", "Event")"
     save-event-url="@Url.Action("SaveEvent", "Event")">
-    @Html.AntiForgeryTokenOrchard()
-    <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
-
+    @Html.AntiForgeryTokenOrchard()    
     <div id="metadata-panel">
         <div class="row">
 			<div class="col-xs-8">
@@ -121,7 +119,7 @@
 			</thead>
 			<tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
 		</table>
-        
+        <textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.selectedItem)"></textarea>
         <button type="button" class="btn btn-default" data-bind="click: $root.addVenue">@T("Add Venue")</button>
 		
 		<div class="row double-gap">
@@ -144,7 +142,7 @@
     </div>
 </div>
 
-@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetedataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal})
+@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal})
 
 <script type="text/html" id="EntityItemTemplate">
     <tr data-bind="template: {name: $root.getVenueView }"></tr>
@@ -157,8 +155,8 @@
         <div>
             <a data-bind="attr:{href: '/venue/'+Id()}"><img data-bind="attr: {src: Picture }"/></a>
             <a data-bind="attr:{href: '/venue/'+Id()}"><h4 data-bind="text: DisplayName"></h4></a>
-            <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : '', click: $root.selectedItem"></address>
-            <i class="description" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : '', click: $root.selectedItem"></i>
+            <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : ''"></address>
+            <i class="description" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
         </div>
         <div class="clearfix"></div>
         <button type="button" class="btn btn-default gap" data-bind="click: $root.addShow">@T("Create Show")</button>
@@ -174,7 +172,7 @@
                 <div class="form-group">
                     <label for="venueComboBox">@T("Venue"):</label>
                     <div class="input-group">
-                        <select id="venueComboBox" class="form-control pull-left" data-bind="options: $root.ComputedVenues, optionsText: 'Name', value: $data, optionsCaption: '@T("Select Venue...")    '"></select>
+                        <select id="venueComboBox" class="form-control pull-left" data-bind="options: $root.OtherVenues, optionsText: 'Name', value: $data, optionsCaption: '@T("Select Venue...")    '"></select>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default pull-right" id="createVenueButton">@T("Create Venue...")</button>
                         </span>
@@ -385,39 +383,33 @@
             };
 
             vm.saveVenue = function(item) {                
-                alert('item id = ' + item.Id() + ' selected item id = ' + vm.selectedItem().Id());
-                if (vm.selectedItem().Id() == 0)
+                //alert('item id = ' + item.Id() + ' selected item id = ' + vm.selectedItem().Id());
+                if (vm.selectedItem().Id() == 0){
                     vm.deleteVenue(vm.selectedItem());
-                ko.utils.arrayPushAll(item.AllShows, vm.selectedItem().AllShows());
-                vm.selectedItem().AllShows.removeAll();
-                ko.utils.arrayForEach(item.AllShows(), function(show) {
-                    show.VenueId(item.Id());
-                });
-                vm.selectedItem(null);
-                if(false){
-                    var ajdata = ko.toJSON(item);
-                    var urlUpdate = $("#event-item").attr("save-event-venue-url");
-
-                    var config = {
-                        async: true,
-                        url: urlUpdate,
-                        type: "POST",
-                        data: ajdata,
-                        dataType: "json",
-                        cache: false,
-                        contentType: "application/json; charset=utf-8",
-                        error: function(e) {
-                            //window.location.href = "@Url.Action("List")";
-                        },
-                        success: function(data) {
-                            if(data)
-                                item.AllShows.push(new ShowViewModel(data));
-                            vm.selectedItem(null);
-                        }
-                    };
-                    $.ajax(config);
+                    item.State(0);
                 }
-                alert("123");
+                
+                var ajdata = ko.toJSON(item);
+                var urlUpdate = $("#event-item").attr("save-event-venue-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function(e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function(data) {
+                        if(data)
+                            item.AllShows.push(new ShowViewModel(data));
+                        vm.selectedItem(null);
+                    }
+                };
+                $.ajax(config);
             };
 
             vm.getShowView = function (item) {

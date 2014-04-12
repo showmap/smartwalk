@@ -67,7 +67,7 @@ function ShowViewModel(data) {
     var self = this;
 
     self.Id = ko.observable();
-    self.EventMetedataId = ko.observable();
+    self.EventMetadataId = ko.observable();
     self.VenueId = ko.observable();
     self.IsReference = ko.observable();
     self.Title = ko.observable();
@@ -90,7 +90,7 @@ function ShowViewModel(data) {
 
     self.loadData = function(data) {
         self.Id(data.Id);
-        self.EventMetedataId(data.EventMetedataId);
+        self.EventMetadataId(data.EventMetadataId);
         self.VenueId(data.VenueId);
         self.IsReference(data.IsReference);
         self.Title(data.Title);
@@ -111,7 +111,7 @@ function EntityViewModel(data) {
     var self = this;
 
     self.Id = ko.observable();
-    self.EventMetedataId = ko.observable();
+    self.EventMetadataId = ko.observable();
 
     self.Type = ko.observable();
 
@@ -130,7 +130,7 @@ function EntityViewModel(data) {
 
     self.loadData = function (data) {
         self.Id(data.Id);
-        self.EventMetedataId(data.EventMetedataId);
+        self.EventMetadataId(data.EventMetadataId);
         self.Type(data.Type);
 
         self.Name(data.Name);
@@ -294,7 +294,7 @@ function EntityViewModel(data) {
         });
     }, this);
     self.addShow = function () {
-        self.AllShows.push(new ShowViewModel({ Id: 0, EventMetedataId: self.EventMetedataId(), VenueId: self.Id(), State: 1, StartDate: '', EndDate: '' }));
+        self.AllShows.push(new ShowViewModel({ Id: 0, EventMetadataId: self.EventMetadataId(), VenueId: self.Id(), State: 1, StartDate: '', EndDate: '' }));
         return self.AllShows()[self.AllShows().length - 1];
     };
     self.removeShow = function (item) {
@@ -369,17 +369,10 @@ function EventViewModel(data) {
             return item.State() == 3;
         });
     }, this);
-    self.ComputedVenues = ko.computed(function () {
-        return self.AllVenues();
-        if (self.selectedItem() != null && self.selectedItem()  && self.selectedItem().Id() == 0) {
-            
-        }
-        
-        if (self.selectedItem() != null && self.selectedItem() && self.selectedItem().Id() != 0) {
-            return ko.utils.arrayFilter(self.AllVenues(), function (item) {
-                return item.State() != 2 && item.State() != 3 && item.Id() != 0;
-            });
-        }        
+    self.CalcVenues = ko.computed(function () {
+        return ko.utils.arrayFilter(self.AllVenues(), function (item) {
+            return item.Id() == 0;
+        });
     }, this);
     self.addVenue = function (){
         var newVenue = new EntityViewModel({ Id: 0, Type: 1, State: 1 });
@@ -390,7 +383,6 @@ function EventViewModel(data) {
         item.State(2);
     };
     self.cancelVenue = function (item) {
-        alert("item=" + item + " sel item = " + self.selectedItem());
         if (self.selectedItem() && self.selectedItem().Id() == 0) {
             self.removeVenue(self.selectedItem());
         }

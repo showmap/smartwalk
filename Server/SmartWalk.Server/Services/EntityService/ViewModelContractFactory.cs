@@ -36,11 +36,11 @@ namespace SmartWalk.Server.Services.EntityService
 
             var res = CreateViewModelContract(record);
 
-            if (record.ShowRecords.All(s => s.EventMetadataRecord.Id != metadata.Id))
+            if (metadata.ShowRecords.All(s => s.EntityRecord.Id != record.Id))
                 res.State = VmItemState.Hidden;
 
-            res.EventMetedataId = metadata.Id;
-            res.AllShows = record.ShowRecords.Where(s => s.EventMetadataRecord.Id == metadata.Id && !s.IsDeleted).Select(CreateViewModelContract).ToList();
+            res.EventMetadataId = metadata.Id;
+            res.AllShows = metadata.ShowRecords.Where(s => s.EntityRecord.Id == record.Id && !s.IsDeleted).Select(CreateViewModelContract).ToList();
 
             return res;
         }
@@ -53,7 +53,7 @@ namespace SmartWalk.Server.Services.EntityService
             return new ShowVm
             {
                 Id = record.Id,
-                EventMetedataId = record.EventMetadataRecord.Id,
+                EventMetadataId = record.EventMetadataRecord.Id,
                 State = record.IsReference ? VmItemState.Hidden : VmItemState.Normal,
                 VenueId = record.EntityRecord.Id,
                 Title = record.Title,

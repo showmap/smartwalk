@@ -9,7 +9,7 @@ namespace SmartWalk.Server.ViewModels
     {
         public int Id { get; set; }
         public VmItemState State { get; set; }
-        public int EventMetedataId { get; set; }
+        public int EventMetadataId { get; set; }
         public int VenueId { get; set; }
         public bool IsReference { get; set; }
         public string Title { get; set; }
