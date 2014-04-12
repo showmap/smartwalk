@@ -34,9 +34,10 @@ namespace SmartWalk.Client.Core.Utils
         public static ShowStatus GetStatus(this Show show)
         {
             var status = 
-                (show.StartTime.HasValue && show.StartTime.Value.Date > DateTime.Now.Date) ||
+                (show.StartTime.HasValue && show.StartTime.Value.Date != DateTime.Now.Date) ||
                 (!show.StartTime.HasValue && show.EndTime >= DateTime.Now) ||
-                !show.EndTime.HasValue || show.EndTime >= DateTime.Now
+                !show.EndTime.HasValue || 
+                show.EndTime >= DateTime.Now
                 ? ShowStatus.NotStarted 
                 : ShowStatus.Finished;
 
