@@ -1,4 +1,6 @@
-﻿namespace SmartWalk.Shared.DataContracts.Api
+﻿using SmartWalk.Shared.Utils;
+
+namespace SmartWalk.Shared.DataContracts.Api
 {
     [UsedImplicitly]
     public class RequestSelectWhere
@@ -12,5 +14,16 @@
         public object[] Values { get; set; }
 
         public RequestSelectWhereSelectValue SelectValue { get; set; }
+
+        public override int GetHashCode()
+        {
+            return 
+                HashCode.Initial
+                    .CombineHashCodeOrDefault(Field)
+                    .CombineHashCodeOrDefault(Operator)
+                    .CombineHashCodeOrDefault(Value)
+                    .CombineHashCodeOrDefault(Values)
+                    .CombineHashCodeOrDefault(SelectValue);
+        }
     }
 }

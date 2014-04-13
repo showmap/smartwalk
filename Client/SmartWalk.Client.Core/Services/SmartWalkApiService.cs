@@ -14,12 +14,19 @@ namespace SmartWalk.Client.Core.Services
 {
     public class SmartWalkApiService : ISmartWalkApiService
     {
-        private const string apiUrl = "http://smartwalk.azurewebsites.net/api";
+        private const string KeyPrefix = "api";
 
+        private readonly IConfiguration _configuration;
+        private readonly ICacheService _cacheService;
         private readonly IReachabilityService _reachabilityService;
 
-        public SmartWalkApiService(IReachabilityService reachabilityService)
+        public SmartWalkApiService(
+            IConfiguration configuration,
+            ICacheService cacheService,
+            IReachabilityService reachabilityService)
         {
+            _configuration = configuration;
+            _cacheService = cacheService;
             _reachabilityService = reachabilityService;
         }
 
@@ -60,26 +67,30 @@ namespace SmartWalk.Client.Core.Services
                 Storages = new[] { Storage.SmartWalk }
             };
 
-            var response = await GetResponse(request);
+            var response = await GetResponse(request, source);
+            var result = default(OrgEvent[]);
 
-            var eventMetadatas = response
-                .Selects[0].Records
-                .Cast<JObject>()
-                .Select(r => r.ToObject<EventMetadata>())
-                .ToArray();
+            if (response != null)
+            {
+                var eventMetadatas = response
+                    .Selects[0].Records
+                    .Cast<JObject>()
+                    .Select(r => r.ToObject<EventMetadata>())
+                    .ToArray();
 
-            var hosts = response
-                .Selects[1].Records
-                .Cast<JObject>()
-                .Select(r => r.ToObject<Entity>())
-                .ToArray();
+                var hosts = response
+                    .Selects[1].Records
+                    .Cast<JObject>()
+                    .Select(r => r.ToObject<Entity>())
+                    .ToArray();
 
-            var result = eventMetadatas
-                .Select(em => 
-                    new OrgEvent(
-                        em, 
-                        hosts.First(h => h.Id == em.Host.Id())))
-                .ToArray();
+                result = eventMetadatas
+                    .Select(em => 
+                        new OrgEvent(
+                            em, 
+                            hosts.First(h => h.Id == em.Host.Id())))
+                    .ToArray();
+            }
 
             return result;
         }
@@ -142,31 +153,37 @@ namespace SmartWalk.Client.Core.Services
                 Storages = new[] { Storage.SmartWalk }
             };
 
-            var response = await GetResponse(request);
+            var response = await GetResponse(request, source);
+            var result = default(OrgEvent);
 
-            var eventMetadata = response
-                .Selects[0].Records
-                .Cast<JObject>()
-                .Select(em => em.ToObject<EventMetadata>())
-                .FirstOrDefault();
+            if (response != null)
+            {
+                var eventMetadata = response
+                    .Selects[0].Records
+                    .Cast<JObject>()
+                    .Select(em => em.ToObject<EventMetadata>())
+                    .FirstOrDefault();
 
-            var shows = response
-                .Selects[1].Records
-                .Cast<JObject>()
-                .Select(s => s.ToObject<Show>())
-                .ToArray();
+                var shows = response
+                    .Selects[1].Records
+                    .Cast<JObject>()
+                    .Select(s => s.ToObject<Show>())
+                    .ToArray();
 
-            var venues = response
-                .Selects[2].Records
-                .Cast<JObject>()
-                .Select(e => {
-                    var entity = e.ToObject<Entity>();
-                    var venue = CreateVenue(entity, shows);
-                    return venue;
-                })
-                .ToArray();
+                var venues = response
+                    .Selects[2].Records
+                    .Cast<JObject>()
+                    .Select(e =>
+                        {
+                            var entity = e.ToObject<Entity>();
+                            var venue = CreateVenue(entity, shows);
+                            return venue;
+                        })
+                    .ToArray();
 
-            var result = new OrgEvent(eventMetadata, null, venues);
+                result = new OrgEvent(eventMetadata, null, venues);
+            }
+
             return result;
         }
 
@@ -228,25 +245,30 @@ namespace SmartWalk.Client.Core.Services
                 Storages = new[] { Storage.SmartWalk }
             };
 
-            var response = await GetResponse(request);
+            var response = await GetResponse(request, source);
+            var result = default(Venue[]);
 
-            var shows = response
-                .Selects[1].Records
-                .Cast<JObject>()
-                .Select(s => s.ToObject<Show>())
-                .ToArray();
+            if (response != null)
+            {
+                var shows = response
+                    .Selects[1].Records
+                    .Cast<JObject>()
+                    .Select(s => s.ToObject<Show>())
+                    .ToArray();
 
-            var venues = response
-                .Selects[2].Records
-                .Cast<JObject>()
-                .Select(e => {
-                    var entity = e.ToObject<Entity>();
-                    var venue = CreateVenue(entity, shows);
-                    return venue;
-                })
-                .ToArray();
+                result = response
+                    .Selects[2].Records
+                    .Cast<JObject>()
+                    .Select(e =>
+                        {
+                            var entity = e.ToObject<Entity>();
+                            var venue = CreateVenue(entity, shows);
+                            return venue;
+                        })
+                    .ToArray();
+            }
 
-            return venues;
+            return result;
         }
 
         public Task<Org> GetHost(int id, DataSource source)
@@ -254,18 +276,50 @@ namespace SmartWalk.Client.Core.Services
             throw new NotImplementedException();
         }
 
-        private async Task<Response> GetResponse(Request request)
+        private bool GetIsConnected()
         {
-            var client = new RestClient(new Uri(apiUrl));
+            return _reachabilityService.IsHostReachable(_configuration.Host);
+        }
+
+        private async Task<Response> GetResponse(Request request, DataSource source)
+        {
+            var result = default(Response);
+            var isConnected = GetIsConnected();
+            var key = GenerateKey(request);
+
+            if (!isConnected || source == DataSource.Cache)
+            {
+                result = _cacheService.GetObject<Response>(key);
+            }
+
+            if (isConnected && result == null)
+            {
+                result = await DownloadResponse(request);
+
+                if (result != null)
+                {
+                    _cacheService.SetObject(key, result);
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<Response> DownloadResponse(Request request)
+        {
+            var client = new RestClient(new Uri(_configuration.Api));
             var restRequest = new RestRequest(string.Empty, HttpMethod.Post);
             restRequest.AddBody(request);
             var result = await client.Execute<Response>(restRequest);
             return result.Data;
         }
 
-        private bool GetIsConnected()
+        private static string GenerateKey(Request request)
         {
-            return _reachabilityService.IsHostReachable(apiUrl);
+            return KeyPrefix + 
+                request != null 
+                    ? request.GetHashCode().ToString() 
+                    : string.Empty;
         }
 
         private static Venue CreateVenue(Entity entity, Show[] shows)

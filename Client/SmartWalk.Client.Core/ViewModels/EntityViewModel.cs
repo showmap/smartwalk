@@ -294,7 +294,8 @@ namespace SmartWalk.Client.Core.ViewModels
                     _navigateWebLinkCommand = new MvxCommand<Contact>(
                         contact => ShowViewModel<BrowserViewModel>(
                             new BrowserViewModel.Parameters {  
-                                URL = contact.ContactText
+                                URL = contact.ContactText,
+                                Location = InitParameters.Location
                             }),
                         contact => 
                             contact != null &&
@@ -340,10 +341,11 @@ namespace SmartWalk.Client.Core.ViewModels
                             new MapViewModel.Parameters {
                                 Title = entity.Name,
                                 Number = 0, // TODO: To support letters
-                                Addresses = new Addresses { Items = entity.Addresses }
+                                Addresses = new Addresses { Items = entity.Addresses },
+                                Location = InitParameters.Location
                             }),
                         entity => 
-                            entity != null && 
+                            entity != null &&
                             entity.Addresses != null &&
                             entity.Addresses.Length > 0);
                 }

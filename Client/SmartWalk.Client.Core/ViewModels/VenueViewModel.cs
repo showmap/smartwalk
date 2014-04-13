@@ -10,6 +10,7 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels.Common;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -171,7 +172,7 @@ namespace SmartWalk.Client.Core.ViewModels
             get { return CanShowNextEntity; }
         }
 
-        protected override object InitParameters
+        protected override ParametersBase InitParameters
         {
             get { return _parameters; }
         }
@@ -260,7 +261,7 @@ namespace SmartWalk.Client.Core.ViewModels
             return 0;
         }
 
-        public class Parameters
+        public class Parameters : ParametersBase
         {
             public int VenueId { get; set; }
             public int OrgEventId { get; set; }

@@ -1,8 +1,8 @@
 using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Text;
 using GoogleAnalytics;
-using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Utils;
@@ -11,13 +11,6 @@ namespace SmartWalk.Client.iOS.Services
 {
     public class GoogleAnalyticsService : IAnalyticsService
     {
-        private readonly ILocationService _locationService;
-
-        public GoogleAnalyticsService(ILocationService locationService)
-        {
-            _locationService = locationService;
-        }
-
         public bool IsOptOut
         {
             get { return GAI.SharedInstance.OptOut; }
@@ -54,7 +47,7 @@ namespace SmartWalk.Client.iOS.Services
             ConsoleUtil.Log("GA: Send Exception - {0}", format);
         }
 
-        private string GetParametersString(Dictionary<string, object> parameters)
+        private static string GetParametersString(Dictionary<string, object> parameters)
         {
             var builder = new StringBuilder();
 
@@ -79,21 +72,14 @@ namespace SmartWalk.Client.iOS.Services
                             formattedValue = dateValue.ToShortDateString();
                         }
 
-                        builder.Append(key + "=" + formattedValue);
+                        builder.Append(key + "=" + HttpUtility.HtmlEncode(formattedValue));
                     }
                 }
             }
 
-            var locationParam = _locationService.CurrentLocation != Location.Empty 
-                ? "loc=" + _locationService.CurrentLocation 
-                : string.Empty;
-
-            if (locationParam != string.Empty || builder.Length > 0)
+            if (builder.Length > 0)
             {
-                var result = "?" + locationParam + 
-                    (builder.Length > 0 
-                        ? ((locationParam != null ? "&" : string.Empty) + builder) 
-                        : string.Empty);
+                var result = "?" + builder;
                 return result;
             }
 

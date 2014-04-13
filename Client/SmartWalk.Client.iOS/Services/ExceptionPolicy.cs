@@ -14,22 +14,25 @@ namespace SmartWalk.Client.iOS.Services
             _analyticsService = analyticsService;
         }
 
-        public void Trace(Exception ex)
+        public void Trace(Exception ex, bool showAlert = true)
         {
             _analyticsService.SendException(false, ex.ToString());
 
-            // TODO: To Localize
-            string title = "Error";
-            string message = ex.Message;
-
-            if (ex is WebException)
+            if (showAlert)
             {
-                title = "Network Error";
-                message = "Can't access network content. Please try again later";
-            }
+                // TODO: To Localize
+                string title = "Error";
+                string message = ex.Message;
 
-            var alert = new UIAlertView(title, message, null, "OK", null);
-            alert.Show();
+                if (ex is WebException)
+                {
+                    title = "Network Error";
+                    message = "Can't access network content. Please try again later";
+                }
+
+                var alert = new UIAlertView(title, message, null, "OK", null);
+                alert.Show();
+            }
         }
     }
 }

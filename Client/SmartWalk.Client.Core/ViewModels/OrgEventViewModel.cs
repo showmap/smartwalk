@@ -225,7 +225,8 @@ namespace SmartWalk.Client.Core.ViewModels
                         venue => ShowViewModel<VenueViewModel>(
                             new VenueViewModel.Parameters {
                                 VenueId = venue.Info.Id,
-                                OrgEventId = _parameters.OrgEventId
+                                OrgEventId = _parameters.OrgEventId,
+                                Location = _parameters.Location
                             }),
                         venue => venue != null && _parameters != null);
                 }
@@ -267,7 +268,8 @@ namespace SmartWalk.Client.Core.ViewModels
                     _navigateWebLinkCommand = new MvxCommand<Contact>(
                         contact => ShowViewModel<BrowserViewModel>(
                             new BrowserViewModel.Parameters {  
-                                URL = contact.ContactText
+                                URL = contact.ContactText,
+                                Location = _parameters.Location
                             }),
                         contact => contact != null && contact.Type == ContactType.Url);
                 }
@@ -323,7 +325,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        protected override object InitParameters
+        protected override ParametersBase InitParameters
         {
             get { return _parameters; }
         }
@@ -332,15 +334,15 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEvent().ContinueWithThrow();
+            UpdateOrgEvent(DataSource.Cache).ContinueWithThrow();
         }
 
         protected override void Refresh()
         {
-            UpdateOrgEvent().ContinueWithThrow();
+            UpdateOrgEvent(DataSource.Server).ContinueWithThrow();
         }
 
-        private async Task UpdateOrgEvent()
+        private async Task UpdateOrgEvent(DataSource source)
         {
             if (_parameters != null)
             {
@@ -352,7 +354,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     orgEvent = await _apiService.GetOrgEvent(
                         _parameters.OrgEventId, 
-                        DataSource.Server);
+                        source);
                 }
                 catch (Exception ex)
                 {
@@ -397,7 +399,7 @@ namespace SmartWalk.Client.Core.ViewModels
             return 0;
         }
 
-        public class Parameters
+        public class Parameters : ParametersBase
         {
             public int OrgEventId { get; set; }
         }

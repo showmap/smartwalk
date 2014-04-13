@@ -45,6 +45,6 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             }
         }
 
-        protected abstract object InitParameters { get; }
+        protected abstract ParametersBase InitParameters { get; }
     }
 }

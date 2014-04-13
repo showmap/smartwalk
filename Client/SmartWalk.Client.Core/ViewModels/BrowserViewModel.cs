@@ -28,7 +28,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        protected override object InitParameters
+        protected override ParametersBase InitParameters
         {
             get { return _parameters; }
         }
@@ -40,7 +40,7 @@ namespace SmartWalk.Client.Core.ViewModels
             BrowserURL = parameters.URL;
         }
 
-        public class Parameters
+        public class Parameters : ParametersBase
         {
             public string URL { get; set; }
         }

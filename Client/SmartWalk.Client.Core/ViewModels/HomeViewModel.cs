@@ -14,6 +14,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly ISmartWalkApiService _apiService;
         private readonly IExceptionPolicy _exceptionPolicy;
         private readonly ILocationService _locationService;
+        private readonly Parameters _parameters;
 
         private string _locationString;
         private OrgEvent[] _eventInfos;
@@ -28,6 +29,8 @@ namespace SmartWalk.Client.Core.ViewModels
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
             _locationService = locationService;
+
+            _parameters = new Parameters();
 
             _locationService.LocationChanged += (s, e) => UpdateEventInfos();
             _locationService.LocationStringChanged += (s, e) => UpdateLocationString();
@@ -47,6 +50,8 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _locationString = value;
                     RaisePropertyChanged(() => LocationString);
+
+                    _parameters.Location = _locationString;
                 }
             }
         }
@@ -72,16 +77,19 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _navigateOrgEventViewCommand = new MvxCommand<OrgEvent>(
                         orgEvent => ShowViewModel<OrgEventViewModel>(
-                            new OrgEventViewModel.Parameters { OrgEventId = orgEvent.Id }));
+                            new OrgEventViewModel.Parameters { 
+                                OrgEventId = orgEvent.Id,
+                                Location = _parameters.Location
+                            }));
                 }
 
                 return _navigateOrgEventViewCommand;
             }
         }
 
-        protected override object InitParameters
+        protected override ParametersBase InitParameters
         {
-            get { return null; }
+            get { return _parameters; }
         }
 
         public override void Start()
@@ -122,6 +130,10 @@ namespace SmartWalk.Client.Core.ViewModels
         private void UpdateLocationString()
         {
             LocationString = _locationService.CurrentLocationString;
+        }
+
+        public class Parameters : ParametersBase
+        {
         }
     }
 }

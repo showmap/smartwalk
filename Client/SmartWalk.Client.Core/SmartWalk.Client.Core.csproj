@@ -85,7 +85,6 @@
     <Folder Include="ViewModels\Interfaces\" />
     <Folder Include="ViewModels\Common\" />
     <Folder Include="Constants\" />
-    <Folder Include="Model\New\" />
     <Folder Include="Model\DataContracts\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
@@ -133,6 +132,8 @@
     <Compile Include="Model\OrgEvent.cs" />
     <Compile Include="Model\Venue.cs" />
     <Compile Include="Services\ILocationService.cs" />
+    <Compile Include="Services\IConfiguration.cs" />
+    <Compile Include="ViewModels\Common\ParametersBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

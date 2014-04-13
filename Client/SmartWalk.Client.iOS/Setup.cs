@@ -11,6 +11,8 @@ namespace SmartWalk.Client.iOS
 {
     public class Setup : MvxTouchSetup
     {
+        private const string Host = "smartwalk.azurewebsites.net";
+
         public Setup(MvxApplicationDelegate appDelegate, IMvxTouchViewPresenter presenter)
             : base(appDelegate, presenter)
         {
@@ -18,11 +20,13 @@ namespace SmartWalk.Client.iOS
 
         protected override IMvxApplication CreateApp()
         {
+            InitializeConfiguration();
+
+            Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
+            Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
             Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();
             Mvx.LazyConstructAndRegisterSingleton<IReachabilityService, ReachabilityService>();
             Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
-            Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
-            Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
             Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();
 
             return new SmartWalkApplication();
@@ -47,6 +51,15 @@ namespace SmartWalk.Client.iOS
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
 
             base.InitializeLastChance();
+        }
+
+        private static void InitializeConfiguration()
+        {
+            Mvx.RegisterSingleton<IConfiguration>(
+                new Configuration {
+                    Host = Host,
+                    Api = string.Format("http://{0}/api", Host),
+                });
         }
     }
 }

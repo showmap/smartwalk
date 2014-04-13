@@ -180,6 +180,7 @@
     <Reference Include="System.Net.Http.Extensions">
       <HintPath>..\..\packages\Microsoft.Net.Http.2.2.19\lib\portable-net45+win8\System.Net.Http.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Services" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -331,6 +332,7 @@
     <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\LocationService.cs" />
+    <Compile Include="Services\Configuration.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

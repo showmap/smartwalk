@@ -7,6 +7,7 @@ using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels.Common;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -26,7 +27,11 @@ namespace SmartWalk.Client.Core.ViewModels
             IMvxComposeEmailTask composeEmailTask,
             IShowDirectionsTask showDirectionsTask,
             IExceptionPolicy exceptionPolicy) : 
-                base(analyticsService, phoneCallTask, composeEmailTask, showDirectionsTask)
+                base(
+                    analyticsService, 
+                    phoneCallTask, 
+                    composeEmailTask, 
+                    showDirectionsTask)
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
@@ -57,9 +62,10 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _navigateOrgEventViewCommand = new MvxCommand<OrgEvent>(
                         orgEvent => ShowViewModel<OrgEventViewModel>(
-                        new OrgEventViewModel.Parameters {  
-                            OrgEventId = orgEvent.Id
-                        }),
+                            new OrgEventViewModel.Parameters {  
+                                OrgEventId = orgEvent.Id,
+                                Location = _parameters.Location
+                            }),
                         orgEvent => orgEvent != null);
                 }
 
@@ -67,7 +73,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        protected override object InitParameters
+        protected override ParametersBase InitParameters
         {
             get { return _parameters; }
         }
@@ -81,10 +87,10 @@ namespace SmartWalk.Client.Core.ViewModels
 
         protected override void Refresh()
         {
-            UpdateOrg().ContinueWithThrow();
+            UpdateOrg(DataSource.Server).ContinueWithThrow();
         }
 
-        private async Task UpdateOrg(DataSource source = DataSource.Server)
+        private async Task UpdateOrg(DataSource source)
         {
             if (_parameters != null)
             {
@@ -112,7 +118,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public class Parameters
+        public class Parameters : ParametersBase
         {
             public int OrgId { get; set; }
         }

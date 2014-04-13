@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Linq;
+
 namespace SmartWalk.Shared.Utils
 {
     public static class HashCode
@@ -17,7 +20,14 @@ namespace SmartWalk.Shared.Utils
         {
             unchecked
             {
-                return Multiplier * hashCode + (arg == null ? Initial : arg.GetHashCode());
+                return Multiplier * hashCode + 
+                    (arg == null 
+                        ? Initial 
+                        : (arg is IEnumerable
+                            ? ((IEnumerable)arg).Cast<object>().Aggregate(
+                                HashCode.Initial, 
+                                (i1, i2) => i1.GetHashCode().CombineHashCode(i2))
+                            : arg.GetHashCode()));
             }
         }
     }

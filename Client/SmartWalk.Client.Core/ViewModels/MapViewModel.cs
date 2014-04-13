@@ -67,7 +67,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        protected override object InitParameters
+        protected override ParametersBase InitParameters
         {
             get { return _parameters; }
         }
@@ -89,7 +89,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public class Parameters
+        public class Parameters : ParametersBase
         {
             public int Number { get; set; }
             public string Title { get; set; }
