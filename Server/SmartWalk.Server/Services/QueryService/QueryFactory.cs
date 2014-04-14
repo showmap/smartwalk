@@ -35,7 +35,6 @@ namespace SmartWalk.Server.Services.QueryService
         private const string Rec = "rec";
         private const string Lat = "lat";
         private const string Long = "long";
-        private const string RecordPostfix = "Record";
 
         /// <summary>
         /// Generates an expression for a generic query accross table's records with a where filter condition.
@@ -74,7 +73,6 @@ namespace SmartWalk.Server.Services.QueryService
         /// </summary>
         public static ISQLQuery CreateGroupedEventsQuery(
             ISession session,
-            QueryContext context,
             int limit,
             RequestSelect select,
             IDictionary<string, object[]> results)
@@ -95,16 +93,15 @@ namespace SmartWalk.Server.Services.QueryService
                         INNER JOIN
 	                        {0}{1} {2} ON {2}Groupped.{3} = {2}.{3}
                         {7}",
-                        context.DbPrefix,
-                        context.EventMetadataTable,
-                        context.EventMetadataTableAlias,
-                        context.EventMetadataId,
-                        context.EventMetadataStartTime,
-                        context.EventMetadataEntityRecordId,
+                        QueryContext.Instance.DbPrefix,
+                        QueryContext.Instance.EventMetadataTable,
+                        QueryContext.Instance.EventMetadataTableAlias,
+                        QueryContext.Instance.EventMetadataId,
+                        QueryContext.Instance.EventMetadataStartTime,
+                        QueryContext.Instance.EventMetadataEntityRecordId,
                         limit,
                         SortBy<EventMetadataRecord>(
-                            context,
-                            context.EventMetadataTableAlias, 
+                            QueryContext.Instance.EventMetadataTableAlias, 
                             select,
                             out latLong)))
                        .AddEntity(typeof(EventMetadataRecord));
@@ -124,7 +121,6 @@ namespace SmartWalk.Server.Services.QueryService
         /// </summary>
         public static IQueryable<TRecord> SortBy<TRecord>(
             this IQueryable<TRecord> table,
-            QueryContext context,
             RequestSelect select)
         {
             var queryable = table;
@@ -137,7 +133,7 @@ namespace SmartWalk.Server.Services.QueryService
 
                 double[] latLong;
                 if (typeof(TRecord) == typeof(EventMetadataRecord) && 
-                    IsLatLongDistanceSorting(context, select.SortBy, out latLong))
+                    IsLatLongDistanceSorting(select.SortBy, out latLong))
                 {
                     expression = Expression.Call(
                         typeof(Queryable),
@@ -151,9 +147,12 @@ namespace SmartWalk.Server.Services.QueryService
 
                 foreach (var sortBy in select.SortBy)
                 {
-                    if (SkipLatLongDistanceSorting(context, sortBy)) continue;
+                    if (SkipLatLongDistanceSorting(sortBy)) continue;
 
-                    var sortByExpr = Expression.Property(recordExpr, recordExpr.Type, sortBy.Field);
+                    var sortByExpr = Expression.Property(
+                        recordExpr, 
+                        recordExpr.Type,
+                        GetMappedPropertyName(sortBy.Field, recordExpr.Type));
                     var method =
                         expression == queryable.Expression
                             ? (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
@@ -167,7 +166,7 @@ namespace SmartWalk.Server.Services.QueryService
                     expression = Expression.Call(
                         typeof(Queryable),
                         method,
-                        new[] { typeof(TRecord), typeof(string) },
+                        new[] { typeof(TRecord), sortByExpr.Type },
                         expression,
                         Expression.Lambda(methodType, sortByExpr, new[] { recordExpr }));
                 }
@@ -182,7 +181,6 @@ namespace SmartWalk.Server.Services.QueryService
         /// Generates a string for a generic query accross table's records with sorting.
         /// </summary>
         private static string SortBy<TRecord>(
-            QueryContext context,
             string alias,
             RequestSelect select,
             out double[] latLong)
@@ -194,18 +192,18 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.SortBy != null && select.SortBy.Length > 0)
             {
                 if (typeof(TRecord) == typeof(EventMetadataRecord) &&
-                    IsLatLongDistanceSorting(context, select.SortBy, out latLong))
+                    IsLatLongDistanceSorting(select.SortBy, out latLong))
                 {
                     result = string.Format(
                         "ABS({0}.{1} - :lat) + ABS({0}.{2} - :long) ASC",
                         alias,
-                        context.EventMetadataLatitude,
-                        context.EventMetadataLongitude);
+                        QueryContext.Instance.EventMetadataLatitude,
+                        QueryContext.Instance.EventMetadataLongitude);
                 }
 
                 foreach (var sortBy in select.SortBy)
                 {
-                    if (SkipLatLongDistanceSorting(context, sortBy)) continue;
+                    if (SkipLatLongDistanceSorting(sortBy)) continue;
 
                     if (!Reflection<TRecord>.HasProperty(sortBy.Field))
                     {
@@ -243,7 +241,7 @@ namespace SmartWalk.Server.Services.QueryService
             foreach (var where in whereItems)
             {
                 var whereExpr = default(Expression);
-                var fields = GetPropertiesPath(where.Field, true);
+                var fields = GetPropertiesPath(where.Field, recordExpr.Type);
                 if (fields != null)
                 {
                     // building field accessing expression
@@ -343,10 +341,9 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (lookUpRecords.Length > 0)
             {
-                var fields = GetPropertiesPath(selectValue.Field);
-
                 // resolving the type of records in look up dataset
                 var recordType = lookUpRecords.First().GetType();
+                var fields = GetPropertiesPath(selectValue.Field);
 
                 // filling up the cache of property path reflection info
                 var propertyInfos = GetPropertyInfoCache(recordType, fields);
@@ -443,13 +440,14 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
-        // TODO: To support mapping of EntityRecord property to HostRecord or to VenueRecord while in pathToRecordMode mode
         /// <summary>
         /// Returns the list of properties extracted from raw fieldsPath string. 
         /// </summary>
         /// <returns>The list of properties. All properties except the last one are updated with postfix 'Record' 
         /// (if pathToRecordMode equals true) assuming that all complex properies are records.</returns>
-        private static IEnumerable<string> GetPropertiesPath(string fieldsPath, bool pathToRecordMode = false)
+        private static IEnumerable<string> GetPropertiesPath(
+            string fieldsPath, 
+            Type targetRecordType = null)
         {
             if (fieldsPath == null) return null;
 
@@ -459,9 +457,9 @@ namespace SmartWalk.Server.Services.QueryService
             {
                 var properties = fieldsPath.Split(DotChar);
                 result =
-                    pathToRecordMode
+                    targetRecordType != null
                         ? properties
-                              .Select((p, i) => i < properties.Length - 1 ? p + RecordPostfix : p)
+                              .Select(p => GetMappedPropertyName(p, targetRecordType))
                               .ToArray()
                         : properties;
             }
@@ -473,17 +471,39 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
+        private static string GetMappedPropertyName(
+            string property, 
+            Type targetRecordType)
+        {
+            if (targetRecordType == typeof(EventMetadataRecord))
+            {
+                if (property == QueryContext.Instance.EventMetadataHost)
+                {
+                    return QueryContext.Instance.EventMetadataEntityRecord;
+                }
+            }
+
+            if (targetRecordType == typeof(ShowRecord))
+            {
+                if (property == QueryContext.Instance.ShowVenue)
+                {
+                    return QueryContext.Instance.ShowEntityRecord;
+                }
+            }
+
+            return property;
+        }
+
         private static bool IsLatLongDistanceSorting(
-            QueryContext context,
             RequestSelectSortBy[] sortBy,
             out double[] latLong)
         {
             var latitude = sortBy
                 .FirstOrDefault(
-                    sb => sb.Field.EqualsIgnoreCase(context.EventMetadataLatitude));
+                    sb => sb.Field.EqualsIgnoreCase(QueryContext.Instance.EventMetadataLatitude));
             var longitude = sortBy
                 .FirstOrDefault(
-                    sb => sb.Field.EqualsIgnoreCase(context.EventMetadataLongitude));
+                    sb => sb.Field.EqualsIgnoreCase(QueryContext.Instance.EventMetadataLongitude));
 
             if (latitude != null && latitude.OfDistance.HasValue &&
                 longitude != null && longitude.OfDistance.HasValue)
@@ -497,11 +517,10 @@ namespace SmartWalk.Server.Services.QueryService
         }
 
         private static bool SkipLatLongDistanceSorting(
-            QueryContext context,
             RequestSelectSortBy sortBy)
         {
-            return (sortBy.Field == context.EventMetadataLatitude ||
-                    sortBy.Field == context.EventMetadataLongitude) && 
+            return (sortBy.Field == QueryContext.Instance.EventMetadataLatitude ||
+                    sortBy.Field == QueryContext.Instance.EventMetadataLongitude) && 
                     sortBy.OfDistance.HasValue;
         }
     }

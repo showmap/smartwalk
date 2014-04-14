@@ -173,5 +173,52 @@ namespace SmartWalk.Labs.Api
 
             return result;
         }
+
+        public static Request CreateHostViewRequest(int hostId)
+        {
+            var result = new Request
+            {
+                Selects = new[]
+                        {
+                            new RequestSelect
+                                {
+                                    Fields = new[] {"Name", "Description", "Picture", "Contacts", "Addresses"},
+                                    From = RequestSelectFromTables.Entity,
+                                    Where = new[]
+                                        {
+                                            new RequestSelectWhere
+                                                {
+                                                    Field = "Id",
+                                                    Operator = RequestSelectWhereOperators.EqualsTo,
+                                                    Value = hostId
+                                                }
+                                        }
+                                },
+                            new RequestSelect
+                                {
+                                    Fields =
+                                        new[] {"Host", "Title", "Picture", "StartTime" },
+                                    From = RequestSelectFromTables.EventMetadata,
+                                    Where = new[] {
+                                        new RequestSelectWhere {
+                                            Field = "Host.Id",
+                                            Operator = RequestSelectWhereOperators.EqualsTo,
+                                            Value = hostId
+                                        }
+                                    },
+                                    SortBy = new[]
+                                        {
+                                            new RequestSelectSortBy
+                                                {
+                                                    Field = "StartTime",
+                                                    IsDescending = true
+                                                }
+                                        }
+                                }
+                        }
+            };
+
+            return result;
+        }
     }
 }

@@ -7,12 +7,15 @@ namespace SmartWalk.Server.Services.QueryService
 {
     public class QueryContext
     {
-        private static QueryContext _instance;
-
-        internal static QueryContext GetContext(ShellSettings shellSettings)
+        internal static void InstantiateContext(ShellSettings shellSettings)
         {
-            return _instance ?? (_instance = new QueryContext(shellSettings));
+            if (Instance == null)
+            {
+                Instance = new QueryContext(shellSettings);
+            }
         }
+
+        internal static QueryContext Instance { get; private set; }
 
         private QueryContext(ShellSettings shellSettings)
         {
@@ -34,8 +37,9 @@ namespace SmartWalk.Server.Services.QueryService
                 Reflection<EventMetadataRecord>.GetProperty(p => p.Id).Name;
             EventMetadataHost =
                 Reflection<EventMetadata>.GetProperty(p => p.Host).Name;
-            EventMetadataEntityRecordId =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.EntityRecord).Name + "_Id";
+            EventMetadataEntityRecord =
+                Reflection<EventMetadataRecord>.GetProperty(p => p.EntityRecord).Name;
+            EventMetadataEntityRecordId = EventMetadataEntityRecord + "_Id";
             EventMetadataTitle =
                 Reflection<EventMetadataRecord>.GetProperty(p => p.Title).Name;
             EventMetadataDescription =
@@ -70,6 +74,8 @@ namespace SmartWalk.Server.Services.QueryService
 
             ShowVenue =
                 Reflection<Show>.GetProperty(p => p.Venue).Name;
+            ShowEntityRecord =
+                Reflection<ShowRecord>.GetProperty(p => p.EntityRecord).Name;
             ShowIsReference =
                 Reflection<Show>.GetProperty(p => p.IsReference).Name;
             ShowTitle =
@@ -93,6 +99,7 @@ namespace SmartWalk.Server.Services.QueryService
 
         public string EventMetadataId { get; private set; }
         public string EventMetadataHost { get; private set; }
+        public string EventMetadataEntityRecord { get; private set; }
         public string EventMetadataEntityRecordId { get; private set; }
         public string EventMetadataTitle { get; private set; }
         public string EventMetadataDescription { get; private set; }
@@ -112,6 +119,7 @@ namespace SmartWalk.Server.Services.QueryService
         public string EntityAddresses { get; private set; }
 
         public string ShowVenue { get; private set; }
+        public string ShowEntityRecord { get; private set; }
         public string ShowIsReference { get; private set; }
         public string ShowTitle { get; private set; }
         public string ShowDescription { get; private set; }

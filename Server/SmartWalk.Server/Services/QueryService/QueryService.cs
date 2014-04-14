@@ -23,8 +23,6 @@ namespace SmartWalk.Server.Services.QueryService
 
         private readonly ISessionLocator _sessionLocator;
 
-        private readonly QueryContext _context;
-
         public QueryService(
             IRepository<EventMetadataRecord> eventMetadataRepository,
             ISessionLocator sessionLocator, ShellSettings shellSettings,
@@ -37,7 +35,7 @@ namespace SmartWalk.Server.Services.QueryService
 
             _sessionLocator = sessionLocator;
 
-            _context = QueryContext.GetContext(shellSettings);
+            QueryContext.InstantiateContext(shellSettings);
         }
 
         public Response ExecuteRequestQuery(Request request)
@@ -106,9 +104,9 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.EventMetadata))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_eventMetadataRepository.Table, select, results);
-                var records = queryable.SortBy(_context, select).Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(_context, rec, select.Fields, storages))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
                 return dataContracts;
             }
@@ -116,10 +114,10 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.GroupedEventMetadata))
             {
                 var session = _sessionLocator.For(typeof(EventMetadataRecord));
-                var sqlQuery = QueryFactory.CreateGroupedEventsQuery(session, _context, DefaultLimit, select, results);
+                var sqlQuery = QueryFactory.CreateGroupedEventsQuery(session, DefaultLimit, select, results);
                 var records = sqlQuery.List<EventMetadataRecord>();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(_context, rec, select.Fields, storages))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
                 return dataContracts;
             }
@@ -127,9 +125,9 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Entity))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_entityRepository.Table, select, results);
-                var records = queryable.SortBy(_context, select).Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(_context, rec, select.Fields))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
                     .ToArray();
                 return dataContracts;
             }
@@ -137,9 +135,9 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Show))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_showRepository.Table, select, results);
-                var records = queryable.SortBy(_context, select).Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(_context, rec, select.Fields, storages))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
                 return dataContracts;
             }

@@ -13,7 +13,6 @@ namespace SmartWalk.Server.Services.QueryService
     public static class DataContractsFactory
     {
         public static EventMetadata CreateDataContract(
-            QueryContext context,
             EventMetadataRecord record,
             string[] fields,
             string[] storages)
@@ -25,53 +24,53 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields != null)
             {
-                if (fields.ContainsIgnoreCase(context.EventMetadataHost) &&
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataHost) &&
                     record.EntityRecord != null)
                 {
                     result.Host = GetEntityReferences(record.EntityRecord, storages);
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataTitle))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataTitle))
                 {
                     result.Title = record.Title;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataDescription))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataDescription))
                 {
                     result.Description = record.Description;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataPicture))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataPicture))
                 {
                     result.Picture = record.Picture;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataStartTime))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataStartTime))
                 {
                     result.StartTime = record.StartTime;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataEndTime))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataEndTime))
                 {
                     result.EndTime = record.EndTime;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataLatitude))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataLatitude))
                 {
                     result.Latitude = record.Latitude;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataLongitude))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataLongitude))
                 {
                     result.Longitude = record.Longitude;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataCombineType))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataCombineType))
                 {
                     result.CombineType = (CombineType)record.CombineType;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EventMetadataShows))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataShows))
                 {
                     result.Shows =
                         record.ShowRecords
@@ -88,7 +87,6 @@ namespace SmartWalk.Server.Services.QueryService
         }
 
         public static Entity CreateDataContract(
-            QueryContext context,
             EntityRecord record,
             string[] fields)
         {
@@ -99,32 +97,32 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields != null)
             {
-                if (fields.ContainsIgnoreCase(context.EntityType))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityType))
                 {
                     result.Type = (EntityType)record.Type;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EntityName))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityName))
                 {
                     result.Name = record.Name;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EntityDescription))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityDescription))
                 {
                     result.Description = record.Description;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EntityPicture))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityPicture))
                 {
                     result.Picture = record.Picture;
                 }
 
-                if (fields.ContainsIgnoreCase(context.EntityContacts))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityContacts))
                 {
                     result.Contacts = record.ContactRecords.Select(CreateDataContract).ToArray();
                 }
 
-                if (fields.ContainsIgnoreCase(context.EntityAddresses))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityAddresses))
                 {
                     result.Addresses = record.AddressRecords.Select(CreateDataContract).ToArray();
                 }
@@ -134,7 +132,6 @@ namespace SmartWalk.Server.Services.QueryService
         }
 
         public static Show CreateDataContract(
-            QueryContext context,
             ShowRecord record,
             string[] fields,
             string[] storages)
@@ -146,42 +143,42 @@ namespace SmartWalk.Server.Services.QueryService
 
             if (fields != null)
             {
-                if (fields.ContainsIgnoreCase(context.ShowVenue))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowVenue))
                 {
                     result.Venue = GetEntityReferences(record.EntityRecord, storages);
                 }
 
-                if (fields.ContainsIgnoreCase(context.ShowIsReference))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowIsReference))
                 {
                     result.IsReference = record.IsReference;
                 }
 
-                if (fields.ContainsIgnoreCase(context.ShowTitle))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowTitle))
                 {
                     result.Title = record.Title;
                 }
 
-                if (fields.ContainsIgnoreCase(context.ShowDescription))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowDescription))
                 {
                     result.Description = record.Description;
                 }
 
-                if (fields.ContainsIgnoreCase(context.ShowStartTime))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowStartTime))
                 {
                     result.StartTime = record.StartTime;
                 }
 
-                if (fields.ContainsIgnoreCase(context.ShowEndTime))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowEndTime))
                 {
                     result.EndTime = record.EndTime;
                 }
 
-                if (fields.ContainsIgnoreCase(context.ShowPicture))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowPicture))
                 {
                     result.Picture = record.Picture;
                 }
 
-                if (fields.ContainsIgnoreCase(context.ShowDetailsUrl))
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowDetailsUrl))
                 {
                     result.DetailsUrl = record.DetailsUrl;
                 }

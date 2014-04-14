@@ -113,6 +113,35 @@ namespace SmartWalk.Labs.Api
                 }
             }
 
+            Console.WriteLine("\nHost View");
+            var hostViewRequest = RequestFactory.CreateHostViewRequest(513);
+            json = JsonConvert.SerializeObject(
+                hostViewRequest,
+                new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+            Console.WriteLine(json);
+
+            using (var client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+
+                try
+                {
+                    var result = client.UploadString(SmartWalkUrl, json);
+                    Console.WriteLine(result);
+
+                    var response = JsonConvert.DeserializeObject<Response>(result);
+                    Console.WriteLine("Response hash code: " + response.GetHashCode());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
             Console.ReadLine();
         }
     }
