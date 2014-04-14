@@ -85,18 +85,18 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
+            return Json(_entityService.GetEntityVmById(263, EntityType.Venue));
+
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             try
             {
-                _entityService.SaveOrAddEntity(user.Record, venue);
+                return Json(_entityService.SaveOrAddEntity(user.Record, venue));
             }
             catch
             {
                 return Json(false);
             }
-
-            return Json(true);
         }
     }
 }

@@ -310,4 +310,7 @@
   <ItemGroup>
     <Content Include="Views\Host\Edit.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Venue\EditTemplate.cshtml" />
+  </ItemGroup>
 </Project>

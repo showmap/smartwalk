@@ -79,6 +79,9 @@ function ShowViewModel(data) {
     self.Picture = ko.observable();
     self.DetailsUrl = ko.observable();
     self.State = ko.observable();
+    
+    self.IsChecked = ko.observable();
+
 
     self.TimeText = ko.computed(function () {
         if (self.EndTime()) {
@@ -102,6 +105,7 @@ function ShowViewModel(data) {
         self.Picture(data.Picture);
         self.DetailsUrl(data.DetailsUrl);
         self.State(data.State);
+        self.IsChecked(false);
     };
 
     self.loadData(data);
@@ -177,18 +181,6 @@ function EntityViewModel(data) {
         item.State(2);
     };
 
-    self.IsAllContactsSelected = ko.computed(function () {
-        if (self.Contacts().length == 0)
-            return false;
-
-        for (var i = 0; i < self.Contacts().length; i++) {
-            if (!self.Contacts()[i].IsChecked()) {
-                return false;
-            }
-        }
-        return true;
-    });
-
     self.IsAnyContactSelected = ko.computed(function () {
         if (self.Contacts().length == 0)
             return false;
@@ -202,7 +194,17 @@ function EntityViewModel(data) {
     });
 
     self.AllContactsChecked = ko.computed({
-        read: self.IsAllContactsSelected,
+        read: function () {
+            if (self.Contacts().length == 0)
+                return false;
+
+            for (var i = 0; i < self.Contacts().length; i++) {
+                if (!self.Contacts()[i].IsChecked()) {
+                    return false;
+                }
+            }
+            return true;
+        },
         write: function (value) {
             for (var i = 0; i < self.Contacts().length; i++) {
                 self.Contacts()[i].IsChecked(value);
@@ -252,18 +254,6 @@ function EntityViewModel(data) {
         item.State(2);
     };
 
-    self.IsAllAddressSelected = ko.computed(function () {
-        if (self.Addresses().length == 0)
-            return false;
-
-        for (var i = 0; i < self.Addresses().length; i++) {
-            if (!self.Addresses()[i].IsChecked()) {
-                return false;
-            }
-        }
-        return true;
-    });
-    
     self.IsAnyAddressSelected = ko.computed(function () {
         if (self.Addresses().length == 0)
             return false;
@@ -277,7 +267,17 @@ function EntityViewModel(data) {
     });
 
     self.AllAddressesChecked = ko.computed({
-        read: self.IsAllAddressSelected,
+        read: function () {
+            if (self.Addresses().length == 0)
+                return false;
+
+            for (var i = 0; i < self.Addresses().length; i++) {
+                if (!self.Addresses()[i].IsChecked()) {
+                    return false;
+                }
+            }
+            return true;
+        },
         write: function (value) {
             for (var i = 0; i < self.Addresses().length; i++) {
                 self.Addresses()[i].IsChecked(value);
@@ -287,12 +287,37 @@ function EntityViewModel(data) {
     });
 
     //self.selectedAddress = ko.observable();
-    // Shows
+    // Shows    
+
     self.Shows = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllShows(), function (item) {
             return item.State() != 2 && item.State() != 3;
         });
-    }, this);
+    }, self);
+    self.CheckedShows = ko.computed(function () {
+        return ko.utils.arrayFilter(self.Shows(), function (item) {
+            return item.IsChecked();
+        });
+    }, self);
+    self.AllShowsChecked = ko.computed({
+        read: function () {
+            if (self.Shows().length == 0)
+                return false;
+
+            for (var i = 0; i < self.Shows().length; i++) {
+                if (!self.Shows()[i].IsChecked()) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        write: function (value) {
+            for (var i = 0; i < self.Shows().length; i++) {
+                self.Shows()[i].IsChecked(value);
+            }
+        },
+        owner: self
+    });
     self.addShow = function () {
         self.AllShows.push(new ShowViewModel({ Id: 0, EventMetadataId: self.EventMetadataId(), VenueId: self.Id(), State: 1, StartDate: '', EndDate: '' }));
         return self.AllShows()[self.AllShows().length - 1];
@@ -363,17 +388,50 @@ function EventViewModel(data) {
         return ko.utils.arrayFilter(self.AllVenues(), function (item) {
             return item.State() != 2 && item.State() != 3;
         });
-    }, this);
+    }, self);
     self.OtherVenues = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllVenues(), function (item) {
             return item.State() == 3;
         });
-    }, this);
+    }, self);
+    self.CheckedShows = ko.computed(function () {
+        var venueShows = ko.utils.arrayMap(self.Venues(), function (venue) {
+            return venue.CheckedShows();            
+        });
+
+        var res = new Array();
+        for (var i = 0; i < venueShows.length; i++) {
+            for (var j = 0; j < venueShows[i].length; j++) {
+                res.push(venueShows[i][j]);
+            }
+        }
+
+        return res;
+    });
+    self.AllVenuesChecked = ko.computed({
+        read: function () {
+            if (self.Venues().length == 0)
+                return false;
+
+            for (var i = 0; i < self.Venues().length; i++) {
+                if (!self.Venues()[i].AllShowsChecked()) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        write: function (value) {
+            for (var i = 0; i < self.Venues().length; i++) {
+                self.Venues()[i].AllShowsChecked(value);
+            }
+        },
+        owner: self
+    });
     self.CalcVenues = ko.computed(function () {
         return ko.utils.arrayFilter(self.AllVenues(), function (item) {
             return item.Id() == 0;
         });
-    }, this);
+    }, self);
     self.addVenue = function (){
         var newVenue = new EntityViewModel({ Id: 0, Type: 1, State: 1 });
         self.AllVenues.push(newVenue);

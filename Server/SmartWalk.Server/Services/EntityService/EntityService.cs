@@ -173,7 +173,7 @@ namespace SmartWalk.Server.Services.EntityService
         }
 
         public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata) {
-            return _entityRepository.Table.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted).Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
+            return metadata.ShowRecords.Where(s => !s.IsDeleted).Select(s => s.EntityRecord).Distinct().Select(e => ViewModelContractFactory.CreateViewModelContract(e, metadata)).ToList();
         }
 
         public EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm) {

@@ -97,8 +97,6 @@ namespace SmartWalk.Server.Controllers
             {
                 return Json(false);
             }
-
-            return Json(true);
         }
     }
 }

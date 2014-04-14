@@ -205,6 +205,22 @@ namespace SmartWalk.Server.Controllers
 
             return Json(true);
         }
+
+        [HttpPost]
+        public ActionResult DeleteEventShows(ShowVm[] items) {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            foreach (var showVm in items)
+            {
+                _entityService.DeleteShow(showVm.Id);
+            }
+            
+            return Json(true);
+        }
+
         #endregion
 
         #region Venues

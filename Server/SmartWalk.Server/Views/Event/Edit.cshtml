@@ -23,6 +23,7 @@
     delete-show-url="@Url.Action("DeleteShow", "Event")"
     delete-event-url="@Url.Action("DeleteEvent", "Event")"
     delete-event-venue-url="@Url.Action("DeleteEventVenue", "Event")"
+    delete-event-shows-url="@Url.Action("DeleteEventShows", "Event")"
     save-event-venue-url="@Url.Action("SaveEventVenue", "Event")"
     save-event-url="@Url.Action("SaveEvent", "Event")">
     @Html.AntiForgeryTokenOrchard()    
@@ -67,7 +68,7 @@
                         <!--<input type="text" class="form-control" id="organizedByComboBox" >-->
                         <select class="form-control" id="organizedByComboBox" data-bind="options: AllHosts, optionsText: 'DisplayName', value: Host, optionsCaption: '@T("Select Organizer...")'"></select>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" id="createOrganizerButton">@T("Create Organizer...")</button>
+                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create Organizer...")</button>
                         </span>
                     </div>
 					
@@ -98,6 +99,7 @@
 				</div>
 			</div>
 		</div>                                                               
+        <textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.selectedVenue)"></textarea>
         
         <table class="table table-hover">
 			<thead>
@@ -105,44 +107,45 @@
 					<th><h4>@T("Venues and Shows")</h4></th>
 					<th>@T("Show Time")</th>
 					<th class="td-align">
-						<div class="input-group-btn" style="display:inline">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								<input type="checkbox" value="" /> <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu">
-								<li><a href="#">@T("Duplicate")</a></li>
-								<li><a href="#">@T("Delete")</a></li>
-							</ul>
-						</div>
+					    <div class="input-group-btn" style="display:inline">
+					        <input type="checkbox" data-bind="checked: AllVenuesChecked">
+					        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					            <input type="checkbox" data-bind="checked: AllVenuesChecked" /> <span class="caret"></span>
+					        </button>
+					        <ul class="dropdown-menu">
+					            <li><a href="#">@T("Duplicate")</a></li>
+					            <li><a href="#" data-bind="click: DeleteShows">@T("Delete")</a></li>
+					        </ul>
+					    </div>
 					</th>
 				</tr>
 			</thead>
 			<tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
 		</table>
-        <textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.selectedItem)"></textarea>
         <button type="button" class="btn btn-default" data-bind="click: $root.addVenue">@T("Add Venue")</button>
 		
-		<div class="row double-gap">
-			<div class="col-xs-4">
-				<button type="button" class="btn btn-danger" data-bind="click: $root.deleteEvent">@T("Delete Event")</button>
-			</div>
-		    <div class="col-xs-8 text-right">
-		        <form method="get" action="@cancelAction">
-		            <button type="submit" class="btn btn-default" >@T("Cancel")</button>
-		            <button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save Event")</button>
-		        </form>		        
-		    </div>
-		</div>
+        <div class="row double-gap">
+            <div class="col-xs-4">
+                <button type="button" class="btn btn-danger" data-bind="click: $root.deleteEvent">@T("Delete Event")</button>
+            </div>
+            <div class="col-xs-8 text-right">
+                <form method="get" action="@cancelAction">
+                    <button type="submit" class="btn btn-default" >@T("Cancel")</button>
+                    <button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save Event")</button>
+                </form>		        
+            </div>
+        </div>
 
         <div data-bind="visible: Id() > 0">
             <p>@T("Venues")</p>
-            <select id="other-venues" data-bind="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
-            <button id="add-event-venue-button" data-bind="click: $root.addVenue, enable: selectedVenue">@T("Add venue")</button>    
+            <select id="other-venues" data-bind1="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
+            <button id="add-event-venue-button" data-bind1="click: $root.addVenue, enable: selectedVenue">@T("Add venue")</button>    
         </div>        
     </div>
 </div>
 
-@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal})
+@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal, Type = (int)EntityType.Host})
+@Html.Partial("../Venue/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal, Type = (int)EntityType.Venue})
 
 <script type="text/html" id="EntityItemTemplate">
     <tr data-bind="template: {name: $root.getVenueView }"></tr>
@@ -161,7 +164,7 @@
         <div class="clearfix"></div>
         <button type="button" class="btn btn-default gap" data-bind="click: $root.addShow">@T("Create Show")</button>
     </td>
-    <td class="td-valign td-align"><input type="checkbox" value=""></td>    
+    <td class="td-valign td-align"><input type="checkbox" data-bind="checked: AllShowsChecked"></td>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplateEdit">
@@ -172,9 +175,9 @@
                 <div class="form-group">
                     <label for="venueComboBox">@T("Venue"):</label>
                     <div class="input-group">
-                        <select id="venueComboBox" class="form-control pull-left" data-bind="options: $root.OtherVenues, optionsText: 'Name', value: $data, optionsCaption: '@T("Select Venue...")    '"></select>
+                        <select id="venueComboBox" class="form-control pull-left" data-bind="options: $root.OtherVenues, optionsText: 'Name', value: $root.selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default pull-right" id="createVenueButton">@T("Create Venue...")</button>
+                            <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: $root.createVenue">@T("Create Venue...")</button>
                         </span>
                     </div>
                 </div>
@@ -196,15 +199,15 @@
 </script>
 
 <script type="text/html" id="ShowItemTemplate">
-    <tr data-bind="click: $root.selectedItem">
-        <td>
+    <tr>
+        <td data-bind="click: $root.selectedItem">
             <span data-bind="text: Title"></span>
             <br/>
             <span class="description" data-bind="text: Description"></span>
         </td>
         
-        <td data-bind="text: TimeText"></td>
-        <td class="td-align"><input type="checkbox" value=""></td>
+        <td data-bind="text: TimeText, click: $root.selectedItem"></td>
+        <td class="td-align"><input type="checkbox" data-bind="checked: IsChecked"></td>
     </tr>    
 </script>
 
@@ -304,11 +307,33 @@
                 }
             },*@
         });
-        $(".ui-dialog-titlebar").hide();
-        $("#createOrganizerButton").click(function () {
-            $("#edit-host-form").dialog("open");
-            //ko.applyBindings(vmHost, document.getElementById('host-panel'));
+        
+        $("#edit-venue-form").dialog({
+            modal: true,
+            autoOpen: false,
+            dialogClass: 'noTitleStuff',
+            width: 640,
+            height: 480,
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            },
+            @*buttons: {
+                '@T("Cancel")': function () {
+                    $("#edit-host-form").dialog("close");
+
+                },
+                '@T("Save")': function () {
+                    $("#edit-host-form").dialog("close");                    
+                }
+            },*@
         });
+        
+        $(".ui-dialog-titlebar").hide();
 
         ko.bindingHandlers.switcher = {
             init: function(element, valueAccessor, allBindingsAccessor) {
@@ -355,7 +380,15 @@
 
         $(document).ready(function () {
             var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
-            
+
+            vm.createHost = function() {
+                $("#edit-host-form").dialog("open");           
+            };
+
+            vm.createVenue = function() {
+                $("#edit-venue-form").dialog("open");
+            };
+
             vm.getVenueView = function (item) {
                 return item === vm.selectedItem() ? 'EventVenueItemTemplateEdit' : "EventVenueItemTemplate";
             };                       
@@ -382,14 +415,13 @@
                 $.ajax(config);
             };
 
-            vm.saveVenue = function(item) {                
-                //alert('item id = ' + item.Id() + ' selected item id = ' + vm.selectedItem().Id());
+            vm.saveVenue = function(item) {  
                 if (vm.selectedItem().Id() == 0){
                     vm.deleteVenue(vm.selectedItem());
-                    item.State(0);
-                }
+                }                                                       
                 
-                var ajdata = ko.toJSON(item);
+                alert('item id = ' + vm.selectedVenue().Id() + ' selected item id = ' + vm.selectedItem().Id());
+                var ajdata = ko.toJSON(vm.selectedVenue());
                 var urlUpdate = $("#event-item").attr("save-event-venue-url");
 
                 var config = {
@@ -406,7 +438,9 @@
                     success: function(data) {
                         if(data)
                             item.AllShows.push(new ShowViewModel(data));
+                        vm.selectedVenue().State(0);                        
                         vm.selectedItem(null);
+                        vm.selectedVenue(null);
                     }
                 };
                 $.ajax(config);
@@ -447,7 +481,31 @@
             vm.addShow = function (item) {
                 vm.selectedItem(item.addShow()); 
                 //item.addShow();
-            };                       
+            };
+
+            vm.DeleteShows = function() {
+                var ajdata = ko.toJSON(vm.CheckedShows);
+                var urlUpdate = $("#event-item").attr("delete-event-shows-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: ajdata,
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        ko.utils.arrayForEach(vm.CheckedShows(), function(item) {
+                            item.State(2);
+                        });
+                    }
+                };
+                $.ajax(config);
+            };
 
             vm.deleteShow = function(item) {                
                 var ajdata = ko.toJSON(item);
@@ -549,6 +607,19 @@
                 vm.AllHosts.push(event.item);
                 vm.Host(event.item);
                 $("#edit-host-form").dialog("close");
+            });
+            
+            $("#edit-venue-form").bind('OnVenueCancelled', function (event) {
+                $("#edit-venue-form").dialog("close");
+            });
+        
+            $("#edit-venue-form").bind('OnVenueSaved', function (event) {
+                event.item.State(3);
+                event.item.EventMetadataId(vm.Id());
+                vm.AllVenues.push(event.item);
+                vm.selectedVenue(event.item);
+                
+                $("#edit-venue-form").dialog("close");
             });
 
             ko.applyBindings(vm, document.getElementById('event-item'));            
