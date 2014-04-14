@@ -17,6 +17,7 @@ namespace SmartWalk.Client.Core.ViewModels
     public class OrgEventViewModel : RefreshableViewModel, IFullscreenImageProvider
     {
         private readonly ISmartWalkApiService _apiService;
+        private readonly IConfiguration _configuration;
         private readonly IAnalyticsService _analyticsService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
@@ -30,6 +31,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private MvxCommand<Show> _expandCollapseShowCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
+        private MvxCommand _navigateOrgCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
@@ -38,12 +40,19 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public OrgEventViewModel(
             ISmartWalkApiService apiService,
+            IConfiguration configuration,
             IAnalyticsService analyticsService,
             IExceptionPolicy exceptionPolicy) : base(analyticsService)
         {
             _apiService = apiService;
+            _configuration = configuration;
             _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
+        }
+
+        public IConfiguration Config
+        {
+            get { return _configuration; }
         }
 
         public OrgEventViewMode Mode
@@ -215,6 +224,25 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public ICommand NavigateOrgCommand
+        {
+            get
+            {
+                if (_navigateOrgCommand == null)
+                {
+                    _navigateOrgCommand = new MvxCommand(
+                        () => ShowViewModel<OrgViewModel>(
+                            new OrgViewModel.Parameters {
+                                OrgId = OrgEvent.OrgId,
+                                Location = _parameters.Location
+                            }),
+                        () => OrgEvent != null && _parameters != null);
+                }
+
+                return _navigateOrgCommand;
+            }
+        }
+
         public ICommand NavigateVenueCommand
         {
             get
@@ -323,6 +351,11 @@ namespace SmartWalk.Client.Core.ViewModels
 
                 return _groupByLocationCommand;
             }
+        }
+
+        public int OrgEventId
+        {
+            get { return _parameters.OrgEventId; }
         }
 
         protected override ParametersBase InitParameters

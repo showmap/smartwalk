@@ -333,6 +333,7 @@
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\LocationService.cs" />
     <Compile Include="Services\Configuration.cs" />
+    <Compile Include="Resources\Localization.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -451,6 +452,8 @@
     <BundleResource Include="Resources\Icon-Small%402x.png" />
     <BundleResource Include="Resources\Icon.png" />
     <BundleResource Include="Resources\Icon%402x.png" />
+    <BundleResource Include="Resources\Icons\NavBarMore.png" />
+    <BundleResource Include="Resources\Icons\NavBarMore%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

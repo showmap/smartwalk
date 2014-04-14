@@ -1,6 +1,7 @@
 using System;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.Model
 {
@@ -27,6 +28,11 @@ namespace SmartWalk.Client.Core.Model
         public int Id
         {
             get { return _eventMetadata.Id; }
+        }
+
+        public int OrgId
+        {
+            get { return _eventMetadata.Host.Id(); }
         }
 
         public string Title 

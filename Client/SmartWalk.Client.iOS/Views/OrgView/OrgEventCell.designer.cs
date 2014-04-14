@@ -22,9 +22,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 		MonoTouch.UIKit.UILabel DayLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel HintLabel { get; set; }
-
-		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
@@ -45,11 +42,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 			if (DayLabel != null) {
 				DayLabel.Dispose ();
 				DayLabel = null;
-			}
-
-			if (HintLabel != null) {
-				HintLabel.Dispose ();
-				HintLabel = null;
 			}
 
 			if (Separator != null) {

@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
@@ -13,6 +12,10 @@ namespace SmartWalk.Client.iOS.Views.Common
 {
     public partial class BrowserView : ActiveAwareViewController
     {
+        private const string DocTitle = "document.title";
+        private const string Http = "http://";
+        private const string Https = "https://";
+
         private UIActivityIndicatorView _indicatorView;
 
         private string BrowserURL
@@ -22,10 +25,10 @@ namespace SmartWalk.Client.iOS.Views.Common
                 if (ViewModel.BrowserURL != null)
                 {
                     var url = ViewModel.BrowserURL;
-                    if (!url.StartsWith(@"http://", StringComparison.OrdinalIgnoreCase) &&
-                        !url.StartsWith(@"https://", StringComparison.OrdinalIgnoreCase))
+                    if (!url.StartsWith(Http, StringComparison.OrdinalIgnoreCase) &&
+                        !url.StartsWith(Https, StringComparison.OrdinalIgnoreCase))
                     {
-                        url = "http://" + url;
+                        url = Http + url;
                     }
 
                     return url;
@@ -150,20 +153,19 @@ namespace SmartWalk.Client.iOS.Views.Common
             actionSheet.Style = UIActionSheetStyle.BlackTranslucent;
             actionSheet.Clicked += OnActionClicked;
 
-            // TODO: Localize
             using (var url = new NSUrl(BrowserURL))
             {
                 if (UIApplication.SharedApplication.CanOpenUrl(url))
                 {
-                    actionSheet.AddButton("Open In Safari");
+                    actionSheet.AddButton(Localization.OpenInSafari);
                 }
             }
 
             // TODO: To support Chrome some day
-            //actionSheet.AddButton("Open In Chrome");
+            //actionSheet.AddButton(Localization.OpenInChrome);
 
-            actionSheet.AddButton("Copy Link");
-            actionSheet.AddButton("Cancel");
+            actionSheet.AddButton(Localization.CopyLink);
+            actionSheet.AddButton(Localization.CancelButton);
 
             actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
 
@@ -208,7 +210,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void UpdateViewTitle()
         {
-            var pageTitle = WebView.EvaluateJavascript("document.title");
+            var pageTitle = WebView.EvaluateJavascript(DocTitle);
             NavigationItem.Title = !string.IsNullOrEmpty(pageTitle)
                 ? pageTitle
                 : (WebView.CanGoBack ? string.Empty : ViewModel.BrowserURL);

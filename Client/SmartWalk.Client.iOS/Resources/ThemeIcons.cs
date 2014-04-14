@@ -2,7 +2,7 @@ using MonoTouch.UIKit;
 
 namespace SmartWalk.Client.iOS.Resources
 {
-    public class ThemeIcons
+    public static class ThemeIcons
     {
         public static readonly UIImage NavBarBack = UIImage.FromFile("Icons/NavBarBack.png");
         public static readonly UIImage NavBarBackLandscape = UIImage.FromFile("Icons/NavBarBackLandscape.png");
@@ -14,6 +14,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage NavBarListLandscape = UIImage.FromFile("Icons/NavBarListLandscape.png");
         public static readonly UIImage NavBarMap = UIImage.FromFile("Icons/NavBarMap.png");
         public static readonly UIImage NavBarMapLandscape = UIImage.FromFile("Icons/NavBarMapLandscape.png");
+        public static readonly UIImage NavBarMore = UIImage.FromFile("Icons/NavBarMore.png");
+        public static readonly UIImage NavBarMoreLandscape = UIImage.FromFile("Icons/NavBarMoreLandscape.png");
         public static readonly UIImage NavBarNavigate = UIImage.FromFile("Icons/NavBarNavigate.png");
         public static readonly UIImage NavBarNavigateLandscape = UIImage.FromFile("Icons/NavBarNavigateLandscape.png");
 

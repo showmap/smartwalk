@@ -6,6 +6,7 @@ using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
@@ -31,7 +32,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                     result.Add(
                         new GroupContainer(currentEvents) 
                         {
-                            Key = "Current Events"
+                            Key = Localization.CurrentEvents
                         });
                 }
 
@@ -44,7 +45,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                     result.Add(
                         new GroupContainer(futureEvents) 
                         {
-                            Key = "Upcoming Events"
+                            Key = Localization.UpcomingEvents
                         });
                 }
 
@@ -57,7 +58,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                     result.Add(
                         new GroupContainer(pastEvents) 
                         {
-                            Key = "Past Events"
+                            Key = Localization.PastEvents
                         });
                 }
 

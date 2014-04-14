@@ -31,8 +31,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private bool _isBackOverriden;
         private PointF _tableContentOffset;
         private Show _previousExpandedShow;
-        private UIButton _modeButtonList;
-        private UIButton _modeButtonMap;
+        private ButtonBarButton _modeButtonList;
+        private ButtonBarButton _modeButtonMap;
+        private ButtonBarButton _moreButton;
 
         private NSTimer _timer;
 
@@ -249,14 +250,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _modeButton = new UIBarButtonItem(_modeButtonMap);
             var spacer = ButtonBarUtil.CreateSpacer();
 
-            NavigationItem.SetRightBarButtonItems(new [] {spacer, _modeButton}, true);
+            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
+            _moreButton.TouchUpInside += OnMoreButtonClicked;
+
+            var moreBarButton = new UIBarButtonItem(_moreButton);
+            NavigationItem.SetRightBarButtonItems(new [] {spacer, moreBarButton, _modeButton}, true);
         }
 
         private void DisposeToolBar()
         {
-            if (_modeButton != null)
+            if (_modeButtonList != null)
             {
-                _modeButton.Clicked -= OnModeButtonClicked;
+                _modeButtonList.TouchUpInside -= OnModeButtonClicked;
+            }
+
+            if (_modeButtonMap != null)
+            {
+                _modeButtonMap.TouchUpInside -= OnModeButtonClicked;
+            }
+
+            if (_moreButton != null)
+            {
+                _moreButton.TouchUpInside -= OnMoreButtonClicked;
             }
         }
 
@@ -265,6 +280,54 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.SwitchModeCommand.CanExecute(null))
             {
                 ViewModel.SwitchModeCommand.Execute(null);
+            }
+        }
+
+        private void OnMoreButtonClicked(object sender, EventArgs e)
+        {
+            var actionSheet = new UIActionSheet();
+            actionSheet.Style = UIActionSheetStyle.BlackTranslucent;
+            actionSheet.Clicked += OnActionClicked;
+
+            actionSheet.AddButton(Localization.SaveToCalendar);
+            actionSheet.AddButton(Localization.ShowEventInfo);
+            actionSheet.AddButton(Localization.ShowOrganizerInfo);
+            actionSheet.AddButton(Localization.CopyLink);
+            actionSheet.AddButton(Localization.ShareButton);
+            actionSheet.AddButton(Localization.CancelButton);
+
+            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
+
+            actionSheet.ShowInView(View);
+        }
+
+        private void OnActionClicked(object sender, UIButtonEventArgs e)
+        {
+            var actionSheet = ((UIActionSheet)sender);
+            actionSheet.Clicked -= OnActionClicked;
+
+            switch (actionSheet.ButtonCount - e.ButtonIndex)
+            {
+                case 6:
+                    break;
+
+                case 5:
+                    break;
+
+                case 4:
+                    if (ViewModel.NavigateOrgCommand.CanExecute(null))
+                    {
+                        ViewModel.NavigateOrgCommand.Execute(null);
+                    }
+                    break;
+
+                case 3:
+                    var eventUrl = ViewModel.Config.GetEventUrl(ViewModel.OrgEventId);
+                    UIPasteboard.General.String = eventUrl;
+                    break;
+
+                case 2:
+                    break;
             }
         }
 
@@ -435,6 +498,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (ViewModel.Mode == OrgEventViewMode.Map)
             {
+                _modeButtonList.UpdateState();
                 _modeButton.CustomView = _modeButtonList;
 
                 var completeHandler = new NSAction(() => 
@@ -471,6 +535,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else
             {
+                _modeButtonMap.UpdateState();
                 _modeButton.CustomView = _modeButtonMap;
 
                 var completeHandler = new NSAction(() => 

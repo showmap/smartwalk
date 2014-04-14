@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -49,7 +49,7 @@
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Event Title">
-                        <rect key="frame" x="54" y="10" width="148" height="25"/>
+                        <rect key="frame" x="54" y="10" width="256" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="25" id="163"/>
@@ -58,18 +58,6 @@
                         <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="shadowColor" white="1" alpha="0.94999999999999996" colorSpace="calibratedWhite"/>
-                        <size key="shadowOffset" width="0.0" height="1"/>
-                    </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="hint comment" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="44" userLabel="Hint">
-                        <rect key="frame" x="210" y="10" width="100" height="25"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="100" id="173"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                        <color key="textColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="shadowColor" white="1" alpha="0.93999999999999995" colorSpace="calibratedWhite"/>
                         <size key="shadowOffset" width="0.0" height="1"/>
                     </label>
                     <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pNm-x7-SWB" userLabel="Separator" customClass="Line">
@@ -87,19 +75,16 @@
                     <constraint firstAttribute="bottom" secondItem="63" secondAttribute="bottom" id="Sbr-td-cVd"/>
                     <constraint firstItem="pNm-x7-SWB" firstAttribute="leading" secondItem="nxw-DI-2A9" secondAttribute="leading" id="Sum-BJ-MDA"/>
                     <constraint firstItem="9" firstAttribute="top" secondItem="nxw-DI-2A9" secondAttribute="top" constant="12" id="ZsA-B7-eDE"/>
+                    <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" constant="10" id="ckl-Ww-Ndx"/>
                     <constraint firstAttribute="centerY" secondItem="3" secondAttribute="centerY" id="iV4-VF-wwR"/>
                     <constraint firstItem="63" firstAttribute="leading" secondItem="nxw-DI-2A9" secondAttribute="leading" id="lBH-rb-KLo"/>
                     <constraint firstItem="36" firstAttribute="top" secondItem="nxw-DI-2A9" secondAttribute="top" constant="6" id="rHf-8y-mkv"/>
-                    <constraint firstAttribute="trailing" secondItem="44" secondAttribute="trailing" constant="10" id="s3w-tR-N4k"/>
                     <constraint firstItem="36" firstAttribute="leading" secondItem="nxw-DI-2A9" secondAttribute="leading" constant="1" id="sPR-HZ-RAx"/>
                     <constraint firstAttribute="bottom" secondItem="pNm-x7-SWB" secondAttribute="bottom" id="yDm-pj-q1w"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="44" firstAttribute="top" secondItem="3" secondAttribute="top" id="J42-Pg-O2p"/>
-                <constraint firstItem="44" firstAttribute="baseline" secondItem="3" secondAttribute="baseline" id="Kja-WJ-QuW"/>
-                <constraint firstItem="44" firstAttribute="leading" secondItem="3" secondAttribute="trailing" constant="8" symbolic="YES" id="Wio-JI-0Wr"/>
                 <constraint firstItem="3" firstAttribute="leading" secondItem="63" secondAttribute="trailing" constant="10" id="shI-iD-RtQ"/>
                 <constraint firstItem="36" firstAttribute="centerX" secondItem="9" secondAttribute="centerX" id="yVQ-v1-ZnO"/>
             </constraints>
@@ -108,7 +93,6 @@
                 <outlet property="CalendarView" destination="63" id="164"/>
                 <outlet property="DateLabel" destination="3" id="35"/>
                 <outlet property="DayLabel" destination="9" id="34"/>
-                <outlet property="HintLabel" destination="44" id="51"/>
                 <outlet property="Separator" destination="pNm-x7-SWB" id="2hd-4u-GLO"/>
                 <outlet property="WeekDayLabel" destination="36" id="42"/>
             </connections>

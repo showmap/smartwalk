@@ -44,7 +44,6 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor CellText = UIColor.Black;
         public static readonly UIColor CellTextPassive = UIColor.FromRGB(153, 153, 153);
-        public static readonly UIColor CellTextHint = UIColor.FromRGB(187, 187, 187);
         public static readonly UIColor CellTextHighlight = UIColor.White;
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 
@@ -60,7 +59,6 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont OrgEventDayFont = UIFont.FromName(HelveticaLight, 18);
         public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(HelveticaBold, 10);
         public static readonly UIFont OrgEventDateFont = UIFont.FromName(HelveticaLight, 17);
-        public static readonly UIFont OrgEventHintFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIColor OrgEventActive = CellHighlight;
         public static readonly UIColor OrgEventPassive = UIColor.FromRGB(187, 187, 187);
 

@@ -271,9 +271,66 @@ namespace SmartWalk.Client.Core.Services
             return result;
         }
 
-        public Task<Org> GetHost(int id, DataSource source)
+        public async Task<Org> GetHost(int id, DataSource source)
         {
-            throw new NotImplementedException();
+            var request = new Request {
+                Selects = new[] {
+                    new RequestSelect {
+                        Fields = new[] { "Name", "Description", "Picture", "Contacts", "Addresses" },
+                        From = RequestSelectFromTables.Entity,
+                        Where = new[] {
+                            new RequestSelectWhere {
+                                Field = "Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                Value = id
+                            }
+                        }
+                    },
+                    new RequestSelect {
+                        Fields = new[] { "Host", "Title", "Picture", "StartTime" },
+                        From = RequestSelectFromTables.EventMetadata,
+                        Where = new[] {
+                            new RequestSelectWhere {
+                                Field = "Host.Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                Value = id
+                            }
+                        },
+                        SortBy = new[] {
+                            new RequestSelectSortBy {
+                                Field = "StartTime",
+                                IsDescending = true
+                            }
+                        }
+                    },
+                },
+                Storages = new[] { Storage.SmartWalk }
+            };
+
+            var response = await GetResponse(request, source);
+            var result = default(Org);
+
+            if (response != null)
+            {
+                var entity = response
+                    .Selects[0].Records
+                    .Cast<JObject>()
+                    .Select(e => e.ToObject<Entity>())
+                    .FirstOrDefault();
+
+                var eventMetadatas = response
+                    .Selects[1].Records
+                    .Cast<JObject>()
+                    .Select(r => r.ToObject<EventMetadata>())
+                    .ToArray();
+
+                if (entity != null)
+                {
+                    result = CreateOrg(entity, eventMetadatas);
+                }
+            }
+
+            return result;
         }
 
         private bool GetIsConnected()
@@ -328,6 +385,15 @@ namespace SmartWalk.Client.Core.Services
                 .Where(s => entity.Id == s.Venue.Id() && s.IsReference != true)
                 .ToArray();
             var result = new Venue(entity) { Shows = venueShows };
+            return result;
+        }
+
+        private static Org CreateOrg(Entity entity, EventMetadata[] eventMetadatas)
+        {
+            var orgEvents = eventMetadatas
+                .Select(em => new OrgEvent(em, entity))
+                .ToArray();
+            var result = new Org(entity) { OrgEvents = orgEvents };
             return result;
         }
     }

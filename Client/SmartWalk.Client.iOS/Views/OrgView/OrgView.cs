@@ -1,10 +1,8 @@
-using System;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
@@ -14,13 +12,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         public new OrgViewModel ViewModel
         {
             get { return (OrgViewModel)base.ViewModel; }
-        }
-
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
-
-            InitializeToolBar();
         }
 
         public override void ViewWillAppear(bool animated)
@@ -83,24 +74,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                 OrgEventsTableView.BeginUpdates();
                 OrgEventsTableView.EndUpdates();
             }
-        }
-
-        private void InitializeToolBar()
-        {
-            var rightBarButtons = ButtonBarUtil.GetUpDownBarItems(
-                    new Action(() => {
-                        if (ViewModel.ShowPreviousEntityCommand.CanExecute(null))
-                        {
-                            ViewModel.ShowPreviousEntityCommand.Execute(null);
-                        }
-                    }),
-                    new Action(() => {
-                        if (ViewModel.ShowNextEntityCommand.CanExecute(null))
-                        {
-                            ViewModel.ShowNextEntityCommand.Execute(null);
-                        }
-                    }));
-            NavigationItem.SetRightBarButtonItems(rightBarButtons, true);
         }
     }
 }

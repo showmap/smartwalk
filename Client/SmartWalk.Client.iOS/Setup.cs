@@ -55,11 +55,7 @@ namespace SmartWalk.Client.iOS
 
         private static void InitializeConfiguration()
         {
-            Mvx.RegisterSingleton<IConfiguration>(
-                new Configuration {
-                    Host = Host,
-                    Api = string.Format("http://{0}/api", Host),
-                });
+            Mvx.RegisterSingleton<IConfiguration>(new Configuration(Host));
         }
     }
 }

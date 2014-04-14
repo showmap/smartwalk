@@ -73,9 +73,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
             DateLabel.Font = Theme.OrgEventDateFont;
             DateLabel.TextColor = Theme.CellText;
-
-            HintLabel.Font = Theme.OrgEventHintFont;
-            HintLabel.TextColor = Theme.CellTextHint;
         }
     }
 }
