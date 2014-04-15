@@ -334,6 +334,7 @@
     <Compile Include="Services\LocationService.cs" />
     <Compile Include="Services\Configuration.cs" />
     <Compile Include="Resources\Localization.cs" />
+    <Compile Include="Services\Clipboard.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

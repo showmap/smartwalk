@@ -47,7 +47,6 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellTextHighlight = UIColor.White;
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 
-        public static readonly UIFont ToolBarButtonTextFont = UIFont.FromName(HelveticaLight, 12);
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);

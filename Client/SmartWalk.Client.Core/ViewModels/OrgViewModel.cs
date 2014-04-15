@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
@@ -13,14 +14,19 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public class OrgViewModel : EntityViewModel
     {
+        private readonly IClipboard _clipboard;
+        private readonly IConfiguration _configuration;
         private readonly ISmartWalkApiService _apiService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
         private Org _org;
+        private MvxCommand _copyLinkCommand;
         private ICommand _navigateOrgEventViewCommand;
 
         public OrgViewModel(
+            IClipboard clipboard,
+            IConfiguration configuration,
             ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
             IMvxPhoneCallTask phoneCallTask,
@@ -33,6 +39,8 @@ namespace SmartWalk.Client.Core.ViewModels
                     composeEmailTask, 
                     showDirectionsTask)
         {
+            _clipboard = clipboard;
+            _configuration = configuration;
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
         }
@@ -70,6 +78,27 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _navigateOrgEventViewCommand;
+            }
+        }
+
+        public ICommand CopyLinkCommand
+        {
+            get
+            {
+                if (_copyLinkCommand == null)
+                {
+                    _copyLinkCommand = new MvxCommand(() => 
+                        {
+                            var venueUrl = _configuration
+                                .GetEntityUrl(_parameters.OrgId, EntityType.Host);
+                            _clipboard.Copy(venueUrl);
+                        },
+                        () => 
+                            _parameters != null &&
+                            _parameters.OrgId != 0);
+                }
+
+                return _copyLinkCommand;
             }
         }
 

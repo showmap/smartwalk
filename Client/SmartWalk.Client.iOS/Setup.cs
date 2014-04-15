@@ -22,6 +22,7 @@ namespace SmartWalk.Client.iOS
         {
             InitializeConfiguration();
 
+            Mvx.LazyConstructAndRegisterSingleton<IClipboard, Clipboard>();
             Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
             Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
             Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();

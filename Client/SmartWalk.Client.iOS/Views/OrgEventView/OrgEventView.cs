@@ -289,16 +289,23 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             actionSheet.Style = UIActionSheetStyle.BlackTranslucent;
             actionSheet.Clicked += OnActionClicked;
 
-            actionSheet.AddButton(Localization.SaveToCalendar);
-            actionSheet.AddButton(Localization.ShowEventInfo);
+            if (ViewModel.OrgEvent != null)
+            {
+                actionSheet.AddButton(Localization.SaveToCalendar);
+                actionSheet.AddButton(Localization.ShowEventInfo);
+            }
 
-            if (ViewModel.IsCurrentEvent)
+            if (ViewModel.NavigateOrgCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.ShowOrganizerInfo);
             }
 
-            actionSheet.AddButton(Localization.CopyLink);
-            actionSheet.AddButton(Localization.ShareButton);
+            if (ViewModel.CopyLinkCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(Localization.CopyLink);
+                actionSheet.AddButton(Localization.ShareButton);
+            }
+
             actionSheet.AddButton(Localization.CancelButton);
 
             actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
@@ -314,9 +321,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             switch (actionSheet.ButtonTitle(e.ButtonIndex))
             {
                 case Localization.SaveToCalendar:
+                    // TODO: Save to Calendar
                     break;
 
                 case Localization.ShowEventInfo:
+                    // TODO: Show Event Info
                     break;
 
                 case Localization.ShowOrganizerInfo:
@@ -327,11 +336,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case Localization.CopyLink:
-                    var eventUrl = ViewModel.Config.GetEventUrl(ViewModel.OrgEventId);
-                    UIPasteboard.General.String = eventUrl;
+                    if (ViewModel.CopyLinkCommand.CanExecute(null))
+                    {
+                        ViewModel.CopyLinkCommand.Execute(null);
+                    }
                     break;
 
                 case Localization.ShareButton:
+                    // TODO: Share Event Link
                     break;
             }
         }

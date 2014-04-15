@@ -1,14 +1,13 @@
 using System;
-using System.Linq;
 using System.Drawing;
 using System.Windows.Input;
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -109,8 +108,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         public ICommand ExpandCollapseCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
-        public ICommand ShowContactsViewCommand { get; set; }
-        public ICommand ShowDirectionsCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
         public ICommand NavigateAddressesCommand { get; set; }
 
@@ -253,14 +250,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 DescriptionTopConstraint.Constant = 0;
                 DescriptionBottomConstraint.Constant = 0;
             }
-
-            ToolBarWidthConstraint.Constant = 
-                InfoButton.Hidden || DirectionsButton.Hidden ? 90 : 180;
-
-            // giving it 1px gap in horizontal mode when two buttons are visible
-            DirectionsButtonWidthConstraint.Constant = 
-                (InfoButton.Hidden && !DirectionsButton.Hidden) || 
-                    !ScreenUtil.IsVerticalOrientation ? 90 : 89;
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -271,8 +260,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             {
                 ExpandCollapseCommand = null;
                 ShowImageFullscreenCommand = null;
-                ShowContactsViewCommand = null;
-                ShowDirectionsCommand = null;
                 NavigateWebSiteCommand = null;
                 NavigateAddressesCommand = null;
 
@@ -305,14 +292,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 DataContext.Entity.HasAddresses()
                     ? DataContext.Entity
                     : null;
-
-            InfoButton.Hidden = DataContext == null ||
-                (DataContext != null &&
-                !DataContext.Entity.HasContacts());
-
-            DirectionsButton.Hidden = DataContext == null ||
-                (DataContext != null &&
-                    !DataContext.Entity.HasAddresses());
 
             UpdateImageCellShadowVisibility();
             SetNeedsLayout();
@@ -370,25 +349,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private void InitializeStyle()
         {
             PlaceholderSeparator.Color = Theme.EntitySeparator;
-            ToolBarView.Layer.CornerRadius = 4;
-
-            InfoButton.Font = Theme.ToolBarButtonTextFont;
-            InfoButton.SetImage(ThemeIcons.ToolBarInfo, UIControlState.Normal);
-            InfoButton.SetImage(ThemeIcons.ToolBarInfoWhite, UIControlState.Highlighted);
-
-            InfoButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
-            InfoButton.TouchDown += (sender, e) => InfoButton.BackgroundColor = Theme.NavBarBackground;
-            InfoButton.TouchUpInside += (sender, e) => InfoButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
-            InfoButton.TouchUpOutside += (sender, e) => InfoButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
-
-            DirectionsButton.Font = Theme.ToolBarButtonTextFont;
-            DirectionsButton.SetImage(ThemeIcons.ToolBarDirections, UIControlState.Normal);
-            DirectionsButton.SetImage(ThemeIcons.ToolBarDirectionsWhite, UIControlState.Highlighted);
-
-            DirectionsButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
-            DirectionsButton.TouchDown += (sender, e) => DirectionsButton.BackgroundColor = Theme.NavBarBackground;
-            DirectionsButton.TouchUpInside += (sender, e) => DirectionsButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
-            DirectionsButton.TouchUpOutside += (sender, e) => DirectionsButton.BackgroundColor = Theme.ToolBarButtonHighlightedBackground;
         }
 
         private void InitializeBottomGradientState()
@@ -443,26 +403,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     !ScreenUtil.IsVerticalOrientation || 
                         !DataContext.Entity.HasPicture() || 
                         !DataContext.Entity.HasAddresses();
-            }
-        }
-
-        partial void OnInfoButtonTouchUpInside(UIButton sender, UIEvent @event)
-        {
-            if (ShowContactsViewCommand != null &&
-                ShowContactsViewCommand.CanExecute(DataContext.Entity))
-            {
-                ShowContactsViewCommand.Execute(DataContext.Entity);
-            }
-        }
-
-        partial void OnDirectionsTouchUpInside(UIButton sender, UIEvent @event)
-        {
-            var addressInfo = DataContext.Entity.Addresses.FirstOrDefault();
-
-            if (ShowDirectionsCommand != null &&
-                ShowDirectionsCommand.CanExecute(addressInfo))
-            {
-                ShowDirectionsCommand.Execute(addressInfo);
             }
         }
     }

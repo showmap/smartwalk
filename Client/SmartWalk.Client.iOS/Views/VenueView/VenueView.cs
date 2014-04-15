@@ -5,6 +5,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.OrgEventView;
@@ -13,6 +14,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 {
     public partial class VenueView : ListViewBase
     {
+        private ButtonBarButton _moreButton;
+
         public new VenueViewModel ViewModel
         {
             get { return (VenueViewModel)base.ViewModel; }
@@ -25,10 +28,14 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             InitializeToolBar();
         }
 
-        protected override void Dispose(bool disposing)
+        public override void WillMoveToParentViewController(UIViewController parent)
         {
-            ReleaseDesignerOutlets();
-            base.Dispose(disposing);
+            base.WillMoveToParentViewController(parent);
+
+            if (parent == null)
+            {
+                DisposeToolBar();
+            }
         }
 
         protected override string GetViewTitle()
@@ -93,20 +100,96 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         private void InitializeToolBar()
         {
-            var rightBarButtons = ButtonBarUtil.GetUpDownBarItems(
-                new Action(() => {
-                    if (ViewModel.ShowPreviousEntityCommand.CanExecute(null))
+            var spacer = ButtonBarUtil.CreateSpacer();
+
+            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
+            _moreButton.TouchUpInside += OnMoreButtonClicked;
+
+            var moreBarButton = new UIBarButtonItem(_moreButton);
+            NavigationItem.SetRightBarButtonItems(new [] {spacer, moreBarButton}, true);
+        }
+
+        private void OnMoreButtonClicked(object sender, EventArgs e)
+        {
+            var actionSheet = new UIActionSheet();
+            actionSheet.Style = UIActionSheetStyle.BlackTranslucent;
+            actionSheet.Clicked += OnActionClicked;
+
+            if (ViewModel.ShowDirectionsCommand.CanExecute(ViewModel.Entity))
+            {
+                actionSheet.AddButton(Localization.NavigateInMaps);
+            }
+
+            if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
+            {
+                actionSheet.AddButton(Localization.ShowContactInfo);
+            }
+
+            if (ViewModel.CopyAddressCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(Localization.CopyAddress);
+            }
+
+            if (ViewModel.CopyLinkCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(Localization.CopyLink);
+                actionSheet.AddButton(Localization.ShareButton);
+            }
+
+            actionSheet.AddButton(Localization.CancelButton);
+
+            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
+
+            actionSheet.ShowInView(View);
+        }
+
+        private void OnActionClicked(object sender, UIButtonEventArgs e)
+        {
+            var actionSheet = ((UIActionSheet)sender);
+            actionSheet.Clicked -= OnActionClicked;
+
+            switch (actionSheet.ButtonTitle(e.ButtonIndex))
+            {
+                case Localization.NavigateInMaps:
+                    if (ViewModel.ShowDirectionsCommand.CanExecute(ViewModel.Entity))
                     {
-                        ViewModel.ShowPreviousEntityCommand.Execute(null);
+                        ViewModel.ShowDirectionsCommand.Execute(ViewModel.Entity);
                     }
-                }),
-                new Action(() => {
-                    if (ViewModel.ShowNextEntityCommand.CanExecute(null))
+                    break;
+
+                case Localization.ShowContactInfo:
+                    if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
                     {
-                        ViewModel.ShowNextEntityCommand.Execute(null);
+                        ViewModel.ShowHideContactsCommand.Execute(ViewModel.Entity);
                     }
-                }));
-            NavigationItem.SetRightBarButtonItems(rightBarButtons, true);
+                    break;
+
+                case Localization.CopyAddress:
+                    if (ViewModel.CopyAddressCommand.CanExecute(null))
+                    {
+                        ViewModel.CopyAddressCommand.Execute(null);
+                    }
+                    break;
+
+                case Localization.CopyLink:
+                    if (ViewModel.CopyLinkCommand.CanExecute(null))
+                    {
+                        ViewModel.CopyLinkCommand.Execute(null);
+                    }
+                    break;
+
+                case Localization.ShareButton:
+                    // TODO: Share Venue Link
+                    break;
+            }
+        }
+
+        private void DisposeToolBar()
+        {
+            if (_moreButton != null)
+            {
+                _moreButton.TouchUpInside -= OnMoreButtonClicked;
+            }
         }
     }
 }

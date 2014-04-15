@@ -134,6 +134,7 @@
     <Compile Include="Services\ILocationService.cs" />
     <Compile Include="Services\IConfiguration.cs" />
     <Compile Include="ViewModels\Common\ParametersBase.cs" />
+    <Compile Include="Services\IClipboard.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

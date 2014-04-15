@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
@@ -5,6 +6,7 @@ using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
@@ -32,7 +34,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Entity> _showHideContactsCommand;
         private MvxCommand<Contact> _callPhoneCommand;
         private MvxCommand<Contact> _composeEmailCommand;
-        private MvxCommand<Address> _showDirectionsCommand;
+        private MvxCommand<Entity> _showDirectionsCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<Entity> _navigateAddressesCommand;
 
@@ -226,7 +228,8 @@ namespace SmartWalk.Client.Core.ViewModels
                                 CurrentContactsEntityInfo != null 
                                     ? Analytics.ActionLabelShowContacts
                                     : Analytics.ActionLabelHideContacts);
-                        });
+                        },
+                        entity => entity == null || entity.HasContacts());
                 }
 
                 return _showHideContactsCommand;
@@ -313,17 +316,21 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_showDirectionsCommand == null)
                 {
-                    _showDirectionsCommand = new MvxCommand<Address>(
-                        address =>
-                        {
-                            _showDirectionsTask.ShowDirections(address);
+                    _showDirectionsCommand = new MvxCommand<Entity>(
+                        entity =>
+                            {
+                                var address = entity.Addresses.FirstOrDefault();
 
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                Analytics.ActionLabelShowDirections);
-                        },
-                        address => address != null);
+                                _showDirectionsTask.ShowDirections(address);
+
+                                _analyticsService.SendEvent(
+                                    Analytics.CategoryUI,
+                                    Analytics.ActionTouch,
+                                    Analytics.ActionLabelShowDirections);
+                            },
+                        entity => 
+                            entity != null &&
+                            entity.HasAddresses());
                 }
 
                 return _showDirectionsCommand;
@@ -346,8 +353,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             }),
                         entity => 
                             entity != null &&
-                            entity.Addresses != null &&
-                            entity.Addresses.Length > 0);
+                            entity.HasAddresses());
                 }
 
                 return _navigateAddressesCommand;

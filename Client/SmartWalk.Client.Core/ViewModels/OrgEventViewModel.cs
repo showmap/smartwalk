@@ -16,6 +16,7 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public class OrgEventViewModel : RefreshableViewModel, IFullscreenImageProvider
     {
+        private readonly IClipboard _clipboard;
         private readonly ISmartWalkApiService _apiService;
         private readonly IConfiguration _configuration;
         private readonly IAnalyticsService _analyticsService;
@@ -37,22 +38,20 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
+        private MvxCommand _copyLinkCommand;
 
         public OrgEventViewModel(
+            IClipboard clipboard,
             ISmartWalkApiService apiService,
             IConfiguration configuration,
             IAnalyticsService analyticsService,
             IExceptionPolicy exceptionPolicy) : base(analyticsService)
         {
+            _clipboard = clipboard;
             _apiService = apiService;
             _configuration = configuration;
             _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
-        }
-
-        public IConfiguration Config
-        {
-            get { return _configuration; }
         }
 
         public OrgEventViewMode Mode
@@ -236,7 +235,10 @@ namespace SmartWalk.Client.Core.ViewModels
                                 OrgId = OrgEvent.OrgId,
                                 Location = _parameters.Location
                             }),
-                        () => OrgEvent != null && _parameters != null);
+                        () => 
+                            _parameters != null &&
+                            _parameters.IsCurrentEvent &&
+                            OrgEvent != null);
                 }
 
                 return _navigateOrgCommand;
@@ -353,14 +355,24 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public int OrgEventId
+        public ICommand CopyLinkCommand
         {
-            get { return _parameters.OrgEventId; }
-        }
+            get
+            {
+                if (_copyLinkCommand == null)
+                {
+                    _copyLinkCommand = new MvxCommand(() => 
+                        {
+                            var eventUrl = _configuration.GetEventUrl(_parameters.OrgEventId);
+                            _clipboard.Copy(eventUrl);
+                        },
+                        () => 
+                            _parameters != null &&
+                            _parameters.OrgEventId != 0);
+                }
 
-        public bool IsCurrentEvent
-        {
-            get { return _parameters.IsCurrentEvent; }
+                return _copyLinkCommand;
+            }
         }
 
         protected override ParametersBase InitParameters
