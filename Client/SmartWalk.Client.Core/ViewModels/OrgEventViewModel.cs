@@ -358,6 +358,11 @@ namespace SmartWalk.Client.Core.ViewModels
             get { return _parameters.OrgEventId; }
         }
 
+        public bool IsCurrentEvent
+        {
+            get { return _parameters.IsCurrentEvent; }
+        }
+
         protected override ParametersBase InitParameters
         {
             get { return _parameters; }
@@ -435,6 +440,7 @@ namespace SmartWalk.Client.Core.ViewModels
         public class Parameters : ParametersBase
         {
             public int OrgEventId { get; set; }
+            public bool IsCurrentEvent { get; set; }
         }
     }
 

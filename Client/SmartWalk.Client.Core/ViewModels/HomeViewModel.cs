@@ -79,6 +79,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         orgEvent => ShowViewModel<OrgEventViewModel>(
                             new OrgEventViewModel.Parameters { 
                                 OrgEventId = orgEvent.Id,
+                                IsCurrentEvent = true,
                                 Location = _parameters.Location
                             }));
                 }

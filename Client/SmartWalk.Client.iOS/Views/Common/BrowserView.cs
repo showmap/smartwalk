@@ -177,9 +177,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             var actionSheet = ((UIActionSheet)sender);
             actionSheet.Clicked -= OnActionClicked;
 
-            switch (actionSheet.ButtonCount - e.ButtonIndex)
+            switch (actionSheet.ButtonTitle(e.ButtonIndex))
             {
-                case 3:
+                case Localization.OpenInSafari:
                     using (var url = new NSUrl(BrowserURL))
                     {
                         if (UIApplication.SharedApplication.CanOpenUrl(url))
@@ -189,7 +189,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                     }
                     break;
 
-                case 2:
+                case Localization.CopyLink:
                     UIPasteboard.General.String = BrowserURL;
                     break;
             }

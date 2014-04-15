@@ -291,7 +291,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             actionSheet.AddButton(Localization.SaveToCalendar);
             actionSheet.AddButton(Localization.ShowEventInfo);
-            actionSheet.AddButton(Localization.ShowOrganizerInfo);
+
+            if (ViewModel.IsCurrentEvent)
+            {
+                actionSheet.AddButton(Localization.ShowOrganizerInfo);
+            }
+
             actionSheet.AddButton(Localization.CopyLink);
             actionSheet.AddButton(Localization.ShareButton);
             actionSheet.AddButton(Localization.CancelButton);
@@ -306,27 +311,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var actionSheet = ((UIActionSheet)sender);
             actionSheet.Clicked -= OnActionClicked;
 
-            switch (actionSheet.ButtonCount - e.ButtonIndex)
+            switch (actionSheet.ButtonTitle(e.ButtonIndex))
             {
-                case 6:
+                case Localization.SaveToCalendar:
                     break;
 
-                case 5:
+                case Localization.ShowEventInfo:
                     break;
 
-                case 4:
+                case Localization.ShowOrganizerInfo:
                     if (ViewModel.NavigateOrgCommand.CanExecute(null))
                     {
                         ViewModel.NavigateOrgCommand.Execute(null);
                     }
                     break;
 
-                case 3:
+                case Localization.CopyLink:
                     var eventUrl = ViewModel.Config.GetEventUrl(ViewModel.OrgEventId);
                     UIPasteboard.General.String = eventUrl;
                     break;
 
-                case 2:
+                case Localization.ShareButton:
                     break;
             }
         }
