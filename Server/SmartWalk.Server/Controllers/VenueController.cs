@@ -85,8 +85,6 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            return Json(_entityService.GetEntityVmById(263, EntityType.Venue));
-
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             try
