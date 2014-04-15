@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using RestSharp.Portable;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Client.Core.Model;
@@ -17,15 +15,18 @@ namespace SmartWalk.Client.Core.Services
         private const string KeyPrefix = "api";
 
         private readonly IConfiguration _configuration;
+        private readonly IHttpService _httpService;
         private readonly ICacheService _cacheService;
         private readonly IReachabilityService _reachabilityService;
 
         public SmartWalkApiService(
             IConfiguration configuration,
+            IHttpService httpService,
             ICacheService cacheService,
             IReachabilityService reachabilityService)
         {
             _configuration = configuration;
+            _httpService = httpService;
             _cacheService = cacheService;
             _reachabilityService = reachabilityService;
         }
@@ -351,7 +352,7 @@ namespace SmartWalk.Client.Core.Services
 
             if (isConnected && result == null)
             {
-                result = await DownloadResponse(request);
+                result = await _httpService.Get<Response>(request);
 
                 if (result != null)
                 {
@@ -360,15 +361,6 @@ namespace SmartWalk.Client.Core.Services
             }
 
             return result;
-        }
-
-        private async Task<Response> DownloadResponse(Request request)
-        {
-            var client = new RestClient(new Uri(_configuration.Api));
-            var restRequest = new RestRequest(string.Empty, HttpMethod.Post);
-            restRequest.AddBody(request);
-            var result = await client.Execute<Response>(restRequest);
-            return result.Data;
         }
 
         private static string GenerateKey(Request request)

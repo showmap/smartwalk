@@ -11,14 +11,14 @@ namespace SmartWalk.Shared.Utils
     {
         public static bool HasMethod(this object objectToCheck, string methodName)
         {
-            var type = objectToCheck.GetType();
-            return type.GetMethod(methodName) != null;
+            var typeInfo = objectToCheck.GetType().GetTypeInfo();
+            return typeInfo.GetDeclaredMethod(methodName) != null;
         }
 
         public static bool HasProperty(this object objectToCheck, string propertyName)
         {
-            var type = objectToCheck.GetType();
-            return type.GetProperties().Any(p => p.Name.EqualsIgnoreCase(propertyName));
+            var typeInfo = objectToCheck.GetType().GetTypeInfo();
+            return typeInfo.GetDeclaredProperty(propertyName) != null;
         }
 
         /// <summary>
@@ -28,7 +28,8 @@ namespace SmartWalk.Shared.Utils
         {
             if (that != null && !string.IsNullOrWhiteSpace(propertyName))
             {
-                var property = that.GetType().GetProperty(propertyName);
+                var typeInfo = that.GetType().GetTypeInfo();
+                var property = typeInfo.GetDeclaredProperty(propertyName);
                 if (property != null)
                 {
                     var value = property.GetValue(that, null);
@@ -862,26 +863,28 @@ namespace SmartWalk.Shared.Utils
         {
             var ienum = FindIEnumerable(seqType);
             if (ienum == null) return seqType;
-            return ienum.GetGenericArguments()[0];
+            return ienum.GetTypeInfo().GetGenericParameterConstraints()[0];
         }
 
         private static Type FindIEnumerable(Type seqType)
         {
             if (seqType == null || seqType == typeof(string)) return null;
             if (seqType.IsArray) return typeof(IEnumerable<>).MakeGenericType(seqType.GetElementType());
-            if (seqType.IsGenericType)
+            var seqTypeInfo = seqType.GetTypeInfo();
+            if (seqTypeInfo.IsGenericType)
             {
-                foreach (var arg in seqType.GetGenericArguments())
+                foreach (var arg in seqTypeInfo.GetGenericParameterConstraints())
                 {
                     var ienum = typeof(IEnumerable<>).MakeGenericType(arg);
-                    if (ienum.IsAssignableFrom(seqType))
+                    var ienumTypeInfo = ienum.GetTypeInfo();
+                    if (ienumTypeInfo.IsAssignableFrom(seqTypeInfo))
                     {
                         return ienum;
                     }
                 }
             }
 
-            var ifaces = seqType.GetInterfaces();
+            var ifaces = seqTypeInfo.ImplementedInterfaces.ToArray();
             if (ifaces.Length > 0)
             {
                 foreach (var iface in ifaces)
@@ -891,10 +894,10 @@ namespace SmartWalk.Shared.Utils
                 }
             }
 
-            if (seqType.BaseType != null &&
-                seqType.BaseType != typeof(object))
+            if (seqTypeInfo.BaseType != null &&
+                seqTypeInfo.BaseType != typeof(object))
             {
-                return FindIEnumerable(seqType.BaseType);
+                return FindIEnumerable(seqTypeInfo.BaseType);
             }
 
             return null;
@@ -905,7 +908,7 @@ namespace SmartWalk.Shared.Utils
             if (obj == null) throw new ArgumentNullException("obj");
 
             var result = new Dictionary<string, object>();
-            var properties = obj.GetType().GetProperties();
+            var properties = obj.GetType().GetTypeInfo().DeclaredProperties;
 
             foreach (var property in properties)
             {

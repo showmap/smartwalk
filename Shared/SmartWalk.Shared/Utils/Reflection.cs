@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using SmartWalk.Shared.Resources;
@@ -188,7 +187,7 @@ namespace SmartWalk.Shared.Utils
 
         public static bool HasProperty(string propertyName)
         {
-            return typeof(TTarget).GetProperties().Any(p => p.Name.EqualsIgnoreCase(propertyName));
+            return typeof(TTarget).GetTypeInfo().GetDeclaredProperty(propertyName) != null;
         }
 
         /// <summary>
