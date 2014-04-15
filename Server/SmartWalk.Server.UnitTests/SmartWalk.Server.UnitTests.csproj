@@ -51,8 +51,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="UtilTests\FooClass.cs" />
     <Compile Include="UtilTests\MapUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilTests\ReflectionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
