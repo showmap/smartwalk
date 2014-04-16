@@ -39,7 +39,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(_eventService.GetUserEvents(user.Record));
+            return View(_eventService.GetUserEvents(user.Record, 0, SmartWalkSettings.InitialItemsLoad, e => e.DateCreated, true));
         }
 
         public ActionResult View(int eventId)
@@ -64,6 +64,19 @@ namespace SmartWalk.Server.Controllers
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             return View(_eventService.GetUserEventVmById(user.Record, eventId));
+        }
+
+        [HttpPost]
+        public ActionResult GetEventsByPage(int pageNumber)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            return Json(_eventService.GetUserEvents(user.Record, pageNumber, SmartWalkSettings.ItemsLoad, e => e.Title, false));
         }
 
         #region Addresses
@@ -259,7 +272,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return Json(_eventService.GetUserEvents(user.Record));
+            return Json(_eventService.GetUserEvents(user.Record, 0, SmartWalkSettings.ItemsLoad, e => e.DateCreated, true));
         }
 
         [HttpPost]

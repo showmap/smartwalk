@@ -11,7 +11,8 @@
     var items = (IList<EntityVm>)Model;
 }
 
-<div id="entity-items" data-bind="visible: Items().length > 0">
+<div id="entity-items" get-hosts-url="@Url.Action("GetHosts", "Host", new {area = "SmartWalk.Server"})">
+    @Html.AntiForgeryTokenOrchard()    
     <div class="container">
         <div class="row">
             <div class="col-xs-8">
@@ -46,20 +47,78 @@
                     </div>
                 </a>
             }
+            <!-- ko template: {name: "EntityItemTemplate", foreach: Items() } -->    
+            <!-- /ko -->
             <div class="clearfix"/>
         </div>                   
     </div>
 </div>
 
-<script type="text/html" id="EntityItemTemplate">    
+<script type="text/html" id="EntityItemTemplate">
+    <a class="thumbnail floating" data-bind="attr: { href: '/organizer/' + Id() }">
+        <img data-bind="attr: { src: Picture }"/>
+        <div class="caption">
+            <h3 data-bind="text: DisplayName"></h3>
+        </div>
+    </a>
 </script>
 
 <script>       
-    function HostsViewModel() {
+    function VenuesViewModel() {
         var self = this;
-        
-        //self.Items = ko.observableArray($.map(@Html.Raw(Json.Encode(items)), function(item) { return new EntityViewModel(item); }));
+
+        self.Items = ko.observableArray();
+        self.currentPage = ko.observable(1);
+
+
+        self.getNextPage = function () {
+            return getData(self.currentPage() + 1);
+        };
+
+        function getData(pageNumber) {
+            if (self.currentPage() != pageNumber) {
+                console.log("Scroll Postion begin getData" + $(window).scrollTop());
+                var ajdata = { pageNumber: pageNumber };
+                var urlUpdate = $("#entity-items").attr("get-hosts-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: JSON.stringify(ajdata),
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        if (data.length > 0) {
+                            self.currentPage(self.currentPage() + 1);
+                            for (var i = 0; i < data.length; i++) {
+                                self.Items.push(new EntityViewModel(data[i]));
+                                console.log("Scroll Postion looping ViewModel" + $(window).scrollTop());
+                            }
+                        }
+                    }
+                };
+
+                $.ajax(config);
+            }
+        }
     }
 
-    //ko.applyBindings(new HostsViewModel(), document.getElementById('entity-items'));
+    $(document).ready(function () {
+        var viewModel = new VenuesViewModel();
+
+        ko.applyBindings(viewModel, document.getElementById('entity-items'));
+
+        $(window).scroll(function (evt) {
+            evt.preventDefault();
+            if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+                console.log("Scroll Postion" + $(window).scrollTop());
+                viewModel.getNextPage();
+            }
+        });
+    });
 </script>

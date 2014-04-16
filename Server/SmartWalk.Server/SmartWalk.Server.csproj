@@ -126,6 +126,7 @@
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
+    <Compile Include="SmartWalkSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
       <SubType>Code</SubType>
     </Compile>

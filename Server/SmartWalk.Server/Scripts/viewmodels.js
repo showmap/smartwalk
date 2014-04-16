@@ -345,6 +345,7 @@ function EventViewModel(data) {
     self.IsPublic = ko.observable();
     self.DateCreated = ko.observable();
     self.DateModified = ko.observable();
+    self.DisplayDate = ko.observable();
 
     self.Host = ko.observable();
     self.AllVenues = ko.observableArray();
@@ -372,7 +373,8 @@ function EventViewModel(data) {
         self.IsPublic(data.IsPublic);
         self.DateCreated(data.DateCreated);
         self.DateModified(data.DateModified);
-
+        self.DisplayDate(data.DisplayDate);
+        
         self.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
         self.AllHosts($.map(data.AllHosts, function(item) {
             var vmItem = new EntityViewModel(item);

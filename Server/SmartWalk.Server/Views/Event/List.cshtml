@@ -11,7 +11,8 @@
     var items = (IList<EventMetadataVm>)Model;
 }
 
-<div id="event-items" data-bind="visible: EventItems().length > 0">
+<div id="event-items" get-events-url="@Url.Action("GetEventsByPage", "Event", new {area = "SmartWalk.Server"})">
+    @Html.AntiForgeryTokenOrchard()    
    <div class="container">
         <div class="row">
             <div class="col-xs-8">
@@ -47,16 +48,83 @@
                     </div>
                 </a>
             }
+            <!-- ko template: {name: "EventItemTemplate", foreach: Items() } -->    
+            <!-- /ko -->
             <div class="clearfix"/>
         </div>           
     </div>
 </div>
 
-<script type="text/html" id="eventItemTemplate">      
+<script type="text/html" id="EventItemTemplate">  
+    <a class="thumbnail floating" data-bind="attr: { href: '/event/' + Id() }">
+        <img data-bind="attr: { src: Picture }"/>
+        <div class="caption">
+            <h3 data-bind="text: Title"></h3>
+            <h5 data-bind="text: DisplayDate"></h5>
+        </div>
+    </a>    
 </script>
 
 
 <script>
+    function VenuesViewModel() {
+        var self = this;
+
+        self.Items = ko.observableArray();
+        self.currentPage = ko.observable(1);
+
+
+        self.getNextPage = function () {
+            return getData(self.currentPage() + 1);
+        };
+
+        function getData(pageNumber) {
+            if (self.currentPage() != pageNumber) {
+                console.log("Scroll Postion begin getData" + $(window).scrollTop());
+                var ajdata = { pageNumber: pageNumber };
+                var urlUpdate = $("#event-items").attr("get-events-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: JSON.stringify(ajdata),
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        if (data.length > 0) {
+                            self.currentPage(self.currentPage() + 1);
+                            for (var i = 0; i < data.length; i++) {
+                                self.Items.push(new EventViewModel(data[i]));
+                                console.log("Scroll Postion looping ViewModel" + $(window).scrollTop());
+                            }
+                        }
+                    }
+                };
+
+                $.ajax(config);
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        var viewModel = new VenuesViewModel();
+
+        ko.applyBindings(viewModel, document.getElementById('event-items'));
+
+        $(window).scroll(function (evt) {
+            evt.preventDefault();
+            if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+                console.log("Scroll Postion" + $(window).scrollTop());
+                viewModel.getNextPage();
+            }
+        });
+    });
+
     $(document).ready(function() {
 
         function EventsViewModel() {

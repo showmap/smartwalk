@@ -158,8 +158,12 @@ namespace SmartWalk.Server.Services.EntityService
         #endregion
 
         #region Entities
-        public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type) {
-            return user.Entities.Where(e => e.Type == (int) type && !e.IsDeleted).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+        public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, IComparable> orderBy, bool isDesc)
+        {
+            if(isDesc)
+                return user.Entities.Where(e => e.Type == (int)type && !e.IsDeleted).OrderByDescending(orderBy).Skip(pageSize * pageNumber).Take(pageSize).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+
+                return user.Entities.Where(e => e.Type == (int) type && !e.IsDeleted).OrderBy(orderBy).Skip(pageSize * pageNumber).Take(pageSize).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
         }
 
         public EntityVm GetEntityVmById(int hostId, EntityType type) {

@@ -38,7 +38,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(_entityService.GetUserEntities(user.Record, EntityType.Venue));
+            return View(_entityService.GetUserEntities(user.Record, EntityType.Venue, 0, SmartWalkSettings.InitialItemsLoad, e => e.Name, false));
         }
 
         public ActionResult View(int entityId) {
@@ -69,6 +69,19 @@ namespace SmartWalk.Server.Controllers
             _entityService.DeleteEntity(entityId);
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult GetVenues(int pageNumber)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            return Json(_entityService.GetUserEntities(user.Record, EntityType.Venue, pageNumber, SmartWalkSettings.ItemsLoad, e => e.Name, false));
         }
 
         [HttpPost]

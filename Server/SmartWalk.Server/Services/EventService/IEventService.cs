@@ -9,7 +9,7 @@ using SmartWalk.Server.ViewModels;
 namespace SmartWalk.Server.Services.EventService
 {
     public interface IEventService : IDependency {
-        IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user);
+        IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc);
         EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id);
         void DeleteEvent(EventMetadataVm item);
         EventMetadataVm SaveOrAddEvent(EventMetadataVm item);
