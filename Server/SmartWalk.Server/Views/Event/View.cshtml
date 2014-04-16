@@ -66,10 +66,9 @@
                             }                            
                         </td>
                     </tr>
-                    foreach (var show in venue.AllShows) {
+                    foreach (var show in venue.AllShows.Where(s => !s.IsReference)) {
                      <tr>
-                        <td>@show.Title<br/><span class="description">@show.Description</span></td>
-                        <!-- It's important to have &nbsp; between "start-time" and "-", to keep them on the same row -->
+                        <td>@show.Title<br/><span class="description">@show.Description</span></td>                        
                         @if (string.IsNullOrEmpty(show.EndTime)) {
                             <td>@show.StartTime</td>
                         }

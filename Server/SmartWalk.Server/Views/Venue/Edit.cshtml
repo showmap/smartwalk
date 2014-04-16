@@ -20,7 +20,7 @@
         });
 
         $("#edit-venue-form").bind('OnVenueSaved', function (event) {
-            window.location.href = "@Url.Action("List")";
+            window.location.href = "@Url.Action("View", new { entityId = @venue.Id })";
         });
     });
 </script>
