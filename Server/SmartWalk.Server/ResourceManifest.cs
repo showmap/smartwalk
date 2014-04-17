@@ -33,16 +33,12 @@
             manifest.DefineScript("SmartWalk.AntiForgery").SetUrl("antiforgery.js");
 
             manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetVersion("1.2").SetDependencies("ko", "SmartWalk.AntiForgery");
+            manifest.DefineScript("ko.autocomplete").SetUrl("autocomplete.js").SetVersion("1.2").SetDependencies("ko", "SmartWalk.AntiForgery");
 
             manifest.DefineScript("Bootstrap").SetUrl("bootstrap.js");
             manifest.DefineScript("JQuery-1-10-2").SetUrl("jquery-1.10.2.js");
 
-            #region Host
-            manifest.DefineStyle("SmartWalk.Host").SetUrl("host.css");
-            manifest.DefineScript("SmartWalk.Entity").SetUrl("entity.js").SetVersion("1.1").SetDependencies("ko.datetime");
-            manifest.DefineScript("SmartWalk.ViewModels").SetUrl("viewmodels.js").SetVersion("1.8").SetDependencies("ko.datetime");
-            #endregion
-
+            manifest.DefineScript("SmartWalk.ViewModels").SetUrl("viewmodels.js").SetVersion("1.8").SetDependencies("ko.datetime", "ko.autocomplete");
             #endregion
         }
     }

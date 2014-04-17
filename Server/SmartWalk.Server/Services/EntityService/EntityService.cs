@@ -158,12 +158,27 @@ namespace SmartWalk.Server.Services.EntityService
         #endregion
 
         #region Entities
-        public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, IComparable> orderBy, bool isDesc)
-        {
-            if(isDesc)
-                return user.Entities.Where(e => e.Type == (int)type && !e.IsDeleted).OrderByDescending(orderBy).Skip(pageSize * pageNumber).Take(pageSize).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+        public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy,  bool isDesc) {
+            var query = user.Entities.Where(e => e.Type == (int) type && !e.IsDeleted);
+            if (where != null)
+                query = query.Where(where);
+            query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
-                return user.Entities.Where(e => e.Type == (int) type && !e.IsDeleted).OrderBy(orderBy).Skip(pageSize * pageNumber).Take(pageSize).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+        }
+
+        public IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, Func<EntityRecord, bool> where)
+        {
+            var metadata = user.EventMetadataRecords.FirstOrDefault(e => e.Id == eventId);
+
+            if(metadata == null)
+                return new List<EntityVm>();
+
+            var query = user.Entities.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted && metadata.ShowRecords.All(s => s.EntityRecord.Id != e.Id));
+            if (where != null)
+                query = query.Where(where);
+
+            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, VmItemState.Hidden)).ToList();
         }
 
         public EntityVm GetEntityVmById(int hostId, EntityType type) {

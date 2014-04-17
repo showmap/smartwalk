@@ -350,6 +350,7 @@ function EventViewModel(data) {
     self.Host = ko.observable();
     self.AllVenues = ko.observableArray();
     self.AllHosts = ko.observableArray();
+    self.OtherVenues = ko.observableArray();
     
     self.selectedItem = ko.observable();
     self.selectedVenue = ko.observable();
@@ -391,11 +392,11 @@ function EventViewModel(data) {
             return item.State() != 2 && item.State() != 3;
         });
     }, self);
-    self.OtherVenues = ko.computed(function () {
-        return ko.utils.arrayFilter(self.AllVenues(), function (item) {
-            return item.State() == 3;
-        });
-    }, self);
+    //self.OtherVenues = ko.computed(function () {
+    //    return ko.utils.arrayFilter(self.AllVenues(), function (item) {
+    //        return item.State() == 3;
+    //    });
+    //}, self);
     self.CheckedShows = ko.computed(function () {
         var venueShows = ko.utils.arrayMap(self.Venues(), function (venue) {
             return venue.CheckedShows();            

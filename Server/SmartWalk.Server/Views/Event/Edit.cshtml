@@ -16,6 +16,18 @@
     var cancelAction = eventItem.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @eventItem.Id });
 }
 
+<style type="text/css">
+ .categoryIconContainer {
+	border-radius: 3px 3px 3px 3px;
+    float: left;
+    height: 32px;
+    margin-right: 5px;
+    overflow: hidden;
+    width: 32px;
+    vertical-align: middle;
+}
+</style>
+
 <div id="event-item" 
     save-event-url="@Url.Action("SaveEvent", "Event")" 
     save-show-url="@Url.Action("SaveShow", "Event")"
@@ -25,6 +37,8 @@
     delete-event-venue-url="@Url.Action("DeleteEventVenue", "Event")"
     delete-event-shows-url="@Url.Action("DeleteEventShows", "Event")"
     save-event-venue-url="@Url.Action("SaveEventVenue", "Event")"
+    host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
+    venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")"
     save-event-url="@Url.Action("SaveEvent", "Event")">
     @Html.AntiForgeryTokenOrchard()    
     <div id="metadata-panel">
@@ -66,7 +80,7 @@
                     <label for="organizedByComboBox">@T("Organized By"):</label>
                     <div class="input-group">
                         <!--<input type="text" class="form-control" id="organizedByComboBox" >-->
-                        <select class="form-control" id="organizedByComboBox" data-bind="options: AllHosts, optionsText: 'DisplayName', value: Host, optionsCaption: '@T("Select Organizer...")'"></select>
+                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: AllHosts, jqAutoValue: Host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'DisplayName', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: getAutoItem"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create Organizer...")</button>
                         </span>
@@ -79,9 +93,10 @@
 					<label for="combineTypeButtonsGroup">@T("Combine Type"):</label><br/>
 					<div class="btn-group" id="combineTypeButtonsGroup" data-bind="switcher: CombineType, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}]}"></div>
 				</div>
-			</div>*@
+			</div>            
+            *@
 		</div>		       
-
+        
         <div class="row">
 			<div class="col-sm-8">
 				<div class="form-group">
@@ -99,7 +114,6 @@
 				</div>
 			</div>
 		</div>                                                               
-        <textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.selectedItem)"></textarea>
         
         <table class="table table-hover">
 			<thead>
@@ -135,10 +149,11 @@
                 </form>		        
             </div>
         </div>
+        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.OtherVenues)"></textarea>-->
 
         <div data-bind="visible: Id() > 0">
             <p>@T("Venues")</p>
-            <select id="other-venues" data-bind1="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
+            <select id="other-venues" data-bind="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
             <button id="add-event-venue-button" data-bind1="click: $root.addVenue, enable: selectedVenue">@T("Add venue")</button>    
         </div>        
     </div>
@@ -170,12 +185,12 @@
 <script type="text/html" id="EventVenueItemTemplateEdit">
     <td colspan="3" class="editing-container">
         <div class="well">
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="form-group">
-                    <label for="venueComboBox">@T("Venue"):</label>
-                    <div class="input-group">
-                        <select id="venueComboBox" class="form-control pull-left" data-bind="options: $root.OtherVenues, optionsText: 'Name', value: $root.selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="venueComboBox">@T("Venue"):</label>
+                        <div class="input-group">
+                        <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'DisplayName', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: $root.createVenue">@T("Create Venue...")</button>
                         </span>
@@ -381,6 +396,72 @@
         $(document).ready(function () {
             var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
 
+            vm.getHosts = function(searchTerm, sourceArray) {
+                var ajdata = { term: searchTerm };
+                var urlUpdate = $("#event-item").attr("host-autocomplete-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: JSON.stringify(ajdata),
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        if(data && data.length > 0)
+                            sourceArray($.map(data, function (item) { return new EntityViewModel(item); }));
+                    }
+                };
+                $.ajax(config);
+            };
+
+            vm.getVenues = function(searchTerm, sourceArray) {
+                var ajdata = { term: searchTerm, eventId: vm.Id() };
+                var urlUpdate = $("#event-item").attr("venue-autocomplete-url");
+
+                var config = {
+                    async: true,
+                    url: urlUpdate,
+                    type: "POST",
+                    data: JSON.stringify(ajdata),
+                    dataType: "json",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    error: function (e) {
+                        //window.location.href = "@Url.Action("List")";
+                    },
+                    success: function (data) {
+                        if (data && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                sourceArray($.map(data, function (item) { return new EntityViewModel(item); }));
+                            }
+                        }                            
+                    }
+                };
+                $.ajax(config);
+            };
+
+            vm.getAutoItem = function(item) {
+                var text = "<div>";
+                text += "<div class='categoryIconContainer'><img src='" + (item.Picture() == "" ? "" : item.Picture()) + "' /></div>";
+                text += "<div class='autocomplete-name'>" + item.Name() + "</div>";
+                if (!item.DisplayAddress())
+                    text += "<div class='autocomplete-detail'>&nbsp;</div>";
+                else {
+                    if (item.DisplayAddress().Address() != "")
+                        text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Address() + "</div>";
+                    if (item.DisplayAddress().Tip() != "")
+                        text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Tip() + "</div>";
+                }
+
+                text += "</div>";
+                return text;
+            };
+
             vm.createHost = function() {
                 $("#edit-host-form").dialog("open");           
             };
@@ -420,7 +501,7 @@
                     vm.deleteVenue(vm.selectedItem());
                 }                                                       
                 
-                alert('item id = ' + vm.selectedVenue().Id() + ' selected item id = ' + vm.selectedItem().Id());
+                //alert('item id = ' + vm.selectedVenue().Id() + ' selected item id = ' + vm.selectedItem().Id());
                 var ajdata = ko.toJSON(vm.selectedVenue());
                 var urlUpdate = $("#event-item").attr("save-event-venue-url");
 
@@ -617,7 +698,7 @@
             $("#edit-venue-form").bind('OnVenueSaved', function (event) {
                 event.item.State(3);
                 event.item.EventMetadataId(vm.Id());
-                vm.AllVenues.push(event.item);
+                vm.OtherVenues.push(event.item);
                 vm.selectedVenue(event.item);
                 
                 $("#edit-venue-form").dialog("close");

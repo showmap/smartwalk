@@ -47,19 +47,18 @@ namespace SmartWalk.Server.Services.EventService
             return data.Where(e => !e.IsDeleted).OrderByDescending(e => e.DateCreated).Take(5).Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
         }
 
-        public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc)
-        {
-            if(isDesc)
-                return user.EventMetadataRecords.Where(e => !e.IsDeleted).OrderByDescending(orderBy).Skip(pageSize * pageNumber).Take(pageSize).Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
+        public IList<EventMetadataVm> GetUserEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc) {
+            var query = user.EventMetadataRecords.Where(e => !e.IsDeleted);
+            query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
-            return user.EventMetadataRecords.Where(e => !e.IsDeleted).OrderBy(orderBy).Skip(pageSize * pageNumber).Take(pageSize).Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
+            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => CreateViewModelContract(e, EventLoadMode.MetadataOnly)).ToList();
         }
 
         public EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
             var eventMetadata = user.EventMetadataRecords.FirstOrDefault(u => u.Id == id);
 
             var vm = CreateViewModelContract(user, eventMetadata);
-            vm.AllHosts = _entityService.GetUserEntities(user, EntityType.Host, 0, 8, e => e.Name, false);
+            //vm.AllHosts = _entityService.GetUserEntities(user, EntityType.Host, 0, 8, e => e.Name, false, "");
 
             return vm;
         }

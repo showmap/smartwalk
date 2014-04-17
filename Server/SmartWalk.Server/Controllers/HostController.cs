@@ -11,6 +11,7 @@ using SmartWalk.Server.Records;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
+using System.Globalization;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -37,7 +38,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(_entityService.GetUserEntities(user.Record, EntityType.Host, 0, SmartWalkSettings.InitialItemsLoad, e => e.Name, false));
+            return View(_entityService.GetUserEntities(user.Record, EntityType.Host, 0, SmartWalkSettings.InitialItemsLoad, null, e => e.Name, false));
         }
 
         public ActionResult View(int entityId)
@@ -73,6 +74,19 @@ namespace SmartWalk.Server.Controllers
         }
 
         [HttpPost]
+        public ActionResult AutoCompleteHost(string term)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            return Json(_entityService.GetUserEntities(user.Record, EntityType.Host, 0, SmartWalkSettings.ItemsLoad, e => (string.IsNullOrEmpty(term) || e.Name.ToLower(CultureInfo.InvariantCulture).Contains(term.ToLower(CultureInfo.InvariantCulture))), e => e.Name, false));
+        }
+
+        [HttpPost]
         public ActionResult GetHosts(int pageNumber)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
@@ -82,7 +96,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return Json(_entityService.GetUserEntities(user.Record, EntityType.Host, pageNumber, SmartWalkSettings.ItemsLoad, e => e.Name, false));
+            return Json(_entityService.GetUserEntities(user.Record, EntityType.Host, pageNumber, SmartWalkSettings.ItemsLoad, null, e => e.Name, false));
         }
 
         [HttpPost]

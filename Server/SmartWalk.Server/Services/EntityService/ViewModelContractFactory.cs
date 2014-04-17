@@ -10,7 +10,11 @@ namespace SmartWalk.Server.Services.EntityService
 {
     public static class ViewModelContractFactory
     {
-        public static EntityVm CreateViewModelContract(EntityRecord record)
+        public static EntityVm CreateViewModelContract(EntityRecord record) {
+            return CreateViewModelContract(record, VmItemState.Normal);
+        }
+
+        public static EntityVm CreateViewModelContract(EntityRecord record, VmItemState state)
         {
             if (record == null)
                 return null;
@@ -18,14 +22,14 @@ namespace SmartWalk.Server.Services.EntityService
             return new EntityVm
             {
                 Id = record.Id,
-                State = VmItemState.Normal,
+                State = state,
                 UserId = record.SmartWalkUserRecord.Id,
                 Type = record.Type,
                 Name = record.Name,
                 Picture = record.Picture,
                 Description = record.Description,
                 AllContacts = record.ContactRecords.Select(CreateViewModelContract).ToList(),
-                AllAddresses =  record.AddressRecords.Select(CreateViewModelContract).ToList(),
+                AllAddresses = record.AddressRecords.Select(CreateViewModelContract).ToList(),
             };
         }
 
