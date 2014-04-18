@@ -9,7 +9,7 @@ using SmartWalk.Server.ViewModels;
 namespace SmartWalk.Server.Services.EntityService
 {
     public interface IEntityService : IDependency {
-        IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy, bool isDesc);
+        IList<EntityVm> GetEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy, bool isDesc);
         IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord);
         IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, Func<EntityRecord, bool> where);
         EntityVm GetEntityVmById(int entityId, EntityType type);

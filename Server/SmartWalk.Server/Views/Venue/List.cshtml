@@ -7,11 +7,14 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
 
-    var items = (IList<EntityVm>)Model;
+    var model = (ListViewVm) Model;
+    var parameters = model.Parameters;
+    var items = (IList<EntityVm>)model.Data;
 }
 
 <div id="entity-items" get-venues-url="@Url.Action("GetVenues", "Venue", new {area = "SmartWalk.Server"})">
-    @Html.AntiForgeryTokenOrchard()    
+    @Html.AntiForgeryTokenOrchard()  
+    @Html.HiddenFor(m => model.Parameters.Sort)  
     <div class="container">
         <div class="row">
             <div class="col-xs-8">
@@ -22,20 +25,22 @@
                     </span>
                 </div>
             </div>
-            <div class="col-xs-4 text-right">
-                <form action="/venues/create">
-                    <button type="submit" class="btn btn-primary">@T("Create venue")</button>
-                </form>
-            </div>
+            @if (parameters.IsLoggedIn) {
+                <div class="col-xs-4 text-right">
+                    <form action="/venues/create">
+                        <button type="submit" class="btn btn-primary">@T("Create venue")</button>
+                    </form>
+                </div>
+            }
         </div>
         
-        <div class="gap">
-            <small>
-                <a href="#/events">@T("All Venues")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("My Venues")</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                @T("Sort By"):&nbsp;<a href="#/events">@T("Date")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("Title")</a>
-            </small>
-        </div>
+        @if (parameters.IsLoggedIn) {
+            <div class="gap">
+                <small>
+                    <a href="/venues?Parameters.Display=All">@T("All Venues")</a>&nbsp;|&nbsp;<a href="/venues?Parameters.Display=My">@T("My Venues")</a>
+                </small>
+            </div>
+        }
 
         <div class="floating-container small-gap">
             @foreach (var item in items) {
@@ -77,7 +82,7 @@
         function getData(pageNumber) {
             if (self.currentPage() != pageNumber) {                
                 console.log("Scroll Postion begin getData" + $(window).scrollTop());
-                var ajdata = { pageNumber: pageNumber };
+                var ajdata = { pageNumber: pageNumber, parameters: @Html.Raw(Json.Encode(parameters)) };
                 var urlUpdate = $("#entity-items").attr("get-venues-url");
 
                 var config = {

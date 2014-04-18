@@ -30,15 +30,13 @@ namespace SmartWalk.Server.Controllers
             _eventService = eventService;
         }
 
-        public ActionResult List() {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
+        public ActionResult List(ListViewParametersVm parameters)
+        {
+            parameters.IsLoggedIn = _orchardServices.WorkContext.CurrentUser != null;
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(_entityService.GetUserEntities(user.Record, EntityType.Host, 0, SmartWalkSettings.InitialItemsLoad, null, e => e.Name, false));
+            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Host, 0, SmartWalkSettings.InitialItemsLoad, null, e => e.Name, false)});
         }
 
         public ActionResult View(int entityId)
@@ -82,21 +80,25 @@ namespace SmartWalk.Server.Controllers
             }
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-
-            return Json(_entityService.GetUserEntities(user.Record, EntityType.Host, 0, SmartWalkSettings.ItemsLoad, e => (string.IsNullOrEmpty(term) || e.Name.ToLower(CultureInfo.InvariantCulture).Contains(term.ToLower(CultureInfo.InvariantCulture))), e => e.Name, false));
+            return Json(_entityService.GetEntities(user.Record, EntityType.Host, 0, SmartWalkSettings.ItemsLoad, e => (string.IsNullOrEmpty(term) || e.Name.ToLower(CultureInfo.InvariantCulture).Contains(term.ToLower(CultureInfo.InvariantCulture))), e => e.Name, false));
         }
 
         [HttpPost]
-        public ActionResult GetHosts(int pageNumber)
+        public ActionResult GetHosts(int pageNumber, ListViewParametersVm parameters)
         {
-            if (_orchardServices.WorkContext.CurrentUser == null)
+            SmartWalkUserPart user = null;
+
+            if (parameters.IsLoggedIn)
             {
-                return new HttpUnauthorizedResult();
+                if (_orchardServices.WorkContext.CurrentUser == null)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             }
 
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-
-            return Json(_entityService.GetUserEntities(user.Record, EntityType.Host, pageNumber, SmartWalkSettings.ItemsLoad, null, e => e.Name, false));
+            return Json(_entityService.GetEntities(user == null ? null: user.Record, EntityType.Host, pageNumber, SmartWalkSettings.ItemsLoad, null, e => e.Name, false));
         }
 
         [HttpPost]

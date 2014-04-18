@@ -7,7 +7,9 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
 
-    var items = (IList<EntityVm>)Model;
+    var model = (ListViewVm)Model;
+    var parameters = model.Parameters;
+    var items = (IList<EntityVm>)model.Data;
 }
 
 <div id="entity-items" get-hosts-url="@Url.Action("GetHosts", "Host", new {area = "SmartWalk.Server"})">
@@ -22,20 +24,23 @@
                     </span>
                 </div>
             </div>
-            <div class="col-xs-4 text-right">
-                <form action="/organizers/create">
-                    <button type="submit" class="btn btn-primary">@T("Create organizer")</button>
-                </form>                
-            </div>
+            @if (parameters.IsLoggedIn) {
+                <div class="col-xs-4 text-right">
+                    <form action="/organizers/create">
+                        <button type="submit" class="btn btn-primary">@T("Create organizer")</button>
+                    </form>                
+                </div>
+            }
         </div>
         
-        <div class="gap">
-            <small>
-                <a href="#/events">@T("All Organizers")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("My Organizers")</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                @T("Sort By"):&nbsp;<a href="#/events">@T("Date")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("Title")</a>
-            </small>
-        </div>
+        @if (parameters.IsLoggedIn) {
+
+            <div class="gap">
+                <small>
+                    <a href="/organizers?Parameters.Display=All">@T("All Organizers")</a>&nbsp;|&nbsp;<a href="/organizers?Parameters.Display=My">@T("My Organizers")</a>
+                </small>
+            </div>
+        }
 
         <div class="floating-container small-gap">
             @foreach (var item in items) {
@@ -77,7 +82,7 @@
         function getData(pageNumber) {
             if (self.currentPage() != pageNumber) {
                 console.log("Scroll Postion begin getData" + $(window).scrollTop());
-                var ajdata = { pageNumber: pageNumber };
+                var ajdata = { pageNumber: pageNumber, parameters: @Html.Raw(Json.Encode(parameters)) };
                 var urlUpdate = $("#entity-items").attr("get-hosts-url");
 
                 var config = {

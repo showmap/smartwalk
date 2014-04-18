@@ -4,33 +4,49 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EntityService
 {
     public static class ViewModelContractFactory
     {
-        public static EntityVm CreateViewModelContract(EntityRecord record) {
-            return CreateViewModelContract(record, VmItemState.Normal);
+        public static EntityVm CreateViewModelContract(EntityRecord record, LoadMode mode) {
+            return CreateViewModelContract(record, VmItemState.Normal, mode);
         }
 
-        public static EntityVm CreateViewModelContract(EntityRecord record, VmItemState state)
+        public static EntityVm CreateViewModelContract(EntityRecord record, VmItemState state, LoadMode mode)
         {
             if (record == null)
                 return null;
 
-            return new EntityVm
-            {
-                Id = record.Id,
-                State = state,
-                UserId = record.SmartWalkUserRecord.Id,
-                Type = record.Type,
-                Name = record.Name,
-                Picture = record.Picture,
-                Description = record.Description,
-                AllContacts = record.ContactRecords.Select(CreateViewModelContract).ToList(),
-                AllAddresses = record.AddressRecords.Select(CreateViewModelContract).ToList(),
-            };
+            switch (mode) {
+                case LoadMode.Compact:
+                    return new EntityVm
+                    {
+                        Id = record.Id,
+                        State = state,
+                        UserId = record.SmartWalkUserRecord.Id,
+                        Type = record.Type,
+                        Name = record.Name,
+                        Picture = record.Picture,
+                        AllAddresses = record.AddressRecords.FirstOrDefault() == null ? new List<AddressVm>() : new List<AddressVm> { CreateViewModelContract(record.AddressRecords.FirstOrDefault()) },
+                    };
+                case LoadMode.Full:
+                default:
+                    return new EntityVm
+                    {
+                        Id = record.Id,
+                        State = state,
+                        UserId = record.SmartWalkUserRecord.Id,
+                        Type = record.Type,
+                        Name = record.Name,
+                        Picture = record.Picture,
+                        Description = record.Description,
+                        AllContacts = record.ContactRecords.Select(CreateViewModelContract).ToList(),
+                        AllAddresses = record.AddressRecords.Select(CreateViewModelContract).ToList(),
+                    };
+            }            
         }
 
         public static EntityVm CreateViewModelContract(EntityRecord record, EventMetadataRecord metadata)
@@ -38,7 +54,7 @@ namespace SmartWalk.Server.Services.EntityService
             if (record == null)
                 return null;
 
-            var res = CreateViewModelContract(record);
+            var res = CreateViewModelContract(record, LoadMode.Full);
 
             if (metadata.ShowRecords.All(s => s.EntityRecord.Id != record.Id))
                 res.State = VmItemState.Hidden;

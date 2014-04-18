@@ -8,10 +8,12 @@
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
 
-    var items = (IList<EventMetadataVm>)Model;
+    var model = (ListViewVm)Model;
+    var parameters = model.Parameters;
+    var items = (IList<EventMetadataVm>)model.Data;
 }
 
-<div id="event-items" get-events-url="@Url.Action("GetEventsByPage", "Event", new {area = "SmartWalk.Server"})">
+<div id="event-items" get-events-url="@Url.Action("GetEvents", "Event", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()    
    <div class="container">
         <div class="row">
@@ -23,20 +25,30 @@
                     </span>
                 </div>
             </div>
-            <div class="col-xs-4 text-right">
-                <form action="/events/create">
-                    <button type="submit" class="btn btn-primary">@T("Create event")</button>
-                </form>  
-            </div>
+            @if (parameters.IsLoggedIn) {
+                <div class="col-xs-4 text-right">
+                    <form action="/events/create">
+                        <button type="submit" class="btn btn-primary">@T("Create event")</button>
+                    </form>  
+                </div>
+            }
         </div>
         
-        <div class="gap">
-            <small>
-                <a href="#/events">@T("All Events")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("My Events")</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                @T("Sort By"):&nbsp;<a href="#/events">@T("Date")</a>&nbsp;|&nbsp;<a href="#/events/my">@T("Title")</a>
-            </small>
-        </div>
+        
+            <div class="gap">
+                <small>
+                    @if (parameters.IsLoggedIn) {
+                        <span>
+                            <a href="/events?Parameters.Display=All&Parameters.Sort=@parameters.Sort">@T("All Events")</a>
+                            &nbsp;| 
+                            <a href="/events?Parameters.Display=My&Parameters.Sort=@parameters.Sort">@T("My Events")</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </span>
+                    }
+                    
+                    @T("Sort By"):&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Date">@T("Date")</a>&nbsp;|&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Title">@T("Title")</a>
+                </small>
+            </div>
 
         <div class="floating-container small-gap">
             @foreach (var item in items) {
@@ -81,7 +93,7 @@
         function getData(pageNumber) {
             if (self.currentPage() != pageNumber) {
                 console.log("Scroll Postion begin getData" + $(window).scrollTop());
-                var ajdata = { pageNumber: pageNumber };
+                var ajdata = { pageNumber: pageNumber, parameters: @Html.Raw(Json.Encode(parameters)) };
                 var urlUpdate = $("#event-items").attr("get-events-url");
 
                 var config = {

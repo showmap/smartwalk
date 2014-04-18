@@ -30,16 +30,18 @@ namespace SmartWalk.Server.Controllers
             _entityService = entityService;
         }
 
-        public ActionResult List()
+        public ActionResult List(ListViewParametersVm parameters)
         {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
+            parameters.IsLoggedIn = _orchardServices.WorkContext.CurrentUser != null;
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-
-            return View(_eventService.GetUserEvents(user.Record, 0, SmartWalkSettings.InitialItemsLoad, e => e.DateCreated, true));
+            switch (parameters.Sort) {
+                case SortType.Title:
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.InitialItemsLoad, e => e.Title, true)});
+                case SortType.Date:
+                default:
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.InitialItemsLoad, e => e.DateCreated, true)});
+            }
         }
 
         public ActionResult View(int eventId)
@@ -250,29 +252,28 @@ namespace SmartWalk.Server.Controllers
 
         #region Events
         [HttpPost]
-        public ActionResult GetEventsByPage(int pageNumber)
+        public ActionResult GetEvents(int pageNumber, ListViewParametersVm parameters)
         {
-            if (_orchardServices.WorkContext.CurrentUser == null)
+            SmartWalkUserPart user = null;
+
+            if (parameters.IsLoggedIn)
             {
-                return new HttpUnauthorizedResult();
+                if (_orchardServices.WorkContext.CurrentUser == null)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             }
 
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-
-            return Json(_eventService.GetUserEvents(user.Record, pageNumber, SmartWalkSettings.ItemsLoad, e => e.Title, false));
-        }
-
-        [HttpPost]
-        public ActionResult GetEvents()
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
+            switch (parameters.Sort)
             {
-                return new HttpUnauthorizedResult();
+                case SortType.Title:
+                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, SmartWalkSettings.ItemsLoad, e => e.Title, false));
+                case SortType.Date:
+                default:
+                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, SmartWalkSettings.ItemsLoad, e => e.DateCreated, false));
             }
-
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-
-            return Json(_eventService.GetUserEvents(user.Record, 0, SmartWalkSettings.ItemsLoad, e => e.DateCreated, true));
         }
 
         [HttpPost]

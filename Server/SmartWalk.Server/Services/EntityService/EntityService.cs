@@ -5,6 +5,7 @@ using System.Linq;
 using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.CultureService;
+using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared.Utils;
 
@@ -102,7 +103,6 @@ namespace SmartWalk.Server.Services.EntityService
             return null;
         }
 
-
         public ShowVm SaveOrAddShow(ShowVm item)
         {
             var show = _showRepository.Get(item.Id);
@@ -152,19 +152,21 @@ namespace SmartWalk.Server.Services.EntityService
             }
 
             return ViewModelContractFactory.CreateViewModelContract(show);
-        }
-
-        
+        }        
         #endregion
 
         #region Entities
-        public IList<EntityVm> GetUserEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy,  bool isDesc) {
-            var query = user.Entities.Where(e => e.Type == (int) type && !e.IsDeleted);
+        public IList<EntityVm> GetEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy,  bool isDesc) {
+            return GetEntitiesInner(user == null ? (IEnumerable<EntityRecord>)_entityRepository.Table : user.Entities, type, pageNumber, pageSize, where, orderBy, isDesc);
+        }
+
+        private IList<EntityVm> GetEntitiesInner(IEnumerable<EntityRecord> query, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy, bool isDesc) {
+            query = query.Where(e => e.Type == (int) type && !e.IsDeleted);
             if (where != null)
                 query = query.Where(where);
             query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
-            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(ViewModelContractFactory.CreateViewModelContract).ToList();
+            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, LoadMode.Compact)).ToList();
         }
 
         public IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, Func<EntityRecord, bool> where)
@@ -178,7 +180,7 @@ namespace SmartWalk.Server.Services.EntityService
             if (where != null)
                 query = query.Where(where);
 
-            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, VmItemState.Hidden)).ToList();
+            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, VmItemState.Hidden, LoadMode.Compact)).ToList();
         }
 
         public EntityVm GetEntityVmById(int hostId, EntityType type) {
@@ -188,7 +190,7 @@ namespace SmartWalk.Server.Services.EntityService
         }
 
         public EntityVm GetEntityVm(EntityRecord entity) {
-            return ViewModelContractFactory.CreateViewModelContract(entity);
+            return ViewModelContractFactory.CreateViewModelContract(entity, LoadMode.Full);
         }
 
         public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata) {

@@ -193,6 +193,8 @@
     <Compile Include="ViewModels\ContactVm.cs" />
     <Compile Include="ViewModels\EntityVm.cs" />
     <Compile Include="ViewModels\EventMetadataVm.cs" />
+    <Compile Include="ViewModels\ListViewParametersVm.cs" />
+    <Compile Include="ViewModels\ListViewVm.cs" />
     <Compile Include="ViewModels\ShowVm.cs" />
     <Compile Include="ViewModels\VmItemState.cs" />
   </ItemGroup>

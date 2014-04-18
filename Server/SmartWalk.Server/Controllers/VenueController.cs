@@ -31,15 +31,12 @@ namespace SmartWalk.Server.Controllers
             _eventService = eventService;
         }
 
-        public ActionResult List() {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
+        public ActionResult List(ListViewParametersVm parameters) {
+            parameters.IsLoggedIn = _orchardServices.WorkContext.CurrentUser != null;
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(_entityService.GetUserEntities(user.Record, EntityType.Venue, 0, SmartWalkSettings.InitialItemsLoad, null, e => e.Name, false));
+            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Venue, 0, SmartWalkSettings.InitialItemsLoad, null, e => e.Name, false)});
         }
 
         public ActionResult View(int entityId) {
@@ -86,16 +83,19 @@ namespace SmartWalk.Server.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetVenues(int pageNumber)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
+        public ActionResult GetVenues(int pageNumber, ListViewParametersVm parameters) {
+            SmartWalkUserPart user = null;
+
+            if (parameters.IsLoggedIn) {
+                if (_orchardServices.WorkContext.CurrentUser == null)
+                {
+                    return new HttpUnauthorizedResult();
+                }
+
+                user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();                
             }
 
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-
-            return Json(_entityService.GetUserEntities(user.Record, EntityType.Venue, pageNumber, SmartWalkSettings.ItemsLoad, null, e => e.Name, false));
+            return Json(_entityService.GetEntities(user == null ? null : user.Record, EntityType.Venue, pageNumber, SmartWalkSettings.ItemsLoad, null, e => e.Name, false));
         }
 
         [HttpPost]
