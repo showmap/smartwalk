@@ -377,12 +377,12 @@ function EventViewModel(data) {
         self.DisplayDate(data.DisplayDate);
         
         self.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
-        self.AllHosts($.map(data.AllHosts, function(item) {
-            var vmItem = new EntityViewModel(item);
-            if (data.Host != null && vmItem.Id() == data.Host.Id)
-                self.Host(vmItem);
-            return vmItem;
-        }));
+
+        if (data.Host != null) {
+            var item = new EntityViewModel(data.Host);
+            self.Host(item);
+            self.AllHosts.push(item);
+        }
     };
 
     self.loadData(data);

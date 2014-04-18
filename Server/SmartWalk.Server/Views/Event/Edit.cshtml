@@ -79,7 +79,6 @@
                 <div class="form-group">
                     <label for="organizedByComboBox">@T("Organized By"):</label>
                     <div class="input-group">
-                        <!--<input type="text" class="form-control" id="organizedByComboBox" >-->
                         <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: AllHosts, jqAutoValue: Host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'DisplayName', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: getAutoItem"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create Organizer...")</button>
@@ -149,13 +148,7 @@
                 </form>		        
             </div>
         </div>
-        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.OtherVenues)"></textarea>-->
-
-        <div data-bind="visible: Id() > 0">
-            <p>@T("Venues")</p>
-            <select id="other-venues" data-bind="options: OtherVenues, optionsText: 'Name', value: selectedVenue, optionsCaption: '@T("Select Venue...")'"></select>
-            <button id="add-event-venue-button" data-bind1="click: $root.addVenue, enable: selectedVenue">@T("Add venue")</button>    
-        </div>        
+        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.OtherVenues)"></textarea>-->          
     </div>
 </div>
 
