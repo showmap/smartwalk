@@ -1,31 +1,56 @@
 ﻿@using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
-
 @{
-    Script.Require("jQueryUI").AtHead();
-    Script.Require("SmartWalk.ViewModels").AtHead();
+    Script.Require("AddThisEvent").AtFoot();
+    Script.Require("ImageScale").AtFoot();
     
-    var eventMetadata = (EventMetadataVm) Model;
+    var eventMetadata = (EventMetadataVm)Model;
 }
-
 <div id="view-event-form">
     @Html.AntiForgeryTokenOrchard()
     <div id="event-panel">
+        <!-- TODO: Hide this row if user isn't logged -->
         <div class="row">
-			<div class="col-xs-8">
-				<h2>@eventMetadata.Title</h2>
-			</div>
+            <div class="col-xs-8">
+            </div>
             <div class="col-xs-4 text-right">
-                
                 <button type="button" class="btn btn-primary" id="btn-edit-event">@T("Edit Event")</button>
             </div>
-		</div>
-        
-        @if (!string.IsNullOrEmpty(eventMetadata.Picture)) {
-            <div class="image-container">
-                <img src="@eventMetadata.Picture" />
+        </div>
+
+        <div class="bg-image-container gap">
+            <div class="header big">
+                <h2>@eventMetadata.DisplayName</h2>
+                @if (!string.IsNullOrEmpty(eventMetadata.DisplayPicture)) {
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@eventMetadata.DisplayPicture" />
+                }
             </div>
-        }
+			
+            <div class="info">
+                <div class="pull-left">
+                    <div><h3>@eventMetadata.DisplayDate</h3></div>
+                    <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new {entityId = eventMetadata.Host.Id})">@eventMetadata.Host.DisplayName</a></h4></div>
+                </div>
+				
+                <!-- TODO: To initialize "Add To Calendar" values -->
+                <div class="pull-right add-event-widget">
+                    <a href="http://example.com/link-to-your-event" title="Add to Calendar" class="addthisevent">
+                        Add to Calendar
+                        <span class="_start">10-05-2014 11:38:46</span>
+                        <span class="_end">11-05-2014 11:38:46</span>
+                        <span class="_zonecode">6</span>
+                        <span class="_summary">Summary of the event</span>
+                        <span class="_description">Description of the event</span>
+                        <span class="_location">Location of the event</span>
+                        <span class="_organizer">Organizer</span>
+                        <span class="_organizer_email">Organizer e-mail</span>
+                        <span class="_facebook_event">http://www.facebook.com/events/160427380695693</span>
+                        <span class="_all_day_event">true</span>
+                        <span class="_date_format">DD/MM/YYYY</span>
+                    </a>
+                </div>
+            </div>	
+        </div>
         
         @if (eventMetadata.AllVenues.Any() && eventMetadata.AllVenues.First().AllAddresses.Any()) {
             var venue = eventMetadata.AllVenues.First();
@@ -34,32 +59,20 @@
             query = Regex.Replace(query, @"\s+", "+");
             <iframe class="map-container" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe>                        
         }
-                  
-        
-        <div class="row">
-			<div class="col-md-8">
-				<div><h4>@T("Date"):&nbsp;@eventMetadata.DisplayDate</h4></div>
-				<div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new {entityId = eventMetadata.Host.Id})">@eventMetadata.Host.DisplayName</a></h4></div>
-			</div>
-			<div class="col-md-4">
-				<div class="text-center pull-right" style="margin-top: 10px; border-radius: 4px; width:100px; height: 30px; background-color:#ccc; border:1px solid #444;">@T("Add Event Widget")</div>
-			</div>
-		</div>
-        
+
         <div class="row gap">
             <div class="col-md-8"><p>@eventMetadata.Description</p></div>
-		</div>
-         
+        </div>
         
         <table class="table gap">
-			<thead>
-				<tr><th><h4>@T("Venues and Shows")</h4></th><th>@T("Time")</th></tr>
-			</thead>
+            <thead>
+                <tr><th><h4>@T("Venues and Shows")</h4></th><th>@T("Time")</th></tr>
+            </thead>
             <tbody>
                 @foreach (var venue in eventMetadata.AllVenues.Where(v => v.State == VmItemState.Normal)) {
                     <tr>
                         <td colspan="2" class="venue">
-                            <a href="@Url.Action("View", "Venue", new {entityId = venue.Id})"><img src="@venue.Picture" /></a>
+                            <a class="bg-image" href="@Url.Action("View", "Venue", new {entityId = venue.Id})"><img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" /></a>
                             <a href="@Url.Action("View", "Venue", new {entityId = venue.Id})"><h4>@venue.DisplayName</h4></a>
                             @if (venue.AllAddresses.Any()) {
                                 <address>@venue.AllAddresses.First().Address</address>
@@ -67,26 +80,48 @@
                         </td>
                     </tr>
                     foreach (var show in venue.AllShows.Where(s => !s.IsReference)) {
-                     <tr>
-                        <td>@show.Title<br/><span class="description">@show.Description</span></td>                        
-                        @if (string.IsNullOrEmpty(show.EndTime)) {
-                            <td>@show.StartTime</td>
-                        }
-                        else {
-                            <td>@show.StartTime&nbsp;-&nbsp;@show.EndTime</td>
-                        }
-                    </tr>   
+                        <tr>
+                            <td>@show.Title<br/><span class="description">@show.Description</span></td>                        
+                            @if (string.IsNullOrEmpty(show.EndTime)) {
+                                <td>@show.StartTime</td>
+                            }
+                            else {
+                                <td>@show.StartTime&nbsp;-&nbsp;@show.EndTime</td>
+                            }
+                        </tr>   
                     }
                 }                
             </tbody>
-		</table>                        
+        </table>                        
     </div>
 </div>
 
-<script>
+@using (Script.Foot())
+{
+<script type="text/javascript">
     $(document).ready(function() {
-        $( "#btn-edit-event" ).click(function() {
+        $("#btn-edit-event").click(function() {
             window.location.href = "@Url.Action("View")" + "/edit";
         });
     });
+
+    $(function() {
+        $("img.scale").imageScale();
+    });
+
+    // TODO: To buy a license and set "Add To Calendar" values
+    addthisevent.settings({
+        license: "aao8iuet5zp9iqw5sm9z",
+        mouse: false,
+        css: true,
+        outlook: { show: true, text: "Outlook Calendar" },
+        google: { show: true, text: "Google Calendar" },
+        yahoo: { show: true, text: "Yahoo Calendar" },
+        hotmail: { show: true, text: "Hotmail Calendar" },
+        ical: { show: true, text: "iCal Calendar" },
+        facebook: { show: true, text: "Facebook Event" },
+        dropdown: { order: "outlook,google,ical" },
+        callback: ""
+    });
 </script>
+}

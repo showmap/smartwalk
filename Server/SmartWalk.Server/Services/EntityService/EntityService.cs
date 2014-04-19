@@ -189,8 +189,8 @@ namespace SmartWalk.Server.Services.EntityService
             return entity == null ? new EntityVm {Id = 0, Type = (int) type} : GetEntityVm(entity);
         }
 
-        public EntityVm GetEntityVm(EntityRecord entity) {
-            return ViewModelContractFactory.CreateViewModelContract(entity, LoadMode.Full);
+        public EntityVm GetEntityVm(EntityRecord entity, LoadMode mode = LoadMode.Full) {
+            return ViewModelContractFactory.CreateViewModelContract(entity, mode);
         }
 
         public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata) {

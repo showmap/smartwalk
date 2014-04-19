@@ -1,0 +1,92 @@
+@{
+    /* Global includes for the theme
+    ***************************************************************/
+
+    SetMeta("charset", "utf-8");
+    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
+    SetMeta("viewport", "width=device-width, initial-scale=1.0");
+
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
+
+    WorkContext.Layout.Header.Add(New.Branding(), "0"); // Site name and link to the home page
+    WorkContext.Layout.Footer.Add(New.BadgeOfHonor(), "5"); // Powered by SmartWalk
+    WorkContext.Layout.Navigation.Add(New.User(), "5"); // Login and dashboard links
+
+}<div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @if (Model.Header != null) {
+                    @Display(Model.Header)
+                }
+            </div>
+
+            <div id="main-menu" class="collapse navbar-collapse" >
+                @if (Model.Navigation != null) {
+                    @Display(Model.Navigation)
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (Model.BeforeMain != null) {
+            <div class="row">
+                <div class="col-lg-12">
+                    @Display(Model.BeforeMain)
+                </div>
+            </div>
+        }
+        @if (Model.Featured != null) {
+            <div class="row">
+                <div class="col-lg-12">
+                    @Display(Model.Featured)
+                </div>
+            </div>
+        }
+        @if (Model.Messages != null) {
+            <div class="row">
+                <div class="col-lg-12">
+                    @Display(Model.Messages)
+                </div>
+            </div>
+        }
+        @if (Model.BeforeContent != null) {
+            <div class="row">
+                <div class="col-lg-12">
+                    @Display(Model.BeforeContent)
+                </div>
+            </div>
+        }
+        @if (Model.Content != null) {
+            @Display(Model.Content)
+        }
+        @if (Model.AfterContent != null) {
+            <div class="row">
+                <div class="col-lg-12">
+                    @Display(Model.AfterContent)
+                </div>
+            </div>
+        }
+        @if (Model.AfterMain != null) {
+            <div class="row">
+                <div class="col-lg-12">
+                    @Display(Model.AfterMain)
+                </div>
+            </div>
+        }
+    </div>
+
+    <footer id="footer" class="text-center gap bottom-gap" role="contentinfo">
+        <div class="container">
+            @if (Model.Footer != null) {
+                @Display(Model.Footer)
+            }
+        </div>
+    </footer>

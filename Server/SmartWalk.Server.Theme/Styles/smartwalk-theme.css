@@ -1,0 +1,272 @@
+.navbar {
+	border-radius: 0;
+}
+
+textarea {
+	height: 100px !important;
+}
+
+.valign {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.td-align {
+	text-align: center;
+}
+
+.td-valign {
+	vertical-align: middle !important;
+}
+
+.td-align .dropdown-menu {
+	text-align: left;
+}
+
+.gap {
+	margin-top: 20px;
+}
+
+.double-gap {
+	margin-top: 40px;
+}
+
+.bottom-gap {
+	margin-bottom: 20px;
+}
+
+.small-gap {
+	margin-top: 10px;
+}
+
+.extra-small-gap {
+	margin-top: 10px;
+}
+
+.floating {
+	float: left;
+}
+
+.floating-container .thumbnail {
+	margin-right: 20px;
+	padding: 0;
+	border-radius: 0;
+}
+
+.floating-container a.thumbnail {
+	color: #ffffff !important;
+}
+
+.row h2 {
+	margin-top: 0;
+}
+
+.table thead tr h4 {
+	margin-bottom: 0;
+}
+
+.table thead td {
+	vertical-align: bottom;
+}
+
+.table td.venue {
+	padding-top: 20px;
+}
+
+.table td.venue a.bg-image {
+    position: relative;
+    overflow: hidden;
+    width: 60px;
+	height: 60px;
+	float: left;
+	margin-right: 10px;
+}
+
+.table .venue img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.table .venue h4 {
+	margin-top: 8px;
+}
+
+.table th h4 {
+	display: inline-block;
+}
+
+.table .venue address {
+	margin-bottom: 0;
+}
+
+.description {
+	color: #777;
+}
+
+.map-container {
+	width: 100%;
+	height: 100%;
+	max-height: 200px;
+	border: 0;
+}
+
+.bg-image-container {
+	position: relative;
+}
+
+.bg-image-container .header {
+	position: relative;
+	overflow: hidden;
+	background-color: #aaaaaa;
+}
+
+.bg-image-container .header .big {
+	min-height: 300px;
+}
+
+.floating .header {
+	width: 260px;
+	height: 200px;
+}
+
+.floating .header h2,
+.floating .header h3 {
+    max-height: 125px;
+    overflow: hidden;
+}
+
+.bg-image-container .header img {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.bg-image-container .header h2,
+.bg-image-container .header h3 {
+	position: relative;
+	z-index: 10;
+	margin-top: 0;
+	padding: 15px 15px 30px 15px;
+	
+	/* Candidate for a mixin */
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, rgba(0, 0, 0, 0)),
+		color-stop(1, rgba(0, 0, 0, 0.7))
+	);
+	background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+	background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+	background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+	background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.bg-image-container .header h2 {
+	margin-bottom: 150px;
+}
+
+.bg-image-container .header h3 {
+	margin-bottom: 30px;
+}
+
+.bg-image-container .info {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 15;
+	padding: 15px;
+	
+	/* candidate for a mixin */
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, rgba(0, 0, 0, 0.7)),
+		color-stop(1, rgba(0, 0, 0, 0))
+	);
+	background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+	background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+	background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+	background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.bg-image-container h2, 
+.bg-image-container h3, 
+.bg-image-container h4,
+.bg-image-container h5 {
+	color: #ffffff;
+	text-shadow: rgba(0, 0, 0, 0.498039) 0 1px 3px;
+}
+
+.bg-image-container .info h4 {
+	margin-bottom: 0;
+	max-height: 40px;
+	line-height: 20px;
+	overflow: hidden;
+}
+
+.bg-image-container .info  a {
+	color: #ffffff;
+	text-decoration: underline;
+}
+
+.bg-image-container .info .add-event-widget {
+	margin-top: 10px;
+}
+
+.bg-image-container .info .description {
+	color: #dddddd;
+}
+
+.bg-image-container .info .addresses-container {
+	max-height: 200px;
+	overflow: hidden;
+}
+
+.addthisevent span {
+	display: none;
+}
+
+.addresses-container address,
+.addresses-container h4 {
+	display: inline;
+}
+
+.addresses-container div {
+	padding-top: 12px;
+}
+
+.addresses-container i.description,
+.addresses-table i.description {
+	margin-left: 10px;
+}
+
+.contact-container .well {
+	padding: 5px;
+}
+
+.contact-container .dl-horizontal dt {
+	width: 100px;
+}
+
+.contact-container .dl-horizontal dd {
+	margin-left: 120px;
+}
+
+.editing-container .well {
+	position: relative;
+	z-index: 10;
+	margin: -5px 0 -5px 0;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+td.editing-container {
+	padding: 0 !important;
+}

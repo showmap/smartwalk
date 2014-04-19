@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using SmartWalk.Server.Records;
+﻿using System.Collections.Generic;
 
 namespace SmartWalk.Server.ViewModels
 {

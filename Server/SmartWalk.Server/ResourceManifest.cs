@@ -1,18 +1,14 @@
-﻿namespace SmartWalk.Server
-{
-    using Orchard.UI.Resources;
+﻿using SmartWalk.Shared;
+using Orchard.UI.Resources;
 
+namespace SmartWalk.Server
+{
+    [UsedImplicitly]
     public class ResourceManifest : IResourceManifestProvider
     {
         public void BuildManifests(ResourceManifestBuilder builder)
         {
-            var manifest = builder.Add();
-
-
-            manifest.DefineStyle("SmartWalk.Common").SetUrl("common.css");
-            manifest.DefineStyle("SmartWalk.AddEntity").SetUrl("add-entity.css");
-            manifest.DefineStyle("SmartWalk.ListEvent").SetUrl("list-event.css");
-            manifest.DefineStyle("SmartWalk.EditEvent").SetUrl("edit-event.css");           
+            var manifest = builder.Add();      
 
             #region Google Maps
             manifest.DefineStyle("SmartWalk.GoogleMaps").SetUrl("google-maps.css");
@@ -35,11 +31,13 @@
             manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetVersion("1.2").SetDependencies("ko", "SmartWalk.AntiForgery");
             manifest.DefineScript("ko.autocomplete").SetUrl("autocomplete.js").SetVersion("1.2").SetDependencies("ko", "SmartWalk.AntiForgery");
 
-            manifest.DefineScript("Bootstrap").SetUrl("bootstrap.js");
             manifest.DefineScript("JQuery-1-10-2").SetUrl("jquery-1.10.2.js");
 
             manifest.DefineScript("SmartWalk.ViewModels").SetUrl("viewmodels.js").SetVersion("1.8").SetDependencies("ko.datetime", "ko.autocomplete");
             #endregion
+
+            manifest.DefineScript("ImageScale").SetUrl("image-scale.min.js").SetDependencies("jQuery");
+            manifest.DefineScript("AddThisEvent").SetUrl("http://js.addthisevent.com/atemay.js").SetDependencies("jQuery");
         }
     }
 }

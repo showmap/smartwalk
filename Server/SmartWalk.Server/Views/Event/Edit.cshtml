@@ -6,16 +6,14 @@
 
 @{
     Style.Require("jQueryUI_Orchard");
-    //Style.Require("SmartWalk.ListEvent");
 
-    //Script.Require("jQuery").AtHead();
-    Script.Require("jQueryUI").AtHead();
-    Script.Require("SmartWalk.ViewModels").AtHead();
+    Script.Require("jQueryUI").AtFoot();
+    Script.Require("SmartWalk.ViewModels").AtFoot();
+    Script.Require("ImageScale").AtFoot();
 
     var eventItem = (EventMetadataVm)Model;
     var cancelAction = eventItem.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @eventItem.Id });
 }
-
 <style type="text/css">
  .categoryIconContainer {
 	border-radius: 3px 3px 3px 3px;
@@ -164,7 +162,7 @@
 <script type="text/html" id="EventVenueItemTemplate">
     <td class="venue" colspan="2">
         <div>
-            <a data-bind="attr:{href: '/venue/'+Id()}"><img data-bind="attr: {src: Picture }"/></a>
+            <a class="bg-image" data-bind="attr:{href: '/venue/'+Id()}"><img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/></a>
             <a data-bind="attr:{href: '/venue/'+Id()}"><h4 data-bind="text: DisplayName"></h4></a>
             <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : ''"></address>
             <i class="description" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
@@ -287,10 +285,15 @@
 	</tr>         
 </script>
 
-<script language="javascript">        
+@using (Script.Foot())
+{
+<script type="text/javascript">
+    $(function() {
+        $("img.scale").imageScale();
+    });
 
-    (function ($) {
-        
+    (function($) {
+
         $("#edit-host-form").dialog({
             modal: true,
             autoOpen: false,
@@ -305,17 +308,17 @@
                 effect: "explode",
                 duration: 1000
             },
-            @*buttons: {
-                '@T("Cancel")': function () {
-                    $("#edit-host-form").dialog("close");
+                                                    @*buttons: {
+        '@T("Cancel")': function () {
+            $("#edit-host-form").dialog("close");
 
-                },
-                '@T("Save")': function () {
-                    $("#edit-host-form").dialog("close");                    
-                }
-            },*@
+        },
+        '@T("Save")': function () {
+            $("#edit-host-form").dialog("close");                    
+        }
+    },*@
         });
-        
+
         $("#edit-venue-form").dialog({
             modal: true,
             autoOpen: false,
@@ -330,30 +333,30 @@
                 effect: "explode",
                 duration: 1000
             },
-            @*buttons: {
-                '@T("Cancel")': function () {
-                    $("#edit-host-form").dialog("close");
+                                                    @*buttons: {
+        '@T("Cancel")': function () {
+            $("#edit-host-form").dialog("close");
 
-                },
-                '@T("Save")': function () {
-                    $("#edit-host-form").dialog("close");                    
-                }
-            },*@
+        },
+        '@T("Save")': function () {
+            $("#edit-host-form").dialog("close");                    
+        }
+    },*@
         });
-        
+
         $(".ui-dialog-titlebar").hide();
 
         ko.bindingHandlers.switcher = {
             init: function(element, valueAccessor, allBindingsAccessor) {
-                var options = allBindingsAccessor().switcherOptions || {};                
-                var value = valueAccessor();                
+                var options = allBindingsAccessor().switcherOptions || {};
+                var value = valueAccessor();
                 if (options && options.values) {
                     for (var i = 0; i < options.values.length; i++) {
                         var opt = options.values[i];
                         var btn = (i == 0) ? $("<button type='button' class='btn btn-primary active'>" + opt.disp + "</button>") : $("<button type='button' class='btn btn-default'>" + opt.disp + "</button>");
                         btn.data('val', opt.val);
                         $(element).append(btn);
-                        
+
                         btn.click(function() {
                             //alert('btn val = ' + $(this).data('val') + '; val = ' + value());
                             if (value() != $(this).data('val')) {
@@ -361,7 +364,7 @@
                                     $(this).toggleClass("btn-primary active");
                                     $(this).toggleClass("btn-default");
                                 });
-                                
+
                                 value($(this).data('val'));
                             }
                         });
@@ -370,23 +373,23 @@
             },
             update: function(element, valueAccessor) {
                 var value = valueAccessor();
-                
+
                 $(element).find(" > button").each(function() {
                     if ($(this).data('val') == value() && $(this).hasClass("btn-default")) {
                         $(this).toggleClass("btn-primary active");
-                        $(this).toggleClass("btn-default");    
+                        $(this).toggleClass("btn-default");
                     }
-                    
+
                     if ($(this).data('val') != value() && $(this).hasClass("btn-primary active")) {
                         $(this).toggleClass("btn-primary active");
-                        $(this).toggleClass("btn-default");    
+                        $(this).toggleClass("btn-default");
                     }
 
                 });
             }
         };
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
 
             vm.getHosts = function(searchTerm, sourceArray) {
@@ -401,12 +404,12 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
-                        if(data && data.length > 0)
-                            sourceArray($.map(data, function (item) { return new EntityViewModel(item); }));
+                    success: function(data) {
+                        if (data && data.length > 0)
+                            sourceArray($.map(data, function(item) { return new EntityViewModel(item); }));
                     }
                 };
                 $.ajax(config);
@@ -424,15 +427,15 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function(data) {
                         if (data && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
-                                sourceArray($.map(data, function (item) { return new EntityViewModel(item); }));
+                                sourceArray($.map(data, function(item) { return new EntityViewModel(item); }));
                             }
-                        }                            
+                        }
                     }
                 };
                 $.ajax(config);
@@ -442,8 +445,7 @@
                 var text = "<div>";
                 //text += "<div class='categoryIconContainer'><img src='" + (item.Picture() == "" ? "" : item.Picture()) + "' /></div>";
                 text += "<div class='autocomplete-name'>" + item.Name() + "</div>";
-                if (item.DisplayAddress())
-                {
+                if (item.DisplayAddress()) {
                     if (item.DisplayAddress().Address() != "")
                         text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Address() + "</div>";
                     //if (item.DisplayAddress().Tip() != "")
@@ -455,18 +457,18 @@
             };
 
             vm.createHost = function() {
-                $("#edit-host-form").dialog("open");           
+                $("#edit-host-form").dialog("open");
             };
 
             vm.createVenue = function() {
                 $("#edit-venue-form").dialog("open");
             };
 
-            vm.getVenueView = function (item) {
+            vm.getVenueView = function(item) {
                 return item === vm.selectedItem() ? 'EventVenueItemTemplateEdit' : "EventVenueItemTemplate";
-            };                       
+            };
 
-            vm.deleteVenue = function(item) {                
+            vm.deleteVenue = function(item) {
                 var ajdata = ko.toJSON(item);
                 var urlUpdate = $("#event-item").attr("delete-event-venue-url");
 
@@ -478,21 +480,21 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function(data) {
                         item.State(3);
                     }
                 };
                 $.ajax(config);
             };
 
-            vm.saveVenue = function(item) {  
-                if (vm.selectedItem().Id() == 0){
+            vm.saveVenue = function(item) {
+                if (vm.selectedItem().Id() == 0) {
                     vm.deleteVenue(vm.selectedItem());
-                }                                                       
-                
+                }
+
                 //alert('item id = ' + vm.selectedVenue().Id() + ' selected item id = ' + vm.selectedItem().Id());
                 var ajdata = ko.toJSON(vm.selectedVenue());
                 var urlUpdate = $("#event-item").attr("save-event-venue-url");
@@ -509,9 +511,9 @@
                         //window.location.href = "@Url.Action("List")";
                     },
                     success: function(data) {
-                        if(data)
+                        if (data)
                             item.AllShows.push(new ShowViewModel(data));
-                        vm.selectedVenue().State(0);                        
+                        vm.selectedVenue().State(0);
                         vm.selectedItem(null);
                         vm.selectedVenue(null);
                     }
@@ -519,11 +521,11 @@
                 $.ajax(config);
             };
 
-            vm.getShowView = function (item) {
+            vm.getShowView = function(item) {
                 return item === vm.selectedItem() ? 'ShowItemTemplateEdit' : "ShowItemTemplate";
             };
 
-            vm.cancelShow = function (item) {
+            vm.cancelShow = function(item) {
                 if (item.Id() == 0) {
                     item.State(2);
                     vm.selectedItem(null);
@@ -551,8 +553,8 @@
                 }
             };
 
-            vm.addShow = function (item) {
-                vm.selectedItem(item.addShow()); 
+            vm.addShow = function(item) {
+                vm.selectedItem(item.addShow());
                 //item.addShow();
             };
 
@@ -568,10 +570,10 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function(data) {
                         ko.utils.arrayForEach(vm.CheckedShows(), function(item) {
                             item.State(2);
                         });
@@ -580,7 +582,7 @@
                 $.ajax(config);
             };
 
-            vm.deleteShow = function(item) {                
+            vm.deleteShow = function(item) {
                 var ajdata = ko.toJSON(item);
                 var urlUpdate = $("#event-item").attr("delete-show-url");
 
@@ -592,15 +594,15 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function(data) {
                         item.State(2);
                     }
                 };
                 $.ajax(config);
-            };                        
+            };
 
             vm.saveShow = function(item) {
                 var ajdata = ko.toJSON(item);
@@ -614,20 +616,20 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {                        
+                    success: function(data) {
                         if (item.Id() == 0 || item.Id() != data)
                             item.Id(data);
-                        
+
                         vm.selectedItem(null);
                     }
                 };
                 $.ajax(config);
             };
 
-            vm.deleteEvent = function (item) {
+            vm.deleteEvent = function(item) {
                 var ajdata = ko.toJSON(item);
                 var urlUpdate = $("#event-item").attr("delete-event-url");
 
@@ -639,10 +641,10 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function(data) {
                         window.location.href = "@Url.Action("List")";
                     }
                 };
@@ -650,9 +652,9 @@
             };
 
             vm.saveEvent = function(item) {
-                var ajdata = ko.toJSON(item);                
+                var ajdata = ko.toJSON(item);
                 var urlUpdate = $("#event-item").attr("save-event-url");
-                
+
                 var config = {
                     async: true,
                     url: urlUpdate,
@@ -661,42 +663,43 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {                        
+                    success: function(data) {
                         if (item.Id() == 0)
                             item.loadData(data);
                         window.location.href = "@Url.Action("View", new { entityId = @eventItem.Id })";
                     }
                 };
-                $.ajax(config);                
+                $.ajax(config);
             };
 
-            $("#edit-host-form").bind('OnHostCancelled', function (event) {
+            $("#edit-host-form").bind('OnHostCancelled', function(event) {
                 $("#edit-host-form").dialog("close");
             });
-        
-            $("#edit-host-form").bind('OnHostSaved', function (event) {
+
+            $("#edit-host-form").bind('OnHostSaved', function(event) {
                 vm.AllHosts.push(event.item);
                 vm.Host(event.item);
                 $("#edit-host-form").dialog("close");
             });
-            
-            $("#edit-venue-form").bind('OnVenueCancelled', function (event) {
+
+            $("#edit-venue-form").bind('OnVenueCancelled', function(event) {
                 $("#edit-venue-form").dialog("close");
             });
-        
-            $("#edit-venue-form").bind('OnVenueSaved', function (event) {
+
+            $("#edit-venue-form").bind('OnVenueSaved', function(event) {
                 event.item.State(3);
                 event.item.EventMetadataId(vm.Id());
                 vm.OtherVenues.push(event.item);
                 vm.selectedVenue(event.item);
-                
+
                 $("#edit-venue-form").dialog("close");
             });
 
-            ko.applyBindings(vm, document.getElementById('event-item'));            
+            ko.applyBindings(vm, document.getElementById('event-item'));
         });
     })(jQuery);
 </script>
+}

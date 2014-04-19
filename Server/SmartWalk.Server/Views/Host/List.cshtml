@@ -1,17 +1,13 @@
-﻿
-@using SmartWalk.Server.ViewModels
-
+﻿@using SmartWalk.Server.ViewModels
 @{
-    Style.Require("jQueryUI_Orchard");
-
-    Script.Require("jQueryUI").AtHead();
-    Script.Require("SmartWalk.ViewModels").AtHead();
+    Script.Require("jQueryUI").AtFoot();
+    Script.Require("SmartWalk.ViewModels").AtFoot();
+    Script.Require("ImageScale").AtFoot();
 
     var model = (ListViewVm)Model;
     var parameters = model.Parameters;
     var items = (IList<EntityVm>)model.Data;
 }
-
 <div id="entity-items" get-hosts-url="@Url.Action("GetHosts", "Host", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()    
     <div class="container">
@@ -43,14 +39,20 @@
         }
 
         <div class="floating-container small-gap">
-            @foreach (var item in items) {
-                <a class="thumbnail floating" href="@Url.Action("View", new {entityId = item.Id})">
-                    <img src="@item.Picture">
-                    <div class="caption">
-                        <h3>@item.DisplayName</h3>					    
-                    </div>
-                </a>
-            }
+        @foreach (var item in items) {
+            <a class="thumbnail floating bg-image-container" href="@Url.Action("View", new {entityId = item.Id})">
+                <div class="header">
+                    <h3>@item.DisplayName</h3>
+			
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@item.Picture">
+                </div>
+				
+                <!-- TODO: to render address
+                <div class="info">
+                    <h4></h4>
+                </div> -->
+            </a>
+        }
             <!-- ko template: {name: "EntityItemTemplate", foreach: Items() } -->    
             <!-- /ko -->
             <div class="clearfix"/>
@@ -59,23 +61,30 @@
 </div>
 
 <script type="text/html" id="EntityItemTemplate">
-    <a class="thumbnail floating" data-bind="attr: { href: '/organizer/' + Id() }">
-        <img data-bind="attr: { src: Picture }"/>
-        <div class="caption">
+    <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '/organizer/' + Id()}">
+        <div class="header">
             <h3 data-bind="text: DisplayName"></h3>
+			
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture}">
         </div>
+				
+        <!-- TODO: to render address
+        <div class="info">
+            <h4></h4>
+        </div>-->
     </a>
 </script>
 
-<script>       
-    function VenuesViewModel() {
+@using (Script.Foot())
+{
+<script type="text/javascript">
+    function HostsViewModel() {
         var self = this;
 
         self.Items = ko.observableArray();
         self.currentPage = ko.observable(1);
 
-
-        self.getNextPage = function () {
+        self.getNextPage = function() {
             return getData(self.currentPage() + 1);
         };
 
@@ -93,14 +102,15 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function(data) {
                         if (data.length > 0) {
                             self.currentPage(self.currentPage() + 1);
                             for (var i = 0; i < data.length; i++) {
                                 self.Items.push(new EntityViewModel(data[i]));
+                                $("img.scale").imageScale();
                                 console.log("Scroll Postion looping ViewModel" + $(window).scrollTop());
                             }
                         }
@@ -112,12 +122,12 @@
         }
     }
 
-    $(document).ready(function () {
-        var viewModel = new VenuesViewModel();
+    $(document).ready(function() {
+        var viewModel = new HostsViewModel();
 
         ko.applyBindings(viewModel, document.getElementById('entity-items'));
 
-        $(window).scroll(function (evt) {
+        $(window).scroll(function(evt) {
             evt.preventDefault();
             if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
                 console.log("Scroll Postion" + $(window).scrollTop());
@@ -125,4 +135,9 @@
             }
         });
     });
+    
+    $(function() {
+        $("img.scale").imageScale();
+    });
 </script>
+}

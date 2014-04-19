@@ -340,6 +340,9 @@ function EventViewModel(data) {
     self.Picture = ko.observable();
     self.Latitude = ko.observable();
     self.Longitude = ko.observable();
+    
+    self.DisplayName = ko.observable();
+    self.DisplayPicture = ko.observable();
 
     self.CombineType = ko.observable();
     self.IsPublic = ko.observable();
@@ -369,6 +372,9 @@ function EventViewModel(data) {
 
         self.Latitude(data.Latitude);
         self.Longitude(data.Longitude);
+        
+        self.DisplayName(data.DisplayName);
+        self.DisplayPicture(data.DisplayPicture);
 
         self.CombineType(data.CombineType);
         self.IsPublic(data.IsPublic);

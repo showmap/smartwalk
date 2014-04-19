@@ -1,0 +1,1 @@
+mklink /j C:\Work\Orchard\src\Orchard.Web\Modules\SmartWalk.Server C:\Git\smartwalk\Server\SmartWalk.Server

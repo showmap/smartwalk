@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EntityService
@@ -13,7 +12,7 @@ namespace SmartWalk.Server.Services.EntityService
         IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord);
         IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, Func<EntityRecord, bool> where);
         EntityVm GetEntityVmById(int entityId, EntityType type);
-        EntityVm GetEntityVm(EntityRecord entity);
+        EntityVm GetEntityVm(EntityRecord entity, LoadMode mode = LoadMode.Full);
         EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm);
         void DeleteEntity(int hostId);
 

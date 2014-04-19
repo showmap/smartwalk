@@ -90,16 +90,11 @@
     <Content Include="Images\loading.gif" />
     <Content Include="Scripts\4sqacplugin.js" />
     <Content Include="Scripts\antiforgery.js" />
-    <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\autocomplete.js" />
+    <Content Include="Scripts\image-scale.min.js" />
     <Content Include="Scripts\viewmodels.js" />
     <Content Include="Scripts\kodatetime.js" />
     <Content Include="Scripts\mappy.js" />
-    <Content Include="Styles\add-place.css" />
-    <Content Include="Styles\add-entity.css" />
-    <Content Include="Styles\Copy of list-event.css" />
-    <Content Include="Styles\common.css" />
-    <Content Include="Styles\list-event.css" />
     <Content Include="Styles\fsquare-autocomplete.css" />
     <Content Include="Styles\google-maps.css" />
     <Content Include="Styles\mappy.css" />

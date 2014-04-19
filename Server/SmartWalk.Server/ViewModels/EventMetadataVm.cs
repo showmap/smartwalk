@@ -21,7 +21,17 @@ namespace SmartWalk.Server.ViewModels
 
         public EntityVm Host { get; set; }
         public IList<EntityVm> AllVenues { get; set; }
-        public IList<EntityVm> AllHosts { get; set; }        
+        public IList<EntityVm> AllHosts { get; set; }
+
+        public string DisplayName
+        {
+            get { return Title ?? (Host != null ? Host.Name : null); }
+        }
+
+        public string DisplayPicture
+        {
+            get { return Picture ?? (Host != null ? Host.Picture : null); }
+        }
 
         public EventMetadataVm() {
             AllVenues = new List<EntityVm>();

@@ -1,18 +1,13 @@
 ﻿@using SmartWalk.Server.ViewModels
-
 @{
-    Style.Require("jQueryUI_Orchard");
-    Style.Require("SmartWalk.ListEvent");
-
-    //Script.Require("jQuery").AtHead();
-    Script.Require("jQueryUI").AtHead();
-    Script.Require("SmartWalk.ViewModels").AtHead();
+    Script.Require("jQueryUI").AtFoot();
+    Script.Require("SmartWalk.ViewModels").AtFoot();
+    Script.Require("ImageScale").AtFoot();
 
     var model = (ListViewVm)Model;
     var parameters = model.Parameters;
     var items = (IList<EventMetadataVm>)model.Data;
 }
-
 <div id="event-items" get-events-url="@Url.Action("GetEvents", "Event", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()    
    <div class="container">
@@ -34,59 +29,66 @@
             }
         </div>
         
-        
-            <div class="gap">
-                <small>
-                    @if (parameters.IsLoggedIn) {
-                        <span>
-                            <a href="/events?Parameters.Display=All&Parameters.Sort=@parameters.Sort">@T("All Events")</a>
-                            &nbsp;| 
-                            <a href="/events?Parameters.Display=My&Parameters.Sort=@parameters.Sort">@T("My Events")</a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>
-                    }
+        <div class="gap">
+            <small>
+                @if (parameters.IsLoggedIn) {
+                    <span>
+                        <a href="/events?Parameters.Display=All&Parameters.Sort=@parameters.Sort">@T("All Events")</a>
+                        &nbsp;| 
+                        <a href="/events?Parameters.Display=My&Parameters.Sort=@parameters.Sort">@T("My Events")</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>
+                }
                     
-                    @T("Sort By"):&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Date">@T("Date")</a>&nbsp;|&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Title">@T("Title")</a>
-                </small>
-            </div>
+                @T("Sort By"):&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Date">@T("Date")</a>&nbsp;|&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Title">@T("Title")</a>
+            </small>
+        </div>
 
-        <div class="floating-container small-gap">
-            @foreach (var item in items) {
-                <a class="thumbnail floating" href="@Url.Action("View", new {eventId = item.Id})">
-                    <img src="@item.Picture">
-                    <div class="caption">
-                        <h3>@item.Title</h3>
-                        <h5>@item.DisplayDate</h5>
-                    </div>
-                </a>
-            }
-            <!-- ko template: {name: "EventItemTemplate", foreach: Items() } -->    
-            <!-- /ko -->
-            <div class="clearfix"/>
-        </div>           
+       <div class="floating-container small-gap">
+        @foreach (var item in items) {
+            <a class="thumbnail floating bg-image-container" href="@Url.Action("View", new {eventId = item.Id})">
+                <div class="header">
+                    <h3>@item.DisplayName</h3>
+			
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture">
+                </div>
+				                
+                <div class="info">
+                    <h4>@item.DisplayDate</h4>
+                </div>
+            </a>
+        }
+           <!-- ko template: {name: "EventItemTemplate", foreach: Items() } -->    
+           <!-- /ko -->
+           <div class="clearfix"/>
+       </div>           
     </div>
 </div>
 
-<script type="text/html" id="EventItemTemplate">  
-    <a class="thumbnail floating" data-bind="attr: { href: '/event/' + Id() }">
-        <img data-bind="attr: { src: Picture }"/>
-        <div class="caption">
-            <h3 data-bind="text: Title"></h3>
-            <h5 data-bind="text: DisplayDate"></h5>
+<script type="text/html" id="EventItemTemplate">
+    <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '/event/' + Id()}">
+        <div class="header">
+            <h3 data-bind="text: DisplayName"></h3>
+			
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: DisplayPicture}">
         </div>
-    </a>    
+				
+        <div class="info">
+            <h4 data-bind="text: DisplayDate"></h4>
+        </div>
+    </a>   
 </script>
 
-
-<script>
-    function VenuesViewModel() {
+@using (Script.Foot())
+{
+<script type="text/javascript">
+    function EventsViewModel() {
         var self = this;
 
         self.Items = ko.observableArray();
         self.currentPage = ko.observable(1);
 
-
-        self.getNextPage = function () {
+        self.getNextPage = function() {
             return getData(self.currentPage() + 1);
         };
 
@@ -104,14 +106,15 @@
                     dataType: "json",
                     cache: false,
                     contentType: "application/json; charset=utf-8",
-                    error: function (e) {
+                    error: function(e) {
                         //window.location.href = "@Url.Action("List")";
                     },
-                    success: function (data) {
+                    success: function(data) {
                         if (data.length > 0) {
                             self.currentPage(self.currentPage() + 1);
                             for (var i = 0; i < data.length; i++) {
                                 self.Items.push(new EventViewModel(data[i]));
+                                $("img.scale").imageScale();
                                 console.log("Scroll Postion looping ViewModel" + $(window).scrollTop());
                             }
                         }
@@ -123,12 +126,12 @@
         }
     }
 
-    $(document).ready(function () {
-        var viewModel = new VenuesViewModel();
+    $(document).ready(function() {
+        var viewModel = new EventsViewModel();
 
         ko.applyBindings(viewModel, document.getElementById('event-items'));
 
-        $(window).scroll(function (evt) {
+        $(window).scroll(function(evt) {
             evt.preventDefault();
             if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
                 console.log("Scroll Postion" + $(window).scrollTop());
@@ -136,15 +139,9 @@
             }
         });
     });
-
-    $(document).ready(function() {
-
-        function EventsViewModel() {
-            var self = this;
-
-            //self.EventItems = ko.observableArray($.map(@Html.Raw(Json.Encode(items)), function(item) { return new EventViewModel(item); }));
-        }
-
-        //ko.applyBindings(new EventsViewModel(), document.getElementById('event-items'));
+    
+    $(function() {
+        $("img.scale").imageScale();
     });
 </script>
+}

@@ -1,54 +1,40 @@
 ﻿@using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
-
 @{
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
+    Script.Require("ImageScale").AtFoot();
     
-    var host = (EntityVm) Model;
+    var host = (EntityVm)Model;
 }
-
 <div id="view-host-form" get-host-events="@Url.Action("GetEvents", "Host", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
     <div id="venue-panel">
         <div class="row">
             <div class="col-xs-8">
-                <h2>@host.DisplayName</h2>
+                
             </div>
             <div class="col-xs-4 text-right">
                 <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Organizer")</button>
             </div>
         </div>
-        
-        @if (!string.IsNullOrEmpty(host.Picture)) {
-            <div class="image-container">
-                <img src="@host.Picture" />
-            </div>
-        }
-        
+
+		<div class="bg-image-container gap">
+			<div class="header big">
+				<h2>@host.DisplayName</h2>
+            @if (!string.IsNullOrEmpty(host.Picture)) {
+                <img class="scale" data-scale="best-fill" data-align="center" src="@host.Picture" />
+            }
+			</div>
+		</div>
+
         @if (host.AllAddresses.Any()) {
             var addressFirst = host.AllAddresses.First();
             var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
             query = Regex.Replace(query, @"\s+", "+");
             <iframe class="map-container" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe>
-            
-            <div class="row">
-                <div class="col-md-8 addresses-container">
-                    @foreach (var address in host.AllAddresses) {
-                        <div>                            				
-                            <h4>
-                                @T("Address"):&nbsp;1:&nbsp;<address>@Regex.Replace(address.Address, @"\s+", " ");</address>
-                                @if (!string.IsNullOrEmpty(address.Tip)) {
-                                    <i class="description">@address.Tip</i>
-                                }
-                            </h4>
-                        </div>                        
-                    }
-                </div>
-            </div>
         }
-                  
         
         <div class="row gap">
             <div class="col-md-7"><p>@host.Description</p></div>
@@ -87,24 +73,24 @@
                 <tr><th><h4>@T("Recent Events")</h4></th><th>@T("Date")</th></tr>
             </thead>
             <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems() }'></tbody>
-        </table>
-                
+        </table>        
     </div>
 </div>
 
 <script type="text/html" id="eventItemTemplate">
     <tr>
         <td>
-            <a data-bind="attr: {href: '/event/'+Id()}, text:$root.GetLinkTitle($data)"></a><br/>
+            <a data-bind="attr: {href: '/event/'+Id()}, text: DisplayName"></a><br/>
             <span class="description" data-bind="text: Description"></span>
         </td>
         <td data-bind="text: DateCreated"></td>        
     </tr>       
 </script>
 
-<script>
+@using (Script.Foot())
+{
+<script type="text/javascript">
     $(document).ready(function() {
-
         $( "#btn-edit-venue" ).click(function() {
             window.location.href = "@Url.Action("View")" + "/edit";
         });
@@ -113,14 +99,6 @@
             var self = this;
 
             self.EventItems = ko.observableArray();
-
-            self.GetLinkTitle = function(item) {
-                
-                if (!item.Title())
-                    return '@T("View")';
-                
-                return item.Title();
-            };
 
             self.loadData = function() {
                 var ajdata = ko.toJSON({ entityId: @host.Id });
@@ -151,4 +129,9 @@
 
         ko.applyBindings(new EventsViewModel(), document.getElementById('view-venue-form'));
     });
+    
+    $(function() {
+        $("img.scale").imageScale();
+    });
 </script>
+}

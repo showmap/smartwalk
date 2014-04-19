@@ -1,0 +1,6 @@
+Name: SmartWalk.Server.Theme
+Author: SmartWalk
+Website: http://smartwalk.com
+Description: Default Theme
+Version: 1.0.0.0
+Tags:

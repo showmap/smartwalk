@@ -80,9 +80,9 @@ namespace SmartWalk.Server.Services.EventService
 
         private EventMetadataVm CreateViewModelContract(EventMetadataRecord record, LoadMode mode = LoadMode.Full) {
             var res = ViewModelContractFactory.CreateViewModelContract(record, mode);
+            res.Host = _entityService.GetEntityVm(record.EntityRecord, mode);
 
             if (mode == LoadMode.Full) {
-                res.Host = _entityService.GetEntityVm(record.EntityRecord);
                 res.AllVenues = _entityService.GetEventEntities(record);
             }
 
