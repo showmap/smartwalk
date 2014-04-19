@@ -863,7 +863,7 @@ namespace SmartWalk.Shared.Utils
         {
             var ienum = FindIEnumerable(seqType);
             if (ienum == null) return seqType;
-            return ienum.GetTypeInfo().GetGenericParameterConstraints()[0];
+            return ienum.GetTypeInfo().GenericTypeArguments[0];
         }
 
         private static Type FindIEnumerable(Type seqType)
@@ -873,7 +873,7 @@ namespace SmartWalk.Shared.Utils
             var seqTypeInfo = seqType.GetTypeInfo();
             if (seqTypeInfo.IsGenericType)
             {
-                foreach (var arg in seqTypeInfo.GetGenericParameterConstraints())
+                foreach (var arg in seqTypeInfo.GenericTypeArguments)
                 {
                     var ienum = typeof(IEnumerable<>).MakeGenericType(arg);
                     var ienumTypeInfo = ienum.GetTypeInfo();

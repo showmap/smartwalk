@@ -34,8 +34,10 @@ namespace SmartWalk.Server.UnitTests.UtilTests
             var foo1 = new FooClass { FooProperty = "moo" };
             var foo2 = new FooClass { FooProperty = "moo" };
             var foo3 = new FooClass { FooProperty = "moo" };
-            var coll = new[] { foo1, foo2, foo3 };
-            var elemType = coll.GetType().GetElementType();
+
+            var coll = new[] { foo1, foo2, foo3 }.Select(f => f);
+
+            var elemType = ReflectionExtensions.GetElementType(coll.GetType());
             Assert.AreEqual(typeof(FooClass), elemType);
         }
     }

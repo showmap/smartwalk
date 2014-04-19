@@ -415,6 +415,7 @@ namespace SmartWalk.Server.Services.QueryService
             return result.ToArray();
         }
 
+        // TODO: To cache in app memory precalculated properties to avoid reflection for every http request
         /// <summary>
         /// Gets the pre-calculated set of reflection property infos 
         /// that is used for better performance while accessing lookup values.
