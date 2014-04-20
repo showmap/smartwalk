@@ -9,9 +9,8 @@
     var items = (IList<EntityVm>)model.Data;
 }
 <div id="entity-items" get-venues-url="@Url.Action("GetVenues", "Venue", new {area = "SmartWalk.Server"})">
-    @Html.AntiForgeryTokenOrchard()  
-    @Html.HiddenFor(m => model.Parameters.Sort)  
-    <div class="container">
+        @Html.AntiForgeryTokenOrchard()  
+        @Html.HiddenFor(m => model.Parameters.Sort)  
         <div class="row">
             <div class="col-xs-8">
                 <div class="input-group">
@@ -21,22 +20,22 @@
                     </span>
                 </div>
             </div>
-            @if (parameters.IsLoggedIn) {
-                <div class="col-xs-4 text-right">
-                    <form action="/venues/create">
-                        <button type="submit" class="btn btn-primary">@T("Create venue")</button>
-                    </form>
-                </div>
-            }
-        </div>
-        
         @if (parameters.IsLoggedIn) {
-            <div class="gap">
-                <small>
-                    <a href="/venues?Parameters.Display=All">@T("All Venues")</a>&nbsp;|&nbsp;<a href="/venues?Parameters.Display=My">@T("My Venues")</a>
-                </small>
+            <div class="col-xs-4">
+                <form action="/venues/create">
+                    <button type="submit" class="btn btn-primary">@T("Create venue")</button>
+                </form>
             </div>
         }
+        </div>
+        
+    @if (parameters.IsLoggedIn) {
+        <div class="gap">
+            <small>
+                <a href="/venues?Parameters.Display=All">@T("All Venues")</a>&nbsp;|&nbsp;<a href="/venues?Parameters.Display=My">@T("My Venues")</a>
+            </small>
+        </div>
+    }
 
         <div class="floating-container small-gap">
         @foreach (var item in items) {
@@ -55,9 +54,8 @@
         }
             <!-- ko template: {name: "EntityItemTemplate", foreach: Items() } -->    
             <!-- /ko -->
-            <div class="clearfix"/>
+            <div class="clearfix"></div>
         </div>           
-    </div>
 </div>
 
 <script type="text/html" id="EntityItemTemplate">

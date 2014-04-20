@@ -9,8 +9,7 @@
     var items = (IList<EntityVm>)model.Data;
 }
 <div id="entity-items" get-hosts-url="@Url.Action("GetHosts", "Host", new {area = "SmartWalk.Server"})">
-    @Html.AntiForgeryTokenOrchard()    
-    <div class="container">
+        @Html.AntiForgeryTokenOrchard()    
         <div class="row">
             <div class="col-xs-8">
                 <div class="input-group">
@@ -20,23 +19,22 @@
                     </span>
                 </div>
             </div>
-            @if (parameters.IsLoggedIn) {
-                <div class="col-xs-4 text-right">
-                    <form action="/organizers/create">
-                        <button type="submit" class="btn btn-primary">@T("Create organizer")</button>
-                    </form>                
-                </div>
-            }
-        </div>
-        
         @if (parameters.IsLoggedIn) {
-
-            <div class="gap">
-                <small>
-                    <a href="/organizers?Parameters.Display=All">@T("All Organizers")</a>&nbsp;|&nbsp;<a href="/organizers?Parameters.Display=My">@T("My Organizers")</a>
-                </small>
+            <div class="col-xs-4">
+                <form action="/organizers/create">
+                    <button type="submit" class="btn btn-primary">@T("Create organizer")</button>
+                </form>                
             </div>
         }
+        </div>
+        
+    @if (parameters.IsLoggedIn) {
+        <div class="gap">
+            <small>
+                <a href="/organizers?Parameters.Display=All">@T("All Organizers")</a>&nbsp;|&nbsp;<a href="/organizers?Parameters.Display=My">@T("My Organizers")</a>
+            </small>
+        </div>
+    }
 
         <div class="floating-container small-gap">
         @foreach (var item in items) {
@@ -55,10 +53,9 @@
         }
             <!-- ko template: {name: "EntityItemTemplate", foreach: Items() } -->    
             <!-- /ko -->
-            <div class="clearfix"/>
+            <div class="clearfix"></div>
         </div>                   
     </div>
-</div>
 
 <script type="text/html" id="EntityItemTemplate">
     <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '/organizer/' + Id()}">

@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="img\bg%402x.png" />
+    <Content Include="img\bg.png" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\image-scale.min.js" />
     <Content Include="Styles\bootstrap-theme.min.css" />
@@ -162,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="img\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -9,73 +9,65 @@
     var host = (EntityVm)Model;
 }
 <div id="view-host-form" get-host-events="@Url.Action("GetEvents", "Host", new {area = "SmartWalk.Server"})">
-    @Html.AntiForgeryTokenOrchard()
-    <div id="venue-panel">
-        <div class="row">
-            <div class="col-xs-8">
-                
-            </div>
-            <div class="col-xs-4 text-right">
-                <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Organizer")</button>
-            </div>
-        </div>
-
-		<div class="bg-image-container gap">
+        @Html.AntiForgeryTokenOrchard()
+		<div class="bg-image-container page-header-image">
 			<div class="header big">
-				<h2>@host.DisplayName</h2>
+			    <h2><!-- TODO: Hide button if user isn't logged -->
+			        <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Organizer")</button>
+			        @host.DisplayName
+			    </h2>
             @if (!string.IsNullOrEmpty(host.Picture)) {
                 <img class="scale" data-scale="best-fill" data-align="center" src="@host.Picture" />
             }
 			</div>
 		</div>
 
-        @if (host.AllAddresses.Any()) {
-            var addressFirst = host.AllAddresses.First();
-            var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
-            query = Regex.Replace(query, @"\s+", "+");
-            <iframe class="map-container" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe>
-        }
+    @if (host.AllAddresses.Any()) {
+        var addressFirst = host.AllAddresses.First();
+        var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
+        query = Regex.Replace(query, @"\s+", "+");
+        <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>
+    }
         
         <div class="row gap">
-            <div class="col-md-7"><p>@host.Description</p></div>
+            <div class="col-md-7"><p class="description">@host.Description</p></div>
             <div class="col-md-5 contact-container">
-                @if (host.AllContacts.Any()) {
-                    <div class="well">
-                        <h4 class="text-center">@T("Contacts and Links")</h4>
-                        <dl class="dl-horizontal">
-                            @foreach (var contact in host.AllContacts) {
-                                var title = contact.Title ?? contact.Contact;                             
+            @if (host.AllContacts.Any()) {
+                <div class="well">
+                    <h4 class="text-center">@T("Contacts and Links")</h4>
+                    <dl class="dl-horizontal">
+            @foreach (var contact in host.AllContacts) {
+                var title = contact.Title ?? contact.Contact;                             
                              
-                                switch ((ContactType)contact.Type) {
-                                    case ContactType.Url:
-                                        var url = contact.Contact.StartsWith("http") ? contact.Contact : string.Format("http://{0}", contact.Contact);
-                                        <dt>@T("web"):</dt>
-                                        <dd><a href="@url">@title</a></dd>
-                                        break;
-                                    case ContactType.Phone:
-                                        <dt>@T("phone"):</dt>
-                                        <dd>@contact.Contact</dd>
-                                        break;
-                                    case ContactType.Email:
-                                        <dt>@T("email"):</dt>
-                                        <dd><a href="mailto:@contact.Contact">@title</a></dd>
-                                        break;
-                                }
-                            }
-                        </dl>
-                    </div>   
-                }                
+                switch ((ContactType)contact.Type) {
+                    case ContactType.Url:
+                        var url = contact.Contact.StartsWith("http") ? contact.Contact : string.Format("http://{0}", contact.Contact);
+                        <dt>@T("web"):</dt>
+                        <dd><a href="@url">@title</a></dd>
+                        break;
+                    case ContactType.Phone:
+                        <dt>@T("phone"):</dt>
+                        <dd>@contact.Contact</dd>
+                        break;
+                    case ContactType.Email:
+                        <dt>@T("email"):</dt>
+                        <dd><a href="mailto:@contact.Contact">@title</a></dd>
+                        break;
+                }
+            }
+                    </dl>
+                </div>   
+            }                
             </div>
         </div>     
 
-        <table class="table gap" data-bind="visible: EventItems().length > 0">
+        <table class="table table-content" data-bind="visible: EventItems().length > 0">
             <thead>
                 <tr><th><h4>@T("Recent Events")</h4></th><th>@T("Date")</th></tr>
             </thead>
             <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems() }'></tbody>
         </table>        
     </div>
-</div>
 
 <script type="text/html" id="eventItemTemplate">
     <tr>
