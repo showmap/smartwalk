@@ -1,14 +1,11 @@
-﻿@using SmartWalk.Server.Records
-@using SmartWalk.Server.ViewModels
-
+﻿@using SmartWalk.Server.ViewModels
 @{
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
     
-    var host = (EntityVm) Model;
-    var actionCaption = host.Id == 0 ? T("Add Organizer") : T("Save Organizer");
+    var host = (EntityVm)Model;
+    var actionCaption = host.Id == 0 ? T("Add <span class=\"hidden-xs\">Organizer</span>") : T("Save <span class=\"hidden-xs\">Organizer</span>");
 }
-
 <div id="edit-host-form"  
      save-host-url="@Url.Action("SaveOrAdd", "Host", new {area = "SmartWalk.Server"})" 
      get-address-url ="@Url.Action("GetAddress", "Event", new {area = "SmartWalk.Server"})"
@@ -17,16 +14,16 @@
      get-contact-url ="@Url.Action("GetContact", "Event", new {area = "SmartWalk.Server"})"
      save-contact-url ="@Url.Action("SaveContact", "Event", new {area = "SmartWalk.Server"})"
      delete-contacts-url ="@Url.Action("DeleteContacts", "Event", new {area = "SmartWalk.Server"})">
-    @Html.AntiForgeryTokenOrchard()
-    <div id="venue-panel">
+        @Html.AntiForgeryTokenOrchard()
         <div class="row">
             <div class="col-xs-8">
                 <div class="form-group">
-                    <input class="form-control" type="text" placeholder="@T("Type organizer name...")" data-bind="value: Name" />
+                    <label for="orgNameTextInput">@T("Organizer Name"):</label>
+                    <input id="orgNameTextInput" class="form-control" type="text" placeholder="@T("Type organizer name...")" data-bind="value: Name" />
                 </div>
             </div>
             <div class="col-xs-4 text-right">
-                <!--<button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@actionCaption</button>-->
+                <button type="button" class="btn btn-success btn-top" data-bind="click: saveOrAdd">@actionCaption</button>
             </div>
         </div>
         
@@ -90,7 +87,7 @@
 									</button>
 									<ul class="dropdown-menu">
 										<li><a href="#">@T("Duplicate")</a></li>
-										<li data-bind="visible: IsAnyContactSelected"><a href="#" data-bind="    click: $root.deleteContacts">@T("Delete")</a></li>
+										<li data-bind="visible: IsAnyContactSelected"><a href="#" data-bind="click: $root.deleteContacts">@T("Delete")</a></li>
 									</ul>
 								</div>
 							</th>
@@ -105,12 +102,12 @@
 
         <div class="row double-gap">
             <div class="col-xs-4">
-                @if (host.Id != 0) {
-                   using(Html.BeginForm("Delete", "Host", FormMethod.Get)) {
-                       <input type="hidden" name="entityId" value="@host.Id" />
-                       <button type="submit" class="btn btn-danger" >@T("Delete Organizer")</button>
-                   } 
-                }
+        @if (host.Id != 0) {
+            using(Html.BeginForm("Delete", "Host", FormMethod.Get)) {
+                <input type="hidden" name="entityId" value="@host.Id" />
+                <button type="submit" class="btn btn-danger" >@T("Delete") <span class="hidden-xs">@T("Organizer")</span></button>
+            } 
+        }
             </div>
             <div class="col-xs-8 text-right">                
                 <button type="submit" class="btn btn-default" data-bind="click: cancel">@T("Cancel")</button>
@@ -118,7 +115,6 @@
             </div>
         </div>   
     </div> 
-</div>
 
 @Html.Partial("Templates")
 

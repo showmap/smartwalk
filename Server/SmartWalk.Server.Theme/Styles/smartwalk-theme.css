@@ -1,5 +1,18 @@
 body {
-    background: url(../img/bg@2x.png) repeat;
+    background: url("../img/bg.png") repeat;
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx)
+{
+    body {
+        background: url("../img/bg@2x.png") repeat;
+    }
 }
 
 .navbar {
@@ -23,6 +36,10 @@ span.description {
 
 textarea {
 	height: 100px !important;
+}
+
+.ui-dialog .btn-top {
+    visibility: hidden;
 }
 
 .valign {
@@ -252,6 +269,14 @@ textarea {
 
 .bg-image-container .info .add-event-widget {
 	margin-top: 10px;
+}
+
+.bg-image-container .info .add-event-widget a {
+	border: 1px solid #ffffff;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2) url(http://addthisevent.com/gfx/icon-calendar-t1.png) no-repeat 9px 50%;
+    color: #ffffff !important;
+    font-weight: normal;
 }
 
 .bg-image-container .info .description {

@@ -38,16 +38,16 @@
     host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
     venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")"
     save-event-url="@Url.Action("SaveEvent", "Event")">
-    @Html.AntiForgeryTokenOrchard()    
-    <div id="metadata-panel">
+        @Html.AntiForgeryTokenOrchard()    
         <div class="row">
 			<div class="col-xs-8">
-				<div class="form-group">
-					<input class="form-control" type="text" placeholder="@T("Type event name...")" data-bind="value: Title" />
-				</div>
+			    <div class="form-group">
+			        <label for="eventTitleTextInput">@T("Event Title"):</label>
+			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: Title" />
+			    </div>
 			</div>
 			<div class="col-xs-4 text-right">
-				<button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save Event")</button>
+				<button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
 			</div>
 		</div>
         
@@ -137,18 +137,17 @@
 		
         <div class="row double-gap">
             <div class="col-xs-4">
-                <button type="button" class="btn btn-danger" data-bind="click: $root.deleteEvent">@T("Delete Event")</button>
+                <button type="button" class="btn btn-danger" data-bind="click: $root.deleteEvent">@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
             </div>
             <div class="col-xs-8 text-right">
                 <form method="get" action="@cancelAction">
                     <button type="submit" class="btn btn-default" >@T("Cancel")</button>
-                    <button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save Event")</button>
+                    <button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
                 </form>		        
             </div>
         </div>
         <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.OtherVenues)"></textarea>-->          
     </div>
-</div>
 
 @Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal, Type = (int)EntityType.Host})
 @Html.Partial("../Venue/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal, Type = (int)EntityType.Venue})

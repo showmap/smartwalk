@@ -1,16 +1,11 @@
-﻿@using SmartWalk.Server.Records
-@using SmartWalk.Server.ViewModels
-
+﻿@using SmartWalk.Server.ViewModels
 @{
-    //Style.Require("SmartWalk.Host");
-    
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels").AtHead();
     
-    var venue = (EntityVm) Model;
-    var cancelAction = venue.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @venue.Id });
+    var venue = (EntityVm)Model;
+    var actionCaption = venue.Id == 0 ? T("Add <span class=\"hidden-xs\">Venue</span>") : T("Save <span class=\"hidden-xs\">Venue</span>");
 }
-
 <div id="edit-venue-form" 
      save-venue-url="@Url.Action("SaveOrAdd", "Venue", new {area = "SmartWalk.Server"})" 
      get-address-url ="@Url.Action("GetAddress", "Event", new {area = "SmartWalk.Server"})"
@@ -21,15 +16,15 @@
      delete-contacts-url ="@Url.Action("DeleteContacts", "Event", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
     <div id="venue-panel">
-        
         <div class="row">
             <div class="col-xs-8">
                 <div class="form-group">
-                    <input class="form-control" type="text" placeholder="@T("Type venue name...")" data-bind="value: Name" />
+                    <label for="venueNameTextInput">@T("Venue Name"):</label>
+                    <input id="venueNameTextInput" class="form-control" type="text" placeholder="@T("Type venue name...")" data-bind="value: Name" />
                 </div>
             </div>
             <div class="col-xs-4 text-right">
-                <!--<button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@T("Save Venue")</button>-->
+                <button type="button" class="btn btn-success btn-top" data-bind="click: saveOrAdd">@actionCaption</button>
             </div>
         </div>
         
@@ -51,7 +46,7 @@
 			</div>
 		</div>
         
-        <iframe data-bind="attr: { src: GetMapLink() }, visible: IsMapVisible" class="map-container" frameborder="0"></iframe>
+        <div class="map-container"><iframe data-bind="attr: { src: GetMapLink() }, visible: IsMapVisible"></iframe></div>
         
         <div class="row">
 			<div class="col-sm-8">
@@ -110,16 +105,15 @@
             <div class="col-xs-4">
                 @{ using(Html.BeginForm("Delete", "Venue", FormMethod.Get)) {
                     <input type="hidden" name="entityId" value="@venue.Id" />
-                    <button type="submit" class="btn btn-danger" >@T("Delete Venue")</button>
+                    <button type="submit" class="btn btn-danger" >@T("Delete") <span class="hidden-xs">@T("Venue")</span></button>
                 }}
                 
             </div>
             <div class="col-xs-8 text-right">                
                 <button type="submit" class="btn btn-default" data-bind="click: cancel">@T("Cancel")</button>
-                <button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@T("Save Venue")</button>
+                <button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@actionCaption</button>
             </div>
 		</div>
-
     </div>
 </div>
 
