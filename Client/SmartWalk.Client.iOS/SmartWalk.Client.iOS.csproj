@@ -325,6 +325,7 @@
     <Compile Include="Resources\Localization.cs" />
     <Compile Include="Services\Clipboard.cs" />
     <Compile Include="Services\HttpService.cs" />
+    <Compile Include="Utils\ActionSheetUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -360,7 +361,6 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />
-    <BundleResource Include="Resources\Images\Background%402x.png" />
     <BundleResource Include="Resources\Images\NavBarBackground.png" />
     <BundleResource Include="Resources\Images\NavBarBackground%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarBack.png" />
@@ -445,6 +445,7 @@
     <BundleResource Include="Resources\Icon%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarMore.png" />
     <BundleResource Include="Resources\Icons\NavBarMore%402x.png" />
+    <BundleResource Include="Resources\Images\Background%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

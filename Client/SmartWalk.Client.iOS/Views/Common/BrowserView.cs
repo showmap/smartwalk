@@ -149,9 +149,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void OnActionButtonClick(object sender, EventArgs e)
         {
-            var actionSheet = new UIActionSheet();
-            actionSheet.Style = UIActionSheetStyle.BlackTranslucent;
-            actionSheet.Clicked += OnActionClicked;
+            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
 
             using (var url = new NSUrl(BrowserURL))
             {

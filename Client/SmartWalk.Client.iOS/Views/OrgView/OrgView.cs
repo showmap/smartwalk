@@ -111,9 +111,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         private void OnMoreButtonClicked(object sender, EventArgs e)
         {
-            var actionSheet = new UIActionSheet();
-            actionSheet.Style = UIActionSheetStyle.BlackTranslucent;
-            actionSheet.Clicked += OnActionClicked;
+            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
 
             if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
             {
