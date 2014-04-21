@@ -2,6 +2,8 @@ using System;
 using System.Net;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Services;
+using Newtonsoft.Json;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Services
 {
@@ -20,14 +22,19 @@ namespace SmartWalk.Client.iOS.Services
 
             if (showAlert)
             {
-                // TODO: To Localize
-                string title = "Error";
+                string title = Localization.Error;
                 string message = ex.Message;
 
                 if (ex is WebException)
                 {
-                    title = "Network Error";
-                    message = "Can't access network content. Please try again later";
+                    title = Localization.NetworkError;
+                    message = Localization.CantAccessNetworkContent;
+                }
+
+                if (ex is JsonReaderException)
+                {
+                    title = Localization.ServerError;
+                    message = Localization.CantReadNetworkContent;
                 }
 
                 var alert = new UIAlertView(title, message, null, "OK", null);
