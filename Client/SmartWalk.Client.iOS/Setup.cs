@@ -36,6 +36,7 @@ namespace SmartWalk.Client.iOS
 
         protected override void AddPluginsLoaders(MvxLoaderPluginRegistry loaders)
         {
+            loaders.AddConventionalPlugin<Cheesebaron.MvxPlugins.ModernHttpClient.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.DownloadCache.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.File.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.PhoneCall.Touch.Plugin>();
@@ -46,6 +47,7 @@ namespace SmartWalk.Client.iOS
 
         protected override void InitializeLastChance()
         {
+            Cheesebaron.MvxPlugins.ModernHttpClient.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.PhoneCall.PluginLoader.Instance.EnsureLoaded();

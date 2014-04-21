@@ -26,9 +26,13 @@ namespace SmartWalk.Client.iOS.Utils
                 var button = subview as UIButton;
                 if (button != null)
                 {
-                    button.SetTitleColor(Theme.ActionSheetText, UIControlState.Normal);
-                    button.SetTitleColor(Theme.ActionSheetText, UIControlState.Selected);
-                    button.SetTitleColor(Theme.ActionSheetText, UIControlState.Highlighted);
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                    {
+                        button.SetTitleColor(Theme.ActionSheetText, UIControlState.Normal);
+                        button.SetTitleColor(Theme.ActionSheetText, UIControlState.Selected);
+                        button.SetTitleColor(Theme.ActionSheetText, UIControlState.Highlighted);
+                    }
+
                     button.Font = Theme.ActionSheetFont;
                 }
             }
