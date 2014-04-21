@@ -42,6 +42,14 @@ textarea {
     visibility: hidden;
 }
 
+.titleLabel {
+    display: none;
+}
+
+.ui-dialog .titleLabel {
+    display: inline;
+}
+
 .valign {
   position: relative;
   top: 50%;
@@ -311,11 +319,13 @@ textarea {
 }
 
 .contact-container .dl-horizontal dt {
-	width: 100px;
+	width: 70px;
 }
 
 .contact-container .dl-horizontal dd {
-	margin-left: 120px;
+	margin-left: 80px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 .editing-container .well {

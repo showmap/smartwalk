@@ -22,7 +22,7 @@
         @if (parameters.IsLoggedIn) {
             <div class="col-xs-4">
                 <form action="/events/create">
-                    <button type="submit" class="btn btn-primary">@T("Create event")</button>
+                    <button type="submit" class="btn btn-primary">@T("Create") <span class="hidden-xs">@T("Event")</span></button>
                 </form>  
             </div>
         }

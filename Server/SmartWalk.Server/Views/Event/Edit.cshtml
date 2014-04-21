@@ -42,7 +42,7 @@
         <div class="row">
 			<div class="col-xs-8">
 			    <div class="form-group">
-			        <label for="eventTitleTextInput">@T("Event Title"):</label>
+			        <label class="titleLabel" for="eventTitleTextInput">@T("Event Title"):</label>
 			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: Title" />
 			    </div>
 			</div>
@@ -79,7 +79,7 @@
                     <div class="input-group">
                         <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: AllHosts, jqAutoValue: Host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'DisplayName', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: getAutoItem"/>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create Organizer...")</button>
+                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
                         </span>
                     </div>
 					
@@ -182,7 +182,7 @@
                         <div class="input-group">
                         <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'DisplayName', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: $root.createVenue">@T("Create Venue...")</button>
+                            <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: $root.createVenue">@T("Create")<span class="hidden-xs"> @T("Venue")</span>...</button>
                         </span>
                     </div>
                 </div>
