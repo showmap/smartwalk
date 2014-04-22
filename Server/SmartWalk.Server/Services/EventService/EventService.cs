@@ -66,8 +66,13 @@ namespace SmartWalk.Server.Services.EventService
             return vm;
         }
 
-        public AccessType GetEventAccess(SmartWalkUserRecord user, int eventId)
-        {
+        public AccessType GetEventAccess(SmartWalkUserRecord user, int eventId) {
+            if (user == null)
+                return AccessType.Deny;
+
+            if (eventId == 0)
+                return AccessType.AllowEdit;
+
             var eventRecord = _eventMetadataRepository.Get(eventId);
             if (eventRecord == null || eventRecord.IsDeleted)
                 return AccessType.Deny;

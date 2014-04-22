@@ -158,6 +158,12 @@ namespace SmartWalk.Server.Services.EntityService
         #region Entities
 
         public AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId) {
+            if (user == null)
+                return AccessType.Deny;
+            
+            if(entityId == 0)
+                return AccessType.AllowEdit;
+
             var entity = _entityRepository.Get(entityId);
             if (entity == null || entity.IsDeleted)
                 return AccessType.Deny;
@@ -226,6 +232,7 @@ namespace SmartWalk.Server.Services.EntityService
                 _entityRepository.Create(entity);
             }
             else {
+                entity.Name = entityVm.Name;
                 entity.Picture = entityVm.Picture;
                 entity.Description = entityVm.Description;
                 entity.DateModified = DateTime.Now;

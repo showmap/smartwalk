@@ -79,7 +79,7 @@
         var self = this;
 
         self.Items = ko.observableArray();
-        self.currentPage = ko.observable(1);
+        self.currentPage = ko.observable(0);
 
         self.getNextPage = function() {
             return getData(self.currentPage() + 1);

@@ -4,20 +4,21 @@
     Script.Require("AddThisEvent").AtFoot();
     Script.Require("ImageScale").AtFoot();
 
-    var model = (ViewParametersVm) Model;
-    
+    var model = (ViewParametersVm)Model;
+
     var eventMetadata = (EventMetadataVm)model.Data;
 }
         @Html.AntiForgeryTokenOrchard()
         <div class="bg-image-container page-header-image">
             <div class="header">
-                @if (!model.IsReadOnly) {
-                    <h2>
-                        <button type="button" class="btn btn-primary" id="btn-edit-event">@T("Edit Event")</button>
-                        @eventMetadata.DisplayName
-                    </h2>
+                <h2>
+                @if (!model.IsReadOnly){
+                    <button type="button" class="btn btn-primary" id="btn-edit-event">@T("Edit Event")</button>
                 }    
-                @if (!string.IsNullOrEmpty(eventMetadata.DisplayPicture)) {
+                    @eventMetadata.DisplayName
+                </h2>
+                @if (!string.IsNullOrEmpty(eventMetadata.DisplayPicture))
+                {
                     <img class="scale" data-scale="best-fill" data-align="center" src="@eventMetadata.DisplayPicture" />
                 }
             </div>
@@ -25,7 +26,7 @@
             <div class="info">
                 <div class="pull-left">
                     <div><h3>@eventMetadata.DisplayDate</h3></div>
-                    <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new {entityId = eventMetadata.Host.Id})">@eventMetadata.Host.DisplayName</a></h4></div>
+                    <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new { entityId = eventMetadata.Host.Id })">@eventMetadata.Host.DisplayName</a></h4></div>
                 </div>
 				
                 <!-- TODO: To initialize "Add To Calendar" values -->
@@ -48,7 +49,8 @@
             </div>	
         </div>
         
-    @if (eventMetadata.AllVenues.Any() && eventMetadata.AllVenues.First().AllAddresses.Any()) {
+    @if (eventMetadata.AllVenues.Any() && eventMetadata.AllVenues.First().AllAddresses.Any())
+    {
         var venue = eventMetadata.AllVenues.First();
         var addressFirst = venue.AllAddresses.First();
         var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
@@ -56,7 +58,8 @@
         <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>                       
     }
 
-    @if (!@eventMetadata.Description.IsEmpty()) {
+    @if (!@eventMetadata.Description.IsEmpty())
+    {
         <div class="row gap">
             <div class="col-md-8"><p class="description">@eventMetadata.Description</p></div>
         </div>
@@ -66,29 +69,35 @@
                 <tr><th><h4>@T("Venues and Shows")</h4></th><th>@T("Time")</th></tr>
             </thead>
             <tbody>
-            @foreach (var venue in eventMetadata.AllVenues.Where(v => v.State == VmItemState.Normal)) {
+            @foreach (var venue in eventMetadata.AllVenues.Where(v => v.State == VmItemState.Normal))
+            {
                 <tr>
                     <td colspan="2" class="venue">
-                        <a class="bg-image" href="@Url.Action("View", "Venue", new {entityId = venue.Id})">
+                        <a class="bg-image" href="@Url.Action("View", "Venue", new { entityId = venue.Id })">
                             <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
                         </a>
-                        <a href="@Url.Action("View", "Venue", new {entityId = venue.Id})"><h4>@venue.DisplayName</h4></a>
-                    @if (venue.AllAddresses.Any()) {
+                        <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.DisplayName</h4></a>
+                    @if (venue.AllAddresses.Any())
+                    {
                         <address>@venue.AllAddresses.First().Address</address>
                     }                            
                     </td>
                 </tr>
-                foreach (var show in venue.AllShows.Where(s => !s.IsReference)) {
+                    foreach (var show in venue.AllShows.Where(s => !s.IsReference))
+                    {
                 <tr>
-                    <td>@show.Title<br/>@if (@show.Description != null) {<span class="description">@show.Description</span>}</td>                        
-                @if (string.IsNullOrEmpty(show.EndTime)) {
+                    <td>@show.Title<br/>@if (@show.Description != null)
+                                        {<span class="description">@show.Description</span>}</td>                        
+                @if (string.IsNullOrEmpty(show.EndTime))
+                {
                     <td>@show.StartTime</td>
                 }
-                else {
+                else
+                {
                     <td>@show.StartTime&nbsp;-&nbsp;@show.EndTime</td>
                 }
                 </tr>   
-                }
+                    }
             }                
             </tbody>
         </table>

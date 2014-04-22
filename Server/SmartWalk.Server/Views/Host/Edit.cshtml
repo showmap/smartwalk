@@ -14,7 +14,7 @@
         });
         
         $("#edit-host-form").bind('OnHostSaved', function (event) {
-            window.location.href = "@Url.Action("View", new { entityId = @host.Id })";
+            window.location.href = window.location.href = "/host/" + event.item.Id();
         });
     });
 </script>

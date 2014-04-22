@@ -668,7 +668,7 @@
                     success: function(data) {
                         if (item.Id() == 0)
                             item.loadData(data);
-                        window.location.href = "@Url.Action("View", new { entityId = @eventItem.Id })";
+                        window.location.href = "/event/" + item.Id();
                     }
                 };
                 $.ajax(config);

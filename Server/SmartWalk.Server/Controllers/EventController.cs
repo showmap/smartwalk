@@ -37,10 +37,10 @@ namespace SmartWalk.Server.Controllers
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             switch (parameters.Sort) {
                 case SortType.Title:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.InitialItemsLoad, e => e.Title, true)});
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.ItemsLoad, e => e.Title, true)});
                 case SortType.Date:
                 default:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.InitialItemsLoad, e => e.DateCreated, true)});
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.ItemsLoad, e => e.StartTime, true)});
             }
         }
 

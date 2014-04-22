@@ -36,7 +36,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Venue, 0, SmartWalkSettings.InitialItemsLoad, null, e => e.Name, false)});
+            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Venue, 0, SmartWalkSettings.ItemsLoad, null, e => e.Name, false)});
         }
 
         public ActionResult View(int entityId) {
