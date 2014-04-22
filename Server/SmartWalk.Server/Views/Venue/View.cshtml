@@ -7,28 +7,27 @@
     Script.Require("ImageScale").AtFoot();
 
     var model = (ViewParametersVm) Model;
-    
     var venue = (EntityVm)model.Data;
 }
 <div id="view-venue-form" title="@T("Add Host")" get-venue-events="@Url.Action("GetEvents", "Venue", new {area = "SmartWalk.Server"})">
         @Html.AntiForgeryTokenOrchard()
 		<div class="bg-image-container page-header-image">
 		    <div class="header">
+		        <h2>
 		        @if (!model.IsReadOnly) {
-		            <h2>
-		                <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Venue")</button>
-		                @venue.DisplayName
-		            </h2>
+		            <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Venue")</button>
 		        }
-		        @if (!string.IsNullOrEmpty(venue.Picture)) {
-		            <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
-		        }
+		            @venue.DisplayName
+		        </h2>
+		    @if (!string.IsNullOrEmpty(venue.Picture)) {
+		        <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
+		    }
 		    </div>
 			
 			<div class="info addresses-container">
-                @foreach (var address in venue.AllAddresses) {
-                    <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address>@if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">@address.Tip</i>}</h4></div>                        
-                }
+            @foreach (var address in venue.AllAddresses) {
+                <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address>@if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">@address.Tip</i>}</h4></div>                        
+            }
 			</div>	
 		</div>
         

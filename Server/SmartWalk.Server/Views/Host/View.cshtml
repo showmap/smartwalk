@@ -7,22 +7,21 @@
     Script.Require("ImageScale").AtFoot();
     
     var model = (ViewParametersVm)Model;
-    var host = (EntityVm)model.Data;
-    
+    var host = (EntityVm)model.Data; 
 }
 <div id="view-host-form" get-host-events="@Url.Action("GetEvents", "Host", new {area = "SmartWalk.Server"})">
         @Html.AntiForgeryTokenOrchard()
 		<div class="bg-image-container page-header-image">
 		    <div class="header big">
+		        <h2>
 		        @if (!model.IsReadOnly) {
-		            <h2>
-		                <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Organizer")</button>
-		                @host.DisplayName
-		            </h2>
-                }
-		        @if (!string.IsNullOrEmpty(host.Picture)) {
-		            <img class="scale" data-scale="best-fill" data-align="center" src="@host.Picture" />
+		            <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Organizer")</button>
 		        }
+		            @host.DisplayName
+		        </h2>
+		    @if (!string.IsNullOrEmpty(host.Picture)) {
+		        <img class="scale" data-scale="best-fill" data-align="center" src="@host.Picture" />
+		    }
 		    </div>
 		</div>
 
