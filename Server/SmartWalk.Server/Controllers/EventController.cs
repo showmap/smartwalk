@@ -47,25 +47,35 @@ namespace SmartWalk.Server.Controllers
         public ActionResult View(int eventId)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
-            {
                 return new HttpUnauthorizedResult();
-            }
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+            var item = _eventService.GetUserEventVmById(user.Record, eventId);
 
-            return View(_eventService.GetUserEventVmById(user.Record, eventId));
+            if (item.Id != eventId)
+                return new HttpNotFoundResult();
+
+            return View(new ViewParametersVm { IsReadOnly = _orchardServices.WorkContext.CurrentUser == null, Data = item });
         }
 
         public ActionResult Edit(int eventId)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
-            {
                 return new HttpUnauthorizedResult();
-            }
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(_eventService.GetUserEventVmById(user.Record, eventId));
+            var item = _eventService.GetUserEventVmById(user.Record, eventId);
+
+            if (item.Id != eventId)
+                return new HttpNotFoundResult();
+
+            var access = _eventService.GetEventAccess(user.Record, eventId);
+
+            if (access == AccessType.AllowEdit)
+                return View(item);
+
+            return new HttpUnauthorizedResult();
         }
 
         #region Addresses

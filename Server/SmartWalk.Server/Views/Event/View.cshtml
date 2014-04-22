@@ -3,19 +3,23 @@
 @{
     Script.Require("AddThisEvent").AtFoot();
     Script.Require("ImageScale").AtFoot();
+
+    var model = (ViewParametersVm) Model;
     
-    var eventMetadata = (EventMetadataVm)Model;
+    var eventMetadata = (EventMetadataVm)model.Data;
 }
         @Html.AntiForgeryTokenOrchard()
         <div class="bg-image-container page-header-image">
             <div class="header">
-                <h2><!-- TODO: Hide button if user isn't logged -->
-                    <button type="button" class="btn btn-primary" id="btn-edit-event">@T("Edit Event")</button>
-                    @eventMetadata.DisplayName
-                </h2>
-            @if (!string.IsNullOrEmpty(eventMetadata.DisplayPicture)) {
-                <img class="scale" data-scale="best-fill" data-align="center" src="@eventMetadata.DisplayPicture" />
-            }
+                @if (!model.IsReadOnly) {
+                    <h2>
+                        <button type="button" class="btn btn-primary" id="btn-edit-event">@T("Edit Event")</button>
+                        @eventMetadata.DisplayName
+                    </h2>
+                }    
+                @if (!string.IsNullOrEmpty(eventMetadata.DisplayPicture)) {
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@eventMetadata.DisplayPicture" />
+                }
             </div>
 			
             <div class="info">

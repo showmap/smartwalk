@@ -191,6 +191,7 @@
     <Compile Include="ViewModels\ListViewParametersVm.cs" />
     <Compile Include="ViewModels\ListViewVm.cs" />
     <Compile Include="ViewModels\ShowVm.cs" />
+    <Compile Include="ViewModels\ViewParametersVm.cs" />
     <Compile Include="ViewModels\VmItemState.cs" />
   </ItemGroup>
   <ItemGroup>

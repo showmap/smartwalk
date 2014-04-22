@@ -85,7 +85,7 @@ function ShowViewModel(data) {
 
     self.TimeText = ko.computed(function () {
         if (self.EndTime()) {
-            return self.StartTime() + ' - ' + self.EndTime();
+            return self.StartTime() + '&nbsp-&nbsp' + self.EndTime();
         }
 
         return self.StartTime();

@@ -21,8 +21,8 @@ namespace SmartWalk.Server
             #endregion
 
             #region Mappy
-            manifest.DefineStyle("Mappy").SetUrl("mappy.css");
-            manifest.DefineScript("Mappy").SetUrl("mappy.js").SetDependencies("Bootstrap");
+            //manifest.DefineStyle("Mappy").SetUrl("mappy.css");
+            //manifest.DefineScript("Mappy").SetUrl("mappy.js").SetDependencies("Bootstrap");
             #endregion
             
             #region SmartWalk

@@ -6,20 +6,24 @@
     Script.Require("SmartWalk.ViewModels").AtHead();
     Script.Require("ImageScale").AtFoot();
     
-    var host = (EntityVm)Model;
+    var model = (ViewParametersVm)Model;
+    var host = (EntityVm)model.Data;
+    
 }
 <div id="view-host-form" get-host-events="@Url.Action("GetEvents", "Host", new {area = "SmartWalk.Server"})">
         @Html.AntiForgeryTokenOrchard()
 		<div class="bg-image-container page-header-image">
-			<div class="header big">
-			    <h2><!-- TODO: Hide button if user isn't logged -->
-			        <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Organizer")</button>
-			        @host.DisplayName
-			    </h2>
-            @if (!string.IsNullOrEmpty(host.Picture)) {
-                <img class="scale" data-scale="best-fill" data-align="center" src="@host.Picture" />
-            }
-			</div>
+		    <div class="header big">
+		        @if (!model.IsReadOnly) {
+		            <h2>
+		                <button type="button" class="btn btn-primary" id="btn-edit-venue">@T("Edit Organizer")</button>
+		                @host.DisplayName
+		            </h2>
+                }
+		        @if (!string.IsNullOrEmpty(host.Picture)) {
+		            <img class="scale" data-scale="best-fill" data-align="center" src="@host.Picture" />
+		        }
+		    </div>
 		</div>
 
     @if (host.AllAddresses.Any()) {
@@ -75,7 +79,7 @@
             <a data-bind="attr: {href: '/event/'+Id()}, text: DisplayName"></a><br/>
             <span class="description" data-bind="text: Description"></span>
         </td>
-        <td data-bind="text: DateCreated"></td>        
+        <td data-bind="text: StartTime"></td>        
     </tr>       
 </script>
 

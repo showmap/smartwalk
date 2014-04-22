@@ -66,6 +66,18 @@ namespace SmartWalk.Server.Services.EventService
             return vm;
         }
 
+        public AccessType GetEventAccess(SmartWalkUserRecord user, int eventId)
+        {
+            var eventRecord = _eventMetadataRepository.Get(eventId);
+            if (eventRecord == null || eventRecord.IsDeleted)
+                return AccessType.Deny;
+
+            if(eventRecord.SmartWalkUserRecord.Id == user.Id)
+                return AccessType.AllowEdit;
+
+            return eventRecord.IsPublic ? AccessType.AllowView : AccessType.Deny;
+        }
+
         private EventMetadataVm CreateViewModelContract(SmartWalkUserRecord user, EventMetadataRecord record) {
             if (record != null)
                 return CreateViewModelContract(record);

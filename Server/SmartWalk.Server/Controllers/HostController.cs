@@ -41,22 +41,32 @@ namespace SmartWalk.Server.Controllers
 
         public ActionResult View(int entityId)
         {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
+            var item = _entityService.GetEntityVmById(entityId, EntityType.Host);
 
-            return View(_entityService.GetEntityVmById(entityId, EntityType.Host));
+            if (item.Id != entityId)
+                return new HttpNotFoundResult();
+
+            return View(new ViewParametersVm {IsReadOnly = _orchardServices.WorkContext.CurrentUser == null, Data = item});
         }
 
         public ActionResult Edit(int entityId)
         {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
+            var item = _entityService.GetEntityVmById(entityId, EntityType.Host);
 
-            return View(_entityService.GetEntityVmById(entityId, EntityType.Host));
+            if (item.Id != entityId)
+                return new HttpNotFoundResult();
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            if (user == null)
+                return new HttpUnauthorizedResult();
+
+            var access = _entityService.GetEntityAccess(user.Record, entityId);
+
+            if (access == AccessType.AllowEdit)
+                return View(item);
+
+            return new HttpUnauthorizedResult();            
         }
         
         public ActionResult Delete(int entityId)

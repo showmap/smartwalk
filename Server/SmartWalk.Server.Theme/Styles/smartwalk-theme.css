@@ -339,3 +339,7 @@ textarea {
 td.editing-container {
 	padding: 0 !important;
 }
+
+.ui-widget-content {
+    z-index: 100!important; 
+}

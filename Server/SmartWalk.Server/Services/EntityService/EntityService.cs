@@ -156,6 +156,15 @@ namespace SmartWalk.Server.Services.EntityService
         #endregion
 
         #region Entities
+
+        public AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId) {
+            var entity = _entityRepository.Get(entityId);
+            if (entity == null || entity.IsDeleted)
+                return AccessType.Deny;
+
+            return entity.SmartWalkUserRecord.Id == user.Id ? AccessType.AllowEdit : AccessType.AllowView;
+        }
+
         public IList<EntityVm> GetEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy,  bool isDesc) {
             return GetEntitiesInner(user == null ? (IEnumerable<EntityRecord>)_entityRepository.Table : user.Entities, type, pageNumber, pageSize, where, orderBy, isDesc);
         }
@@ -361,5 +370,11 @@ namespace SmartWalk.Server.Services.EntityService
             _contactRepository.Flush();            
         }
         #endregion
+    }
+
+    public enum AccessType {
+        Deny,
+        AllowView,
+        AllowEdit
     }
 }
