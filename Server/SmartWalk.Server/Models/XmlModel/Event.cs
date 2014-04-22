@@ -9,7 +9,7 @@ namespace SmartWalk.Server.Models.XmlModel
         [XmlAttribute("title")]
         public string Title { get; set; }
 
-        [XmlAttribute("description")]
+        [XmlElement("description")]
         public string Description { get; set; }
 
         [XmlAttribute("logo")]
