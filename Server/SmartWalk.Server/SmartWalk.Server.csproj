@@ -91,6 +91,7 @@
     <Content Include="Scripts\antiforgery.js" />
     <Content Include="Scripts\autocomplete.js" />
     <Content Include="Scripts\image-scale.min.js" />
+    <Content Include="Scripts\smartwalk-common.js" />
     <Content Include="Scripts\viewmodels.js" />
     <Content Include="Scripts\kodatetime.js" />
     <Content Include="Web.config" />

@@ -1,6 +1,7 @@
 ﻿@using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
 @{
+    Script.Require("SmartWalk.Common").AtFoot();
     Script.Require("AddThisEvent").AtFoot();
     Script.Require("ImageScale").AtFoot();
 
@@ -113,6 +114,11 @@
 
     $(function() {
         $("img.scale").imageScale();
+        
+        new collapsableText({
+            targetSelector: "p.description",
+            gradientClass: "collapsed-gradient"
+        });
     });
 
     // TODO: To buy a license and set "Add To Calendar" values

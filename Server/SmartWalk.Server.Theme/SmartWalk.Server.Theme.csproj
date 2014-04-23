@@ -82,6 +82,7 @@
     <Content Include="img\bg.png" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\image-scale.min.js" />
+    <Content Include="Scripts\smartwalk-common.js" />
     <Content Include="Styles\bootstrap-theme.min.css" />
     <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\smartwalk-theme.css" />
