@@ -98,9 +98,7 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Zones\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Document.cshtml" />
   </ItemGroup>
@@ -127,9 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\BadgeOfHonor.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\SearchNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\LogOn.cshtml" />
