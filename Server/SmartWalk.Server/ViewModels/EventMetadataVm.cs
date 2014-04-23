@@ -15,8 +15,6 @@ namespace SmartWalk.Server.ViewModels
         public double Longitude { get; set; }
         public int CombineType { get; set; }
         public bool IsPublic { get; set; }
-        public string DateCreated { get; set; }
-        public string DateModified { get; set; }
         public string DisplayDate { get; set; }
 
         public EntityVm Host { get; set; }

@@ -44,7 +44,7 @@ namespace SmartWalk.Server.Services.EventService
             if ((EntityType)entity.Type == EntityType.Venue)
                 data = _eventMetadataRepository.Table.Where(md => md.ShowRecords.Any(s => s.EntityRecord.Id == entityId));
 
-            return data.Where(e => !e.IsDeleted).OrderByDescending(e => e.DateCreated).Take(5).Select(e => CreateViewModelContract(e, LoadMode.Compact)).ToList();
+            return data.Where(e => !e.IsDeleted).OrderByDescending(e => e.StartTime).Take(5).Select(e => CreateViewModelContract(e, LoadMode.Compact)).ToList();
         }
 
         public IList<EventMetadataVm> GetEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc) {

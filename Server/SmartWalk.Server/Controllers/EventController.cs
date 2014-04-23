@@ -277,7 +277,7 @@ namespace SmartWalk.Server.Controllers
                     return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.Title, false));
                 case SortType.Date:
                 default:
-                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.DateCreated, false));
+                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.StartTime, true));
             }
         }
 
