@@ -10,19 +10,43 @@ namespace SmartWalk.Server
         {
             var manifest = builder.Add();
 
-            manifest.DefineScript("JQuery-1-10-2").SetUrl("jquery-1.10.2.js");
+            // TODO: To setup *.min.css and version
+            manifest.DefineStyle("SmartWalk").SetUrl("smartwalk.css");
 
-            manifest.DefineScript("SmartWalk.Common").SetUrl("smartwalk-common.js").SetDependencies("jQuery");
             manifest.DefineScript("SmartWalk.AntiForgery").SetUrl("antiforgery.js");
 
             // TODO: Why these are depended on AntiForgery?
-            manifest.DefineScript("ko.datetime").SetUrl("kodatetime.js").SetVersion("1.2").SetDependencies("ko", "SmartWalk.AntiForgery");
-            manifest.DefineScript("ko.autocomplete").SetUrl("autocomplete.js").SetVersion("1.2").SetDependencies("ko", "SmartWalk.AntiForgery");
+            manifest.DefineScript("ko.datetime")
+                .SetVersion("1.2")
+                .SetUrl("kodatetime.js")
+                .SetDependencies("ko", "SmartWalk.AntiForgery");
 
-            manifest.DefineScript("SmartWalk.ViewModels").SetUrl("viewmodels.js").SetVersion("1.8").SetDependencies("ko.datetime", "ko.autocomplete");
+            manifest.DefineScript("ko.autocomplete")
+                .SetVersion("1.2")
+                .SetUrl("autocomplete.js")
+                .SetDependencies("ko", "SmartWalk.AntiForgery");
 
-            manifest.DefineScript("ImageScale").SetUrl("image-scale.min.js").SetDependencies("jQuery");
-            manifest.DefineScript("AddThisEvent").SetUrl("http://js.addthisevent.com/atemay.js").SetDependencies("jQuery");
+            manifest.DefineScript("SmartWalk.ViewModels")
+                .SetUrl("viewmodels.js")
+                .SetDependencies("ko.datetime", "ko.autocomplete");
+
+            manifest.DefineStyle("TextCollapse")
+                .SetVersion("1.0")
+                .SetUrl("text-collapse.css");
+
+            manifest.DefineScript("TextCollapse")
+                .SetVersion("1.0")
+                .SetUrl("text-collapse.js")
+                .SetDependencies("jQuery");
+
+            manifest.DefineScript("ImageScale")
+                .SetVersion("1.3.1")
+                .SetUrl("image-scale.min.js", "image-scale.js")
+                .SetDependencies("jQuery");
+
+            manifest.DefineScript("AddThisEvent")
+                .SetCdn("http://js.addthisevent.com/atemay.js")
+                .SetDependencies("jQuery");
         }
     }
 }

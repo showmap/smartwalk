@@ -1,9 +1,12 @@
 ﻿@using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
 @{
-    Script.Require("SmartWalk.Common").AtFoot();
+    Style.Require("SmartWalk");
+    Style.Require("TextCollapse");
+
     Script.Require("AddThisEvent").AtFoot();
     Script.Require("ImageScale").AtFoot();
+    Script.Require("TextCollapse").AtFoot();
 
     var model = (ViewParametersVm)Model;
 
@@ -14,7 +17,7 @@
             <div class="header">
                 <h2>
                 @if (!model.IsReadOnly){
-                    <button type="button" class="btn btn-primary" id="btn-edit-event">@T("Edit Event")</button>
+                    <button type="button" class="btn" id="btn-edit-event">@T("Edit Event")</button>
                 }    
                     @eventMetadata.DisplayName
                 </h2>
@@ -72,7 +75,7 @@
             <tbody>
             @foreach (var venue in eventMetadata.AllVenues.Where(v => v.State == VmItemState.Normal))
             {
-                <tr>
+                <tr class="venue">
                     <td colspan="2" class="venue">
                         <a class="bg-image" href="@Url.Action("View", "Venue", new { entityId = venue.Id })">
                             <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
@@ -86,9 +89,9 @@
                 </tr>
                     foreach (var show in venue.AllShows.Where(s => !s.IsReference))
                     {
-                <tr>
+                <tr class="venue-Sshow">
                     <td>@show.Title<br/>@if (@show.Description != null)
-                                        {<span class="description">@show.Description</span>}</td>                        
+                       {<span class="description">@show.Description</span>}</td>                        
                 @if (string.IsNullOrEmpty(show.EndTime))
                 {
                     <td>@show.StartTime</td>
@@ -114,11 +117,7 @@
 
     $(function() {
         $("img.scale").imageScale();
-        
-        new collapsableText({
-            targetSelector: "p.description",
-            gradientClass: "collapsed-gradient"
-        });
+        $("p.description").textCollapse();
     });
 
     // TODO: To buy a license and set "Add To Calendar" values

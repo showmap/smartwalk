@@ -80,10 +80,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="img\bg%402x.png" />
     <Content Include="img\bg.png" />
+    <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\image-scale.min.js" />
-    <Content Include="Scripts\smartwalk-common.js" />
+    <Content Include="Styles\bootstrap-theme.css" />
     <Content Include="Styles\bootstrap-theme.min.css" />
+    <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\smartwalk-theme.css" />
     <Content Include="ThemeZonePreview.png" />
@@ -98,7 +99,10 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Styles\bootstrap-theme.css.map" />
+    <Content Include="Styles\bootstrap.css.map" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Document.cshtml" />
   </ItemGroup>

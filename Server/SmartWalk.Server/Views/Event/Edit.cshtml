@@ -5,6 +5,8 @@
 @Display(New.TimePickerLocalization())
 
 @{
+    Style.Require("SmartWalk");
+
     Style.Require("jQueryUI_Orchard");
 
     Script.Require("jQueryUI").AtFoot();
@@ -153,7 +155,7 @@
 @Html.Partial("../Venue/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal, Type = (int)EntityType.Venue})
 
 <script type="text/html" id="EntityItemTemplate">
-    <tr data-bind="template: {name: $root.getVenueView }"></tr>
+    <tr class="venue" data-bind="template: {name: $root.getVenueView }"></tr>
     <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
     <!-- /ko -->   
 </script>
@@ -164,7 +166,7 @@
             <a class="bg-image" data-bind="attr:{href: '/venue/'+Id()}"><img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/></a>
             <a data-bind="attr:{href: '/venue/'+Id()}"><h4 data-bind="text: DisplayName"></h4></a>
             <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : ''"></address>
-            <i class="description" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
+            <i class="tip" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
         </div>
         <div class="clearfix"></div>
         <button type="button" class="btn btn-default gap" data-bind="click: $root.addShow">@T("Create Show")</button>
@@ -204,7 +206,7 @@
 </script>
 
 <script type="text/html" id="ShowItemTemplate">
-    <tr>
+    <tr class="venue-show">
         <td data-bind="click: $root.selectedItem">
             <span data-bind="text: Title"></span>
             <br/>
