@@ -1,38 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
 
-namespace SmartWalk.Server
-{
-    public class Routes : IRouteProvider
-    {
-        public void GetRoutes(ICollection<RouteDescriptor> routes)
-        {
-            foreach (var routeDescriptor in GetRoutes())
-            {
+namespace SmartWalk.Server {
+    public class Routes : IRouteProvider {
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+            foreach (var routeDescriptor in GetRoutes()) {
                 routes.Add(routeDescriptor);
             }
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {                
-                new RouteDescriptor {   
+            return new[] {
+                new RouteDescriptor {
                     Priority = 1,
-                    Route = new Route("api",
+                    Route = new Route(
+                        "api",
                         new RouteValueDictionary {
-                        {"area", "SmartWalk.Server"},
-                        {"controller", "Api"},
-                        {"action", "Query"},
-                    },
-                    new RouteValueDictionary (),
-                    new RouteValueDictionary {
-                        {"area", "SmartWalk.Server"}
-                    },
-                    new MvcRouteHandler())
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Api"},
+                            {"action", "Query"},
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
                 },
                 new RouteDescriptor {
                     Priority = 1,
@@ -48,7 +42,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },    
+                },
                 new RouteDescriptor {
                     Name = "CreateEvent",
                     Priority = 1,
@@ -81,7 +75,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },  
+                },
                 new RouteDescriptor {
                     Priority = 2,
                     Route = new Route(
@@ -97,7 +91,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },  
+                },
                 new RouteDescriptor {
                     Priority = 1,
                     Route = new Route(
@@ -112,7 +106,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },  
+                },
                 new RouteDescriptor {
                     Name = "CreateHost",
                     Priority = 1,
@@ -145,7 +139,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },  
+                },
                 new RouteDescriptor {
                     Priority = 2,
                     Route = new Route(
@@ -161,7 +155,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },   
+                },
                 new RouteDescriptor {
                     Priority = 1,
                     Route = new Route(
@@ -176,14 +170,14 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },  
+                },
                 new RouteDescriptor {
                     Name = "CreateVenue",
                     Priority = 1,
                     Route = new Route(
                         "venues/create",
                         new RouteValueDictionary {
-                            {"Name" , "CreateVenue"},
+                            {"Name", "CreateVenue"},
                             {"area", "SmartWalk.Server"},
                             {"controller", "Venue"},
                             {"action", "Edit"},
@@ -210,7 +204,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },   
+                },
                 new RouteDescriptor {
                     Priority = 2,
                     Route = new Route(
@@ -226,7 +220,7 @@ namespace SmartWalk.Server
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
-                },   
+                }
             };
         }
     }

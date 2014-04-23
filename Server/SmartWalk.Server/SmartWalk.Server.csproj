@@ -88,16 +88,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\loading.gif" />
-    <Content Include="Scripts\4sqacplugin.js" />
     <Content Include="Scripts\antiforgery.js" />
     <Content Include="Scripts\autocomplete.js" />
     <Content Include="Scripts\image-scale.min.js" />
     <Content Include="Scripts\viewmodels.js" />
     <Content Include="Scripts\kodatetime.js" />
-    <Content Include="Scripts\mappy.js" />
-    <Content Include="Styles\fsquare-autocomplete.css" />
-    <Content Include="Styles\google-maps.css" />
-    <Content Include="Styles\mappy.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -106,23 +101,13 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Test\Places.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Test\TestFb.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Test\TestFbE.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HostController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
-    <Compile Include="SmartWalkSettings.cs" />
+    <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -198,25 +183,13 @@
     <Content Include="Views\Tools\ImportXmlData.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Test\FSquare.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Test\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Event\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Event\AddPlace.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Event\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Event\AddHost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Host\List.cshtml" />

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard;
-using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.EventService;
 using Orchard.ContentManagement;
-using SmartWalk.Server.Models;
 using Orchard.Themes;
-using Orchard.DisplayManagement;
-using Orchard.Mvc;
-using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Models;
 using SmartWalk.Server.Services.EntityService;
+using SmartWalk.Server.Services.EventService;
+using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Views;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -37,10 +32,10 @@ namespace SmartWalk.Server.Controllers
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             switch (parameters.Sort) {
                 case SortType.Title:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.ItemsLoad, e => e.Title, true)});
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.Title, true)});
                 case SortType.Date:
                 default:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, SmartWalkSettings.ItemsLoad, e => e.StartTime, true)});
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.StartTime, true)});
             }
         }
 
@@ -279,10 +274,10 @@ namespace SmartWalk.Server.Controllers
             switch (parameters.Sort)
             {
                 case SortType.Title:
-                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, SmartWalkSettings.ItemsLoad, e => e.Title, false));
+                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.Title, false));
                 case SortType.Date:
                 default:
-                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, SmartWalkSettings.ItemsLoad, e => e.DateCreated, false));
+                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.DateCreated, false));
             }
         }
 

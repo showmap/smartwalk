@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Globalization;
 using System.Web.Mvc;
 using Orchard;
-using Orchard.Themes;
 using Orchard.ContentManagement;
+using Orchard.Themes;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
-using System.Globalization;
+using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Views;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -36,7 +33,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Host, 0, SmartWalkSettings.ItemsLoad, null, e => e.Name, false)});
+            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Host, 0, ViewSettings.ItemsLoad, null, e => e.Name, false)});
         }
 
         public ActionResult View(int entityId)
@@ -90,7 +87,7 @@ namespace SmartWalk.Server.Controllers
             }
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-            return Json(_entityService.GetEntities(user.Record, EntityType.Host, 0, SmartWalkSettings.ItemsLoad, e => (string.IsNullOrEmpty(term) || e.Name.ToLower(CultureInfo.InvariantCulture).Contains(term.ToLower(CultureInfo.InvariantCulture))), e => e.Name, false));
+            return Json(_entityService.GetEntities(user.Record, EntityType.Host, 0, ViewSettings.ItemsLoad, e => (string.IsNullOrEmpty(term) || e.Name.ToLower(CultureInfo.InvariantCulture).Contains(term.ToLower(CultureInfo.InvariantCulture))), e => e.Name, false));
         }
 
         [HttpPost]
@@ -108,7 +105,7 @@ namespace SmartWalk.Server.Controllers
                 user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             }
 
-            return Json(_entityService.GetEntities(user == null ? null: user.Record, EntityType.Host, pageNumber, SmartWalkSettings.ItemsLoad, null, e => e.Name, false));
+            return Json(_entityService.GetEntities(user == null ? null: user.Record, EntityType.Host, pageNumber, ViewSettings.ItemsLoad, null, e => e.Name, false));
         }
 
         [HttpPost]
