@@ -82,66 +82,25 @@
 @using (Script.Foot())
 {
 <script type="text/javascript">
-    function EventsViewModel() {
-        var self = this;
+    EventsViewModel = function(data, url) {
+        ListViewModel.call(this, data, url);
+    };
 
-        self.Items = ko.observableArray();
-        self.currentPage = ko.observable(0);
+    inherits(EventsViewModel, ListViewModel);
 
-        self.getNextPage = function() {
-            return getData(self.currentPage() + 1);
-        };
-
-        function getData(pageNumber) {
-            if (self.currentPage() != pageNumber) {
-                console.log("Scroll Postion begin getData" + $(window).scrollTop());
-                var ajdata = { pageNumber: pageNumber, parameters: @Html.Raw(Json.Encode(parameters)) };
-                var urlUpdate = $("#event-items").attr("get-events-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: JSON.stringify(ajdata),
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        if (data.length > 0) {
-                            self.currentPage(self.currentPage() + 1);
-                            for (var i = 0; i < data.length; i++) {
-                                self.Items.push(new EventViewModel(data[i]));
-                                $("img.scale").imageScale();
-                                console.log("Scroll Postion looping ViewModel" + $(window).scrollTop());
-                            }
-                        }
-                    }
-                };
-
-                $.ajax(config);
-            }
-        }
-    }
+    EventsViewModel.prototype.addItem = function(data) {
+        //VenuesViewModel.superClass_.Items.push(new EntityViewModel(data));
+        this.Items.push(new EventViewModel(data));
+        $("img.scale").imageScale();
+    };
 
     $(document).ready(function() {
-        var viewModel = new EventsViewModel();
-
-        ko.applyBindings(viewModel, document.getElementById('event-items'));
-
-        $(window).scroll(function(evt) {
-            evt.preventDefault();
-            if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
-                console.log("Scroll Postion" + $(window).scrollTop());
-                viewModel.getNextPage();
-            }
-        });
+        var viewModel = new EventsViewModel(@Html.Raw(Json.Encode(parameters)), $("#event-items").attr("get-events-url"));
+            ko.applyBindings(viewModel, document.getElementById('event-items'));
     });
     
     $(function() {
         $("img.scale").imageScale();
-    });
+    });    
 </script>
 }

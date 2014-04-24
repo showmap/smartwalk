@@ -109,23 +109,11 @@
                 var ajdata = ko.toJSON({ entityId: @venue.Id });
                 var urlUpdate = $("#view-venue-form").attr("get-venue-events");
 
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                    },
-                    success: function(data) {
-                        if (data) {
-                            self.EventItems($.map(data, function(item) { return new EventViewModel(item); }));
-                        }
+                ajaxJsonRequest(ajdata, urlUpdate, function(data) {
+                    if (data) {
+                        self.EventItems($.map(data, function(item) { return new EventViewModel(item); }));                            
                     }
-                };
-                $.ajax(config);
+                });
             };
 
             self.loadData();

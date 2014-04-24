@@ -26,9 +26,13 @@ namespace SmartWalk.Server
                 .SetUrl("autocomplete.js")
                 .SetDependencies("ko", "SmartWalk.AntiForgery");
 
+            manifest.DefineScript("SmartWalk.Utilites")
+                .SetUrl("utilites.js?ver=1.0")
+                .SetDependencies("ko");
+            
             manifest.DefineScript("SmartWalk.ViewModels")
                 .SetUrl("viewmodels.js")
-                .SetDependencies("ko.datetime", "ko.autocomplete");
+                .SetDependencies("ko.datetime", "ko.autocomplete", "SmartWalk.Utilites");
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")

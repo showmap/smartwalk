@@ -93,6 +93,7 @@
     <Content Include="Scripts\image-scale.js" />
     <Content Include="Scripts\image-scale.min.js" />
     <Content Include="Scripts\text-collapse.js" />
+    <Content Include="Scripts\utilites.js" />
     <Content Include="Scripts\viewmodels.js" />
     <Content Include="Scripts\kodatetime.js" />
     <Content Include="Styles\smartwalk.css" />
