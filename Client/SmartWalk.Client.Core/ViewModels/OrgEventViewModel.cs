@@ -33,6 +33,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Show> _expandCollapseShowCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
         private MvxCommand _navigateOrgCommand;
+        private MvxCommand _navigateOrgEventInfoCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
@@ -158,14 +159,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _expandCollapseShowCommand = new MvxCommand<Show>(show => 
                         {
-                            if (!Equals(ExpandedShow, show))
-                            {
-                                ExpandedShow = show;
-                            }
-                            else 
-                            {
-                                ExpandedShow = null;
-                            }
+                            ExpandedShow = !Equals(ExpandedShow, show) ? show : null;
 
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
@@ -242,6 +236,27 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _navigateOrgCommand;
+            }
+        }
+
+        public ICommand NavigateOrgEventInfoCommand
+        {
+            get
+            {
+                if (_navigateOrgEventInfoCommand == null)
+                {
+                    _navigateOrgEventInfoCommand = new MvxCommand(
+                        () => ShowViewModel<OrgEventInfoViewModel>(
+                            new OrgEventInfoViewModel.Parameters {
+                                OrgEventId = OrgEvent.Id,
+                                Location = _parameters.Location
+                            }),
+                        () => 
+                            _parameters != null &&
+                            OrgEvent != null);
+                }
+
+                return _navigateOrgEventInfoCommand;
             }
         }
 

@@ -59,13 +59,7 @@ namespace SmartWalk.Client.Core.Model
 
         public string Description 
         {
-            get 
-            {
-                if (_host == null) 
-                    throw new InvalidOperationException(CantGetPropertyException);
-
-                return _eventMetadata.Description ?? _host.Description; 
-            }
+            get { return _eventMetadata.Description; }
         }
 
         public DateTime? StartTime 

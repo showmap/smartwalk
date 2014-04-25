@@ -290,6 +290,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.OrgEvent != null)
             {
                 actionSheet.AddButton(Localization.SaveToCalendar);
+            }
+
+            if (ViewModel.NavigateOrgEventInfoCommand.CanExecute(null))
+            {
                 actionSheet.AddButton(Localization.ShowEventInfo);
             }
 
@@ -323,7 +327,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case Localization.ShowEventInfo:
-                    // TODO: Show Event Info
+                    if (ViewModel.NavigateOrgEventInfoCommand.CanExecute(null))
+                    {
+                        ViewModel.NavigateOrgEventInfoCommand.Execute(null);
+                    }
                     break;
 
                 case Localization.ShowOrganizerInfo:

@@ -326,6 +326,12 @@
     <Compile Include="Services\HttpService.cs" />
     <Compile Include="Utils\ActionSheetUtil.cs" />
     <Compile Include="Services\MvxFastHttpFileDownloader.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventInfoView.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventInfoView.designer.cs">
+      <DependentUpon>OrgEventInfoView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrgEventView\OrgEventInfoTableSource.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventInfoTableSourceConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -358,6 +364,7 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
     <InterfaceDefinition Include="Views\Common\GroupHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderContentView.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\OrgEventInfoView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />

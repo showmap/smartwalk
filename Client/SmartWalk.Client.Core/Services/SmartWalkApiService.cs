@@ -101,7 +101,7 @@ namespace SmartWalk.Client.Core.Services
             var request = new Request {
                 Selects = new[] {
                     new RequestSelect {
-                        Fields = new[] { "Host", "Title", "StartTime", "EndTime", "Shows" },
+                        Fields = new[] { "StartTime", "EndTime", "Shows" },
                         From = RequestSelectFromTables.EventMetadata,
                         As = "em",
                         Where = new[] {
@@ -183,6 +183,63 @@ namespace SmartWalk.Client.Core.Services
                     .ToArray();
 
                 result = new OrgEvent(eventMetadata, null, venues);
+            }
+
+            return result;
+        }
+
+        public async Task<OrgEvent> GetOrgEventInfo(int id, DataSource source)
+        {
+            var request = new Request {
+                Selects = new[] {
+                    new RequestSelect {
+                        Fields = new[] { "Host", "Title", "Description", "Picture" },
+                        From = RequestSelectFromTables.EventMetadata,
+                        As = "em",
+                        Where = new[] {
+                            new RequestSelectWhere {
+                                Field = "Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                Value = id
+                            }
+                        }
+                    },
+                    new RequestSelect {
+                        Fields = new[] { "Name", "Picture" },
+                        From = RequestSelectFromTables.Entity,
+                        Where = new[] {
+                            new RequestSelectWhere {
+                                Field = "Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                SelectValue = new RequestSelectWhereSelectValue {
+                                    Field = "Host.Id",
+                                    SelectName = "em"
+                                }
+                            }
+                        }
+                    }
+                },
+                Storages = new[] { Storage.SmartWalk }
+            };
+
+            var response = await GetResponse(request, source);
+            var result = default(OrgEvent);
+
+            if (response != null)
+            {
+                var eventMetadata = response
+                    .Selects[0].Records
+                    .Cast<JObject>()
+                    .Select(em => em.ToObject<EventMetadata>())
+                    .FirstOrDefault();
+
+                var host = response
+                    .Selects[1].Records
+                    .Cast<JObject>()
+                    .Select(e => e.ToObject<Entity>())
+                    .FirstOrDefault();
+
+                result = new OrgEvent(eventMetadata, host);
             }
 
             return result;
