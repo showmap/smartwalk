@@ -101,7 +101,7 @@ namespace SmartWalk.Client.Core.Services
             var request = new Request {
                 Selects = new[] {
                     new RequestSelect {
-                        Fields = new[] { "StartTime", "EndTime", "Shows" },
+                        Fields = new[] { "Host", "StartTime", "EndTime", "Shows" },
                         From = RequestSelectFromTables.EventMetadata,
                         As = "em",
                         Where = new[] {

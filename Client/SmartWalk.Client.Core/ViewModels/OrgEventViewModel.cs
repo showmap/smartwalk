@@ -232,7 +232,8 @@ namespace SmartWalk.Client.Core.ViewModels
                         () => 
                             _parameters != null &&
                             _parameters.IsCurrentEvent &&
-                            OrgEvent != null);
+                            OrgEvent != null &&
+                            OrgEvent.OrgId != 0);
                 }
 
                 return _navigateOrgCommand;
@@ -253,7 +254,8 @@ namespace SmartWalk.Client.Core.ViewModels
                             }),
                         () => 
                             _parameters != null &&
-                            OrgEvent != null);
+                            OrgEvent != null &&
+                            OrgEvent.Id != 0);
                 }
 
                 return _navigateOrgEventInfoCommand;
@@ -273,7 +275,10 @@ namespace SmartWalk.Client.Core.ViewModels
                                 OrgEventId = _parameters.OrgEventId,
                                 Location = _parameters.Location
                             }),
-                        venue => venue != null && _parameters != null);
+                        venue => 
+                            venue != null && 
+                            _parameters != null &&
+                            _parameters.OrgEventId != 0);
                 }
 
                 return _navigateVenueCommand;

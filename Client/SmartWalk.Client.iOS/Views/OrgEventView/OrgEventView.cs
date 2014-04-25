@@ -592,17 +592,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
             {
                 cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+                cell.IsHighlighted = cell.IsExpanded && !ViewModel.IsGroupedByLocation;
             }
 
             if (!ViewModel.IsGroupedByLocation)
             {
                 var tableSoure = (OrgEventTableSource)tableView.WeakDataSource;
+                var previousOffset = tableView.ContentOffset;
 
                 if (_previousExpandedShow != null)
                 {
                     tableView.ReloadSections(
                         NSIndexSet.FromIndex(
-                            tableSoure.GetSectionIndexByShow(_previousExpandedShow)),
+                            tableSoure.GetItemIndex(_previousExpandedShow).Section),
                         UITableViewRowAnimation.Fade);
                 }
 
@@ -610,9 +612,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     tableView.ReloadSections(
                         NSIndexSet.FromIndex(
-                            tableSoure.GetSectionIndexByShow(ViewModel.ExpandedShow)),
+                            tableSoure.GetItemIndex(ViewModel.ExpandedShow).Section), 
                         UITableViewRowAnimation.Fade);
                 }
+
+                // TODO: To measure row heights to compensate big deltas
+                tableView.SetContentOffset(
+                    new PointF(
+                        previousOffset.X,
+                        previousOffset.Y + 
+                            (ViewModel.ExpandedShow != null ? 1: -1) * VenueHeaderView.DefaultHeight), 
+                    true);
             }
 
             tableView.BeginUpdates();

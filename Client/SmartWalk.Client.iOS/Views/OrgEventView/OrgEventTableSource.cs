@@ -73,7 +73,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                             .SelectMany(v => v.Shows.Select(
                                 s =>
                                 { 
-                                var venue = new Venue(v.Info) { Shows = new [] { s } }; 
+                                    var venue = new Venue(v.Info) { Shows = new [] { s } }; 
                                     return venue;
                                 }))
                             .OrderBy(v => v.Shows[0], new ShowComparer())
@@ -89,17 +89,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get { return _viewModel.IsGroupedByLocation ? VenueItemsSource : FlattenItemsSource; }
         }
 
-        public int GetSectionIndexByShow(Show show)
+        public NSIndexPath GetItemIndex(Show show)
         {
             for (var i = 0; i < CurrentItemsSource.Length; i++)
             {
                 if (CurrentItemsSource[i].Shows.Contains(show))
                 {
-                    return i;
+                    return NSIndexPath.FromItemSection(
+                        Array.IndexOf(CurrentItemsSource[i].Shows, show), 
+                        i);
                 }
             }
 
-            return 0;
+            return NSIndexPath.FromItemSection(0, 0);
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
@@ -208,6 +210,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = show;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
+                ((VenueShowCell)cell).IsHighlighted = ((VenueShowCell)cell).IsExpanded && 
+                    !_viewModel.IsGroupedByLocation;
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     !_viewModel.IsGroupedByLocation ||
                     indexPath.Row < CurrentItemsSource[indexPath.Section].Shows.Length - 1 ||

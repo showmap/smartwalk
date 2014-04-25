@@ -40,6 +40,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor CellBackground = UIColor.White;
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
+        public static readonly UIColor CellSemiHighlight = UIColor.FromRGB(255, 250, 225);
         public static readonly UIColor CellSeparator = UIColor.FromRGB(220, 220, 220);
         public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(255, 255, 255, 250);
         public static readonly UIColor ToolBarButtonHighlightedBackground = 

@@ -32,10 +32,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _detailsTapGesture;
         private bool _isExpanded;
+        private bool _isHighlighted;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView { BackgroundColor = Theme.CellBackground };
+            BackgroundView = new UIView();
+            UpdateBackgroundColor();
 
             _imageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
@@ -135,6 +137,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     UpateImageState();
                     UpdateVisibility();
                     UpdateConstraints();
+
+                    if (!_isExpanded)
+                    {
+                        IsHighlighted = false;
+                    }
+                }
+            }
+        }
+
+        public bool IsHighlighted
+        {
+            get
+            {
+                return _isHighlighted;
+            }
+            set
+            {
+                if (_isHighlighted != value)
+                {
+                    _isHighlighted = value;
+                    UpdateBackgroundColor();
                 }
             }
         }
@@ -419,6 +442,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
                     break;
             }
+        }
+
+        private void UpdateBackgroundColor()
+        {
+            BackgroundView.BackgroundColor = 
+                IsHighlighted 
+                    ? Theme.CellSemiHighlight 
+                    : Theme.CellBackground;
         }
     }
 }
