@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ModernHttpClient;
+using MonoTouch.UIKit;
 using Newtonsoft.Json;
 using SmartWalk.Client.Core.Services;
-using MonoTouch.UIKit;
 
 namespace SmartWalk.Client.iOS.Services
 {
@@ -37,7 +37,7 @@ namespace SmartWalk.Client.iOS.Services
             return result;
         }
 
-        private static HttpClient CreateHttpClient()
+        public static HttpClient CreateHttpClient()
         {
             HttpClient result;
 

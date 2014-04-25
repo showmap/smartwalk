@@ -1,5 +1,6 @@
 using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
+using Cirrious.MvvmCross.Plugins.DownloadCache;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
@@ -36,7 +37,6 @@ namespace SmartWalk.Client.iOS
 
         protected override void AddPluginsLoaders(MvxLoaderPluginRegistry loaders)
         {
-            loaders.AddConventionalPlugin<Cheesebaron.MvxPlugins.ModernHttpClient.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.DownloadCache.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.File.Touch.Plugin>();
             loaders.AddConventionalPlugin<Cirrious.MvvmCross.Plugins.PhoneCall.Touch.Plugin>();
@@ -47,12 +47,13 @@ namespace SmartWalk.Client.iOS
 
         protected override void InitializeLastChance()
         {
-            Cheesebaron.MvxPlugins.ModernHttpClient.PluginLoader.Instance.EnsureLoaded();
-            Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
+            PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.PhoneCall.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Email.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
+
+            Mvx.RegisterSingleton<IMvxHttpFileDownloader>(() => new MvxFastHttpFileDownloader());
 
             base.InitializeLastChance();
         }

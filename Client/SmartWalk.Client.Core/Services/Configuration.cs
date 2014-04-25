@@ -1,8 +1,7 @@
-﻿using SmartWalk.Client.Core.Services;
-using System;
+﻿using System;
 using SmartWalk.Shared.DataContracts;
 
-namespace SmartWalk.Client.iOS.Services
+namespace SmartWalk.Client.Core.Services
 {
     public class Configuration : IConfiguration
     {

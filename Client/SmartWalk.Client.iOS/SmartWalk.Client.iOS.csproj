@@ -170,12 +170,6 @@
     <Reference Include="ModernHttpClient.iOS">
       <HintPath>..\..\packages\modernhttpclient.1.2.2\lib\MonoTouch\ModernHttpClient.iOS.dll</HintPath>
     </Reference>
-    <Reference Include="Cheesebaron.MvxPlugins.ModernHttpClient.Touch">
-      <HintPath>..\..\..\smartwalk-binaries\Client\Cheesebaron.MvxPlugins.ModernHttpClient\Cheesebaron.MvxPlugins.ModernHttpClient.Touch.dll</HintPath>
-    </Reference>
-    <Reference Include="Cheesebaron.MvxPlugins.ModernHttpClient">
-      <HintPath>..\..\..\smartwalk-binaries\Client\Cheesebaron.MvxPlugins.ModernHttpClient\Cheesebaron.MvxPlugins.ModernHttpClient.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -327,11 +321,11 @@
     <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\LocationService.cs" />
-    <Compile Include="Services\Configuration.cs" />
     <Compile Include="Resources\Localization.cs" />
     <Compile Include="Services\Clipboard.cs" />
     <Compile Include="Services\HttpService.cs" />
     <Compile Include="Utils\ActionSheetUtil.cs" />
+    <Compile Include="Services\MvxFastHttpFileDownloader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

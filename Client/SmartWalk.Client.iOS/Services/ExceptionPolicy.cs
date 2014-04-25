@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Services;
 using Newtonsoft.Json;
+using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Services
