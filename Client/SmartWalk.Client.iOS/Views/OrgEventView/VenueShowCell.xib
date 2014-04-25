@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -14,8 +14,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="302"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="592" userLabel="Realtime">
-                        <rect key="frame" x="0.0" y="0.0" width="5" height="303"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="592" userLabel="Realtime">
+                        <rect key="frame" x="0.0" y="0.0" width="5" height="302"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -43,26 +43,26 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="top" misplaced="YES" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="201" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="111" y="8" width="201" height="153"/>
+                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="201" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Description" customClass="CopyLabel">
+                        <rect key="frame" x="111" y="12" width="201" height="137"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <imageView hidden="YES" contentMode="scaleAspectFit" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
-                        <rect key="frame" x="111" y="169" width="173" height="100"/>
+                    <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
+                        <rect key="frame" x="111" y="161" width="173" height="100"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="100" id="139"/>
                             <constraint firstAttribute="width" constant="173" id="173"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="left" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
-                        <rect key="frame" x="111" y="277" width="173" height="18"/>
+                    <label hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
+                        <rect key="frame" x="111" y="273" width="173" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="18" id="367"/>
+                            <constraint firstAttribute="height" constant="17" id="367"/>
                         </constraints>
                         <attributedString key="attributedText">
                             <fragment content="more info">
@@ -91,10 +91,10 @@
                     <constraint firstItem="3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="10" id="K8r-rY-19h"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="Mgw-5u-WMm"/>
                     <constraint firstAttribute="trailing" secondItem="K9o-xv-nfu" secondAttribute="trailing" id="Saq-Ut-4Ls"/>
-                    <constraint firstItem="9" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="8" id="Ubz-V9-XNH"/>
+                    <constraint firstItem="9" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="12" id="Ubz-V9-XNH"/>
                     <constraint firstAttribute="bottom" secondItem="592" secondAttribute="bottom" id="Z4Z-UY-RgZ"/>
                     <constraint firstAttribute="bottom" secondItem="K9o-xv-nfu" secondAttribute="bottom" id="ZUK-hY-8aQ"/>
-                    <constraint firstAttribute="bottom" secondItem="181" secondAttribute="bottom" constant="8" id="e9g-Hw-SsH"/>
+                    <constraint firstAttribute="bottom" secondItem="181" secondAttribute="bottom" constant="12" id="e9g-Hw-SsH"/>
                     <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="fLo-Av-da9"/>
                     <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" constant="8" id="zyo-g5-Tzk"/>
                 </constraints>
@@ -103,15 +103,16 @@
                 <constraint firstItem="181" firstAttribute="leading" secondItem="9" secondAttribute="leading" id="5mB-cZ-z0P"/>
                 <constraint firstItem="6" firstAttribute="leading" secondItem="3" secondAttribute="trailing" constant="3" id="93y-jZ-to3"/>
                 <constraint firstItem="50" firstAttribute="leading" secondItem="9" secondAttribute="leading" id="FN9-RG-HkB"/>
-                <constraint firstItem="181" firstAttribute="top" secondItem="50" secondAttribute="bottom" constant="8" id="H0t-fT-ezL"/>
+                <constraint firstItem="181" firstAttribute="top" secondItem="50" secondAttribute="bottom" constant="12" id="H0t-fT-ezL"/>
                 <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="top" id="RVd-iL-t0g"/>
                 <constraint firstItem="50" firstAttribute="trailing" secondItem="181" secondAttribute="trailing" id="ggf-wX-NXc"/>
-                <constraint firstItem="50" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="8" id="oIx-Bh-aFO"/>
+                <constraint firstItem="50" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="12" id="oIx-Bh-aFO"/>
                 <constraint firstItem="6" firstAttribute="baseline" secondItem="3" secondAttribute="baseline" id="z7o-uO-yi2"/>
             </constraints>
             <connections>
                 <outlet property="DescriptionAndImageSpaceConstraint" destination="oIx-Bh-aFO" id="5nt-CW-Yes"/>
                 <outlet property="DescriptionLabel" destination="9" id="376"/>
+                <outlet property="DescriptionLeftConstraint" destination="DFg-T2-Ly1" id="Eps-gF-XOd"/>
                 <outlet property="DetailsHeightConstraint" destination="367" id="384"/>
                 <outlet property="DetailsLabel" destination="181" id="378"/>
                 <outlet property="EndTimeLabel" destination="6" id="380"/>

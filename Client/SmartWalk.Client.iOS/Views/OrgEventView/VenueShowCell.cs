@@ -6,6 +6,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common;
 
@@ -23,7 +24,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static readonly char M = 'm';
 
         private const int ImageHeight = 100;
-        private const int TimeBlockWidth = 109;
+        private const int TimeBlockWidth = 111;
         private const int Gap = 12;
 
         private readonly MvxImageViewLoader _imageHelper;
@@ -73,9 +74,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     var logoHeight = show.Picture != null ? Gap + ImageHeight : 0;
                     var detailsHeight = show.DetailsUrl != null ? Gap + Theme.VenueShowTextLineHeight : 0;
-                    var textHeight = CalculateTextHeight(
-                        frameWidth - TimeBlockWidth, 
-                        showText);
+                    var textHeight = CalculateTextHeight(GetTextWidth(frameWidth), showText);
                     cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
                 }
 
@@ -107,6 +106,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return 0;
         }
 
+        private static float GetTextWidth(float frameWidth)
+        {
+            return frameWidth - TimeBlockWidth - 8; // Description Label right gap
+        }
+
         public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand ExpandCollapseShowCommand { get; set; }
         public ICommand NavigateDetailsLinkCommand { get; set; }
@@ -129,39 +133,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     _isExpanded = value;
                     UpateImageState();
-                    SetNeedsUpdateConstraints();
+                    UpdateVisibility();
+                    UpdateConstraints();
                 }
             }
         }
 
         public bool IsSeparatorVisible
         {
-            get
-            {
-                return !Separator.Hidden;
-            }
-            set
-            {
-                Separator.Hidden = !value;
-            }
+            get { return !Separator.Hidden; }
+            set { Separator.Hidden = !value; }
         }
 
         public override void PrepareForReuse()
         {
             base.PrepareForReuse();
 
-            ThumbImageView.Hidden = true;
             IsExpanded = false;
-
-            UpdateConstraints();
         }
 
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-
-            ThumbImageView.Hidden = !IsExpanded || 
-                DataContext == null || DataContext.Picture == null;
 
             UpdateConstraints();
         }
@@ -170,9 +163,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.UpdateConstraints();
 
+            DescriptionLeftConstraint.Constant = TimeBlockWidth;
+
             if (IsExpanded &&
-                DataContext != null && 
-                DataContext.Picture != null &&
+                DataContext.HasPicture() &&
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
                 ImageHeightConstraint.Constant = ImageHeight;
@@ -187,8 +181,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             if (IsExpanded && 
-                DataContext != null && 
-                DataContext.DetailsUrl != null &&
+                DataContext.HasDetailsUrl() &&
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
                 DetailsHeightConstraint.Constant = Theme.VenueShowTextLineHeight;
@@ -250,7 +243,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             UpdateClockIcon();
             UpateImageState();
-            SetNeedsUpdateConstraints();
+            UpdateVisibility();
+            UpdateConstraints();
         }
 
         private static NSAttributedString GetTimeText(DateTime time, ShowStatus status)
@@ -290,6 +284,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ? DataContext.Picture : null;
         }
 
+        private void UpdateVisibility()
+        {
+            ThumbImageView.Hidden = !IsExpanded || 
+                !DataContext.HasPicture();
+
+            DetailsLabel.Hidden = !IsExpanded || 
+                !DataContext.HasDetailsUrl();
+        }
+
         private float GetImageProportionalWidth()
         {
             if (_imageHelper.ImageUrl != null &&
@@ -298,7 +301,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 var imageSize = ThumbImageView.Image.Size;
 
-                var width = (float)(1.0 * imageSize.Width * ImageHeight / imageSize.Height);
+                var width = Math.Min(
+                    (float)(1.0 * imageSize.Width * ImageHeight / imageSize.Height),
+                    GetTextWidth(Frame.Width));
                 return width;
             }
 
@@ -329,16 +334,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 NumberOfTapsRequired = (uint)1
             };
 
-            _detailsTapGesture = new UITapGestureRecognizer(() => {
-                if (NavigateDetailsLinkCommand != null &&
-                    NavigateDetailsLinkCommand.CanExecute(DataContext.DetailsUrl))
+            var uITapGestureRecognizer = new UITapGestureRecognizer(() => 
+            {
+                var contact = new Contact {
+                    Type = ContactType.Url,
+                    ContactText = DataContext.DetailsUrl
+                };
+                if (NavigateDetailsLinkCommand != null && 
+                    NavigateDetailsLinkCommand.CanExecute(contact))
                 {
-                    NavigateDetailsLinkCommand.Execute(DataContext.DetailsUrl);
+                    NavigateDetailsLinkCommand.Execute(contact);
                 }
-            }) {
-                NumberOfTouchesRequired = (uint)1,
-                NumberOfTapsRequired = (uint)1
-            };
+            });
+            uITapGestureRecognizer.NumberOfTouchesRequired = (uint)1;
+            uITapGestureRecognizer.NumberOfTapsRequired = (uint)1;
+            _detailsTapGesture = uITapGestureRecognizer;
 
             _cellTapGesture.RequireGestureRecognizerToFail(_imageTapGesture);
             _cellTapGesture.RequireGestureRecognizerToFail(_detailsTapGesture);

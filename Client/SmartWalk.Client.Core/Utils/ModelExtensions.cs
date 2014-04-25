@@ -123,6 +123,16 @@ namespace SmartWalk.Client.Core.Utils
             return entity != null && entity.Addresses != null && entity.Addresses.Length > 0;
         }
 
+        public static bool HasPicture(this Show show)
+        {
+            return show != null && show.Picture != null;
+        }
+
+        public static bool HasDetailsUrl(this Show show)
+        {
+            return show != null && show.DetailsUrl != null;
+        }
+
         public static int Id(this Reference[] refs)
         {
             var smartWalkRef = refs != null 
