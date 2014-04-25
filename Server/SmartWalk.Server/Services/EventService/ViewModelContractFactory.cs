@@ -20,11 +20,11 @@ namespace SmartWalk.Server.Services.EventService
                         StartTime = record.StartTime.ToString("d", CultureInfo.InvariantCulture),
                         EndTime = record.EndTime.HasValue ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
                         IsPublic = record.IsPublic,
-                        Picture = record.Picture
+                        Picture = record.Picture,
+                        DisplayDate = record.StartTime.ToString("D", CultureInfo.InvariantCulture)
                     };
 
                 case LoadMode.Full:
-                default:
                     return new EventMetadataVm
                     {
                         Id = record.Id,
@@ -40,6 +40,9 @@ namespace SmartWalk.Server.Services.EventService
                         Picture = record.Picture,
                         DisplayDate = record.StartTime.ToString("D", CultureInfo.InvariantCulture)
                     };
+
+                default:
+                    return null;
             }            
         }
     }
