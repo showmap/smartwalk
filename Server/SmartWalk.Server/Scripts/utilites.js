@@ -4,8 +4,8 @@
     child.prototype = new F();
     child.prototype.constructor = child;
 
-    // `child` function is an object like all functions
-    child.superClass_ = parent.prototype;
+    // `child` function is an object like all functions    
+    child.superClass_ = parent.prototype;    
 }
 
 function addSingletonGetter(ctor) {
@@ -28,26 +28,29 @@ function attachVerticalScroll(callback) {
     });
 }
 
-function ajaxJsonRequest(data, url, onSuccess, onError) {
+function ajaxJsonRequest(ajData, url, onSuccess, onError) {
+    var z = this;
+
     var config = {
         async: true,
         url: url,
         type: "POST",
-        data: data,
+        data: ajData,
         dataType: "json",
         cache: false,
         contentType: "application/json; charset=utf-8",
         error: function (e) {
-            onError(e);
+            onError.call(z, e);
         },
         success: function (data) {
-            onSuccess(data);
+            onSuccess.call(z, data);
         }
     };
 
     $.ajax(config);
 }
 
+//ListViewModel class
 ListViewModel = function (parameters, url) {
     this.parameters_ = parameters;
     this.url_ = url;
@@ -55,26 +58,80 @@ ListViewModel = function (parameters, url) {
     attachVerticalScroll.call(this, this.getNextPage);
 };
 
-ListViewModel.prototype = {
-    Items: ko.observableArray(),
-    currentPage: ko.observable(0),
-    addItem: function(data) {
-    },
-    getData: function(pageNumber) {
-        if (this.currentPage() != pageNumber) {
-            var z = this;
-            var ajData = JSON.stringify({ pageNumber: pageNumber, parameters: this.parameters_ });
-            ajaxJsonRequest(ajData, this.url_, function (data) {
-                if (data.length > 0) {
-                    z.currentPage(z.currentPage() + 1);
-                    for (var i = 0; i < data.length; i++) {
-                        z.addItem(data[i]);
-                    }
+ListViewModel.prototype.Items = ko.observableArray();
+ListViewModel.prototype.currentPage = ko.observable(0);
+ListViewModel.prototype.getData = function(pageNumber) {
+    if (this.currentPage() != pageNumber) {
+        var ajData = JSON.stringify({ pageNumber: pageNumber, parameters: this.parameters_ });
+        ajaxJsonRequest.call(this, ajData, this.url_, function(data) {
+            if (data.length > 0) {
+                this.currentPage(this.currentPage() + 1);
+                for (var i = 0; i < data.length; i++) {
+                    this.addItem(data[i]);
                 }
-            });
+            }
+        });
+    }
+};
+ListViewModel.prototype.getNextPage = function() {
+    return this.getData(this.currentPage() + 1);
+};
+
+//ViewModelBase Class
+ViewModelBase = function () {};
+
+ViewModelBase.prototype.selectedItem = ko.observable();
+
+ViewModelBase.prototype.DeleteItem_ = function(item) {
+    item.State(2);
+};
+
+ViewModelBase.prototype.Items_ = function(itemCollection) {
+    return ko.utils.arrayFilter(itemCollection(), function(item) {
+        return item.State() != 2 && item.State() != 3;
+    });
+};
+
+ViewModelBase.prototype.DeletedItems_ = function(itemCollection) {
+    return ko.utils.arrayFilter(itemCollection(), function(item) {
+        return item.State() == 2;
+    });
+};
+
+ViewModelBase.prototype.CheckedItems_ = function(itemCollection) {
+    return ko.utils.arrayFilter(itemCollection(), function(item) {
+        return item.IsChecked() && item != this.selectedItem();
+    });
+};
+
+ViewModelBase.prototype.IsAnyItemSelected_ = function(itemCollection) {
+    if (itemCollection().length == 0)
+        return false;
+
+    for (var i = 0; i < itemCollection().length; i++) {
+        if (itemCollection()[i].IsChecked()) {
+            return true;
         }
-    },
-    getNextPage: function () {
-        return this.getData(this.currentPage() + 1);
-    },
+    }
+    return false;
+};
+
+ViewModelBase.prototype.GetAllItemsChecked_ = function(itemCollection) {
+    if (itemCollection().length == 0)
+        return false;
+
+    for (var i = 0; i < itemCollection().length; i++) {
+        if (!itemCollection()[i].IsChecked()) {
+            return false;
+        }
+    }
+    return true;
+};
+
+ViewModelBase.prototype.SetAllItemsChecked_ = function(itemsCollection, value) {
+    for (var i = 0; i < itemsCollection().length; i++) {
+        if (itemsCollection()[i].IsChecked() != value) {
+            itemsCollection()[i].IsChecked(value);
+        }
+    }
 };

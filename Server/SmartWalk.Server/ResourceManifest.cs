@@ -22,17 +22,25 @@ namespace SmartWalk.Server
                 .SetDependencies("ko", "SmartWalk.AntiForgery");
 
             manifest.DefineScript("ko.autocomplete")
-                .SetVersion("1.2")
+                .SetVersion("1.1")
                 .SetUrl("autocomplete.js")
                 .SetDependencies("ko", "SmartWalk.AntiForgery");
 
             manifest.DefineScript("SmartWalk.Utilites")
-                .SetUrl("utilites.js?ver=1.0")
+                .SetUrl("utilites.js?ver=1.2")
                 .SetDependencies("ko");
             
-            manifest.DefineScript("SmartWalk.ViewModels")
-                .SetUrl("viewmodels.js")
+            manifest.DefineScript("SmartWalk.ViewModels.Common")
+                .SetUrl("viewmodels-common.js")
                 .SetDependencies("ko.datetime", "ko.autocomplete", "SmartWalk.Utilites");
+
+            manifest.DefineScript("SmartWalk.ViewModels.Entity")
+                .SetUrl("viewmodels-entity.js?ver=1.0")
+                .SetDependencies("SmartWalk.ViewModels.Common");
+
+            manifest.DefineScript("SmartWalk.ViewModels.Event")
+                .SetUrl("viewmodels-event.js?ver=1.4")
+                .SetDependencies("SmartWalk.ViewModels.Entity");
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")

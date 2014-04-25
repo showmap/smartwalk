@@ -26,8 +26,6 @@ namespace SmartWalk.Server.Services.EntityService
                     {
                         Id = record.Id,
                         State = state,
-                        UserId = record.SmartWalkUserRecord.Id,
-                        Type = record.Type,
                         Name = record.Name,
                         Picture = record.Picture,
                         AllAddresses = record.AddressRecords.FirstOrDefault() == null ? new List<AddressVm>() : new List<AddressVm> { CreateViewModelContract(record.AddressRecords.FirstOrDefault()) },
@@ -38,8 +36,6 @@ namespace SmartWalk.Server.Services.EntityService
                     {
                         Id = record.Id,
                         State = state,
-                        UserId = record.SmartWalkUserRecord.Id,
-                        Type = record.Type,
                         Name = record.Name,
                         Picture = record.Picture,
                         Description = record.Description,

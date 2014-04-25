@@ -15,8 +15,7 @@ namespace SmartWalk.Server.Services.EventService
                     return new EventMetadataVm
                     {
                         Id = record.Id,
-                        UserId = record.SmartWalkUserRecord.Id,
-                        Title = record.Title,
+                        Title = string.IsNullOrEmpty(record.Title) ? record.EntityRecord.Name : record.Title,
                         StartTime = record.StartTime.ToString("d", CultureInfo.InvariantCulture),
                         EndTime = record.EndTime.HasValue ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture) : "",
                         IsPublic = record.IsPublic,

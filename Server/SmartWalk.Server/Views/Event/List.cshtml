@@ -3,7 +3,7 @@
     Style.Require("SmartWalk");
 
     Script.Require("jQueryUI").AtFoot();
-    Script.Require("SmartWalk.ViewModels").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Event").AtFoot();
     Script.Require("ImageScale").AtFoot();
 
     var model = (ListViewVm)Model;
@@ -68,9 +68,9 @@
 <script type="text/html" id="EventItemTemplate">
     <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '/event/' + Id()}">
         <div class="header">
-            <h3 data-bind="text: DisplayName"></h3>
+            <h3 data-bind="text: Title"></h3>
 			
-            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: DisplayPicture}">
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture}">
         </div>
 				
         <div class="info">
@@ -83,20 +83,20 @@
 {
 <script type="text/javascript">
     EventsViewModel = function(data, url) {
-        ListViewModel.call(this, data, url);
+        EventsViewModel.superClass_.constructor.call(this, data, url);
     };
 
     inherits(EventsViewModel, ListViewModel);
 
     EventsViewModel.prototype.addItem = function(data) {
         //VenuesViewModel.superClass_.Items.push(new EntityViewModel(data));
-        this.Items.push(new EventViewModel(data));
+        this.Items.push(new EventViewModelBase(data));
         $("img.scale").imageScale();
     };
 
     $(document).ready(function() {
         var viewModel = new EventsViewModel(@Html.Raw(Json.Encode(parameters)), $("#event-items").attr("get-events-url"));
-            ko.applyBindings(viewModel, document.getElementById('event-items'));
+        ko.applyBindings(viewModel, document.getElementById('event-items'));
     });
     
     $(function() {

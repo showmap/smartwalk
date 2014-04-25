@@ -120,7 +120,6 @@ function EntityViewModel(data) {
     self.Type = ko.observable();
 
     self.Name = ko.observable();
-    self.DisplayName = ko.observable();
 
     self.Description = ko.observable();
     self.Picture = ko.observable();
@@ -138,7 +137,6 @@ function EntityViewModel(data) {
         self.Type(data.Type);
 
         self.Name(data.Name);
-        self.DisplayName(data.DisplayName);
 
         self.Description(data.Description);
         self.Picture(data.Picture);
@@ -341,9 +339,6 @@ function EventViewModel(data) {
     self.Latitude = ko.observable();
     self.Longitude = ko.observable();
     
-    self.DisplayName = ko.observable();
-    self.DisplayPicture = ko.observable();
-
     self.CombineType = ko.observable();
     self.IsPublic = ko.observable();
     self.DisplayDate = ko.observable();
@@ -371,9 +366,6 @@ function EventViewModel(data) {
         self.Latitude(data.Latitude);
         self.Longitude(data.Longitude);
         
-        self.DisplayName(data.DisplayName);
-        self.DisplayPicture(data.DisplayPicture);
-
         self.CombineType(data.CombineType);
         self.IsPublic(data.IsPublic);
         self.DisplayDate(data.DisplayDate);

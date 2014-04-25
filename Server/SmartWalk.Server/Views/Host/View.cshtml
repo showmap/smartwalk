@@ -6,7 +6,7 @@
     Style.Require("TextCollapse");
 
     Script.Require("jQueryUI").AtFoot();
-    Script.Require("SmartWalk.ViewModels").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Event").AtFoot();
     Script.Require("ImageScale").AtFoot();
     Script.Require("TextCollapse").AtFoot();
     
@@ -67,6 +67,7 @@
             }                
             </div>
         </div>     
+            <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
 
         <table class="table table-content" data-bind="visible: EventItems().length > 0">
             <thead>
@@ -79,7 +80,7 @@
 <script type="text/html" id="eventItemTemplate">
     <tr>
         <td>
-            <a data-bind="attr: {href: '/event/'+Id()}, text: DisplayName"></a><br/>
+            <a data-bind="attr: {href: '/event/'+Id()}, text: Title"></a><br/>
             <span class="description" data-bind="text: Description"></span>
         </td>
         <td data-bind="text: StartTime"></td>        
@@ -94,7 +95,7 @@
             window.location.href = "@Url.Action("View")" + "/edit";
         });
 
-        function EventsViewModel() {
+        function eventsViewModel() {
             var self = this;
 
             self.EventItems = ko.observableArray();
@@ -114,7 +115,7 @@
         }
 
 
-        ko.applyBindings(new EventsViewModel(), document.getElementById('view-venue-form'));
+        ko.applyBindings(new eventsViewModel(), document.getElementById('view-venue-form'));
     });
     
     $(function() {
