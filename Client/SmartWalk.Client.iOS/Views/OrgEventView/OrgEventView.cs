@@ -600,29 +600,44 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var tableSoure = (OrgEventTableSource)tableView.WeakDataSource;
                 var previousOffset = tableView.ContentOffset;
 
-                if (_previousExpandedShow != null)
-                {
-                    tableView.ReloadSections(
-                        NSIndexSet.FromIndex(
-                            tableSoure.GetItemIndex(_previousExpandedShow).Section),
-                        UITableViewRowAnimation.Fade);
-                }
+                var previousIndex = _previousExpandedShow != null
+                    ? tableSoure.GetItemIndex(_previousExpandedShow)
+                    : null;
 
-                if (ViewModel.ExpandedShow != null)
-                {
-                    tableView.ReloadSections(
-                        NSIndexSet.FromIndex(
-                            tableSoure.GetItemIndex(ViewModel.ExpandedShow).Section), 
-                        UITableViewRowAnimation.Fade);
-                }
+                var currentIndex = ViewModel.ExpandedShow != null
+                    ? tableSoure.GetItemIndex(ViewModel.ExpandedShow)
+                    : null;
 
-                // TODO: To measure row heights to compensate big deltas
+                var delta = 
+                    (ViewModel.ExpandedShow != null ? 1: -1) * 
+                        VenueHeaderView.DefaultHeight -
+                    (previousIndex != null && 
+                        currentIndex != null && 
+                            previousIndex.Section < currentIndex.Section
+                        ? VenueShowCell.CalculateCellHeight(
+                            tableView.Frame.Width,
+                            true,
+                            _previousExpandedShow) + 25
+                        : 0);
+
+                // Compensating that shift created by expanded headers or previous cells
                 tableView.SetContentOffset(
-                    new PointF(
-                        previousOffset.X,
-                        previousOffset.Y + 
-                            (ViewModel.ExpandedShow != null ? 1: -1) * VenueHeaderView.DefaultHeight), 
+                    new PointF(previousOffset.X, previousOffset.Y + delta), 
                     true);
+
+                if (previousIndex != null)
+                {
+                    tableView.ReloadSections(
+                        NSIndexSet.FromIndex(previousIndex.Section),
+                        UITableViewRowAnimation.Fade);
+                }
+
+                if (currentIndex != null)
+                {
+                    tableView.ReloadSections(
+                        NSIndexSet.FromIndex(currentIndex.Section), 
+                        UITableViewRowAnimation.Fade);
+                }
             }
 
             tableView.BeginUpdates();
