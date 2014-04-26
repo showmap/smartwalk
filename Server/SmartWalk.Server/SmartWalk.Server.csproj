@@ -90,13 +90,14 @@
     <Content Include="Images\loading.gif" />
     <Content Include="Scripts\antiforgery.js" />
     <Content Include="Scripts\autocomplete.js" />
-    <Content Include="Scripts\viewmodels-event.js" />
-    <Content Include="Scripts\viewmodels-entity.js" />
-    <Content Include="Scripts\viewmodels-common.js" />
+    <Content Include="Scripts\smartwalk-viewmodels-entity-extended.js" />
+    <Content Include="Scripts\smartwalk-viewmodels-event.js" />
+    <Content Include="Scripts\smartwalk-viewmodels-entity.js" />
+    <Content Include="Scripts\smartwalk-viewmodels-common.js" />
     <Content Include="Scripts\image-scale.js" />
     <Content Include="Scripts\image-scale.min.js" />
     <Content Include="Scripts\text-collapse.js" />
-    <Content Include="Scripts\utilites.js" />
+    <Content Include="Scripts\smartwalk-utilites.js" />
     <Content Include="Scripts\viewmodels.js" />
     <Content Include="Scripts\kodatetime.js" />
     <Content Include="Styles\smartwalk.css" />
@@ -221,7 +222,7 @@
     <Content Include="Views\Host\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Templates.cshtml" />
+    <Content Include="Views\Entity\Templates.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Event\View.cshtml" />
@@ -296,5 +297,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\image-scale.jquery.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Entity\EditTemplate.cshtml" />
   </ItemGroup>
 </Project>

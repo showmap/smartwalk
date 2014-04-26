@@ -39,7 +39,7 @@ EventViewModel = function (data) {
     this.AllHosts = ko.observableArray();
     this.OtherVenues = ko.observableArray();
 
-    this.loadData.call(this, data);
+    EventViewModel.prototype.loadData.call(this, data);
 };
 
 inherits(EventViewModel, EventViewModelBase);
@@ -62,12 +62,12 @@ EventViewModel.prototype.loadData = function (data) {
 };
 
 EventViewModel.prototype.Venues = ko.computed(function () {
-    return this.Items_ ? this.Items_(this.AllVenues()) : null;
+    return this.Items_ ? this.Items_(this.AllVenues()) : [];
 });
 
 EventViewModel.prototype.CheckedShows = ko.computed(function () {
     if (!this.Venues)
-        return null;
+        return [];
     
     var venueShows = ko.utils.arrayMap(this.Venues(), function (venue) {
         return venue.CheckedShows();
@@ -95,7 +95,7 @@ EventViewModel.prototype.AllVenuesChecked = ko.computed({
 
 EventViewModel.prototype.CalcVenues = ko.computed(function () {
     if (!this.AllVenues)
-        return null;
+        return [];
     return ko.utils.arrayFilter(this.AllVenues(), function (item) {
         return item.Id() == 0;
     });

@@ -3,7 +3,6 @@
     Style.Require("SmartWalk");
 
     Script.Require("jQueryUI").AtHead();
-    Script.Require("SmartWalk.ViewModels").AtHead();
     
     var host = (EntityVm) Model;
     var cancelAction = host.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @host.Id });    
@@ -16,7 +15,7 @@
         });
         
         $("#edit-host-form").bind('OnHostSaved', function (event) {
-            window.location.href = window.location.href = "/host/" + event.item.Id();
+            window.location.href = window.location.href = "/organizer/" + event.item.Id();
         });
     });
 </script>

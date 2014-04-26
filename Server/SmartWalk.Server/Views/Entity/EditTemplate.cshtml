@@ -1,0 +1,74 @@
+﻿@using SmartWalk.Server.Records
+
+<div class="row">
+	<div class="col-sm-8">
+		<div class="form-group">
+			<label for="pictureTextInput">@T("Picture"):</label>
+			<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture" />
+		</div>
+	</div>
+</div>
+        
+<div class="row">
+	<div class="col-sm-8">
+		<div class="form-group">
+			<label for="descriptionTextArea">@T("Description"):</label>
+			<textarea class="form-control" id="descriptionTextArea" data-bind="value: Description"></textarea>
+		</div>
+	</div>
+</div>
+        
+<div class="map-container"><iframe data-bind="attr: { src: GetMapLink() }, visible: IsMapVisible"></iframe></div>
+
+<div class="row" data-bind="visible: Type() == @Convert.ToInt32(EntityType.Venue)">
+	<div class="col-sm-8">
+		<table class="table table-hover addresses-table" data-bind="visible: Addresses().length > 0">
+			<thead>
+				<tr>
+					<th><h4>@T("Addresses")</h4></th>
+					<th class="td-align">
+						<div class="input-group-btn" style="display:inline">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<input type="checkbox" data-bind="checked: AllAddressesChecked"/><span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#">@T("Duplicate")</a></li>
+								<li data-bind="visible: IsAnyAddressSelected"><a href="#" data-bind="click: function () { $root.deleteAddresses($root) }">@T("Delete")</a></li>
+							</ul>
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody data-bind="template: { name: getAddressView, foreach: Addresses() }"></tbody>
+		</table>
+				
+		<button type="button" class="btn btn-default" data-bind="click: addAddress">@T("Add Address")</button>
+	</div>
+</div>
+        
+<div class="row gap">
+    <div class="col-sm-8">
+        <table class="table table-hover" data-bind="visible: Contacts().length > 0">
+            <thead>
+                <tr>
+                    <th>@T("Contact Type")</th>
+                    <th><h4>@T("E-mail, Phone or Web-Site")</h4></th>
+                    <th class="td-align">
+                        <div class="input-group-btn" style="display:inline">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <input type="checkbox" data-bind="checked: AllContactsChecked"/><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">@T("Duplicate")</a></li>
+                                <li data-bind="visible: IsAnyContactSelected"><a href="#" data-bind="click: function () { $root.deleteContacts($root) }">@T("Delete")</a></li>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody data-bind="template: { name: getContactView, foreach: Contacts() }"></tbody>
+        </table>
+				
+        <button type="button" class="btn btn-default" data-bind="click: addContact">@T("Add Contact")</button>
+    </div>
+</div>

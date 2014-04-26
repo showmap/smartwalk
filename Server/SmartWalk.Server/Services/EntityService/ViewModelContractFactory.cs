@@ -36,6 +36,7 @@ namespace SmartWalk.Server.Services.EntityService
                     {
                         Id = record.Id,
                         State = state,
+                        Type = record.Type,
                         Name = record.Name,
                         Picture = record.Picture,
                         Description = record.Description,

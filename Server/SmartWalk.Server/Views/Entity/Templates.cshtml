@@ -42,8 +42,8 @@
 							
                 <div class="text-right">
                     <div class="form-group">
-                        <button type="button" class="btn btn-default" data-bind="click: $root.cancelAddress">@T("Cancel")</button>
-                        <button type="button" class="btn btn-success" data-bind="click: $root.saveAddress">@T("Save Address")</button>
+                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.cancelAddress($data, $root) }">@T("Cancel")</button>
+                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.saveAddress($data, $root) }">@T("Save Address")</button>
                     </div>
                 </div>
             </div>
@@ -66,11 +66,9 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="form-group">
-                            <label for="addressTextInput">@T("Type"):</label>
-                            <select class="form-control" data-bind="value: Type">
-                                <option value="0" data-bind="text: $root.GetContactTypeById('0')"></option>
-                                <option value="1" data-bind="text: $root.GetContactTypeById('1')"></option>
-                                <option value="2" data-bind="text: $root.GetContactTypeById('2')"></option>
+                            <label for="addressTextInput">@T("Type"):</label>                            
+                            <select class="form-control" data-bind="value: Type, foreach: $root.contactTypes">
+                                <option data-bind="text: $data, value: $root.contactTypes.indexOf($data)"></option>                                
                             </select>
                         </div>
                     </div>
@@ -90,8 +88,8 @@
 							
                 <div class="text-right">
                     <div class="form-group">
-                        <button type="button" class="btn btn-default" data-bind="click: $root.cancelContact">@T("Cancel")</button>
-                        <button type="button" class="btn btn-success" data-bind="click: $root.saveContact">@T("Save Contact")</button>
+                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.cancelContact($data, $root) }">@T("Cancel")</button>
+                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.saveContact($data, $root) }">@T("Save Contact")</button>
                     </div>
                 </div>
             </div>

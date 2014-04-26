@@ -359,6 +359,7 @@ namespace SmartWalk.Server.Services.EntityService
             {
                 contact.Title = contactVm.Title;
                 contact.Contact = contactVm.Contact;
+                contact.Type = contactVm.Type;
             }
 
             _contactRepository.Flush();

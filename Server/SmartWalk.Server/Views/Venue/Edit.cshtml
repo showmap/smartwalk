@@ -2,8 +2,7 @@
 @{
     Style.Require("SmartWalk");
 
-    Script.Require("jQueryUI").AtHead();
-    Script.Require("SmartWalk.ViewModels").AtHead();
+    Script.Require("jQueryUI").AtHead();    
     
     var venue = (EntityVm) Model;
     var cancelAction = venue.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @venue.Id });
@@ -11,11 +10,11 @@
 @Html.Partial("EditTemplate", venue)
 <script>
     $(function () {
-        $("#edit-venue-form").bind('OnVenueCancelled', function (event) {
+        $("#edit-venue-form").bind(EntityViewModelExtended.VENUE_CANCEL_EVENT, function (event) {
             window.location.href = "@cancelAction";
         });
 
-        $("#edit-venue-form").bind('OnVenueSaved', function (event) {
+        $("#edit-venue-form").bind(EntityViewModelExtended.VENUE_SAVE_EVENT, function (event) {
             window.location.href = "/venue/" + event.item.Id();
         });
     });

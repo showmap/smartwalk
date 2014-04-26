@@ -30,7 +30,7 @@ function attachVerticalScroll(callback) {
 
 function ajaxJsonRequest(ajData, url, onSuccess, onError) {
     var z = this;
-
+    
     var config = {
         async: true,
         url: url,
@@ -40,10 +40,12 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
         cache: false,
         contentType: "application/json; charset=utf-8",
         error: function (e) {
-            onError.call(z, e);
+            if(onError)
+                onError.call(z, e);
         },
         success: function (data) {
-            onSuccess.call(z, data);
+            if(onSuccess)
+                onSuccess.call(z, data);
         }
     };
 
@@ -63,14 +65,16 @@ ListViewModel.prototype.currentPage = ko.observable(0);
 ListViewModel.prototype.getData = function(pageNumber) {
     if (this.currentPage() != pageNumber) {
         var ajData = JSON.stringify({ pageNumber: pageNumber, parameters: this.parameters_ });
-        ajaxJsonRequest.call(this, ajData, this.url_, function(data) {
-            if (data.length > 0) {
-                this.currentPage(this.currentPage() + 1);
-                for (var i = 0; i < data.length; i++) {
-                    this.addItem(data[i]);
+        ajaxJsonRequest.call(this, ajData, this.url_,
+            function (data) {
+                if (data.length > 0) {
+                    this.currentPage(this.currentPage() + 1);
+                    for (var i = 0; i < data.length; i++) {
+                        this.addItem(data[i]);
+                    }
                 }
             }
-        });
+        );
     }
 };
 ListViewModel.prototype.getNextPage = function() {
@@ -87,29 +91,30 @@ ViewModelBase.prototype.DeleteItem_ = function(item) {
 };
 
 ViewModelBase.prototype.Items_ = function(itemCollection) {
-    return ko.utils.arrayFilter(itemCollection(), function(item) {
+    return ko.utils.arrayFilter(itemCollection, function(item) {
         return item.State() != 2 && item.State() != 3;
     });
 };
 
 ViewModelBase.prototype.DeletedItems_ = function(itemCollection) {
-    return ko.utils.arrayFilter(itemCollection(), function(item) {
+    return ko.utils.arrayFilter(itemCollection, function(item) {
         return item.State() == 2;
     });
 };
 
-ViewModelBase.prototype.CheckedItems_ = function(itemCollection) {
-    return ko.utils.arrayFilter(itemCollection(), function(item) {
-        return item.IsChecked() && item != this.selectedItem();
+ViewModelBase.prototype.CheckedItems_ = function (itemCollection) {
+    var selectedItem = this.selectedItem();
+    return ko.utils.arrayFilter(itemCollection, function(item) {
+        return item.IsChecked() && item != selectedItem;
     });
 };
 
 ViewModelBase.prototype.IsAnyItemSelected_ = function(itemCollection) {
-    if (itemCollection().length == 0)
+    if (itemCollection.length == 0)
         return false;
 
-    for (var i = 0; i < itemCollection().length; i++) {
-        if (itemCollection()[i].IsChecked()) {
+    for (var i = 0; i < itemCollection.length; i++) {
+        if (itemCollection[i].IsChecked()) {
             return true;
         }
     }
@@ -117,11 +122,11 @@ ViewModelBase.prototype.IsAnyItemSelected_ = function(itemCollection) {
 };
 
 ViewModelBase.prototype.GetAllItemsChecked_ = function(itemCollection) {
-    if (itemCollection().length == 0)
+    if (itemCollection.length == 0)
         return false;
 
-    for (var i = 0; i < itemCollection().length; i++) {
-        if (!itemCollection()[i].IsChecked()) {
+    for (var i = 0; i < itemCollection.length; i++) {
+        if (!itemCollection[i].IsChecked()) {
             return false;
         }
     }
@@ -129,9 +134,9 @@ ViewModelBase.prototype.GetAllItemsChecked_ = function(itemCollection) {
 };
 
 ViewModelBase.prototype.SetAllItemsChecked_ = function(itemsCollection, value) {
-    for (var i = 0; i < itemsCollection().length; i++) {
-        if (itemsCollection()[i].IsChecked() != value) {
-            itemsCollection()[i].IsChecked(value);
+    for (var i = 0; i < itemsCollection.length; i++) {
+        if (itemsCollection[i].IsChecked() != value) {
+            itemsCollection[i].IsChecked(value);
         }
     }
 };
