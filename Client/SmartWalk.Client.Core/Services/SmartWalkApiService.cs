@@ -431,6 +431,8 @@ namespace SmartWalk.Client.Core.Services
 
         private static Venue CreateVenue(Entity entity, Show[] shows)
         {
+            entity.Type = EntityType.Venue; // saving a bit traffic here
+
             var venueShows = shows
                 .Where(s => entity.Id == s.Venue.Id() && s.IsReference != true)
                 .ToArray();
@@ -440,6 +442,8 @@ namespace SmartWalk.Client.Core.Services
 
         private static Org CreateOrg(Entity entity, EventMetadata[] eventMetadatas)
         {
+            entity.Type = EntityType.Host; // saving a bit traffic here
+
             var orgEvents = eventMetadatas
                 .Select(em => new OrgEvent(em, entity))
                 .ToArray();

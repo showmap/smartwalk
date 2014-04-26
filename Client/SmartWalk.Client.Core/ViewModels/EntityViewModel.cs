@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using System.Windows.Input;
+using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
@@ -15,8 +17,11 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public abstract class EntityViewModel : RefreshableViewModel, 
         IFullscreenImageProvider,
-        IContactsEntityProvider
+        IContactsEntityProvider,
+        IShareableViewModel
     {
+        private readonly IConfiguration _configuration;
+        private readonly IClipboard _clipboard;
         private readonly IAnalyticsService _analyticsService;
         private readonly IMvxPhoneCallTask _phoneCallTask;
         private readonly IMvxComposeEmailTask _composeEmailTask;
@@ -37,19 +42,27 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Entity> _showDirectionsCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<Entity> _navigateAddressesCommand;
+        private MvxCommand _copyLinkCommand;
+        private MvxCommand _shareCommand;
 
         protected EntityViewModel(
+            IConfiguration configuration,
+            IClipboard clipboard,
             IAnalyticsService analyticsService,
             IMvxPhoneCallTask phoneCallTask,
             IMvxComposeEmailTask composeEmailTask,
             IShowDirectionsTask showDirectionsTask) : 
             base(analyticsService)
         {
+            _configuration = configuration;
+            _clipboard = clipboard;
             _analyticsService = analyticsService;
             _phoneCallTask = phoneCallTask;
             _composeEmailTask = composeEmailTask;
             _showDirectionsTask = showDirectionsTask;
         }
+
+        public event EventHandler<MvxValueEventArgs<string>> Share;
 
         public Entity Entity
         {
@@ -355,6 +368,57 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _navigateAddressesCommand;
+            }
+        }
+
+        public ICommand CopyLinkCommand
+        {
+            get
+            {
+                if (_copyLinkCommand == null)
+                {
+                    _copyLinkCommand = new MvxCommand(() => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCopyLink);
+
+                            var url = _configuration
+                                .GetEntityUrl(Entity.Id, Entity.Type.Value);
+                            _clipboard.Copy(url);
+                        },
+                        () => Entity != null && Entity.Type.HasValue);
+                }
+
+                return _copyLinkCommand;
+            }
+        }
+
+        public ICommand ShareCommand
+        {
+            get
+            {
+                if (_shareCommand == null)
+                {
+                    _shareCommand = new MvxCommand(() => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShare);
+
+                            var url = _configuration
+                                .GetEntityUrl(Entity.Id, Entity.Type.Value);
+                            if (url != null && Share != null)
+                            {
+                                Share(this, new MvxValueEventArgs<string>(url));
+                            }
+                        },
+                        () => Entity != null && Entity.Type.HasValue);
+                }
+
+                return _shareCommand;
             }
         }
 

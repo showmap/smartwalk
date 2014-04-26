@@ -5,7 +5,6 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -18,14 +17,12 @@ namespace SmartWalk.Client.Core.ViewModels
     public class VenueViewModel : EntityViewModel
     {
         private readonly IClipboard _clipboard;
-        private readonly IConfiguration _configuration;
         private readonly ISmartWalkApiService _apiService;
         private readonly IAnalyticsService _analyticsService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
         private MvxCommand  _copyAddressCommand;
-        private MvxCommand _copyLinkCommand;
         private MvxCommand<Show> _expandCollapseShowCommand;
         private Show _expandedShow;
         private Venue _venue;
@@ -40,10 +37,15 @@ namespace SmartWalk.Client.Core.ViewModels
             IMvxComposeEmailTask composeEmailTask,
             IShowDirectionsTask showDirectionsTask,
             IExceptionPolicy exceptionPolicy) : 
-                base(analyticsService, phoneCallTask, composeEmailTask, showDirectionsTask)
+                base(
+                    configuration,
+                    clipboard,
+                    analyticsService, 
+                    phoneCallTask, 
+                    composeEmailTask, 
+                    showDirectionsTask)
         {
             _clipboard = clipboard;
-            _configuration = configuration;
             _apiService = apiService;
             _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
@@ -161,32 +163,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _expandCollapseShowCommand;
-            }
-        }
-
-        public ICommand CopyLinkCommand
-        {
-            get
-            {
-                if (_copyLinkCommand == null)
-                {
-                    _copyLinkCommand = new MvxCommand(() => 
-                        {
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                Analytics.ActionLabelCopyLink);
-
-                            var venueUrl = _configuration
-                                .GetEntityUrl(_parameters.VenueId, EntityType.Venue);
-                            _clipboard.Copy(venueUrl);
-                        },
-                        () => 
-                            _parameters != null &&
-                            _parameters.VenueId != 0);
-                }
-
-                return _copyLinkCommand;
             }
         }
 

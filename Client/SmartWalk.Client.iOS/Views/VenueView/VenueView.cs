@@ -131,6 +131,10 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.CopyLink);
+            }
+
+            if (ViewModel.ShareCommand.CanExecute(null))
+            {
                 actionSheet.AddButton(Localization.ShareButton);
             }
 
@@ -177,7 +181,10 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     break;
 
                 case Localization.ShareButton:
-                    // TODO: Share Venue Link
+                    if (ViewModel.ShareCommand.CanExecute(null))
+                    {
+                        ViewModel.ShareCommand.Execute(null);
+                    }
                     break;
             }
         }

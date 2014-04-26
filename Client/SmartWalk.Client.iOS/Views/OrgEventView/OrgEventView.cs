@@ -5,6 +5,7 @@ using System.Linq;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.CoreLocation;
+using MonoTouch.EventKit;
 using MonoTouch.EventKitUI;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -18,7 +19,6 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.OrgEventView;
-using MonoTouch.EventKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -324,6 +324,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.CopyLink);
+            }
+
+            if (ViewModel.ShareCommand.CanExecute(null))
+            {
                 actionSheet.AddButton(Localization.ShareButton);
             }
 
@@ -370,7 +374,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case Localization.ShareButton:
-                    // TODO: Share Event Link
+                    if (ViewModel.ShareCommand.CanExecute(null))
+                    {
+                        ViewModel.ShareCommand.Execute(null);
+                    }
                     break;
             }
         }

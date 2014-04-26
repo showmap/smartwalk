@@ -98,6 +98,7 @@
     <Compile Include="ViewModels\OrgEventInfoViewModel.cs" />
     <Compile Include="Services\ICalendarService.cs" />
     <Compile Include="Model\CalendarEvent.cs" />
+    <Compile Include="ViewModels\Interfaces\IShareableViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

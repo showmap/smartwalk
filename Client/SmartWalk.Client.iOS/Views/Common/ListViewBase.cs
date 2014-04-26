@@ -4,13 +4,13 @@ using System.Drawing;
 using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
-using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -76,6 +76,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 InitializeRefreshControl();
                 refreshableViewModel.RefreshCompleted += OnViewModelRefreshCompleted;
+            }
+
+            var shareableViewModel = ViewModel as IShareableViewModel;
+            if (shareableViewModel != null)
+            {
+                shareableViewModel.Share += (sender, e) => ShareUtil.Share(this, e.Value);
             }
 
             UpdateViewTitle();

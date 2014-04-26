@@ -121,6 +121,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.CopyLink);
+            }
+
+            if (ViewModel.ShareCommand.CanExecute(null))
+            {
                 actionSheet.AddButton(Localization.ShareButton);
             }
 
@@ -153,7 +157,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                     break;
 
                 case Localization.ShareButton:
-                    // TODO: Share Host Link
+                    if (ViewModel.ShareCommand.CanExecute(null))
+                    {
+                        ViewModel.ShareCommand.Execute(null);
+                    }
                     break;
             }
         }

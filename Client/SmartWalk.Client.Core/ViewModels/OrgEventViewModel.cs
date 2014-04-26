@@ -11,10 +11,13 @@ using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
+using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
-    public class OrgEventViewModel : RefreshableViewModel, IFullscreenImageProvider
+    public class OrgEventViewModel : RefreshableViewModel, 
+        IFullscreenImageProvider, 
+        IShareableViewModel
     {
         private readonly IClipboard _clipboard;
         private readonly ISmartWalkApiService _apiService;
@@ -45,6 +48,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand _saveEventCommand;
         private MvxCommand _cancelEventCommand;
         private MvxCommand _copyLinkCommand;
+        private MvxCommand _shareCommand;
 
         public OrgEventViewModel(
             IClipboard clipboard,
@@ -61,6 +65,8 @@ namespace SmartWalk.Client.Core.ViewModels
             _calendarService = calendarService;
             _exceptionPolicy = exceptionPolicy;
         }
+
+        public event EventHandler<MvxValueEventArgs<string>> Share;
 
         public OrgEventViewMode Mode
         {
@@ -516,6 +522,34 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _copyLinkCommand;
+            }
+        }
+
+        public ICommand ShareCommand
+        {
+            get
+            {
+                if (_shareCommand == null)
+                {
+                    _shareCommand = new MvxCommand(() => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShare);
+
+                            var eventUrl = _configuration.GetEventUrl(_parameters.OrgEventId);
+                            if (eventUrl != null && Share != null)
+                            {
+                                Share(this, new MvxValueEventArgs<string>(eventUrl));
+                            }
+                        },
+                        () => 
+                            _parameters != null &&
+                            _parameters.OrgEventId != 0);
+                }
+
+                return _shareCommand;
             }
         }
 

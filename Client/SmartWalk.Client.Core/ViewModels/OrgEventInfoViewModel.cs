@@ -19,6 +19,8 @@ namespace SmartWalk.Client.Core.ViewModels
         private OrgEvent _orgEvent;
 
         public OrgEventInfoViewModel(
+            IClipboard clipboard,
+            IConfiguration configuration,
             ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
             IMvxPhoneCallTask phoneCallTask,
@@ -26,6 +28,8 @@ namespace SmartWalk.Client.Core.ViewModels
             IShowDirectionsTask showDirectionsTask,
             IExceptionPolicy exceptionPolicy) : 
                 base(
+                    configuration,
+                    clipboard,
                     analyticsService, 
                     phoneCallTask, 
                     composeEmailTask, 
