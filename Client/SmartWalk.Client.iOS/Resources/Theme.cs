@@ -82,7 +82,7 @@ namespace SmartWalk.Client.iOS.Resources
         public const int VenueShowTextLineHeight = 17;
 
         public static readonly UIColor MapPinText = UIColor.White;
-        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaMedium, 14);
+        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaMedium, 13);
         public static readonly PointF MapPinOffset = new PointF(-8, -4);
         public static readonly PointF MapPinTextOffset = new PointF(5, 5);
 

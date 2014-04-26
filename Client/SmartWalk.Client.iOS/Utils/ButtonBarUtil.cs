@@ -63,19 +63,5 @@ namespace SmartWalk.Client.iOS.Utils
                 }
             }
         }
-
-        public static UIBarButtonItem[] GetUpDownBarItems(Action upClickHandler, Action downClickHandler)
-        {
-            var buttonUp = ButtonBarUtil.Create(ThemeIcons.NavBarUp, null, new SizeF(34, 44), null);
-            buttonUp.TouchUpInside += (s, e) => upClickHandler();
-            var barButtonUp = new UIBarButtonItem(buttonUp);
-
-            var buttonDown = ButtonBarUtil.Create(ThemeIcons.NavBarDown, null, new SizeF(34, 44), null);
-            buttonDown.TouchUpInside += (s, e) => downClickHandler();
-            var barButtonDown = new UIBarButtonItem(buttonDown);
-
-            var result = new [] { CreateSpacer(), barButtonDown, barButtonUp };
-            return result;
-        }
     }
 }

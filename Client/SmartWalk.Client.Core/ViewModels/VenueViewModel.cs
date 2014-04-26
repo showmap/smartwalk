@@ -205,7 +205,9 @@ namespace SmartWalk.Client.Core.ViewModels
                                 .FirstOrDefault();
                             _clipboard.Copy(address);
                         },
-                        () => Entity != null);
+                        () => 
+                            Entity != null &&
+                            Entity.Addresses != null);
                 }
 
                 return _copyAddressCommand;

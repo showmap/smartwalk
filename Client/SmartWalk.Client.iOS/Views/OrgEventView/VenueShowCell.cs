@@ -24,7 +24,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static readonly char M = 'm';
 
         private const int ImageHeight = 100;
-        private const int TimeBlockWidth = 111;
+        private const int TimeBlockWidth = 109;
         private const int Gap = 12;
 
         private readonly MvxImageViewLoader _imageHelper;

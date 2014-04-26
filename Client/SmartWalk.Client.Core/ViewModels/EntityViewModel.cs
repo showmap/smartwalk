@@ -347,7 +347,6 @@ namespace SmartWalk.Client.Core.ViewModels
                         entity => ShowViewModel<MapViewModel>(
                             new MapViewModel.Parameters {
                                 Title = entity.Name,
-                                Number = 0, // TODO: To support letters
                                 Addresses = new Addresses { Items = entity.Addresses },
                                 Location = InitParameters.Location
                             }),

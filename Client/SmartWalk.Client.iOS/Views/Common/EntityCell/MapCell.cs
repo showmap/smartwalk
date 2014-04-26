@@ -58,7 +58,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             InitializeGestures();
 
-            MapView.Delegate = new MapDelegate { CanShowCallout = false };
+            MapView.Delegate = new MapDelegate { CanShowDetails = false };
         }
 
         protected override void OnDataContextChanged()
@@ -70,17 +70,25 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             if (DataContext != null && 
                 DataContext.HasAddresses())
             {
-                var annotations = DataContext.Addresses.Select(
-                        a => new MapViewAnnotation(0, // TODO: To pass letters
-                                DataContext.Name, 
-                                a)).ToArray();
+                var annotations = DataContext.Addresses
+                    .Select( a => new MapViewAnnotation(DataContext.Name, a))
+                    .ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 
                 MapView.SetRegion(
-                    MapUtil.CoordinateRegionForCoordinates(coordinates, new MKMapSize(2000, 2000)),
+                    MapUtil.CoordinateRegionForCoordinates(
+                        coordinates, 
+                        new MKMapSize(2000, 2000)),
+                    !isFirstLoading);
+
+                MapView.SetCenterCoordinate(
+                    new CLLocationCoordinate2D(
+                        annotations[0].Coordinate.Latitude + 0.00065, // moving a bit down to fit callout
+                        annotations[0].Coordinate.Longitude),
                     !isFirstLoading);
 
                 MapView.AddAnnotations(annotations);
+                MapView.SelectAnnotation(annotations[0], !isFirstLoading);
             }
         }
 
@@ -97,14 +105,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 NumberOfTapsRequired = (uint)1
             };
 
-            MapView.AddGestureRecognizer(_mapTapGesture);
+            CoverView.AddGestureRecognizer(_mapTapGesture);
         }
 
         private void DisposeGestures()
         {
             if (_mapTapGesture != null)
             {
-                MapView.RemoveGestureRecognizer(_mapTapGesture);
+                CoverView.RemoveGestureRecognizer(_mapTapGesture);
                 _mapTapGesture.Dispose();
                 _mapTapGesture = null;
             }

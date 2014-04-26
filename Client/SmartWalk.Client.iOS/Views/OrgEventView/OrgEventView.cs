@@ -193,7 +193,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 UpdateTableViewOnShowExpanding(VenuesAndShowsTableView);
 
-                if (SearchDisplayController.SearchResultsTableView.Superview != null)
+                if (SearchDisplayController.SearchResultsTableView.Superview != null &&
+                    !SearchDisplayController.SearchResultsTableView.Hidden)
                 {
                     UpdateTableViewOnShowExpanding(SearchDisplayController.SearchResultsTableView);
                 }
@@ -589,6 +590,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateTableViewOnShowExpanding(UITableView tableView)
         {
+            if (tableView.VisibleCells.Length == 0 ||
+                tableView.WeakDataSource == null) return;
+
             foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
             {
                 cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
@@ -617,13 +621,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         ? VenueShowCell.CalculateCellHeight(
                             tableView.Frame.Width,
                             true,
-                            _previousExpandedShow) + 25
+                            _previousExpandedShow) + 25 // just a magic number, really
                         : 0);
 
                 // Compensating that shift created by expanded headers or previous cells
-                tableView.SetContentOffset(
-                    new PointF(previousOffset.X, previousOffset.Y + delta), 
-                    true);
+                if (tableView.ScrollEnabled &&
+                    previousOffset.Y + delta > 0)
+                {
+                    tableView.SetContentOffset(
+                        new PointF(previousOffset.X, previousOffset.Y + delta), 
+                        true);
+                }
 
                 if (previousIndex != null)
                 {

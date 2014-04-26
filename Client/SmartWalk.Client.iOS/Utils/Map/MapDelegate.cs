@@ -5,7 +5,6 @@ using Cirrious.CrossCore.Core;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
 
@@ -69,7 +68,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
                     Font = Theme.MapPinFont,
                     TextAlignment = UITextAlignment.Center,
                     BackgroundColor = UIColor.Clear,
-                    Text = mapAnnotation.Number.ToString(),
+                    Text = mapAnnotation.Abbr,
                     Frame = new RectangleF(Theme.MapPinTextOffset, new SizeF(25, 25))
                 };
                 annotationView.AddSubview(numberLabel);

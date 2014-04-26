@@ -6,6 +6,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
+using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
@@ -14,6 +15,8 @@ namespace SmartWalk.Client.iOS.Views.Common
 {
     public partial class MapView : ActiveAwareViewController
     {
+        private ButtonBarButton _moreButton;
+
         public new MapViewModel ViewModel
         {
             get { return (MapViewModel)base.ViewModel; }
@@ -23,33 +26,14 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.ViewDidLoad();
 
-            InitializeTopToolBar();
-            InitializeStyle();
+            InitializeToolBar();
 
             MapViewControl.Delegate = new MapDelegate { CanShowDetails = false };
 
             UpdateViewTitle();
             SelectAnnotation();
-            UpdateBottomToolBarState();
 
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
-        }
-
-        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
-        {
-            base.WillAnimateRotation(toInterfaceOrientation, duration);
-
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
-            UpdateBottomToolBarState();
         }
 
         protected override void Dispose(bool disposing)
@@ -64,7 +48,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 UpdateViewTitle();
                 SelectAnnotation();
-                UpdateBottomToolBarState();
             }
         }
 
@@ -78,7 +61,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 var annotations = ViewModel.Annotation.Addresses
                     .Select(address => new MapViewAnnotation(
-                        ViewModel.Annotation.Number,
                         ViewModel.Annotation.Title,
                         address)).ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
@@ -89,7 +71,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                         new MKMapSize(5000, 5000)), 
                     false);
                 MapViewControl.AddAnnotations(annotations);
-                MapViewControl.SelectAnnotation(annotations.First(), false);
+                MapViewControl.SelectAnnotation(annotations[0], false);
             }
         }
 
@@ -100,88 +82,80 @@ namespace SmartWalk.Client.iOS.Views.Common
                 : null;
         }
 
-        private void UpdateBottomToolBarState()
-        {
-            var currentAddress = GetCurrentAddress();
-
-            if (currentAddress != null)
-            {
-                BottomToolBarHeightConstraint.Constant = 
-                    ScreenUtil.IsVerticalOrientation ? 44 : 33;
-
-                AddressLabel.Text = currentAddress;
-            }
-            else
-            {
-                BottomToolBarHeightConstraint.Constant = 0;
-            }
-
-            CopyButton.Font = ScreenUtil.IsVerticalOrientation 
-                ? Theme.ButtonTextFont
-                : Theme.ButtonTextLandscapeFont;
-        }
-
-        private void InitializeTopToolBar()
+        private void InitializeToolBar()
         {
             ButtonBarUtil.OverrideNavigatorBackButton(
                 NavigationItem,
                 () => NavigationController.PopViewControllerAnimated(true));
 
-            var navigateButton = ButtonBarUtil.Create(ThemeIcons.NavBarNavigate, ThemeIcons.NavBarNavigateLandscape);
-            navigateButton.TouchUpInside += (sender, e) => 
-                { 
-                    if (ViewModel.Annotation != null &&
-                        ViewModel.Annotation.Addresses != null)
+            var spacer = ButtonBarUtil.CreateSpacer();
+
+            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
+            _moreButton.TouchUpInside += OnMoreButtonClicked;
+
+            var moreBarButton = new UIBarButtonItem(_moreButton);
+            NavigationItem.SetRightBarButtonItems(new [] {spacer, moreBarButton}, true);
+        }
+
+        private void DisposeToolBar()
+        {
+            if (_moreButton != null)
+            {
+                _moreButton.TouchUpInside -= OnMoreButtonClicked;
+            }
+        }
+
+        private void OnMoreButtonClicked(object sender, EventArgs e)
+        {
+            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
+
+            if (ViewModel.ShowDirectionsCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(Localization.NavigateInMaps);
+            }
+
+            if (ViewModel.CopyAddressCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(Localization.CopyAddress);
+            }
+
+            if (true)
+            {
+                actionSheet.AddButton(Localization.ShareButton);
+            }
+
+            actionSheet.AddButton(Localization.CancelButton);
+
+            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
+
+            actionSheet.ShowInView(View);
+        }
+
+        private void OnActionClicked(object sender, UIButtonEventArgs e)
+        {
+            var actionSheet = ((UIActionSheet)sender);
+            actionSheet.Clicked -= OnActionClicked;
+
+            switch (actionSheet.ButtonTitle(e.ButtonIndex))
+            {
+                case Localization.NavigateInMaps:
+                    if (ViewModel.ShowDirectionsCommand.CanExecute(null))
                     {
-                        var addressInfo = ViewModel.Annotation.Addresses.FirstOrDefault();
-                        
-                        if (ViewModel.ShowDirectionsCommand.CanExecute(addressInfo))
-                        {
-                            ViewModel.ShowDirectionsCommand.Execute(addressInfo);
-                        }
+                        ViewModel.ShowDirectionsCommand.Execute(null);
                     }
-                };
+                    break;
 
-            var navigationBarButton = new UIBarButtonItem(navigateButton);
-            NavigationItem.SetRightBarButtonItems(
-                new [] { ButtonBarUtil.CreateSpacer(), navigationBarButton }, true);  
-        }
+                case Localization.CopyAddress:
+                    if (ViewModel.CopyAddressCommand.CanExecute(null))
+                    {
+                        ViewModel.CopyAddressCommand.Execute(null);
+                    }
+                    break;
 
-        private void InitializeStyle()
-        {
-            AddressLabel.Font = Theme.MapViewAddressFont;
-
-            CopyButton.Layer.BorderWidth = 1;
-            CopyButton.Layer.CornerRadius = 4;
-            CopyButton.Layer.BorderColor = UIColor.White.CGColor;
-
-            CopyButton.TouchDown += (sender, e) => CopyButton.BackgroundColor = UIColor.Black;
-            CopyButton.TouchUpInside += (sender, e) => CopyButton.BackgroundColor = UIColor.Clear;
-            CopyButton.TouchUpOutside += (sender, e) => CopyButton.BackgroundColor = UIColor.Clear;
-
-            BottomToolBarView.BackgroundColor = Theme.NavBarBackground;
-        }
-
-        partial void OnCopyButtonClick(UIButton sender, UIEvent @event)
-        {
-            var currentAddress = GetCurrentAddress();
-            if (currentAddress != null)
-            {
-                UIPasteboard.General.String = currentAddress;
+                case Localization.ShareButton:
+                    // TODO: Share Address Text
+                    break;
             }
-        }
-
-        private string GetCurrentAddress()
-        {
-            if (ViewModel.Annotation != null &&
-                ViewModel.Annotation.Addresses != null)
-            {
-                var info = ViewModel.Annotation.Addresses
-                    .FirstOrDefault(ai => !string.IsNullOrWhiteSpace(ai.AddressText));
-                return info != null && !string.IsNullOrWhiteSpace(info.AddressText) ? info.AddressText : null; 
-            }
-
-            return null;
         }
     }
 }

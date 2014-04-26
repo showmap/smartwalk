@@ -1,29 +1,34 @@
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Platform;
 using Cirrious.MvvmCross.ViewModels;
 using Newtonsoft.Json;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Constants;
-using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels.Common;
-using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
     public class MapViewModel : ActiveViewModel
     {
+        private readonly IClipboard _clipboard;
         private readonly IAnalyticsService _analyticsService;
         private readonly IShowDirectionsTask _showDirectionsTask;
 
         private Parameters _parameters;
         private MapAnnotation _annotation;
-        private MvxCommand<Address> _showDirectionsCommand;
+        private MvxCommand _showDirectionsCommand;
+        private MvxCommand  _copyAddressCommand;
 
         public MapViewModel(
+            IClipboard clipboard,
             IAnalyticsService analyticsService,
             IShowDirectionsTask showDirectionsTask) : base(analyticsService)
         {
+            _clipboard = clipboard;
             _analyticsService = analyticsService;
             _showDirectionsTask = showDirectionsTask;
         }
@@ -44,15 +49,39 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public ICommand CopyAddressCommand
+        {
+            get
+            {
+                if (_copyAddressCommand == null)
+                {
+                    _copyAddressCommand = new MvxCommand(() => 
+                        {
+                            var address = Annotation.Addresses
+                                .Select(a => a.AddressText)
+                                .FirstOrDefault();
+                            _clipboard.Copy(address);
+                        },
+                        () => 
+                            Annotation != null &&
+                            Annotation.Addresses != null);
+                }
+
+                return _copyAddressCommand;
+            }
+        }
+
         public ICommand ShowDirectionsCommand
         {
             get
             {
                 if (_showDirectionsCommand == null)
                 {
-                    _showDirectionsCommand = new MvxCommand<Address>(
-                        address =>
+                    _showDirectionsCommand = new MvxCommand(
+                        () =>
                         {
+                            var address = Annotation.Addresses.FirstOrDefault();
+
                             _showDirectionsTask.ShowDirections(address);
 
                             _analyticsService.SendEvent(
@@ -60,7 +89,9 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelShowDirections);
                         },
-                        address => address != null);
+                        () => 
+                            Annotation != null &&
+                            Annotation.Addresses != null);
                 }
 
                 return _showDirectionsCommand;
@@ -80,7 +111,6 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 Annotation = new MapAnnotation(
                     parameters.Title,
-                    parameters.Number,
                     parameters.Addresses.Items);
             }
             else
@@ -91,7 +121,6 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public class Parameters : ParametersBase
         {
-            public int Number { get; set; }
             public string Title { get; set; }
             public Addresses Addresses { get; set; }
         }
@@ -124,16 +153,31 @@ namespace SmartWalk.Client.Core.ViewModels
     {
         public MapAnnotation(
             string title,
-            int number,
             Address[] addresses)
         {
-            Number = number;
             Title = title;
             Addresses = addresses;
         }
 
-        public int Number { get; private set; }
         public string Title { get; private set; }
         public Address[] Addresses { get; private set; }
+
+        public override bool Equals(object obj)
+        {
+            var ma = obj as MapAnnotation;
+            if (ma != null)
+            {
+                return Title == ma.Title;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Initial
+                .CombineHashCodeOrDefault(Title)
+                .CombineHashCodeOrDefault(Addresses);
+        }
     }
 }

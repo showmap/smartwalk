@@ -50,11 +50,6 @@ namespace SmartWalk.Client.iOS.Utils.Map
             return coordinates;
         }
 
-        public static string GetAnnotationTitle(int number, string title)
-        {
-            return (number != 0 ? number + ". " : string.Empty) + title;
-        }
-
         public static void OpenAddressInMaps(Address address)
         {
             if (address != null)

@@ -43,15 +43,15 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="201" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="111" y="12" width="201" height="137"/>
+                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="203" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Description" customClass="CopyLabel">
+                        <rect key="frame" x="109" y="12" width="203" height="137"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
-                        <rect key="frame" x="111" y="161" width="173" height="100"/>
+                        <rect key="frame" x="109" y="161" width="173" height="100"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="100" id="139"/>
@@ -59,7 +59,7 @@
                         </constraints>
                     </imageView>
                     <label hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
-                        <rect key="frame" x="111" y="273" width="173" height="17"/>
+                        <rect key="frame" x="109" y="273" width="173" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="367"/>
@@ -87,7 +87,7 @@
                 <constraints>
                     <constraint firstItem="3" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="8" id="1Fz-a1-6kX"/>
                     <constraint firstItem="592" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="1LN-jV-Dfr"/>
-                    <constraint firstItem="9" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="111" id="DFg-T2-Ly1"/>
+                    <constraint firstItem="9" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="109" id="DFg-T2-Ly1"/>
                     <constraint firstItem="3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="10" id="K8r-rY-19h"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="Mgw-5u-WMm"/>
                     <constraint firstAttribute="trailing" secondItem="K9o-xv-nfu" secondAttribute="trailing" id="Saq-Ut-4Ls"/>

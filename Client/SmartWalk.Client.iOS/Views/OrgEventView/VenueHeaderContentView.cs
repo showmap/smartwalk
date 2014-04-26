@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common;
 
@@ -70,10 +70,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 LogoImageView.Hidden = true;
                 ImageLabelView.Hidden = false;
-
-                ImageLabel.Text = DataContext.Info.Name != null 
-                    ? DataContext.Info.Name.FirstOrDefault().ToString()
-                    : null;
+                ImageLabel.Text = DataContext.Info.Name.GetAbbreviation(2);
             }
             else
             {
