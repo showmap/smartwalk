@@ -37,7 +37,7 @@ namespace SmartWalk.Client.iOS.Services
                     message = Localization.CantReadNetworkContent;
                 }
 
-                var alert = new UIAlertView(title, message, null, "OK", null);
+                var alert = new UIAlertView(title, message, null, Localization.OK, null);
                 alert.Show();
             }
         }

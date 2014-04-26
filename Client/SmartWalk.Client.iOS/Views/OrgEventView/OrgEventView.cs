@@ -5,6 +5,7 @@ using System.Linq;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.CoreLocation;
+using MonoTouch.EventKitUI;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
@@ -17,6 +18,7 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.OrgEventView;
+using MonoTouch.EventKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -25,6 +27,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private OrgEventHeaderView _headerView;
         private UIBarButtonItem _modeButton;
         private UISearchDisplayController _searchDisplayController;
+        private EKEventEditViewController _editEventController;
         private UISwipeGestureRecognizer _swipeLeft;
         private bool _isMapViewInitialized;
         private bool _isAnimating;
@@ -181,7 +184,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
                 }
 
-                _isBackOverriden = _isAnimating && 
+                _isBackOverriden = 
+                    _isAnimating &&
                     ViewModel.Mode == OrgEventViewMode.Map &&
                     ViewModel.SelectedVenueOnMap != null;
             }
@@ -200,6 +204,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 }
 
                 _previousExpandedShow = ViewModel.ExpandedShow;
+            }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentCalendarEvent))
+            {
+                if (ViewModel.CurrentCalendarEvent != null)
+                {
+                    if (_editEventController == null)
+                    {
+                        InitializeEventViewController();
+                    }
+                }
+                else
+                {
+                    DisposeEventViewController();
+                }
             }
         }
 
@@ -288,7 +306,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
 
-            if (ViewModel.OrgEvent != null)
+            if (ViewModel.CreateEventCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.SaveToCalendar);
             }
@@ -324,7 +342,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             switch (actionSheet.ButtonTitle(e.ButtonIndex))
             {
                 case Localization.SaveToCalendar:
-                    // TODO: Save to Calendar
+                    if (ViewModel.CreateEventCommand.CanExecute(null))
+                    {
+                        ViewModel.CreateEventCommand.Execute(null);
+                    }
                     break;
 
                 case Localization.ShowEventInfo:
@@ -516,6 +537,29 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.NavigateVenueCommand.Execute(venueAnnotation.Venue);
             }
         }
+
+        private void InitializeEventViewController()
+        {
+            _editEventController = new EKEventEditViewController();
+            _editEventController.EventStore = (EKEventStore)ViewModel.CurrentCalendarEvent.EventStore;
+            _editEventController.Event = (EKEvent)ViewModel.CurrentCalendarEvent.EventObj;
+
+            var eventControllerDelegate = new CreateEventEditViewDelegate(ViewModel);
+            _editEventController.EditViewDelegate = eventControllerDelegate;
+
+            PresentViewController(_editEventController, true, null);
+        }
+
+        private void DisposeEventViewController()
+        {
+            if (_editEventController != null)
+            {
+                _editEventController.DismissViewController(true, null);
+                _editEventController.EditViewDelegate = null;
+                _editEventController.Dispose();
+                _editEventController = null;
+            }
+        }
        
         private void UpdateViewState(bool isAnimated)
         {
@@ -624,7 +668,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                             _previousExpandedShow) + 25 // just a magic number, really
                         : 0);
 
-                // Compensating that shift created by expanded headers or previous cells
+                // Compensating the shift created by expanded headers or previous cells
                 if (tableView.ScrollEnabled &&
                     previousOffset.Y + delta > 0)
                 {

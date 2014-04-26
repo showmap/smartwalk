@@ -33,7 +33,14 @@ namespace SmartWalk.Client.iOS.Utils
                         button.SetTitleColor(Theme.ActionSheetText, UIControlState.Highlighted);
                     }
 
-                    button.Font = Theme.ActionSheetFont;
+                    if (button.TitleLabel.Text == Localization.CancelButton)
+                    {
+                        button.Font = Theme.ActionSheetCancelFont;
+                    }
+                    else 
+                    {
+                        button.Font = Theme.ActionSheetFont;
+                    }
                 }
             }
         }

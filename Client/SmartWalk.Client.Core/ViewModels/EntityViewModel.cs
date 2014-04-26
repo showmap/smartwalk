@@ -152,12 +152,12 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _showPreviousEntityCommand = 
                         new MvxCommand(() => {
-                            OnShowPreviousEntity();
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelShowPreviousEntity);
+
+                            OnShowPreviousEntity();
                         },
                         () => CanShowNextEntity);
                 }
@@ -174,12 +174,12 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _showNextEntityCommand = 
                         new MvxCommand(() => { 
-                            OnShowNextEntity();
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelShowNextEntity);
+
+                            OnShowNextEntity();
                         }, 
                         () => CanShowPreviousEntity);
                 }
@@ -196,14 +196,14 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _showFullscreenImageCommand = new MvxCommand<string>(
                         image => {
-                            CurrentFullscreenImage = image;
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
-                                CurrentFullscreenImage != null
+                                image != null
                                     ? Analytics.ActionLabelShowFullscreenImage
                                     : Analytics.ActionLabelHideFullscreenImage);
+
+                            CurrentFullscreenImage = image;
                         });
                 }
 
@@ -220,14 +220,14 @@ namespace SmartWalk.Client.Core.ViewModels
                     _showHideContactsCommand = new MvxCommand<Entity>(
                         entity => 
                         {
-                            CurrentContactsEntityInfo = entity;
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
-                                CurrentContactsEntityInfo != null 
+                                entity != null 
                                     ? Analytics.ActionLabelShowContacts
                                     : Analytics.ActionLabelHideContacts);
+
+                            CurrentContactsEntityInfo = entity;
                         },
                         entity => entity == null || entity.HasContacts());
                 }
@@ -245,12 +245,12 @@ namespace SmartWalk.Client.Core.ViewModels
                     _callPhoneCommand = new MvxCommand<Contact>(
                         contact =>
                         {
-                            _phoneCallTask.MakePhoneCall(contact.Title, contact.ContactText);
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCallPhone);
+
+                            _phoneCallTask.MakePhoneCall(contact.Title, contact.ContactText);
                         },
                         contact => 
                             contact != null && 
@@ -271,12 +271,12 @@ namespace SmartWalk.Client.Core.ViewModels
                     _composeEmailCommand = new MvxCommand<Contact>(
                         contact =>
                         {
-                            _composeEmailTask.ComposeEmail(contact.ContactText, null, null, null, true);
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelComposeEmail);
+
+                            _composeEmailTask.ComposeEmail(contact.ContactText, null, null, null, true);
                         },
                         contact => 
                             contact != null &&
@@ -319,14 +319,13 @@ namespace SmartWalk.Client.Core.ViewModels
                     _showDirectionsCommand = new MvxCommand<Entity>(
                         entity =>
                             {
-                                var address = entity.Addresses.FirstOrDefault();
-
-                                _showDirectionsTask.ShowDirections(address);
-
                                 _analyticsService.SendEvent(
                                     Analytics.CategoryUI,
                                     Analytics.ActionTouch,
                                     Analytics.ActionLabelShowDirections);
+
+                                var address = entity.Addresses.FirstOrDefault();
+                                _showDirectionsTask.ShowDirections(address);
                             },
                         entity => 
                             entity != null &&

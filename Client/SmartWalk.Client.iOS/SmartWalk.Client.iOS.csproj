@@ -331,6 +331,8 @@
     </Compile>
     <Compile Include="Views\OrgEventView\OrgEventInfoTableSource.cs" />
     <Compile Include="Views\OrgEventView\OrgEventInfoTableSourceConverter.cs" />
+    <Compile Include="Services\CalendarService.cs" />
+    <Compile Include="Views\OrgEventView\CreateEventEditViewDelegate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

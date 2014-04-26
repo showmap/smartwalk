@@ -72,6 +72,16 @@ namespace SmartWalk.Client.Core.Model
             get { return _eventMetadata.EndTime; }
         }
 
+        public double? Latitude 
+        {
+            get { return _eventMetadata.Latitude; }
+        }
+
+        public double? Longitude 
+        {
+            get { return _eventMetadata.Longitude; }
+        }
+
         public Venue[] Venues
         {
             get { return _venues; }

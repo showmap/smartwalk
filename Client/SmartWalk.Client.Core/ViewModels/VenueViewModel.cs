@@ -147,14 +147,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _expandCollapseShowCommand = new MvxCommand<Show>(show => 
                         {
-                            if (ExpandedShow != show)
-                            {
-                                ExpandedShow = show;
-                            }
-                            else 
-                            {
-                                ExpandedShow = null;
-                            }
+                            ExpandedShow = ExpandedShow != show ? show : null;
 
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
@@ -178,14 +171,19 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_copyLinkCommand == null)
                 {
                     _copyLinkCommand = new MvxCommand(() => 
-                    {
-                        var venueUrl = _configuration
-                            .GetEntityUrl(_parameters.VenueId, EntityType.Venue);
-                        _clipboard.Copy(venueUrl);
-                    },
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCopyLink);
+
+                            var venueUrl = _configuration
+                                .GetEntityUrl(_parameters.VenueId, EntityType.Venue);
+                            _clipboard.Copy(venueUrl);
+                        },
                         () => 
-                        _parameters != null &&
-                        _parameters.VenueId != 0);
+                            _parameters != null &&
+                            _parameters.VenueId != 0);
                 }
 
                 return _copyLinkCommand;
@@ -200,6 +198,11 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _copyAddressCommand = new MvxCommand(() => 
                         {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCopyAddress);
+
                             var address = Entity.Addresses
                                 .Select(a => a.AddressText)
                                 .FirstOrDefault();

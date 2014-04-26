@@ -20,6 +20,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly ISmartWalkApiService _apiService;
         private readonly IConfiguration _configuration;
         private readonly IAnalyticsService _analyticsService;
+        private readonly ICalendarService _calendarService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private OrgEventViewMode _mode = OrgEventViewMode.List;
@@ -27,6 +28,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private Show _expandedShow;
         private Venue _selectedVenueOnMap;
         private string _currentFullscreenImage;
+        private CalendarEvent _currentCalendarEvent;
         private Parameters _parameters;
         private bool _isGroupedByLocation = true;
 
@@ -39,6 +41,9 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
+        private MvxCommand _createEventCommand;
+        private MvxCommand _saveEventCommand;
+        private MvxCommand _cancelEventCommand;
         private MvxCommand _copyLinkCommand;
 
         public OrgEventViewModel(
@@ -46,12 +51,14 @@ namespace SmartWalk.Client.Core.ViewModels
             ISmartWalkApiService apiService,
             IConfiguration configuration,
             IAnalyticsService analyticsService,
+            ICalendarService calendarService,
             IExceptionPolicy exceptionPolicy) : base(analyticsService)
         {
             _clipboard = clipboard;
             _apiService = apiService;
             _configuration = configuration;
             _analyticsService = analyticsService;
+            _calendarService = calendarService;
             _exceptionPolicy = exceptionPolicy;
         }
 
@@ -131,6 +138,22 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _currentFullscreenImage = value;
                     RaisePropertyChanged(() => CurrentFullscreenImage);
+                }
+            }
+        }
+
+        public CalendarEvent CurrentCalendarEvent
+        {
+            get
+            {
+                return _currentCalendarEvent;
+            }
+            private set
+            {
+                if (!Equals(_currentCalendarEvent, value))
+                {
+                    _currentCalendarEvent = value;
+                    RaisePropertyChanged(() => CurrentCalendarEvent);
                 }
             }
         }
@@ -293,14 +316,14 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _navigateVenueOnMapCommand = new MvxCommand<Venue>(
                         venue => {
-                            Mode = OrgEventViewMode.Map;
-                            SelectedVenueOnMap = venue;
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelNavigateVenueOnMap,
                                 venue.Info.Id);
+
+                            Mode = OrgEventViewMode.Map;
+                            SelectedVenueOnMap = venue;
                         },
                         venue => venue != null);
                 }
@@ -336,14 +359,14 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _showFullscreenImageCommand = new MvxCommand<string>(
                         image => { 
-                            CurrentFullscreenImage = image;
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
-                                CurrentFullscreenImage != null
+                                image != null
                                     ? Analytics.ActionLabelShowFullscreenImage
                                     : Analytics.ActionLabelHideFullscreenImage);
+
+                            CurrentFullscreenImage = image;
                         });
                 }
 
@@ -359,19 +382,115 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _groupByLocationCommand = new MvxCommand<bool?>(
                         groupBy => { 
-                            IsGroupedByLocation = (bool)groupBy;
+                        _analyticsService.SendEvent(
+                            Analytics.CategoryUI,
+                            Analytics.ActionTouch,
+                            (bool)groupBy 
+                                ? Analytics.ActionLabelTurnOnGroupByLocation
+                                : Analytics.ActionLabelTurnOffGroupByLocation);
 
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                IsGroupedByLocation 
-                                    ? Analytics.ActionLabelTurnOnGroupByLocation
-                                    : Analytics.ActionLabelTurnOffGroupByLocation);
+                            IsGroupedByLocation = (bool)groupBy;
                         },
                         groupBy => groupBy.HasValue);
                 }
 
                 return _groupByLocationCommand;
+            }
+        }
+
+        public ICommand CreateEventCommand
+        {
+            get
+            {
+                if (_createEventCommand == null)
+                {
+                    _createEventCommand = new MvxCommand(async () => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCreateEvent);
+
+                            var eventInfo = default(OrgEvent);
+                            try
+                            {
+                                eventInfo = await _apiService.GetOrgEventInfo(
+                                    _parameters.OrgEventId, 
+                                    DataSource.Cache);
+                            }
+                            catch (Exception ex)
+                            {
+                                _exceptionPolicy.Trace(ex);
+                            }
+                            
+                            try
+                            {
+                                CurrentCalendarEvent = 
+                                    await _calendarService.CreateNewEvent(eventInfo);
+                            }
+                            catch (Exception ex)
+                            {
+                                _exceptionPolicy.Trace(ex);
+                            }
+                        },
+                        () => 
+                            _parameters != null &&
+                            _parameters.OrgEventId != 0);
+                }
+
+                return _createEventCommand;
+            }
+        }
+
+        public ICommand SaveEventCommand
+        {
+            get
+            {
+                if (_saveEventCommand == null)
+                {
+                    _saveEventCommand = new MvxCommand(() => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelSaveEvent);
+
+                            try
+                            {
+                                _calendarService.SaveEvent(CurrentCalendarEvent);
+                                CurrentCalendarEvent = null;
+                            }
+                            catch (Exception ex)
+                            {
+                                _exceptionPolicy.Trace(ex);
+                            }
+                        },
+                        () => CurrentCalendarEvent != null);
+                }
+
+                return _saveEventCommand;
+            }
+        }
+
+        public ICommand CancelEventCommand
+        {
+            get
+            {
+                if (_cancelEventCommand == null)
+                {
+                    _cancelEventCommand = new MvxCommand(() => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCancelEvent);
+
+                            CurrentCalendarEvent = null;
+                        },
+                        () => CurrentCalendarEvent != null);
+                }
+
+                return _cancelEventCommand;
             }
         }
 
@@ -383,6 +502,11 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _copyLinkCommand = new MvxCommand(() => 
                         {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCopyLink);
+
                             var eventUrl = _configuration.GetEventUrl(_parameters.OrgEventId);
                             _clipboard.Copy(eventUrl);
                         },

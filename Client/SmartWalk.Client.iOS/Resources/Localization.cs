@@ -2,6 +2,7 @@
 {
     public static class Localization
     {
+        public const string OK = "OK";
         public const string CurrentEvents = "Current Events";
         public const string UpcomingEvents = "Upcoming Events";
         public const string PastEvents = "Past Events";
@@ -21,5 +22,7 @@
         public const string ServerError = "Server Error";
         public const string CantAccessNetworkContent = "Can't access network content. Please try again later";
         public const string CantReadNetworkContent = "Can't read network content. Please try again later";
+        public const string AccessDenied = "Access Denied";
+        public const string UserDeniedAccessToCalendars = "User Denied Access to Calendars";
     }
 }

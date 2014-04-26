@@ -28,6 +28,7 @@ namespace SmartWalk.Client.iOS
             Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
             Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
             Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();
+            Mvx.LazyConstructAndRegisterSingleton<ICalendarService, CalendarService>();
             Mvx.LazyConstructAndRegisterSingleton<IReachabilityService, ReachabilityService>();
             Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
             Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();

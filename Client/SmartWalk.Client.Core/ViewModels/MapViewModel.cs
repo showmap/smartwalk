@@ -57,6 +57,11 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _copyAddressCommand = new MvxCommand(() => 
                         {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCopyAddress);
+
                             var address = Annotation.Addresses
                                 .Select(a => a.AddressText)
                                 .FirstOrDefault();
@@ -80,14 +85,13 @@ namespace SmartWalk.Client.Core.ViewModels
                     _showDirectionsCommand = new MvxCommand(
                         () =>
                         {
-                            var address = Annotation.Addresses.FirstOrDefault();
-
-                            _showDirectionsTask.ShowDirections(address);
-
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelShowDirections);
+
+                            var address = Annotation.Addresses.FirstOrDefault();
+                            _showDirectionsTask.ShowDirections(address);
                         },
                         () => 
                             Annotation != null &&

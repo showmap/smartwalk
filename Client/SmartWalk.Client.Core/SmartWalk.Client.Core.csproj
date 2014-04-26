@@ -96,6 +96,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Configuration.cs" />
     <Compile Include="ViewModels\OrgEventInfoViewModel.cs" />
+    <Compile Include="Services\ICalendarService.cs" />
+    <Compile Include="Model\CalendarEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

@@ -26,5 +26,10 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionLabelNavigateVenueOnMap = "navigate-venue-on-map";
         public static readonly string ActionLabelTurnOnGroupByLocation = "turn-on-groupbylocation";
         public static readonly string ActionLabelTurnOffGroupByLocation = "turn-off-groupbylocation";
+        public static readonly string ActionLabelCreateEvent = "create-event";
+        public static readonly string ActionLabelSaveEvent = "save-event";
+        public static readonly string ActionLabelCancelEvent = "cancel-event";
+        public static readonly string ActionLabelCopyLink = "copy-link";
+        public static readonly string ActionLabelCopyAddress = "copy-address";
     }
 }

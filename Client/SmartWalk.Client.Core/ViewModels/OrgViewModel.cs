@@ -5,6 +5,7 @@ using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Shared.DataContracts;
+using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
@@ -17,6 +18,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly IClipboard _clipboard;
         private readonly IConfiguration _configuration;
         private readonly ISmartWalkApiService _apiService;
+        private readonly IAnalyticsService _analyticsService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
         private Parameters _parameters;
@@ -42,6 +44,7 @@ namespace SmartWalk.Client.Core.ViewModels
             _clipboard = clipboard;
             _configuration = configuration;
             _apiService = apiService;
+            _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
         }
 
@@ -89,9 +92,14 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _copyLinkCommand = new MvxCommand(() => 
                         {
-                            var venueUrl = _configuration
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCopyLink);
+
+                            var hostUrl = _configuration
                                 .GetEntityUrl(_parameters.OrgId, EntityType.Host);
-                            _clipboard.Copy(venueUrl);
+                            _clipboard.Copy(hostUrl);
                         },
                         () => 
                             _parameters != null &&

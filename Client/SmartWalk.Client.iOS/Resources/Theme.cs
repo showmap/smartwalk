@@ -32,6 +32,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static int ToolBarPaddingCompensate = -12;
 
         public static readonly UIFont ActionSheetFont = UIFont.FromName(HelveticaBold, 17);
+        public static readonly UIFont ActionSheetCancelFont = UIFont.FromName(HelveticaBold, 18);
         public static readonly UIColor ActionSheetText = UIColor.Black;
 
         public static readonly UIColor RefreshControl = UIColor.FromRGB(200, 200, 200);
@@ -95,6 +96,7 @@ namespace SmartWalk.Client.iOS.Resources
                 UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
 
                 UINavigationBar.Appearance.BarTintColor = NavBarBackgroundiOS7;
+                UINavigationBar.Appearance.TintColor = Theme.NavBarText;
             }
             else
             {
