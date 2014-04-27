@@ -2,13 +2,13 @@ using System;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
-using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {

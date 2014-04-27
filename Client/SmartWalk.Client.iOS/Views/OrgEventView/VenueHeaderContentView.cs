@@ -3,10 +3,10 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model;
 using SmartWalk.Shared.Utils;
+using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common;
+using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {

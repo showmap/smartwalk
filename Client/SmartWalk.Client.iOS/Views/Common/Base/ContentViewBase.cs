@@ -1,18 +1,16 @@
-using System;
+﻿using System;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Utils;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.Base
 {
-    public class TableHeaderBase : UITableViewHeaderFooterView
+    public abstract class ContentViewBase : UIView
     {
         private bool _isInitialized;
         private object _dataContext;
 
-        protected TableHeaderBase(IntPtr handle) : base(handle)
+        protected ContentViewBase(IntPtr handle) : base(handle) 
         {
-            // HACK: http://stackoverflow.com/questions/19132908/auto-layout-constraints-issue-on-ios7-in-uitableviewcell
-            ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
         }
 
         public object DataContext

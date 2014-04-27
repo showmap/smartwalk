@@ -12,7 +12,7 @@ using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ListViewBase : ActiveAwareViewController
     {

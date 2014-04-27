@@ -2,8 +2,9 @@
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Views.Common.Base;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 {
     public class GroupHeaderView : TableHeaderBase
     {

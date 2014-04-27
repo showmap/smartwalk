@@ -4,7 +4,9 @@ using System.Globalization;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Client.iOS.Views.Common;
+using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
+using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
@@ -18,7 +20,9 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             {
                 var result = new List<GroupContainer>();
 
-                result.Add(new GroupContainer(new [] { new EntityViewModelWrapper(venueViewModel) }));
+                result.Add(new GroupContainer(new [] { 
+                    new EntityViewModelWrapper(venueViewModel) 
+                }));
 
                 if (venue.Shows != null &&
                     venue.Shows.Length > 0)
@@ -26,7 +30,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     result.Add(
                         new GroupContainer(venue.Shows) 
                         {
-                            Key = "Shows"
+                            Key = Localization.Shows
                         });
                 }
 

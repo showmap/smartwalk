@@ -1,7 +1,7 @@
 using Cirrious.MvvmCross.Touch.Views;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ActiveAwareViewController : MvxViewController
     {

@@ -1,8 +1,9 @@
 ﻿using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
+using SmartWalk.Client.iOS.Views.Common.Base;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 {
     public partial class GroupHeaderContentView : ContentViewBase
     {

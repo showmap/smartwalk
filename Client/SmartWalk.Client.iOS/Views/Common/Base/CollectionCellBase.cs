@@ -1,17 +1,14 @@
-﻿using System;
+using System;
 using MonoTouch.UIKit;
-using SmartWalk.Client.iOS.Utils;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.Base
 {
-    public abstract class ContentViewBase : UIView
+    public abstract class CollectionCellBase : UICollectionViewCell
     {
         private bool _isInitialized;
         private object _dataContext;
 
-        protected ContentViewBase(IntPtr handle) : base(handle) 
-        {
-        }
+        protected CollectionCellBase(IntPtr handle) : base(handle) {}
 
         public object DataContext
         {
@@ -20,7 +17,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 if (!Equals(_dataContext, value))
                 {
-                    var previousContext = _dataContext;
                     _dataContext = value;
 
                     if (!_isInitialized)
@@ -29,7 +25,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                         _isInitialized = true;
                     }
 
-                    OnDataContextChanged(previousContext, _dataContext);
+                    OnDataContextChanged();
                 }
             }
         }
@@ -38,14 +34,14 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
         }
 
-        protected virtual void OnDataContextChanged(object previousContext, object newContext)
+        protected virtual void OnDataContextChanged()
         {
         }
 
-        protected override void Dispose(bool disposing)
+        /*protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
-        }
+        }*/
     }
 }

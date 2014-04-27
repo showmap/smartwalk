@@ -7,7 +7,8 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
+using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {
@@ -21,7 +22,9 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             {
                 var result = new List<GroupContainer>();
 
-                result.Add(new GroupContainer(new [] { new EntityViewModelWrapper(orgViewModel) }));
+                result.Add(new GroupContainer(new [] { 
+                    new EntityViewModelWrapper(orgViewModel) 
+                }));
 
                 var currentEvents = org.OrgEvents
                     .Where(ei => ei.GetStatus() == 0)

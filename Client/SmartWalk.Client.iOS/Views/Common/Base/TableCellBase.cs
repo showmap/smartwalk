@@ -2,7 +2,7 @@ using System;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Utils;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class TableCellBase : UITableViewCell
     {

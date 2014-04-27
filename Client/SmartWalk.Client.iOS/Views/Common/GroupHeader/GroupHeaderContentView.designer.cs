@@ -7,7 +7,7 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 {
     [Register ("GroupHeaderContentView")]
     partial class GroupHeaderContentView

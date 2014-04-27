@@ -3,7 +3,7 @@ using System.Globalization;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Client.iOS.Views.Common;
+using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {

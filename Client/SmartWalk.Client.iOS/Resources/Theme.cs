@@ -1,7 +1,7 @@
 using System.Drawing;
 using MonoTouch.UIKit;
-using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.HomeView;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 

@@ -2,9 +2,8 @@ using System.ComponentModel;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
-using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
-namespace SmartWalk.Client.iOS.Views.Common
+namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public class EntityViewModelWrapper : IEntityCellContext
     {

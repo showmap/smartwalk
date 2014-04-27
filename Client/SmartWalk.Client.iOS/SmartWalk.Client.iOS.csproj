@@ -187,6 +187,8 @@
     <Folder Include="Resources\Icons\" />
     <Folder Include="Utils\Map\" />
     <Folder Include="Settings.bundle\" />
+    <Folder Include="Views\Common\GroupHeader\" />
+    <Folder Include="Views\Common\Base\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -225,8 +227,6 @@
     <Compile Include="Views\OrgView\OrgEventCell.designer.cs">
       <DependentUpon>OrgEventCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Common\TableCellBase.cs" />
-    <Compile Include="Views\Common\GroupContainer.cs" />
     <Compile Include="Views\OrgView\OrgTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.cs" />
     <Compile Include="Views\OrgEventView\VenueAnnotation.cs" />
@@ -237,18 +237,14 @@
     <Compile Include="Views\Common\EntityCell\ContactCollectionSource.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionDelegate.cs" />
     <Compile Include="Controls\ListViewDecorator.cs" />
-    <Compile Include="Views\Common\ListViewBase.cs" />
     <Compile Include="Views\HomeView\HomeCollectionSource.cs" />
-    <Compile Include="Views\Common\CollectionCellBase.cs" />
     <Compile Include="Views\HomeView\HomeCollectionDelegate.cs" />
     <Compile Include="Services\ExceptionPolicy.cs" />
     <Compile Include="Views\Common\EntityCell\IEntityCellContext.cs" />
-    <Compile Include="Views\Common\EntityViewModelWrapper.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.designer.cs">
       <DependentUpon>VenueShowCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\OrgEventView\OrgEventSearchDelegate.cs" />
-    <Compile Include="Views\Common\TableHeaderBase.cs" />
     <Compile Include="Views\OrgEventView\OrgEventHeaderView.cs" />
     <Compile Include="Views\OrgEventView\OrgEventHeaderView.designer.cs">
       <DependentUpon>OrgEventHeaderView.cs</DependentUpon>
@@ -301,20 +297,13 @@
       <DependentUpon>ContactCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ButtonBarButton.cs" />
-    <Compile Include="Views\Common\ActiveAwareViewController.cs" />
     <Compile Include="Services\ShowDirectionsTask.cs" />
     <Compile Include="Controls\Line.cs" />
     <Compile Include="Views\OrgEventView\VenueHeaderView.cs" />
-    <Compile Include="Views\Common\GroupHeaderView.cs" />
-    <Compile Include="Views\Common\GroupHeaderContentView.cs" />
-    <Compile Include="Views\Common\GroupHeaderContentView.designer.cs">
-      <DependentUpon>GroupHeaderContentView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\OrgEventView\VenueHeaderContentView.cs" />
     <Compile Include="Views\OrgEventView\VenueHeaderContentView.designer.cs">
       <DependentUpon>VenueHeaderContentView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Common\ContentViewBase.cs" />
     <Compile Include="Utils\Reachability.cs" />
     <Compile Include="Services\ReachabilityService.cs" />
     <Compile Include="Utils\ConsoleUtil.cs" />
@@ -334,6 +323,19 @@
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Views\OrgEventView\CreateEventEditViewDelegate.cs" />
     <Compile Include="Utils\ShareUtil.cs" />
+    <Compile Include="Views\Common\GroupHeader\GroupContainer.cs" />
+    <Compile Include="Views\Common\GroupHeader\GroupHeaderContentView.cs" />
+    <Compile Include="Views\Common\GroupHeader\GroupHeaderContentView.designer.cs">
+      <DependentUpon>GroupHeaderContentView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\GroupHeader\GroupHeaderView.cs" />
+    <Compile Include="Views\Common\Base\CollectionCellBase.cs" />
+    <Compile Include="Views\Common\Base\ContentViewBase.cs" />
+    <Compile Include="Views\Common\Base\ListViewBase.cs" />
+    <Compile Include="Views\Common\Base\TableCellBase.cs" />
+    <Compile Include="Views\Common\Base\TableHeaderBase.cs" />
+    <Compile Include="Views\Common\Base\ActiveAwareViewController.cs" />
+    <Compile Include="Views\Common\EntityCell\EntityViewModelWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -364,9 +366,9 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactsView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
-    <InterfaceDefinition Include="Views\Common\GroupHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventInfoView.xib" />
+    <InterfaceDefinition Include="Views\Common\GroupHeader\GroupHeaderContentView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />
