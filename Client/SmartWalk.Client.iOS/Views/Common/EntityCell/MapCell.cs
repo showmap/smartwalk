@@ -7,6 +7,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 
@@ -58,6 +59,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             InitializeGestures();
 
+            MapView.TintColor = Theme.MapTint;
             MapView.Delegate = new MapDelegate { CanShowDetails = false };
         }
 

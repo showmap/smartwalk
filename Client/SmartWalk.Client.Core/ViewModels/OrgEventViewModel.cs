@@ -417,6 +417,8 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCreateEvent);
 
+                            IsLoading = true;
+
                             var eventInfo = default(OrgEvent);
                             try
                             {
@@ -438,6 +440,8 @@ namespace SmartWalk.Client.Core.ViewModels
                             {
                                 _exceptionPolicy.Trace(ex);
                             }
+
+                            IsLoading = false;
                         },
                         () => 
                             _parameters != null &&
