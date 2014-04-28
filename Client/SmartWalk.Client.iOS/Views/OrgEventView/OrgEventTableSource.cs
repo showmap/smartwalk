@@ -128,7 +128,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     Equals(_viewModel.ExpandedShow, venueShow),
                     venueShow);
 
-                return height;
+                return (float)Math.Ceiling(height);
             }
 
             return VenueShowCell.DefaultHeight;

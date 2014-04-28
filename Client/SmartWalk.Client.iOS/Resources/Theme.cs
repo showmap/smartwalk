@@ -68,7 +68,6 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor EntitySeparator = UIColor.FromRGBA(120, 120, 120, 127);
         public static readonly UIFont EntityDescrFont = UIFont.FromName(HelveticaRegular, 15);
-        public const int EntityDescrTextLineHeight = 19;
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIFont VenueCellTitleFont = UIFont.FromName(HelveticaMedium, 15);
@@ -79,7 +78,6 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont VenueShowCellFinishedTimeFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowCellTimeAmPmFont = UIFont.FromName(HelveticaLight, 9);
         public static readonly UIFont VenueShowCellFont = UIFont.FromName(HelveticaRegular, 14);
-        public const int VenueShowTextLineHeight = 17;
 
         public static readonly UIColor MapTint = UIColor.FromRGB(51, 51, 51);
         public static readonly UIColor MapPinText = UIColor.White;

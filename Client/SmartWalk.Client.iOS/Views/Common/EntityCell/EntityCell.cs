@@ -35,7 +35,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return (EntityCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static int CalculateCellHeight(
+        public static float CalculateCellHeight(
             float frameWidth,
             bool isExpanded, 
             Entity entity)
@@ -44,11 +44,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             var result = 
                 GetHeaderHeight(entity) + 
                 (textHeight != 0 ? Gap * 2 : 0) + 
-                    (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrTextLineHeight * 3));
+                    (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrFont.LineHeight * 3));
             return result;
         }
 
-        private static int CalculateTextHeight(float frameWidth, string text)
+        private static float CalculateTextHeight(float frameWidth, string text)
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -89,7 +89,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     }
                 }
 
-                return (int)Math.Ceiling(textSize.Height);
+                return textSize.Height;
             }
 
             return 0;

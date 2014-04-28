@@ -29,7 +29,11 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             InitializeToolBar();
 
-            MapViewControl.TintColor = Theme.MapTint;
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                MapViewControl.TintColor = Theme.MapTint;
+            }
+
             MapViewControl.Delegate = new MapDelegate { CanShowDetails = false };
 
             UpdateViewTitle();

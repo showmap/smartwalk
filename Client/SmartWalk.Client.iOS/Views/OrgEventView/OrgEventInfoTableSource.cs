@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     entityCellContext.IsDescriptionExpanded,
                     entityCellContext.Entity);
 
-                return height;
+                return (float)Math.Ceiling(height);
             }
 
             throw new Exception("There is an unsupported type in the list.");

@@ -460,7 +460,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 if (!_isMapViewInitialized)
                 {
                     VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
-                    VenuesMapView.TintColor = Theme.MapTint;
+
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                    {
+                        VenuesMapView.TintColor = Theme.MapTint;
+                    }
 
                     if (!(VenuesMapView.WeakDelegate is MapDelegate))
                     {

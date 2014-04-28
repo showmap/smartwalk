@@ -17,7 +17,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
-        public const int DefaultHeight = Gap + Theme.VenueShowTextLineHeight + Gap;
+        public readonly static float DefaultHeight = Gap + Theme.VenueShowCellFont.LineHeight + Gap;
 
         private static readonly string TimeFormat = "{0:t}";
         private static readonly string Space = " ";
@@ -75,7 +75,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 if (showText != null)
                 {
                     var logoHeight = show.Picture != null ? Gap + ImageHeight : 0;
-                    var detailsHeight = show.DetailsUrl != null ? Gap + Theme.VenueShowTextLineHeight : 0;
+                    var detailsHeight = show.DetailsUrl != null ? Gap + Theme.VenueShowCellFont.LineHeight : 0;
                     var textHeight = CalculateTextHeight(GetTextWidth(frameWidth), showText);
                     cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
                 }
@@ -86,7 +86,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return DefaultHeight;
         }
 
-        private static int CalculateTextHeight(float frameWidth, string text)
+        private static float CalculateTextHeight(float frameWidth, string text)
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -102,7 +102,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         UILineBreakMode.TailTruncation);
                 }
 
-                return (int)Math.Ceiling(textSize.Height);
+                return textSize.Height;
             }
 
             return 0;
@@ -207,7 +207,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 DataContext.HasDetailsUrl() &&
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
-                DetailsHeightConstraint.Constant = Theme.VenueShowTextLineHeight;
+                DetailsHeightConstraint.Constant = Theme.VenueShowCellFont.LineHeight;
                 ImageAndDetailsSpaceConstraint.Constant = Gap;
             }
             else
