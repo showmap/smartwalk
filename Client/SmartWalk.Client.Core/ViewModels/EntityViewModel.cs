@@ -33,7 +33,6 @@ namespace SmartWalk.Client.Core.ViewModels
         private string _currentFullscreenImage;
 
         private MvxCommand _expandCollapseCommand;
-        private MvxCommand _showPreviousEntityCommand;
         private MvxCommand _showNextEntityCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand<Entity> _showHideContactsCommand;

@@ -370,8 +370,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private void OnViewModelRefreshCompleted(object sender, EventArgs e)
         {
             UpdateViewTitle();
-            InvokeOnMainThread(_refreshControl.EndRefreshing);
-
+            _refreshControl.EndRefreshing();
             OnViewModelRefreshed();
         }
 

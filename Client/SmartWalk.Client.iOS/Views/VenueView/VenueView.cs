@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
@@ -95,6 +96,18 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
                 VenueShowsTableView.BeginUpdates();
                 VenueShowsTableView.EndUpdates();
+            }
+        }
+
+        protected override void OnViewModelRefreshed()
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                VenueShowsTableView.SetContentOffset(new PointF(0, -TopLayoutGuide.Length), true);
+            }
+            else
+            {
+                VenueShowsTableView.SetContentOffset(PointF.Empty, true);
             }
         }
 
