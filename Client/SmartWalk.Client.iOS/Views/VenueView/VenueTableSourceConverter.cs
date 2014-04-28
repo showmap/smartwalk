@@ -34,6 +34,13 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                         });
                 }
 
+                if (venueViewModel.CanShowNextEntity)
+                {
+                    result.Add(new GroupContainer(new [] { 
+                        venueViewModel.NextEntityTitle
+                    }));
+                }
+
                 return result.ToArray();
             }
 

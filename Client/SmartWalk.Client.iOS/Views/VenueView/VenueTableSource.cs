@@ -24,6 +24,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             tableView.RegisterClassForHeaderFooterViewReuse(typeof(GroupHeaderView), GroupHeaderView.Key);
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
+            tableView.RegisterNibForCellReuse(NextVenueCell.Nib, NextVenueCell.Key);
         }
 
         public GroupContainer[] GroupItemsSource
@@ -69,6 +70,11 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     venueShow);
 
                 return height;
+            }
+
+            if (item is string)
+            {
+                return NextVenueCell.DefaultHeight;
             }
 
             throw new Exception("There is an unsupported type in the list.");
@@ -135,6 +141,14 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
                     indexPath.Section == GroupItemsSource.Length - 1;
+            }
+
+            var nextVenueTitle = item as string;
+            if (nextVenueTitle != null)
+            {
+                cell = tableView.DequeueReusableCell(NextVenueCell.Key, indexPath);
+                ((NextVenueCell)cell).ShowNextEntityCommand = _viewModel.ShowNextEntityCommand;
+                ((NextVenueCell)cell).DataContext = nextVenueTitle;
             }
 
             return cell;

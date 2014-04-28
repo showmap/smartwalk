@@ -157,28 +157,6 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public ICommand ShowPreviousEntityCommand
-        {
-            get
-            {
-                if (_showPreviousEntityCommand == null)
-                {
-                    _showPreviousEntityCommand = 
-                        new MvxCommand(() => {
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                Analytics.ActionLabelShowPreviousEntity);
-
-                            OnShowPreviousEntity();
-                        },
-                        () => CanShowNextEntity);
-                }
-
-                return _showPreviousEntityCommand;
-            }
-        }
-
         public ICommand ShowNextEntityCommand
         {
             get
@@ -194,7 +172,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
                             OnShowNextEntity();
                         }, 
-                        () => CanShowPreviousEntity);
+                        () => CanShowNextEntity);
                 }
 
                 return _showNextEntityCommand;
@@ -427,13 +405,9 @@ namespace SmartWalk.Client.Core.ViewModels
             get { return true; }
         }
 
-        public virtual bool CanShowPreviousEntity
+        public virtual string NextEntityTitle
         {
-            get { return true; }
-        }
-
-        protected virtual void OnShowPreviousEntity()
-        {
+            get { return null; }
         }
 
         protected virtual void OnShowNextEntity()

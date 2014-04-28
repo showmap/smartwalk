@@ -198,9 +198,13 @@ namespace SmartWalk.Client.Core.ViewModels
             get { return OrgEventVenues != null && OrgEventVenues.Length > 0 && Venue != null; }
         }
 
-        public override bool CanShowPreviousEntity
+        public override string NextEntityTitle
         {
-            get { return CanShowNextEntity; }
+            get
+            {
+                var nextVenue = GetNextVenue();
+                return nextVenue != null ? nextVenue.Info.Name : null;
+            }
         }
 
         protected override ParametersBase InitParameters
@@ -222,33 +226,9 @@ namespace SmartWalk.Client.Core.ViewModels
                 .ContinueWithThrow();
         }
 
-        protected override void OnShowPreviousEntity()
-        {
-            var currentIndex = Array.IndexOf(OrgEventVenues, Venue);
-            if (currentIndex > 0)
-            {
-                Venue = OrgEventVenues[currentIndex - 1];
-            }
-            else
-            {
-                Venue = OrgEventVenues.Last();
-            }
-
-            RaiseRefreshCompleted();
-        }
-
         protected override void OnShowNextEntity()
         {
-            var currentIndex = Array.IndexOf(OrgEventVenues, Venue);
-            if (currentIndex < OrgEventVenues.Length - 1)
-            {
-                Venue = OrgEventVenues[currentIndex + 1];
-            }
-            else
-            {
-                Venue = OrgEventVenues[0];
-            }
-
+            Venue = GetNextVenue();
             RaiseRefreshCompleted();
         }
 
@@ -290,6 +270,26 @@ namespace SmartWalk.Client.Core.ViewModels
             }
 
             return 0;
+        }
+
+        private Venue GetNextVenue()
+        {
+            var result = default(Venue);
+
+            if (OrgEventVenues != null && Venue != null)
+            {
+                var currentIndex = Array.IndexOf(OrgEventVenues, Venue);
+                if (currentIndex < OrgEventVenues.Length - 1)
+                {
+                    result = OrgEventVenues[currentIndex + 1];
+                }
+                else
+                {
+                    result = OrgEventVenues[0];
+                }
+            }
+
+            return result;
         }
 
         public class Parameters : ParametersBase

@@ -336,6 +336,10 @@
     <Compile Include="Views\Common\Base\TableHeaderBase.cs" />
     <Compile Include="Views\Common\Base\ActiveAwareViewController.cs" />
     <Compile Include="Views\Common\EntityCell\EntityViewModelWrapper.cs" />
+    <Compile Include="Views\VenueView\NextVenueCell.cs" />
+    <Compile Include="Views\VenueView\NextVenueCell.designer.cs">
+      <DependentUpon>NextVenueCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -369,6 +373,7 @@
     <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventInfoView.xib" />
     <InterfaceDefinition Include="Views\Common\GroupHeader\GroupHeaderContentView.xib" />
+    <InterfaceDefinition Include="Views\VenueView\NextVenueCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />
@@ -439,6 +444,10 @@
     <BundleResource Include="Resources\Icons\NavBarMore%402x.png" />
     <BundleResource Include="Resources\Images\Background%402x.png" />
     <BundleResource Include="Resources\Images\Black.png" />
+    <BundleResource Include="Resources\Icons\DetailsBlack.png" />
+    <BundleResource Include="Resources\Icons\DetailsBlack%402x.png" />
+    <BundleResource Include="Resources\Icons\NextEntity.png" />
+    <BundleResource Include="Resources\Icons\NextEntity%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

@@ -18,6 +18,8 @@
         public const string CopyLink = "Copy Link";
         public const string ShareButton = "Share";
         public const string CancelButton = "Cancel";
+        public const string NextPattern = "Next: {0}";
+
         public const string Error = "Error";
         public const string NetworkError = "Network Error";
         public const string ServerError = "Server Error";
