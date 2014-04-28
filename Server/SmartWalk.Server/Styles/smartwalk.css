@@ -324,6 +324,6 @@ td.editing-container {
 
 /* jQuery overrides */
 
-.ui-widget-content {
+.ui-datepicker {
     z-index: 100!important; 
 }

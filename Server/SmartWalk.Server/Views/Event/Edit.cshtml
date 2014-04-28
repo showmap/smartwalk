@@ -10,7 +10,7 @@
     Style.Require("jQueryUI_Orchard");
 
     Script.Require("jQueryUI").AtFoot();
-    Script.Require("SmartWalk.ViewModels").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Event.Extended").AtFoot();
     Script.Require("ImageScale").AtFoot();
 
     var eventItem = (EventMetadataVm)Model;
@@ -34,12 +34,12 @@
     get-show-url="@Url.Action("GetShow", "Event")"
     delete-show-url="@Url.Action("DeleteShow", "Event")"
     delete-event-url="@Url.Action("DeleteEvent", "Event")"
-    delete-event-venue-url="@Url.Action("DeleteEventVenue", "Event")"
+    delete-venue-url="@Url.Action("DeleteEventVenue", "Event")"
     delete-event-shows-url="@Url.Action("DeleteEventShows", "Event")"
-    save-event-venue-url="@Url.Action("SaveEventVenue", "Event")"
+    save-venue-url="@Url.Action("SaveEventVenue", "Event")"
     host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
     venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")"
-    save-event-url="@Url.Action("SaveEvent", "Event")">
+    >
         @Html.AntiForgeryTokenOrchard()    
         <div class="row">
 			<div class="col-xs-8">
@@ -52,6 +52,9 @@
 				<button type="button" class="btn btn-success" data-bind="click: $root.saveEvent">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
 			</div>
 		</div>
+
+        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
+
         
         <div class="row">
 			<div class="col-sm-4">
@@ -127,7 +130,7 @@
 					        </button>
 					        <ul class="dropdown-menu">
 					            <li><a href="#">@T("Duplicate")</a></li>
-					            <li><a href="#" data-bind="click: DeleteShows">@T("Delete")</a></li>
+					            <li><a href="#" data-bind="click: deleteShows">@T("Delete")</a></li>
 					        </ul>
 					    </div>
 					</th>
@@ -148,11 +151,10 @@
                 </form>		        
             </div>
         </div>
-        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.OtherVenues)"></textarea>-->          
     </div>
 
-@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal, Type = (int)EntityType.Host})
-@Html.Partial("../Venue/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, UserId = eventItem.UserId, State = VmItemState.Normal, Type = (int)EntityType.Venue})
+@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, State = VmItemState.Normal, Type = (int)EntityType.Host})
+@Html.Partial("../Venue/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, State = VmItemState.Normal, Type = (int)EntityType.Venue})
 
 <script type="text/html" id="EntityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.getVenueView }"></tr>
@@ -294,411 +296,41 @@
     });
 
     (function($) {
-
-        $("#edit-host-form").dialog({
-            modal: true,
-            autoOpen: false,
-            dialogClass: 'noTitleStuff',
-            width: 640,
-            height: 480,
-            show: {
-                effect: "blind",
-                duration: 1000
-            },
-            hide: {
-                effect: "explode",
-                duration: 1000
-            },
-                                                    @*buttons: {
-        '@T("Cancel")': function () {
-            $("#edit-host-form").dialog("close");
-
-        },
-        '@T("Save")': function () {
-            $("#edit-host-form").dialog("close");                    
-        }
-    },*@
-        });
-
-        $("#edit-venue-form").dialog({
-            modal: true,
-            autoOpen: false,
-            dialogClass: 'noTitleStuff',
-            width: 640,
-            height: 480,
-            show: {
-                effect: "blind",
-                duration: 1000
-            },
-            hide: {
-                effect: "explode",
-                duration: 1000
-            },
-                                                    @*buttons: {
-        '@T("Cancel")': function () {
-            $("#edit-host-form").dialog("close");
-
-        },
-        '@T("Save")': function () {
-            $("#edit-host-form").dialog("close");                    
-        }
-    },*@
-        });
-
-        $(".ui-dialog-titlebar").hide();
-
-        ko.bindingHandlers.switcher = {
-            init: function(element, valueAccessor, allBindingsAccessor) {
-                var options = allBindingsAccessor().switcherOptions || {};
-                var value = valueAccessor();
-                if (options && options.values) {
-                    for (var i = 0; i < options.values.length; i++) {
-                        var opt = options.values[i];
-                        var btn = (i == 0) ? $("<button type='button' class='btn btn-primary active'>" + opt.disp + "</button>") : $("<button type='button' class='btn btn-default'>" + opt.disp + "</button>");
-                        btn.data('val', opt.val);
-                        $(element).append(btn);
-
-                        btn.click(function() {
-                            //alert('btn val = ' + $(this).data('val') + '; val = ' + value());
-                            if (value() != $(this).data('val')) {
-                                $(element).find(" > button").each(function() {
-                                    $(this).toggleClass("btn-primary active");
-                                    $(this).toggleClass("btn-default");
-                                });
-
-                                value($(this).data('val'));
-                            }
-                        });
-                    }
-                }
-            },
-            update: function(element, valueAccessor) {
-                var value = valueAccessor();
-
-                $(element).find(" > button").each(function() {
-                    if ($(this).data('val') == value() && $(this).hasClass("btn-default")) {
-                        $(this).toggleClass("btn-primary active");
-                        $(this).toggleClass("btn-default");
-                    }
-
-                    if ($(this).data('val') != value() && $(this).hasClass("btn-primary active")) {
-                        $(this).toggleClass("btn-primary active");
-                        $(this).toggleClass("btn-default");
-                    }
-
-                });
-            }
-        };
-
+        
         $(document).ready(function() {
-            var vm = new EventViewModel(@Html.Raw(Json.Encode(eventItem)));
+            
+            var form = $("#event-item");
+            var hostFormName = "#edit-host-form";
+            var venueFormName = "#edit-venue-form";
+            
+            var data = @Html.Raw(Json.Encode(eventItem));
+            
+            var settings = {
+                hostFormName: hostFormName,
+                venueFormName: venueFormName,
+                
+                eventSaveUrl: form.attr("save-event-url"),
+    
+                showGetUrl: form.attr("get-show-url"),
+                showSaveUrl: form.attr("save-show-url"),
+                showDeleteUrl: form.attr("delete-show-url"),
+    
+                showView: "ShowItemTemplate",
+                showEditView: "ShowItemTemplateEdit",
 
-            vm.getHosts = function(searchTerm, sourceArray) {
-                var ajdata = { term: searchTerm };
-                var urlUpdate = $("#event-item").attr("host-autocomplete-url");
+                eventVenueSaveUrl: form.attr("save-venue-url"),
+                eventVenueDeleteUrl: form.attr("delete-venue-url"),
 
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: JSON.stringify(ajdata),
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        if (data && data.length > 0)
-                            sourceArray($.map(data, function(item) { return new EntityViewModel(item); }));
-                    }
-                };
-                $.ajax(config);
+                eventVenueView: "EventVenueItemTemplate",
+                eventVenueEditView: "EventVenueItemTemplateEdit",
+
+                eventShowsDeleteUrl: form.attr("delete-event-shows-url"),
+
+                hostAutocompleteUrl: form.attr("host-autocomplete-url"),
+                venueAutocompleteUrl: form.attr("venue-autocomplete-url"),                               
             };
 
-            vm.getVenues = function(searchTerm, sourceArray) {
-                var ajdata = { term: searchTerm, eventId: vm.Id() };
-                var urlUpdate = $("#event-item").attr("venue-autocomplete-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: JSON.stringify(ajdata),
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        if (data && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                sourceArray($.map(data, function(item) { return new EntityViewModel(item); }));
-                            }
-                        }
-                    }
-                };
-                $.ajax(config);
-            };
-
-            vm.getAutoItem = function(item) {
-                var text = "<div>";
-                //text += "<div class='categoryIconContainer'><img src='" + (item.Picture() == "" ? "" : item.Picture()) + "' /></div>";
-                text += "<div class='autocomplete-name'>" + item.Name() + "</div>";
-                if (item.DisplayAddress()) {
-                    if (item.DisplayAddress().Address() != "")
-                        text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Address() + "</div>";
-                    //if (item.DisplayAddress().Tip() != "")
-                    //    text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Tip() + "</div>";
-                }
-
-                text += "</div>";
-                return text;
-            };
-
-            vm.createHost = function() {
-                $("#edit-host-form").dialog("open");
-            };
-
-            vm.createVenue = function() {
-                $("#edit-venue-form").dialog("open");
-            };
-
-            vm.getVenueView = function(item) {
-                return item === vm.selectedItem() ? 'EventVenueItemTemplateEdit' : "EventVenueItemTemplate";
-            };
-
-            vm.deleteVenue = function(item) {
-                var ajdata = ko.toJSON(item);
-                var urlUpdate = $("#event-item").attr("delete-event-venue-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        item.State(3);
-                    }
-                };
-                $.ajax(config);
-            };
-
-            vm.saveVenue = function(item) {
-                if (vm.selectedItem().Id() == 0) {
-                    vm.deleteVenue(vm.selectedItem());
-                }
-
-                //alert('item id = ' + vm.selectedVenue().Id() + ' selected item id = ' + vm.selectedItem().Id());
-                var ajdata = ko.toJSON(vm.selectedVenue());
-                var urlUpdate = $("#event-item").attr("save-event-venue-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        if (data)
-                            item.AllShows.push(new ShowViewModel(data));
-                        vm.selectedVenue().State(0);
-                        vm.selectedItem(null);
-                        vm.selectedVenue(null);
-                    }
-                };
-                $.ajax(config);
-            };
-
-            vm.getShowView = function(item) {
-                return item === vm.selectedItem() ? 'ShowItemTemplateEdit' : "ShowItemTemplate";
-            };
-
-            vm.cancelShow = function(item) {
-                if (item.Id() == 0) {
-                    item.State(2);
-                    vm.selectedItem(null);
-                } else {
-                    var ajdata = ko.toJSON(item);
-                    var urlUpdate = $("#event-item").attr("get-show-url");
-
-                    var config = {
-                        async: true,
-                        url: urlUpdate,
-                        type: "POST",
-                        data: ajdata,
-                        dataType: "json",
-                        cache: false,
-                        contentType: "application/json; charset=utf-8",
-                        error: function(e) {
-                            //window.location.href = "@Url.Action("List")";
-                        },
-                        success: function(data) {
-                            item.loadData(data);
-                            vm.selectedItem(null);
-                        }
-                    };
-                    $.ajax(config);
-                }
-            };
-
-            vm.addShow = function(item) {
-                vm.selectedItem(item.addShow());
-                //item.addShow();
-            };
-
-            vm.DeleteShows = function() {
-                var ajdata = ko.toJSON(vm.CheckedShows);
-                var urlUpdate = $("#event-item").attr("delete-event-shows-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        ko.utils.arrayForEach(vm.CheckedShows(), function(item) {
-                            item.State(2);
-                        });
-                    }
-                };
-                $.ajax(config);
-            };
-
-            vm.deleteShow = function(item) {
-                var ajdata = ko.toJSON(item);
-                var urlUpdate = $("#event-item").attr("delete-show-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        item.State(2);
-                    }
-                };
-                $.ajax(config);
-            };
-
-            vm.saveShow = function(item) {
-                var ajdata = ko.toJSON(item);
-                var urlUpdate = $("#event-item").attr("save-show-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        if (item.Id() == 0 || item.Id() != data)
-                            item.Id(data);
-
-                        vm.selectedItem(null);
-                    }
-                };
-                $.ajax(config);
-            };
-
-            vm.deleteEvent = function(item) {
-                var ajdata = ko.toJSON(item);
-                var urlUpdate = $("#event-item").attr("delete-event-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        window.location.href = "@Url.Action("List")";
-                    }
-                };
-                $.ajax(config);
-            };
-
-            vm.saveEvent = function(item) {
-                var ajdata = ko.toJSON(item);
-                var urlUpdate = $("#event-item").attr("save-event-url");
-
-                var config = {
-                    async: true,
-                    url: urlUpdate,
-                    type: "POST",
-                    data: ajdata,
-                    dataType: "json",
-                    cache: false,
-                    contentType: "application/json; charset=utf-8",
-                    error: function(e) {
-                        //window.location.href = "@Url.Action("List")";
-                    },
-                    success: function(data) {
-                        if (item.Id() == 0)
-                            item.loadData(data);
-                        window.location.href = "/event/" + item.Id();
-                    }
-                };
-                $.ajax(config);
-            };
-
-            $("#edit-host-form").bind('OnHostCancelled', function(event) {
-                $("#edit-host-form").dialog("close");
-            });
-
-            $("#edit-host-form").bind('OnHostSaved', function(event) {
-                vm.AllHosts.push(event.item);
-                vm.Host(event.item);
-                $("#edit-host-form").dialog("close");
-            });
-
-            $("#edit-venue-form").bind('OnVenueCancelled', function(event) {
-                $("#edit-venue-form").dialog("close");
-            });
-
-            $("#edit-venue-form").bind('OnVenueSaved', function(event) {
-                event.item.State(3);
-                event.item.EventMetadataId(vm.Id());
-                vm.OtherVenues.push(event.item);
-                vm.selectedVenue(event.item);
-
-                $("#edit-venue-form").dialog("close");
-            });
-
+            var vm = new EventViewModelExtended(settings, data);
             ko.applyBindings(vm, document.getElementById('event-item'));
         });
     })(jQuery);

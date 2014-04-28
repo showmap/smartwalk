@@ -51,11 +51,12 @@
 
 <script>
     $(function () {
-        var form = $("#edit-host-form");
+        var formName = "#edit-host-form";
+        var form = $(formName);
 
         var data = @Html.Raw(Json.Encode(host));
         var settings = {
-            entityForm: form,
+            entityFormName: formName,
             entityCancelEvent: EntityViewModelExtended.HOST_CANCEL_EVENT,
             entitySaveEvent: EntityViewModelExtended.HOST_SAVE_EVENT,
 

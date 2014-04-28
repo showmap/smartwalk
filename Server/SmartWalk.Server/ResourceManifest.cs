@@ -18,12 +18,17 @@ namespace SmartWalk.Server
             // TODO: Why these are depended on AntiForgery?
             manifest.DefineScript("ko.datetime")
                 .SetVersion("1.2")
-                .SetUrl("kodatetime.js")
-                .SetDependencies("ko", "SmartWalk.AntiForgery");
+                .SetUrl("ko-datetime.js")
+                .SetDependencies("ko");
+
+            manifest.DefineScript("ko.switcher")
+                .SetVersion("1.2")
+                .SetUrl("ko-switcher.js")
+                .SetDependencies("ko");
 
             manifest.DefineScript("ko.autocomplete")
                 .SetVersion("1.1")
-                .SetUrl("autocomplete.js")
+                .SetUrl("ko-autocomplete.js")
                 .SetDependencies("ko", "SmartWalk.AntiForgery");
 
             manifest.DefineScript("SmartWalk.Utilites")
@@ -32,7 +37,7 @@ namespace SmartWalk.Server
             
             manifest.DefineScript("SmartWalk.ViewModels.Common")
                 .SetUrl("smartwalk-viewmodels-common.js")
-                .SetDependencies("ko.datetime", "ko.autocomplete", "SmartWalk.Utilites");
+                .SetDependencies("ko.datetime", "ko.switcher", "ko.autocomplete", "SmartWalk.Utilites");
 
             manifest.DefineScript("SmartWalk.ViewModels.Entity")
                 .SetUrl("smartwalk-viewmodels-entity.js?ver=1.0")
@@ -43,8 +48,12 @@ namespace SmartWalk.Server
                 .SetDependencies("SmartWalk.ViewModels.Entity");
 
             manifest.DefineScript("SmartWalk.ViewModels.Event")
-                .SetUrl("smartwalk-viewmodels-event.js?ver=1.4")
+                .SetUrl("smartwalk-viewmodels-event.js?ver=1.5")
                 .SetDependencies("SmartWalk.ViewModels.Entity");
+
+            manifest.DefineScript("SmartWalk.ViewModels.Event.Extended")
+                .SetUrl("smartwalk-viewmodels-event-extended.js?ver=1.4")
+                .SetDependencies("SmartWalk.ViewModels.Event");
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")

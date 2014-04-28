@@ -1,4 +1,5 @@
-﻿EventViewModelBase = function (data) {
+﻿//EventViewModelBase class
+EventViewModelBase = function (data) {
     EventViewModelBase.superClass_.constructor.call(this);
     
     this.Id = ko.observable();
@@ -9,7 +10,7 @@
     this.Picture = ko.observable();
     this.DisplayDate = ko.observable();
 
-    EventViewModelBase.prototype.loadData.call(this, data);
+    this.loadData(data);
 };
 
 inherits(EventViewModelBase, ViewModelBase);
@@ -24,6 +25,7 @@ EventViewModelBase.prototype.loadData = function(data) {
     this.DisplayDate(data.DisplayDate);
 };
 
+//EventViewModel class
 EventViewModel = function (data) {    
     EventViewModel.superClass_.constructor.call(this, data);
     
@@ -39,67 +41,61 @@ EventViewModel = function (data) {
     this.AllHosts = ko.observableArray();
     this.OtherVenues = ko.observableArray();
 
-    EventViewModel.prototype.loadData.call(this, data);
+    this.selectedVenue = ko.observable();
+
+    this.Venues = ko.computed(function () {
+        return this.Items_(this.AllVenues());
+    }, this);
+
+    this.CheckedShows = ko.computed(function () {
+        var venueShows = ko.utils.arrayMap(this.Venues(), function (venue) {
+            return venue.CheckedShows();
+        });
+
+        var res = new Array();
+        for (var i = 0; i < venueShows.length; i++) {
+            for (var j = 0; j < venueShows[i].length; j++) {
+                res.push(venueShows[i][j]);
+            }
+        }
+
+        return res;
+    }, this);
+    
+    this.AllVenuesChecked = ko.computed({
+        read: function () {
+            return this.GetAllItemsChecked_(this.Venues());
+        },
+        write: function (value) {
+            this.SetAllItemsChecked_(this.Venues(), value);
+        }
+    }, this);
+
+    this.CalcVenues = ko.computed(function () {
+        return ko.utils.arrayFilter(this.AllVenues(), function (item) {
+            return item.Id() == 0;
+        });
+    }, this);
+
+    this.loadDataEventViewModel(data);
 };
 
 inherits(EventViewModel, EventViewModelBase);
 
-EventViewModel.prototype.selectedVenue = ko.observable();
-EventViewModel.prototype.loadData = function (data) {
+EventViewModel.prototype.loadDataEventViewModel = function (data) {
     this.Description(data.Description);
     this.Latitude(data.Latitude);
     this.Longitude(data.Longitude);
 
     this.CombineType(data.CombineType);
-
-    this.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModelBase(item); }));
-
+    this.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
+    
     if (data.Host != null) {
         var item = new EntityViewModelBase(data.Host);
         this.Host(item);
         this.AllHosts.push(item);
     }
 };
-
-EventViewModel.prototype.Venues = ko.computed(function () {
-    return this.Items_ ? this.Items_(this.AllVenues()) : [];
-});
-
-EventViewModel.prototype.CheckedShows = ko.computed(function () {
-    if (!this.Venues)
-        return [];
-    
-    var venueShows = ko.utils.arrayMap(this.Venues(), function (venue) {
-        return venue.CheckedShows();
-    });
-
-    var res = new Array();
-    for (var i = 0; i < venueShows.length; i++) {
-        for (var j = 0; j < venueShows[i].length; j++) {
-            res.push(venueShows[i][j]);
-        }
-    }
-
-    return res;
-});
-EventViewModel.prototype.AllVenuesChecked = ko.computed({
-    read: function () {
-        return this.GetAllItemsChecked_ ? this.GetAllItemsChecked_(this.Venues()) : false;
-    },
-    write: function (value) {
-        if (this.SetAllItemsChecked_)
-            this.SetAllItemsChecked_(this.Venues(), value);
-    },
-    owner: self
-});
-
-EventViewModel.prototype.CalcVenues = ko.computed(function () {
-    if (!this.AllVenues)
-        return [];
-    return ko.utils.arrayFilter(this.AllVenues(), function (item) {
-        return item.Id() == 0;
-    });
-});
 
 EventViewModel.prototype.addVenue = function () {
     var newVenue = new EntityViewModel({ Id: 0, Type: 1, State: 1 });

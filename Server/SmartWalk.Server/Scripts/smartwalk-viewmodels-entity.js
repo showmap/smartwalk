@@ -91,6 +91,8 @@
         }
     }, this);
 
+    this.IsChecked = this.AllShowsChecked;
+
     this.loadData(data);
 };
 
@@ -159,5 +161,3 @@ EntityViewModel.prototype.addShow = function() {
 EntityViewModel.prototype.removeShow = function(item) {
     this.DeleteItem_(item);
 };
-
-EntityViewModel.prototype.IsChecked = EntityViewModel.prototype.AllShowsChecked;

@@ -1,7 +1,7 @@
 ﻿EntityViewModelExtended = function (settings, data) {
     EntityViewModelExtended.superClass_.constructor.call(this, data);
 
-    this.entityForm = settings.entityForm;
+    this.entityFormName = settings.entityFormName;
     
     this.entityCancelEvent = settings.entityCancelEvent;
     this.entitySaveEvent = settings.entitySaveEvent;
@@ -19,7 +19,25 @@
     this.contactDeleteUrl = settings.contactDeleteUrl;
     this.contactView = settings.contactView;
     this.contactEditView = settings.contactEditView;
-    this.contactTypes = settings.contactTypes;   
+    this.contactTypes = settings.contactTypes;
+
+    var self = this;
+
+    EntityViewModelExtended.prototype.toJSON = function () {
+        return {
+            Id: self.Id(),
+            State: self.State(),
+            Type: self.Type(),
+            Name: self.Name(),
+            Picture: self.Picture(),
+            EventMetadataId: self.EventMetadataId(),
+            Description: self.Description(),
+
+            AllContacts: self.AllContacts(),
+            AllAddresses: self.AllAddresses(),
+            AllShows: self.AllShows(),
+        };
+    };
 };
 
 EntityViewModelExtended.VENUE_CANCEL_EVENT = "OnVenueCancelled";
@@ -149,7 +167,7 @@ EntityViewModelExtended.prototype.GetMapLink = function () {
 };
 
 EntityViewModelExtended.prototype.cancel = function () {
-    this.entityForm.trigger({
+    $(this.entityFormName).trigger({
         type: this.entityCancelEvent
     });
 };
@@ -162,26 +180,10 @@ EntityViewModelExtended.prototype.saveOrAdd = function (root) {
         function (data) {
             if (self.Id() == 0)
                 self.loadData(data);
-            self.entityForm.trigger({
+            $(self.entityFormName).trigger({
                 type: self.entitySaveEvent,
                 item: self
             });
         }
     );
-};
-
-EntityViewModelExtended.prototype.toJSON = function () {
-    return {
-        Id: this.Id(),
-        State: this.State(),
-        Type: this.Type(),
-        Name: this.Name(),
-        Picture: this.Picture(),
-        EventMetadataId: this.EventMetadataId(),
-        Description: this.Description(),
-    
-        AllContacts: this.AllContacts(),
-        AllAddresses: this.AllAddresses(),
-        AllShows: this.AllShows(),
-    };
 };
