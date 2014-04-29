@@ -189,7 +189,7 @@
     <Folder Include="Settings.bundle\" />
     <Folder Include="Views\Common\GroupHeader\" />
     <Folder Include="Views\Common\Base\" />
-    <Folder Include="Utils\Mvx\" />
+    <Folder Include="Utils\MvvmCross\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -340,9 +340,15 @@
     <Compile Include="Views\VenueView\NextVenueCell.designer.cs">
       <DependentUpon>NextVenueCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Mvx\MvxPlus.cs" />
-    <Compile Include="Utils\Mvx\MvxFastHttpFileDownloader.cs" />
-    <Compile Include="Utils\Mvx\MvxResizedImageViewLoader.cs" />
+    <Compile Include="Utils\MvvmCross\MvxPlus.cs" />
+    <Compile Include="Utils\MvvmCross\MvxFastHttpFileDownloader.cs" />
+    <Compile Include="Utils\MvvmCross\MvxResizedImageViewLoader.cs" />
+    <Compile Include="Utils\MvvmCross\IMvxResizedImageCache.cs" />
+    <Compile Include="Utils\MvvmCross\MvxResizedImageCache.cs" />
+    <Compile Include="Utils\MvvmCross\MvxResizedImageRequest.cs" />
+    <Compile Include="Utils\MvvmCross\MvxResizedDynamicImageHelper.cs" />
+    <Compile Include="Utils\MvvmCross\IMvxResizedImageHelper.cs" />
+    <Compile Include="Utils\MvvmCross\MvxFastFileDownloadRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

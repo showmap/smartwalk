@@ -6,7 +6,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using SmartWalk.Client.iOS.Utils.Mvx;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {

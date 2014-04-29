@@ -30,7 +30,10 @@ namespace SmartWalk.Client.iOS.Services
             content.Headers.ContentType = MediaTypeHeaderValue.Parse(JsonHeader);
 
             var httpClient = CreateHttpClient();
+
             var response = await httpClient.PostAsync(_configuration.Api, content);
+            response.EnsureSuccessStatusCode();
+
             var resultString = await response.Content.ReadAsStringAsync();
 
             var result = JsonConvert.DeserializeObject<TResponse>(resultString);

@@ -3,7 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using SmartWalk.Client.iOS.Utils.Mvx;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {

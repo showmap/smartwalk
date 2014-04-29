@@ -8,7 +8,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.iOS.Services;
-using SmartWalk.Client.iOS.Utils.Mvx;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
 
 namespace SmartWalk.Client.iOS
 {
@@ -50,12 +50,9 @@ namespace SmartWalk.Client.iOS
 
         protected override IMvxPluginConfiguration GetPluginConfiguration(Type plugin)
         {
-            if (plugin == typeof(Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader))
-            {
-                return MvxPlus.GetDownloadCacheConfig();
-            }
-
-            return null;
+            return plugin == typeof(Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader) 
+                ? MvxPlus.CacheConfig 
+                : null;
         }
 
         protected override void InitializeLastChance()
@@ -66,10 +63,10 @@ namespace SmartWalk.Client.iOS
             Cirrious.MvvmCross.Plugins.Email.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
 
-            Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxFileDownloadCache>(
-                MvxPlus.CreateDownloadCache);
             Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxImageCache<UIImage>>(
                 MvxPlus.CreateImageCache);
+            Mvx.RegisterSingleton<IMvxResizedImageCache<UIImage>>(MvxPlus.CreateResizedImageCache);
+            Mvx.RegisterType<IMvxResizedImageHelper<UIImage>, MvxResizedDynamicImageHelper<UIImage>>();
             Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxHttpFileDownloader>(
                 MvxPlus.CreateHttpFileDownloader);
 

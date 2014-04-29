@@ -6,7 +6,7 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using SmartWalk.Client.iOS.Utils.Mvx;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -15,14 +15,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("ImageCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("ImageCell");
 
-        private readonly MvxResizedImageViewLoader _imageHelper;
+        private readonly MvxImageViewLoader _imageHelper;
 
         private UITapGestureRecognizer _imageTapGesture;
         private bool _isShadowHidden;
 
         public ImageCell(IntPtr handle) : base (handle)
         {
-            _imageHelper = new MvxResizedImageViewLoader(
+            _imageHelper = new MvxImageViewLoader(
                 () => ImageView,
                 () => {
                     if (_imageHelper.ImageUrl != null && 
