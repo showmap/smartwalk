@@ -1,12 +1,12 @@
 using System;
 using System.Windows.Input;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Utils.Mvx;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -15,14 +15,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("ImageCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("ImageCell");
 
-        private readonly MvxImageViewLoader _imageHelper;
+        private readonly MvxResizedImageViewLoader _imageHelper;
 
         private UITapGestureRecognizer _imageTapGesture;
         private bool _isShadowHidden;
 
         public ImageCell(IntPtr handle) : base (handle)
         {
-            _imageHelper = new MvxImageViewLoader(
+            _imageHelper = new MvxResizedImageViewLoader(
                 () => ImageView,
                 () => {
                     if (_imageHelper.ImageUrl != null && 

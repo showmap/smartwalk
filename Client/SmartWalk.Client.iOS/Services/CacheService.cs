@@ -8,7 +8,7 @@ namespace SmartWalk.Client.iOS.Services
 {
     public class CacheService : ICacheService
     {
-        private const string CacheFileExt = ".cache";
+        private const string CacheFileExt = ".json";
 
         private readonly string _cacheFolderPath;
 

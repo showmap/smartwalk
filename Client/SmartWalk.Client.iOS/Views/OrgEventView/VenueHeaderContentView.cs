@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Input;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Utils.Mvx;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -14,13 +14,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         public static readonly UINib Nib = UINib.FromName("VenueHeaderContentView", NSBundle.MainBundle);
 
-        private readonly MvxImageViewLoader _imageHelper;
+        private readonly MvxResizedImageViewLoader _imageHelper;
         private UITapGestureRecognizer _cellTapGesture;
         private UILongPressGestureRecognizer _cellPressGesture;
 
         public VenueHeaderContentView(IntPtr handle) : base(handle)
         {
-            _imageHelper = new MvxImageViewLoader(() => LogoImageView);
+            _imageHelper = new MvxResizedImageViewLoader(() => LogoImageView);
         }
 
         public static VenueHeaderContentView Create()

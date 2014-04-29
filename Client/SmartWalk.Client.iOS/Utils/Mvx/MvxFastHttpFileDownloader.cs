@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Plugins.DownloadCache;
+using SmartWalk.Client.iOS.Services;
 
-namespace SmartWalk.Client.iOS.Services
+namespace SmartWalk.Client.iOS.Utils.Mvx
 {
     /// <summary>
     /// As seen on http://www.michaelridland.com/mobile/implementing-modernhttpclient-in-mvvmcross/
@@ -15,34 +15,42 @@ namespace SmartWalk.Client.iOS.Services
     public class MvxFastHttpFileDownloader 
         : MvxLockableObject, IMvxHttpFileDownloader
     {
+        private const int DefaultMaxConcurrentDownloads = 30;
+
         private readonly Dictionary<MvxFastFileDownloadRequest, bool> _currentRequests =
             new Dictionary<MvxFastFileDownloadRequest, bool>();
-
-        private const int DefaultMaxConcurrentDownloads = 30;
-        private readonly int _maxConcurrentDownloads;
         private readonly Queue<MvxFastFileDownloadRequest> _queuedRequests = 
             new Queue<MvxFastFileDownloadRequest>();
 
-        public MvxFastHttpFileDownloader(int maxConcurrentDownloads = DefaultMaxConcurrentDownloads)
+        private readonly int _maxConcurrentDownloads;
+
+        public MvxFastHttpFileDownloader(
+            int maxConcurrentDownloads = DefaultMaxConcurrentDownloads)
         {
             _maxConcurrentDownloads = maxConcurrentDownloads;
         }
 
-        public void RequestDownload(string url, string downloadPath, Action success, Action<Exception> error)
+        public void RequestDownload(
+            string url, 
+            string downloadPath, 
+            Action success, 
+            Action<Exception> error)
         {
             var request = new MvxFastFileDownloadRequest(url, downloadPath);
 
-            request.DownloadComplete += (sender, args) =>
-            {
-                OnRequestFinished(request);
-                success();
-            };
+            request.DownloadComplete += 
+                (sender, args) =>
+                {
+                    OnRequestFinished(request);
+                    success();
+                };
 
-            request.DownloadFailed += (sender, args) =>
-            {
-                OnRequestFinished(request);
-                error(args.Value);
-            };
+            request.DownloadFailed += 
+                (sender, args) =>
+                {
+                    OnRequestFinished(request);
+                    error(args.Value);
+                };
 
             RunSyncOrAsyncWithLock(
                 () =>
@@ -72,17 +80,13 @@ namespace SmartWalk.Client.iOS.Services
 
         private void StartNextQueuedItem()
         {
-            if (_currentRequests.Count >= _maxConcurrentDownloads)
-                return;
+            if (_currentRequests.Count >= _maxConcurrentDownloads) return;
 
             RunSyncOrAsyncWithLock(
                 () =>
                 {
-                    if (_currentRequests.Count >= _maxConcurrentDownloads)
-                        return;
-
-                    if (!_queuedRequests.Any())
-                        return;
+                    if (_currentRequests.Count >= _maxConcurrentDownloads) return;
+                    if (!_queuedRequests.Any()) return;
 
                     var request = _queuedRequests.Dequeue();
                     _currentRequests.Add(request, true);
@@ -108,20 +112,21 @@ namespace SmartWalk.Client.iOS.Services
         public void Start()
         {
             var client = HttpService.CreateHttpClient();
-
-            Task<HttpResponseMessage> result;
-
-            result = client.GetAsync(Url);
-            result.ContinueWith(
-                res =>
+            client
+                .GetAsync(Url)
+                .ContinueWith(
+                response =>
                 {
-                    var httpResult = res.Result;
+                    var httpResult = response.Result;
                     httpResult.EnsureSuccessStatusCode(); 
-                    httpResult.Content.ReadAsStreamAsync()
-                    .ContinueWith(HandleSuccess, 
-                        TaskContinuationOptions.NotOnFaulted)
-                    .ContinueWith(ae => FireDownloadFailed(ae.Exception), 
-                        TaskContinuationOptions.OnlyOnFaulted);
+                    httpResult.Content
+                            .ReadAsStreamAsync()
+                            .ContinueWith(
+                                HandleSuccess, 
+                                TaskContinuationOptions.NotOnFaulted)
+                            .ContinueWith(
+                                ae => FireDownloadFailed(ae.Exception), 
+                                TaskContinuationOptions.OnlyOnFaulted);
 
                 })
                 .ContinueWith(
@@ -156,14 +161,18 @@ namespace SmartWalk.Client.iOS.Services
         {
             var handler = DownloadFailed;
             if (handler != null)
+            {
                 handler(this, new MvxValueEventArgs<Exception>(exception));
+            }
         }
 
         private void FireDownloadComplete()
         {
             var handler = DownloadComplete;
             if (handler != null)
+            {
                 handler(this, new MvxFileDownloadedEventArgs(Url, DownloadPath));
+            }
         }
     }
 }

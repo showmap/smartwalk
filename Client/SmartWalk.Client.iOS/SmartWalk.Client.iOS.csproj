@@ -189,6 +189,7 @@
     <Folder Include="Settings.bundle\" />
     <Folder Include="Views\Common\GroupHeader\" />
     <Folder Include="Views\Common\Base\" />
+    <Folder Include="Utils\Mvx\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -313,7 +314,6 @@
     <Compile Include="Services\Clipboard.cs" />
     <Compile Include="Services\HttpService.cs" />
     <Compile Include="Utils\ActionSheetUtil.cs" />
-    <Compile Include="Services\MvxFastHttpFileDownloader.cs" />
     <Compile Include="Views\OrgEventView\OrgEventInfoView.cs" />
     <Compile Include="Views\OrgEventView\OrgEventInfoView.designer.cs">
       <DependentUpon>OrgEventInfoView.cs</DependentUpon>
@@ -340,6 +340,9 @@
     <Compile Include="Views\VenueView\NextVenueCell.designer.cs">
       <DependentUpon>NextVenueCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Mvx\MvxPlus.cs" />
+    <Compile Include="Utils\Mvx\MvxFastHttpFileDownloader.cs" />
+    <Compile Include="Utils\Mvx\MvxResizedImageViewLoader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

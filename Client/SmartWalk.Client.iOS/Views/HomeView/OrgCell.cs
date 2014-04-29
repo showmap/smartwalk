@@ -1,9 +1,9 @@
 using System;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Utils.Mvx;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
@@ -12,13 +12,13 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         public static readonly UINib Nib = UINib.FromName("OrgCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgCell");
 
-        private readonly MvxImageViewLoader _imageHelper;
+        private readonly MvxResizedImageViewLoader _imageHelper;
 
         public const float DefaultHeight = 74;
 
         public OrgCell(IntPtr handle) : base(handle)
         {
-            _imageHelper = new MvxImageViewLoader(() => OrgImageView);
+            _imageHelper = new MvxResizedImageViewLoader(() => OrgImageView);
         }
 
         public new OrgEvent DataContext

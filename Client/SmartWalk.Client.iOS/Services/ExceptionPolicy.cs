@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using MonoTouch.UIKit;
 using Newtonsoft.Json;
 using SmartWalk.Client.Core.Services;
@@ -35,6 +36,11 @@ namespace SmartWalk.Client.iOS.Services
                 {
                     title = Localization.ServerError;
                     message = Localization.CantReadNetworkContent;
+                }
+
+                if (ex is TaskCanceledException)
+                {
+                    return;
                 }
 
                 var alert = new UIAlertView(title, message, null, Localization.OK, null);

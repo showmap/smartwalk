@@ -1,12 +1,14 @@
+using System;
 using Cirrious.CrossCore;
 using Cirrious.CrossCore.Plugins;
-using Cirrious.MvvmCross.Plugins.DownloadCache;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
+using MonoTouch.UIKit;
 using SmartWalk.Client.Core;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.iOS.Services;
+using SmartWalk.Client.iOS.Utils.Mvx;
 
 namespace SmartWalk.Client.iOS
 {
@@ -46,15 +48,30 @@ namespace SmartWalk.Client.iOS
             base.AddPluginsLoaders(loaders);
         }
 
+        protected override IMvxPluginConfiguration GetPluginConfiguration(Type plugin)
+        {
+            if (plugin == typeof(Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader))
+            {
+                return MvxPlus.GetDownloadCacheConfig();
+            }
+
+            return null;
+        }
+
         protected override void InitializeLastChance()
         {
-            PluginLoader.Instance.EnsureLoaded();
+            Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.File.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.PhoneCall.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Email.PluginLoader.Instance.EnsureLoaded();
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
 
-            Mvx.RegisterSingleton<IMvxHttpFileDownloader>(() => new MvxFastHttpFileDownloader());
+            Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxFileDownloadCache>(
+                MvxPlus.CreateDownloadCache);
+            Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxImageCache<UIImage>>(
+                MvxPlus.CreateImageCache);
+            Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxHttpFileDownloader>(
+                MvxPlus.CreateHttpFileDownloader);
 
             base.InitializeLastChance();
         }

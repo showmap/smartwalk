@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Input;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -9,6 +8,7 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Utils.Mvx;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -27,7 +27,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const int TimeBlockWidth = 109;
         private const int Gap = 12;
 
-        private readonly MvxImageViewLoader _imageHelper;
+        private readonly MvxResizedImageViewLoader _imageHelper;
         private UITapGestureRecognizer _imageTapGesture;
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _detailsTapGesture;
@@ -39,7 +39,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             BackgroundView = new UIView();
             UpdateBackgroundColor();
 
-            _imageHelper = new MvxImageViewLoader(
+            _imageHelper = new MvxResizedImageViewLoader(
                 () => ThumbImageView, 
                 () => 
                 {
