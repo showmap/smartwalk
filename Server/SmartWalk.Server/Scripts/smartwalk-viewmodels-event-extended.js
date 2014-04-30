@@ -25,32 +25,6 @@ EventViewModelExtended = function (settings, data) {
     this.hostAutocompleteUrl = settings.hostAutocompleteUrl;
     this.venueAutocompleteUrl = settings.venueAutocompleteUrl;
 
-    var self = this;
-
-    EventViewModelExtended.prototype.toJSONw = function () {
-        return {
-            Id: self.Id(),
-            Title: self.Title(),
-            StartTime: self.StartTime(),
-            EndTime: self.EndTime(),
-            IsPublic: self.IsPublic(),
-            Picture: self.Picture(),
-            DisplayDate: self.DisplayDate(),
-            Description: self.Description(),
-            Latitude: self.Latitude(),
-            Longitude: self.Longitude(),
-
-            CombineType: self.CombineType(),
-
-            Host: self.Host(),
-
-            AllVenues: self.AllVenues(),
-            AllHosts: self.AllHosts(),
-            OtherVenues: self.OtherVenues(),
-        };
-    };
-
-
     this.attachEvents();
     this.setupDialogs();
 };
@@ -62,8 +36,8 @@ EventViewModelExtended.prototype.setupDialogs = function () {
         modal: true,
         autoOpen: false,
         dialogClass: 'noTitleStuff',
-        width: 640,
-        height: 480,
+        width: 800,
+        height: 600,
         show: {
             effect: "blind",
             duration: 1000
@@ -78,8 +52,8 @@ EventViewModelExtended.prototype.setupDialogs = function () {
         modal: true,
         autoOpen: false,
         dialogClass: 'noTitleStuff',
-        width: 640,
-        height: 480,
+        width: 800,
+        height: 600,
         show: {
             effect: "blind",
             duration: 1000
@@ -121,7 +95,7 @@ EventViewModelExtended.prototype.attachEvents = function () {
 };
 
 EventViewModelExtended.prototype.saveEvent = function () {
-    var ajdata = ko.toJSON(this.toJSON());
+    var ajdata = ko.toJSON(this);
 
     ajaxJsonRequest(ajdata, this.eventSaveUrl,
         function (data) {            
@@ -222,8 +196,8 @@ EventViewModelExtended.prototype.deleteVenue = function (root, item) {
     );
 };
 
-EventViewModelExtended.prototype.createVenue = function () {
-    $(this.venueFormName).dialog("open");
+EventViewModelExtended.prototype.createVenue = function (root) {
+    $(root.venueFormName).dialog("open");
 };
 
 EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) {
@@ -241,12 +215,11 @@ EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) 
 };
 
 EventViewModelExtended.prototype.getVenueView = function (item, bindingContext) {
-    return item === bindingContext.$root.selectedItem() ? bindingContext.$root.eventVenueEditViewEditView : bindingContext.$root.eventVenueView;
+    return item === bindingContext.$root.selectedItem() ? bindingContext.$root.eventVenueEditView : bindingContext.$root.eventVenueView;
 };
 
 EventViewModelExtended.prototype.getHosts = function(searchTerm, sourceArray) {
     var ajdata = JSON.stringify({ term: searchTerm });
-
     ajaxJsonRequest(ajdata, this.hostAutocompleteUrl,
         function (data) {
             if (data && data.length > 0)

@@ -40,7 +40,7 @@ namespace SmartWalk.Server
                 .SetDependencies("ko.datetime", "ko.switcher", "ko.autocomplete", "SmartWalk.Utilites");
 
             manifest.DefineScript("SmartWalk.ViewModels.Entity")
-                .SetUrl("smartwalk-viewmodels-entity.js?ver=1.0")
+                .SetUrl("smartwalk-viewmodels-entity.js?ver=1.1")
                 .SetDependencies("SmartWalk.ViewModels.Common");
 
             manifest.DefineScript("SmartWalk.ViewModels.Entity.Extended")

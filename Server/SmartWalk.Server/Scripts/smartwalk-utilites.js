@@ -82,9 +82,9 @@ ListViewModel.prototype.getNextPage = function() {
 };
 
 //ViewModelBase Class
-ViewModelBase = function () {};
-
-ViewModelBase.prototype.selectedItem = ko.observable();
+ViewModelBase = function() {
+    this.selectedItem = ko.observable();
+};
 
 ViewModelBase.prototype.DeleteItem_ = function(item) {
     item.State(2);

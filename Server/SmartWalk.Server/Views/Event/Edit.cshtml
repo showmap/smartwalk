@@ -53,7 +53,7 @@
 			</div>
 		</div>
 
-        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
+        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.selectedItem)"></textarea>-->
 
         
         <div class="row">
@@ -138,7 +138,7 @@
 			</thead>
 			<tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
 		</table>
-        <button type="button" class="btn btn-default" data-bind="click: $root.addVenue">@T("Add Venue")</button>
+        <button type="button" class="btn btn-default" data-bind="click: function(){ $root.addVenue($root); }">@T("Add Venue")</button>
 		
         <div class="row double-gap">
             <div class="col-xs-4">
@@ -171,7 +171,7 @@
             <i class="tip" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
         </div>
         <div class="clearfix"></div>
-        <button type="button" class="btn btn-default gap" data-bind="click: $root.addShow">@T("Create Show")</button>
+        <button type="button" class="btn btn-default gap" data-bind="click: function(){$root.addShow($root, $data)}">@T("Create Show")</button>
     </td>
     <td class="td-valign td-align"><input type="checkbox" data-bind="checked: AllShowsChecked"></td>
 </script>
@@ -186,7 +186,7 @@
                         <div class="input-group">
                         <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: $root.createVenue">@T("Create")<span class="hidden-xs"> @T("Venue")</span>...</button>
+                            <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: function(){ $root.createVenue($root); }">@T("Create")<span class="hidden-xs"> @T("Venue")</span>...</button>
                         </span>
                     </div>
                 </div>
@@ -198,8 +198,8 @@
                 <div class="col-sm-4 text-right">
 				    <div class="form-group">
 					    <label for="saveShowButton">&nbsp;</label><br/>
-					    <button type="button" class="btn btn-default" data-bind="click: $root.cancelVenue">@T("Cancel")</button>
-					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: $root.saveVenue">@T("Save Venue")</button>
+					    <button type="button" class="btn btn-default" data-bind="click: function(){ $root.cancelVenue($root, $data); }">@T("Cancel")</button>
+					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function(){ $root.saveVenue($root, $data) } ">@T("Save Venue")</button>
 				    </div>
 			    </div>
 		    </div>
@@ -278,8 +278,8 @@
 					<div class="col-sm-4 text-right">
 						<div class="form-group">
 							<label for="saveShowButton">&nbsp;</label><br/>
-							<button type="button" class="btn btn-default" data-bind="click: $root.cancelShow">@T("Cancel")</button>
-							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: $root.saveShow">@T("Save Show")</button>
+							<button type="button" class="btn btn-default" data-bind="click: function() {$root.cancelShow($root, $data); }">@T("Cancel")</button>
+							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$root.saveShow($root, $data); } ">@T("Save Show")</button>
 						</div>
 					</div>
 				</div>

@@ -7,7 +7,7 @@
 //jqAutoSourceInputValue -- the property that should be displayed in the input box
 //jqAutoSourceValue -- the property to use for the value
 ko.bindingHandlers.jqAuto = {
-    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+    init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         var options = valueAccessor() || {},
             allBindings = allBindingsAccessor(),
             unwrap = ko.utils.unwrapObservable,
@@ -73,7 +73,7 @@ ko.bindingHandlers.jqAuto = {
         if (query) {
             options.source = function(request, response) {
                 currentResponse = response;
-                query.call(this, request.term, mappedSource);
+                query.call(bindingContext.$root, request.term, mappedSource);
             };
         } else {
             //whenever the items that make up the source are updated, make sure that autocomplete knows it

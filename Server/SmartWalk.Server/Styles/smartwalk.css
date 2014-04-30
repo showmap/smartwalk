@@ -311,7 +311,8 @@ textarea {
 
 .editing-container .well {
 	position: relative;
-	z-index: 10;
+	/*Popup window conflict (adding, editing addresses, contacts)*/
+    /*z-index: 10;*/
 	margin: -5px 0 -5px 0;
 	padding-top: 10px;
 	padding-bottom: 10px;

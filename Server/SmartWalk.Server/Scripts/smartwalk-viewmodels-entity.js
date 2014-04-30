@@ -153,9 +153,11 @@ EntityViewModel.prototype.deleteAddress = function(item) {
 };
 
 // Shows    
-EntityViewModel.prototype.addShow = function() {
-    this.AllShows.push(new ShowViewModel({ Id: 0, EventMetadataId: this.EventMetadataId(), VenueId: this.Id(), State: 1, StartDate: '', EndDate: '' }));
-    return this.AllShows()[this.AllShows().length - 1];
+EntityViewModel.prototype.addShow = function () {
+    var newShow = new ShowViewModel({ Id: 0, EventMetadataId: this.EventMetadataId(), VenueId: this.Id(), State: 1, StartDate: '', EndDate: '' });
+    //this.AllShows.splice(0, 0, newShow);
+    this.AllShows.push(newShow);
+    return newShow;
 };
 
 EntityViewModel.prototype.removeShow = function(item) {

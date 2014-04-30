@@ -21,23 +21,22 @@
     this.contactEditView = settings.contactEditView;
     this.contactTypes = settings.contactTypes;
 
-    var self = this;
 
-    EntityViewModelExtended.prototype.toJSON = function () {
+    this.toJSON = ko.computed(function () {
         return {
-            Id: self.Id(),
-            State: self.State(),
-            Type: self.Type(),
-            Name: self.Name(),
-            Picture: self.Picture(),
-            EventMetadataId: self.EventMetadataId(),
-            Description: self.Description(),
+            Id: this.Id(),
+            State: this.State(),
+            Type: this.Type(),
+            Name: this.Name(),
+            Picture: this.Picture(),
+            EventMetadataId: this.EventMetadataId(),
+            Description: this.Description(),
 
-            AllContacts: self.AllContacts(),
-            AllAddresses: self.AllAddresses(),
-            AllShows: self.AllShows(),
+            AllContacts: this.AllContacts(),
+            AllAddresses: this.AllAddresses(),
+            AllShows: this.AllShows(),
         };
-    };
+    }, this);
 };
 
 EntityViewModelExtended.VENUE_CANCEL_EVENT = "OnVenueCancelled";
@@ -173,7 +172,7 @@ EntityViewModelExtended.prototype.cancel = function () {
 };
 
 EntityViewModelExtended.prototype.saveOrAdd = function (root) {
-    var ajdata = ko.toJSON(this.toJSON());
+    var ajdata = ko.toJSON(root);
     var self = this;
 
     ajaxJsonRequest(ajdata, this.entitySaveUrl,

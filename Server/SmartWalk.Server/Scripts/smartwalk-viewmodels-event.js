@@ -97,20 +97,23 @@ EventViewModel.prototype.loadDataEventViewModel = function (data) {
     }
 };
 
-EventViewModel.prototype.addVenue = function () {
+EventViewModel.prototype.addVenue = function (root) {
     var newVenue = new EntityViewModel({ Id: 0, Type: 1, State: 1 });
-    this.AllVenues.push(newVenue);
-    this.selectedItem(newVenue);
+    root.AllVenues.push(newVenue);
+    root.selectedItem(newVenue);
+    //root.selectedItem(root.AllVenues()[root.AllVenues().length-1]);
+    //root.selectedVenue(newVenue);
 };
+
 EventViewModel.prototype.removeVenue = function (item) {
     this.DeleteItem_(item);
 };
 
-EventViewModel.prototype.cancelVenue = function (item) {
-    if (this.selectedItem() && this.selectedItem().Id() == 0) {
-        this.removeVenue(this.selectedItem());
+EventViewModel.prototype.cancelVenue = function (root) {
+    if (root.selectedItem() && root.selectedItem().Id() == 0) {
+        root.removeVenue(root.selectedItem());
     }
-    this.selectedItem(null);
+    root.selectedItem(null);
 };
 
 EventViewModel.prototype.toJSON = function () {
