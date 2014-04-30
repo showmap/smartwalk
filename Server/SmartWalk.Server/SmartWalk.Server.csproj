@@ -306,4 +306,7 @@
   <ItemGroup>
     <Content Include="Views\Entity\View.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Event\Templates.cshtml" />
+  </ItemGroup>
 </Project>

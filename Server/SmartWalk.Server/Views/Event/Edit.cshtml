@@ -35,6 +35,7 @@
     delete-show-url="@Url.Action("DeleteShow", "Event")"
     delete-event-url="@Url.Action("DeleteEvent", "Event")"
     delete-venue-url="@Url.Action("DeleteEventVenue", "Event")"
+    delete-venues-url="@Url.Action("DeleteEventVenues", "Event")"
     delete-event-shows-url="@Url.Action("DeleteEventShows", "Event")"
     save-venue-url="@Url.Action("SaveEventVenue", "Event")"
     host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
@@ -53,7 +54,7 @@
 			</div>
 		</div>
 
-        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.selectedItem)"></textarea>-->
+        <textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.selectedVenue)"></textarea>
 
         
         <div class="row">
@@ -130,7 +131,7 @@
 					        </button>
 					        <ul class="dropdown-menu">
 					            <li><a href="#">@T("Duplicate")</a></li>
-					            <li><a href="#" data-bind="click: deleteShows">@T("Delete")</a></li>
+					            <li><a href="#" data-bind="click: function() { $root.deleteAction($root); }">@T("Delete")</a></li>
 					        </ul>
 					    </div>
 					</th>
@@ -142,7 +143,12 @@
 		
         <div class="row double-gap">
             <div class="col-xs-4">
-                <button type="button" class="btn btn-danger" data-bind="click: $root.deleteEvent">@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
+                @if (eventItem.Id != 0) {
+                    using(Html.BeginForm("DeleteEvent", "Event", FormMethod.Get)) {
+                        <input type="hidden" name="eventId" value="@eventItem.Id" />
+                        <button type="submit" class="btn btn-danger" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
+                    }
+                }                
             </div>
             <div class="col-xs-8 text-right">
                 <form method="get" action="@cancelAction">
@@ -156,137 +162,7 @@
 @Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, State = VmItemState.Normal, Type = (int)EntityType.Host})
 @Html.Partial("../Venue/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, State = VmItemState.Normal, Type = (int)EntityType.Venue})
 
-<script type="text/html" id="EntityItemTemplate">
-    <tr class="venue" data-bind="template: {name: $root.getVenueView }"></tr>
-    <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
-    <!-- /ko -->   
-</script>
-
-<script type="text/html" id="EventVenueItemTemplate">
-    <td class="venue" colspan="2">
-        <div>
-            <a class="bg-image" data-bind="attr:{href: '/venue/'+Id()}"><img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/></a>
-            <a data-bind="attr:{href: '/venue/'+Id()}"><h4 data-bind="text: Name"></h4></a>
-            <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : ''"></address>
-            <i class="tip" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
-        </div>
-        <div class="clearfix"></div>
-        <button type="button" class="btn btn-default gap" data-bind="click: function(){$root.addShow($root, $data)}">@T("Create Show")</button>
-    </td>
-    <td class="td-valign td-align"><input type="checkbox" data-bind="checked: AllShowsChecked"></td>
-</script>
-
-<script type="text/html" id="EventVenueItemTemplateEdit">
-    <td colspan="3" class="editing-container">
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="form-group">
-                        <label for="venueComboBox">@T("Venue"):</label>
-                        <div class="input-group">
-                        <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: function(){ $root.createVenue($root); }">@T("Create")<span class="hidden-xs"> @T("Venue")</span>...</button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-									   							
-        <div class="row">			
-                <div class="col-sm-8"></div>
-                <div class="col-sm-4 text-right">
-				    <div class="form-group">
-					    <label for="saveShowButton">&nbsp;</label><br/>
-					    <button type="button" class="btn btn-default" data-bind="click: function(){ $root.cancelVenue($root, $data); }">@T("Cancel")</button>
-					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function(){ $root.saveVenue($root, $data) } ">@T("Save Venue")</button>
-				    </div>
-			    </div>
-		    </div>
-	    </div>
-    </td>
-</script>
-
-<script type="text/html" id="ShowItemTemplate">
-    <tr class="venue-show">
-        <td data-bind="click: $root.selectedItem">
-            <span data-bind="text: Title"></span>
-            <br/>
-            <span class="description" data-bind="text: Description"></span>
-        </td>
-        
-        <td data-bind="html: TimeText, click: $root.selectedItem"></td>
-        <td class="td-align"><input type="checkbox" data-bind="checked: IsChecked"></td>
-    </tr>    
-</script>
-
-<script type="text/html" id="ShowItemTemplateEdit">
-    <tr>
-		<td colspan="3" class="editing-container">
-			<div class="well">							
-				<div class="row">
-					<div class="col-sm-8">
-						<div class="form-group">
-							<label for="titleTextInput">@T("Title"):</label>
-							<input type="text" class="form-control" id="titleTextInput" data-bind="value: Title">
-						</div>
-									
-						<div class="form-group">
-							<label for="showDescriptionTextArea">@T("Description"):</label>
-							<textarea class="form-control" id="showDescriptionTextArea" data-bind="value: Description"></textarea>
-						</div>
-					</div>
-							
-					<div class="col-sm-2">
-						<div class="form-group">
-							<label for="showStartTimeInput">@T("Start Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: StartTime, timepickerOptions: { stepMinute: 5 }" />
-						</div>
-									
-						<div class="form-group">
-							<label for="showStartDateInput">@T("Start Date"):</label><br/>
-							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />
-						</div>
-					</div>
-							
-					<div class="col-sm-2">
-						<div class="form-group">
-							<label for="showStartTimeInput">@T("End Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: EndTime, timepickerOptions: { stepMinute: 5 }" />
-						</div>
-									
-						<div class="form-group">
-							<label for="showEndDateInput">@T("End Date"):</label><br/>
-							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }" />
-						</div>
-					</div>
-				</div>
-							
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="form-group">
-							<label for="pictureTextInput">@T("Picture"):</label>
-							<input type="text" class="form-control" id="pictureTextInput" data-bind="value: Picture">
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							<label for="detailsURLTextInput">@T("Details URL"):</label><br/>
-							<input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: DetailsUrl" />
-						</div>
-					</div>
-					<div class="col-sm-4 text-right">
-						<div class="form-group">
-							<label for="saveShowButton">&nbsp;</label><br/>
-							<button type="button" class="btn btn-default" data-bind="click: function() {$root.cancelShow($root, $data); }">@T("Cancel")</button>
-							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$root.saveShow($root, $data); } ">@T("Save Show")</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</td>
-	</tr>         
-</script>
+@Html.Partial("Templates")
 
 @using (Script.Foot())
 {
@@ -320,6 +196,7 @@
 
                 eventVenueSaveUrl: form.attr("save-venue-url"),
                 eventVenueDeleteUrl: form.attr("delete-venue-url"),
+                eventVenuesDeleteUrl: form.attr("delete-venues-url"),
 
                 eventVenueView: "EventVenueItemTemplate",
                 eventVenueEditView: "EventVenueItemTemplateEdit",

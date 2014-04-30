@@ -253,6 +253,23 @@ namespace SmartWalk.Server.Controllers
 
             return Json(true);
         }
+
+
+        [HttpPost]
+        public ActionResult DeleteEventVenues(EntityVm[] venues) {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            foreach (var venueVm in venues)
+            {
+                _entityService.DeleteEventVenue(venueVm);
+            }
+
+            return Json(true);
+        }
+
         #endregion
 
         #region Events
@@ -294,17 +311,16 @@ namespace SmartWalk.Server.Controllers
             return Json(_eventService.SaveOrAddEvent(item));
         } 
 
-        [HttpPost]
-        public ActionResult DeleteEvent(EventMetadataVm item)
+        public ActionResult DeleteEvent(int eventId)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
                 return new HttpUnauthorizedResult();
             }
 
-            _eventService.DeleteEvent(item);
+            _eventService.DeleteEvent(eventId);
 
-            return Json(true);
+            return RedirectToAction("List");
         }
         #endregion
     }

@@ -75,13 +75,28 @@ namespace SmartWalk.Server.Services.EntityService
 
         private ShowVm CheckShowVenue(int eventId, int venueId)
         {
-            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == eventId && s.EntityRecord.Id == venueId).ToList();
+            var shows = _showRepository.Table.Where(s => s.EventMetadataRecord.Id == eventId && s.EntityRecord.Id == venueId && (!s.IsDeleted || s.IsReference)).ToList();
             if (shows.Any()) {
                 if (shows.Count(s => !s.IsReference) > 0 && shows.Count(s => s.IsReference) > 0) {
                     foreach (var showRecord in shows.Where(s => s.IsReference)) {
                         _showRepository.Delete(showRecord);
                         _showRepository.Flush();
                     }
+                }
+
+                var isReferenceShowCount = shows.Count(s => s.IsReference);
+
+                if (isReferenceShowCount > 0) {
+                    for (var i = 0; i < isReferenceShowCount; i++) {
+                        if (i == 0)
+                            shows[i].IsDeleted = false;
+                        else
+                            _showRepository.Delete(shows[i]);
+
+                        _showRepository.Flush();
+                    }
+
+                    return ViewModelContractFactory.CreateViewModelContract(shows.FirstOrDefault(s => s.IsReference));
                 }                
             }
             else {
@@ -191,11 +206,11 @@ namespace SmartWalk.Server.Services.EntityService
             if(metadata == null)
                 return new List<EntityVm>();
 
-            var query = user.Entities.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted && metadata.ShowRecords.All(s => s.EntityRecord.Id != e.Id));
+            var query = user.Entities.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted && metadata.ShowRecords.All(s => s.EntityRecord.Id != e.Id || s.IsDeleted));
             if (where != null)
                 query = query.Where(where);
 
-            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, VmItemState.Hidden, LoadMode.Compact)).ToList();
+            return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, VmItemState.Normal, LoadMode.Compact)).ToList();
         }
 
         public EntityVm GetEntityVmById(int hostId, EntityType type) {

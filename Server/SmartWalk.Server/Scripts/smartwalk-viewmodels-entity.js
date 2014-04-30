@@ -84,10 +84,10 @@
 
     this.AllShowsChecked = ko.computed({
         read: function () {
-            return this.GetAllItemsChecked_(this.Shows());
+            return this.GetAllItemsChecked_(this.AllShows());
         },
         write: function (value) {
-            this.SetAllItemsChecked_(this.Shows(), value);
+            this.SetAllItemsChecked_(this.AllShows(), value);
         }
     }, this);
 

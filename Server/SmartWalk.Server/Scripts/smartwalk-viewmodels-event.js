@@ -47,6 +47,10 @@ EventViewModel = function (data) {
         return this.Items_(this.AllVenues());
     }, this);
 
+    this.CheckedVenues = ko.computed(function () {
+        return this.CheckedItems_.call(this, this.Venues());
+    }, this);
+
     this.CheckedShows = ko.computed(function () {
         var venueShows = ko.utils.arrayMap(this.Venues(), function (venue) {
             return venue.CheckedShows();
@@ -69,12 +73,6 @@ EventViewModel = function (data) {
         write: function (value) {
             this.SetAllItemsChecked_(this.Venues(), value);
         }
-    }, this);
-
-    this.CalcVenues = ko.computed(function () {
-        return ko.utils.arrayFilter(this.AllVenues(), function (item) {
-            return item.Id() == 0;
-        });
     }, this);
 
     this.loadDataEventViewModel(data);
@@ -114,12 +112,4 @@ EventViewModel.prototype.cancelVenue = function (root) {
         root.removeVenue(root.selectedItem());
     }
     root.selectedItem(null);
-};
-
-EventViewModel.prototype.toJSON = function () {
-    var copy = ko.toJS(this); //just a quick way to get a clean copy
-    delete copy.AllVenues;
-    delete copy.Venues;
-    delete copy.OtherVenues;
-    return copy;
 };

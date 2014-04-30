@@ -106,8 +106,8 @@ namespace SmartWalk.Server.Services.EventService
             return res;
         }
 
-        public void DeleteEvent(EventMetadataVm item) {
-            var metadata = _eventMetadataRepository.Get(item.Id);
+        public void DeleteEvent(int eventId) {
+            var metadata = _eventMetadataRepository.Get(eventId);
 
             if (metadata == null)
                 return;
@@ -165,6 +165,11 @@ namespace SmartWalk.Server.Services.EventService
                 metadata.DateModified = DateTime.Now;
 
                 _eventMetadataRepository.Flush();
+            }
+
+            foreach (var showVm in item.AllVenues.Where(venueVm => venueVm.State != VmItemState.Deleted).SelectMany(venueVm => venueVm.AllShows.Where(showVm => showVm.State != VmItemState.Deleted))) {
+                showVm.EventMetadataId = metadata.Id;
+                _entityService.SaveOrAddShow(showVm);
             }
 
             return CreateViewModelContract(metadata);
