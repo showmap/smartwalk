@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Input;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -8,7 +9,6 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -71,12 +71,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 var cellHeight = default(float);
 
-                var showText = show.GetText();
+                var showText = show.GetText();  
                 if (showText != null)
                 {
-                    var logoHeight = show.Picture != null ? Gap + ImageHeight : 0;
-                    var detailsHeight = show.DetailsUrl != null ? Gap + Theme.VenueShowCellFont.LineHeight : 0;
-                    var textHeight = CalculateTextHeight(GetTextWidth(frameWidth), showText);
+                    var logoHeight = show.HasPicture() ? Gap + ImageHeight : 0;
+                    var detailsHeight = show.HasDetailsUrl()
+                        ? Gap + (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) 
+                        : 0;
+                    var textHeight = 
+                        (float)Math.Ceiling(CalculateTextHeight(GetTextWidth(frameWidth), showText));
                     cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
                 }
 
@@ -207,7 +210,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 DataContext.HasDetailsUrl() &&
                 Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
             {
-                DetailsHeightConstraint.Constant = Theme.VenueShowCellFont.LineHeight;
+                DetailsHeightConstraint.Constant = 
+                    (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight);
                 ImageAndDetailsSpaceConstraint.Constant = Gap;
             }
             else

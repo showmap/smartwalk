@@ -9,33 +9,17 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 {
-    [Register ("GroupHeaderContentView")]
-    partial class GroupHeaderContentView
+	[Register ("GroupHeaderContentView")]
+	partial class GroupHeaderContentView
 	{
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Line BottomSeparator { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
-
-		[Outlet]
-		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (BottomSeparator != null) {
-				BottomSeparator.Dispose ();
-				BottomSeparator = null;
-			}
-
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
-			}
-
-			if (TopSeparator != null) {
-				TopSeparator.Dispose ();
-				TopSeparator = null;
 			}
 		}
 	}

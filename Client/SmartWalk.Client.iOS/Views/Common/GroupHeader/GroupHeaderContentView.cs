@@ -2,6 +2,7 @@
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 {
@@ -26,7 +27,8 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 
         protected override void OnInitialize()
         {
-            BottomSeparator.IsLineOnTop = true;
+            TitleLabel.Font = Theme.GroupHeaderTextFont;
+            TitleLabel.TextColor = Theme.GroupHeaderText;
         }
     }
 }

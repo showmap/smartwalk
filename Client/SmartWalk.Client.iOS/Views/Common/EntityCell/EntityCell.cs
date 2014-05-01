@@ -45,7 +45,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 GetHeaderHeight(entity) + 
                 (textHeight != 0 ? Gap * 2 : 0) + 
                     (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrFont.LineHeight * 3));
-            return result;
+            return (float)Math.Ceiling(result);
         }
 
         private static float CalculateTextHeight(float frameWidth, string text)

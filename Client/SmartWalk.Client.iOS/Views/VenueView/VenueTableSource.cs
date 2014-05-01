@@ -57,8 +57,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     tableView.Frame.Width,
                     entityCellContext.IsDescriptionExpanded,
                     entityCellContext.Entity);
-
-                return (float)Math.Ceiling(height);
+                return height;
             }
 
             var venueShow = item as Show;
@@ -68,8 +67,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     tableView.Frame.Width,
                     Equals(_viewModel.ExpandedShow, venueShow),
                     venueShow);
-
-                return (float)Math.Ceiling(height);
+                return height;
             }
 
             if (item is string)

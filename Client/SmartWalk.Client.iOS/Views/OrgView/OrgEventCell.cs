@@ -16,7 +16,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         public OrgEventCell(IntPtr handle) : base(handle)
         {   
-            BackgroundView = new UIView { BackgroundColor = Theme.BackgroundPatternColor };
+            BackgroundView = new UIView { BackgroundColor = UIColor.White };
             SelectedBackgroundView = new UIView { BackgroundColor = Theme.CellHighlight };
         }
 
@@ -33,14 +33,8 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         public bool IsSeparatorVisible
         {
-            get
-            {
-                return !Separator.Hidden;
-            }
-            set
-            {
-                Separator.Hidden = !value;
-            }
+            get { return !Separator.Hidden; }
+            set { Separator.Hidden = !value; }
         }
 
         protected override void OnInitialize()

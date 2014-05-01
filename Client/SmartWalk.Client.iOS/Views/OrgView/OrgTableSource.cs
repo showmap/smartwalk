@@ -63,8 +63,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                     tableView.Frame.Width,
                     entityCellContext.IsDescriptionExpanded,
                     entityCellContext.Entity);
-
-                return (float)Math.Ceiling(height);
+                return height;
             }
 
             if (item is OrgEvent)

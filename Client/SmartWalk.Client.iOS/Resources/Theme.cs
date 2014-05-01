@@ -42,7 +42,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
         public static readonly UIColor CellSemiHighlight = UIColor.FromRGB(255, 250, 225);
         public static readonly UIColor CellSeparator = UIColor.FromRGB(220, 220, 220);
-        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(255, 255, 255, 250);
+        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(51, 51, 51, 250);
         public static readonly UIColor ToolBarButtonHighlightedBackground = 
             UIColor.FromRGBA(255, 255, 255, 230);
 
@@ -59,6 +59,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIFont OrgTextFont = UIFont.FromName(HelveticaRegular, 19);
         public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
+        public static readonly UIColor GroupHeaderText = UIColor.White;
 
         public static readonly UIFont OrgEventDayFont = UIFont.FromName(HelveticaLight, 18);
         public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(HelveticaBold, 10);
@@ -163,10 +164,6 @@ namespace SmartWalk.Client.iOS.Resources
             labelAp.Font = Theme.OrgTextFont;
             labelAp.TextColor = Theme.CellText;
             labelAp.HighlightedTextColor = Theme.CellTextHighlight;
-
-            labelAp = UILabel.AppearanceWhenContainedIn(typeof(GroupHeaderContentView));
-            labelAp.Font = Theme.GroupHeaderTextFont;
-            labelAp.TextColor = Theme.CellText;
 
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(EntityCell));
             labelAp.Font = Theme.EntityDescrFont;
