@@ -17,7 +17,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
-        public readonly static float DefaultHeight = Gap + Theme.VenueShowCellFont.LineHeight + Gap;
+        public readonly static float DefaultHeight = Gap + 
+            (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) + Gap;
 
         private static readonly string TimeFormat = "{0:t}";
         private static readonly string Space = " ";
