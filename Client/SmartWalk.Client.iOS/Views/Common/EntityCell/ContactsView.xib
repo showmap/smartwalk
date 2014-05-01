@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -73,11 +73,6 @@
                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="400" id="360"/>
                     </constraints>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="6"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -102,6 +97,7 @@
                 <outlet property="CollectionView" destination="23" id="32"/>
                 <outlet property="PlaceholderBottomConstraint" destination="96" id="107"/>
                 <outlet property="PlaceholderTopConstraint" destination="45" id="106"/>
+                <outlet property="PlaceholderView" destination="15" id="Xf4-S4-gEp"/>
             </connections>
         </view>
     </objects>

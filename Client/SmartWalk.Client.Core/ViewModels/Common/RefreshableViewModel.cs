@@ -40,6 +40,8 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             }
         }
 
+        public abstract string Title { get; }
+
         protected abstract void Refresh();
 
         protected void RaiseRefreshCompleted()

@@ -321,7 +321,6 @@
     <Compile Include="Views\OrgEventView\OrgEventInfoTableSource.cs" />
     <Compile Include="Views\OrgEventView\OrgEventInfoTableSourceConverter.cs" />
     <Compile Include="Services\CalendarService.cs" />
-    <Compile Include="Views\OrgEventView\CreateEventEditViewDelegate.cs" />
     <Compile Include="Utils\ShareUtil.cs" />
     <Compile Include="Views\Common\GroupHeader\GroupContainer.cs" />
     <Compile Include="Views\Common\GroupHeader\GroupHeaderContentView.cs" />
@@ -349,6 +348,12 @@
     <Compile Include="Utils\MvvmCross\MvxResizedDynamicImageHelper.cs" />
     <Compile Include="Utils\MvvmCross\IMvxResizedImageHelper.cs" />
     <Compile Include="Utils\MvvmCross\MvxFastFileDownloadRequest.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventCalEditViewDelegate.cs" />
+    <Compile Include="Views\OrgEventView\ListSettingsView.cs" />
+    <Compile Include="Views\OrgEventView\ListSettingsView.designer.cs">
+      <DependentUpon>ListSettingsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\Base\DialogViewBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -383,6 +388,7 @@
     <InterfaceDefinition Include="Views\OrgEventView\OrgEventInfoView.xib" />
     <InterfaceDefinition Include="Views\Common\GroupHeader\GroupHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\VenueView\NextVenueCell.xib" />
+    <InterfaceDefinition Include="Views\OrgEventView\ListSettingsView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />
@@ -457,6 +463,8 @@
     <BundleResource Include="Resources\Icons\DetailsBlack%402x.png" />
     <BundleResource Include="Resources\Icons\NextEntity.png" />
     <BundleResource Include="Resources\Icons\NextEntity%402x.png" />
+    <BundleResource Include="Resources\Icons\ListOptions.png" />
+    <BundleResource Include="Resources\Icons\ListOptions%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

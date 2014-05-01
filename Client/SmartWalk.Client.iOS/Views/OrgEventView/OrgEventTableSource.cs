@@ -45,17 +45,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        protected override float HeaderHeight
-        {
-            get
-            {
-                return TableView != null && 
-                    TableView.TableHeaderView != null
-                        ? ((OrgEventHeaderView)TableView.TableHeaderView).SearchBarControl.Frame.Height 
-                        : 0; 
-            }
-        }
-
         private Venue[] VenueItemsSource
         {
             get { return (Venue[])ItemsSource; }
@@ -76,7 +65,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                                     var venue = new Venue(v.Info) { Shows = new [] { s } }; 
                                     return venue;
                                 }))
-                            .OrderBy(v => v.Shows[0], new ShowComparer())
                             .ToArray();
                 }
 
@@ -86,7 +74,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private Venue[] CurrentItemsSource
         {
-            get { return _viewModel.IsGroupedByLocation ? VenueItemsSource : FlattenItemsSource; }
+            get 
+            { 
+                return _viewModel.IsGroupedByLocation 
+                    ? VenueItemsSource 
+                    : FlattenItemsSource
+                        .OrderBy(v => v.Shows[0], new ShowComparer(_viewModel.SortBy))
+                        .ToArray(); 
+            }
         }
 
         public NSIndexPath GetItemIndex(Show show)
@@ -171,20 +166,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             return null;
-        }
-
-        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
-        {
-            base.DraggingEnded(scrollView, willDecelerate);
-
-            // Scrolling to get Group By section always fully visible
-            if (TableView != null &&
-                TableView.TableHeaderView != null &&
-                HeaderHeight < TableView.ContentOffset.Y &&
-                TableView.ContentOffset.Y < TableView.TableHeaderView.Frame.Height)
-            {
-                TableView.SetContentOffset(new PointF(0, HeaderHeight), true);
-            }
         }
 
         protected override UITableViewCell GetOrCreateCellFor(
@@ -289,23 +270,31 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         if (TableView.ContentSize.Height > HeaderHeight)
                         {
-                            TableView.SetContentOffset(new PointF(0, HeaderHeight), _isTouched);
-
-                            if (TableView.Hidden)
-                            {
-                                UIView.Transition(
-                                    TableView,
-                                    ListViewBase.ListViewShowAnimationDuration,
-                                    UIViewAnimationOptions.TransitionCrossDissolve,
-                                    new NSAction(() => TableView.Hidden = false),
-                                    null);
-                            }
+                            ScrollOutHeader();
 
                             _timer.Invalidate();
                             _timer.Dispose();
                             _timer = null;
                         }
                     }));
+            }
+        }
+
+        public void ScrollOutHeader()
+        {
+            if (TableView.ContentSize.Height > HeaderHeight)
+            {
+                TableView.SetContentOffset(new PointF(0, HeaderHeight), _isTouched);
+
+                if (TableView.Hidden)
+                {
+                    UIView.Transition(
+                        TableView,
+                        ListViewBase.ListViewShowAnimationDuration,
+                        UIViewAnimationOptions.TransitionCrossDissolve,
+                        new NSAction(() => TableView.Hidden = false),
+                        null);
+                }
             }
         }
 

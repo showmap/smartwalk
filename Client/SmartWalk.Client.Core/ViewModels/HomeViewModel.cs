@@ -38,6 +38,11 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateLocationString();
         }
 
+        public override string Title
+        {
+            get { return LocationString; }
+        }
+
         public string LocationString
         {
             get
@@ -50,6 +55,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _locationString = value;
                     RaisePropertyChanged(() => LocationString);
+                    RaisePropertyChanged(() => Title);
 
                     _parameters.Location = _locationString;
                 }

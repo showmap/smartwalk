@@ -100,9 +100,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
                 controller.SearchBar.Frame = 
-                    new RectangleF(
-                        controller.SearchBar.Frame.Location,
-                        new SizeF(controller.SearchBar.Frame.Width, OrgEventHeaderView.DefaultHeight / 2));
+                    OrgEventHeaderView.GetSearchBarFrame(controller.SearchBar);
             }
         }
 

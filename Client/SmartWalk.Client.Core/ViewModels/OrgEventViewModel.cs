@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.Core.Constants;
@@ -11,7 +12,6 @@ using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
-using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -34,6 +34,8 @@ namespace SmartWalk.Client.Core.ViewModels
         private CalendarEvent _currentCalendarEvent;
         private Parameters _parameters;
         private bool _isGroupedByLocation = true;
+        private bool _isListOptionsShown;
+        private SortBy _sortBy = SortBy.Time;
 
         private MvxCommand<Show> _expandCollapseShowCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
@@ -43,6 +45,8 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
+        private MvxCommand<bool?> _showHideListOptionsCommand;
+        private MvxCommand<SortBy> _sortByCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand _createEventCommand;
         private MvxCommand _saveEventCommand;
@@ -67,6 +71,19 @@ namespace SmartWalk.Client.Core.ViewModels
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
+
+        public override string Title
+        {
+            get
+            {
+                if (OrgEvent != null && OrgEvent.StartTime.HasValue)
+                {
+                    return string.Format("{0:d MMMM yyyy}", OrgEvent.StartTime.Value);
+                }
+
+                return null;
+            }
+        }
 
         public OrgEventViewMode Mode
         {
@@ -96,6 +113,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _orgEvent = value;
                     RaisePropertyChanged(() => OrgEvent);
+                    RaisePropertyChanged(() => Title);
                 }
             }
         }
@@ -176,6 +194,38 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _isGroupedByLocation = value;
                     RaisePropertyChanged(() => IsGroupedByLocation);
+                }
+            }
+        }
+
+        public bool IsListOptionsShown
+        {
+            get
+            {
+                return _isListOptionsShown;
+            }
+            private set
+            {
+                if (_isListOptionsShown != value)
+                {
+                    _isListOptionsShown = value;
+                    RaisePropertyChanged(() => IsListOptionsShown);
+                }
+            }
+        }
+
+        public SortBy SortBy
+        {
+            get
+            {
+                return _sortBy;
+            }
+            private set
+            {
+                if (_sortBy != value)
+                {
+                    _sortBy = value;
+                    RaisePropertyChanged(() => SortBy);
                 }
             }
         }
@@ -388,12 +438,12 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _groupByLocationCommand = new MvxCommand<bool?>(
                         groupBy => { 
-                        _analyticsService.SendEvent(
-                            Analytics.CategoryUI,
-                            Analytics.ActionTouch,
-                            (bool)groupBy 
-                                ? Analytics.ActionLabelTurnOnGroupByLocation
-                                : Analytics.ActionLabelTurnOffGroupByLocation);
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                (bool)groupBy 
+                                    ? Analytics.ActionLabelTurnOnGroupByLocation
+                                    : Analytics.ActionLabelTurnOffGroupByLocation);
 
                             IsGroupedByLocation = (bool)groupBy;
                         },
@@ -401,6 +451,56 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _groupByLocationCommand;
+            }
+        }
+
+        public ICommand ShowHideListOptionsCommand
+        {
+            get
+            {
+                if (_showHideListOptionsCommand == null)
+                {
+                    _showHideListOptionsCommand = new MvxCommand<bool?>(
+                        on => 
+                        { 
+                            var isShown = on.HasValue && on.Value;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                isShown
+                                    ? Analytics.ActionLabelShowListOptions
+                                    : Analytics.ActionLabelHideListOptions);
+
+                            IsListOptionsShown = isShown;
+                        });
+                }
+
+                return _showHideListOptionsCommand;
+            }
+        }
+
+        public ICommand SortByCommand
+        {
+            get
+            {
+                if (_sortByCommand == null)
+                {
+                    _sortByCommand = new MvxCommand<SortBy>(
+                        sortBy => 
+                        { 
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                sortBy == SortBy.Time
+                                    ? Analytics.ActionLabelSortShowsByTime
+                                    : Analytics.ActionLabelSortShowsByTitle);
+
+                            SortBy = sortBy;
+                        });
+                }
+
+                return _sortByCommand;
             }
         }
 
@@ -642,5 +742,11 @@ namespace SmartWalk.Client.Core.ViewModels
     {
         List,
         Map
+    }
+
+    public enum SortBy
+    {
+        Time = 0,
+        Name = 1
     }
 }

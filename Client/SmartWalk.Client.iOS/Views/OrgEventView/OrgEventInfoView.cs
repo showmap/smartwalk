@@ -14,16 +14,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get { return (OrgEventInfoViewModel)base.ViewModel; }
         }
 
-        protected override string GetViewTitle()
-        {
-            if (ViewModel.OrgEvent != null)
-            {
-                return ViewModel.OrgEvent.Title;
-            }
-
-            return null;
-        }
-
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(OrgEventInfoTableView);  
@@ -53,11 +43,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
-            {
-                GetViewTitle();
-            }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+            if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 OrgEventInfoTableView.BeginUpdates();
                 OrgEventInfoTableView.EndUpdates();

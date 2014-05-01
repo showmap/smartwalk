@@ -40,6 +40,19 @@ namespace SmartWalk.Client.Core.ViewModels
             _exceptionPolicy = exceptionPolicy;
         }
 
+        public override string Title
+        {
+            get
+            {
+                if (Org != null && Org.Info != null)
+                {
+                    return Org.Info.Name;
+                }
+
+                return null;
+            }
+        }
+
         public Org Org
         {
             get
@@ -53,6 +66,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     _org = value;
                     Entity = _org != null ? _org.Info : null;
                     RaisePropertyChanged(() => Org);
+                    RaisePropertyChanged(() => Title);
                 }
             }
         }

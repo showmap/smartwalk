@@ -27,7 +27,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private OrgEventHeaderView _headerView;
         private UIBarButtonItem _modeButton;
         private UISearchDisplayController _searchDisplayController;
-        private EKEventEditViewController _editEventController;
+        private EKEventEditViewController _editCalEventController;
+        private ListSettingsView _listSettingsView;
         private UISwipeGestureRecognizer _swipeLeft;
         private bool _isMapViewInitialized;
         private bool _isAnimating;
@@ -110,6 +111,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         }
                     }));
             }
+
+            if (_listSettingsView != null)
+            {
+                SetDialogViewFullscreenFrame(_listSettingsView);
+            }
+        }
+
+        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillAnimateRotation(toInterfaceOrientation, duration);
+
+            if (_listSettingsView != null)
+            {
+                SetDialogViewFullscreenFrame(_listSettingsView);
+            }
         }
 
         protected override void OnNavigationBackClick()
@@ -127,6 +143,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        protected override void UpdateViewTitle()
+        {
+            base.UpdateViewTitle();
+
+            if (_headerView != null)
+            {
+                _headerView.Title = ViewTitle;
+            }
+        }
+
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(VenuesAndShowsTableView);  
@@ -140,16 +166,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         protected override NSLayoutConstraint GetProgressViewTopConstraint()
         {
             return ProgressViewTopConstraint;
-        }
-
-        protected override string GetViewTitle()
-        {
-            if (ViewModel.OrgEvent != null && ViewModel.OrgEvent.StartTime.HasValue)
-            {
-                return string.Format("{0:d MMMM yyyy}", ViewModel.OrgEvent.StartTime.Value);
-            }
-
-            return null;
         }
 
         protected override IListViewSource CreateListViewSource()
@@ -189,9 +205,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ViewModel.Mode == OrgEventViewMode.Map &&
                     ViewModel.SelectedVenueOnMap != null;
             }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation))
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation) ||
+                propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
             {
                 VenuesAndShowsTableView.ReloadData();
+
+                if (SearchDisplayController.SearchResultsTableView.Superview != null &&
+                    !SearchDisplayController.SearchResultsTableView.Hidden)
+                {
+                    SearchDisplayController.SearchResultsTableView.ReloadData();
+                }
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
@@ -209,15 +232,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 if (ViewModel.CurrentCalendarEvent != null)
                 {
-                    if (_editEventController == null)
+                    if (_editCalEventController == null)
                     {
-                        InitializeEventViewController();
+                        InitializeCalEventViewController();
                     }
                 }
                 else
                 {
-                    DisposeEventViewController();
+                    DisposeCalEventViewController();
                 }
+            }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsShown))
+            {
+                ShowHideListSettingsView(ViewModel.IsListOptionsShown);
             }
         }
 
@@ -228,6 +255,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.Mode == OrgEventViewMode.Map)
             {
                 InitializeMapView();
+            }
+
+            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource;
+            if (tableSource != null && !tableSource.IsHeaderViewHidden)
+            {
+                tableSource.ScrollOutHeader();
             }
         }
 
@@ -385,7 +418,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeTableHeader()
         {
             _headerView = OrgEventHeaderView.Create();
-            _headerView.GroupByLocationCommand = ViewModel.GroupByLocationCommand;
+            _headerView.Title = ViewTitle;
+            _headerView.ShowOptionsCommand = ViewModel.ShowHideListOptionsCommand;
 
             VenuesAndShowsTableView.TableHeaderView = _headerView;
         }
@@ -550,26 +584,102 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private void InitializeEventViewController()
+        private void InitializeCalEventViewController()
         {
-            _editEventController = new EKEventEditViewController();
-            _editEventController.EventStore = (EKEventStore)ViewModel.CurrentCalendarEvent.EventStore;
-            _editEventController.Event = (EKEvent)ViewModel.CurrentCalendarEvent.EventObj;
+            _editCalEventController = new EKEventEditViewController();
+            _editCalEventController.EventStore = (EKEventStore)ViewModel.CurrentCalendarEvent.EventStore;
+            _editCalEventController.Event = (EKEvent)ViewModel.CurrentCalendarEvent.EventObj;
 
-            var eventControllerDelegate = new CreateEventEditViewDelegate(ViewModel);
-            _editEventController.EditViewDelegate = eventControllerDelegate;
+            var viewDelegate = new OrgEventCalEditViewDelegate(ViewModel);
+            _editCalEventController.EditViewDelegate = viewDelegate;
 
-            PresentViewController(_editEventController, true, null);
+            PresentViewController(_editCalEventController, true, null);
         }
 
-        private void DisposeEventViewController()
+        private void DisposeCalEventViewController()
         {
-            if (_editEventController != null)
+            if (_editCalEventController != null)
             {
-                _editEventController.DismissViewController(true, null);
-                _editEventController.EditViewDelegate = null;
-                _editEventController.Dispose();
-                _editEventController = null;
+                _editCalEventController.DismissViewController(true, null);
+                _editCalEventController.EditViewDelegate = null;
+                _editCalEventController.Dispose();
+                _editCalEventController = null;
+            }
+        }
+
+        private void ShowHideListSettingsView(bool isShown)
+        {
+            if (isShown)
+            {
+                _listSettingsView = View.Subviews.
+                    OfType<ListSettingsView>()
+                    .FirstOrDefault();
+                if (_listSettingsView == null)
+                {
+                    InitializeListSettingsView();
+
+                    _listSettingsView.Alpha = 0;
+                    View.Add(_listSettingsView);
+                    UIView.BeginAnimations(null);
+                    _listSettingsView.Alpha = 1;
+                    UIView.CommitAnimations();
+                }
+            }
+            else if (_listSettingsView != null)
+            {
+                UIView.Animate(
+                    0.2, 
+                    new NSAction(() => _listSettingsView.Alpha = 0),
+                    new NSAction(_listSettingsView.RemoveFromSuperview));
+
+                DisposeListSettingsView();
+            }
+        }
+
+        // TODO: Maybe to support showing on Top of headerView if there is no bottom space
+        private float GetListSettingsTopMargin()
+        {
+            var headerLocation = 
+                View.ConvertPointFromView(
+                    _headerView.Frame.Location, 
+                    VenuesAndShowsTableView);
+
+            var result = headerLocation.Y + _headerView.Frame.Height;
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                result -= TopLayoutGuide.Length;
+            }
+
+            return result;
+        }
+
+        private void InitializeListSettingsView()
+        {
+            _listSettingsView = ListSettingsView.Create();
+            _listSettingsView.MarginTop = GetListSettingsTopMargin();
+
+            SetDialogViewFullscreenFrame(_listSettingsView);
+
+            _listSettingsView.IsGroupByLocation = ViewModel.IsGroupedByLocation;
+            _listSettingsView.SortBy = ViewModel.SortBy;
+
+            _listSettingsView.Initialize();
+
+            _listSettingsView.GroupByLocationCommand = ViewModel.GroupByLocationCommand;
+            _listSettingsView.SortByCommand = ViewModel.SortByCommand;
+            _listSettingsView.CloseCommand = ViewModel.ShowHideListOptionsCommand;
+        }
+
+        private void DisposeListSettingsView()
+        {
+            if (_listSettingsView != null)
+            {
+                _listSettingsView.GroupByLocationCommand = null;
+                _listSettingsView.SortByCommand = null;
+                _listSettingsView.CloseCommand = null;
+                _listSettingsView.Dispose();
+                _listSettingsView = null;
             }
         }
        

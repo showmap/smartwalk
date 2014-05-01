@@ -1,7 +1,6 @@
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Views.Common.Base;
 
@@ -29,11 +28,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             return ProgressViewTopConstraint;
         }
 
-        protected override string GetViewTitle()
-        {
-            return ViewModel.LocationString;
-        }
-
         protected override void InitializeListView()
         {
             base.InitializeListView();
@@ -47,17 +41,9 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             var collectionSource = new HomeCollectionSource(OrgCollectionView);
 
-            this.CreateBinding(collectionSource).To((HomeViewModel vm) => vm.EventInfos).Apply();
+            this.CreateBinding(collectionSource).To<HomeViewModel>(vm => vm.EventInfos).Apply();
 
             return collectionSource;
-        }
-
-        protected override void OnViewModelPropertyChanged(string propertyName)
-        {
-            if (propertyName == ViewModel.GetPropertyName(p => p.LocationString))
-            {
-                GetViewTitle();
-            }
         }
     }
 }

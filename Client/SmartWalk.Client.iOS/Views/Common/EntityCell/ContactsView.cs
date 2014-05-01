@@ -7,10 +7,11 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
-    public partial class ContactsView : UIView
+    public partial class ContactsView : DialogViewBase
     {
         public static readonly UINib Nib = UINib.FromName("ContactsView", NSBundle.MainBundle);
 
@@ -19,7 +20,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private const float DefaultPlaceholderLandscapeMargin = 15;
 
         private Entity _entity;
-        private UITapGestureRecognizer _backgroundTapGesture;
         private ICommand _callPhoneCommand;
         private ICommand _composeEmailCommand;
         private ICommand _navigateWebSiteCommand;
@@ -32,8 +32,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             return (ContactsView)Nib.Instantiate(null, null)[0];
         }
-
-        public event EventHandler Close;
 
         public ICommand CallPhoneCommand
         {
@@ -97,24 +95,26 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
             set
             {
-                var isInitialized = _entity != null;
-
                 if (!Equals(_entity, value))
                 {
                     _entity = value;
 
-                    if (!isInitialized)
-                    {
-                        InitializeStyle();
-                        InitializeGestures();
-                        InitializeCollectionView();
-                    }
+                    Initialize();
 
-                    ((ContactCollectionSource)CollectionView.WeakDataSource).ItemsSource =
-                        _entity != null ? _entity.Contacts : null;
+                    ((ContactCollectionSource)CollectionView.WeakDataSource)
+                        .ItemsSource =
+                            _entity != null ? _entity.Contacts : null;
 
                     SetNeedsUpdateConstraints();
                 }
+            }
+        }
+
+        protected override UIView OutsideAreaView
+        {
+            get
+            {
+                return BackgroundView;
             }
         }
 
@@ -127,8 +127,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 CallPhoneCommand = null;
                 ComposeEmailCommand = null;
                 NavigateWebSiteCommand = null;
-
-                DisposeGestures();
             }
         }
 
@@ -168,6 +166,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+
+            InitializeStyle();
+            InitializeCollectionView();
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -191,6 +197,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
+            PlaceholderView.Layer.CornerRadius = 6;
+
             CloseButton.Layer.BorderWidth = 1;
             CloseButton.Layer.CornerRadius = 4;
             CloseButton.Layer.BorderColor = UIColor.Gray.CGColor;
@@ -200,40 +208,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             CloseButton.TouchUpOutside += (sender, e) => CloseButton.BackgroundColor = Theme.CellBackground;
         }
 
-        private void InitializeGestures()
-        {
-            if (_backgroundTapGesture == null)
-            {
-                _backgroundTapGesture = new UITapGestureRecognizer(CloseView) {
-                    NumberOfTouchesRequired = (uint)1,
-                    NumberOfTapsRequired = (uint)1
-                };
-
-                BackgroundView.AddGestureRecognizer(_backgroundTapGesture);
-            }
-        }
-
-        private void DisposeGestures()
-        {
-            if (_backgroundTapGesture != null)
-            {
-                BackgroundView.RemoveGestureRecognizer(_backgroundTapGesture);
-                _backgroundTapGesture.Dispose();
-                _backgroundTapGesture = null;
-            }
-        }
-
         partial void OnCloseButtonClick(NSObject sender, UIEvent @event)
         {
             CloseView();
-        }
-
-        private void CloseView()
-        {
-            if (Close != null)
-            {
-                Close(this, EventArgs.Empty);
-            }
         }
     }
 }

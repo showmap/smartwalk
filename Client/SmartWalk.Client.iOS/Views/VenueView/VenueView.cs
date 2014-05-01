@@ -39,16 +39,6 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             }
         }
 
-        protected override string GetViewTitle()
-        {
-            if (ViewModel.Venue != null && ViewModel.Venue.Info != null)
-            {
-                return ViewModel.Venue.Info.Name;
-            }
-
-            return null;
-        }
-
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(VenueShowsTableView);  
@@ -78,11 +68,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
-            if (propertyName == ViewModel.GetPropertyName(vm => vm.Venue))
-            {
-                GetViewTitle();
-            }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
+            if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 VenueShowsTableView.BeginUpdates();
                 VenueShowsTableView.EndUpdates();

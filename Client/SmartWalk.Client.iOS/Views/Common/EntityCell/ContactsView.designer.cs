@@ -9,69 +9,77 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
-    [Register ("ContactsView")]
-    partial class ContactsView
-    {
-        [Outlet]
-        MonoTouch.UIKit.UIView BackgroundView { get; set; }
+	[Register ("ContactsView")]
+	partial class ContactsView
+	{
+		[Outlet]
+		MonoTouch.UIKit.UIView BackgroundView { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIButton CloseButton { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIButton CloseButton { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.NSLayoutConstraint CollectionBottomConstraint { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint CollectionBottomConstraint { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.NSLayoutConstraint CollectionTopConstraint { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint CollectionTopConstraint { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UICollectionView CollectionView { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UICollectionView CollectionView { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.NSLayoutConstraint PlaceholderBottomConstraint { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint PlaceholderBottomConstraint { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.NSLayoutConstraint PlaceholderTopConstraint { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint PlaceholderTopConstraint { get; set; }
 
-        [Action ("OnCloseButtonClick:forEvent:")]
-        partial void OnCloseButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (BackgroundView != null) {
-                BackgroundView.Dispose ();
-                BackgroundView = null;
-            }
+		[Outlet]
+		MonoTouch.UIKit.UIView PlaceholderView { get; set; }
 
-            if (CloseButton != null) {
-                CloseButton.Dispose ();
-                CloseButton = null;
-            }
+		[Action ("OnCloseButtonClick:forEvent:")]
+		partial void OnCloseButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (PlaceholderView != null) {
+				PlaceholderView.Dispose ();
+				PlaceholderView = null;
+			}
 
-            if (CollectionBottomConstraint != null) {
-                CollectionBottomConstraint.Dispose ();
-                CollectionBottomConstraint = null;
-            }
+			if (BackgroundView != null) {
+				BackgroundView.Dispose ();
+				BackgroundView = null;
+			}
 
-            if (CollectionTopConstraint != null) {
-                CollectionTopConstraint.Dispose ();
-                CollectionTopConstraint = null;
-            }
+			if (CloseButton != null) {
+				CloseButton.Dispose ();
+				CloseButton = null;
+			}
 
-            if (CollectionView != null) {
-                CollectionView.Dispose ();
-                CollectionView = null;
-            }
+			if (CollectionBottomConstraint != null) {
+				CollectionBottomConstraint.Dispose ();
+				CollectionBottomConstraint = null;
+			}
 
-            if (PlaceholderBottomConstraint != null) {
-                PlaceholderBottomConstraint.Dispose ();
-                PlaceholderBottomConstraint = null;
-            }
+			if (CollectionTopConstraint != null) {
+				CollectionTopConstraint.Dispose ();
+				CollectionTopConstraint = null;
+			}
 
-            if (PlaceholderTopConstraint != null) {
-                PlaceholderTopConstraint.Dispose ();
-                PlaceholderTopConstraint = null;
-            }
-        }
-    }
+			if (CollectionView != null) {
+				CollectionView.Dispose ();
+				CollectionView = null;
+			}
+
+			if (PlaceholderBottomConstraint != null) {
+				PlaceholderBottomConstraint.Dispose ();
+				PlaceholderBottomConstraint = null;
+			}
+
+			if (PlaceholderTopConstraint != null) {
+				PlaceholderTopConstraint.Dispose ();
+				PlaceholderTopConstraint = null;
+			}
+		}
+	}
 }

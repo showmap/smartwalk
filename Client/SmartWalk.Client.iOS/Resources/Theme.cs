@@ -3,7 +3,6 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.HomeView;
-using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Resources
 {
@@ -54,6 +53,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
+        public static readonly UIFont SegmentsTextFont = UIFont.FromName(HelveticaMedium, 15);
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont ContactTextFont = UIFont.FromName(HelveticaRegular, 16);
 
@@ -138,6 +138,20 @@ namespace SmartWalk.Client.iOS.Resources
             UISwitch.Appearance.OnTintColor = UIColor.DarkGray;
             UISwitch.Appearance.TintColor = UIColor.Gray;
 
+            UISegmentedControl.Appearance.SetTitleTextAttributes(
+                new UITextAttributes {
+                    Font = SegmentsTextFont, 
+                    TextColor = UIColor.White 
+                }, 
+                UIControlState.Highlighted);
+            UISegmentedControl.Appearance.SetTitleTextAttributes(
+                new UITextAttributes {
+                    Font = SegmentsTextFont,
+                    TextColor = UIColor.DarkGray 
+                }, 
+                UIControlState.Normal);
+            UISegmentedControl.Appearance.TintColor = UIColor.Gray;
+
             var buttonLabelAp = UILabel.AppearanceWhenContainedIn(typeof(UIButton));
             buttonLabelAp.Font = ButtonTextFont;
             buttonLabelAp.TextColor = CellText;
@@ -157,10 +171,6 @@ namespace SmartWalk.Client.iOS.Resources
             labelAp = UILabel.AppearanceWhenContainedIn(typeof(EntityCell));
             labelAp.Font = Theme.EntityDescrFont;
             labelAp.TextColor = Theme.CellText;
-
-            labelAp = UILabel.AppearanceWhenContainedIn(typeof(OrgEventHeaderView));
-            labelAp.Font = Theme.OrgEventHeaderFont;
-            labelAp.TextColor = Theme.CellTextPassive;
         }
     }
 }

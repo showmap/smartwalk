@@ -4,11 +4,11 @@ using SmartWalk.Client.Core.ViewModels;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    public class CreateEventEditViewDelegate : EKEventEditViewDelegate
+    public class OrgEventCalEditViewDelegate : EKEventEditViewDelegate
     {
         private readonly OrgEventViewModel _viewModel;
 
-        public CreateEventEditViewDelegate(OrgEventViewModel viewModel)
+        public OrgEventCalEditViewDelegate(OrgEventViewModel viewModel)
         {
             _viewModel = viewModel;
         }

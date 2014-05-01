@@ -51,6 +51,19 @@ namespace SmartWalk.Client.Core.ViewModels
             _exceptionPolicy = exceptionPolicy;
         }
 
+        public override string Title
+        {
+            get
+            {
+                if (Venue != null && Venue.Info != null)
+                {
+                    return Venue.Info.Name;
+                }
+
+                return null;
+            }
+        }
+
         public Venue[] OrgEventVenues
         {
             get
@@ -90,6 +103,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     _venue = value;
                     Entity = _venue != null ? _venue.Info : null;
                     RaisePropertyChanged(() => Venue);
+                    RaisePropertyChanged(() => Title);
 
                     if (_venue != null)
                     {

@@ -10,5 +10,7 @@ namespace SmartWalk.Client.Core.ViewModels.Interfaces
         event EventHandler RefreshCompleted;
 
         ICommand RefreshCommand { get; }
+
+        string Title { get; }
     }
 }

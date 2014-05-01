@@ -13,19 +13,35 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class OrgEventHeaderView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UISwitch GroupByLocationSwitch { get; set; }
+		MonoTouch.UIKit.UIButton OptionsButton { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
 
-		[Action ("OnGroupByLocationTouchUpInside:forEvent:")]
-		partial void OnGroupByLocationTouchUpInside (MonoTouch.UIKit.UISwitch sender, MonoTouch.UIKit.UIEvent @event);
+		[Outlet]
+		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UIView TitlePlaceholder { get; set; }
+
+		[Action ("OnOptionsButtonTouchUpInside:")]
+		partial void OnOptionsButtonTouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (GroupByLocationSwitch != null) {
-				GroupByLocationSwitch.Dispose ();
-				GroupByLocationSwitch = null;
+			if (OptionsButton != null) {
+				OptionsButton.Dispose ();
+				OptionsButton = null;
+			}
+
+			if (TitleLabel != null) {
+				TitleLabel.Dispose ();
+				TitleLabel = null;
+			}
+
+			if (TitlePlaceholder != null) {
+				TitlePlaceholder.Dispose ();
+				TitlePlaceholder = null;
 			}
 
 			if (SearchBar != null) {

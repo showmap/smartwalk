@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
+using SmartWalk.Client.Core.ViewModels;
 
 namespace SmartWalk.Client.Core.Model.DataContracts
 {
@@ -56,26 +57,40 @@ namespace SmartWalk.Client.Core.Model.DataContracts
 
     public class ShowComparer : IComparer<Show>
     {
+        private readonly SortBy _sortBy;
+
+        public ShowComparer(SortBy sortBy)
+        {
+            _sortBy = sortBy;
+        }
+
         public int Compare(Show x, Show y)
         {
-            if (x.StartTime < y.StartTime)
+            if (_sortBy == SortBy.Time)
             {
-                return -1;
-            }
+                if (x.StartTime < y.StartTime)
+                {
+                    return -1;
+                }
 
-            if (x.StartTime > y.StartTime)
-            {
-                return 1;
-            }
+                if (x.StartTime > y.StartTime)
+                {
+                    return 1;
+                }
 
-            if (x.EndTime < y.EndTime)
-            {
-                return -1;
-            }
+                if (x.EndTime < y.EndTime)
+                {
+                    return -1;
+                }
 
-            if (x.EndTime > y.EndTime)
+                if (x.EndTime > y.EndTime)
+                {
+                    return 1;
+                }
+            }
+            else if (_sortBy == SortBy.Name)
             {
-                return 1;
+                return x.Title.CompareTo(y.Title);
             }
 
             return 0;

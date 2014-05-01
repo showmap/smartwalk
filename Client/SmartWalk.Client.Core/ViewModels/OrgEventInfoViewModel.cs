@@ -39,6 +39,15 @@ namespace SmartWalk.Client.Core.ViewModels
             _exceptionPolicy = exceptionPolicy;
         }
 
+        public override string Title
+        {
+            get
+            {
+                return OrgEvent != null ? OrgEvent.Title : null;
+
+            }
+        }
+
         public OrgEvent OrgEvent
         {
             get
@@ -59,6 +68,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         : null;
                     IsDescriptionExpanded = true;
                     RaisePropertyChanged(() => OrgEvent);
+                    RaisePropertyChanged(() => Title);
                 }
             }
         }
