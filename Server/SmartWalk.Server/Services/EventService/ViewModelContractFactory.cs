@@ -27,7 +27,6 @@ namespace SmartWalk.Server.Services.EventService
                     return new EventMetadataVm
                     {
                         Id = record.Id,
-                        UserId = record.SmartWalkUserRecord.Id,
                         Title = record.Title,
                         CombineType = record.CombineType,
                         StartTime = record.StartTime.ToString("d", CultureInfo.InvariantCulture),

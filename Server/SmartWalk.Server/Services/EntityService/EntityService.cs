@@ -203,10 +203,7 @@ namespace SmartWalk.Server.Services.EntityService
         {
             var metadata = user.EventMetadataRecords.FirstOrDefault(e => e.Id == eventId);
 
-            if(metadata == null)
-                return new List<EntityVm>();
-
-            var query = user.Entities.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted && metadata.ShowRecords.All(s => s.EntityRecord.Id != e.Id || s.IsDeleted));
+            var query = user.Entities.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted && (metadata == null || metadata.ShowRecords.All(s => s.EntityRecord.Id != e.Id || s.IsDeleted)));
             if (where != null)
                 query = query.Where(where);
 

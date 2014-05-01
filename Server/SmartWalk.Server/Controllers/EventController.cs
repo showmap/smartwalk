@@ -306,9 +306,10 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            _eventService.SaveOrAddEvent(item);
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return Json(_eventService.SaveOrAddEvent(item));
+
+            return Json(_eventService.SaveOrAddEvent(user.Record, item));
         } 
 
         public ActionResult DeleteEvent(int eventId)

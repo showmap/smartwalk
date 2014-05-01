@@ -103,18 +103,39 @@ EventViewModelExtended.prototype.saveEvent = function () {
     );
 };
 
+
+EventViewModelExtended.prototype.clearItem = function (root, item, condition, deleteItem) {
+    if (item() != null) {
+        if(condition() && deleteItem)
+            root.DeleteItem_(item());
+        item(null);
+    }
+};
+
+EventViewModelExtended.prototype.clearSelectedItem = function (root, deleteItem) {
+    root.clearItem(root, root.selectedItem, function () { return root.selectedItem().Id() == 0; }, deleteItem);
+};
+
+EventViewModelExtended.prototype.clearSelectedVenue = function (root, deleteItem) {
+    root.clearItem(root, root.selectedVenue, function () { return true; }, deleteItem);
+};
+
+EventViewModelExtended.prototype.cancelInner = function (root) {
+    root.clearSelectedItem(root, true);
+    root.clearSelectedVenue(root, true);
+};
+
 // Show
 EventViewModelExtended.prototype.addShow = function (root, item) {
+    root.cancelInner(root);
     root.selectedItem(item.addShow());
     //item.addShow();
 };
 
 EventViewModelExtended.prototype.cancelShow = function (root, item) {
-    root.selectedItem(null);
-
-    if (item.Id() == 0) {
-        root.DeleteItem_(item);
-    } else {
+    root.cancelInner(root);
+    
+    if (item.Id() != 0) {
         var ajdata = ko.toJSON(item);
 
         ajaxJsonRequest(ajdata, root.showGetUrl,
@@ -127,7 +148,6 @@ EventViewModelExtended.prototype.cancelShow = function (root, item) {
 };
 
 EventViewModelExtended.prototype.saveShow = function (root, item) {
-    root.selectedItem(null);
     if (root.Id() != 0) {
         var ajdata = ko.toJSON(item);
 
@@ -135,12 +155,17 @@ EventViewModelExtended.prototype.saveShow = function (root, item) {
             function(data) {
                 if (item.Id() == 0 || item.Id() != data)
                     item.Id(data);
+                root.selectedItem(null);
             }
         );
+    } else {
+        root.clearSelectedItem(root, false);
     }
 };
 
 EventViewModelExtended.prototype.deleteShow = function (root, item) {
+    root.selectedItem(null);
+    
     if (root.Id() != 0) {
         var ajdata = ko.toJSON(item);
 
@@ -155,10 +180,11 @@ EventViewModelExtended.prototype.deleteShow = function (root, item) {
 };
 
 EventViewModelExtended.prototype.deleteShows = function (root) {
-    if (root.CheckedShows().length > 0) {
-        var ajdata = ko.toJSON(root.CheckedShows);
+    root.cancelInner(root);
 
+    if (root.CheckedShows().length > 0) {
         if (root.Id() != 0) {
+            var ajdata = ko.toJSON(root.CheckedShows);
             ajaxJsonRequest(ajdata, root.eventShowsDeleteUrl,
                 function(data) {
                     ko.utils.arrayForEach(root.CheckedShows(), function(item) {
@@ -179,12 +205,9 @@ EventViewModelExtended.prototype.getShowView = function (item, bindingContext) {
 };
 
 EventViewModelExtended.prototype.saveVenue = function (root, item) {
-    if (root.Id() != 0) {
-        if (root.selectedItem().Id() == 0)
-            root.DeleteItem_(root.selectedItem());
-
-        var venue = root.selectedVenue();
-
+    var venue = root.selectedVenue();
+    
+    if (root.Id() != 0) {        
         //alert('item id = ' + vm.selectedVenue().Id() + ' selected item id = ' + vm.selectedItem().Id());
         venue.EventMetadataId(root.Id());
         var ajdata = ko.toJSON(venue);
@@ -193,19 +216,21 @@ EventViewModelExtended.prototype.saveVenue = function (root, item) {
             function(data) {
                 if (data)
                     venue.AllShows.push(new ShowViewModel(data));
+                
                 root.AllVenues.push(venue);
-                root.selectedItem(null);
-                root.selectedVenue(null);
+                root.clearSelectedItem(root, true);
+                root.clearSelectedVenue(root, false);
             }
         );
     } else {
-        root.selectedItem(null);
-        root.selectedVenue(null);
+        root.AllVenues.push(venue);
+        root.clearSelectedItem(root, true);
+        root.clearSelectedVenue(root, false);
     }
 };
 
 
-EventViewModelExtended.prototype.deleteVenuesClientSide = function(root) {
+EventViewModelExtended.prototype.deleteVenuesClientSide = function(root) {    
     ko.utils.arrayForEach(root.CheckedVenues(), function (venue) {
         ko.utils.arrayForEach(venue.AllShows(), function (show) {
             root.DeleteItem_(show);
@@ -216,23 +241,25 @@ EventViewModelExtended.prototype.deleteVenuesClientSide = function(root) {
     root.deleteShows(root);
 };
 
-EventViewModelExtended.prototype.deleteVenues = function (root) {
-    if (root.Id() != 0) {
-        if (root.CheckedVenues().length > 0) {
-            var ajdata = ko.toJSON(root.CheckedVenues);
+EventViewModelExtended.prototype.deleteVenues = function(root) {
+    root.cancelInner(root);
 
-            ajaxJsonRequest(ajdata, root.eventVenuesDeleteUrl,
-                function(data) {
-                    root.deleteVenuesClientSide();
-                }
-            );
-        }
+    if (root.Id() != 0 && root.CheckedVenues().length > 0) {
+        var ajdata = ko.toJSON(root.CheckedVenues);
+
+        ajaxJsonRequest(ajdata, root.eventVenuesDeleteUrl,
+            function(data) {
+                root.deleteVenuesClientSide(root);
+            }
+        );
     } else {
-        root.deleteVenuesClientSide();
+        root.deleteVenuesClientSide(root);
     }
 };
 
 EventViewModelExtended.prototype.deleteVenue = function (root, item) {
+    root.cancelInner(root);
+
     if (root.Id() != 0) {
         var ajdata = ko.toJSON(item.toJSON());
 
@@ -266,6 +293,24 @@ EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) 
     );
 };
 
+EventViewModel.prototype.addVenue = function (root) {
+    root.cancelInner(root);
+    
+    var newVenue = new EntityViewModel({ Id: 0, Type: 1, State: 1 });
+    root.AllVenues.push(newVenue);
+    root.selectedItem(newVenue);
+    //root.selectedItem(root.AllVenues()[root.AllVenues().length-1]);
+    //root.selectedVenue(newVenue);
+};
+
+EventViewModel.prototype.removeVenue = function (item) {
+    this.DeleteItem_(item);
+};
+
+EventViewModel.prototype.cancelVenue = function (root) {
+    root.cancelInner(root);    
+};
+
 EventViewModelExtended.prototype.getVenueView = function (item, bindingContext) {
     return item === bindingContext.$root.selectedItem() ? bindingContext.$root.eventVenueEditView : bindingContext.$root.eventVenueView;
 };
@@ -296,13 +341,15 @@ EventViewModelExtended.prototype.getAutoItem = function(item) {
 };
 
 EventViewModelExtended.prototype.deleteAction = function (root) {
-    root.deleteVenues(root);    
+    root.deleteVenues(root);
 };
 
 
 EventViewModelExtended.prototype.createHost = function() {
     $(this.hostFormName).dialog("open");
 };
+
+
 
 //EventViewModelExtended.prototype.deleteEvent = function(item) {
 //    var ajdata = ko.toJSON(item);

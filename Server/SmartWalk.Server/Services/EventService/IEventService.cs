@@ -14,7 +14,7 @@ namespace SmartWalk.Server.Services.EventService
         EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id);
         AccessType GetEventAccess(SmartWalkUserRecord user, int eventId);
         void DeleteEvent(int eventId);
-        EventMetadataVm SaveOrAddEvent(EventMetadataVm item);
+        EventMetadataVm SaveOrAddEvent(SmartWalkUserRecord user, EventMetadataVm item);
         IList<EventMetadataVm> GetEntityEvents(int entityId);
     }
 }

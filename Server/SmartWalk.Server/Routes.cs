@@ -61,6 +61,23 @@ namespace SmartWalk.Server {
                         new MvcRouteHandler())
                 },
                 new RouteDescriptor {
+                    Name = "MyEvents",
+                    Priority = 1,
+                    Route = new Route(
+                        "events/my",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Event"},
+                            {"action", "List"},
+                            {"Parameters.Display", "My"},
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
                     Priority = 2,
                     Route = new Route(
                         "event/{eventId}",

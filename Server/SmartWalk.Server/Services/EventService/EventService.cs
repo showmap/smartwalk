@@ -89,7 +89,6 @@ namespace SmartWalk.Server.Services.EventService
 
             var res = new EventMetadataVm {
                 Id = 0,
-                UserId = user.Id
             };
 
             return res;
@@ -121,12 +120,12 @@ namespace SmartWalk.Server.Services.EventService
             _eventMetadataRepository.Flush();
         }
 
-        public EventMetadataVm SaveOrAddEvent(EventMetadataVm item) {
+        public EventMetadataVm SaveOrAddEvent(SmartWalkUserRecord user, EventMetadataVm item) {
             var host = _entityRepository.Get(item.Host.Id);
             var dtFrom = item.StartTime.ParseDateTime(_cultureInfo.Value);
-            var user = _userRepository.Get(item.UserId);
+            
 
-            if (user == null || host == null || dtFrom == null)
+            if (host == null || dtFrom == null)
                 return null;
 
             var metadata =_eventMetadataRepository.Get(item.Id);
