@@ -15,7 +15,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var viewModel = parameter as OrgEventInfoViewModel;
             if (org != null && viewModel != null)
             {
-                var result = new [] { new EntityViewModelWrapper(viewModel) };
+                var result = new [] 
+                    { 
+                        new EntityViewModelWrapper(
+                            viewModel, 
+                            EntityViewModelWrapper.ModelMode.Event) 
+                    };
                 return result;
             }
 

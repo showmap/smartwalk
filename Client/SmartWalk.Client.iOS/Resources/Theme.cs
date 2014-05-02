@@ -1,7 +1,5 @@
 using System.Drawing;
 using MonoTouch.UIKit;
-using SmartWalk.Client.iOS.Views.Common.EntityCell;
-using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.HomeView;
 
 namespace SmartWalk.Client.iOS.Resources
@@ -57,7 +55,12 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont ContactTextFont = UIFont.FromName(HelveticaRegular, 16);
 
-        public static readonly UIFont OrgTextFont = UIFont.FromName(HelveticaRegular, 19);
+        public static readonly UIFont ImageTitleTextFont = UIFont.FromName(HelveticaRegular, 19);
+        public static readonly UIFont ImageSubtitleTextFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIColor ImageTitleText = UIColor.White;
+        public static readonly UIColor ImageSubtitleText = UIColor.White;
+        public static readonly UIColor ImageGradient = UIColor.FromRGB(0, 0, 0);
+        public static readonly UIColor ImageTextShadow = UIColor.FromRGB(51, 51, 51);
         public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
         public static readonly UIColor GroupHeaderText = UIColor.White;
 
@@ -161,13 +164,9 @@ namespace SmartWalk.Client.iOS.Resources
             cellAp.BackgroundColor = Theme.CellBackground;
 
             var labelAp = UILabel.AppearanceWhenContainedIn(typeof(OrgCell));
-            labelAp.Font = Theme.OrgTextFont;
+            labelAp.Font = Theme.ImageTitleTextFont;
             labelAp.TextColor = Theme.CellText;
             labelAp.HighlightedTextColor = Theme.CellTextHighlight;
-
-            labelAp = UILabel.AppearanceWhenContainedIn(typeof(EntityCell));
-            labelAp.Font = Theme.EntityDescrFont;
-            labelAp.TextColor = Theme.CellText;
         }
     }
 }

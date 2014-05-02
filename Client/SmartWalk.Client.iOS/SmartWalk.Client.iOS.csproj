@@ -268,14 +268,6 @@
     <Compile Include="Views\Common\MapView.designer.cs">
       <DependentUpon>MapView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Common\EntityCell\ImageCell.cs" />
-    <Compile Include="Views\Common\EntityCell\ImageCell.designer.cs">
-      <DependentUpon>ImageCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\EntityCell\MapCell.cs" />
-    <Compile Include="Views\Common\EntityCell\MapCell.designer.cs">
-      <DependentUpon>MapCell.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Placeholder.cs" />
     <Compile Include="Views\Common\EntityCell\ContactsView.cs" />
     <Compile Include="Views\Common\EntityCell\ContactsView.designer.cs">
@@ -354,6 +346,10 @@
       <DependentUpon>ListSettingsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\Base\DialogViewBase.cs" />
+    <Compile Include="Views\Common\ImageBackgroundView.cs" />
+    <Compile Include="Views\Common\ImageBackgroundView.designer.cs">
+      <DependentUpon>ImageBackgroundView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -380,8 +376,6 @@
     <InterfaceDefinition Include="Views\Common\BrowserView.xib" />
     <InterfaceDefinition Include="Views\Common\ProgressView.xib" />
     <InterfaceDefinition Include="Views\Common\MapView.xib" />
-    <InterfaceDefinition Include="Views\Common\EntityCell\ImageCell.xib" />
-    <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactsView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderContentView.xib" />
@@ -389,6 +383,7 @@
     <InterfaceDefinition Include="Views\Common\GroupHeader\GroupHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\VenueView\NextVenueCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\ListSettingsView.xib" />
+    <InterfaceDefinition Include="Views\Common\ImageBackgroundView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />

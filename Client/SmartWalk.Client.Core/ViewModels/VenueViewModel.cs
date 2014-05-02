@@ -64,6 +64,20 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public override string Subtitle
+        {
+            get
+            {
+                if (Venue != null && 
+                    Venue.Info.HasAddresses())
+                {
+                    return Venue.Info.Addresses[0].AddressText;
+                }
+
+                return null;
+            }
+        }
+
         public Venue[] OrgEventVenues
         {
             get

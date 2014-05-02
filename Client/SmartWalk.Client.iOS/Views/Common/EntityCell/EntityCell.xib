@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -14,35 +14,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="542"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="HeaderPlaceholder">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="ImagePlaceholder" customClass="Placeholder">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" customClass="Placeholder">
-                                <rect key="frame" x="0.0" y="120" width="320" height="80"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="1030"/>
-                                    <constraint firstAttribute="width" constant="320" id="1032"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" customClass="Placeholder">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="1029"/>
-                                    <constraint firstAttribute="width" constant="320" id="1031"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="1011" firstAttribute="top" secondItem="999" secondAttribute="top" id="1012"/>
-                            <constraint firstItem="1011" firstAttribute="leading" secondItem="999" secondAttribute="leading" id="1013"/>
-                            <constraint firstItem="1016" firstAttribute="leading" secondItem="999" secondAttribute="leading" id="1024"/>
-                            <constraint firstItem="1016" firstAttribute="top" secondItem="999" secondAttribute="top" constant="120" id="1025"/>
                             <constraint firstAttribute="height" constant="200" id="1033"/>
                         </constraints>
                     </view>
@@ -54,24 +30,24 @@
                             <constraint firstAttribute="height" constant="1" id="1070"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="top" misplaced="YES" text="Description Description Description Description Description Description Description Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="10" y="210" width="300" height="323"/>
+                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description Description Description Description Description Description Description Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="Description" customClass="CopyLabel">
+                        <rect key="frame" x="10" y="210" width="300" height="322"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <gestureRecognizers/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="802" userLabel="BottomGradientView">
-                        <rect key="frame" x="10" y="495" width="300" height="38"/>
+                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="802" userLabel="BottomGradientView">
+                        <rect key="frame" x="10" y="494" width="300" height="38"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="38" id="869"/>
                         </constraints>
                     </view>
-                    <view hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U3N-hC-GE0" userLabel="Separator" customClass="Line">
-                        <rect key="frame" x="0.0" y="542" width="320" height="1"/>
+                    <view hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U3N-hC-GE0" userLabel="Separator" customClass="Line">
+                        <rect key="frame" x="0.0" y="541" width="320" height="1"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -107,15 +83,7 @@
                 <outlet property="DescriptionBottomConstraint" destination="sU9-x5-c4S" id="HqL-Tt-pBc"/>
                 <outlet property="DescriptionLabel" destination="19" id="45"/>
                 <outlet property="DescriptionTopConstraint" destination="DQK-qT-KNl" id="SYM-5n-K2N"/>
-                <outlet property="HeaderHeightConstraint" destination="1033" id="1035"/>
-                <outlet property="ImageCellPlaceholder" destination="1011" id="1050"/>
-                <outlet property="ImageHeightConstraint" destination="1029" id="1036"/>
-                <outlet property="ImageWidthConstraint" destination="1031" id="1037"/>
-                <outlet property="MapCellPlaceholder" destination="1016" id="1051"/>
-                <outlet property="MapHeightConstraint" destination="1030" id="1049"/>
-                <outlet property="MapWidthConstraint" destination="1032" id="1039"/>
-                <outlet property="MapXConstraint" destination="1024" id="1040"/>
-                <outlet property="MapYConstraint" destination="1025" id="1041"/>
+                <outlet property="ImagePlaceholder" destination="999" id="tSW-Mb-UxO"/>
                 <outlet property="PlaceholderSeparator" destination="1056" id="5KK-bg-0xI"/>
                 <outlet property="Separator" destination="U3N-hC-GE0" id="Mfe-CC-8vU"/>
             </connections>

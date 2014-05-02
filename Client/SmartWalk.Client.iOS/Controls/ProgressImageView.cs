@@ -8,7 +8,7 @@ namespace SmartWalk.Client.iOS.Controls
     [Register("ProgressImageView")]
     public class ProgressImageView : UIImageView
     {
-        private UIActivityIndicatorView _progress = 
+        private readonly UIActivityIndicatorView _progress = 
             new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray)
                 {
                     HidesWhenStopped = true

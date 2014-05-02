@@ -23,7 +23,9 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                 var result = new List<GroupContainer>();
 
                 result.Add(new GroupContainer(new [] { 
-                    new EntityViewModelWrapper(orgViewModel) 
+                    new EntityViewModelWrapper(
+                        orgViewModel, 
+                        EntityViewModelWrapper.ModelMode.Host) 
                 }));
 
                 var currentEvents = org.OrgEvents

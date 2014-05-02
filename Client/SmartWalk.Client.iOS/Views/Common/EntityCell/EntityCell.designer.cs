@@ -25,31 +25,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
-
-		[Outlet]
-		SmartWalk.Client.iOS.Controls.Placeholder ImageCellPlaceholder { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
-
-		[Outlet]
-		SmartWalk.Client.iOS.Controls.Placeholder MapCellPlaceholder { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapWidthConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapXConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapYConstraint { get; set; }
+		SmartWalk.Client.iOS.Controls.Placeholder ImagePlaceholder { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line PlaceholderSeparator { get; set; }
@@ -79,49 +55,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 				DescriptionTopConstraint = null;
 			}
 
-			if (HeaderHeightConstraint != null) {
-				HeaderHeightConstraint.Dispose ();
-				HeaderHeightConstraint = null;
-			}
-
-			if (ImageCellPlaceholder != null) {
-				ImageCellPlaceholder.Dispose ();
-				ImageCellPlaceholder = null;
-			}
-
-			if (ImageHeightConstraint != null) {
-				ImageHeightConstraint.Dispose ();
-				ImageHeightConstraint = null;
-			}
-
-			if (ImageWidthConstraint != null) {
-				ImageWidthConstraint.Dispose ();
-				ImageWidthConstraint = null;
-			}
-
-			if (MapCellPlaceholder != null) {
-				MapCellPlaceholder.Dispose ();
-				MapCellPlaceholder = null;
-			}
-
-			if (MapHeightConstraint != null) {
-				MapHeightConstraint.Dispose ();
-				MapHeightConstraint = null;
-			}
-
-			if (MapWidthConstraint != null) {
-				MapWidthConstraint.Dispose ();
-				MapWidthConstraint = null;
-			}
-
-			if (MapXConstraint != null) {
-				MapXConstraint.Dispose ();
-				MapXConstraint = null;
-			}
-
-			if (MapYConstraint != null) {
-				MapYConstraint.Dispose ();
-				MapYConstraint = null;
+			if (ImagePlaceholder != null) {
+				ImagePlaceholder.Dispose ();
+				ImagePlaceholder = null;
 			}
 
 			if (PlaceholderSeparator != null) {

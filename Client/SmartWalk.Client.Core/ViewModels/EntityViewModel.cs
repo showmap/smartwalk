@@ -40,7 +40,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Contact> _composeEmailCommand;
         private MvxCommand<Entity> _showDirectionsCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
-        private MvxCommand<Entity> _navigateAddressesCommand;
+        private MvxCommand _navigateAddressesCommand;
         private MvxCommand _copyLinkCommand;
         private MvxCommand _shareCommand;
 
@@ -62,6 +62,11 @@ namespace SmartWalk.Client.Core.ViewModels
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
+
+        public virtual string Subtitle
+        {
+            get { return null; }
+        }
 
         public Entity Entity
         {
@@ -332,16 +337,16 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_navigateAddressesCommand == null)
                 {
-                    _navigateAddressesCommand = new MvxCommand<Entity>(
-                        entity => ShowViewModel<MapViewModel>(
+                    _navigateAddressesCommand = new MvxCommand(
+                        () => ShowViewModel<MapViewModel>(
                             new MapViewModel.Parameters {
-                                Title = entity.Name,
-                                Addresses = new Addresses { Items = entity.Addresses },
+                                Title = Entity.Name,
+                                Addresses = new Addresses { Items = Entity.Addresses },
                                 Location = InitParameters.Location
                             }),
-                        entity => 
-                            entity != null &&
-                            entity.HasAddresses());
+                        () => 
+                            Entity != null &&
+                            Entity.HasAddresses());
                 }
 
                 return _navigateAddressesCommand;

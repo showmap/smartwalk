@@ -9,7 +9,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
     {
         private readonly EntityViewModel _viewModel;
 
-        public EntityViewModelWrapper(EntityViewModel viewModel)
+        public EntityViewModelWrapper(EntityViewModel viewModel, ModelMode mode)
         {
             _viewModel = viewModel;
             _viewModel.PropertyChanged += (sender, e) => 
@@ -21,12 +21,21 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     }
                 };
 
+            Mode = mode;
             Entity = viewModel.Entity;
+            Title = viewModel.Title;
+            Subtitle = viewModel.Subtitle;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Entity Entity { get; private set; }
+
+        public ModelMode Mode { get; private set; }
+
+        public string Title { get; private set; }
+
+        public string Subtitle { get; private set; }
 
         public bool IsDescriptionExpanded
         {
@@ -50,6 +59,13 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public override int GetHashCode()
         {
             return HashCode.Initial.CombineHashCodeOrDefault(Entity);
+        }
+
+        public enum ModelMode 
+        {
+            Host,
+            Venue,
+            Event
         }
     }
 }
