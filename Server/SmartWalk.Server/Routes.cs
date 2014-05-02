@@ -35,7 +35,8 @@ namespace SmartWalk.Server {
                         new RouteValueDictionary {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Event"},
-                            {"action", "List"}
+                            {"action", "List"},
+                            {"Parameters.Display", "All"},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -142,6 +143,23 @@ namespace SmartWalk.Server {
                         new MvcRouteHandler())
                 },
                 new RouteDescriptor {
+                    Name = "MyHosts",
+                    Priority = 1,
+                    Route = new Route(
+                        "organizers/my",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Event"},
+                            {"action", "List"},
+                            {"Parameters.Display", "My"},
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
                     Priority = 2,
                     Route = new Route(
                         "organizer/{entityId}",
@@ -199,6 +217,23 @@ namespace SmartWalk.Server {
                             {"controller", "Venue"},
                             {"action", "Edit"},
                             {"entityId", "0"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Name = "MyVenues",
+                    Priority = 1,
+                    Route = new Route(
+                        "venues/my",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Event"},
+                            {"action", "List"},
+                            {"Parameters.Display", "My"},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {

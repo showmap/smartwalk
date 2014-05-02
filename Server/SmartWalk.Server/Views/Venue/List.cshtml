@@ -34,7 +34,15 @@
     @if (parameters.IsLoggedIn) {
         <div class="gap">
             <small>
-                <a href="/venues?Parameters.Display=All">@T("All Venues")</a>&nbsp;|&nbsp;<a href="/venues?Parameters.Display=My">@T("My Venues")</a>
+                @{
+                     var linkClass = parameters.Display == DisplayType.All ? "selected" : "default";
+                }
+                <a class="@linkClass" href="/venues">@T("All Venues")</a>
+                &nbsp;|&nbsp;
+                @{
+                    linkClass = parameters.Display == DisplayType.My ? "selected" : "default";
+                }
+                <a class="@linkClass" href="/venues/my">@T("My Venues")</a>
             </small>
         </div>
     }

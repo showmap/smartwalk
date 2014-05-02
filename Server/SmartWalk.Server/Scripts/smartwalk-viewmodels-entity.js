@@ -122,11 +122,27 @@ EntityViewModelBase.prototype.loadData = function (data) {
     this.EventMetadataId(data.EventMetadataId);
     this.Description(data.Description);
 
-    this.loadCollections_(data);
+    this.loadCollections_(data);   
 };
 
 EntityViewModel = function (data) {
     EntityViewModel.superClass_.constructor.call(this, data);
+    
+    this.toJSON = ko.computed(function () {
+        return {
+            Id: this.Id(),
+            State: this.State(),
+            Type: this.Type(),
+            Name: this.Name(),
+            Picture: this.Picture(),
+            EventMetadataId: this.EventMetadataId(),
+            Description: this.Description(),
+
+            AllContacts: this.AllContacts(),
+            AllAddresses: this.AllAddresses(),
+            AllShows: this.AllShows(),
+        };
+    }, this);
 };
 
 inherits(EntityViewModel, EntityViewModelBase);

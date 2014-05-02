@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Themes;
+using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
@@ -25,14 +26,14 @@ namespace SmartWalk.Server.Controllers
             _entityService = entityService;
         }
 
-        public ActionResult List(ListViewParametersVm parameters)
+        public ActionResult List(ListViewParametersVm parameters, string sort)
         {
-            parameters.IsLoggedIn = _orchardServices.WorkContext.CurrentUser != null;
+            parameters.LoadParameters(_orchardServices.WorkContext.CurrentUser != null, sort);
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             switch (parameters.Sort) {
                 case SortType.Title:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.Title, true)});
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.Title, false)});
                 case SortType.Date:
                 default:
                     return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.StartTime, true)});
@@ -53,6 +54,7 @@ namespace SmartWalk.Server.Controllers
             return View(new ViewParametersVm { IsReadOnly = _orchardServices.WorkContext.CurrentUser == null, Data = item });
         }
 
+        [CompressFilter]
         public ActionResult Edit(int eventId)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
@@ -274,6 +276,7 @@ namespace SmartWalk.Server.Controllers
 
         #region Events
         [HttpPost]
+        [CompressFilter]
         public ActionResult GetEvents(int pageNumber, ListViewParametersVm parameters)
         {
             SmartWalkUserPart user = null;
@@ -299,6 +302,7 @@ namespace SmartWalk.Server.Controllers
         }
 
         [HttpPost]
+        [CompressFilter]
         public ActionResult SaveEvent(EventMetadataVm item)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)

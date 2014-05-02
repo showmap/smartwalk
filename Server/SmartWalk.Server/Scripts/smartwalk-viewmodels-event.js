@@ -73,9 +73,33 @@ EventViewModel = function (data) {
         write: function (value) {
             this.SetAllItemsChecked_(this.Venues(), value);
         }
-    }, this);
+    }, this);    
 
     this.loadDataEventViewModel(data);
+    
+    this.toJSON = ko.computed(function () {
+        
+        return {
+            Id: this.Id(),
+            Title: this.Title(),
+            StartTime: this.StartTime(),
+            EndTime: this.EndTime(),
+            IsPublic: this.IsPublic(),
+            Picture: this.Picture(),
+
+            Description: this.Description(),
+            Latitude: this.Latitude(),
+            Longitude: this.Longitude(),
+
+            CombineType: this.CombineType(),
+
+            Host: this.Host().toJSON(),
+
+            AllVenues:  ko.utils.arrayMap(this.Venues(), function (venue) {
+                return venue.toJSON();
+            }),
+        };
+    }, this);
 };
 
 inherits(EventViewModel, EventViewModelBase);
@@ -88,8 +112,8 @@ EventViewModel.prototype.loadDataEventViewModel = function (data) {
     this.CombineType(data.CombineType);
     this.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
     
-    if (data.Host != null) {
-        var item = new EntityViewModelBase(data.Host);
+    if (data.Host != null) {        
+        var item = new EntityViewModel(data.Host);
         this.Host(item);
         this.AllHosts.push(item);
     }

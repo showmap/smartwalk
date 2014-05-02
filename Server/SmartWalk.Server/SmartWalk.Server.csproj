@@ -118,6 +118,8 @@
     <Compile Include="Controllers\HostController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
+    <Compile Include="Extensions\CompressFilter.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
       <SubType>Code</SubType>

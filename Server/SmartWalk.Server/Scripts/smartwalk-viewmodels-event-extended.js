@@ -27,7 +27,7 @@ EventViewModelExtended = function (settings, data) {
     this.venueAutocompleteUrl = settings.venueAutocompleteUrl;
 
     this.attachEvents();
-    this.setupDialogs();
+    this.setupDialogs();    
 };
 
 inherits(EventViewModelExtended, EventViewModel);
@@ -94,8 +94,7 @@ EventViewModelExtended.prototype.attachEvents = function () {
 };
 
 EventViewModelExtended.prototype.saveEvent = function () {
-    var ajdata = ko.toJSON(this);
-
+    var ajdata = ko.toJSON(this.toJSON());
     ajaxJsonRequest(ajdata, this.eventSaveUrl,
         function (data) {            
             window.location.href = "/event/" + data.Id;

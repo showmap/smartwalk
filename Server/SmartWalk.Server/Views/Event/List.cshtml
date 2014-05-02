@@ -9,6 +9,8 @@
     var model = (ListViewVm)Model;
     var parameters = model.Parameters;
     var items = (IList<EventMetadataVm>)model.Data;
+    var linkClass = "";
+    var baseLink = string.Format("/events{0}", parameters.Url);
 }
 <div id="event-items" get-events-url="@Url.Action("GetEvents", "Event", new {area = "SmartWalk.Server"})">
         @Html.AntiForgeryTokenOrchard()    
@@ -34,14 +36,28 @@
             <small>
             @if (parameters.IsLoggedIn) {
                 <span>
-                    <a href="/events?Parameters.Display=All&Parameters.Sort=@parameters.Sort">@T("All Events")</a>
+                    @{
+                        linkClass = parameters.Display == DisplayType.My ? "selected" : "default";
+                    }
+                    <a class="@linkClass" href="@string.Format("/events?sort={0}", parameters.Sort.ToString().ToLower())">@T("All Events")</a>
                     &nbsp;| 
-                    <a href="/events?Parameters.Display=My&Parameters.Sort=@parameters.Sort">@T("My Events")</a>
+                    @{
+                        linkClass = parameters.Display == DisplayType.All ? "selected" : "default";
+                    }
+                    <a class="@linkClass" href="@string.Format("/events/my?sort={1}", baseLink, parameters.Sort.ToString().ToLower())">@T("My Events")</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 </span>
             }
-                    
-                @T("Sort By"):&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Date">@T("Date")</a>&nbsp;|&nbsp;<a href="/events?Parameters.Display=@parameters.Display&Parameters.Sort=Title">@T("Title")</a>
+                @T("Sort By"):&nbsp;
+                @{
+                    linkClass = parameters.Sort == SortType.Date ? "selected" : "default";
+                }    
+                <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseLink, SortType.Date.ToString().ToLower())">@T("Date")</a>
+                &nbsp;|&nbsp;
+                @{
+                    linkClass = parameters.Sort == SortType.Title ? "selected" : "default";
+                }    
+                <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseLink, SortType.Title.ToString().ToLower())">@T("Title")</a>
             </small>
         </div>
 

@@ -33,7 +33,15 @@
     @if (parameters.IsLoggedIn) {
         <div class="gap">
             <small>
-                <a href="/organizers?Parameters.Display=All">@T("All Organizers")</a>&nbsp;|&nbsp;<a href="/organizers?Parameters.Display=My">@T("My Organizers")</a>
+                @{
+                     var linkClass = parameters.Display == DisplayType.All ? "selected" : "default";
+                }
+                <a class="@linkClass" href="/organizers">@T("All Organizers")</a>
+                &nbsp;|&nbsp;
+                @{
+                    linkClass = parameters.Display == DisplayType.My ? "selected" : "default";
+                }
+                <a class="@linkClass" href="/organizers/my">@T("My Organizers")</a>
             </small>
         </div>
     }

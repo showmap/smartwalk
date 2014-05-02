@@ -19,24 +19,7 @@
     this.contactDeleteUrl = settings.contactDeleteUrl;
     this.contactView = settings.contactView;
     this.contactEditView = settings.contactEditView;
-    this.contactTypes = settings.contactTypes;
-
-
-    this.toJSON = ko.computed(function () {
-        return {
-            Id: this.Id(),
-            State: this.State(),
-            Type: this.Type(),
-            Name: this.Name(),
-            Picture: this.Picture(),
-            EventMetadataId: this.EventMetadataId(),
-            Description: this.Description(),
-
-            AllContacts: this.AllContacts(),
-            AllAddresses: this.AllAddresses(),
-            AllShows: this.AllShows(),
-        };
-    }, this);
+    this.contactTypes = settings.contactTypes;   
 };
 
 EntityViewModelExtended.VENUE_CANCEL_EVENT = "OnVenueCancelled";
