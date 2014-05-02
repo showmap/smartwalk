@@ -149,7 +149,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 NavigateAddressesCommand = null;
 
                 DisposeGestures();
-                DisposeHeaderCells();
+                DisposeHeaderImage();
             }
         }
 
@@ -157,7 +157,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             InitializeStyle();
             InitializeGestures();
-            InitializeHeaderCells();
+            InitializeHeaderImage();
             InitializeBottomGradientState();
 
             SetNeedsLayout();
@@ -216,7 +216,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        private void InitializeHeaderCells()
+        private void InitializeHeaderImage()
         {
             ImagePlaceholder.Content = ImageBackgroundView.Create();
 
@@ -230,7 +230,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        private void DisposeHeaderCells()
+        private void DisposeHeaderImage()
         {
             ImageBackground.ShowImageFullscreenCommand = null;
             ImageBackground.ShowSubtitleContentCommand = null;

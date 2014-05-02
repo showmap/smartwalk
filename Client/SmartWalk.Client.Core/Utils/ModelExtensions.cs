@@ -140,6 +140,18 @@ namespace SmartWalk.Client.Core.Utils
                 : null;
             return smartWalkRef != null ? smartWalkRef.Id : 0;
         }
+
+        public static string GetDateString(this OrgEvent orgEvent)
+        {
+            var result = orgEvent != null 
+                ? string.Format(
+                    "{0:d MMMM yyyy}{1}{2:d MMMM yyyy}", 
+                    orgEvent.StartTime, 
+                    orgEvent.EndTime != null ? " - " : string.Empty, 
+                    orgEvent.EndTime)
+                : null;
+            return result;
+        }
     }
 
     public enum ShowStatus

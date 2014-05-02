@@ -143,12 +143,12 @@ namespace SmartWalk.Client.Core.ViewModels
                         ExpandedShow = _venue.Shows[0];
                     }
 
-                    if (_venue != null &&
+                    /*if (_venue != null &&
                         _venue.Shows == null || 
                         _venue.Shows.Length == 0)
                     {
                         IsDescriptionExpanded = true;
-                    }
+                    }*/
                 }
             }
         }

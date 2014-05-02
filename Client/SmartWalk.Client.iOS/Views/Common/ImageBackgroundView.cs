@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.CoreAnimation;
@@ -6,6 +7,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -17,31 +19,19 @@ namespace SmartWalk.Client.iOS.Views.Common
         private const int ButtonWidth = 40;
         private const int SubtitleHeight = 50;
 
-        private readonly MvxImageViewLoader _imageHelper;
+        private MvxImageViewLoader _imageHelper;
+        private MvxResizedImageViewLoader _resizedImageHelper;
         private UITapGestureRecognizer _imageTapGesture;
         private UITapGestureRecognizer _subtitleTapGesture;
         private CAGradientLayer _bottomGradient;
 
+        private ICommand _showImageFullscreenCommand;
+        private ICommand _showSubtitleContentCommand;
+
+        private bool _resizeImage;
+
         public ImageBackgroundView(IntPtr handle) : base(handle)
         {
-            _imageHelper = new MvxImageViewLoader(
-                () => BackgroundImage,
-                () =>
-                {
-                    if (_imageHelper.ImageUrl != null &&
-                        BackgroundImage.Image != null)
-                    {
-                        BackgroundImage.StopProgress();
-                    }
-                    else if (_imageHelper.ImageUrl == null)
-                    {
-                        BackgroundImage.StopProgress();
-                    }
-                    else
-                    {
-                        BackgroundImage.StartProgress();
-                    }
-                });
         }
 
         public static ImageBackgroundView Create()
@@ -49,16 +39,23 @@ namespace SmartWalk.Client.iOS.Views.Common
             return (ImageBackgroundView)Nib.Instantiate(null, null)[0];
         }
 
-        public ICommand ShowImageFullscreenCommand { get; set; }
-        public ICommand ShowSubtitleContentCommand { get; set; }
-
-        public string ImageUrl
+        public ICommand ShowImageFullscreenCommand
         {
-            get { return _imageHelper.ImageUrl; }
+            get { return _showImageFullscreenCommand; }
             set
-            { 
-                BackgroundImage.Image = null;
-                _imageHelper.ImageUrl = value; 
+            {
+                _showImageFullscreenCommand = value;
+                InitializeGestures();
+            }
+        }
+
+        public ICommand ShowSubtitleContentCommand
+        {
+            get { return _showSubtitleContentCommand; }
+            set
+            {
+                _showSubtitleContentCommand = value;
+                InitializeGestures();
             }
         }
 
@@ -78,6 +75,44 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             get { return SubtitleButton.CurrentImage; }
             set { SubtitleButton.SetImage(value, UIControlState.Normal); }
+        }
+
+        public string ImageUrl
+        {
+            get 
+            {
+                return _resizeImage 
+                    ? _resizedImageHelper.ImageUrl 
+                    : _imageHelper.ImageUrl;
+            }
+            set
+            {
+                BackgroundImage.Image = null;
+
+                if (_resizeImage)
+                {
+                    _resizedImageHelper.ImageUrl = value;
+                }
+                else
+                {
+                    _imageHelper.ImageUrl = value;
+                }
+            }
+        }
+
+        public override RectangleF Frame
+        {
+            get { return base.Frame; }
+            set
+            {
+                base.Frame = value;
+
+                // Making sure that it has proper frame for loading a resized image
+                if (BackgroundImage != null)
+                {
+                    BackgroundImage.Frame = Bounds;
+                }
+            }
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -120,8 +155,11 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        public void Initialize()
+        public void Initialize(bool resizeImage = false)
         {
+            _resizeImage = resizeImage;
+
+            InitializeImageHelper();
             InitializeStyle();
             InitializeBottomGradientState();
             InitializeGestures();
@@ -152,6 +190,41 @@ namespace SmartWalk.Client.iOS.Views.Common
                 ShowSubtitleContentCommand.CanExecute(null))
             {
                 ShowSubtitleContentCommand.Execute(null);
+            }
+        }
+
+        private void InitializeImageHelper()
+        {
+            var afterImageChangeAction = 
+                new Action(
+                    () =>
+                    {
+                        if (ImageUrl != null &&
+                            BackgroundImage.Image != null)
+                        {
+                            BackgroundImage.StopProgress();
+                        }
+                        else if (ImageUrl == null)
+                        {
+                            BackgroundImage.StopProgress();
+                        }
+                        else
+                        {
+                            BackgroundImage.StartProgress();
+                        }
+                    });
+
+            if (_resizeImage)
+            {
+                _resizedImageHelper = new MvxResizedImageViewLoader(
+                    () => BackgroundImage,
+                    afterImageChangeAction);
+            }
+            else
+            {
+                _imageHelper = new MvxImageViewLoader(
+                    () => BackgroundImage,
+                    afterImageChangeAction);
             }
         }
 
@@ -190,31 +263,42 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeGestures()
         {
-            _imageTapGesture = new UITapGestureRecognizer(() => {
-                if (ShowImageFullscreenCommand != null &&
-                    ShowImageFullscreenCommand.CanExecute(ImageUrl))
-                {
-                    ShowImageFullscreenCommand.Execute(ImageUrl);
-                }
-            }) {
-                NumberOfTouchesRequired = (uint)1,
-                NumberOfTapsRequired = (uint)1
-            };
+            if (_imageTapGesture == null && 
+                ShowImageFullscreenCommand != null)
+            {
+                _imageTapGesture = new UITapGestureRecognizer(() =>
+                    {
+                        if (ShowImageFullscreenCommand != null &&
+                            ShowImageFullscreenCommand.CanExecute(ImageUrl))
+                        {
+                            ShowImageFullscreenCommand.Execute(ImageUrl);
+                        }
+                    }) {
+                        NumberOfTouchesRequired = (uint)1,
+                        NumberOfTapsRequired = (uint)1
+                    };
 
-            BackgroundImage.AddGestureRecognizer(_imageTapGesture);
+                BackgroundImage.AddGestureRecognizer(_imageTapGesture);
+                TitleLabel.AddGestureRecognizer(_imageTapGesture);
+            }
 
-            _subtitleTapGesture = new UITapGestureRecognizer(() => {
-                if (ShowSubtitleContentCommand != null &&
-                    ShowSubtitleContentCommand.CanExecute(null))
-                {
-                    ShowSubtitleContentCommand.Execute(null);
-                }
-            }) {
-                NumberOfTouchesRequired = (uint)1,
-                NumberOfTapsRequired = (uint)1
-            };
+            if (_subtitleTapGesture == null &&
+                ShowSubtitleContentCommand != null)
+            {
+                _subtitleTapGesture = new UITapGestureRecognizer(() =>
+                    {
+                        if (ShowSubtitleContentCommand != null &&
+                            ShowSubtitleContentCommand.CanExecute(null))
+                        {
+                            ShowSubtitleContentCommand.Execute(null);
+                        }
+                    }) {
+                        NumberOfTouchesRequired = (uint)1,
+                        NumberOfTapsRequired = (uint)1
+                    };
 
-            SubtitleLabel.AddGestureRecognizer(_subtitleTapGesture);
+                SubtitleLabel.AddGestureRecognizer(_subtitleTapGesture);
+            }
         }
 
         private void DisposeGestures()
@@ -222,6 +306,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             if (_imageTapGesture != null)
             {
                 BackgroundImage.RemoveGestureRecognizer(_imageTapGesture);
+                TitleLabel.RemoveGestureRecognizer(_imageTapGesture);
                 _imageTapGesture.Dispose();
                 _imageTapGesture = null;
             }

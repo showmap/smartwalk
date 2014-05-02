@@ -13,29 +13,13 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 	partial class OrgCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIImageView OrgImageView { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UILabel OrgNameLabel { get; set; }
-
-		[Outlet]
-		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
+		SmartWalk.Client.iOS.Controls.Placeholder Placeholder { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (OrgImageView != null) {
-				OrgImageView.Dispose ();
-				OrgImageView = null;
-			}
-
-			if (OrgNameLabel != null) {
-				OrgNameLabel.Dispose ();
-				OrgNameLabel = null;
-			}
-
-			if (Separator != null) {
-				Separator.Dispose ();
-				Separator = null;
+			if (Placeholder != null) {
+				Placeholder.Dispose ();
+				Placeholder = null;
 			}
 		}
 	}

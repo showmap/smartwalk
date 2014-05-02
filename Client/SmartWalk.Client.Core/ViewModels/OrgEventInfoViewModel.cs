@@ -52,13 +52,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             get
             {
-                return OrgEvent != null 
-                    ? string.Format(
-                        "{0:d MMMM yyyy}{1}{2:d MMMM yyyy}", 
-                        OrgEvent.StartTime, 
-                        OrgEvent.EndTime != null ? " - " : string.Empty, 
-                        OrgEvent.EndTime)
-                    : null;
+                return OrgEvent.GetDateString();
             }
         }
 
