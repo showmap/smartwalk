@@ -22,6 +22,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         private MvxImageViewLoader _imageHelper;
         private MvxResizedImageViewLoader _resizedImageHelper;
         private UITapGestureRecognizer _imageTapGesture;
+        private UITapGestureRecognizer _titleTapGesture;
         private UITapGestureRecognizer _subtitleTapGesture;
         private CAGradientLayer _bottomGradient;
 
@@ -259,7 +260,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeGestures()
         {
-            if (_imageTapGesture == null && 
+            if (_imageTapGesture == null &&
                 ShowImageFullscreenCommand != null)
             {
                 _imageTapGesture = new UITapGestureRecognizer(() =>
@@ -275,7 +276,21 @@ namespace SmartWalk.Client.iOS.Views.Common
                     };
 
                 BackgroundImage.AddGestureRecognizer(_imageTapGesture);
-                TitleLabel.AddGestureRecognizer(_imageTapGesture);
+
+                _titleTapGesture = new UITapGestureRecognizer(() =>
+                    {
+                        if (ShowImageFullscreenCommand != null &&
+                            ShowImageFullscreenCommand.CanExecute(ImageUrl))
+                        {
+                            ShowImageFullscreenCommand.Execute(ImageUrl);
+                        }
+                    }) {
+                        NumberOfTouchesRequired = (uint)1,
+                        NumberOfTapsRequired = (uint)1
+                    };
+
+
+                TitleLabel.AddGestureRecognizer(_titleTapGesture);
             }
 
             if (_subtitleTapGesture == null &&
@@ -302,9 +317,15 @@ namespace SmartWalk.Client.iOS.Views.Common
             if (_imageTapGesture != null)
             {
                 BackgroundImage.RemoveGestureRecognizer(_imageTapGesture);
-                TitleLabel.RemoveGestureRecognizer(_imageTapGesture);
                 _imageTapGesture.Dispose();
                 _imageTapGesture = null;
+            }
+
+            if (_titleTapGesture != null)
+            {
+                TitleLabel.RemoveGestureRecognizer(_titleTapGesture);
+                _titleTapGesture.Dispose();
+                _titleTapGesture = null;
             }
 
             if (_subtitleTapGesture != null)

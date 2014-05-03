@@ -7,6 +7,7 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -20,7 +21,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public VenueHeaderContentView(IntPtr handle) : base(handle)
         {
-            _imageHelper = new MvxResizedImageViewLoader(() => LogoImageView);
+            _imageHelper = new MvxResizedImageViewLoader(
+                () => LogoImageView,
+                () => 
+                {
+                    if (LogoImageView != null)
+                    {
+                        var noImage = LogoImageView.Image == null || 
+                            LogoImageView.Image.Size == Theme.DefaultImageSize || 
+                            LogoImageView.Image.Size == Theme.ErrorImageSize; 
+                        LogoImageView.Hidden = noImage;
+                        ImageLabelView.Hidden = !noImage;
+                    }
+                });
         }
 
         public static VenueHeaderContentView Create()
@@ -66,19 +79,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Picture : null;
 
-            if (DataContext != null && DataContext.Info.Picture == null)
+            if (DataContext != null)
             {
-                LogoImageView.Hidden = true;
-                ImageLabelView.Hidden = false;
-                ImageLabel.Text = DataContext.Info.Name.GetAbbreviation(2);
-            }
-            else
-            {
-                LogoImageView.Hidden = false;
-                ImageLabelView.Hidden = true;
+                if (DataContext.Info.HasPicture())
+                {
+                    LogoImageView.Hidden = false;
+                    ImageLabelView.Hidden = true;
+                }
+                else
+                {
+                    LogoImageView.Hidden = true;
+                    ImageLabelView.Hidden = false;
+                }
             }
 
             NameLabel.Text = DataContext.Info.Name;
+            ImageLabel.Text = DataContext.Info.Name.GetAbbreviation(2);
 
             // TODO: to support showing more than one address
             AddressLabel.Text = DataContext != null && 

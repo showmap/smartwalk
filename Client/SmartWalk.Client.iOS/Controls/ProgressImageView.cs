@@ -2,7 +2,7 @@ using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using SmartWalk.Client.iOS.Utils;
-using System.Drawing;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Controls
 {
@@ -39,7 +39,7 @@ namespace SmartWalk.Client.iOS.Controls
                 base.Image = value;
 
                 if (value == null || 
-                    value.Size != new SizeF(10, 10)) // size of DefaultImage.png
+                    value.Size != Theme.DefaultImageSize) // size of DefaultImage.png
                 {
                     StopProgress();
                 }

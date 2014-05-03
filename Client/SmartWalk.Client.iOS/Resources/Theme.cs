@@ -89,6 +89,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly PointF MapPinOffset = new PointF(-8, -4);
         public static readonly PointF MapPinTextOffset = new PointF(5, 5);
 
+        public static readonly SizeF DefaultImageSize = new SizeF(10, 10);
+        public static readonly SizeF ErrorImageSize = new SizeF(20, 20);
         public static readonly string DefaultImagePath = "res:Images/DefaultImage.png";
         public static readonly string ErrorImagePath = "res:Images/ErrorImage.png";
 

@@ -172,9 +172,18 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 ? DataContext.Title
                 : null;
 
-            ImageBackground.Subtitle = DataContext != null
-                ? DataContext.Subtitle
-                : null;
+            if (DataContext.Mode == EntityViewModelWrapper.ModelMode.Event)
+            {
+                ImageBackground.Uptitle = DataContext != null
+                    ? DataContext.Subtitle
+                    : null;
+            }
+            else
+            {
+                ImageBackground.Subtitle = DataContext != null
+                    ? DataContext.Subtitle
+                    : null;
+            }
 
             ImageBackground.SubtitleButtonImage = 
                 DataContext != null &&
