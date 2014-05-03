@@ -62,6 +62,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return result;
         }
 
+        public override void WillMoveToSuperview(UIView newsuper)
+        {
+            base.WillMoveToSuperview(newsuper);
+
+            if (newsuper == null)
+            {
+                ShowOptionsCommand = null;
+            }
+        }
+
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();

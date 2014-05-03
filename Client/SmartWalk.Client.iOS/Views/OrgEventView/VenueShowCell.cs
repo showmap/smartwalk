@@ -300,10 +300,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpateImageState()
         {
-            ThumbImageView.StartProgress();
-            _imageHelper.ImageUrl = 
-                IsExpanded && DataContext != null 
+            var url = IsExpanded && DataContext != null 
                 ? DataContext.Picture : null;
+
+            if (url != null)
+            {
+                ThumbImageView.StartProgress();
+            }
+
+            _imageHelper.ImageUrl = url;
         }
 
         private void UpdateVisibility()

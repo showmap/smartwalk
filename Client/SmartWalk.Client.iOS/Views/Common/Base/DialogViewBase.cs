@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -41,6 +42,12 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         protected virtual void OnInitialize()
         {
             InitializeGestures();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         protected void CloseView()

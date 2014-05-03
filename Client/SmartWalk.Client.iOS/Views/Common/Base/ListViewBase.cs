@@ -11,6 +11,7 @@ using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -90,7 +91,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             var shareableViewModel = ViewModel as IShareableViewModel;
             if (shareableViewModel != null)
             {
-                shareableViewModel.Share += (sender, e) => ShareUtil.Share(this, e.Value);
+                shareableViewModel.Share += OnViewModelShare;
             }
 
             UpdateViewTitle();
@@ -117,6 +118,12 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 if (refreshableViewModel != null)
                 {
                     refreshableViewModel.RefreshCompleted -= OnViewModelRefreshCompleted;
+                }
+
+                var shareableViewModel = ViewModel as IShareableViewModel;
+                if (shareableViewModel != null)
+                {
+                    shareableViewModel.Share -= OnViewModelShare;
                 }
 
                 DisposeGesture();
@@ -393,6 +400,11 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             _refreshControl.EndRefreshing();
             OnViewModelRefreshed();
+        }
+
+        private void OnViewModelShare(object sender, MvxValueEventArgs<string> e)
+        {
+            ShareUtil.Share(this, e.Value);
         }
 
         private void OnRefreshControlValueChanged(object sender, EventArgs e)

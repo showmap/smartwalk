@@ -95,7 +95,11 @@ namespace SmartWalk.Client.iOS.Views.Common
             set
             {
                 BackgroundImage.Image = null;
-                BackgroundImage.StartProgress();
+
+                if (value != null)
+                {
+                    BackgroundImage.StartProgress();
+                }
 
                 if (_resizeImage)
                 {
@@ -230,6 +234,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             UptitleLabel.Font = Theme.ImageSubtitleTextFont;
             UptitleLabel.TextColor = Theme.ImageSubtitleText;
             UptitleLabel.ShadowColor = Theme.ImageTextShadow;
+            UptitleLabel.BackgroundColor = Theme.ImageUptitle;
 
             SubtitleLabel.Font = Theme.ImageSubtitleTextFont;
             SubtitleLabel.TextColor = Theme.ImageSubtitleText;

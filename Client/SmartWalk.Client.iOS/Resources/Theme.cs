@@ -57,6 +57,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIFont ImageTitleTextFont = UIFont.FromName(HelveticaRegular, 19);
         public static readonly UIFont ImageSubtitleTextFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIColor ImageUptitle = UIColor.FromRGBA(255, 216, 0, 110);
         public static readonly UIColor ImageTitleText = UIColor.White;
         public static readonly UIColor ImageSubtitleText = UIColor.White;
         public static readonly UIColor ImageGradient = UIColor.FromRGB(0, 0, 0);

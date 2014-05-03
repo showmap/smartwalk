@@ -174,12 +174,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             InitializeCollectionView();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            ConsoleUtil.LogDisposed(this);
-        }
-
         private void InitializeCollectionView()
         {
             if (CollectionView.Source == null)

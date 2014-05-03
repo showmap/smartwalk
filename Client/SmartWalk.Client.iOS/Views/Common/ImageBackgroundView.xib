@@ -19,7 +19,7 @@
                     <rect key="frame" x="0.0" y="197" width="320" height="123"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mission Arts &amp; Performance Project" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
+                        <label opaque="NO" clipsSubviews="YES" contentMode="bottom" verticalCompressionResistancePriority="700" text="Mission Arts &amp; Performance Project" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
                             <rect key="frame" x="10" y="31" width="300" height="46"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
@@ -28,7 +28,7 @@
                             <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <size key="shadowOffset" width="0.0" height="1"/>
                         </label>
-                        <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" text="November 26, 1982 - May 2nd, 2014" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="242" translatesAutoresizingMaskIntoConstraints="NO" id="BCg-5G-DDJ" userLabel="Uptitle Label" customClass="CopyLabel">
+                        <label opaque="NO" clipsSubviews="YES" contentMode="left" text="November 26, 1982 - May 2nd, 2014" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="242" translatesAutoresizingMaskIntoConstraints="NO" id="BCg-5G-DDJ" userLabel="Uptitle Label" customClass="CopyLabel">
                             <rect key="frame" x="10" y="10" width="242" height="19"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.72672193877551017" green="0.72672193877551017" blue="0.72672193877551017" alpha="0.5" colorSpace="calibratedRGB"/>
@@ -38,7 +38,7 @@
                             <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <size key="shadowOffset" width="0.0" height="1"/>
                         </label>
-                        <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" text="2678 21st Street, San Francisco, CA 94110" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="270" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
+                        <label opaque="NO" clipsSubviews="YES" contentMode="left" text="2678 21st Street, San Francisco, CA 94110" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="270" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
                             <rect key="frame" x="40" y="79" width="270" height="38"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -51,7 +51,7 @@
                             <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <size key="shadowOffset" width="0.0" height="1"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9E2-De-hJ2" userLabel="Subtitle Button">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9E2-De-hJ2" userLabel="Subtitle Button">
                             <rect key="frame" x="5" y="81" width="33" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <constraints>
