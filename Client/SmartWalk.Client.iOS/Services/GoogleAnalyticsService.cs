@@ -11,11 +11,7 @@ namespace SmartWalk.Client.iOS.Services
 {
     public class GoogleAnalyticsService : IAnalyticsService
     {
-        public bool IsOptOut
-        {
-            get { return GAI.SharedInstance.OptOut; }
-            set { GAI.SharedInstance.OptOut = value; }
-        }
+        public static bool IsOptOut { get; set; }
 
         public void SendView(string name, Dictionary<string, object> parameters = null)
         {
@@ -23,7 +19,11 @@ namespace SmartWalk.Client.iOS.Services
 
             var viewPath = name + "/" + GetParametersString(parameters);
 
-            GAI.SharedInstance.DefaultTracker.SendView(viewPath);
+            if (!IsOptOut)
+            {
+                EasyTracker.GetTracker().SendView(viewPath);
+            }
+
             ConsoleUtil.Log("GA: Send View - {0}", viewPath);
         }
 
@@ -32,7 +32,11 @@ namespace SmartWalk.Client.iOS.Services
             if (category == null) throw new ArgumentNullException("category");
             if (action == null) throw new ArgumentNullException("action");
 
-            GAI.SharedInstance.DefaultTracker.SendEvent(category, action, label, value);
+            if (!IsOptOut)
+            {
+                EasyTracker.GetTracker().SendEvent(category, action, label, value);
+            }
+
             ConsoleUtil.Log(
                 "GA: Send Event - category:{0}, action:{1}, label:{2}, value:{3}",
                 category,
@@ -43,7 +47,11 @@ namespace SmartWalk.Client.iOS.Services
 
         public void SendException(bool isFatal, string format)
         {
-            GAI.SharedInstance.DefaultTracker.SendException(isFatal, format);
+            if (!IsOptOut)
+            {
+                EasyTracker.GetTracker().SendException(format, isFatal);
+            }
+
             ConsoleUtil.Log("GA: Send Exception - {0}", format);
         }
 

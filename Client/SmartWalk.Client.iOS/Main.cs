@@ -1,15 +1,30 @@
+using System;
+using GoogleAnalytics;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Services;
 
 namespace SmartWalk.Client.iOS
 {
     public class Application
     {
-        // This is the main entry point of the application.
         static void Main(string[] args)
         {
-            // if you want to use a different Application Delegate class from "AppDelegate"
-            // you can specify it here.
-            UIApplication.Main(args, null, "AppDelegate");
+            try
+            {
+                UIApplication.Main(args, null, "AppDelegate");
+            }
+            catch (Exception ex)
+            {
+                if (!GoogleAnalyticsService.IsOptOut)
+                {
+                    EasyTracker.Current
+                        .OnApplicationUnhandledException(ex)
+                        .ContinueWithThrow();
+                }
+
+                throw;
+            }
         }
     }
 }

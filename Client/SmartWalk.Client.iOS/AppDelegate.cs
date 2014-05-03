@@ -10,6 +10,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Services;
 
 namespace SmartWalk.Client.iOS
 {
@@ -51,6 +52,20 @@ namespace SmartWalk.Client.iOS
             return true;
         }
 
+        public override void DidEnterBackground(UIApplication application)
+        {
+            base.DidEnterBackground(application);
+
+            EasyTracker.Current.OnApplicationDeactivated(application);
+        }
+
+        public override void WillEnterForeground(UIApplication application)
+        {
+            base.WillEnterForeground(application);
+
+            EasyTracker.Current.OnApplicationActivated(application);
+        }
+
         private static void InitializeTestFlight()
         {
             TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
@@ -71,15 +86,15 @@ namespace SmartWalk.Client.iOS
 
         private static void InitializeGAI()
         {
-            GAI.SharedInstance.TrackUncaughtExceptions = true;
-            GAI.SharedInstance.DispatchInterval = 20;
-            GAI.SharedInstance.GetTracker("UA-44480601-1");
-            GAI.SharedInstance.DefaultTracker.AppVersion = _version;
+            EasyTracker.GetTracker();
+            EasyTracker.Current.Config.ReportUncaughtExceptions = true;
+            EasyTracker.Current.Config.AutoAppLifetimeTracking = true;
 
             if (NSUserDefaults.StandardUserDefaults[SettingKeys.AnonymousStatsEnabled] != null)
             {
-                GAI.SharedInstance.OptOut = !NSUserDefaults.StandardUserDefaults
-                    .BoolForKey(SettingKeys.AnonymousStatsEnabled);
+                GoogleAnalyticsService.IsOptOut = 
+                    !NSUserDefaults.StandardUserDefaults
+                        .BoolForKey(SettingKeys.AnonymousStatsEnabled);
             }
         }
     }

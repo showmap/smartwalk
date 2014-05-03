@@ -466,5 +466,6 @@
     <Content Include="Settings.bundle\Acknowledgements.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="analytics.xml" />
   </ItemGroup>
 </Project>
