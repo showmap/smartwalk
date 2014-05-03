@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -58,7 +59,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateViewState(false);
         }
 
-        partial void OnGroupByLocationTouchUpInside(UISwitch sender, UIEvent @event)
+        partial void OnGroupByLocationTouchUpInside(NSObject sender)
         {
             if (GroupByLocationCommand != null &&
                 GroupByLocationCommand.CanExecute(IsGroupByLocation))
@@ -69,7 +70,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateViewState(true);
         }
 
-        partial void OnSortBySegmentsValueChanged(UISegmentedControl sender, UIEvent @event)
+        partial void OnSortBySegmentsValueChanged(NSObject sender)
         {
             if (SortByCommand != null &&
                 SortByCommand.CanExecute(SortBy))
@@ -83,6 +84,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             TopSeparator.IsLineOnTop = true;
 
             PlaceholderView.BackgroundColor = Theme.BackgroundPatternColor;
+            PlaceholderView.Layer.ShadowColor = UIColor.Black.CGColor;
+            PlaceholderView.Layer.ShadowOffset = new SizeF(0, 5);
+            PlaceholderView.Layer.ShadowOpacity = 0.3f;
 
             GroupByLocationLabel.Font = Theme.OrgEventHeaderFont;
             GroupByLocationLabel.TextColor = Theme.CellText;
@@ -93,14 +97,59 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateViewState(bool animated)
         {
-            if (animated) UIView.BeginAnimations(null);
+            if (!animated)
+            {
+                ContainerHeightConstraint.Constant = 
+                    IsGroupByLocation ? CollapsedHeight : DefaultHeight;
+                SortByPlaceholder.Hidden = IsGroupByLocation;
+                return;
+            }
 
-            SortByPlaceholder.Hidden = IsGroupByLocation;
-            ContainerHeightConstraint.Constant = IsGroupByLocation 
-                ? CollapsedHeight 
-                : DefaultHeight;
+            const double animationSpeed = 0.2;
 
-            if (animated) UIView.CommitAnimations();
+            if (IsGroupByLocation)
+            {
+                UIView.Transition(
+                    SortByPlaceholder, 
+                    animationSpeed, 
+                    UIViewAnimationOptions.TransitionCrossDissolve,
+                    () => {},
+                    () => 
+                    {
+                        LayoutIfNeeded();
+                        UIView.Animate(
+                            animationSpeed, 
+                            () =>
+                            {
+                                ContainerHeightConstraint.Constant = CollapsedHeight;
+                                LayoutIfNeeded();
+                            });
+                    });
+
+                SortByPlaceholder.Hidden = true;
+            }
+            else
+            {
+                LayoutIfNeeded();
+                UIView.Animate(
+                    animationSpeed, 
+                    () =>
+                    {
+                        ContainerHeightConstraint.Constant = DefaultHeight;
+                        LayoutIfNeeded();
+                    },
+                    () =>
+                    {
+                        UIView.Transition(
+                            SortByPlaceholder, 
+                            animationSpeed, 
+                            UIViewAnimationOptions.TransitionCrossDissolve,
+                            () => {},
+                            null);
+
+                        SortByPlaceholder.Hidden = false;
+                    });
+            }
         }
     }
 }

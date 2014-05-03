@@ -16,11 +16,11 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JOT-4w-4bo" userLabel="Gradient Placeholder">
-                    <rect key="frame" x="0.0" y="199" width="320" height="121"/>
+                    <rect key="frame" x="0.0" y="197" width="320" height="123"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mission Arts &amp; Performance Project" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
-                            <rect key="frame" x="10" y="25" width="300" height="46"/>
+                        <label opaque="NO" clipsSubviews="YES" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mission Arts &amp; Performance Project" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
+                            <rect key="frame" x="10" y="31" width="300" height="46"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -28,12 +28,22 @@
                             <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <size key="shadowOffset" width="0.0" height="1"/>
                         </label>
-                        <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2678 21st Street, San Francisco, CA 94110" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="270" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
-                            <rect key="frame" x="40" y="73" width="270" height="38"/>
+                        <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" text="November 26, 1982 - May 2nd, 2014" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="242" translatesAutoresizingMaskIntoConstraints="NO" id="BCg-5G-DDJ" userLabel="Uptitle Label" customClass="CopyLabel">
+                            <rect key="frame" x="10" y="10" width="242" height="19"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.72672193877551017" green="0.72672193877551017" blue="0.72672193877551017" alpha="0.5" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                            <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <size key="shadowOffset" width="0.0" height="1"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" text="2678 21st Street, San Francisco, CA 94110" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="270" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
+                            <rect key="frame" x="40" y="79" width="270" height="38"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="38" id="E0k-eM-C3V"/>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="38" id="599-hc-pMb"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -42,7 +52,7 @@
                             <size key="shadowOffset" width="0.0" height="1"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9E2-De-hJ2" userLabel="Subtitle Button">
-                            <rect key="frame" x="5" y="75" width="33" height="33"/>
+                            <rect key="frame" x="5" y="81" width="33" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="33" id="D6y-21-QmG"/>
@@ -60,14 +70,17 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="9E2-De-hJ2" secondAttribute="bottom" constant="13" id="D9l-Ze-hjh"/>
-                        <constraint firstAttribute="bottom" secondItem="ezd-AL-Mpz" secondAttribute="bottom" constant="50" id="FTF-5K-ret"/>
+                        <constraint firstItem="Qrq-nK-B4N" firstAttribute="top" secondItem="ezd-AL-Mpz" secondAttribute="bottom" constant="2" id="BN4-po-jtC"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="BCg-5G-DDJ" secondAttribute="trailing" constant="10" id="Cet-Ub-jcK"/>
+                        <constraint firstItem="BCg-5G-DDJ" firstAttribute="top" secondItem="JOT-4w-4bo" secondAttribute="top" constant="10" id="Gf6-ma-O0r"/>
+                        <constraint firstItem="BCg-5G-DDJ" firstAttribute="leading" secondItem="JOT-4w-4bo" secondAttribute="leading" constant="10" id="IFn-M0-TfN"/>
                         <constraint firstItem="ezd-AL-Mpz" firstAttribute="leading" secondItem="JOT-4w-4bo" secondAttribute="leading" constant="10" id="NDp-xE-ohP"/>
-                        <constraint firstAttribute="bottom" secondItem="Qrq-nK-B4N" secondAttribute="bottom" constant="10" id="Oxu-36-sNw"/>
+                        <constraint firstAttribute="bottom" secondItem="Qrq-nK-B4N" secondAttribute="bottom" constant="6" id="Oxu-36-sNw"/>
                         <constraint firstAttribute="trailing" secondItem="Qrq-nK-B4N" secondAttribute="trailing" constant="10" id="ZNB-R9-L0W"/>
                         <constraint firstItem="9E2-De-hJ2" firstAttribute="leading" secondItem="JOT-4w-4bo" secondAttribute="leading" constant="5" id="cs4-ae-hIh"/>
                         <constraint firstAttribute="trailing" secondItem="ezd-AL-Mpz" secondAttribute="trailing" constant="10" id="d0f-1R-rtz"/>
-                        <constraint firstItem="ezd-AL-Mpz" firstAttribute="top" secondItem="JOT-4w-4bo" secondAttribute="top" constant="25" id="eKE-Mm-5MJ"/>
+                        <constraint firstItem="9E2-De-hJ2" firstAttribute="centerY" secondItem="Qrq-nK-B4N" secondAttribute="centerY" id="iXP-l6-GXA"/>
+                        <constraint firstItem="ezd-AL-Mpz" firstAttribute="top" secondItem="BCg-5G-DDJ" secondAttribute="bottom" constant="2" id="zav-H8-i7J"/>
                         <constraint firstItem="Qrq-nK-B4N" firstAttribute="leading" secondItem="JOT-4w-4bo" secondAttribute="leading" constant="40" id="znV-t0-zZu"/>
                     </constraints>
                 </view>
@@ -87,10 +100,11 @@
                 <outlet property="BackgroundImage" destination="Eue-t7-Ebm" id="ft5-Hs-bAU"/>
                 <outlet property="GradientPlaceholder" destination="JOT-4w-4bo" id="yv5-h5-sAY"/>
                 <outlet property="SubtitleButton" destination="9E2-De-hJ2" id="9ax-ID-fKs"/>
+                <outlet property="SubtitleHeightConstraint" destination="599-hc-pMb" id="PDr-N5-VDB"/>
                 <outlet property="SubtitleLabel" destination="Qrq-nK-B4N" id="4bK-1Q-g6S"/>
                 <outlet property="SubtitleLeftConstraint" destination="znV-t0-zZu" id="aJk-dw-2D3"/>
-                <outlet property="TitleBottomConstraint" destination="FTF-5K-ret" id="6tu-1N-ETQ"/>
                 <outlet property="TitleLabel" destination="ezd-AL-Mpz" id="kv3-oa-djR"/>
+                <outlet property="UptitleLabel" destination="BCg-5G-DDJ" id="slz-15-JFu"/>
             </connections>
         </view>
     </objects>

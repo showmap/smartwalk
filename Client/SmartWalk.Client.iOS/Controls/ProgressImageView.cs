@@ -2,6 +2,7 @@ using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using SmartWalk.Client.iOS.Utils;
+using System.Drawing;
 
 namespace SmartWalk.Client.iOS.Controls
 {
@@ -28,6 +29,21 @@ namespace SmartWalk.Client.iOS.Controls
         {
             get { return _progress.ActivityIndicatorViewStyle; }
             set { _progress.ActivityIndicatorViewStyle = value; }
+        }
+
+        public override UIImage Image
+        {
+            get { return base.Image; }
+            set
+            {
+                base.Image = value;
+
+                if (value == null || 
+                    value.Size != new SizeF(10, 10)) // size of DefaultImage.png
+                {
+                    StopProgress();
+                }
+            }
         }
 
         public override void LayoutSubviews()

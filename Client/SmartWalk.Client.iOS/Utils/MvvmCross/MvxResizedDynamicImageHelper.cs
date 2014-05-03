@@ -216,7 +216,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
         private void HttpImageErrorSeen()
         {
             _currentImageState = ImageState.ErrorShown;
-            ShowDefaultImage();
+            ShowErrorImage();
         }
 
         private void NewImageAvailable(T image)

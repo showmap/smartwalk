@@ -47,18 +47,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     if (_imageHelper.ImageUrl != null && 
                         ThumbImageView.Image != null)
                     {
-                        ThumbImageView.StopProgress();
                         SetNeedsLayout();
                     }
-                    else if (_imageHelper.ImageUrl == null)
-                    {
-                        ThumbImageView.StopProgress();
-                    }
-                    else
-                    {
-                        ThumbImageView.StartProgress();
-                    }
                 });
+            _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
+            _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
         }
 
         public static VenueShowCell Create()
@@ -307,6 +300,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpateImageState()
         {
+            ThumbImageView.StartProgress();
             _imageHelper.ImageUrl = 
                 IsExpanded && DataContext != null 
                 ? DataContext.Picture : null;

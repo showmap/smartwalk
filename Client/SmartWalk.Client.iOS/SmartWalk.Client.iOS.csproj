@@ -460,6 +460,8 @@
     <BundleResource Include="Resources\Icons\NextEntity%402x.png" />
     <BundleResource Include="Resources\Icons\ListOptions.png" />
     <BundleResource Include="Resources\Icons\ListOptions%402x.png" />
+    <BundleResource Include="Resources\Images\DefaultImage.png" />
+    <BundleResource Include="Resources\Images\ErrorImage.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

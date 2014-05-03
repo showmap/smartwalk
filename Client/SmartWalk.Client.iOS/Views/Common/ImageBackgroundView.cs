@@ -59,6 +59,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
+        public string Uptitle
+        {
+            get { return UptitleLabel.Text; }
+            set { UptitleLabel.Text = value; }
+        }
+
         public string Title
         {
             get { return TitleLabel.Text; }
@@ -88,6 +94,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             set
             {
                 BackgroundImage.Image = null;
+                BackgroundImage.StartProgress();
 
                 if (_resizeImage)
                 {
@@ -132,17 +139,6 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.UpdateConstraints();
 
-            if (Subtitle == null)
-            {
-                SubtitleLabel.Hidden = true;
-                TitleBottomConstraint.Constant = Gap;
-            }
-            else
-            {
-                SubtitleLabel.Hidden = false;
-                TitleBottomConstraint.Constant = SubtitleHeight;
-            }
-
             if (SubtitleButtonImage == null)
             {
                 SubtitleButton.Hidden = true;
@@ -153,11 +149,26 @@ namespace SmartWalk.Client.iOS.Views.Common
                 SubtitleButton.Hidden = false;
                 SubtitleLeftConstraint.Constant = ButtonWidth;
             }
+
+            if (Subtitle == null)
+            {
+                SubtitleHeightConstraint.Constant = 0;
+            }
+            else
+            {
+                SubtitleHeightConstraint.Constant = 
+                    (float)Math.Ceiling(Theme.ImageSubtitleTextFont.LineHeight * 2);
+            }
         }
 
         public void Initialize(bool resizeImage = false)
         {
             _resizeImage = resizeImage;
+
+            // removing design values set in markup
+            UptitleLabel.Text = null;
+            TitleLabel.Text = null;
+            SubtitleLabel.Text = null;
 
             InitializeImageHelper();
             InitializeStyle();
@@ -195,36 +206,17 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeImageHelper()
         {
-            var afterImageChangeAction = 
-                new Action(
-                    () =>
-                    {
-                        if (ImageUrl != null &&
-                            BackgroundImage.Image != null)
-                        {
-                            BackgroundImage.StopProgress();
-                        }
-                        else if (ImageUrl == null)
-                        {
-                            BackgroundImage.StopProgress();
-                        }
-                        else
-                        {
-                            BackgroundImage.StartProgress();
-                        }
-                    });
-
             if (_resizeImage)
             {
-                _resizedImageHelper = new MvxResizedImageViewLoader(
-                    () => BackgroundImage,
-                    afterImageChangeAction);
+                _resizedImageHelper = 
+                    new MvxResizedImageViewLoader(() => BackgroundImage);
             }
             else
             {
-                _imageHelper = new MvxImageViewLoader(
-                    () => BackgroundImage,
-                    afterImageChangeAction);
+                _imageHelper = 
+                    new MvxImageViewLoader(() => BackgroundImage);
+                _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
+                _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
             }
         }
 
@@ -233,6 +225,10 @@ namespace SmartWalk.Client.iOS.Views.Common
             TitleLabel.Font = Theme.ImageTitleTextFont;
             TitleLabel.TextColor = Theme.ImageTitleText;
             TitleLabel.ShadowColor = Theme.ImageTextShadow;
+
+            UptitleLabel.Font = Theme.ImageSubtitleTextFont;
+            UptitleLabel.TextColor = Theme.ImageSubtitleText;
+            UptitleLabel.ShadowColor = Theme.ImageTextShadow;
 
             SubtitleLabel.Font = Theme.ImageSubtitleTextFont;
             SubtitleLabel.TextColor = Theme.ImageSubtitleText;
@@ -248,7 +244,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                     Colors = new [] { 
                         Theme.ImageGradient.ColorWithAlpha(0f).CGColor, 
                         Theme.ImageGradient.ColorWithAlpha(0.1f).CGColor, 
-                        Theme.ImageGradient.ColorWithAlpha(0.95f).CGColor 
+                        Theme.ImageGradient.ColorWithAlpha(0.6f).CGColor 
                     },
                     Locations = new [] {
                         new NSNumber(0),

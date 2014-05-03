@@ -11,10 +11,10 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D2I-Ij-IgL" userLabel="Background">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D2I-Ij-IgL" userLabel="Background">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oNl-zk-hMG" userLabel="Placeholder">
                     <rect key="frame" x="0.0" y="100" width="320" height="88"/>
@@ -53,7 +53,7 @@
                                     </constraints>
                                     <color key="onTintColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <connections>
-                                        <action selector="OnGroupByLocationTouchUpInside:forEvent:" destination="1" eventType="touchUpInside" id="9SQ-wk-BaW"/>
+                                        <action selector="OnGroupByLocationTouchUpInside:" destination="1" eventType="touchUpInside" id="GzO-tp-VG3"/>
                                     </connections>
                                 </switch>
                                 <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8zI-Ud-fVD" userLabel="Separator" customClass="Line">
@@ -86,7 +86,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="150" id="HM8-RV-Axu"/>
-                                        <constraint firstAttribute="height" constant="29" id="jjR-hh-C9d"/>
+                                        <constraint firstAttribute="height" constant="28" id="jjR-hh-C9d"/>
                                     </constraints>
                                     <segments>
                                         <segment title="TIME"/>
@@ -94,7 +94,7 @@
                                     </segments>
                                     <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <connections>
-                                        <action selector="OnSortBySegmentsValueChanged:forEvent:" destination="1" eventType="valueChanged" id="Anj-X1-b9l"/>
+                                        <action selector="OnSortBySegmentsValueChanged:" destination="1" eventType="valueChanged" id="s9J-Tf-Xd6"/>
                                     </connections>
                                 </segmentedControl>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Sort By" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7pP-Vb-9ZW">

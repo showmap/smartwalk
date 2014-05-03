@@ -4,6 +4,7 @@ using Cirrious.CrossCore.Core;
 using Cirrious.CrossCore.WeakSubscription;
 using Cirrious.MvvmCross.Binding;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {
@@ -40,6 +41,9 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
             var eventInfo = _imageHelper.GetType().GetEvent("ImageChanged");
             _subscription = eventInfo.WeakSubscribe<UIImage>(_imageHelper, ImageHelperOnImageChanged);
+
+            DefaultImagePath = Theme.DefaultImagePath;
+            ErrorImagePath = Theme.ErrorImagePath;
         }
 
         ~MvxResizedImageViewLoader()
@@ -78,12 +82,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             set 
             { 
                 _imageUrl = value;
-
-                if (_imageHelper != null)
-                {
-                    _imageHelper.ImageUrl = 
-                        GetImageUrlWithDimensions(_imageUrl, _imageViewAccess());
-                }
+                _imageHelper.ImageUrl = 
+                    GetImageUrlWithDimensions(_imageUrl, _imageViewAccess());
             }
         }
 

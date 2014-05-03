@@ -54,7 +54,9 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             ImageBackground.ImageUrl = DataContext != null ? DataContext.Picture : null;
             ImageBackground.Title = DataContext != null ? DataContext.Title : null;
-            ImageBackground.Subtitle = DataContext.GetDateString();
+
+            var uptitle = DataContext.GetDateString();
+            ImageBackground.Uptitle = uptitle != null ? string.Format(" {0} ", uptitle) : null;
         }
 
         private void InitializeHeaderImage()

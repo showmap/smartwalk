@@ -179,7 +179,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             ImageBackground.SubtitleButtonImage = 
                 DataContext != null &&
                 DataContext.Mode == EntityViewModelWrapper.ModelMode.Venue
-                    ? ThemeIcons.NavBarMap
+                    ? ThemeIcons.NavBarMapLandscape
                     : null;
 
             ImageBackground.ImageUrl = DataContext != null

@@ -22,22 +22,30 @@ namespace SmartWalk.Client.iOS.Views.Common
 		MonoTouch.UIKit.UIButton SubtitleButton { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint SubtitleHeightConstraint { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel SubtitleLabel { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint SubtitleLeftConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TitleBottomConstraint { get; set; }
+		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
+		SmartWalk.Client.iOS.Controls.CopyLabel UptitleLabel { get; set; }
 
 		[Action ("OnSubtitleButtonTouchInsideUp:")]
 		partial void OnSubtitleButtonTouchInsideUp (MonoTouch.UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (UptitleLabel != null) {
+				UptitleLabel.Dispose ();
+				UptitleLabel = null;
+			}
+
 			if (BackgroundImage != null) {
 				BackgroundImage.Dispose ();
 				BackgroundImage = null;
@@ -68,9 +76,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 				TitleLabel = null;
 			}
 
-			if (TitleBottomConstraint != null) {
-				TitleBottomConstraint.Dispose ();
-				TitleBottomConstraint = null;
+			if (SubtitleHeightConstraint != null) {
+				SubtitleHeightConstraint.Dispose ();
+				SubtitleHeightConstraint = null;
 			}
 		}
 	}

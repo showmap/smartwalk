@@ -53,29 +53,12 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             // HACK: Removing all constraints defined in IB to avoid flickering on zooming
             ScrollView.RemoveConstraints(ScrollView.Constraints);
-
             ScrollView.ViewForZoomingInScrollView += sv => ImageView;
 
-            _imageHelper = new MvxImageViewLoader(
-                () => ImageView,
-                () => {
-                    if (_imageHelper.ImageUrl != null && 
-                        ImageView.Image != null)
-                    {
-                        ImageView.StopProgress();
-                    }
-                    else if (_imageHelper.ImageUrl == null)
-                    {
-                        ImageView.StopProgress();
-                    }
-                    else
-                    {
-                        ImageView.StartProgress();
-                    }
-
-                    ScrollView.UpdateZoomConstants();
-                });
-
+            ImageView.StartProgress();
+            _imageHelper = new MvxImageViewLoader(() => ImageView);
+            _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
+            _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
             _imageHelper.ImageUrl = ImageURL;
 
             InitializeGestures();

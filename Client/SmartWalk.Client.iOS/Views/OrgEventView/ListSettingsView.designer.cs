@@ -42,17 +42,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
 
-		[Action ("OnGroupByLocationTouchUpInside:forEvent:")]
-		partial void OnGroupByLocationTouchUpInside (MonoTouch.UIKit.UISwitch sender, MonoTouch.UIKit.UIEvent @event);
+		[Action ("OnGroupByLocationTouchUpInside:")]
+		partial void OnGroupByLocationTouchUpInside (MonoTouch.Foundation.NSObject sender);
 
-		[Action ("OnSortBySegmentsValueChanged:forEvent:")]
-		partial void OnSortBySegmentsValueChanged (MonoTouch.UIKit.UISegmentedControl sender, MonoTouch.UIKit.UIEvent @event);
+		[Action ("OnSortBySegmentsValueChanged:")]
+		partial void OnSortBySegmentsValueChanged (MonoTouch.Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (TopSeparator != null) {
-				TopSeparator.Dispose ();
-				TopSeparator = null;
+			if (BackgroundView != null) {
+				BackgroundView.Dispose ();
+				BackgroundView = null;
 			}
 
 			if (ContainerHeightConstraint != null) {
@@ -65,16 +65,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				ContainerTopConstraint = null;
 			}
 
-			if (BackgroundView != null) {
-				BackgroundView.Dispose ();
-				BackgroundView = null;
-			}
-
-			if (PlaceholderView != null) {
-				PlaceholderView.Dispose ();
-				PlaceholderView = null;
-			}
-
 			if (GroupByLocationLabel != null) {
 				GroupByLocationLabel.Dispose ();
 				GroupByLocationLabel = null;
@@ -83,6 +73,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (GroupByLocationSwitch != null) {
 				GroupByLocationSwitch.Dispose ();
 				GroupByLocationSwitch = null;
+			}
+
+			if (PlaceholderView != null) {
+				PlaceholderView.Dispose ();
+				PlaceholderView = null;
 			}
 
 			if (SortByLabel != null) {
@@ -98,6 +93,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (SortBySegments != null) {
 				SortBySegments.Dispose ();
 				SortBySegments = null;
+			}
+
+			if (TopSeparator != null) {
+				TopSeparator.Dispose ();
+				TopSeparator = null;
 			}
 		}
 	}
