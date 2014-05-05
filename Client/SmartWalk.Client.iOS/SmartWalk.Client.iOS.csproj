@@ -350,6 +350,10 @@
     <Compile Include="Views\Common\ImageBackgroundView.designer.cs">
       <DependentUpon>ImageBackgroundView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\EntityCell\MapCell.cs" />
+    <Compile Include="Views\Common\EntityCell\MapCell.designer.cs">
+      <DependentUpon>MapCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -384,6 +388,7 @@
     <InterfaceDefinition Include="Views\VenueView\NextVenueCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\ListSettingsView.xib" />
     <InterfaceDefinition Include="Views\Common\ImageBackgroundView.xib" />
+    <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />

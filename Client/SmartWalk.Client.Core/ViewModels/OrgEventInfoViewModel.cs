@@ -67,14 +67,10 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (!Equals(_orgEvent, value))
                 {
                     _orgEvent = value;
-                    Entity = _orgEvent != null 
-                        ? new Entity { 
-                            Name = _orgEvent.Title, 
-                            Description = _orgEvent.Description, 
-                            Picture = _orgEvent.Picture
-                        } 
-                        : null;
+
+                    Entity = _orgEvent != null ? CreateEntity() : null;
                     IsDescriptionExpanded = true;
+
                     RaisePropertyChanged(() => OrgEvent);
                     RaisePropertyChanged(() => Title);
                 }
@@ -108,7 +104,8 @@ namespace SmartWalk.Client.Core.ViewModels
 
                 try 
                 {
-                    orgEvent = await _apiService.GetOrgEventInfo(_parameters.OrgEventId, source);
+                    orgEvent = await _apiService
+                        .GetOrgEventInfo(_parameters.OrgEventId, source);
                 }
                 catch (Exception ex)
                 {
@@ -124,6 +121,30 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 OrgEvent = null;
             }
+        }
+
+        private Entity CreateEntity()
+        {
+            var result = new Entity { 
+                Name = _orgEvent.Title, 
+                Description = _orgEvent.Description, 
+                Picture = _orgEvent.Picture
+            };
+
+            if (_orgEvent.Latitude.HasValue && 
+                _orgEvent.Longitude.HasValue)
+            {
+                result.Addresses = new [] {
+                    new Address 
+                    { 
+                        AddressText = _orgEvent.Title,
+                        Latitude = _orgEvent.Latitude.Value,
+                        Longitude = _orgEvent.Longitude.Value
+                    }
+                };
+            }
+
+            return result;
         }
 
         public class Parameters : ParametersBase

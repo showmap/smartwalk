@@ -98,7 +98,12 @@ namespace SmartWalk.Client.iOS.Views.Common
 
                 if (value != null)
                 {
+                    ShowGradient();
                     BackgroundImage.StartProgress();
+                }
+                else
+                {
+                    HideGradient();
                 }
 
                 if (_resizeImage)
@@ -211,15 +216,34 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeImageHelper()
         {
+            var afterImageChangeAction = new Action(() =>
+                {
+                    if (BackgroundImage != null &&
+                        (BackgroundImage.Image == null ||
+                        BackgroundImage.Image.Size == Theme.DefaultImageSize ||
+                        BackgroundImage.Image.Size == Theme.ErrorImageSize))
+                    {
+                        HideGradient();
+                    }
+                    else
+                    {
+                        ShowGradient();
+                    }
+                });
+
             if (_resizeImage)
             {
                 _resizedImageHelper = 
-                    new MvxResizedImageViewLoader(() => BackgroundImage);
+                    new MvxResizedImageViewLoader(
+                        () => BackgroundImage,
+                        afterImageChangeAction);
             }
             else
             {
                 _imageHelper = 
-                    new MvxImageViewLoader(() => BackgroundImage);
+                    new MvxImageViewLoader(
+                        () => BackgroundImage,
+                        afterImageChangeAction);
                 _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
                 _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
             }
@@ -227,6 +251,8 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
+            BackgroundColor = Theme.HeaderCellBackground;
+
             TitleLabel.Font = Theme.ImageTitleTextFont;
             TitleLabel.TextColor = Theme.ImageTitleText;
             TitleLabel.ShadowColor = Theme.ImageTextShadow;
@@ -258,8 +284,22 @@ namespace SmartWalk.Client.iOS.Views.Common
                         new NSNumber(1)
                     },
                 };
+            }
+        }
 
+        private void ShowGradient()
+        {
+            if (_bottomGradient != null)
+            {
                 GradientPlaceholder.Layer.InsertSublayer(_bottomGradient, 0);
+            }
+        }
+
+        private void HideGradient()
+        {
+            if (_bottomGradient != null)
+            {
+                _bottomGradient.RemoveFromSuperLayer();
             }
         }
 

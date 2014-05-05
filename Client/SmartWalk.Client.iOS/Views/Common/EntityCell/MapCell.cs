@@ -65,7 +65,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 MapView.TintColor = Theme.MapTint;
             }
 
-            MapView.Delegate = new MapDelegate { CanShowDetails = false };
+            MapView.Delegate = new MapDelegate { CanShowCallout = false };
         }
 
         protected override void OnDataContextChanged()
@@ -82,20 +82,22 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     .ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 
-                MapView.SetRegion(
-                    MapUtil.CoordinateRegionForCoordinates(
-                        coordinates, 
-                        new MKMapSize(2000, 2000)),
-                    !isFirstLoading);
+                if (coordinates.Length > 0)
+                {
+                    MapView.SetRegion(
+                        MapUtil.CoordinateRegionForCoordinates(
+                            coordinates, 
+                            new MKMapSize(3000, 3000)),
+                        !isFirstLoading);
 
-                MapView.SetCenterCoordinate(
-                    new CLLocationCoordinate2D(
-                        annotations[0].Coordinate.Latitude + 0.00065, // moving a bit down to fit callout
-                        annotations[0].Coordinate.Longitude),
-                    !isFirstLoading);
+                    MapView.SetCenterCoordinate(
+                        new CLLocationCoordinate2D(
+                            annotations[0].Coordinate.Latitude + 0.00047, // moving a bit down to compensate callout height
+                            annotations[0].Coordinate.Longitude),
+                        !isFirstLoading);
 
-                MapView.AddAnnotations(annotations);
-                MapView.SelectAnnotation(annotations[0], !isFirstLoading);
+                    MapView.AddAnnotations(annotations);
+                }
             }
         }
 

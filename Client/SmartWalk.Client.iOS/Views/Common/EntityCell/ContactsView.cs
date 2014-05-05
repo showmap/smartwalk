@@ -191,6 +191,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
+            BackgroundView.BackgroundColor = Theme.DialogOutside;
             PlaceholderView.Layer.CornerRadius = 6;
 
             CloseButton.Layer.BorderWidth = 1;

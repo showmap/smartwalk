@@ -40,7 +40,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
         public static readonly UIColor CellSemiHighlight = UIColor.FromRGB(255, 250, 225);
         public static readonly UIColor CellSeparator = UIColor.FromRGB(220, 220, 220);
-        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(51, 51, 51, 250);
+        public static readonly UIColor CellDarkSeparator = UIColor.FromRGB(51, 51, 51);
+        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(150, 150, 150, 250);
         public static readonly UIColor ToolBarButtonHighlightedBackground = 
             UIColor.FromRGBA(255, 255, 255, 230);
 
@@ -64,6 +65,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor ImageTextShadow = UIColor.FromRGB(51, 51, 51);
         public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
         public static readonly UIColor GroupHeaderText = UIColor.White;
+        public static readonly UIColor DialogOutside = UIColor.FromRGBA(0, 0, 0, 200);
 
         public static readonly UIFont OrgEventDayFont = UIFont.FromName(HelveticaLight, 18);
         public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(HelveticaBold, 10);

@@ -1,25 +1,27 @@
 using System;
 using System.Drawing;
 using System.Windows.Input;
-using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class EntityCell : TableCellBase
     {
-        private const int ImageHeight = 200;
+        private const int ImageVerticalHeight = 160;
+        private const int MapVerticalHeight = 80;
+        private const int CellHorizontalHeight = 100;
         private const int Gap = 10;
 
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
 
         private UITapGestureRecognizer _descriptionTapGesture;
-        private CAGradientLayer _bottomGradient;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
@@ -38,9 +40,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             var textHeight = CalculateTextHeight(frameWidth - Gap * 2, entity.Description);
             var result = 
-                ImageHeight + 
+                GetHeaderHeight(entity) + 
                 ((int)textHeight != 0 ? Gap * 2 : 0) + 
-                    (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrFont.LineHeight * 3));
+                (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrFont.LineHeight * 3));
             return (float)Math.Ceiling(result);
         }
 
@@ -91,6 +93,17 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return 0;
         }
 
+        private static int GetHeaderHeight(Entity entity)
+        {
+            if (ScreenUtil.IsVerticalOrientation)
+            {
+                return ImageVerticalHeight + 
+                    (entity.HasAddresses() ? MapVerticalHeight : 0);
+            }
+
+            return CellHorizontalHeight;
+        }
+
         public ICommand ExpandCollapseCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
@@ -109,20 +122,98 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private ImageBackgroundView ImageBackground
         {
-            get { return (ImageBackgroundView)ImagePlaceholder.Content; }
+            get { return (ImageBackgroundView)ImageCellPlaceholder.Content; }
+        }
+
+        private MapCell MapCell
+        {
+            get { return (MapCell)MapCellPlaceholder.Content; }
         }
 
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
 
-            UpdateBottomGradientHiddenState();
             UpdateConstraints();
         }
 
         public override void UpdateConstraints()
         {
             base.UpdateConstraints();
+
+            var headerHeight = GetHeaderHeight(
+                DataContext != null ? DataContext.Entity : null);
+            if (Frame.Height >= headerHeight)
+            {
+                HeaderHeightConstraint.Constant = headerHeight;
+            }
+            else
+            {
+                HeaderHeightConstraint.Constant = 0;
+            }
+
+            if (DataContext != null &&
+                Frame.Height >= headerHeight)
+            {
+                if (ScreenUtil.IsVerticalOrientation)
+                {
+                    ImageWidthConstraint.Constant = Bounds.Width;
+                    ImageHeightConstraint.Constant = ImageVerticalHeight;
+                }
+                else
+                {
+                    ImageWidthConstraint.Constant = DataContext.Entity.HasAddresses()
+                        ? Bounds.Width / 2
+                        : Bounds.Width;
+                    ImageHeightConstraint.Constant = CellHorizontalHeight;
+                }
+
+                if (DataContext.Entity.HasAddresses())
+                {
+                    if (ScreenUtil.IsVerticalOrientation)
+                    {
+                        MapXConstraint.Constant = 0;
+                        MapYConstraint.Constant = ImageVerticalHeight;
+
+                        MapWidthConstraint.Constant = Bounds.Width;
+                        MapHeightConstraint.Constant = MapVerticalHeight;
+                    }
+                    else
+                    {
+                        MapXConstraint.Constant = Bounds.Width / 2;
+                        MapYConstraint.Constant = 0;
+
+                        MapWidthConstraint.Constant = Bounds.Width / 2;
+                        MapHeightConstraint.Constant = CellHorizontalHeight;
+                    }
+                }
+                else
+                {
+                    MapWidthConstraint.Constant = 0;
+                    MapHeightConstraint.Constant = 0;
+                }
+            }
+            else
+            {
+                ImageWidthConstraint.Constant = 0;
+                ImageHeightConstraint.Constant = 0;
+                MapXConstraint.Constant = 0;
+                MapYConstraint.Constant = 0;
+                MapWidthConstraint.Constant = 0;
+                MapHeightConstraint.Constant = 0;
+            }
+
+            // HACK: to make sure that Frames are updated (on first opening they aren't)
+            ImageCellPlaceholder.Frame = new RectangleF(
+                0, 
+                0, 
+                ImageWidthConstraint.Constant,
+                ImageHeightConstraint.Constant);
+            MapCellPlaceholder.Frame = new RectangleF(
+                MapXConstraint.Constant,
+                MapYConstraint.Constant,
+                MapWidthConstraint.Constant,
+                MapHeightConstraint.Constant);
 
             if (DataContext != null &&
                 DataContext.Entity.Description != null)
@@ -150,6 +241,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
                 DisposeGestures();
                 DisposeHeaderImage();
+                DisposeMapCell();
             }
         }
 
@@ -158,7 +250,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             InitializeStyle();
             InitializeGestures();
             InitializeHeaderImage();
-            InitializeBottomGradientState();
+            InitializeMapCell();
 
             SetNeedsLayout();
         }
@@ -166,7 +258,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             DescriptionLabel.Text = DataContext != null 
-                ? DataContext.Entity.Description : null;
+                ? DataContext.Entity.Description 
+                : null;
 
             ImageBackground.Title = DataContext != null
                 ? DataContext.Title
@@ -193,6 +286,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
             ImageBackground.ImageUrl = DataContext != null
                 ? DataContext.Entity.Picture
+                : null;
+
+            MapCell.DataContext = DataContext != null &&
+                DataContext.Entity.HasAddresses()
+                ? DataContext.Entity
                 : null;
 
             SetNeedsLayout();
@@ -227,7 +325,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeHeaderImage()
         {
-            ImagePlaceholder.Content = ImageBackgroundView.Create();
+            ImageCellPlaceholder.Content = ImageBackgroundView.Create();
 
             ImageBackground.Initialize();
             ImageBackground.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
@@ -245,7 +343,22 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             ImageBackground.ShowSubtitleContentCommand = null;
 
             ImageBackground.Dispose();
-            ImagePlaceholder.Content = null;
+            ImageCellPlaceholder.Content = null;
+        }
+
+        private void InitializeMapCell()
+        {
+            MapCellPlaceholder.Content = MapCell.Create();
+
+            MapCell.NavigateAddressesCommand = NavigateAddressesCommand;
+        }
+
+        private void DisposeMapCell()
+        {
+            MapCell.NavigateAddressesCommand = null;
+
+            MapCell.Dispose();
+            MapCellPlaceholder.Content = null;
         }
 
         private void InitializeStyle()
@@ -254,50 +367,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
             DescriptionLabel.Font = Theme.EntityDescrFont;
             DescriptionLabel.TextColor = Theme.CellText;
-        }
-
-        private void InitializeBottomGradientState()
-        {
-            _bottomGradient = new CAGradientLayer
-                {
-                    Frame = BottomGradientView.Bounds,
-                    Colors = new [] { 
-                        Theme.TextGradient.ColorWithAlpha(0.2f).CGColor, 
-                        Theme.TextGradient.CGColor 
-                    },
-                };
-
-            BottomGradientView.Layer.InsertSublayer(_bottomGradient, 0);
-        }
-
-        private void UpdateBottomGradientHiddenState()
-        {
-            if (_bottomGradient == null) return;
-
-            // HACK: getting width from Cell's bounds, because Label's ones aren't updated yet
-            var frame = _bottomGradient.Frame;
-            frame.Width = Bounds.Width - Gap * 2;
-            _bottomGradient.Frame = frame;
-
-            if (DataContext != null && 
-                !DataContext.IsDescriptionExpanded)
-            {
-                var textHeight = CalculateTextHeight(
-                    DescriptionLabel.Frame.Width, 
-                    DataContext.Entity.Description);
-
-                var labelHeight = CalculateCellHeight(
-                    Frame.Width, 
-                    false, 
-                    DataContext.Entity) - 
-                        ImageHeight;
-
-                _bottomGradient.Hidden = textHeight <= labelHeight;
-            }
-            else
-            {
-                _bottomGradient.Hidden = true;
-            }
         }
     }
 }

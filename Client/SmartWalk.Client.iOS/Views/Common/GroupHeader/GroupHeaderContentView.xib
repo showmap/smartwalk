@@ -21,15 +21,28 @@
                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
+                <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rTJ-LY-aD8" userLabel="Separator" customClass="Line">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="ScL-yR-KfH"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="V40-IT-ILe"/>
+                    </constraints>
+                </view>
             </subviews>
             <constraints>
+                <constraint firstItem="rTJ-LY-aD8" firstAttribute="top" secondItem="1" secondAttribute="top" id="B4M-zR-oFS"/>
                 <constraint firstItem="Ck9-zw-Bgi" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="10" id="CIO-n9-Xbk"/>
                 <constraint firstAttribute="trailing" secondItem="Ck9-zw-Bgi" secondAttribute="trailing" constant="10" id="KPl-9H-nzA"/>
+                <constraint firstAttribute="trailing" secondItem="rTJ-LY-aD8" secondAttribute="trailing" id="OlP-8R-4U6"/>
                 <constraint firstAttribute="centerY" secondItem="Ck9-zw-Bgi" secondAttribute="centerY" id="hAs-yb-7Dp"/>
+                <constraint firstItem="rTJ-LY-aD8" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="hlF-8m-jrP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="TitleLabel" destination="Ck9-zw-Bgi" id="Qfz-t5-y3S"/>
+                <outlet property="TopSeparator" destination="rTJ-LY-aD8" id="A8u-mV-nM8"/>
             </connections>
         </view>
     </objects>

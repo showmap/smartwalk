@@ -14,16 +14,40 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="542"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="ImagePlaceholder" customClass="Placeholder">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="HeaderPlaceholder">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" customClass="Placeholder">
+                                <rect key="frame" x="0.0" y="160" width="320" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="1030"/>
+                                    <constraint firstAttribute="width" constant="320" id="1032"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" customClass="Placeholder">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="160"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="160" id="1029"/>
+                                    <constraint firstAttribute="width" constant="320" id="1031"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="200" id="1033"/>
+                            <constraint firstItem="1011" firstAttribute="top" secondItem="999" secondAttribute="top" id="1012"/>
+                            <constraint firstItem="1011" firstAttribute="leading" secondItem="999" secondAttribute="leading" id="1013"/>
+                            <constraint firstItem="1016" firstAttribute="leading" secondItem="999" secondAttribute="leading" id="1024"/>
+                            <constraint firstItem="1016" firstAttribute="top" secondItem="999" secondAttribute="top" constant="160" id="1025"/>
+                            <constraint firstAttribute="height" constant="240" id="1033"/>
                         </constraints>
                     </view>
                     <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1056" userLabel="PlaceholderSeparator" customClass="Line">
-                        <rect key="frame" x="0.0" y="199" width="320" height="1"/>
+                        <rect key="frame" x="0.0" y="239" width="320" height="1"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -31,21 +55,13 @@
                         </constraints>
                     </view>
                     <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description Description Description Description Description Description Description Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="10" y="210" width="300" height="322"/>
+                        <rect key="frame" x="10" y="250" width="300" height="282"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <gestureRecognizers/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="802" userLabel="BottomGradientView">
-                        <rect key="frame" x="10" y="494" width="300" height="38"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="38" id="869"/>
-                        </constraints>
-                    </view>
                     <view hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U3N-hC-GE0" userLabel="Separator" customClass="Line">
                         <rect key="frame" x="0.0" y="541" width="320" height="1"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -63,7 +79,6 @@
                     <constraint firstItem="U3N-hC-GE0" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="FfR-dD-NUg"/>
                     <constraint firstAttribute="trailing" secondItem="999" secondAttribute="trailing" id="RZc-C1-wQF"/>
                     <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" priority="800" constant="10" id="bd6-1O-KDF"/>
-                    <constraint firstAttribute="bottom" secondItem="802" secondAttribute="bottom" constant="10" id="dAK-oO-4uk"/>
                     <constraint firstAttribute="trailing" secondItem="U3N-hC-GE0" secondAttribute="trailing" id="duc-Mt-2Gg"/>
                     <constraint firstItem="999" firstAttribute="top" secondItem="Q3o-AI-f2B" secondAttribute="top" id="erS-LN-8ki"/>
                     <constraint firstItem="1056" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="r3T-QA-hJg"/>
@@ -71,19 +86,23 @@
                 </constraints>
             </tableViewCellContentView>
             <constraints>
-                <constraint firstItem="802" firstAttribute="leading" secondItem="19" secondAttribute="leading" id="Bcy-JV-mip"/>
                 <constraint firstItem="19" firstAttribute="top" secondItem="999" secondAttribute="bottom" priority="800" constant="10" id="DQK-qT-KNl"/>
-                <constraint firstItem="802" firstAttribute="trailing" secondItem="19" secondAttribute="trailing" id="Gwp-v8-uFn"/>
                 <constraint firstItem="999" firstAttribute="bottom" secondItem="1056" secondAttribute="bottom" id="kGd-35-sJO"/>
-                <constraint firstItem="802" firstAttribute="bottom" secondItem="19" secondAttribute="bottom" id="svZ-58-FpB"/>
             </constraints>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
-                <outlet property="BottomGradientView" destination="802" id="870"/>
                 <outlet property="DescriptionBottomConstraint" destination="sU9-x5-c4S" id="HqL-Tt-pBc"/>
                 <outlet property="DescriptionLabel" destination="19" id="45"/>
                 <outlet property="DescriptionTopConstraint" destination="DQK-qT-KNl" id="SYM-5n-K2N"/>
-                <outlet property="ImagePlaceholder" destination="999" id="tSW-Mb-UxO"/>
+                <outlet property="HeaderHeightConstraint" destination="1033" id="1035"/>
+                <outlet property="ImageCellPlaceholder" destination="1011" id="1050"/>
+                <outlet property="ImageHeightConstraint" destination="1029" id="1036"/>
+                <outlet property="ImageWidthConstraint" destination="1031" id="1037"/>
+                <outlet property="MapCellPlaceholder" destination="1016" id="1051"/>
+                <outlet property="MapHeightConstraint" destination="1030" id="1049"/>
+                <outlet property="MapWidthConstraint" destination="1032" id="1039"/>
+                <outlet property="MapXConstraint" destination="1024" id="1040"/>
+                <outlet property="MapYConstraint" destination="1025" id="1041"/>
                 <outlet property="PlaceholderSeparator" destination="1056" id="5KK-bg-0xI"/>
                 <outlet property="Separator" destination="U3N-hC-GE0" id="Mfe-CC-8vU"/>
             </connections>

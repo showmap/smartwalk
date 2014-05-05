@@ -14,12 +14,20 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 	{
 		[Outlet]
 		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
+			}
+
+			if (TopSeparator != null) {
+				TopSeparator.Dispose ();
+				TopSeparator = null;
 			}
 		}
 	}
