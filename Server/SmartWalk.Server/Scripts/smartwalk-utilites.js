@@ -56,6 +56,7 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
 ListViewModel = function (parameters, url) {
     this.parameters_ = parameters;
     this.url_ = url;
+    this.query = ko.observable();
 
     attachVerticalScroll.call(this, this.getNextPage);
 };
@@ -64,7 +65,7 @@ ListViewModel.prototype.Items = ko.observableArray();
 ListViewModel.prototype.currentPage = ko.observable(0);
 ListViewModel.prototype.getData = function(pageNumber) {
     if (this.currentPage() != pageNumber) {
-        var ajData = JSON.stringify({ pageNumber: pageNumber, parameters: this.parameters_ });
+        var ajData = JSON.stringify({ pageNumber: pageNumber, query: this.query(), parameters: this.parameters_ });
         ajaxJsonRequest.call(this, ajData, this.url_,
             function (data) {
                 if (data.length > 0) {
@@ -79,6 +80,12 @@ ListViewModel.prototype.getData = function(pageNumber) {
 };
 ListViewModel.prototype.getNextPage = function() {
     return this.getData(this.currentPage() + 1);
+};
+ListViewModel.prototype.search = function (data) {
+    $("a").remove(".default-rows");
+    this.Items.removeAll();
+    this.currentPage(-1);
+    this.getNextPage();
 };
 
 //ViewModelBase Class

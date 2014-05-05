@@ -33,7 +33,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Host, 0, ViewSettings.ItemsLoad, null, e => e.Name, false)});
+            return View(new ListViewVm {Parameters = parameters, Data = _entityService.GetEntities(user == null ? null : user.Record, EntityType.Host, 0, ViewSettings.ItemsLoad, e => e.Name, false, "")});
         }
 
         public ActionResult View(int entityId)
@@ -87,11 +87,11 @@ namespace SmartWalk.Server.Controllers
             }
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-            return Json(_entityService.GetEntities(user.Record, EntityType.Host, 0, ViewSettings.ItemsLoad, e => (string.IsNullOrEmpty(term) || e.Name.ToLower(CultureInfo.InvariantCulture).Contains(term.ToLower(CultureInfo.InvariantCulture))), e => e.Name, false));
+            return Json(_entityService.GetEntities(user.Record, EntityType.Host, 0, ViewSettings.ItemsLoad, e => e.Name, false, term));
         }
 
         [HttpPost]
-        public ActionResult GetHosts(int pageNumber, ListViewParametersVm parameters)
+        public ActionResult GetHosts(int pageNumber, string query, ListViewParametersVm parameters)
         {
             SmartWalkUserPart user = null;
 
@@ -105,7 +105,7 @@ namespace SmartWalk.Server.Controllers
                 user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             }
 
-            return Json(_entityService.GetEntities(user == null ? null: user.Record, EntityType.Host, pageNumber, ViewSettings.ItemsLoad, null, e => e.Name, false));
+            return Json(_entityService.GetEntities(user == null ? null: user.Record, EntityType.Host, pageNumber, ViewSettings.ItemsLoad, e => e.Name, false, query));
         }
 
         [HttpPost]

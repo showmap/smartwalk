@@ -33,10 +33,10 @@ namespace SmartWalk.Server.Controllers
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
             switch (parameters.Sort) {
                 case SortType.Title:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.Title, false)});
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.Title, false, "")});
                 case SortType.Date:
                 default:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.StartTime, true)});
+                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.StartTime, true, "")});
             }
         }
 
@@ -277,7 +277,7 @@ namespace SmartWalk.Server.Controllers
         #region Events
         [HttpPost]
         [CompressFilter]
-        public ActionResult GetEvents(int pageNumber, ListViewParametersVm parameters)
+        public ActionResult GetEvents(int pageNumber, string query, ListViewParametersVm parameters)
         {
             SmartWalkUserPart user = null;
 
@@ -294,10 +294,10 @@ namespace SmartWalk.Server.Controllers
             switch (parameters.Sort)
             {
                 case SortType.Title:
-                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.Title, false));
+                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.Title, false, query));
                 case SortType.Date:
                 default:
-                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.StartTime, true));
+                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.StartTime, true, query));
             }
         }
 

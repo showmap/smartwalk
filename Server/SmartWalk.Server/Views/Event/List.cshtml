@@ -17,9 +17,9 @@
         <div class="row">
             <div class="col-xs-8">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="@T("Type event name...")">
+                    <input type="text" class="form-control" placeholder="@T("Type event name...")" data-bind="value: query">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">@T("Search")</button>
+                        <button id="btnSearch" class="btn btn-default" type="button">@T("Search")</button>
                     </span>
                 </div>
             </div>
@@ -63,7 +63,7 @@
 
        <div class="floating-container small-gap">
         @foreach (var item in items) {
-            <a class="thumbnail floating bg-image-container" href="@Url.Action("View", new {eventId = item.Id})">
+            <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {eventId = item.Id})">
                 <div class="header">
                     <h3>@item.DisplayName</h3>
 			
@@ -108,11 +108,12 @@
         //VenuesViewModel.superClass_.Items.push(new EntityViewModel(data));
         this.Items.push(new EventViewModelBase(data));
         $("img.scale").imageScale();
-    };
+    };    
 
     $(document).ready(function() {
         var viewModel = new EventsViewModel(@Html.Raw(Json.Encode(parameters)), $("#event-items").attr("get-events-url"));
         ko.applyBindings(viewModel, document.getElementById('event-items'));
+        $("#btnSearch").click(function () { viewModel.search.call(viewModel); });
     });
     
     $(function() {

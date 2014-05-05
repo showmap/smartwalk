@@ -93,7 +93,7 @@ EventViewModel = function (data) {
 
             CombineType: this.CombineType(),
 
-            Host: this.Host().toJSON(),
+            Host:  this.Host() ? this.Host().toJSON() : "",
 
             AllVenues:  ko.utils.arrayMap(this.Venues(), function (venue) {
                 return venue.toJSON();

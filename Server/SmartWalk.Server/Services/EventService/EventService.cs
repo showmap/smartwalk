@@ -47,12 +47,15 @@ namespace SmartWalk.Server.Services.EventService
             return data.Where(e => !e.IsDeleted).OrderByDescending(e => e.StartTime).Take(5).Select(e => CreateViewModelContract(e, LoadMode.Compact)).ToList();
         }
 
-        public IList<EventMetadataVm> GetEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc) {
-            return GetEventsInner(user == null ? (IEnumerable<EventMetadataRecord>) _eventMetadataRepository.Table.Where(e => e.IsPublic) : user.EventMetadataRecords, pageNumber, pageSize, orderBy, isDesc);
+        public IList<EventMetadataVm> GetEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc, string searchString) {
+            return GetEventsInner(user == null ? (IEnumerable<EventMetadataRecord>) _eventMetadataRepository.Table.Where(e => e.IsPublic) : user.EventMetadataRecords, pageNumber, pageSize, orderBy, isDesc, searchString);
         }
 
-        private IList<EventMetadataVm> GetEventsInner(IEnumerable<EventMetadataRecord> query, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc) {
+        private IList<EventMetadataVm> GetEventsInner(IEnumerable<EventMetadataRecord> query, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc, string searchString)
+        {
             query = query.Where(e => !e.IsDeleted);
+            if(!string.IsNullOrEmpty(searchString))
+                query = query.Where(e => !string.IsNullOrEmpty(e.Title) && e.Title.ToLower(CultureInfo.InvariantCulture).Contains(searchString.ToLower(CultureInfo.InvariantCulture)));
             query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
             return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => CreateViewModelContract(e, LoadMode.Compact)).ToList();
         }

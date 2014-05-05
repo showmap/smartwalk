@@ -186,26 +186,28 @@ namespace SmartWalk.Server.Services.EntityService
             return entity.SmartWalkUserRecord.Id == user.Id ? AccessType.AllowEdit : AccessType.AllowView;
         }
 
-        public IList<EntityVm> GetEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy,  bool isDesc) {
-            return GetEntitiesInner(user == null ? (IEnumerable<EntityRecord>)_entityRepository.Table : user.Entities, type, pageNumber, pageSize, where, orderBy, isDesc);
+        public IList<EntityVm> GetEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, IComparable> orderBy, bool isDesc, string searchString)
+        {
+            return GetEntitiesInner(user == null ? (IEnumerable<EntityRecord>)_entityRepository.Table : user.Entities, type, pageNumber, pageSize, orderBy, isDesc, searchString);
         }
 
-        private IList<EntityVm> GetEntitiesInner(IEnumerable<EntityRecord> query, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, bool> where, Func<EntityRecord, IComparable> orderBy, bool isDesc) {
+        private IList<EntityVm> GetEntitiesInner(IEnumerable<EntityRecord> query, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, IComparable> orderBy, bool isDesc, string searchString)
+        {
             query = query.Where(e => e.Type == (int) type && !e.IsDeleted);
-            if (where != null)
-                query = query.Where(where);
+            if (!string.IsNullOrEmpty(searchString))
+                query = query.Where(e => e.Name.ToLower(CultureInfo.InvariantCulture).Contains(searchString.ToLower(CultureInfo.InvariantCulture)));
             query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
             return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, LoadMode.Compact)).ToList();
         }
 
-        public IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, Func<EntityRecord, bool> where)
+        public IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, string searchString)
         {
             var metadata = user.EventMetadataRecords.FirstOrDefault(e => e.Id == eventId);
 
             var query = user.Entities.Where(e => e.Type == (int) EntityType.Venue && !e.IsDeleted && (metadata == null || metadata.ShowRecords.All(s => s.EntityRecord.Id != e.Id || s.IsDeleted)));
-            if (where != null)
-                query = query.Where(where);
+            if (!string.IsNullOrEmpty(searchString))
+                query = query.Where(e => e.Name.ToLower(CultureInfo.InvariantCulture).Contains(searchString.ToLower(CultureInfo.InvariantCulture)));
 
             return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => ViewModelContractFactory.CreateViewModelContract(e, VmItemState.Normal, LoadMode.Compact)).ToList();
         }
