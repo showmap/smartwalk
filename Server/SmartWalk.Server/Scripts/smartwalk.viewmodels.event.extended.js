@@ -1,6 +1,20 @@
 ﻿//EventViewModelExtended class
 EventViewModelExtended = function (settings, data) {
+    this.setupValidations = function () {
+        this.StartTime.extend({
+            required: { message: settings.startTimeRequiredValidationMessage },
+        });
+        this.Host.extend({
+            required: { message: settings.hostRequiredValidationMessage },
+        });
+        this.Picture.extend({
+            required: { message: settings.hostRequiredValidationMessage },
+        });
+    };
+
     EventViewModelExtended.superClass_.constructor.call(this, data);
+
+    this.generalValidationMessage = settings.generalValidationMessage;
 
     this.hostFormName = settings.hostFormName;
     this.venueFormName = settings.venueFormName;
@@ -26,6 +40,7 @@ EventViewModelExtended = function (settings, data) {
     this.hostAutocompleteUrl = settings.hostAutocompleteUrl;
     this.venueAutocompleteUrl = settings.venueAutocompleteUrl;
 
+    this.errors = ko.validation.group(this);
     this.attachEvents();
     this.setupDialogs();    
 };
@@ -93,15 +108,19 @@ EventViewModelExtended.prototype.attachEvents = function () {
     });
 };
 
-EventViewModelExtended.prototype.saveEvent = function () {
-    var ajdata = ko.toJSON(this.toJSON());
-    ajaxJsonRequest(ajdata, this.eventSaveUrl,
-        function (data) {            
-            window.location.href = "/event/" + data.Id;
-        }
-    );
+EventViewModelExtended.prototype.saveEvent = function (root) {
+    if (root.errors().length == 0) {
+        var ajdata = ko.toJSON(this.toJSON());
+        ajaxJsonRequest(ajdata, this.eventSaveUrl,
+            function (data) {
+                window.location.href = "/event/" + data.Id;
+            }
+        );
+    } else {
+        alert(root.generalValidationMessage);
+        root.errors.showAllMessages();
+    }    
 };
-
 
 EventViewModelExtended.prototype.clearItem = function (root, item, condition, deleteItem) {
     if (item() != null) {

@@ -8,10 +8,10 @@
 //jqAutoSourceValue -- the property to use for the value
 ko.bindingHandlers.jqAuto = {
     init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-        var options = valueAccessor() || {},
-            allBindings = allBindingsAccessor(),
+        var allBindings = allBindingsAccessor(),
+            options = allBindings.jqOptions || {},
             unwrap = ko.utils.unwrapObservable,
-            modelValue = allBindings.jqAutoValue,
+            modelValue = valueAccessor(),
             source = allBindings.jqAutoSource,
             query = allBindings.jqAutoQuery,
             autocompleteItemText = allBindings.jqAutoItemText,
@@ -29,20 +29,30 @@ ko.bindingHandlers.jqAuto = {
             }
         }
 
+        $(element).change(function () {
+            if($(element).val() == '')
+                writeValueToModel(null);
+        });
+
         //on a selection write the proper value to the model
         options.select = function (event, ui) {
             writeValueToModel(ui.item ? ui.item.item : null);
         };
 
         //on a change, make sure that it is a valid value or clear out the model value
-        options.change = function(event, ui) {
+        options.change = function (event, ui) {
             var currentValue = $(element).val();
-            var matchingItem = ko.utils.arrayFirst(unwrap(source), function(item) {
-                return unwrap(item[inputValueProp]) === currentValue;
-            });
-
-            if (!matchingItem) {
+            
+            if (currentValue == "") {
                 writeValueToModel(null);
+            } else {
+                var matchingItem = ko.utils.arrayFirst(unwrap(source), function(item) {
+                    return unwrap(item[inputValueProp]) === currentValue;
+                });
+
+                if (!matchingItem) {
+                    writeValueToModel(null);
+                }
             }
         };
 
@@ -103,7 +113,7 @@ ko.bindingHandlers.jqAuto = {
         //update value based on a model change
         var allBindings = allBindingsAccessor(),
             unwrap = ko.utils.unwrapObservable,
-            modelValue = unwrap(allBindings.jqAutoValue) || '',
+            modelValue = unwrap(valueAccessor()) || '',
             valueProp = allBindings.jqAutoSourceValue,
             inputValueProp = allBindings.jqAutoSourceInputValue || valueProp;
 
@@ -119,3 +129,8 @@ ko.bindingHandlers.jqAuto = {
         $(element).val(modelValue && inputValueProp !== valueProp ? unwrap(modelValue[inputValueProp]) : modelValue.toString());
     }
 };
+
+(
+function () {
+    addValidationCodeToCustomBinding("jqAuto");
+}());

@@ -1,17 +1,17 @@
 ﻿EntityViewModelBase = function (data) {
     EntityViewModelBase.superClass_.constructor.call(this);
 
-    this.Id = ko.observable(),
-    this.State = ko.observable(),
-    this.Type = ko.observable(),
-    this.Name = ko.observable(),
-    this.Picture = ko.observable(),
-    this.EventMetadataId = ko.observable(),
-    this.Description = ko.observable(),
-    
-    this.AllContacts = ko.observableArray(),
-    this.AllAddresses = ko.observableArray(),
-    this.AllShows = ko.observableArray(),
+    this.Id = ko.observable();
+    this.State = ko.observable();
+    this.Type = ko.observable();
+    this.Name = ko.observable();
+    this.Picture = ko.observable();
+    this.EventMetadataId = ko.observable();
+    this.Description = ko.observable();
+
+    this.AllContacts = ko.observableArray();
+    this.AllAddresses = ko.observableArray();
+    this.AllShows = ko.observableArray();
 
     //Contacts computed
     this.Contacts = ko.computed(function () {
@@ -92,7 +92,10 @@
     }, this);
 
     this.IsChecked = this.AllShowsChecked;
-
+  
+    if (this.setupValidations)
+        this.setupValidations();
+    
     this.loadData(data);
 };
 

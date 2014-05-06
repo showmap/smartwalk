@@ -1,12 +1,20 @@
-﻿function inherits(child, parent) {
+﻿function addValidationCodeToCustomBinding(binding) {
+    var init = ko.bindingHandlers[binding].init;
+    ko.bindingHandlers[binding].init = function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+        return ko.bindingHandlers['validationCore'].init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+    };
+};
+
+function inherits(child, parent) {
     var F = function () { };
     F.prototype = parent.prototype;
     child.prototype = new F();
     child.prototype.constructor = child;
 
     // `child` function is an object like all functions    
-    child.superClass_ = parent.prototype;    
-}
+    child.superClass_ = parent.prototype;
+};
 
 function addSingletonGetter(ctor) {
     ctor.getInstance = function () {
@@ -16,7 +24,7 @@ function addSingletonGetter(ctor) {
 
         return ctor.instance_;
     };
-}
+};
 
 function attachVerticalScroll(callback) {
     var z = this;
@@ -26,11 +34,11 @@ function attachVerticalScroll(callback) {
             callback.call(z);
         }
     });
-}
+};
 
 function ajaxJsonRequest(ajData, url, onSuccess, onError) {
     var z = this;
-    
+
     var config = {
         async: true,
         url: url,
@@ -40,17 +48,17 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
         cache: false,
         contentType: "application/json; charset=utf-8",
         error: function (e) {
-            if(onError)
+            if (onError)
                 onError.call(z, e);
         },
         success: function (data) {
-            if(onSuccess)
+            if (onSuccess)
                 onSuccess.call(z, data);
         }
     };
 
     $.ajax(config);
-}
+};
 
 //ListViewModel class
 ListViewModel = function (parameters, url) {

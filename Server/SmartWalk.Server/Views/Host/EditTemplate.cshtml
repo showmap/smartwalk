@@ -56,6 +56,10 @@
 
         var data = @Html.Raw(Json.Encode(host));
         var settings = {
+            nameRequiredValidationMessage: '@T("Please, supply name for your organizer!")',
+            nameRequiredValidationPatternMessage: '@T("Hey this doesnt match my pattern")',
+            generalValidationMessage: '@T("Please check your submission.")',
+
             entityFormName: formName,
             entityCancelEvent: EntityViewModelExtended.HOST_CANCEL_EVENT,
             entitySaveEvent: EntityViewModelExtended.HOST_SAVE_EVENT,

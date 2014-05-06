@@ -60,6 +60,10 @@
         var form = $(formName);
         var data = @Html.Raw(Json.Encode(venue));
         var settings = {
+            nameRequiredValidationMessage: '@T("Please, supply name for your venue!")',
+            nameRequiredValidationPatternMessage: '@T("Hey this doesnt match my pattern")',
+            generalValidationMessage: '@T("Please check your submission.")',
+
             entityFormName: formName,
             entityCancelEvent: EntityViewModelExtended.VENUE_CANCEL_EVENT,
             entitySaveEvent: EntityViewModelExtended.VENUE_SAVE_EVENT,

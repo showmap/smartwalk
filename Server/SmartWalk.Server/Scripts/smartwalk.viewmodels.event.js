@@ -9,7 +9,11 @@ EventViewModelBase = function (data) {
     this.IsPublic = ko.observable();
     this.Picture = ko.observable();
     this.DisplayDate = ko.observable();
+    this.Host = ko.observable();
 
+    if (this.setupValidations)
+        this.setupValidations();
+    
     this.loadData(data);
 };
 
@@ -34,8 +38,6 @@ EventViewModel = function (data) {
     this.Longitude = ko.observable();
 
     this.CombineType = ko.observable();
-
-    this.Host = ko.observable();
 
     this.AllVenues = ko.observableArray();
     this.AllHosts = ko.observableArray();
@@ -111,10 +113,12 @@ EventViewModel.prototype.loadDataEventViewModel = function (data) {
 
     this.CombineType(data.CombineType);
     this.AllVenues($.map(data.AllVenues, function (item) { return new EntityViewModel(item); }));
-    
-    if (data.Host != null) {        
+
+    if (data.Host != null) {
         var item = new EntityViewModel(data.Host);
         this.Host(item);
         this.AllHosts.push(item);
+    } else {
+        this.Host(null);
     }
 };

@@ -1,5 +1,13 @@
 ﻿EntityViewModelExtended = function (settings, data) {
-    EntityViewModelExtended.superClass_.constructor.call(this, data);
+    this.setupValidations = function () {
+        this.Name.extend({
+            required: { message: settings.nameRequiredValidationMessage },
+        });
+    };
+
+    EntityViewModelExtended.superClass_.constructor.call(this, data, settings);
+    
+    this.generalValidationMessage = settings.generalValidationMessage;
 
     this.entityFormName = settings.entityFormName;
     
@@ -19,7 +27,9 @@
     this.contactDeleteUrl = settings.contactDeleteUrl;
     this.contactView = settings.contactView;
     this.contactEditView = settings.contactEditView;
-    this.contactTypes = settings.contactTypes;   
+    this.contactTypes = settings.contactTypes;
+    
+    this.errors = ko.validation.group(this);
 };
 
 EntityViewModelExtended.VENUE_CANCEL_EVENT = "OnVenueCancelled";
@@ -29,7 +39,6 @@ EntityViewModelExtended.HOST_CANCEL_EVENT = "OnHostCancelled";
 EntityViewModelExtended.HOST_SAVE_EVENT = "OnHostSaved";
 
 inherits(EntityViewModelExtended, EntityViewModel);
-
 
 EntityViewModelExtended.prototype.getContactView = function (item, bindingContext) {
     return item === bindingContext.$root.selectedItem() ? bindingContext.$root.contactEditView : bindingContext.$root.contactView;
@@ -155,17 +164,22 @@ EntityViewModelExtended.prototype.cancel = function () {
 };
 
 EntityViewModelExtended.prototype.saveOrAdd = function (root) {
-    var ajdata = ko.toJSON(root);
-    var self = this;
+    if (root.errors().length == 0) {
+        var ajdata = ko.toJSON(root);
+        var self = this;
 
-    ajaxJsonRequest(ajdata, this.entitySaveUrl,
-        function (data) {
-            if (self.Id() == 0)
-                self.loadData(data);
-            $(self.entityFormName).trigger({
-                type: self.entitySaveEvent,
-                item: self
-            });
-        }
-    );
+        ajaxJsonRequest(ajdata, this.entitySaveUrl,
+            function (data) {
+                if (self.Id() == 0)
+                    self.loadData(data);
+                $(self.entityFormName).trigger({
+                    type: self.entitySaveEvent,
+                    item: self
+                });
+            }
+        );
+    } else {
+        alert(root.generalValidationMessage);
+        root.errors.showAllMessages();
+    }
 };

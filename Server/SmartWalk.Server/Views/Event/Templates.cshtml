@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <label for="venueComboBox">@T("Venue"):</label>
                         <div class="input-group">
-                        <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
+                        <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: function(){ $root.createVenue($root); }">@T("Create")<span class="hidden-xs"> @T("Venue")</span>...</button>
                         </span>
