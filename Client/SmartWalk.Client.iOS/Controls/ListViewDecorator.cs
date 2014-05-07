@@ -1,6 +1,6 @@
-using MonoTouch.UIKit;
 using System;
 using System.Collections;
+using MonoTouch.UIKit;
 
 namespace SmartWalk.Client.iOS.Controls
 {
@@ -21,11 +21,11 @@ namespace SmartWalk.Client.iOS.Controls
             _collectionView = collectionView;
         }
 
-        public UIView View
+        public UIScrollView View
         {
             get
             {
-                return (UIView)_tableView ?? (UIView)_collectionView;
+                return (UIScrollView)_tableView ?? (UIScrollView)_collectionView;
             }
         }
 
@@ -69,45 +69,6 @@ namespace SmartWalk.Client.iOS.Controls
             if (_collectionView != null)
             {
                 _collectionView.ReloadData();
-            }
-        }
-
-        public void AddSubview(UIView view)
-        {
-            if (_tableView != null)
-            {
-                _tableView.AddSubview(view);
-            }
-
-            if (_collectionView != null)
-            {
-                _collectionView.AddSubview(view);
-            }
-        }
-
-        public void AddGestureRecognizer(UIGestureRecognizer gestureRecognizer)
-        {
-            if (_tableView != null)
-            {
-                _tableView.AddGestureRecognizer(gestureRecognizer);
-            }
-
-            if (_collectionView != null)
-            {
-                _collectionView.AddGestureRecognizer(gestureRecognizer);
-            }
-        }
-
-        public void RemoveGestureRecognizer(UIGestureRecognizer gestureRecognizer)
-        {
-            if (_tableView != null)
-            {
-                _tableView.RemoveGestureRecognizer(gestureRecognizer);
-            }
-
-            if (_collectionView != null)
-            {
-                _collectionView.RemoveGestureRecognizer(gestureRecognizer);
             }
         }
     }

@@ -9,6 +9,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class OrgEventInfoView : ListViewBase
     {
+        public OrgEventInfoView()
+        {
+            IsMoreButtonVisible = false;
+        }
+
         public new OrgEventInfoViewModel ViewModel
         {
             get { return (OrgEventInfoViewModel)base.ViewModel; }

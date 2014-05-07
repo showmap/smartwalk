@@ -20,6 +20,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor BackgroundPatternColor = UIColor.FromPatternImage(
             UIImage.FromFile("Images/Background.png"));
         public static readonly UIImage BlackImage = UIImage.FromFile("Images/Black.png");
+        public static readonly UIImage TransImage = UIImage.FromFile("Images/Trans.png");
+        public static readonly UIImage SemiTransImage = UIImage.FromFile("Images/SemiTrans.png");
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGB(51, 51, 51);
         public static readonly UIColor NavBarBackgroundiOS7 = UIColor.FromRGB(16, 16, 16);
@@ -101,7 +103,7 @@ namespace SmartWalk.Client.iOS.Resources
         {
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
-                NavBarPaddingCompensate = -16;
+                NavBarPaddingCompensate = -10;
 
                 UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
 
@@ -132,19 +134,6 @@ namespace SmartWalk.Client.iOS.Resources
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
                 ToolBarPaddingCompensate = -16;
-
-                UIToolbar.Appearance.BarTintColor = NavBarBackgroundiOS7;
-            }
-            else
-            {
-                UIToolbar.Appearance.SetBackgroundImage(
-                    NavBarBackgroundImage,
-                    UIToolbarPosition.Any,
-                    UIBarMetrics.Default);
-                UIToolbar.Appearance.SetBackgroundImage(
-                    NavBarLandscapeBackgroundImage,
-                    UIToolbarPosition.Any,
-                    UIBarMetrics.LandscapePhone);
             }
 
             UISwitch.Appearance.OnTintColor = UIColor.DarkGray;

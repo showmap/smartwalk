@@ -18,12 +18,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		[Outlet]
 		MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
 
-		[Outlet]
-		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIView TitlePlaceholder { get; set; }
-
 		[Action ("OnOptionsButtonTouchUpInside:")]
 		partial void OnOptionsButtonTouchUpInside (MonoTouch.UIKit.UIButton sender);
 		
@@ -32,16 +26,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (OptionsButton != null) {
 				OptionsButton.Dispose ();
 				OptionsButton = null;
-			}
-
-			if (TitleLabel != null) {
-				TitleLabel.Dispose ();
-				TitleLabel = null;
-			}
-
-			if (TitlePlaceholder != null) {
-				TitlePlaceholder.Dispose ();
-				TitlePlaceholder = null;
 			}
 
 			if (SearchBar != null) {

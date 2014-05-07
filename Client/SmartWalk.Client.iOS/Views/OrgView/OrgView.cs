@@ -1,46 +1,25 @@
-using System;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {
     public partial class OrgView : ListViewBase
     {
-        private ButtonBarButton _moreButton;
-
         public new OrgViewModel ViewModel
         {
             get { return (OrgViewModel)base.ViewModel; }
-        }
-
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
-
-            InitializeToolBar();
-        }
-
-        public override void WillMoveToParentViewController(UIViewController parent)
-        {
-            base.WillMoveToParentViewController(parent);
-
-            if (parent == null)
-            {
-                DisposeToolBar();
-            }
         }
 
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
-            // HACK: to fix the bug with floating tableview
+            // HACK: to fix the bug with floating tableview, probably iOS 6 only
             if (OrgEventsTableView.VisibleCells.Length > 0)
             {
                 OrgEventsTableView.BeginUpdates();
@@ -84,21 +63,8 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             }
         }
 
-        private void InitializeToolBar()
+        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
         {
-            var spacer = ButtonBarUtil.CreateSpacer();
-
-            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
-            _moreButton.TouchUpInside += OnMoreButtonClicked;
-
-            var moreBarButton = new UIBarButtonItem(_moreButton);
-            NavigationItem.SetRightBarButtonItems(new [] {spacer, moreBarButton}, true);
-        }
-
-        private void OnMoreButtonClicked(object sender, EventArgs e)
-        {
-            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
-
             if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
             {
                 actionSheet.AddButton(Localization.ShowContactInfo);
@@ -113,20 +79,11 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             {
                 actionSheet.AddButton(Localization.ShareButton);
             }
-
-            actionSheet.AddButton(Localization.CancelButton);
-
-            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
-
-            actionSheet.ShowInView(View);
         }
 
-        private void OnActionClicked(object sender, UIButtonEventArgs e)
+        protected override void OnActionSheetClick(string buttonTitle)
         {
-            var actionSheet = ((UIActionSheet)sender);
-            actionSheet.Clicked -= OnActionClicked;
-
-            switch (actionSheet.ButtonTitle(e.ButtonIndex))
+            switch (buttonTitle)
             {
                 case Localization.ShowContactInfo:
                     if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
@@ -148,14 +105,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                         ViewModel.ShareCommand.Execute(null);
                     }
                     break;
-            }
-        }
-
-        private void DisposeToolBar()
-        {
-            if (_moreButton != null)
-            {
-                _moreButton.TouchUpInside -= OnMoreButtonClicked;
             }
         }
     }

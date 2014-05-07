@@ -354,6 +354,11 @@
     <Compile Include="Views\Common\EntityCell\MapCell.designer.cs">
       <DependentUpon>MapCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TransparentToolBar.cs" />
+    <Compile Include="Utils\NavBarManager.cs" />
+    <Compile Include="Views\Common\Base\CustomNavBarViewBase.cs" />
+    <Compile Include="Views\Common\Base\CustomNavBarTableViewSource.cs" />
+    <Compile Include="Views\Common\Base\ViewBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -467,6 +472,8 @@
     <BundleResource Include="Resources\Icons\ListOptions%402x.png" />
     <BundleResource Include="Resources\Images\DefaultImage.png" />
     <BundleResource Include="Resources\Images\ErrorImage.png" />
+    <BundleResource Include="Resources\Images\Trans.png" />
+    <BundleResource Include="Resources\Images\SemiTrans.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

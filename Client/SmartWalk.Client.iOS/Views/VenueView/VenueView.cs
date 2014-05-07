@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
@@ -7,7 +5,6 @@ using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 
@@ -15,28 +12,9 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 {
     public partial class VenueView : ListViewBase
     {
-        private ButtonBarButton _moreButton;
-
         public new VenueViewModel ViewModel
         {
             get { return (VenueViewModel)base.ViewModel; }
-        }
-
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
-
-            InitializeToolBar();
-        }
-
-        public override void WillMoveToParentViewController(UIViewController parent)
-        {
-            base.WillMoveToParentViewController(parent);
-
-            if (parent == null)
-            {
-                DisposeToolBar();
-            }
         }
 
         protected override ListViewDecorator GetListView()
@@ -85,33 +63,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             }
         }
 
-        protected override void OnViewModelRefreshed()
+        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                VenueShowsTableView.SetContentOffset(new PointF(0, -TopLayoutGuide.Length), true);
-            }
-            else
-            {
-                VenueShowsTableView.SetContentOffset(PointF.Empty, true);
-            }
-        }
-
-        private void InitializeToolBar()
-        {
-            var spacer = ButtonBarUtil.CreateSpacer();
-
-            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
-            _moreButton.TouchUpInside += OnMoreButtonClicked;
-
-            var moreBarButton = new UIBarButtonItem(_moreButton);
-            NavigationItem.SetRightBarButtonItems(new [] {spacer, moreBarButton}, true);
-        }
-
-        private void OnMoreButtonClicked(object sender, EventArgs e)
-        {
-            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
-
             if (ViewModel.ShowDirectionsCommand.CanExecute(ViewModel.Entity))
             {
                 actionSheet.AddButton(Localization.NavigateInMaps);
@@ -136,20 +89,11 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             {
                 actionSheet.AddButton(Localization.ShareButton);
             }
-
-            actionSheet.AddButton(Localization.CancelButton);
-
-            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
-
-            actionSheet.ShowInView(View);
         }
 
-        private void OnActionClicked(object sender, UIButtonEventArgs e)
+        protected override void OnActionSheetClick(string buttonTitle)
         {
-            var actionSheet = ((UIActionSheet)sender);
-            actionSheet.Clicked -= OnActionClicked;
-
-            switch (actionSheet.ButtonTitle(e.ButtonIndex))
+            switch (buttonTitle)
             {
                 case Localization.NavigateInMaps:
                     if (ViewModel.ShowDirectionsCommand.CanExecute(ViewModel.Entity))
@@ -185,14 +129,6 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                         ViewModel.ShareCommand.Execute(null);
                     }
                     break;
-            }
-        }
-
-        private void DisposeToolBar()
-        {
-            if (_moreButton != null)
-            {
-                _moreButton.TouchUpInside -= OnMoreButtonClicked;
             }
         }
     }

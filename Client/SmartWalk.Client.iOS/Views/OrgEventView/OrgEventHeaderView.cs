@@ -11,7 +11,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class OrgEventHeaderView : UIView
     {
-        public const int DefaultHeight = 88;
+        public const int DefaultHeight = 44;
         private const int OptionsButtonWith = 44;
 
         public static readonly UINib Nib = UINib.FromName("OrgEventHeaderView", NSBundle.MainBundle);
@@ -32,12 +32,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get { return SearchBar; }
         }
 
-        public string Title
-        {
-            get { return TitleLabel.Text; }
-            set { TitleLabel.Text = value; }
-        }
-
         public ICommand ShowOptionsCommand { get; set; }
 
         public override RectangleF Frame
@@ -55,10 +49,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             var result =
                     new RectangleF(
-                        new PointF(0, DefaultHeight / 2),
+                        new PointF(0, DefaultHeight),
                         new SizeF(
                             searchBar.Frame.Width - OptionsButtonWith, 
-                            DefaultHeight / 2));
+                            DefaultHeight));
             return result;
         }
 
@@ -99,9 +93,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 SearchBar.TranslatesAutoresizingMaskIntoConstraints = true;
             }
-
-            TitleLabel.Font = Theme.OrgEventHeaderFont;
-            TitleLabel.TextColor = Theme.CellText;
 
             OptionsButton.SetImage(ThemeIcons.ListOptions, UIControlState.Normal);
 

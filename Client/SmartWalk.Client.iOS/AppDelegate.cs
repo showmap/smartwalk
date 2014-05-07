@@ -11,13 +11,13 @@ using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Services;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS
 {
     [Register("AppDelegate")]
     public class AppDelegate : MvxApplicationDelegate
     {
-        private UIWindow _window;
         private static string _version;
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
@@ -39,9 +39,10 @@ namespace SmartWalk.Client.iOS
 
             Theme.Apply();
 
-            _window = new UIWindow(UIScreen.MainScreen.Bounds);
+            var window = new UIWindow(UIScreen.MainScreen.Bounds);
+            NavBarManager.Initialize(window);
 
-            var presenter = new MvxTouchViewPresenter(this, _window);
+            var presenter = new MvxTouchViewPresenter(this, window);
 
             var setup = new Setup(this, presenter);
             setup.Initialize();
@@ -49,7 +50,7 @@ namespace SmartWalk.Client.iOS
             var startup = Mvx.Resolve<IMvxAppStart>();
             startup.Start();
 
-            _window.MakeKeyAndVisible();
+            window.MakeKeyAndVisible();
             
             return true;
         }
@@ -72,6 +73,13 @@ namespace SmartWalk.Client.iOS
             {
                 EasyTracker.Current.OnApplicationActivated(application);
             }
+        }
+
+        public override void DidChangeStatusBarOrientation(
+            UIApplication application, 
+            UIInterfaceOrientation oldStatusBarOrientation)
+        {
+            NavBarManager.Instance.Rotate();
         }
 
         private static void InitializeTestFlight()

@@ -32,7 +32,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UISwipeGestureRecognizer _swipeLeft;
         private bool _isMapViewInitialized;
         private bool _isAnimating;
-        private bool _isBackOverriden;
         private PointF _tableContentOffset;
         private Show _previousExpandedShow;
         private ButtonBarButton _modeButtonList;
@@ -49,6 +48,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                EdgesForExtendedLayout = UIRectEdge.Top;
+            }
 
             InitializeConstraints();
             InitializeToolBar();
@@ -79,19 +83,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        // HACK: To persist table scroll offset
-        public override void ViewDidDisappear(bool animated)
-        {
-            base.ViewDidDisappear(animated);
-
-            _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
-        }
-
         // TODO: Find another soltuion. It must be much simpler.
         // HACK: To persist table scroll offset on rotation and appearing
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
+
+            NavBarManager.Instance.SetNavBarVisibility(true, true, false, animated);
 
             if (_tableContentOffset != PointF.Empty && _timer == null)
             {
@@ -118,6 +116,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        // HACK: To persist table scroll offset
+        public override void ViewDidDisappear(bool animated)
+        {
+            base.ViewDidDisappear(animated);
+
+            _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
+        }
+
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
         {
             base.WillAnimateRotation(toInterfaceOrientation, duration);
@@ -125,31 +131,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_listSettingsView != null)
             {
                 SetDialogViewFullscreenFrame(_listSettingsView);
-            }
-        }
-
-        protected override void OnNavigationBackClick()
-        {
-            if (_isBackOverriden)
-            {
-                if (ViewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
-                {
-                    ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
-                }
-            }
-            else
-            {
-                base.OnNavigationBackClick();
-            }
-        }
-
-        protected override void UpdateViewTitle()
-        {
-            base.UpdateViewTitle();
-
-            if (_headerView != null)
-            {
-                _headerView.Title = ViewTitle;
             }
         }
 
@@ -186,11 +167,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
                 UpdateViewState(true);
-
-                if (ViewModel.Mode == OrgEventViewMode.List)
-                {
-                    _isBackOverriden = false;
-                }
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
@@ -199,11 +175,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
                 }
-
-                _isBackOverriden = 
-                    _isAnimating &&
-                    ViewModel.Mode == OrgEventViewMode.Map &&
-                    ViewModel.SelectedVenueOnMap != null;
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation) ||
                 propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
@@ -273,72 +244,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private void InitializeConstraints()
+        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                View.RemoveConstraint(TablePanelTopConstaint);
-
-                var views = new NSDictionary("topGuide", TopLayoutGuide, "view", TablePanel);
-                var constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
-                View.AddConstraints(constraint);
-
-                View.RemoveConstraint(MapPanelTopConstraint);
-
-                views = new NSDictionary("topGuide", TopLayoutGuide, "view", MapPanel);
-                constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
-                View.AddConstraints(constraint);
-            }
-        }
-
-        private void InitializeToolBar()
-        {
-            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape);
-            _modeButtonList.TouchUpInside += OnModeButtonClicked;
-
-            _modeButtonMap = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
-            _modeButtonMap.TouchUpInside += OnModeButtonClicked;
-
-            _modeButton = new UIBarButtonItem(_modeButtonMap);
-            var spacer = ButtonBarUtil.CreateSpacer();
-
-            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
-            _moreButton.TouchUpInside += OnMoreButtonClicked;
-
-            var moreBarButton = new UIBarButtonItem(_moreButton);
-            NavigationItem.SetRightBarButtonItems(new [] {spacer, moreBarButton, _modeButton}, true);
-        }
-
-        private void DisposeToolBar()
-        {
-            if (_modeButtonList != null)
-            {
-                _modeButtonList.TouchUpInside -= OnModeButtonClicked;
-            }
-
-            if (_modeButtonMap != null)
-            {
-                _modeButtonMap.TouchUpInside -= OnModeButtonClicked;
-            }
-
-            if (_moreButton != null)
-            {
-                _moreButton.TouchUpInside -= OnMoreButtonClicked;
-            }
-        }
-
-        private void OnModeButtonClicked(object sender, EventArgs e)
-        {
-            if (ViewModel.SwitchModeCommand.CanExecute(null))
-            {
-                ViewModel.SwitchModeCommand.Execute(null);
-            }
-        }
-
-        private void OnMoreButtonClicked(object sender, EventArgs e)
-        {
-            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
-
             if (ViewModel.CreateEventCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.SaveToCalendar);
@@ -363,20 +270,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 actionSheet.AddButton(Localization.ShareButton);
             }
-
-            actionSheet.AddButton(Localization.CancelButton);
-
-            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
-
-            actionSheet.ShowInView(View);
         }
 
-        private void OnActionClicked(object sender, UIButtonEventArgs e)
+        protected override void OnActionSheetClick(string buttonTitle)
         {
-            var actionSheet = ((UIActionSheet)sender);
-            actionSheet.Clicked -= OnActionClicked;
-
-            switch (actionSheet.ButtonTitle(e.ButtonIndex))
+            switch (buttonTitle)
             {
                 case Localization.SaveToCalendar:
                     if (ViewModel.CreateEventCommand.CanExecute(null))
@@ -415,10 +313,76 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        private void InitializeConstraints()
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                View.RemoveConstraint(TablePanelTopConstaint);
+
+                var views = new NSDictionary("topGuide", TopLayoutGuide, "view", TablePanel);
+                var constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
+                View.AddConstraints(constraint);
+
+                View.RemoveConstraint(MapPanelTopConstraint);
+
+                views = new NSDictionary("topGuide", TopLayoutGuide, "view", MapPanel);
+                constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
+                View.AddConstraints(constraint);
+            }
+        }
+
+        private void InitializeToolBar()
+        {
+            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape);
+            _modeButtonList.TouchUpInside += OnModeButtonClicked;
+
+            _modeButtonMap = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
+            _modeButtonMap.TouchUpInside += OnModeButtonClicked;
+
+            _modeButton = new UIBarButtonItem(_modeButtonMap);
+            var gap = ButtonBarUtil.CreateGapSpacer();
+
+            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
+            _moreButton.TouchUpInside += OnMoreButtonClicked;
+
+            var moreBarButton = new UIBarButtonItem(_moreButton);
+            NavigationItem.SetRightBarButtonItems(new [] {gap, moreBarButton, _modeButton}, true);
+        }
+
+        private void DisposeToolBar()
+        {
+            if (_modeButtonList != null)
+            {
+                _modeButtonList.TouchUpInside -= OnModeButtonClicked;
+            }
+
+            if (_modeButtonMap != null)
+            {
+                _modeButtonMap.TouchUpInside -= OnModeButtonClicked;
+            }
+
+            if (_moreButton != null)
+            {
+                _moreButton.TouchUpInside -= OnMoreButtonClicked;
+            }
+        }
+
+        private void OnModeButtonClicked(object sender, EventArgs e)
+        {
+            if (ViewModel.SwitchModeCommand.CanExecute(null))
+            {
+                ViewModel.SwitchModeCommand.Execute(null);
+            }
+        }
+
+        private void OnMoreButtonClicked(object sender, EventArgs e)
+        {
+            ShowActionSheet();
+        }
+
         private void InitializeTableHeader()
         {
             _headerView = OrgEventHeaderView.Create();
-            _headerView.Title = ViewTitle;
             _headerView.ShowOptionsCommand = ViewModel.ShowHideListOptionsCommand;
 
             VenuesAndShowsTableView.TableHeaderView = _headerView;

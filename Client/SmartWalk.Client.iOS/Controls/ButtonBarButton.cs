@@ -22,12 +22,14 @@ namespace SmartWalk.Client.iOS.Controls
 
         public ButtonBarButton(
             UIImage verticalIcon,
-            UIImage landscapeIcon) 
+            UIImage landscapeIcon,
+            bool isSemiTransparent = false) 
             : this(
                 verticalIcon,
                 landscapeIcon,
                 DefaultVerticalSize,
-                DefaultLandscapeSize) 
+                DefaultLandscapeSize,
+                isSemiTransparent) 
         {
         }
 
@@ -35,7 +37,8 @@ namespace SmartWalk.Client.iOS.Controls
             UIImage verticalIcon,
             UIImage landscapeIcon,
             SizeF? verticalSize,
-            SizeF? landscapeSize)
+            SizeF? landscapeSize,
+            bool isSemiTransparent = false)
                 : base(UIButtonType.Custom)
         {
             if (verticalIcon == null) throw new ArgumentNullException("verticalIcon");
@@ -44,6 +47,11 @@ namespace SmartWalk.Client.iOS.Controls
             _landscapeIcon = landscapeIcon;
             _verticalSize = verticalSize ?? DefaultVerticalSize;
             _landscapeSize = landscapeSize ?? DefaultLandscapeSize;
+
+            if (isSemiTransparent)
+            {
+                SetBackgroundImage(Theme.SemiTransImage, UIControlState.Normal);
+            }
 
             SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
 

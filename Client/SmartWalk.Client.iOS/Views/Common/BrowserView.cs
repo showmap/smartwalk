@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -11,7 +10,7 @@ using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class BrowserView : ActiveAwareViewController
+    public partial class BrowserView : CustomNavBarViewBase
     {
         private const string DocTitle = "document.title";
         private const string Http = "http://";
@@ -48,15 +47,9 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.ViewDidLoad();
 
-            ButtonBarUtil.OverrideNavigatorBackButton(
-                NavigationItem,
-                () => NavigationController.PopViewControllerAnimated(true));
-
             InitializeStyle();
             InitializeIndicator();
             UpdateViewTitle();
-
-            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
             WebView.LoadStarted += OnWebViewLoadStarted;
             WebView.LoadError += OnWebViewLoadFinished;
@@ -71,7 +64,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             base.ViewWillAppear(animated);
 
             UpdateFrames();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
         }
 
@@ -80,8 +72,54 @@ namespace SmartWalk.Client.iOS.Views.Common
             base.WillAnimateRotation(toInterfaceOrientation, duration);
 
             UpdateFrames();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
+        }
+
+        protected override void OnViewModelPropertyChanged(string propertyName)
+        {
+            base.OnViewModelPropertyChanged(propertyName);
+
+            if (propertyName == ViewModel.GetPropertyName(p => p.BrowserURL))
+            {
+                LoadURL();
+            }
+        }
+
+        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
+        {
+            using (var url = new NSUrl(BrowserURL))
+            {
+                if (UIApplication.SharedApplication.CanOpenUrl(url))
+                {
+                    actionSheet.AddButton(Localization.OpenInSafari);
+                }
+            }
+
+            // TODO: To support Chrome some day
+            //actionSheet.AddButton(Localization.OpenInChrome);
+
+            actionSheet.AddButton(Localization.CopyLink);
+        }
+
+        // TODO: Move to ViewModel's commands
+        protected override void OnActionSheetClick(string buttonTitle)
+        {
+            switch (buttonTitle)
+            {
+                case Localization.OpenInSafari:
+                    using (var url = new NSUrl(BrowserURL))
+                    {
+                        if (UIApplication.SharedApplication.CanOpenUrl(url))
+                        {
+                            UIApplication.SharedApplication.OpenUrl(url);
+                        }
+                    }
+                    break;
+
+                case Localization.CopyLink:
+                    UIPasteboard.General.String = BrowserURL;
+                    break;
+            }
         }
 
         private void InitializeIndicator()
@@ -92,14 +130,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             ProgressButton.CustomView = _indicatorView;
         }
 
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == ViewModel.GetPropertyName(p => p.BrowserURL))
-            {
-                LoadURL();
-            }
-        }
-
         private void LoadURL()
         {
             if (BrowserURL != null)
@@ -107,12 +137,6 @@ namespace SmartWalk.Client.iOS.Views.Common
                 var request = new NSUrlRequest(new NSUrl(BrowserURL));
                 WebView.LoadRequest(request);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            ConsoleUtil.LogDisposed(this);
         }
 
         private void OnWebViewLoadStarted(object sender, EventArgs e)
@@ -148,52 +172,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             WebView.Reload();
         }
 
-        private void OnActionButtonClick(object sender, EventArgs e)
-        {
-            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
-
-            using (var url = new NSUrl(BrowserURL))
-            {
-                if (UIApplication.SharedApplication.CanOpenUrl(url))
-                {
-                    actionSheet.AddButton(Localization.OpenInSafari);
-                }
-            }
-
-            // TODO: To support Chrome some day
-            //actionSheet.AddButton(Localization.OpenInChrome);
-
-            actionSheet.AddButton(Localization.CopyLink);
-            actionSheet.AddButton(Localization.CancelButton);
-
-            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
-
-            actionSheet.ShowInView(View);
-        }
-
-        private void OnActionClicked(object sender, UIButtonEventArgs e)
-        {
-            var actionSheet = ((UIActionSheet)sender);
-            actionSheet.Clicked -= OnActionClicked;
-
-            switch (actionSheet.ButtonTitle(e.ButtonIndex))
-            {
-                case Localization.OpenInSafari:
-                    using (var url = new NSUrl(BrowserURL))
-                    {
-                        if (UIApplication.SharedApplication.CanOpenUrl(url))
-                        {
-                            UIApplication.SharedApplication.OpenUrl(url);
-                        }
-                    }
-                    break;
-
-                case Localization.CopyLink:
-                    UIPasteboard.General.String = BrowserURL;
-                    break;
-            }
-        }
-
         private void UpdateNavButtonsState()
         {
             SetButtonEnabled(BackButton, WebView.CanGoBack);
@@ -217,6 +195,22 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                BottomToolbar.BarTintColor = Theme.NavBarBackgroundiOS7;
+            }
+            else
+            {
+                BottomToolbar.SetBackgroundImage(
+                    Theme.NavBarBackgroundImage,
+                    UIToolbarPosition.Any,
+                    UIBarMetrics.Default);
+                BottomToolbar.SetBackgroundImage(
+                    Theme.NavBarLandscapeBackgroundImage,
+                    UIToolbarPosition.Any,
+                    UIBarMetrics.LandscapePhone);
+            }
+
             LeftSpacer.Width = Theme.ToolBarPaddingCompensate;
 
             var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape);
@@ -236,6 +230,11 @@ namespace SmartWalk.Client.iOS.Views.Common
             ActionButton.CustomView = button;
 
             RightSpacer.Width = Theme.ToolBarPaddingCompensate;
+        }
+
+        private void OnActionButtonClick(object sender, EventArgs e)
+        {
+            ShowActionSheet();
         }
 
         // HACK: This is to keep bottom toolbar proper height on rotation

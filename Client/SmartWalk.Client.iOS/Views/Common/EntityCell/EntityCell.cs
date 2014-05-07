@@ -15,7 +15,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
     {
         private const int ImageVerticalHeight = 160;
         private const int MapVerticalHeight = 80;
-        private const int CellHorizontalHeight = 100;
+        private const int CellHorizontalHeight = 160;
         private const int Gap = 10;
 
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);

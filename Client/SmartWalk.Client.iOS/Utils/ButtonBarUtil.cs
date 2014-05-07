@@ -8,18 +8,19 @@ namespace SmartWalk.Client.iOS.Utils
 {
     public static class ButtonBarUtil
     {
-        public static UIBarButtonItem CreateSpacer()
+        public static UIBarButtonItem CreateGapSpacer(float width = 0f)
         {
             var spacer = new UIBarButtonItem(UIBarButtonSystemItem.FixedSpace);
-            spacer.Width = Theme.NavBarPaddingCompensate;
+            spacer.Width = (int)width == 0 ? Theme.NavBarPaddingCompensate : width;
             return spacer;
         }
 
         public static ButtonBarButton Create(
             UIImage verticalIcon,
-            UIImage landscapeIcon)
+            UIImage landscapeIcon,
+            bool isSemiTransparent = false)
         {
-            var button = new ButtonBarButton(verticalIcon, landscapeIcon);
+            var button = new ButtonBarButton(verticalIcon, landscapeIcon, isSemiTransparent);
             return button;
         }
 
@@ -27,13 +28,15 @@ namespace SmartWalk.Client.iOS.Utils
             UIImage verticalIcon,
             UIImage landscapeIcon,
             SizeF? verticalSize,
-            SizeF? landscapeSize)
+            SizeF? landscapeSize,
+            bool isSemiTransparent = false)
         {
             var button = new ButtonBarButton(
                 verticalIcon,
                 landscapeIcon,
                 verticalSize,
-                landscapeSize);
+                landscapeSize,
+                isSemiTransparent);
             return button;
         }
 
@@ -47,7 +50,7 @@ namespace SmartWalk.Client.iOS.Utils
             button.TouchUpInside += (sender, e) => backButtonClickHandler();
             var barButton = new UIBarButtonItem(button);
 
-            navItem.SetLeftBarButtonItems(new [] { CreateSpacer(), barButton }, true);
+            navItem.SetLeftBarButtonItems(new [] { CreateGapSpacer(), barButton }, true);
         }
 
         public static void UpdateButtonsFrameOnRotation(UIBarButtonItem[] items)
