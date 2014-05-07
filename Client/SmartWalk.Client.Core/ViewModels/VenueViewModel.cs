@@ -271,7 +271,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 try 
                 {
                     venues = await _apiService.GetOrgEventVenues(
-                        _parameters.OrgEventId,
+                        _parameters.EventId,
                         source);
                 }
                 catch (Exception ex)
@@ -323,7 +323,7 @@ namespace SmartWalk.Client.Core.ViewModels
         public class Parameters : ParametersBase
         {
             public int VenueId { get; set; }
-            public int OrgEventId { get; set; }
+            public int EventId { get; set; }
         }
     }
 }

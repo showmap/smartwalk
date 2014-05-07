@@ -31,8 +31,10 @@ namespace SmartWalk.Client.iOS
             InitializeVersion();
             InitializeSettings();
 
-#if APPSTORE
+#if ADHOC || APPSTORE
             InitializeGAI();
+#else
+            GoogleAnalyticsService.IsOptOut = true;
 #endif
 
             Theme.Apply();

@@ -105,7 +105,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 try 
                 {
                     orgEvent = await _apiService
-                        .GetOrgEventInfo(_parameters.OrgEventId, source);
+                        .GetOrgEventInfo(_parameters.EventId, source);
                 }
                 catch (Exception ex)
                 {
@@ -149,7 +149,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public class Parameters : ParametersBase
         {
-            public int OrgEventId { get; set; }
+            public int EventId { get; set; }
         }
     }
 }

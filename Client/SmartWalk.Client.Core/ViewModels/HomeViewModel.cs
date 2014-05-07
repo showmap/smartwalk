@@ -84,8 +84,8 @@ namespace SmartWalk.Client.Core.ViewModels
                     _navigateOrgEventViewCommand = new MvxCommand<OrgEvent>(
                         orgEvent => ShowViewModel<OrgEventViewModel>(
                             new OrgEventViewModel.Parameters { 
-                                OrgEventId = orgEvent.Id,
-                                IsCurrentEvent = true,
+                                EventId = orgEvent.Id,
+                                Current = true,
                                 Location = _parameters.Location
                             }));
                 }

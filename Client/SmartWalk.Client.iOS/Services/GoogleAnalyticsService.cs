@@ -72,7 +72,7 @@ namespace SmartWalk.Client.iOS.Services
                             builder.Append("&");
                         }
 
-                        var formattedValue = paramValue.ToString();
+                        var formattedValue = paramValue.ToString().ToLower();
 
                         if (paramValue is DateTime)
                         {

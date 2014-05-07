@@ -310,7 +310,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             }),
                         () => 
                             _parameters != null &&
-                            _parameters.IsCurrentEvent &&
+                            _parameters.Current &&
                             OrgEvent != null &&
                             OrgEvent.OrgId != 0);
                 }
@@ -328,7 +328,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     _navigateOrgEventInfoCommand = new MvxCommand(
                         () => ShowViewModel<OrgEventInfoViewModel>(
                             new OrgEventInfoViewModel.Parameters {
-                                OrgEventId = OrgEvent.Id,
+                                EventId = OrgEvent.Id,
                                 Location = _parameters.Location
                             }),
                         () => 
@@ -351,13 +351,13 @@ namespace SmartWalk.Client.Core.ViewModels
                         venue => ShowViewModel<VenueViewModel>(
                             new VenueViewModel.Parameters {
                                 VenueId = venue.Info.Id,
-                                OrgEventId = _parameters.OrgEventId,
+                                EventId = _parameters.EventId,
                                 Location = _parameters.Location
                             }),
                         venue => 
                             venue != null && 
                             _parameters != null &&
-                            _parameters.OrgEventId != 0);
+                            _parameters.EventId != 0);
                 }
 
                 return _navigateVenueCommand;
@@ -523,7 +523,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             try
                             {
                                 eventInfo = await _apiService.GetOrgEventInfo(
-                                    _parameters.OrgEventId, 
+                                    _parameters.EventId, 
                                     DataSource.Cache);
                             }
                             catch (Exception ex)
@@ -545,7 +545,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         },
                         () => 
                             _parameters != null &&
-                            _parameters.OrgEventId != 0);
+                            _parameters.EventId != 0);
                 }
 
                 return _createEventCommand;
@@ -617,12 +617,12 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCopyLink);
 
-                            var eventUrl = _configuration.GetEventUrl(_parameters.OrgEventId);
+                            var eventUrl = _configuration.GetEventUrl(_parameters.EventId);
                             _clipboard.Copy(eventUrl);
                         },
                         () => 
                             _parameters != null &&
-                            _parameters.OrgEventId != 0);
+                            _parameters.EventId != 0);
                 }
 
                 return _copyLinkCommand;
@@ -642,7 +642,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelShare);
 
-                            var eventUrl = _configuration.GetEventUrl(_parameters.OrgEventId);
+                            var eventUrl = _configuration.GetEventUrl(_parameters.EventId);
                             if (eventUrl != null && Share != null)
                             {
                                 Share(this, new MvxValueEventArgs<string>(eventUrl));
@@ -650,7 +650,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         },
                         () => 
                             _parameters != null &&
-                            _parameters.OrgEventId != 0);
+                            _parameters.EventId != 0);
                 }
 
                 return _shareCommand;
@@ -685,7 +685,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 try 
                 {
                     orgEvent = await _apiService.GetOrgEvent(
-                        _parameters.OrgEventId, 
+                        _parameters.EventId, 
                         source);
                 }
                 catch (Exception ex)
@@ -733,8 +733,8 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public class Parameters : ParametersBase
         {
-            public int OrgEventId { get; set; }
-            public bool IsCurrentEvent { get; set; }
+            public int EventId { get; set; }
+            public bool Current { get; set; }
         }
     }
 
