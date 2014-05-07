@@ -58,14 +58,20 @@ namespace SmartWalk.Client.iOS
         {
             base.DidEnterBackground(application);
 
-            EasyTracker.Current.OnApplicationDeactivated(application);
+            if (!GoogleAnalyticsService.IsOptOut)
+            {
+                EasyTracker.Current.OnApplicationDeactivated(application);
+            }
         }
 
         public override void WillEnterForeground(UIApplication application)
         {
             base.WillEnterForeground(application);
 
-            EasyTracker.Current.OnApplicationActivated(application);
+            if (!GoogleAnalyticsService.IsOptOut)
+            {
+                EasyTracker.Current.OnApplicationActivated(application);
+            }
         }
 
         private static void InitializeTestFlight()
