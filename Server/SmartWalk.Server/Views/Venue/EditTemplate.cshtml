@@ -15,11 +15,15 @@
      delete-addresses-url ="@Url.Action("DeleteAddresses", "Event", new {area = "SmartWalk.Server"})"
      get-contact-url ="@Url.Action("GetContact", "Event", new {area = "SmartWalk.Server"})"
      save-contact-url ="@Url.Action("SaveContact", "Event", new {area = "SmartWalk.Server"})"
-     delete-contacts-url ="@Url.Action("DeleteContacts", "Event", new {area = "SmartWalk.Server"})">
+     delete-contacts-url ="@Url.Action("DeleteContacts", "Event", new {area = "SmartWalk.Server"})"
+     validate-venue-url = "@Url.Action("ValidateModel", "Venue", new {area = "SmartWalk.Server"})"
+     validate-address-url = "@Url.Action("ValidateAddress", "Event", new {area = "SmartWalk.Server"})"
+     validate-contact-url = "@Url.Action("ValidateContact", "Event", new {area = "SmartWalk.Server"})"
+    >
     @Html.AntiForgeryTokenOrchard()
     <div id="venue-panel">
         <div class="row">
-            <div class="col-xs-8">
+            <div class="col-xs-8" data-bind="validationElement: Name">
                 <div class="form-group">
                     <label class="titleLabel" for="venueNameTextInput">@T("Venue Name"):</label>
                     <input id="venueNameTextInput" class="form-control" type="text" placeholder="@T("Type venue name...")" data-bind="value: Name" />
@@ -68,17 +72,21 @@
             entityCancelEvent: EntityViewModelExtended.VENUE_CANCEL_EVENT,
             entitySaveEvent: EntityViewModelExtended.VENUE_SAVE_EVENT,
 
+            validationUrl: form.attr("validate-venue-url"),
+
             entitySaveUrl: form.attr("save-venue-url"),
 
             addressGetUrl: form.attr("get-address-url"),
             addressSaveUrl: form.attr("save-address-url"),
             addressDeleteUrl: form.attr("delete-addresses-url"),
+            addressValidationUrl: form.attr("validate-address-url"),
             addressView: "ViewAddressTemplate",
             addressEditView: "EditAddressTemplate",
 
             contactGetUrl: form.attr("get-contact-url"),
             contactSaveUrl: form.attr("save-contact-url"),
             contactDeleteUrl: form.attr("delete-contacts-url"),
+            contactValidationUrl: form.attr("validate-contact-url"),
             contactView: "ViewContactTemplate",
             contactEditView: "EditContactTemplate",
             contactTypes: ["@T("E-mail")", "@T("Web")", "@T("Phone")"],

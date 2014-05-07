@@ -1,12 +1,26 @@
-﻿EntityViewModelExtended = function (settings, data) {
-    this.setupValidations = function () {
-        this.Name.extend({
-            required: { message: settings.nameRequiredValidationMessage },
-        });
+﻿EntityViewModelExtended = function (settings, data) {    
+    this.setupValidations = function (model) {
+        this.Name.extend({ asyncValidation: { validationUrl: settings.validationUrl, propName: 'Name', model: model.toJSON() } });
+        this.Picture.extend({ asyncValidation: { validationUrl: settings.validationUrl, propName: 'Picture', model: model.toJSON() } });
+        
+        this.isValidating = ko.computed(function () {
+            return this.Name.isValidating() || this.Picture.isValidating();
+        }, this);
     };
 
-    EntityViewModelExtended.superClass_.constructor.call(this, data, settings);
+    this.PrepareCollectionData = function(collection, extData) {
+        if (collection && collection.length > 0) {
+            for (var i = 0; i < collection.length; i++) {
+                collection[i] = $.extend(collection[i], extData);
+            }
+        }
+    };
     
+    this.PrepareCollectionData(data.AllContacts, { validationUrl: settings.contactValidationUrl });
+    this.PrepareCollectionData(data.AllAddresses, { validationUrl: settings.addressValidationUrl });
+
+    EntityViewModelExtended.superClass_.constructor.call(this, data, settings);
+
     this.generalValidationMessage = settings.generalValidationMessage;
 
     this.entityFormName = settings.entityFormName;
@@ -19,12 +33,14 @@
     this.addressGetUrl = settings.addressGetUrl;
     this.addressSaveUrl = settings.addressSaveUrl;
     this.addressDeleteUrl = settings.addressDeleteUrl;
+    this.addressValidationUrl = settings.addressValidationUrl;
     this.addressView = settings.addressView;
     this.addressEditView = settings.addressEditView;
 
     this.contactGetUrl = settings.contactGetUrl;
     this.contactSaveUrl = settings.contactSaveUrl;
     this.contactDeleteUrl = settings.contactDeleteUrl;
+    this.contactValidationUrl = settings.contactValidationUrl;
     this.contactView = settings.contactView;
     this.contactEditView = settings.contactEditView;
     this.contactTypes = settings.contactTypes;
@@ -65,18 +81,29 @@ EntityViewModelExtended.prototype.cancelContact = function (item, root) {
 };
 
 EntityViewModelExtended.prototype.saveContact = function (item, root) {
-    root.selectedItem(null);
-    
-    if (root.Id() != 0) {
-        var ajdata = ko.toJSON(item);
-
-        ajaxJsonRequest(ajdata, root.contactSaveUrl,
-            function(data) {
-                if (item.Id() == 0 || item.Id() != data)
-                    item.Id(data);
-            }
-        );
+    if (item.isValidating()) {
+        setTimeout(function () {
+            root.saveContact(item, root);
+        }, 50);
+        return false;
     }
+
+    if (item.errors().length == 0) {
+        root.selectedItem(null);
+
+        if (root.Id() != 0) {
+            var ajdata = ko.toJSON(item);
+
+            ajaxJsonRequest(ajdata, root.contactSaveUrl,
+                function (data) {
+                    if (item.Id() == 0 || item.Id() != data)
+                        item.Id(data);
+                }
+            );
+        }
+    } else {
+        item.errors.showAllMessages();
+    }    
 };
 
 EntityViewModelExtended.prototype.deleteContacts = function (root) {
@@ -116,17 +143,28 @@ EntityViewModelExtended.prototype.cancelAddress = function (item, root) {
 };        
 
 EntityViewModelExtended.prototype.saveAddress = function (item, root) {
-    root.selectedItem(null);
+    if (item.isValidating()) {
+        setTimeout(function () {
+            root.saveContact(item, root);
+        }, 50);
+        return false;
+    }
 
-    if (root.Id() != 0) {
-        var ajdata = ko.toJSON(item);
+    if (item.errors().length == 0) {
+        root.selectedItem(null);
 
-        ajaxJsonRequest(ajdata, root.addressSaveUrl,
-            function(data) {
-                if (item.Id() == 0 || item.Id() != data)
-                    item.Id(data);
-            }
-        );
+        if (root.Id() != 0) {
+            var ajdata = ko.toJSON(item);
+
+            ajaxJsonRequest(ajdata, root.addressSaveUrl,
+                function(data) {
+                    if (item.Id() == 0 || item.Id() != data)
+                        item.Id(data);
+                }
+            );
+        }
+    } else {
+        item.errors.showAllMessages();
     }
 };
 
@@ -164,6 +202,13 @@ EntityViewModelExtended.prototype.cancel = function () {
 };
 
 EntityViewModelExtended.prototype.saveOrAdd = function (root) {
+    if (root.isValidating()) {
+        setTimeout(function () {
+            root.saveOrAdd(root);
+        }, 50);
+        return false;
+    }
+
     if (root.errors().length == 0) {
         var ajdata = ko.toJSON(root);
         var self = this;

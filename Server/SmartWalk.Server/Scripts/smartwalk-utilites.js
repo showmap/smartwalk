@@ -47,17 +47,15 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
         dataType: "json",
         cache: false,
         contentType: "application/json; charset=utf-8",
-        error: function (e) {
-            if (onError)
-                onError.call(z, e);
-        },
-        success: function (data) {
-            if (onSuccess)
-                onSuccess.call(z, data);
-        }
     };
 
-    $.ajax(config);
+    $.ajax(config)
+        .done(function(response, statusText, xhr) {
+            onSuccess.call(z, response, statusText, xhr);
+        })
+        .fail(function (response, statusText, xhr) {
+            onError.call(z, response, statusText, xhr);
+        });
 };
 
 //ListViewModel class
@@ -155,3 +153,28 @@ ViewModelBase.prototype.SetAllItemsChecked_ = function(itemsCollection, value) {
         }
     }
 };
+
+ko.validation.rules['asyncValidation'] = {
+    async: true,
+    validator: function (val, otherVal, callback) {
+        otherVal.model[otherVal.propName] = val;
+        var ajdata = ko.toJSON({ propName: otherVal.propName, model: otherVal.model });
+
+        ajaxJsonRequest(ajdata, otherVal.validationUrl,
+            function (response, statusText, xhr) {
+                callback(true);
+            },
+            function (response, statusText, xhr) {
+                callback({ isValid: false, message: $.parseJSON(response.responseText).Message });
+            }
+        );
+    }
+};
+
+ko.validation.registerExtenders();
+
+ko.validation.init({
+    errorElementClass: 'has-error',
+    errorMessageClass: 'help-block',
+    decorateElement: true
+});

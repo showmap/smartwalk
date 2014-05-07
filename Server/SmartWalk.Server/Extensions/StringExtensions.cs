@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace SmartWalk.Server.Extensions
@@ -18,6 +19,13 @@ namespace SmartWalk.Server.Extensions
             letters[0] = char.ToUpper(letters[0]);
             // return the array made of the new char array
             return new string(letters);
+        }
+
+        public static bool IsUrlValid(this string source)
+        {
+            const string pattern = @"^(http|https|ftp|)\://|[a-zA-Z0-9\-\.]+\.[a-zA-Z](:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$";
+            var reg = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return reg.IsMatch(source);
         }
     }
 }

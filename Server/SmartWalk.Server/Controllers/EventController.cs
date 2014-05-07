@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Themes;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
@@ -19,11 +20,16 @@ namespace SmartWalk.Server.Controllers
         private readonly IEventService _eventService;
         private readonly IEntityService _entityService;
 
+        public Localizer T { get; set; }
+
+
         public EventController(IEventService eventService, IEntityService entityService, IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
 
             _eventService = eventService;
             _entityService = entityService;
+
+            T = NullLocalizer.Instance;
         }
 
         public ActionResult List(ListViewParametersVm parameters, string sort)
@@ -76,6 +82,43 @@ namespace SmartWalk.Server.Controllers
         }
 
         #region Addresses
+        private IDictionary<string, string> ValidateAddress(AddressVm model)
+        {
+            var res = new Dictionary<string, string>();
+
+            #region Address
+            if (string.IsNullOrEmpty(model.Address))
+                res.Add("Address", T("Address can not be empty!").Text);
+            else if (model.Address.Length > 255)
+                res.Add("Address", T("Address can not be larger than 255 characters!").Text);
+            #endregion
+
+            #region Tip
+            if (!string.IsNullOrEmpty(model.Tip))
+            {
+                if (model.Tip.Length > 255)
+                    res.Add("Tip", T("Address tip can not be larger than 255 characters!").Text);
+            }
+            #endregion
+
+            return res;
+        }
+
+
+        [HttpPost]
+        public ActionResult ValidateAddress(string propName, AddressVm model)
+        {
+            var errors = ValidateAddress(model);
+
+            if (errors.ContainsKey(propName))
+            {
+                HttpContext.Response.StatusCode = 400;
+                return Json(new { Message = errors[propName] });
+            }
+
+            return Json(true);
+        }
+        
         [HttpPost]
         public ActionResult GetAddress(AddressVm item)
         {
@@ -128,6 +171,42 @@ namespace SmartWalk.Server.Controllers
         #endregion
 
         #region Contacts
+        private IDictionary<string, string> ValidateContact(ContactVm model)
+        {
+            var res = new Dictionary<string, string>();
+
+            #region Contact
+            if (string.IsNullOrEmpty(model.Contact))
+                res.Add("Contact", T("Contact can not be empty!").Text);
+            else if (model.Contact.Length > 255)
+                res.Add("Contact", T("Contact can not be larger than 255 characters!").Text);
+            #endregion
+
+            #region Title
+            if (!string.IsNullOrEmpty(model.Title))
+            {
+                if (model.Title.Length > 255)
+                    res.Add("Tip", T("Contact title can not be larger than 255 characters!").Text);
+            }
+            #endregion
+
+            return res;
+        }
+
+        [HttpPost]
+        public ActionResult ValidateContact(string propName, ContactVm model)
+        {
+            var errors = ValidateContact(model);
+
+            if (errors.ContainsKey(propName))
+            {
+                HttpContext.Response.StatusCode = 400;
+                return Json(new { Message = errors[propName] });
+            }
+
+            return Json(true);
+        }
+
         [HttpPost]
         public ActionResult GetContact(ContactVm item)
         {

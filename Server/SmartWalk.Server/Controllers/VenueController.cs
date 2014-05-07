@@ -1,7 +1,10 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Themes;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Records;
@@ -9,6 +12,7 @@ using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
+using SmartWalk.Server.Extensions;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -20,12 +24,16 @@ namespace SmartWalk.Server.Controllers
         private readonly IEntityService _entityService;
         private readonly IEventService _eventService;
 
+        public Localizer T { get; set; }
+
         public VenueController(IOrchardServices orchardServices, IEntityService entityService, IEventService eventService)
         {
             _orchardServices = orchardServices;
 
             _entityService = entityService;
             _eventService = eventService;
+
+            T = NullLocalizer.Instance;
         }
 
         public ActionResult List(ListViewParametersVm parameters) {
@@ -74,6 +82,40 @@ namespace SmartWalk.Server.Controllers
             _entityService.DeleteEntity(entityId);
 
             return RedirectToAction("List");
+        }
+
+        private IDictionary<string, string> ValidateModel(EntityVm model) {
+            var res = new Dictionary<string, string>();
+
+            #region Name
+            if (string.IsNullOrEmpty(model.Name))
+                res.Add("Name", T("Venue name can not be empty!").Text);
+            else if(model.Name.Length > 255)
+                res.Add("Name", T("Venue name can not be larger than 255 characters!").Text);
+            #endregion
+
+            #region Picture
+            if (!string.IsNullOrEmpty(model.Picture)) {
+                if(model.Picture.Length > 255)
+                    res.Add("Picture", T("Picture url can not be larger than 255 characters!").Text);
+                else if (!model.Picture.IsUrlValid())
+                    res.Add("Picture", T("Picture url is in bad format!").Text);
+            }
+            #endregion
+
+            return res;
+        }
+
+        [HttpPost]
+        public ActionResult ValidateModel(string propName, EntityVm model) {
+            var errors = ValidateModel(model);
+
+            if (errors.ContainsKey(propName)) {
+                HttpContext.Response.StatusCode = 400;
+                return Json(new {Message = errors[propName]});
+            }
+
+            return Json(true);
         }
 
         [HttpPost]

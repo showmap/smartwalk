@@ -93,10 +93,26 @@
 
     this.IsChecked = this.AllShowsChecked;
   
-    if (this.setupValidations)
-        this.setupValidations();
-    
+    this.toJSON = ko.computed(function () {
+        return {
+            Id: this.Id(),
+            State: this.State(),
+            Type: this.Type(),
+            Name: this.Name(),
+            Picture: this.Picture(),
+            EventMetadataId: this.EventMetadataId(),
+            Description: this.Description(),
+
+            AllContacts: this.AllContacts(),
+            AllAddresses: this.AllAddresses(),
+            AllShows: this.AllShows(),
+        };
+    }, this);
+
     this.loadData(data);
+
+    if (this.setupValidations)
+        this.setupValidations(this);    
 };
 
 inherits(EntityViewModelBase, ViewModelBase);
@@ -107,7 +123,9 @@ EntityViewModelBase.prototype.DisplayAddress = ko.computed(function() {
     return this.AllAddresses()[0];
 });
 
-EntityViewModelBase.prototype.loadCollections_ = function(data) {
+EntityViewModelBase.prototype.loadCollections_ = function (data) {
+    var self = this;
+    
     if (data.AllContacts)
         this.AllContacts($.map(data.AllContacts, function(item) { return new ContactViewModel(item); }));
     if (data.AllAddresses)
@@ -125,27 +143,11 @@ EntityViewModelBase.prototype.loadData = function (data) {
     this.EventMetadataId(data.EventMetadataId);
     this.Description(data.Description);
 
-    this.loadCollections_(data);   
+    this.loadCollections_(data);
 };
 
 EntityViewModel = function (data) {
-    EntityViewModel.superClass_.constructor.call(this, data);
-    
-    this.toJSON = ko.computed(function () {
-        return {
-            Id: this.Id(),
-            State: this.State(),
-            Type: this.Type(),
-            Name: this.Name(),
-            Picture: this.Picture(),
-            EventMetadataId: this.EventMetadataId(),
-            Description: this.Description(),
-
-            AllContacts: this.AllContacts(),
-            AllAddresses: this.AllAddresses(),
-            AllShows: this.AllShows(),
-        };
-    }, this);
+    EntityViewModel.superClass_.constructor.call(this, data);        
 };
 
 inherits(EntityViewModel, EntityViewModelBase);
@@ -153,8 +155,9 @@ inherits(EntityViewModel, EntityViewModelBase);
 
 //Contacts
 EntityViewModel.prototype.addContact = function () {
-    this.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: this.Id(), Type: 1, State: 1 }));
+    this.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: this.Id(), Type: 1, State: 1, validationUrl: this.contactValidationUrl }));
     this.selectedItem(this.AllContacts()[this.AllContacts().length - 1]);
+    //this.selectedItem().errors.showAllMessages();
 };
 
 EntityViewModel.prototype.deleteContact = function(item) {
@@ -163,8 +166,9 @@ EntityViewModel.prototype.deleteContact = function(item) {
 
 //Addresses
 EntityViewModel.prototype.addAddress = function() {
-    this.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: this.Id(), State: 1, Address: "" }));
+    this.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: this.Id(), State: 1, Address: "", validationUrl: this.addressValidationUrl }));
     this.selectedItem(this.AllAddresses()[this.AllAddresses().length - 1]);
+    //this.selectedItem().errors.showAllMessages();
 };
 
 EntityViewModel.prototype.deleteAddress = function(item) {

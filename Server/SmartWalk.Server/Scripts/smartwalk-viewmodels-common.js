@@ -12,7 +12,7 @@
 
     self.DisplayContact = ko.computed(function () {
         return (self.Title() ? self.Title() : "") + (self.Contact() ? ' [' + self.Contact() + ']' : "");
-    }, self);
+    }, self);    
 
     self.loadData = function (data) {
         self.Id(data.Id);
@@ -26,6 +26,17 @@
     };
 
     self.loadData(data);
+    
+    if (data.validationUrl) {
+        self.Contact.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Contact', model: $.parseJSON(ko.toJSON(self)) } });
+        self.Title.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Title', model: $.parseJSON(ko.toJSON(self)) } });
+
+        self.isValidating = ko.computed(function () {
+            return self.Contact.isValidating() || self.Title.isValidating();
+        }, self);
+    };
+
+    self.errors = ko.validation.group(self);
 }
 
 function AddressViewModel(data) {
@@ -46,7 +57,7 @@ function AddressViewModel(data) {
             return "";
         var res = self.Address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
         return "https://www.google.com/maps/embed/v1/place?q=" + res + "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
-    };
+    };    
 
     self.loadData = function (data) {
         self.Id(data.Id);
@@ -61,6 +72,17 @@ function AddressViewModel(data) {
     };
 
     self.loadData(data);
+    
+    if (data.validationUrl) {
+        self.Address.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Address', model: $.parseJSON(ko.toJSON(self)) } });
+        self.Tip.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Tip', model: $.parseJSON(ko.toJSON(self)) } });
+
+        self.isValidating = ko.computed(function () {
+            return self.Address.isValidating() || self.Tip.isValidating();
+        }, self);
+    };
+    
+    self.errors = ko.validation.group(self);
 }
 
 function ShowViewModel(data) {
