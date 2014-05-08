@@ -14,8 +14,6 @@ EventViewModelExtended = function (settings, data) {
 
     EventViewModelExtended.superClass_.constructor.call(this, data);
 
-    this.generalValidationMessage = settings.generalValidationMessage;
-
     this.hostFormName = settings.hostFormName;
     this.venueFormName = settings.venueFormName;
     
@@ -117,7 +115,6 @@ EventViewModelExtended.prototype.saveEvent = function (root) {
             }
         );
     } else {
-        alert(root.generalValidationMessage);
         root.errors.showAllMessages();
     }    
 };

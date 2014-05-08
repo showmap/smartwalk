@@ -1,7 +1,9 @@
 ﻿EntityViewModelExtended = function (settings, data) {    
     this.setupValidations = function (model) {
         this.Name.extend({ asyncValidation: { validationUrl: settings.validationUrl, propName: 'Name', model: model.toJSON() } });
-        this.Picture.extend({ asyncValidation: { validationUrl: settings.validationUrl, propName: 'Picture', model: model.toJSON() } });
+        this.Picture
+            .extend({ maxLength: { params: 255, message: settings.pictureLengthValidationMessage } })
+            .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.picturePatternValidationMessage } });
         
         this.isValidating = ko.computed(function () {
             return this.Name.isValidating() || this.Picture.isValidating();
@@ -16,34 +18,12 @@
         }
     };
     
-    this.PrepareCollectionData(data.AllContacts, { validationUrl: settings.contactValidationUrl });
-    this.PrepareCollectionData(data.AllAddresses, { validationUrl: settings.addressValidationUrl });
+    this.PrepareCollectionData(data.AllContacts, { messages: settings.addressMessages });
+    this.PrepareCollectionData(data.AllAddresses, { messages: settings.contactMessages });
 
     EntityViewModelExtended.superClass_.constructor.call(this, data, settings);
 
-    this.generalValidationMessage = settings.generalValidationMessage;
-
-    this.entityFormName = settings.entityFormName;
-    
-    this.entityCancelEvent = settings.entityCancelEvent;
-    this.entitySaveEvent = settings.entitySaveEvent;
-    
-    this.entitySaveUrl = settings.entitySaveUrl;
-
-    this.addressGetUrl = settings.addressGetUrl;
-    this.addressSaveUrl = settings.addressSaveUrl;
-    this.addressDeleteUrl = settings.addressDeleteUrl;
-    this.addressValidationUrl = settings.addressValidationUrl;
-    this.addressView = settings.addressView;
-    this.addressEditView = settings.addressEditView;
-
-    this.contactGetUrl = settings.contactGetUrl;
-    this.contactSaveUrl = settings.contactSaveUrl;
-    this.contactDeleteUrl = settings.contactDeleteUrl;
-    this.contactValidationUrl = settings.contactValidationUrl;
-    this.contactView = settings.contactView;
-    this.contactEditView = settings.contactEditView;
-    this.contactTypes = settings.contactTypes;
+    this.settings = settings;    
     
     this.errors = ko.validation.group(this);
 };
@@ -56,12 +36,24 @@ EntityViewModelExtended.HOST_SAVE_EVENT = "OnHostSaved";
 
 inherits(EntityViewModelExtended, EntityViewModel);
 
+
+//Contacts
+EntityViewModelExtended.prototype.addContact = function () {
+    this.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: this.Id(), Type: 1, State: 1, messages: this.settings.contactMessages }));
+    this.selectedItem(this.AllContacts()[this.AllContacts().length - 1]);
+    //this.selectedItem().errors.showAllMessages();
+};
+
+EntityViewModelExtended.prototype.deleteContact = function (item) {
+    this.DeleteItem_(item);
+};
+
 EntityViewModelExtended.prototype.getContactView = function (item, bindingContext) {
-    return item === bindingContext.$root.selectedItem() ? bindingContext.$root.contactEditView : bindingContext.$root.contactView;
+    return item === bindingContext.$root.selectedItem() ? bindingContext.$root.settings.contactEditView : bindingContext.$root.settings.contactView;
 };
         
 EntityViewModelExtended.prototype.GetContactType = function (item) {
-    return this.contactTypes[item.Type()];
+    return this.settings.contactTypes[item.Type()];
 };
 
 EntityViewModelExtended.prototype.cancelContact = function (item, root) {
@@ -72,7 +64,7 @@ EntityViewModelExtended.prototype.cancelContact = function (item, root) {
     } else {
         var ajdata = ko.toJSON(item);
 
-        ajaxJsonRequest(ajdata, root.contactGetUrl,
+        ajaxJsonRequest(ajdata, root.settings.contactGetUrl,
             function (data) {
                 item.loadData(data);
             }
@@ -81,12 +73,12 @@ EntityViewModelExtended.prototype.cancelContact = function (item, root) {
 };
 
 EntityViewModelExtended.prototype.saveContact = function (item, root) {
-    if (item.isValidating()) {
-        setTimeout(function () {
-            root.saveContact(item, root);
-        }, 50);
-        return false;
-    }
+    //if (item.isValidating()) {
+    //    setTimeout(function () {
+    //        root.saveContact(item, root);
+    //    }, 50);
+    //    return false;
+    //}
 
     if (item.errors().length == 0) {
         root.selectedItem(null);
@@ -94,7 +86,7 @@ EntityViewModelExtended.prototype.saveContact = function (item, root) {
         if (root.Id() != 0) {
             var ajdata = ko.toJSON(item);
 
-            ajaxJsonRequest(ajdata, root.contactSaveUrl,
+            ajaxJsonRequest(ajdata, root.settings.contactSaveUrl,
                 function (data) {
                     if (item.Id() == 0 || item.Id() != data)
                         item.Id(data);
@@ -112,7 +104,7 @@ EntityViewModelExtended.prototype.deleteContacts = function (root) {
     if (root.Id() != 0) {
         var ajdata = ko.toJSON(root.CheckedContacts);
 
-        ajaxJsonRequest(ajdata, root.contactDeleteUrl,
+        ajaxJsonRequest(ajdata, root.settings.contactDeleteUrl,
             function (data) {
                 while (root.CheckedContacts().length > 0){
                     root.AllContacts.remove(root.CheckedContacts()[0]);
@@ -122,8 +114,19 @@ EntityViewModelExtended.prototype.deleteContacts = function (root) {
     }
 };
 
+//Addresses
+EntityViewModelExtended.prototype.addAddress = function () {
+    this.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: this.Id(), State: 1, Address: "", messages: this.settings.addressMessages }));
+    this.selectedItem(this.AllAddresses()[this.AllAddresses().length - 1]);
+    //this.selectedItem().errors.showAllMessages();
+};
+
+EntityViewModelExtended.prototype.deleteAddress = function (item) {
+    this.DeleteItem_(item);
+};
+
 EntityViewModelExtended.prototype.getAddressView = function (item, bindingContext) {
-    return item === bindingContext.$root.selectedItem() ? bindingContext.$root.addressEditView : bindingContext.$root.addressView;
+    return item === bindingContext.$root.selectedItem() ? bindingContext.$root.settings.addressEditView : bindingContext.$root.settings.addressView;
 };
 
 EntityViewModelExtended.prototype.cancelAddress = function (item, root) {
@@ -134,7 +137,7 @@ EntityViewModelExtended.prototype.cancelAddress = function (item, root) {
     } else {
         var ajdata = ko.toJSON(item);
 
-        ajaxJsonRequest(ajdata, root.addressGetUrl,
+        ajaxJsonRequest(ajdata, root.settings.addressGetUrl,
             function(data) {
                 item.loadData(data);
             }
@@ -143,12 +146,12 @@ EntityViewModelExtended.prototype.cancelAddress = function (item, root) {
 };        
 
 EntityViewModelExtended.prototype.saveAddress = function (item, root) {
-    if (item.isValidating()) {
-        setTimeout(function () {
-            root.saveContact(item, root);
-        }, 50);
-        return false;
-    }
+    //if (item.isValidating()) {
+    //    setTimeout(function () {
+    //        root.saveContact(item, root);
+    //    }, 50);
+    //    return false;
+    //}
 
     if (item.errors().length == 0) {
         root.selectedItem(null);
@@ -156,7 +159,7 @@ EntityViewModelExtended.prototype.saveAddress = function (item, root) {
         if (root.Id() != 0) {
             var ajdata = ko.toJSON(item);
 
-            ajaxJsonRequest(ajdata, root.addressSaveUrl,
+            ajaxJsonRequest(ajdata, root.settings.addressSaveUrl,
                 function(data) {
                     if (item.Id() == 0 || item.Id() != data)
                         item.Id(data);
@@ -174,7 +177,7 @@ EntityViewModelExtended.prototype.deleteAddresses = function (root) {
     if (root.Id() != 0) {
         var ajdata = ko.toJSON(root.CheckedAddresses);
 
-        ajaxJsonRequest(ajdata, root.addressDeleteUrl,
+        ajaxJsonRequest(ajdata, root.settings.addressDeleteUrl,
             function (data) {
                 while (root.CheckedAddresses().length > 0){
                     root.AllAddresses.remove(root.CheckedAddresses()[0]);
@@ -183,6 +186,19 @@ EntityViewModelExtended.prototype.deleteAddresses = function (root) {
         );
     }
 };        
+
+// Shows    
+EntityViewModel.prototype.addShow = function () {
+    var newShow = new ShowViewModel({ Id: 0, EventMetadataId: this.EventMetadataId(), VenueId: this.Id(), State: 1, StartDate: '', EndDate: '' });
+    //this.AllShows.splice(0, 0, newShow);
+    this.AllShows.push(newShow);
+    return newShow;
+};
+
+EntityViewModel.prototype.removeShow = function (item) {
+    this.DeleteItem_(item);
+};
+
 
 EntityViewModelExtended.prototype.GetMapLink = function () {
     var res = "";
@@ -196,8 +212,8 @@ EntityViewModelExtended.prototype.GetMapLink = function () {
 };
 
 EntityViewModelExtended.prototype.cancel = function () {
-    $(this.entityFormName).trigger({
-        type: this.entityCancelEvent
+    $(this.settings.entityFormName).trigger({
+        type: this.settings.entityCancelEvent
     });
 };
 
@@ -213,18 +229,17 @@ EntityViewModelExtended.prototype.saveOrAdd = function (root) {
         var ajdata = ko.toJSON(root);
         var self = this;
 
-        ajaxJsonRequest(ajdata, this.entitySaveUrl,
+        ajaxJsonRequest(ajdata, this.settings.entitySaveUrl,
             function (data) {
                 if (self.Id() == 0)
                     self.loadData(data);
-                $(self.entityFormName).trigger({
-                    type: self.entitySaveEvent,
+                $(self.settings.entityFormName).trigger({
+                    type: self.settings.entitySaveEvent,
                     item: self
                 });
             }
         );
     } else {
-        alert(root.generalValidationMessage);
         root.errors.showAllMessages();
     }
 };

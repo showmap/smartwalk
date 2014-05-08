@@ -172,6 +172,11 @@ namespace SmartWalk.Server.Services.EntityService
 
         #region Entities
 
+        public bool IsNameExists(string name) {
+            return _entityRepository.Table.Any(e => e.Name == name);
+        }
+
+
         public AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId) {
             if (user == null)
                 return AccessType.Deny;

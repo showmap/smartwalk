@@ -36,6 +36,18 @@
         }, self);
     };
 
+    if (data.messages) {
+        self.Type.extend({ dependencies: [self.Contact] });
+
+        self.Contact
+            .extend({ required: { params: true, message: data.messages.contactRequiredValidationMessage } })
+            .extend({ maxLength: { params: 255, message: data.messages.contactLengthValidationMessage } })
+            .extend({ contactValidation: { allowEmpty: true, contactType: self.Type, messages: data.messages } });
+        
+        self.Title
+            .extend({ maxLength: { params: 255, message: data.messages.contactTitleValidationMessage } });
+    };
+
     self.errors = ko.validation.group(self);
 }
 
@@ -82,6 +94,15 @@ function AddressViewModel(data) {
         }, self);
     };
     
+    if (data.messages) {
+        self.Address
+            .extend({ required: { params: true, message: data.messages.addressRequiredValidationMessage } })
+            .extend({ maxLength: { params: 255, message: data.messages.addressLengthValidationMessage } });
+
+        self.Tip
+            .extend({ maxLength: { params: 255, message: data.messages.addressTipValidationMessage } });
+    };
+
     self.errors = ko.validation.group(self);
 }
 

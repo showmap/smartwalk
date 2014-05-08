@@ -67,8 +67,8 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="addressTextInput">@T("Type"):</label>                            
-                            <select class="form-control" data-bind="value: Type, foreach: $root.contactTypes">
-                                <option data-bind="text: $data, value: $root.contactTypes.indexOf($data)"></option>                                
+                            <select class="form-control" data-bind="value: Type, foreach: $root.settings.contactTypes">
+                                <option data-bind="text: $data, value: $root.settings.contactTypes.indexOf($data)"></option>                                
                             </select>
                         </div>
                     </div>

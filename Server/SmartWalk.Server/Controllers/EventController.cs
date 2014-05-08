@@ -186,7 +186,7 @@ namespace SmartWalk.Server.Controllers
             if (!string.IsNullOrEmpty(model.Title))
             {
                 if (model.Title.Length > 255)
-                    res.Add("Tip", T("Contact title can not be larger than 255 characters!").Text);
+                    res.Add("Title", T("Contact title can not be larger than 255 characters!").Text);
             }
             #endregion
 

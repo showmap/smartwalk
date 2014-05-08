@@ -151,38 +151,3 @@ EntityViewModel = function (data) {
 };
 
 inherits(EntityViewModel, EntityViewModelBase);
-
-
-//Contacts
-EntityViewModel.prototype.addContact = function () {
-    this.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: this.Id(), Type: 1, State: 1, validationUrl: this.contactValidationUrl }));
-    this.selectedItem(this.AllContacts()[this.AllContacts().length - 1]);
-    //this.selectedItem().errors.showAllMessages();
-};
-
-EntityViewModel.prototype.deleteContact = function(item) {
-    this.DeleteItem_(item);
-};
-
-//Addresses
-EntityViewModel.prototype.addAddress = function() {
-    this.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: this.Id(), State: 1, Address: "", validationUrl: this.addressValidationUrl }));
-    this.selectedItem(this.AllAddresses()[this.AllAddresses().length - 1]);
-    //this.selectedItem().errors.showAllMessages();
-};
-
-EntityViewModel.prototype.deleteAddress = function(item) {
-    this.DeleteItem_(item);
-};
-
-// Shows    
-EntityViewModel.prototype.addShow = function () {
-    var newShow = new ShowViewModel({ Id: 0, EventMetadataId: this.EventMetadataId(), VenueId: this.Id(), State: 1, StartDate: '', EndDate: '' });
-    //this.AllShows.splice(0, 0, newShow);
-    this.AllShows.push(newShow);
-    return newShow;
-};
-
-EntityViewModel.prototype.removeShow = function(item) {
-    this.DeleteItem_(item);
-};
