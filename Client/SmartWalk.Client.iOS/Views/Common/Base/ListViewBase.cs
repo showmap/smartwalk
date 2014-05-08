@@ -117,7 +117,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         protected virtual void OnViewModelRefreshed()
         {
             ListView.View.SetContentOffset(PointF.Empty, true);
-            ((IUIScrollViewDelegate)_listViewSource).Scrolled(ListView.View);
         }
 
         protected virtual void OnLoadingViewStateUpdate()

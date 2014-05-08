@@ -1,4 +1,5 @@
 using System;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -8,11 +9,10 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
-using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
-    public class VenueTableSource : CustomNavBarTableViewSource, IListViewSource
+    public class VenueTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly VenueViewModel _viewModel;
 

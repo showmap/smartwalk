@@ -223,6 +223,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnViewModelRefreshed()
         {
+            base.OnViewModelRefreshed();
+
             _isMapViewInitialized = false;
 
             if (ViewModel.Mode == OrgEventViewMode.Map)

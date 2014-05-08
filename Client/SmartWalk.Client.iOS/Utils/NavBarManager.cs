@@ -7,6 +7,8 @@ namespace SmartWalk.Client.iOS.Utils
 {
     public sealed class NavBarManager
     {
+        private float _statusBarHeight = 20;
+
         public static NavBarManager Instance { get; private set; }
 
         internal static void Initialize(UIWindow window)
@@ -19,6 +21,12 @@ namespace SmartWalk.Client.iOS.Utils
 
         private NavBarManager(UIWindow window)
         {
+            // just in case, you know
+            if (!UIApplication.SharedApplication.StatusBarFrame.IsEmpty)
+            {
+                _statusBarHeight = UIApplication.SharedApplication.StatusBarFrame.Height;
+            }
+
             Window = window;
 
             InitializeBars();
@@ -75,10 +83,9 @@ namespace SmartWalk.Client.iOS.Utils
 
         private void UpdateFrames()
         {
-            var statusBarFrame = UIApplication.SharedApplication.StatusBarFrame;
             NavBar.Frame = ScreenUtil.IsVerticalOrientation
-                ? new RectangleF(0, statusBarFrame.Height, Window.Bounds.Width, 44)
-                : new RectangleF(0, statusBarFrame.Width, Window.Bounds.Height, 33);
+                ? new RectangleF(0, _statusBarHeight, Window.Bounds.Width, 44)
+                : new RectangleF(0, _statusBarHeight, Window.Bounds.Height, 33);
         }
     }
 }

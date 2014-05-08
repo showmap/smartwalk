@@ -357,7 +357,6 @@
     <Compile Include="Controls\TransparentToolBar.cs" />
     <Compile Include="Utils\NavBarManager.cs" />
     <Compile Include="Views\Common\Base\CustomNavBarViewBase.cs" />
-    <Compile Include="Views\Common\Base\CustomNavBarTableViewSource.cs" />
     <Compile Include="Views\Common\Base\ViewBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

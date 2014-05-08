@@ -1,4 +1,5 @@
 using System;
+using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
@@ -7,11 +8,10 @@ using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
-using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {
-    public class OrgTableSource : CustomNavBarTableViewSource, IListViewSource
+    public class OrgTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly OrgViewModel _viewModel;
 

@@ -103,7 +103,7 @@ namespace SmartWalk.Client.iOS.Resources
         {
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
-                NavBarPaddingCompensate = -10;
+                NavBarPaddingCompensate = -9;
 
                 UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
 

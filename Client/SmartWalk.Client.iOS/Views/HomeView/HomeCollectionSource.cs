@@ -1,4 +1,3 @@
-using System.Drawing;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -13,13 +12,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             : base(collectionView)
         {
             collectionView.RegisterNibForCell(OrgCell.Nib, OrgCell.Key);
-        }
-
-        public override void Scrolled(UIScrollView scrollView)
-        {
-            UIApplication.SharedApplication.SetStatusBarHidden(
-                scrollView.ContentOffset != PointF.Empty, 
-                UIStatusBarAnimation.Slide);
         }
 
         protected override UICollectionViewCell GetOrCreateCellFor(

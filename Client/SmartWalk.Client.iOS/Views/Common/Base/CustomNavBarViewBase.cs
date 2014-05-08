@@ -46,7 +46,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                     .SetStatusBarStyle(UIStatusBarStyle.LightContent, true);
             }
 
-            NavBarManager.Instance.SetNavBarVisibility(true, false, true, animated);
+            NavBarManager.Instance.SetNavBarVisibility(false, false, true, animated);
             NavBarManager.Instance.NavBar.SetItems(_navBarItems, animated);
         }
 

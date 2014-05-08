@@ -4,6 +4,7 @@ using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using System.Drawing;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
@@ -18,13 +19,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         public new HomeViewModel ViewModel
         {
             get { return (HomeViewModel)base.ViewModel; }
-        }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            NavBarManager.Instance.SetNavBarVisibility(false, false, false, animated);
         }
 
         protected override ListViewDecorator GetListView()
