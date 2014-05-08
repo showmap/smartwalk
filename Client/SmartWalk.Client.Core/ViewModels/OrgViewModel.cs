@@ -25,6 +25,7 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
+            IReachabilityService reachabilityService,
             IMvxPhoneCallTask phoneCallTask,
             IMvxComposeEmailTask composeEmailTask,
             IShowDirectionsTask showDirectionsTask,
@@ -32,6 +33,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 base(configuration,
                     clipboard,
                     analyticsService,
+                    reachabilityService,
                     phoneCallTask, 
                     composeEmailTask, 
                     showDirectionsTask)
@@ -102,9 +104,9 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateOrg(DataSource.Cache).ContinueWithThrow();
         }
 
-        protected override void Refresh()
+        protected override void Refresh(DataSource source)
         {
-            UpdateOrg(DataSource.Server).ContinueWithThrow();
+            UpdateOrg(source).ContinueWithThrow();
         }
 
         private async Task UpdateOrg(DataSource source)

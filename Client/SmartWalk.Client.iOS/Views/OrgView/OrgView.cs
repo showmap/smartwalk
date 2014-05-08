@@ -56,6 +56,8 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
+            base.OnViewModelPropertyChanged(propertyName);
+
             if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 OrgEventsTableView.BeginUpdates();

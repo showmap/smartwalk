@@ -34,17 +34,36 @@ namespace SmartWalk.Client.Core.ViewModels.Common
 
                     if (_isActive)
                     {
-                        var viewName = GetType().Name.ToLowerInvariant()
-                            .Replace(ViewModelPostfix, string.Empty);
-
-                        _analyticsService.SendView(
-                            viewName,
-                            InitParameters != null ? InitParameters.ToDictionary() : null);
+                        OnActivate();
+                        SendStats();
+                    }
+                    else
+                    {
+                        OnDeactivate();
                     }
                 }
             }
         }
 
         protected abstract ParametersBase InitParameters { get; }
+
+        protected virtual void OnActivate()
+        {
+        }
+
+        protected virtual void OnDeactivate()
+        {
+        }
+
+        private void SendStats()
+        {
+            var viewName = GetType().Name
+                .ToLowerInvariant()
+                .Replace(ViewModelPostfix, string.Empty);
+
+            _analyticsService.SendView(
+                viewName,
+                InitParameters != null ? InitParameters.ToDictionary() : null);
+        }
     }
 }

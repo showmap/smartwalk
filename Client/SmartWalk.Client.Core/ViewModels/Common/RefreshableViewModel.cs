@@ -1,20 +1,27 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.Core.ViewModels.Common
 {
     public abstract class RefreshableViewModel : ProgressViewModel, IRefreshableViewModel
     {
-        private ICommand _refreshCommand;
-
+        private readonly IReachabilityService _reachabilityService;
         private readonly IAnalyticsService _analyticsService;
 
-        protected RefreshableViewModel(IAnalyticsService analyticsService) : base(analyticsService)
+        private ICommand _refreshCommand;
+
+        protected RefreshableViewModel(
+            IReachabilityService reachabilityService,
+            IAnalyticsService analyticsService) 
+            : base(analyticsService)
         {
+            _reachabilityService = reachabilityService;
             _analyticsService = analyticsService;
         }
 
@@ -27,7 +34,7 @@ namespace SmartWalk.Client.Core.ViewModels.Common
                 if (_refreshCommand == null)
                 {
                     _refreshCommand = new MvxCommand(() => { 
-                        Refresh();
+                        Refresh(DataSource.Server);
 
                         _analyticsService.SendEvent(
                             Analytics.CategoryUI,
@@ -42,13 +49,41 @@ namespace SmartWalk.Client.Core.ViewModels.Common
 
         public abstract string Title { get; }
 
-        protected abstract void Refresh();
+        protected abstract void Refresh(DataSource source);
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+
+            _reachabilityService.StateChanged += OnReachableStateChanged;
+        }
+
+        protected override void OnDeactivate()
+        {
+            base.OnDeactivate();
+
+            _reachabilityService.StateChanged -= OnReachableStateChanged;
+        }
 
         protected void RaiseRefreshCompleted()
         {
             if (RefreshCompleted != null)
             {
                 RefreshCompleted(this, EventArgs.Empty);
+            }
+        }
+
+        private void OnReachableStateChanged(object sender, EventArgs e)
+        {
+            RefreshIfReachable().ContinueWithThrow();
+        }
+
+        private async Task RefreshIfReachable()
+        {
+            var isReachable = await _reachabilityService.GetIsReachable();
+            if (isReachable)
+            {
+                Refresh(DataSource.Cache);
             }
         }
     }

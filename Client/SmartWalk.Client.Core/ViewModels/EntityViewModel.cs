@@ -48,10 +48,11 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             IClipboard clipboard,
             IAnalyticsService analyticsService,
+            IReachabilityService reachabilityService,
             IMvxPhoneCallTask phoneCallTask,
             IMvxComposeEmailTask composeEmailTask,
-            IShowDirectionsTask showDirectionsTask) : 
-            base(analyticsService)
+            IShowDirectionsTask showDirectionsTask) 
+            : base(reachabilityService, analyticsService)
         {
             _configuration = configuration;
             _clipboard = clipboard;

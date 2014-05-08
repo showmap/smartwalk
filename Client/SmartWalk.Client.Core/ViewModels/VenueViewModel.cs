@@ -33,6 +33,7 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             ISmartWalkApiService apiService, 
             IAnalyticsService analyticsService,
+            IReachabilityService reachabilityService,
             IMvxPhoneCallTask phoneCallTask,
             IMvxComposeEmailTask composeEmailTask,
             IShowDirectionsTask showDirectionsTask,
@@ -41,6 +42,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     configuration,
                     clipboard,
                     analyticsService, 
+                    reachabilityService,
                     phoneCallTask, 
                     composeEmailTask, 
                     showDirectionsTask)
@@ -244,14 +246,12 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEventVenues(DataSource.Cache)
-                .ContinueWithThrow();
+            UpdateOrgEventVenues(DataSource.Cache).ContinueWithThrow();
         }
 
-        protected override void Refresh()
+        protected override void Refresh(DataSource source)
         {
-            UpdateOrgEventVenues(DataSource.Server)
-                .ContinueWithThrow();
+            UpdateOrgEventVenues(source).ContinueWithThrow();
         }
 
         protected override void OnShowNextEntity()

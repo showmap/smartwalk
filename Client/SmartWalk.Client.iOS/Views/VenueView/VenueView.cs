@@ -46,6 +46,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
+            base.OnViewModelPropertyChanged(propertyName);
+
             if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
                 VenueShowsTableView.BeginUpdates();

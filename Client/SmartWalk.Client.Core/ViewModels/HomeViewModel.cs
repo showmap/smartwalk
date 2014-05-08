@@ -24,7 +24,9 @@ namespace SmartWalk.Client.Core.ViewModels
             ISmartWalkApiService apiService,
             IExceptionPolicy exceptionPolicy,
             IAnalyticsService analyticsService,
-            ILocationService locationService) : base(analyticsService)
+            IReachabilityService reachabilityService,
+            ILocationService locationService) 
+            : base(reachabilityService, analyticsService)
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
@@ -32,7 +34,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
             _parameters = new Parameters();
 
-            _locationService.LocationChanged += (s, e) => UpdateEventInfos();
+            _locationService.LocationChanged += (s, e) => Refresh(DataSource.Server);
             _locationService.LocationStringChanged += (s, e) => UpdateLocationString();
 
             UpdateLocationString();
@@ -101,17 +103,17 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override void Start()
         {
-            UpdateEventInfos().ContinueWithThrow();
+            UpdateEventInfos(DataSource.Cache).ContinueWithThrow();
 
             base.Start();
         }
 
-        protected override void Refresh()
+        protected override void Refresh(DataSource source = DataSource.Server)
         {
-            UpdateEventInfos().ContinueWithThrow();
+            UpdateEventInfos(source).ContinueWithThrow();
         }
 
-        private async Task UpdateEventInfos()
+        private async Task UpdateEventInfos(DataSource source)
         {
             IsLoading = true;
 
@@ -121,7 +123,7 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 eventInfos = await _apiService.GetOrgEvents(
                     _locationService.CurrentLocation,
-                    DataSource.Server); 
+                    source); 
             }
             catch (Exception ex)
             {

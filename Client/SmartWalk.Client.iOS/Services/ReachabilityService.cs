@@ -18,25 +18,33 @@ namespace SmartWalk.Client.iOS.Services
             _configuration = configuration;
         }
 
+        public event EventHandler StateChanged;
+
+        private bool IsReachable
+        {
+            get { return _isReachable; }
+            set 
+            {
+                if (_isReachable != value)
+                {
+                    _isReachable = value;
+
+                    if (StateChanged != null)
+                    {
+                        StateChanged(this, EventArgs.Empty);
+                    }
+                }
+            }
+        }
+
         public async Task<bool> GetIsReachable()
         {
             if (_reachability == null)
             {
-                Initialize();
-
-                await Task.Run(
-                    () =>
-                    {
-                        NetworkReachabilityFlags flags;
-
-                        if (_reachability.TryGetFlags(out flags))
-                        {
-                            OnNotification(flags);
-                        }
-                    });
+                await Initialize();
             }
 
-            return _isReachable;
+            return IsReachable;
         }
 
         public void Dispose()
@@ -49,16 +57,34 @@ namespace SmartWalk.Client.iOS.Services
             }
         }
 
-        private void Initialize()
+        private async Task Initialize()
         {
             _reachability = new NetworkReachability(_configuration.Host);
+
+            var reachability = _reachability;
+            var resultFlags = 
+                await Task.Run(
+                () =>
+                {
+                    NetworkReachabilityFlags flags;
+
+                    if (reachability.TryGetFlags(out flags))
+                    {
+                        return flags;
+                    }
+
+                    return (NetworkReachabilityFlags)0;
+                });
+
+            OnNotification(resultFlags);
+
             _reachability.SetNotification(OnNotification);
             _reachability.Schedule();
         }
 
         private void OnNotification(NetworkReachabilityFlags flags)
         {
-            _isReachable = Reachability.IsReachableWithoutRequiringConnection(flags);
+            IsReachable = Reachability.IsReachableWithoutRequiringConnection(flags);
         }
     }
 }

@@ -60,7 +60,9 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             IAnalyticsService analyticsService,
             ICalendarService calendarService,
-            IExceptionPolicy exceptionPolicy) : base(analyticsService)
+            IReachabilityService reachabilityService,
+            IExceptionPolicy exceptionPolicy) 
+            : base(reachabilityService, analyticsService)
         {
             _clipboard = clipboard;
             _apiService = apiService;
@@ -531,14 +533,17 @@ namespace SmartWalk.Client.Core.ViewModels
                                 _exceptionPolicy.Trace(ex);
                             }
                             
-                            try
+                            if (eventInfo != null)
                             {
-                                CurrentCalendarEvent = 
-                                    await _calendarService.CreateNewEvent(eventInfo);
-                            }
-                            catch (Exception ex)
-                            {
-                                _exceptionPolicy.Trace(ex);
+                                try
+                                {
+                                    CurrentCalendarEvent = 
+                                        await _calendarService.CreateNewEvent(eventInfo);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _exceptionPolicy.Trace(ex);
+                                }
                             }
 
                             IsLoading = false;
@@ -669,9 +674,9 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateOrgEvent(DataSource.Cache).ContinueWithThrow();
         }
 
-        protected override void Refresh()
+        protected override void Refresh(DataSource source)
         {
-            UpdateOrgEvent(DataSource.Server).ContinueWithThrow();
+            UpdateOrgEvent(source).ContinueWithThrow();
         }
 
         private async Task UpdateOrgEvent(DataSource source)

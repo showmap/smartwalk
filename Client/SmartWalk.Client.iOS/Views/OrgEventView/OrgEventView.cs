@@ -164,6 +164,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
+            base.OnViewModelPropertyChanged(propertyName);
+
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
                 UpdateViewState(true);
