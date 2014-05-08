@@ -14,18 +14,15 @@ namespace SmartWalk.Client.Core.Services
     {
         private const string KeyPrefix = "api";
 
-        private readonly IConfiguration _configuration;
         private readonly IHttpService _httpService;
         private readonly ICacheService _cacheService;
         private readonly IReachabilityService _reachabilityService;
 
         public SmartWalkApiService(
-            IConfiguration configuration,
             IHttpService httpService,
             ICacheService cacheService,
             IReachabilityService reachabilityService)
         {
-            _configuration = configuration;
             _httpService = httpService;
             _cacheService = cacheService;
             _reachabilityService = reachabilityService;
@@ -392,16 +389,16 @@ namespace SmartWalk.Client.Core.Services
             return result;
         }
 
-        private bool GetIsConnected()
+        private Task<bool> GetIsConnected()
         {
-            return _reachabilityService.IsHostReachable(_configuration.Host);
+            return _reachabilityService.GetIsReachable();
         }
 
         private async Task<Response> GetResponse(Request request, DataSource source)
         {
             var result = default(Response);
-            var isConnected = GetIsConnected();
             var key = GenerateKey(request);
+            var isConnected = await GetIsConnected();
 
             if (!isConnected || source == DataSource.Cache)
             {

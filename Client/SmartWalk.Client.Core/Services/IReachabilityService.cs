@@ -1,7 +1,9 @@
-﻿namespace SmartWalk.Client.Core.Services
+﻿using System.Threading.Tasks;
+
+namespace SmartWalk.Client.Core.Services
 {
     public interface IReachabilityService
     {
-        bool IsHostReachable(string host);
+        Task<bool> GetIsReachable();
     }
 }
