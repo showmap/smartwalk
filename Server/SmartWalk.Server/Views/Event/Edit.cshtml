@@ -43,7 +43,7 @@
     >
         @Html.AntiForgeryTokenOrchard()    
         <div class="row">
-			<div class="col-xs-8">
+			<div class="col-xs-8" data-bind="validationElement: Title">
 			    <div class="form-group">
 			        <label class="titleLabel" for="eventTitleTextInput">@T("Event Title"):</label>
 			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: Title" />
@@ -56,15 +56,14 @@
 
         <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.AllHosts)"></textarea>-->
 
-        
         <div class="row">
-			<div class="col-sm-4">
+			<div class="col-sm-4" data-bind="validationElement: StartTime">
 				<div class="form-group">
 					<label for="startDateInput">@T("Start Date"):</label>
 					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: StartTime, datepickerOptions: { showAnim: '' }">
 				</div>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-4" data-bind="validationElement: EndTime">
 				<div class="form-group">
 					<label for="endDateInput">@T("End Date"):</label>
 					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: EndTime, datepickerOptions: { showAnim: '' }">
@@ -82,13 +81,12 @@
             <div class="col-sm-8">
                 <div class="form-group">
                     <label for="organizedByComboBox">@T("Organized By"):</label>
-                    <div class="input-group">
+                    <div class="input-group" data-bind="validationElement: Host">
                         <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: Host, jqOptions: { autoFocus: true }, jqAutoSource: AllHosts, jqAutoValue: Host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: getAutoItem"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
                         </span>
                     </div>
-					
                 </div>
             </div>
             @*<div class="col-sm-4">
@@ -101,7 +99,7 @@
 		</div>		       
         
         <div class="row">
-			<div class="col-sm-8">
+			<div class="col-sm-8" data-bind="validationElement: Picture">
 				<div class="form-group">
 					<label for="pictureTextInput">@T("Picture"):</label>
 					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture"/>
@@ -183,7 +181,12 @@
             
             var settings = {
                 startTimeRequiredValidationMessage: '@T("Start time is required!")',
+                endTimeCompareValidationMessage: '@T("End time has to be greater or equal than start time!")',
                 hostRequiredValidationMessage: '@T("Organizer is required!")',
+                venueRequiredValidationMessage: '@T("Venue is required!")',
+
+                pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
+                picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
                     
                 hostFormName: hostFormName,
                 venueFormName: venueFormName,

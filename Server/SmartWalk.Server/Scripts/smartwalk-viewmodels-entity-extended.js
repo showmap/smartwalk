@@ -18,8 +18,8 @@
         }
     };
     
-    this.PrepareCollectionData(data.AllContacts, { messages: settings.addressMessages });
-    this.PrepareCollectionData(data.AllAddresses, { messages: settings.contactMessages });
+    this.PrepareCollectionData(data.AllContacts, { messages: settings.contactMessages });
+    this.PrepareCollectionData(data.AllAddresses, { messages: settings.addressMessages });
 
     EntityViewModelExtended.superClass_.constructor.call(this, data, settings);
 
@@ -41,7 +41,6 @@ inherits(EntityViewModelExtended, EntityViewModel);
 EntityViewModelExtended.prototype.addContact = function () {
     this.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: this.Id(), Type: 1, State: 1, messages: this.settings.contactMessages }));
     this.selectedItem(this.AllContacts()[this.AllContacts().length - 1]);
-    //this.selectedItem().errors.showAllMessages();
 };
 
 EntityViewModelExtended.prototype.deleteContact = function (item) {
@@ -118,7 +117,6 @@ EntityViewModelExtended.prototype.deleteContacts = function (root) {
 EntityViewModelExtended.prototype.addAddress = function () {
     this.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: this.Id(), State: 1, Address: "", messages: this.settings.addressMessages }));
     this.selectedItem(this.AllAddresses()[this.AllAddresses().length - 1]);
-    //this.selectedItem().errors.showAllMessages();
 };
 
 EntityViewModelExtended.prototype.deleteAddress = function (item) {

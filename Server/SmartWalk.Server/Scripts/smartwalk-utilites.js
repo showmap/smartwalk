@@ -194,6 +194,24 @@ ko.validation.rules['contactValidation'] = {
     }
 };
 
+ko.validation.rules['dateCompareValidation'] = {
+    validator: function (val, otherVal) {
+        if (otherVal.allowEmpty && !val)
+            return true;
+        
+        var dateFormat = $.datepicker.regional[''].dateFormat;
+        
+        var curDate = $.datepicker.parseDate(dateFormat, val);
+        var cmpDate = $.datepicker.parseDate(dateFormat, otherVal.compareVal()); 
+        
+        if (otherVal.cmp == 'GREATER_THAN') {
+            return curDate >= cmpDate;
+        }
+
+        return false;
+    }
+};
+
 
 ko.validation.rules['urlValidation'] = {
     validator: function (val, otherVal) {

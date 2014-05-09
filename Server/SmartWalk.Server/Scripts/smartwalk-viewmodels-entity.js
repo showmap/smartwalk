@@ -92,6 +92,13 @@
     }, this);
 
     this.IsChecked = this.AllShowsChecked;
+    
+    this.DisplayAddress = ko.computed(function () {
+        if (!this.AllAddresses || this.AllAddresses().length <= 0)
+            return '';
+        return this.AllAddresses()[0];
+    }, this);
+
   
     this.toJSON = ko.computed(function () {
         return {
@@ -116,12 +123,6 @@
 };
 
 inherits(EntityViewModelBase, ViewModelBase);
-
-EntityViewModelBase.prototype.DisplayAddress = ko.computed(function() {
-    if (!this.AllAddresses || this.AllAddresses().length <= 0)
-        return '';
-    return this.AllAddresses()[0];
-});
 
 EntityViewModelBase.prototype.loadCollections_ = function (data) {
     var self = this;

@@ -10,11 +10,8 @@ EventViewModelBase = function (data) {
     this.Picture = ko.observable();
     this.DisplayDate = ko.observable();
     this.Host = ko.observable();
-
-    if (this.setupValidations)
-        this.setupValidations();
-    
-    this.loadData(data);
+        
+    this.loadData(data);       
 };
 
 inherits(EventViewModelBase, ViewModelBase);
@@ -77,8 +74,8 @@ EventViewModel = function (data) {
         }
     }, this);    
 
-    this.loadDataEventViewModel(data);
-    
+    this.loadDataEventViewModel(data);       
+
     this.toJSON = ko.computed(function () {
         
         return {
@@ -102,6 +99,9 @@ EventViewModel = function (data) {
             }),
         };
     }, this);
+    
+    if (this.setupValidations)
+        this.setupValidations();
 };
 
 inherits(EventViewModel, EventViewModelBase);

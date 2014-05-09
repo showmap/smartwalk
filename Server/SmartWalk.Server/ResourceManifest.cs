@@ -62,7 +62,7 @@ namespace SmartWalk.Server
                 .SetDependencies("SmartWalk.ViewModels.Entity");
 
             manifest.DefineScript("SmartWalk.ViewModels.Event.Extended")
-                .SetUrl("smartwalk-viewmodels-event-extended.js?ver=1.4")
+                .SetUrl("smartwalk-viewmodels-event-extended.js?ver=1.5")
                 .SetDependencies("SmartWalk.ViewModels.Event");
 
             manifest.DefineStyle("TextCollapse")
