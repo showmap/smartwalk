@@ -26,17 +26,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         private OrgEventHeaderView _headerView;
         private UIBarButtonItem _modeButton;
+        private UIBarButtonItem _customModeButton;
         private UISearchDisplayController _searchDisplayController;
         private EKEventEditViewController _editCalEventController;
         private ListSettingsView _listSettingsView;
-        private UISwipeGestureRecognizer _swipeLeft;
         private bool _isMapViewInitialized;
-        private bool _isAnimating;
         private PointF _tableContentOffset;
         private Show _previousExpandedShow;
         private ButtonBarButton _modeButtonList;
         private ButtonBarButton _modeButtonMap;
         private ButtonBarButton _moreButton;
+        private NSLayoutConstraint[] _topLayoutGuideConstraint;
 
         private NSTimer _timer;
 
@@ -54,33 +54,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 EdgesForExtendedLayout = UIRectEdge.Top;
             }
 
-            InitializeConstraints();
             InitializeToolBar();
             InitializeGestures();
 
             UpdateViewState(false);
-        }
-
-        // set header before items source is passed to table
-        // for easier header auto-hiding
-        protected override void OnBeforeSetListViewSource()
-        {   
-            InitializeTableHeader();
-            InitializeSearchDisplayController();
-        }
-
-        public override void WillMoveToParentViewController(UIViewController parent)
-        {
-            base.WillMoveToParentViewController(parent);
-
-            if (parent == null)
-            {
-                DisposeToolBar();
-                DisposeGestures();
-                DisposeTableHeader();
-                DisposeSearchDisplayController();
-                DisposeMapView();
-            }
         }
 
         // TODO: Find another soltuion. It must be much simpler.
@@ -89,7 +66,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewWillAppear(animated);
 
-            NavBarManager.Instance.SetNavBarVisibility(true, true, false, animated);
+            UpdateNavBarState(animated);
 
             if (_tableContentOffset != PointF.Empty && _timer == null)
             {
@@ -99,7 +76,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         if (VenuesAndShowsTableView.TableHeaderView != null &&
                             VenuesAndShowsTableView.ContentSize.Height > 
-                                VenuesAndShowsTableView.TableHeaderView.Frame.Height)
+                            VenuesAndShowsTableView.TableHeaderView.Frame.Height)
                         {
                             VenuesAndShowsTableView.SetContentOffset(_tableContentOffset, false);
                             _tableContentOffset = PointF.Empty;
@@ -122,6 +99,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.ViewDidDisappear(animated);
 
             _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
+        }
+
+        public override void WillMoveToParentViewController(UIViewController parent)
+        {
+            base.WillMoveToParentViewController(parent);
+
+            if (parent == null)
+            {
+                DisposeToolBar();
+                DisposeGestures();
+                DisposeTableHeader();
+                DisposeSearchDisplayController();
+                DisposeMapView();
+            }
         }
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
@@ -172,7 +163,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
-                if ((!_isAnimating && ViewModel.Mode == OrgEventViewMode.Map) ||
+                if (ViewModel.Mode == OrgEventViewMode.Map || 
+                    ViewModel.Mode == OrgEventViewMode.Combo ||
                     ViewModel.SelectedVenueOnMap == null)
                 {
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
@@ -227,7 +219,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _isMapViewInitialized = false;
 
-            if (ViewModel.Mode == OrgEventViewMode.Map)
+            if (ViewModel.Mode == OrgEventViewMode.Map ||
+                ViewModel.Mode == OrgEventViewMode.Combo)
             {
                 InitializeMapView();
             }
@@ -237,6 +230,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 tableSource.ScrollOutHeader();
             }
+        }
+
+        // set header before items source is passed to table
+        // for easier header auto-hiding
+        protected override void OnBeforeSetListViewSource()
+        {   
+            InitializeTableHeader();
+            InitializeSearchDisplayController();
         }
 
         protected override void OnLoadedViewStateUpdate()
@@ -317,33 +318,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private void InitializeConstraints()
+        protected override void OnInitializeCustomNavBarItems(List<UIBarButtonItem> navBarItems)
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                View.RemoveConstraint(TablePanelTopConstaint);
+            base.OnInitializeCustomNavBarItems(navBarItems);
 
-                var views = new NSDictionary("topGuide", TopLayoutGuide, "view", TablePanel);
-                var constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
-                View.AddConstraints(constraint);
+            _customModeButton = new UIBarButtonItem();
 
-                View.RemoveConstraint(MapPanelTopConstraint);
-
-                views = new NSDictionary("topGuide", TopLayoutGuide, "view", MapPanel);
-                constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
-                View.AddConstraints(constraint);
-            }
+            navBarItems.Add(_customModeButton);
         }
 
         private void InitializeToolBar()
         {
-            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape);
+            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
             _modeButtonList.TouchUpInside += OnModeButtonClicked;
 
             _modeButtonMap = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
             _modeButtonMap.TouchUpInside += OnModeButtonClicked;
 
-            _modeButton = new UIBarButtonItem(_modeButtonMap);
+            _modeButton = new UIBarButtonItem();
             var gap = ButtonBarUtil.CreateGapSpacer();
 
             _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
@@ -432,26 +424,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeGestures()
         {
-            _swipeLeft = new UISwipeGestureRecognizer(rec => 
-                {
-                    if (ViewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.Map))
-                    {
-                        ViewModel.SwitchModeCommand.Execute(OrgEventViewMode.Map);
-                    }
-                });
-
-            _swipeLeft.Direction = UISwipeGestureRecognizerDirection.Left;
-            TablePanel.AddGestureRecognizer(_swipeLeft);
         }
 
         private void DisposeGestures()
         {
-            if (_swipeLeft != null)
-            {
-                TablePanel.RemoveGestureRecognizer(_swipeLeft);
-                _swipeLeft.Dispose();
-                _swipeLeft = null;
-            }
         }
 
         private void InitializeMapView()
@@ -651,74 +627,126 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
        
-        private void UpdateViewState(bool isAnimated)
+        private void UpdateViewState(bool animated)
         {
-            if (ViewModel.Mode == OrgEventViewMode.Map)
+            _modeButtonList.UpdateState();
+
+            switch (ViewModel.Mode)
             {
-                _modeButtonList.UpdateState();
-                _modeButton.CustomView = _modeButtonList;
+                case OrgEventViewMode.Combo:
+                    _modeButton.CustomView = new UIView();
+                    _customModeButton.CustomView = _modeButtonList;
 
-                var completeHandler = new NSAction(() => 
+                    TablePanel.Hidden = false;
+                    MapPanel.Hidden = false;
+
+                    InitializeMapView();
+
+                    if (ViewModel.SelectedVenueOnMap != null)
                     {
-                        _isAnimating = false;
+                        SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
+                    }
+                    break;
 
-                        TablePanel.Hidden = true;
-                        MapPanel.Hidden = false;
+                case OrgEventViewMode.Map:
+                    _modeButton.CustomView = new UIView();
+                    _customModeButton.CustomView = _modeButtonList;
 
-                        InitializeMapView();
+                    TablePanel.Hidden = true;
+                    MapPanel.Hidden = false;
 
-                        if (ViewModel.SelectedVenueOnMap != null)
-                        {
-                            SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
-                        }
-                    });
+                    InitializeMapView();
 
-                if (isAnimated)
+                    if (ViewModel.SelectedVenueOnMap != null)
+                    {
+                        SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
+                    }
+                    break;
+
+                case OrgEventViewMode.List:
+                    _customModeButton.CustomView = new UIView();
+                    _modeButton.CustomView = _modeButtonMap;
+
+                    TablePanel.Hidden = false;
+                    MapPanel.Hidden = true;
+                    break;
+            }
+
+            UpdateNavBarState(animated);
+            UpdateViewConstraints();
+        }
+
+        private void UpdateNavBarState(bool animated)
+        {
+            if (ViewModel.Mode == OrgEventViewMode.List)
+            {
+                NavBarManager.Instance.SetNavBarVisibility(true, true, false, animated);
+
+                if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                 {
-                    _isAnimating = true;
-
-                    UIView.Transition(
-                        TablePanel, 
-                        MapPanel, 
-                        0.8, 
-                        UIViewAnimationOptions.TransitionFlipFromRight | 
-                        UIViewAnimationOptions.ShowHideTransitionViews, 
-                        completeHandler);
-                }
-                else
-                {
-                    completeHandler();
+                    UIApplication.SharedApplication
+                        .SetStatusBarStyle(UIStatusBarStyle.LightContent, animated);
                 }
             }
             else
             {
-                _modeButtonMap.UpdateState();
-                _modeButton.CustomView = _modeButtonMap;
+                NavBarManager.Instance.SetNavBarVisibility(true, false, true, animated);
 
-                var completeHandler = new NSAction(() => 
+                if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                {
+                    UIApplication.SharedApplication
+                        .SetStatusBarStyle(UIStatusBarStyle.Default, animated);
+                }
+            }
+        }
+
+        public override void UpdateViewConstraints()
+        {
+            base.UpdateViewConstraints();
+
+            switch (ViewModel.Mode)
+            {
+                case OrgEventViewMode.Combo:
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
+                        !View.Constraints.Contains(TablePanelTopConstaint))
                     {
-                        _isAnimating = false;
+                        View.AddConstraint(TablePanelTopConstaint);
 
-                        TablePanel.Hidden = false;
-                        MapPanel.Hidden = true;
-                    });
+                        if (_topLayoutGuideConstraint != null)
+                        {
+                            View.RemoveConstraints(_topLayoutGuideConstraint);
+                        }
+                    }
 
-                if (isAnimated)
-                {
-                    _isAnimating = true;
+                    TablePanelTopConstaint.Constant = 200;
+                    break;
 
-                    UIView.Transition(
-                        MapPanel, 
-                        TablePanel, 
-                        0.8,
-                        UIViewAnimationOptions.TransitionFlipFromLeft | 
-                        UIViewAnimationOptions.ShowHideTransitionViews,
-                        completeHandler);
-                }
-                else
-                {
-                    completeHandler();
-                }
+                case OrgEventViewMode.Map:
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
+                        !View.Constraints.Contains(TablePanelTopConstaint))
+                    {
+                        View.AddConstraint(TablePanelTopConstaint);
+
+                        if (_topLayoutGuideConstraint != null)
+                        {
+                            View.RemoveConstraints(_topLayoutGuideConstraint);
+                        }
+                    }
+
+                    TablePanelTopConstaint.Constant = View.Frame.Height; // use a bottom constraint of map
+                    break;
+
+                case OrgEventViewMode.List:
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                    {
+                        View.RemoveConstraint(TablePanelTopConstaint);
+
+                        var views = new NSDictionary("topGuide", TopLayoutGuide, "view", TablePanel);
+                        _topLayoutGuideConstraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
+
+                        View.AddConstraints(_topLayoutGuideConstraint);
+                    }
+                    break;
             }
         }
 

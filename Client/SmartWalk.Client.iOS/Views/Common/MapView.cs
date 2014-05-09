@@ -29,17 +29,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             SelectAnnotation();
         }
 
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                UIApplication.SharedApplication
-                    .SetStatusBarStyle(UIStatusBarStyle.Default, animated);
-            }
-        }
-
         protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
         {
             if (ViewModel.ShowDirectionsCommand.CanExecute(null))

@@ -26,7 +26,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly ICalendarService _calendarService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
-        private OrgEventViewMode _mode = OrgEventViewMode.List;
+        private OrgEventViewMode _mode = OrgEventViewMode.Combo;
         private OrgEvent _orgEvent;
         private Show _expandedShow;
         private Venue _selectedVenueOnMap;
@@ -274,9 +274,12 @@ namespace SmartWalk.Client.Core.ViewModels
                             {
                                 switch (Mode)
                                 {
+                                    case OrgEventViewMode.Combo:
+                                        Mode = OrgEventViewMode.List;
+                                        break;
+
                                     case OrgEventViewMode.List:
-                                        Mode = OrgEventViewMode.Map;
-                                        SelectedVenueOnMap = null;
+                                        Mode = OrgEventViewMode.Combo;
                                         break;
 
                                     case OrgEventViewMode.Map:
@@ -290,7 +293,9 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Mode == OrgEventViewMode.List 
                                     ? Analytics.ActionLabelSwitchToList 
-                                    : Analytics.ActionLabelSwitchToMap);
+                                    : (Mode == OrgEventViewMode.Map
+                                        ? Analytics.ActionLabelSwitchToMap
+                                        : Analytics.ActionLabelSwitchToCombo));
                         });
                 }
 
@@ -380,7 +385,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionLabelNavigateVenueOnMap,
                                 venue.Info.Id);
 
-                            Mode = OrgEventViewMode.Map;
+                            Mode = OrgEventViewMode.Combo;
                             SelectedVenueOnMap = venue;
                         },
                         venue => venue != null);
@@ -745,6 +750,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
     public enum OrgEventViewMode
     {
+        Combo,
         List,
         Map
     }

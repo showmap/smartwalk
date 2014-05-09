@@ -16,9 +16,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UIView MapPanel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapPanelTopConstraint { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 
 		[Outlet]
@@ -43,19 +40,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				MapPanel = null;
 			}
 
-			if (MapPanelTopConstraint != null) {
-				MapPanelTopConstraint.Dispose ();
-				MapPanelTopConstraint = null;
+			if (ProgressViewContainer != null) {
+				ProgressViewContainer.Dispose ();
+				ProgressViewContainer = null;
 			}
 
 			if (ProgressViewTopConstraint != null) {
 				ProgressViewTopConstraint.Dispose ();
 				ProgressViewTopConstraint = null;
-			}
-
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
 			}
 
 			if (TablePanel != null) {

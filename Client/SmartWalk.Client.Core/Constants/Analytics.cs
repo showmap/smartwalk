@@ -20,6 +20,7 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionLabelHideContacts = "hide-contacts";
         public static readonly string ActionLabelExpandVenueShow = "expand-venueshow";
         public static readonly string ActionLabelCollapseVenueShow = "collapse-venueshow";
+        public static readonly string ActionLabelSwitchToCombo = "switch-to-combo";
         public static readonly string ActionLabelSwitchToList = "switch-to-list";
         public static readonly string ActionLabelSwitchToMap = "switch-to-map";
         public static readonly string ActionLabelNavigateVenueOnMap = "navigate-venue-on-map";

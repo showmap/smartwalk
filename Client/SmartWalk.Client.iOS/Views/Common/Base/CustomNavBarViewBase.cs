@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             View.BackgroundColor = Theme.BackgroundPatternColor;
 
-            InitializeNavBarItems();
+            InitializeCustomNavBarItems();
         }
 
         public override void ViewWillAppear(bool animated)
@@ -70,11 +70,15 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             if (parent == null)
             {
-                DisposeToolBar();
+                DisposeCustomNavBarItems();
             }
         }
 
-        private void InitializeNavBarItems()
+        protected virtual void OnInitializeCustomNavBarItems(List<UIBarButtonItem> navBarItems)
+        {
+        }
+
+        private void InitializeCustomNavBarItems()
         {
             // just in case replacing default iOS back button (it may not be visible)
             if (NavigationController.ViewControllers.Length > 1)
@@ -96,21 +100,24 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 navBarItems.AddRange(new [] { gap, backBarButton });
             }
 
+            var space = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
+            navBarItems.Add(space);
+
+            OnInitializeCustomNavBarItems(navBarItems);
+
             if (IsMoreButtonVisible)
             {
-                var space = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace);
-
                 _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape, true);
                 _moreButton.TouchUpInside += OnMoreButtonClicked;
                 var moreBarButton = new UIBarButtonItem(_moreButton);
 
-                navBarItems.AddRange(new [] { space, moreBarButton, gap });
+                navBarItems.AddRange(new [] { moreBarButton, gap });
             }
 
             _navBarItems = navBarItems.ToArray();
         }
 
-        private void DisposeToolBar()
+        private void DisposeCustomNavBarItems()
         {
             if (_backButton != null)
             {
