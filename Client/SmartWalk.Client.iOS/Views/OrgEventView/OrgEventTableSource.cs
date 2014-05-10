@@ -99,6 +99,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return NSIndexPath.FromItemSection(0, 0);
         }
 
+        public NSIndexPath GetItemIndex(Venue venue)
+        {
+            return NSIndexPath.FromItemSection(0, Array.IndexOf(CurrentItemsSource, venue));
+        }
+
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             TableView.DeselectRow(indexPath, false);
@@ -159,7 +164,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 headerView.DataContext = CurrentItemsSource[section];
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
-                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateAndZoomVenueOnMapCommand;
+                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
 
                 return headerView;
             }

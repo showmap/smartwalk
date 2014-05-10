@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Utils
         }
 
         public UIWindow Window { get; private set; }
-        public UIToolbar NavBar { get; private set; }
+        public TransparentToolBar NavBar { get; private set; }
 
         private UINavigationController NavController 
         {
@@ -79,7 +79,6 @@ namespace SmartWalk.Client.iOS.Utils
             NavBar = new TransparentToolBar();
             NavBar.Translucent = true;
             NavBar.BackgroundColor = UIColor.Clear;
-
 
             UpdateFrames();
         }

@@ -50,6 +50,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.ViewDidLoad();
 
             ViewModel.ZoomSelectedVenue += OnZoomSelectedVenue;
+            ViewModel.ScrollSelectedVenue += OnScrollSelectedVenue;
 
             InitializeStyle();
             InitializeToolBar();
@@ -109,6 +110,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (parent == null)
             {
                 ViewModel.ZoomSelectedVenue -= OnZoomSelectedVenue;
+                ViewModel.ScrollSelectedVenue -= OnScrollSelectedVenue;
 
                 DisposeToolBar();
                 DisposeGestures();
@@ -616,7 +618,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         var mapDelegate = new MapDelegate
                             {
-                                SelectAnnotationCommand = ViewModel.NavigateVenueOnMapCommand,
+                                SelectAnnotationCommand = ViewModel.SelectVenueOnMapCommand,
                                 ShowDetailsCommand = ViewModel.NavigateVenueCommand
                             };
                         VenuesMapView.Delegate = mapDelegate;
@@ -704,6 +706,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 VenuesMapView.SetRegion(
                     MapUtil.CoordinateRegionForCoordinates(shiftedCoord), true);
+            }
+        }
+
+        private void OnScrollSelectedVenue(object sender, EventArgs e)
+        {
+            var tableSource = VenuesAndShowsTableView.WeakDelegate as OrgEventTableSource;
+            if (tableSource != null &&
+                ViewModel.SelectedVenueOnMap != null)
+            {
+                VenuesAndShowsTableView.SelectRow(
+                    tableSource.GetItemIndex(ViewModel.SelectedVenueOnMap), 
+                    true, 
+                    UITableViewScrollPosition.Top);
             }
         }
 
@@ -825,7 +840,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     _modeButton.CustomView = new UIView();
                     _customModeButton.CustomView = _modeButtonList;
 
-                    MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;;
+                    MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;
+                    MapFullscreenButton.UpdateState();
 
                     TablePanel.Hidden = false;
                     MapPanel.Hidden = false;
@@ -838,6 +854,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     _customModeButton.CustomView = _modeButtonList;
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.ExitFullscreen;
+                    MapFullscreenButton.UpdateState();
 
                     TablePanel.Hidden = true;
                     MapPanel.Hidden = false;

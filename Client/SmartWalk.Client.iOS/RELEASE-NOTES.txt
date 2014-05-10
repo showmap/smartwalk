@@ -1,4 +1,5 @@
-Polishing UI for iOS7
-Shadow removed
-Search bar was fixed
-Refactoring
+Biiig update
+The new way of navigation / toolbar
+The new Event view with split screen
+Tons of internal performance improvements
+Enjoy

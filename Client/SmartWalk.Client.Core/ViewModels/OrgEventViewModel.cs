@@ -43,8 +43,8 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand _navigateOrgCommand;
         private MvxCommand _navigateOrgEventInfoCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
+        private MvxCommand<Venue> _selectVenueOnMapCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
-        private MvxCommand<Venue> _navigateAndZoomVenueOnMapCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
         private MvxCommand<bool?> _showHideListOptionsCommand;
@@ -76,6 +76,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
         public event EventHandler ZoomSelectedVenue;
+        public event EventHandler ScrollSelectedVenue;
 
         public override string Title
         {
@@ -413,6 +414,36 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public ICommand SelectVenueOnMapCommand
+        {
+            get
+            {
+                if (_selectVenueOnMapCommand == null)
+                {
+                    _selectVenueOnMapCommand = new MvxCommand<Venue>(
+                        venue => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                venue != null
+                                    ? Analytics.ActionLabelSelectVenueOnMap
+                                    : Analytics.ActionLabelDeselectVenueOnMap,
+                                venue != null ? venue.Info.Id : 0);
+
+                            SelectedVenueOnMap = venue;
+
+                            if (ScrollSelectedVenue != null)
+                            {
+                                ScrollSelectedVenue(this, EventArgs.Empty);
+                            }
+                        });
+                }
+
+                return _selectVenueOnMapCommand;
+            }
+        }
+
         public ICommand NavigateVenueOnMapCommand
         {
             get
@@ -420,49 +451,27 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_navigateVenueOnMapCommand == null)
                 {
                     _navigateVenueOnMapCommand = new MvxCommand<Venue>(
-                        venue => 
+                        venue =>
                         {
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
-                                venue != null
-                                    ? Analytics.ActionLabelNavigateVenueOnMap
-                                    : Analytics.ActionLabelDeselectVenueOnMap,
-                                venue != null ? venue.Info.Id : 0);
+                                Analytics.ActionLabelNavigateVenueOnMap,
+                                venue.Info.Id);
 
-                            SelectedVenueOnMap = venue;
-                        });
-                }
-
-                return _navigateVenueOnMapCommand;
-            }
-        }
-
-        public ICommand NavigateAndZoomVenueOnMapCommand
-        {
-            get
-            {
-                if (_navigateAndZoomVenueOnMapCommand == null)
-                {
-                    _navigateAndZoomVenueOnMapCommand = new MvxCommand<Venue>(
-                        venue =>
-                        {
-                            if (venue != null)
-                            {
-                                Mode = OrgEventViewMode.Combo;
-                            }
+                            Mode = OrgEventViewMode.Combo;
                             
-                            NavigateVenueOnMapCommand.Execute(venue);
+                            SelectedVenueOnMap = venue;
 
                             if (ZoomSelectedVenue != null)
                             {
                                 ZoomSelectedVenue(this, EventArgs.Empty);
                             }
                         },
-                        NavigateVenueOnMapCommand.CanExecute);
+                        venue => venue != null);
                 }
 
-                return _navigateAndZoomVenueOnMapCommand;
+                return _navigateVenueOnMapCommand;
             }
         }
 
@@ -551,7 +560,8 @@ namespace SmartWalk.Client.Core.ViewModels
                                     : Analytics.ActionLabelHideListOptions);
 
                             IsListOptionsShown = isShown;
-                        });
+                        },
+                        on => !IsLoading);
                 }
 
                 return _showHideListOptionsCommand;
