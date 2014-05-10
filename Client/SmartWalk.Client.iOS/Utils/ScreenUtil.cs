@@ -1,3 +1,4 @@
+using System;
 using MonoTouch.UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
@@ -16,6 +17,12 @@ namespace SmartWalk.Client.iOS.Utils
         {
             return orientation == UIInterfaceOrientation.Portrait || 
                 orientation == UIInterfaceOrientation.PortraitUpsideDown;
+        }
+
+        public static float GetGoldenRatio(float frameHeight)
+        {
+            var result = (float)Math.Ceiling(2 * (frameHeight / 5));
+            return result;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     public partial class OrgEventHeaderView : UIView
     {
         public const int DefaultHeight = 44;
-        private const int OptionsButtonWith = 44;
+        public const int OptionsButtonWith = 44;
 
         public static readonly UINib Nib = UINib.FromName("OrgEventHeaderView", NSBundle.MainBundle);
 
@@ -44,18 +44,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        // HACK To support correct Frame after OrgEventSearchDelegate.DidEndSearch
-        public static RectangleF GetSearchBarFrame(UISearchBar searchBar)
-        {
-            var result =
-                    new RectangleF(
-                        new PointF(0, DefaultHeight),
-                        new SizeF(
-                            searchBar.Frame.Width - OptionsButtonWith, 
-                            DefaultHeight));
-            return result;
-        }
-
         public override void WillMoveToSuperview(UIView newsuper)
         {
             base.WillMoveToSuperview(newsuper);
@@ -63,6 +51,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (newsuper == null)
             {
                 ShowOptionsCommand = null;
+                SearchBar.Dispose();
             }
         }
 
@@ -71,6 +60,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.LayoutSubviews();
 
             InitializeStyles();
+
+            SearchBar.Frame = 
+                new RectangleF(
+                    PointF.Empty,
+                    new SizeF(
+                        Frame.Width - OptionsButtonWith, 
+                        DefaultHeight));
+
+            OptionsButton.Frame = 
+                new RectangleF(
+                    new PointF(
+                        SearchBar.Frame.Width,
+                        0),
+                    new SizeF(
+                        OptionsButtonWith,
+                        DefaultHeight));
         }
 
         protected override void Dispose(bool disposing)
@@ -91,7 +96,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
-                SearchBar.TranslatesAutoresizingMaskIntoConstraints = true;
+                SearchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+                SearchBar.TintColor = UIColor.Black;
             }
 
             OptionsButton.SetImage(ThemeIcons.ListOptions, UIControlState.Normal);

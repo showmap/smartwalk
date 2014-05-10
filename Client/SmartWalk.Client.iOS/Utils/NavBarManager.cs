@@ -77,6 +77,9 @@ namespace SmartWalk.Client.iOS.Utils
         private void InitializeBars()
         {
             NavBar = new TransparentToolBar();
+            NavBar.Translucent = true;
+            NavBar.BackgroundColor = UIColor.Clear;
+
 
             UpdateFrames();
         }

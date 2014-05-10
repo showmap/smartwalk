@@ -48,6 +48,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             NavBarManager.Instance.SetNavBarVisibility(false, false, true, animated);
             NavBarManager.Instance.NavBar.SetItems(_navBarItems, animated);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(_navBarItems);
         }
 
         public override void ViewWillDisappear(bool animated)
@@ -89,7 +90,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
 
             var navBarItems = new List<UIBarButtonItem>();
-            var gap = ButtonBarUtil.CreateGapSpacer();
+            var gap = 
+                UIDevice.CurrentDevice.CheckSystemVersion(7, 0)
+                    ? ButtonBarUtil.CreateGapSpacer()
+                    : ButtonBarUtil.CreateGapSpacer(Theme.CustomNavBarPaddingCompensate);
 
             if (IsBackButtonVisible)
             {

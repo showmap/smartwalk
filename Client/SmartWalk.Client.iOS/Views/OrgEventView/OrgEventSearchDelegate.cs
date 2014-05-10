@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -90,17 +89,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             else
             {
                 controller.SearchBar.TintColor = Theme.SearchControl;
-            }
-        }
-
-        // HACK: In iOS7 SearchBar is returned as a child of TableView (sick!) and not HeaderView
-        // so the Frame is reset to default because it's has height of HeaderView which is 88
-        public override void DidEndSearch(UISearchDisplayController controller)
-        {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                controller.SearchBar.Frame = 
-                    OrgEventHeaderView.GetSearchBarFrame(controller.SearchBar);
             }
         }
 

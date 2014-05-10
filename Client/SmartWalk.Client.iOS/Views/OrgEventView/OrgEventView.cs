@@ -126,6 +126,29 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateViewConstraints();
             ButtonBarUtil.UpdateButtonsFrameOnRotation(
                 new [] {_modeButtonList, _modeButtonMap, MapFullscreenButton});
+
+            // HACK: hiding jerking search bar on rotation
+            if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                if (_headerView != null)
+                {
+                    _headerView.SearchBarControl.Hidden = true;
+                }
+            }
+        }
+
+        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
+        {
+            base.DidRotate(fromInterfaceOrientation);
+
+            // HACK: showing jerking search bar on rotation
+            if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                if (_headerView != null)
+                {
+                    _headerView.SearchBarControl.Hidden = false;
+                }
+            }
         }
 
         public override void UpdateViewConstraints()
@@ -174,7 +197,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
 
                     UpdateConstraint(
-                        () => MapHeightConstraint.Constant = (float)Math.Ceiling(2 * (View.Frame.Height / 5)),
+                        () => MapHeightConstraint.Constant = ScreenUtil.GetGoldenRatio(View.Frame.Height),
                         animated);
                     break;
 
@@ -530,7 +553,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (_headerView != null)
             {
-                _headerView.SearchBarControl.Dispose();
                 _headerView.Dispose();
                 _headerView = null;
             }
@@ -831,6 +853,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     UIApplication.SharedApplication
                         .SetStatusBarStyle(UIStatusBarStyle.LightContent, animated);
                 }
+                else
+                {
+                    WantsFullScreenLayout = false;
+                    UIApplication.SharedApplication
+                        .SetStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated);
+                }
             }
             else
             {
@@ -840,6 +868,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     UIApplication.SharedApplication
                         .SetStatusBarStyle(UIStatusBarStyle.Default, animated);
+                }
+                else
+                {
+                    WantsFullScreenLayout = true;
+                    UIApplication.SharedApplication
+                        .SetStatusBarStyle(UIStatusBarStyle.BlackTranslucent, animated);
                 }
             }
         }

@@ -29,7 +29,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (entityCellContext != null)
             {
                 var height = EntityCell.CalculateCellHeight(
-                    tableView.Frame.Width,
+                    tableView.Frame,
                     entityCellContext.IsDescriptionExpanded,
                     entityCellContext.Entity);
                 return height;
