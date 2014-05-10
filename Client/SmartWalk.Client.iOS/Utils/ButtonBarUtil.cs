@@ -3,6 +3,7 @@ using System.Drawing;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Controls;
+using System.Linq;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -57,13 +58,21 @@ namespace SmartWalk.Client.iOS.Utils
         {
             if (items == null) return;
 
-            foreach (var item in items)
+            var buttons = items
+                .Select(i => i.CustomView as ButtonBarButton)
+                .Where(b => b != null)
+                .ToArray();
+
+            UpdateButtonsFrameOnRotation(buttons);
+        }
+
+        public static void UpdateButtonsFrameOnRotation(ButtonBarButton[] buttons)
+        {
+            if (buttons == null) return;
+
+            foreach (var button in buttons)
             {
-                var button = item.CustomView as ButtonBarButton;
-                if (button != null)
-                {
-                    button.UpdateState();
-                }
+                button.UpdateState();
             }
         }
     }

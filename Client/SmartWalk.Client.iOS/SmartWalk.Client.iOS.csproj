@@ -473,6 +473,10 @@
     <BundleResource Include="Resources\Images\ErrorImage.png" />
     <BundleResource Include="Resources\Images\Trans.png" />
     <BundleResource Include="Resources\Images\SemiTrans.png" />
+    <BundleResource Include="Resources\Icons\ExitFullscreen.png" />
+    <BundleResource Include="Resources\Icons\ExitFullscreen%402x.png" />
+    <BundleResource Include="Resources\Icons\Fullscreen.png" />
+    <BundleResource Include="Resources\Icons\Fullscreen%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

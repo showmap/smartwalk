@@ -13,7 +13,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class OrgEventView
 	{
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint FullscreenHeightConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint FullscreenWidthConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line MapBottomSeparator { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.ButtonBarButton MapFullscreenButton { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIView MapPanel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint MapToTableConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
@@ -22,22 +40,45 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView TablePanel { get; set; }
+		MonoTouch.UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TablePanelTopConstaint { get; set; }
+		MonoTouch.UIKit.UIView TablePanel { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
 
 		[Outlet]
 		MonoTouch.MapKit.MKMapView VenuesMapView { get; set; }
+
+		[Action ("OnMapFullscreenTouchUpInside:")]
+		partial void OnMapFullscreenTouchUpInside (MonoTouch.Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (MapBottomSeparator != null) {
+				MapBottomSeparator.Dispose ();
+				MapBottomSeparator = null;
+			}
+
+			if (MapFullscreenButton != null) {
+				MapFullscreenButton.Dispose ();
+				MapFullscreenButton = null;
+			}
+
+			if (MapHeightConstraint != null) {
+				MapHeightConstraint.Dispose ();
+				MapHeightConstraint = null;
+			}
+
 			if (MapPanel != null) {
 				MapPanel.Dispose ();
 				MapPanel = null;
+			}
+
+			if (MapToTableConstraint != null) {
+				MapToTableConstraint.Dispose ();
+				MapToTableConstraint = null;
 			}
 
 			if (ProgressViewContainer != null) {
@@ -50,14 +91,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				ProgressViewTopConstraint = null;
 			}
 
+			if (TableHeightConstraint != null) {
+				TableHeightConstraint.Dispose ();
+				TableHeightConstraint = null;
+			}
+
 			if (TablePanel != null) {
 				TablePanel.Dispose ();
 				TablePanel = null;
-			}
-
-			if (TablePanelTopConstaint != null) {
-				TablePanelTopConstaint.Dispose ();
-				TablePanelTopConstaint = null;
 			}
 
 			if (VenuesAndShowsTableView != null) {
@@ -68,6 +109,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (VenuesMapView != null) {
 				VenuesMapView.Dispose ();
 				VenuesMapView = null;
+			}
+
+			if (FullscreenWidthConstraint != null) {
+				FullscreenWidthConstraint.Dispose ();
+				FullscreenWidthConstraint = null;
+			}
+
+			if (FullscreenHeightConstraint != null) {
+				FullscreenHeightConstraint.Dispose ();
+				FullscreenHeightConstraint = null;
 			}
 		}
 	}

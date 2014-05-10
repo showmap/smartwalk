@@ -14,6 +14,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage NavBarMoreLandscape = UIImage.FromFile("Icons/NavBarMoreLandscape.png");
 
         public static readonly UIImage ListOptions = UIImage.FromFile("Icons/ListOptions.png");
+        public static readonly UIImage Fullscreen = UIImage.FromFile("Icons/Fullscreen.png");
+        public static readonly UIImage ExitFullscreen = UIImage.FromFile("Icons/ExitFullscreen.png");
         public static readonly UIImage MapPin = UIImage.FromFile("Icons/MapPin.png");
         public static readonly UIImage SmallMap = UIImage.FromFile("Icons/SmallMap.png");
         public static readonly UIImage GoRight = UIImage.FromFile("Icons/GoRight.png");

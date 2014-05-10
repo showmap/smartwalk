@@ -39,6 +39,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private MvxCommand<Show> _expandCollapseShowCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
+        private MvxCommand _switchMapFullscreenCommand;
         private MvxCommand _navigateOrgCommand;
         private MvxCommand _navigateOrgEventInfoCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
@@ -300,6 +301,45 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _switchModeCommand;
+            }
+        }
+
+        public ICommand SwitchMapFullscreenCommand
+        {
+            get 
+            {
+                if (_switchMapFullscreenCommand == null)
+                {
+                    _switchMapFullscreenCommand = new MvxCommand(
+                        () => 
+                        {
+                            switch (Mode)
+                            {
+                                case OrgEventViewMode.Combo:
+                                    Mode = OrgEventViewMode.Map;
+                                    break;
+
+                                case OrgEventViewMode.Map:
+                                    Mode = OrgEventViewMode.Combo;
+                                    break;
+
+                                case OrgEventViewMode.List:
+                                    Mode = OrgEventViewMode.Map;
+                                    break;
+                            }
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Mode == OrgEventViewMode.List 
+                                ? Analytics.ActionLabelSwitchToList 
+                                : (Mode == OrgEventViewMode.Map
+                                    ? Analytics.ActionLabelSwitchToMap
+                                    : Analytics.ActionLabelSwitchToCombo));
+                        });
+                }
+
+                return _switchMapFullscreenCommand;
             }
         }
 

@@ -49,11 +49,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewDidLoad();
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                EdgesForExtendedLayout = UIRectEdge.Top;
-            }
-
+            InitializeStyle();
             InitializeToolBar();
             InitializeGestures();
 
@@ -91,6 +87,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 SetDialogViewFullscreenFrame(_listSettingsView);
             }
+
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(
+                new [] {_modeButtonList, _modeButtonMap, MapFullscreenButton});
         }
 
         // HACK: To persist table scroll offset
@@ -122,6 +121,136 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_listSettingsView != null)
             {
                 SetDialogViewFullscreenFrame(_listSettingsView);
+            }
+
+            UpdateViewConstraints();
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(
+                new [] {_modeButtonList, _modeButtonMap, MapFullscreenButton});
+        }
+
+        public override void UpdateViewConstraints()
+        {
+            base.UpdateViewConstraints();
+
+            UpdateViewConstraints(false);
+        }
+
+        private void UpdateViewConstraints(bool animated)
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
+                _topLayoutGuideConstraint == null)
+            {
+                _topLayoutGuideConstraint = 
+                    NSLayoutConstraint.FromVisualFormat(
+                        "V:[topGuide]-0-[view]", 
+                        0, 
+                        null, 
+                        new NSDictionary(
+                            "topGuide", 
+                            TopLayoutGuide, 
+                            "view", 
+                            TablePanel));
+            }
+
+            switch (ViewModel.Mode)
+            {
+                case OrgEventViewMode.Combo:
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                    {
+                        EdgesForExtendedLayout = UIRectEdge.None;
+                        View.RemoveConstraints(_topLayoutGuideConstraint);
+
+                        if (!View.Constraints.Contains(MapToTableConstraint))
+                        {
+                            View.AddConstraint(MapToTableConstraint);
+                        }
+                    }
+
+                    TablePanel.RemoveConstraint(TableHeightConstraint);
+
+                    if (!MapPanel.Constraints.Contains(MapHeightConstraint))
+                    {
+                        MapPanel.AddConstraint(MapHeightConstraint);
+                    }
+
+                    UpdateConstraint(
+                        () => MapHeightConstraint.Constant = (float)Math.Ceiling(2 * (View.Frame.Height / 5)),
+                        animated);
+                    break;
+
+                case OrgEventViewMode.Map:
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                    {
+                        EdgesForExtendedLayout = UIRectEdge.None;
+                        View.RemoveConstraints(_topLayoutGuideConstraint);
+
+                        if (!View.Constraints.Contains(MapToTableConstraint))
+                        {
+                            View.AddConstraint(MapToTableConstraint);
+                        }
+                    }
+
+                    MapPanel.RemoveConstraint(MapHeightConstraint);
+
+                    if (!TablePanel.Constraints.Contains(TableHeightConstraint))
+                    {
+                        TablePanel.AddConstraint(TableHeightConstraint);
+                    }
+
+                    UpdateConstraint(
+                        () => TableHeightConstraint.Constant = 0,
+                        animated);
+                    break;
+
+                case OrgEventViewMode.List:
+                    TablePanel.RemoveConstraint(TableHeightConstraint);
+
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                    {
+                        EdgesForExtendedLayout = UIRectEdge.Top;
+                        View.RemoveConstraint(MapToTableConstraint);
+
+                        if (!_topLayoutGuideConstraint.Any(c => View.Constraints.Contains(c)))
+                        {
+                            View.AddConstraints(_topLayoutGuideConstraint);
+                        }
+                    }
+
+                    if (!MapPanel.Constraints.Contains(MapHeightConstraint))
+                    {
+                        MapPanel.AddConstraint(MapHeightConstraint);
+                    }
+
+                    UpdateConstraint(
+                        () => MapHeightConstraint.Constant = 0,
+                        animated);
+                    break;
+            }
+
+            var size = ScreenUtil.IsVerticalOrientation 
+                ? ButtonBarButton.DefaultVerticalSize
+                : ButtonBarButton.DefaultLandscapeSize;
+            FullscreenWidthConstraint.Constant = size.Width;
+            FullscreenHeightConstraint.Constant = size.Height;
+        }
+
+        private void UpdateConstraint(Action updateHandler, bool animated)
+        {
+            const double animationSpeed = 0.2;
+
+            if (animated)
+            {
+                UIView.Animate(
+                    animationSpeed, 
+                    () =>
+                    {
+                        updateHandler();
+                        View.LayoutIfNeeded();
+                    });
+            }
+            else
+            {
+                updateHandler();
             }
         }
 
@@ -327,6 +456,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             navBarItems.Add(_customModeButton);
         }
 
+        private void InitializeStyle()
+        {
+            MapFullscreenButton.IsSemiTransparent = true;
+        }
+
         private void InitializeToolBar()
         {
             _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
@@ -374,6 +508,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void OnMoreButtonClicked(object sender, EventArgs e)
         {
             ShowActionSheet();
+        }
+
+        partial void OnMapFullscreenTouchUpInside (NSObject sender)
+        {
+            if (ViewModel.SwitchMapFullscreenCommand.CanExecute(null))
+            {
+                ViewModel.SwitchMapFullscreenCommand.Execute(null);
+            }
         }
 
         private void InitializeTableHeader()
@@ -629,13 +771,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
        
         private void UpdateViewState(bool animated)
         {
-            _modeButtonList.UpdateState();
-
             switch (ViewModel.Mode)
             {
                 case OrgEventViewMode.Combo:
                     _modeButton.CustomView = new UIView();
                     _customModeButton.CustomView = _modeButtonList;
+
+                    MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;;
 
                     TablePanel.Hidden = false;
                     MapPanel.Hidden = false;
@@ -651,6 +793,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 case OrgEventViewMode.Map:
                     _modeButton.CustomView = new UIView();
                     _customModeButton.CustomView = _modeButtonList;
+
+                    MapFullscreenButton.VerticalIcon = ThemeIcons.ExitFullscreen;
 
                     TablePanel.Hidden = true;
                     MapPanel.Hidden = false;
@@ -671,9 +815,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapPanel.Hidden = true;
                     break;
             }
-
+                    
             UpdateNavBarState(animated);
-            UpdateViewConstraints();
+            UpdateViewConstraints(animated);
         }
 
         private void UpdateNavBarState(bool animated)
@@ -697,56 +841,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     UIApplication.SharedApplication
                         .SetStatusBarStyle(UIStatusBarStyle.Default, animated);
                 }
-            }
-        }
-
-        public override void UpdateViewConstraints()
-        {
-            base.UpdateViewConstraints();
-
-            switch (ViewModel.Mode)
-            {
-                case OrgEventViewMode.Combo:
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
-                        !View.Constraints.Contains(TablePanelTopConstaint))
-                    {
-                        View.AddConstraint(TablePanelTopConstaint);
-
-                        if (_topLayoutGuideConstraint != null)
-                        {
-                            View.RemoveConstraints(_topLayoutGuideConstraint);
-                        }
-                    }
-
-                    TablePanelTopConstaint.Constant = 200;
-                    break;
-
-                case OrgEventViewMode.Map:
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
-                        !View.Constraints.Contains(TablePanelTopConstaint))
-                    {
-                        View.AddConstraint(TablePanelTopConstaint);
-
-                        if (_topLayoutGuideConstraint != null)
-                        {
-                            View.RemoveConstraints(_topLayoutGuideConstraint);
-                        }
-                    }
-
-                    TablePanelTopConstaint.Constant = View.Frame.Height; // use a bottom constraint of map
-                    break;
-
-                case OrgEventViewMode.List:
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                    {
-                        View.RemoveConstraint(TablePanelTopConstaint);
-
-                        var views = new NSDictionary("topGuide", TopLayoutGuide, "view", TablePanel);
-                        _topLayoutGuideConstraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
-
-                        View.AddConstraints(_topLayoutGuideConstraint);
-                    }
-                    break;
             }
         }
 

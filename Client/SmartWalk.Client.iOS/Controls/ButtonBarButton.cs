@@ -13,12 +13,18 @@ namespace SmartWalk.Client.iOS.Controls
         public static readonly SizeF DefaultVerticalSize = new SizeF(44, 44);
         public static readonly SizeF DefaultLandscapeSize = new SizeF(33, 33);
 
-        private readonly UIImage _verticalIcon;
-        private readonly UIImage _landscapeIcon;
-        private readonly SizeF _verticalSize;
-        private readonly SizeF _landscapeSize;
+        private UIImageView _imageView;
+        private bool _isSemiTransparent;
 
-        private readonly UIImageView _imageView;
+        public ButtonBarButton(IntPtr handle) : base(handle)
+        {
+            Initialize(
+                null, 
+                null,
+                DefaultVerticalSize,
+                DefaultLandscapeSize);
+            UpdateState();
+        }
 
         public ButtonBarButton(
             UIImage verticalIcon,
@@ -41,24 +47,42 @@ namespace SmartWalk.Client.iOS.Controls
             bool isSemiTransparent = false)
                 : base(UIButtonType.Custom)
         {
-            if (verticalIcon == null) throw new ArgumentNullException("verticalIcon");
-
-            _verticalIcon = verticalIcon;
-            _landscapeIcon = landscapeIcon;
-            _verticalSize = verticalSize ?? DefaultVerticalSize;
-            _landscapeSize = landscapeSize ?? DefaultLandscapeSize;
-
-            if (isSemiTransparent)
-            {
-                SetBackgroundImage(Theme.SemiTransImage, UIControlState.Normal);
-            }
-
-            SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
-
-            _imageView = new UIImageView();
-            AddSubview(_imageView);
-
+            Initialize(
+                verticalIcon, 
+                landscapeIcon,
+                verticalSize,
+                landscapeSize,
+                isSemiTransparent);
             UpdateState();
+        }
+
+        public UIImage VerticalIcon { get; set; }
+        public UIImage LandscapeIcon { get; set; }
+        public SizeF VerticalSize { get; set; }
+        public SizeF LandscapeSize { get; set; }
+
+        public bool IsSemiTransparent
+        {
+            get
+            {
+                return _isSemiTransparent;
+            }
+            set
+            {
+                if (_isSemiTransparent != value)
+                {
+                    _isSemiTransparent = value;
+
+                    if (_isSemiTransparent)
+                    {
+                        SetBackgroundImage(Theme.SemiTransImage, UIControlState.Normal);
+                    }
+                    else
+                    {
+                        SetBackgroundImage(null, UIControlState.Normal);
+                    }
+                }
+            }
         }
 
         public void UpdateState()
@@ -67,16 +91,35 @@ namespace SmartWalk.Client.iOS.Controls
 
             if (ScreenUtil.IsVerticalOrientation)
             {
-                Frame = new RectangleF(frame.Location, _verticalSize);
-                _imageView.Frame = new RectangleF(PointF.Empty, _verticalSize);
-                _imageView.Image = _verticalIcon;
+                Frame = new RectangleF(frame.Location, VerticalSize);
+                _imageView.Frame = new RectangleF(PointF.Empty, VerticalSize);
+                _imageView.Image = VerticalIcon;
             }
             else
             {
-                Frame = new RectangleF(frame.Location, _landscapeSize);
-                _imageView.Frame = new RectangleF(PointF.Empty, _landscapeSize);
-                _imageView.Image = _landscapeIcon ?? _verticalIcon;
+                Frame = new RectangleF(frame.Location, LandscapeSize);
+                _imageView.Frame = new RectangleF(PointF.Empty, LandscapeSize);
+                _imageView.Image = LandscapeIcon ?? VerticalIcon;
             }
+        }
+
+        private void Initialize(
+            UIImage verticalIcon,
+            UIImage landscapeIcon,
+            SizeF? verticalSize,
+            SizeF? landscapeSize,
+            bool isSemiTransparent = false)
+        {
+            VerticalIcon = verticalIcon;
+            LandscapeIcon = landscapeIcon;
+            VerticalSize = verticalSize ?? DefaultVerticalSize;
+            LandscapeSize = landscapeSize ?? DefaultLandscapeSize;
+            IsSemiTransparent = isSemiTransparent;
+
+            SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
+
+            _imageView = new UIImageView();
+            AddSubview(_imageView);
         }
     }
 }
