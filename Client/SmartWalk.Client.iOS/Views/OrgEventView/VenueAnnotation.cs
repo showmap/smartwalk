@@ -13,5 +13,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         }
 
         public Venue Venue { get; set; }
+
+        public override object DataContext
+        {
+            get { return Venue; }
+        }
     }
 }

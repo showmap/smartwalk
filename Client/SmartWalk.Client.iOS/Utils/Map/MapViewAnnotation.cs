@@ -38,5 +38,10 @@ namespace SmartWalk.Client.iOS.Utils.Map
         {
             get { return _subTitle; }
         }
+
+        public virtual object DataContext
+        {
+            get { return null; }
+        }
     }
 }

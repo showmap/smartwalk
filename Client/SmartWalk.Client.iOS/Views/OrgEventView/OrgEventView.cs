@@ -49,6 +49,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewDidLoad();
 
+            ViewModel.ZoomSelectedVenue += OnZoomSelectedVenue;
+
             InitializeStyle();
             InitializeToolBar();
             InitializeGestures();
@@ -106,6 +108,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (parent == null)
             {
+                ViewModel.ZoomSelectedVenue -= OnZoomSelectedVenue;
+
                 DisposeToolBar();
                 DisposeGestures();
                 DisposeTableHeader();
@@ -482,6 +486,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeStyle()
         {
             MapFullscreenButton.IsSemiTransparent = true;
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                VenuesMapView.TintColor = Theme.MapTint;
+            }
         }
 
         private void InitializeToolBar()
@@ -603,15 +612,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     VenuesMapView.RemoveAnnotations(VenuesMapView.Annotations);
 
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                    {
-                        VenuesMapView.TintColor = Theme.MapTint;
-                    }
-
                     if (!(VenuesMapView.WeakDelegate is MapDelegate))
                     {
-                        var mapDelegate = new MapDelegate();
-                        mapDelegate.DetailsClick += OnMapDelegateDetailsClick;
+                        var mapDelegate = new MapDelegate
+                            {
+                                SelectAnnotationCommand = ViewModel.NavigateVenueOnMapCommand,
+                                ShowDetailsCommand = ViewModel.NavigateVenueCommand
+                            };
                         VenuesMapView.Delegate = mapDelegate;
                     }
 
@@ -645,7 +652,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var mapDelegate = VenuesMapView.WeakDelegate as MapDelegate;
             if (mapDelegate != null)
             {
-                mapDelegate.DetailsClick -= OnMapDelegateDetailsClick;
+                mapDelegate.SelectAnnotationCommand = null;
+                mapDelegate.ShowDetailsCommand = null;
                 mapDelegate.Dispose();
                 VenuesMapView.WeakDelegate = null;
             }
@@ -655,16 +663,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (venue != null)
             {
-                var annotation = 
-                    VenuesMapView.Annotations
-                        .OfType<VenueAnnotation>()
-                            .FirstOrDefault(an => 
-                                an.Venue.Info.Id == venue.Info.Id);
-
+                var annotation = GetAnnotationByVenue(venue);
                 if (annotation != null)
                 {
-                    VenuesMapView.SetRegion(
-                        MapUtil.CoordinateRegionForCoordinates(annotation.Coordinate), true);
                     VenuesMapView.SelectAnnotation(annotation, true);
                 }
             }
@@ -679,6 +680,30 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var annotations = VenuesMapView.Annotations.OfType<VenueAnnotation>();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
                 VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), true);
+            }
+        }
+
+        private VenueAnnotation GetAnnotationByVenue(Venue venue)
+        {
+            var annotation = 
+                VenuesMapView.Annotations
+                    .OfType<VenueAnnotation>()
+                    .FirstOrDefault(an => 
+                        an.Venue.Info.Id == venue.Info.Id);
+            return annotation;
+        }
+
+        private void OnZoomSelectedVenue(object sender, EventArgs e)
+        {
+            if (ViewModel.SelectedVenueOnMap != null)
+            {
+                var annotation = GetAnnotationByVenue(ViewModel.SelectedVenueOnMap);
+
+                var shiftedCoord = annotation.Coordinate;
+                shiftedCoord.Latitude += 0.0008f;
+
+                VenuesMapView.SetRegion(
+                    MapUtil.CoordinateRegionForCoordinates(shiftedCoord), true);
             }
         }
 
@@ -754,7 +779,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var result = headerLocation.Y + _headerView.Frame.Height;
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
+                ViewModel.Mode == OrgEventViewMode.List)
             {
                 result -= TopLayoutGuide.Length;
             }
@@ -805,11 +831,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapPanel.Hidden = false;
 
                     InitializeMapView();
-
-                    if (ViewModel.SelectedVenueOnMap != null)
-                    {
-                        SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
-                    }
                     break;
 
                 case OrgEventViewMode.Map:
@@ -822,11 +843,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapPanel.Hidden = false;
 
                     InitializeMapView();
-
-                    if (ViewModel.SelectedVenueOnMap != null)
-                    {
-                        SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
-                    }
                     break;
 
                 case OrgEventViewMode.List:
@@ -855,9 +871,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 }
                 else
                 {
+                    #pragma warning disable 618
+
                     WantsFullScreenLayout = false;
                     UIApplication.SharedApplication
                         .SetStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated);
+
+                    #pragma warning restore 618
                 }
             }
             else
@@ -871,9 +891,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 }
                 else
                 {
+                    #pragma warning disable 618
+
                     WantsFullScreenLayout = true;
                     UIApplication.SharedApplication
                         .SetStatusBarStyle(UIStatusBarStyle.BlackTranslucent, animated);
+
+                    #pragma warning restore 618
                 }
             }
         }

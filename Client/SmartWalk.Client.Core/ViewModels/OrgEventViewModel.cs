@@ -44,6 +44,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand _navigateOrgEventInfoCommand;
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
+        private MvxCommand<Venue> _navigateAndZoomVenueOnMapCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
         private MvxCommand<bool?> _showHideListOptionsCommand;
@@ -74,6 +75,7 @@ namespace SmartWalk.Client.Core.ViewModels
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
+        public event EventHandler ZoomSelectedVenue;
 
         public override string Title
         {
@@ -418,20 +420,49 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_navigateVenueOnMapCommand == null)
                 {
                     _navigateVenueOnMapCommand = new MvxCommand<Venue>(
-                        venue => {
+                        venue => 
+                        {
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
-                                Analytics.ActionLabelNavigateVenueOnMap,
-                                venue.Info.Id);
+                                venue != null
+                                    ? Analytics.ActionLabelNavigateVenueOnMap
+                                    : Analytics.ActionLabelDeselectVenueOnMap,
+                                venue != null ? venue.Info.Id : 0);
 
-                            Mode = OrgEventViewMode.Combo;
                             SelectedVenueOnMap = venue;
-                        },
-                        venue => venue != null);
+                        });
                 }
 
                 return _navigateVenueOnMapCommand;
+            }
+        }
+
+        public ICommand NavigateAndZoomVenueOnMapCommand
+        {
+            get
+            {
+                if (_navigateAndZoomVenueOnMapCommand == null)
+                {
+                    _navigateAndZoomVenueOnMapCommand = new MvxCommand<Venue>(
+                        venue =>
+                        {
+                            if (venue != null)
+                            {
+                                Mode = OrgEventViewMode.Combo;
+                            }
+                            
+                            NavigateVenueOnMapCommand.Execute(venue);
+
+                            if (ZoomSelectedVenue != null)
+                            {
+                                ZoomSelectedVenue(this, EventArgs.Empty);
+                            }
+                        },
+                        NavigateVenueOnMapCommand.CanExecute);
+                }
+
+                return _navigateAndZoomVenueOnMapCommand;
             }
         }
 

@@ -159,7 +159,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 headerView.DataContext = CurrentItemsSource[section];
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
-                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
+                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateAndZoomVenueOnMapCommand;
 
                 return headerView;
             }

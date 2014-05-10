@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -79,11 +79,11 @@
                     </constraints>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Pk-2b-V2d" userLabel="@">
-                    <rect key="frame" x="63" y="25" width="32" height="32"/>
+                    <rect key="frame" x="58" y="19" width="44" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="32" id="6dV-bb-DUX"/>
-                        <constraint firstAttribute="height" constant="32" id="rbf-pF-VcU"/>
+                        <constraint firstAttribute="width" constant="44" id="6dV-bb-DUX"/>
+                        <constraint firstAttribute="height" constant="44" id="rbf-pF-VcU"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                     <state key="normal">
@@ -115,14 +115,14 @@
                 <constraint firstItem="UkY-cD-CsE" firstAttribute="top" secondItem="1" secondAttribute="top" constant="14" id="JXO-RW-786"/>
                 <constraint firstAttribute="trailing" secondItem="cEe-0r-q6s" secondAttribute="trailing" constant="-7" id="LMN-5I-fII"/>
                 <constraint firstAttribute="bottom" secondItem="QVS-aJ-Vym" secondAttribute="bottom" constant="-1" id="OBN-L9-tdd"/>
-                <constraint firstItem="8Pk-2b-V2d" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="63" id="OOs-er-uCH"/>
+                <constraint firstItem="8Pk-2b-V2d" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="58" id="OOs-er-uCH"/>
                 <constraint firstItem="QVS-aJ-Vym" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="QY4-FN-YaK"/>
                 <constraint firstItem="prj-64-Tjh" firstAttribute="top" secondItem="1" secondAttribute="top" id="Uqq-zX-1Ja"/>
                 <constraint firstAttribute="trailing" secondItem="UkY-cD-CsE" secondAttribute="trailing" constant="29" id="WYG-lI-fNQ"/>
                 <constraint firstItem="TYG-yN-nra" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="90" id="cKb-R8-ddR"/>
                 <constraint firstItem="UkY-cD-CsE" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="74" id="fK2-7C-cK1"/>
                 <constraint firstAttribute="trailing" secondItem="QVS-aJ-Vym" secondAttribute="trailing" id="h3A-xB-piv"/>
-                <constraint firstItem="8Pk-2b-V2d" firstAttribute="top" secondItem="1" secondAttribute="top" constant="25" id="oia-ae-ymn"/>
+                <constraint firstItem="8Pk-2b-V2d" firstAttribute="top" secondItem="1" secondAttribute="top" constant="19" id="oia-ae-ymn"/>
                 <constraint firstAttribute="trailing" secondItem="trZ-gJ-tnq" secondAttribute="trailing" id="p7A-OW-6lZ"/>
                 <constraint firstAttribute="trailing" secondItem="TYG-yN-nra" secondAttribute="trailing" constant="29" id="vGj-Gc-ksJ"/>
                 <constraint firstItem="trZ-gJ-tnq" firstAttribute="top" secondItem="1" secondAttribute="top" constant="-1" id="xgQ-Uo-Gnx"/>

@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Cirrious.CrossCore.Core;
+using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
@@ -23,10 +22,11 @@ namespace SmartWalk.Client.iOS.Utils.Map
             CanShowDetails = true;
         }
 
-        public event EventHandler<MvxValueEventArgs<IMapAnnotation>> DetailsClick;
-
         public bool CanShowCallout { get; set; }
         public bool CanShowDetails { get; set; }
+
+        public ICommand SelectAnnotationCommand { get; set; }
+        public ICommand ShowDetailsCommand { get; set; }
 
         public override MKAnnotationView GetViewForAnnotation(
             MKMapView mapView,
@@ -89,11 +89,10 @@ namespace SmartWalk.Client.iOS.Utils.Map
 
                     detailButton.TouchUpInside += (s, e) => 
                         {
-                            if (DetailsClick != null)
+                            if (ShowDetailsCommand != null &&
+                                ShowDetailsCommand.CanExecute(mapAnnotation.DataContext))
                             {
-                                DetailsClick(
-                                    this, 
-                                    new MvxValueEventArgs<IMapAnnotation>(mapAnnotation));
+                                ShowDetailsCommand.Execute(mapAnnotation.DataContext);
                             }
                         };
 
@@ -102,6 +101,26 @@ namespace SmartWalk.Client.iOS.Utils.Map
             }
 
             return annotationView;
+        }
+
+        public override void DidSelectAnnotationView(MKMapView mapView, MKAnnotationView view)
+        {
+            var mapAnnotation = view.Annotation as IMapAnnotation;
+            if (mapAnnotation != null &&
+                SelectAnnotationCommand != null &&
+                SelectAnnotationCommand.CanExecute(mapAnnotation.DataContext))
+            {
+                SelectAnnotationCommand.Execute(mapAnnotation.DataContext);
+            }
+        }
+
+        public override void DidDeselectAnnotationView(MKMapView mapView, MKAnnotationView view)
+        {
+            if (SelectAnnotationCommand != null &&
+                SelectAnnotationCommand.CanExecute(null))
+            {
+                SelectAnnotationCommand.Execute(null);
+            }
         }
 
         protected override void Dispose(bool disposing)
