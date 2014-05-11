@@ -50,9 +50,10 @@ namespace SmartWalk.Client.iOS.Services
                 if (_locationManager != null &&
                     _locationManager.Location != null)
                 {
-                    return new Location(
-                        _locationManager.Location.Coordinate.Latitude,
-                        _locationManager.Location.Coordinate.Longitude);
+                    var result = new Location(
+                        Math.Round(_locationManager.Location.Coordinate.Latitude, 2),
+                        Math.Round(_locationManager.Location.Coordinate.Longitude, 2));
+                    return result;
                 }
 
                 return Location.Empty;
@@ -70,8 +71,8 @@ namespace SmartWalk.Client.iOS.Services
 
                 try
                 {
-                    placemarks = await _geocoder.ReverseGeocodeLocationAsync(
-                        _locationManager.Location);
+                    placemarks = await _geocoder
+                        .ReverseGeocodeLocationAsync(_locationManager.Location);
                 }
                 catch (Exception ex)
                 {

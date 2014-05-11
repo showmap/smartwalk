@@ -194,6 +194,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="packages.config" />
+    <None Include="RELEASE-NOTES.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -359,6 +360,7 @@
     <Compile Include="Views\Common\Base\CustomNavBarViewBase.cs" />
     <Compile Include="Views\Common\Base\ViewBase.cs" />
     <Compile Include="Views\OrgEventView\CustomUISearchBar.cs" />
+    <Compile Include="Controls\CustomMKMapView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
