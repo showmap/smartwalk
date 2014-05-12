@@ -360,7 +360,8 @@
     <Compile Include="Views\Common\Base\CustomNavBarViewBase.cs" />
     <Compile Include="Views\Common\Base\ViewBase.cs" />
     <Compile Include="Views\OrgEventView\CustomUISearchBar.cs" />
-    <Compile Include="Controls\CustomMKMapView.cs" />
+    <Compile Include="Utils\UITouchGestureRecognizer.cs" />
+    <Compile Include="Utils\UIBeingTouchedGestureRecognizer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

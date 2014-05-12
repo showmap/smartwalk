@@ -8,7 +8,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
     public abstract class DialogViewBase : UIView
     {
         private bool _isInitialized;
-        private UITapGestureRecognizer _outsidedTapGesture;
+        private UITouchGestureRecognizer _outsideTouchGesture;
 
         protected DialogViewBase(IntPtr handle) : base(handle)
         {
@@ -61,24 +61,20 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeGestures()
         {
-            if (_outsidedTapGesture == null)
+            if (_outsideTouchGesture == null)
             {
-                _outsidedTapGesture = new UITapGestureRecognizer(CloseView) {
-                    NumberOfTouchesRequired = (uint)1,
-                    NumberOfTapsRequired = (uint)1
-                };
-
-                OutsideAreaView.AddGestureRecognizer(_outsidedTapGesture);
+                _outsideTouchGesture = new UITouchGestureRecognizer(CloseView);
+                OutsideAreaView.AddGestureRecognizer(_outsideTouchGesture);
             }
         }
 
         private void DisposeGestures()
         {
-            if (_outsidedTapGesture != null)
+            if (_outsideTouchGesture != null)
             {
-                OutsideAreaView.RemoveGestureRecognizer(_outsidedTapGesture);
-                _outsidedTapGesture.Dispose();
-                _outsidedTapGesture = null;
+                OutsideAreaView.RemoveGestureRecognizer(_outsideTouchGesture);
+                _outsideTouchGesture.Dispose();
+                _outsideTouchGesture = null;
             }
         }
     }

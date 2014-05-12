@@ -37,6 +37,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private ButtonBarButton _modeButtonMap;
         private ButtonBarButton _moreButton;
         private NSLayoutConstraint[] _topLayoutGuideConstraint;
+        private UIBeingTouchedGestureRecognizer _mapTouchGesture;
 
         private NSTimer _timer;
 
@@ -614,10 +615,30 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeGestures()
         {
+            if (_mapTouchGesture == null)
+            {
+                _mapTouchGesture = new UIBeingTouchedGestureRecognizer(
+                    isBeingTouched =>
+                    {
+                        var mapDelegate = VenuesMapView.WeakDelegate as MapDelegate;
+                        if (mapDelegate != null)
+                        {
+                            mapDelegate.IsMapBeingTouched = isBeingTouched;
+                        }
+                    });
+
+                VenuesMapView.AddGestureRecognizer(_mapTouchGesture);
+            }
         }
 
         private void DisposeGestures()
         {
+            if (_mapTouchGesture != null)
+            {
+                VenuesMapView.RemoveGestureRecognizer(_mapTouchGesture);
+                _mapTouchGesture.Dispose();
+                _mapTouchGesture = null;
+            }
         }
 
         private void InitializeMapView()

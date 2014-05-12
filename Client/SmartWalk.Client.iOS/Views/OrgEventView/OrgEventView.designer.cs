@@ -49,7 +49,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
 
 		[Outlet]
-        SmartWalk.Client.iOS.Controls.CustomMKMapView VenuesMapView { get; set; }
+        MonoTouch.MapKit.MKMapView VenuesMapView { get; set; }
 
 		[Action ("OnMapFullscreenTouchUpInside:")]
 		partial void OnMapFullscreenTouchUpInside (MonoTouch.Foundation.NSObject sender);
