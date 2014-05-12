@@ -13,30 +13,8 @@ namespace SmartWalk.Client.iOS.Views.Common
     public partial class BrowserView : CustomNavBarViewBase
     {
         private const string DocTitle = "document.title";
-        private const string Http = "http://";
-        private const string Https = "https://";
 
         private UIActivityIndicatorView _indicatorView;
-
-        private string BrowserURL
-        {
-            get
-            {
-                if (ViewModel.BrowserURL != null)
-                {
-                    var url = ViewModel.BrowserURL;
-                    if (!url.StartsWith(Http, StringComparison.OrdinalIgnoreCase) &&
-                        !url.StartsWith(Https, StringComparison.OrdinalIgnoreCase))
-                    {
-                        url = Http + url;
-                    }
-
-                    return url;
-                }
-
-                return null;
-            }
-        }
 
         public new BrowserViewModel ViewModel
         {
@@ -57,13 +35,15 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             LoadURL();
             UpdateNavButtonsState();
+
+            BottomToolbar.Victim = WebView;
         }
 
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
-            UpdateFrames();
+            UpdateViewConstraints();
             ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
         }
 
@@ -71,8 +51,16 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.WillAnimateRotation(toInterfaceOrientation, duration);
 
-            UpdateFrames();
+            UpdateViewConstraints();
             ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
+        }
+
+        public override void UpdateViewConstraints()
+        {
+            base.UpdateViewConstraints();
+
+            ToolBarHeightConstraint.Constant =
+                ScreenUtil.IsVerticalOrientation ? 44 : 33;
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)
@@ -87,44 +75,57 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
         {
-            using (var url = new NSUrl(BrowserURL))
+            if (ViewModel.OpenLinkCommand.CanExecute(null))
             {
-                if (UIApplication.SharedApplication.CanOpenUrl(url))
-                {
-                    actionSheet.AddButton(Localization.OpenInSafari);
-                }
+                actionSheet.AddButton(Localization.OpenInSafari);
             }
 
             // TODO: To support Chrome some day
             //actionSheet.AddButton(Localization.OpenInChrome);
 
-            actionSheet.AddButton(Localization.CopyLink);
+            if (ViewModel.CopyLinkCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(Localization.CopyLink);
+            }
+
+            if (ViewModel.ShareCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(Localization.ShareButton);
+            }
         }
 
-        // TODO: Move to ViewModel's commands
         protected override void OnActionSheetClick(string buttonTitle)
         {
             switch (buttonTitle)
             {
                 case Localization.OpenInSafari:
-                    using (var url = new NSUrl(BrowserURL))
+                    if (ViewModel.OpenLinkCommand.CanExecute(null))
                     {
-                        if (UIApplication.SharedApplication.CanOpenUrl(url))
-                        {
-                            UIApplication.SharedApplication.OpenUrl(url);
-                        }
+                        ViewModel.OpenLinkCommand.Execute(null);
                     }
                     break;
 
                 case Localization.CopyLink:
-                    UIPasteboard.General.String = BrowserURL;
+                    if (ViewModel.CopyLinkCommand.CanExecute(null))
+                    {
+                        ViewModel.CopyLinkCommand.Execute(null);
+                    }
+                    break;
+
+                case Localization.ShareButton:
+                    if (ViewModel.ShareCommand.CanExecute(null))
+                    {
+                        ViewModel.ShareCommand.Execute(null);
+                    }
                     break;
             }
         }
 
         private void InitializeIndicator()
         {
-            _indicatorView = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White) {
+            _indicatorView = new UIActivityIndicatorView(
+                UIActivityIndicatorViewStyle.Gray) 
+            {
                 Frame = new RectangleF(0, 0, 40, 40)
             };
             ProgressButton.CustomView = _indicatorView;
@@ -132,9 +133,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void LoadURL()
         {
-            if (BrowserURL != null)
+            if (ViewModel.BrowserURL != null)
             {
-                var request = new NSUrlRequest(new NSUrl(BrowserURL));
+                var request = new NSUrlRequest(new NSUrl(ViewModel.BrowserURL));
                 WebView.LoadRequest(request);
             }
         }
@@ -176,7 +177,6 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             SetButtonEnabled(BackButton, WebView.CanGoBack);
             SetButtonEnabled(ForwardButton, WebView.CanGoForward);
-            SetButtonEnabled(ActionButton, BrowserURL != null);
         }
 
         private static void SetButtonEnabled(UIBarButtonItem buttonItem, bool isEnabled)
@@ -195,62 +195,22 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                BottomToolbar.BarTintColor = Theme.NavBarBackgroundiOS7;
-            }
-            else
-            {
-                BottomToolbar.SetBackgroundImage(
-                    Theme.NavBarBackgroundImage,
-                    UIToolbarPosition.Any,
-                    UIBarMetrics.Default);
-                BottomToolbar.SetBackgroundImage(
-                    Theme.NavBarLandscapeBackgroundImage,
-                    UIToolbarPosition.Any,
-                    UIBarMetrics.LandscapePhone);
-            }
+            LeftSpacer.Width = 
+                UIDevice.CurrentDevice.CheckSystemVersion(7, 0)
+                    ? Theme.NavBarPaddingCompensate
+                    : Theme.CustomNavBarPaddingCompensate;
 
-            LeftSpacer.Width = Theme.ToolBarPaddingCompensate;
-
-            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape);
+            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape, true);
             button.TouchUpInside += OnBackButtonClick;
             BackButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserForward, ThemeIcons.BrowserForwardLandscape);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserForward, ThemeIcons.BrowserForwardLandscape, true);
             button.TouchUpInside += OnForwardButtonClick;
             ForwardButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefresh, ThemeIcons.BrowserRefreshLandscape);
+            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefresh, ThemeIcons.BrowserRefreshLandscape, true);
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
-
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserMenu, ThemeIcons.BrowserMenuLandscape);
-            button.TouchUpInside += OnActionButtonClick;
-            ActionButton.CustomView = button;
-
-            RightSpacer.Width = Theme.ToolBarPaddingCompensate;
-        }
-
-        private void OnActionButtonClick(object sender, EventArgs e)
-        {
-            ShowActionSheet();
-        }
-
-        // HACK: This is to keep bottom toolbar proper height on rotation
-        // by default it doesn't work with autolayout :-(
-        private void UpdateFrames()
-        {
-            var topBarFrame = NavigationController.Toolbar.Frame;
-            BottomToolbar.Frame = new RectangleF(
-                0, 
-                View.Frame.Height - topBarFrame.Height, 
-                View.Frame.Width,
-                topBarFrame.Height);
-
-            var webFrame = WebView.Frame;
-            webFrame.Height = View.Bounds.Height - topBarFrame.Height;
-            WebView.Frame = webFrame;
         }
     }
 }

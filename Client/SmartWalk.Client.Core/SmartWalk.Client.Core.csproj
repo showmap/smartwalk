@@ -99,6 +99,7 @@
     <Compile Include="Services\ICalendarService.cs" />
     <Compile Include="Model\CalendarEvent.cs" />
     <Compile Include="ViewModels\Interfaces\IShareableViewModel.cs" />
+    <Compile Include="Services\IOpenURLTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

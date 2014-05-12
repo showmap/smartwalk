@@ -9,82 +9,74 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    [Register ("BrowserView")]
-    partial class BrowserView
-    {
-        [Outlet]
-        MonoTouch.UIKit.UIBarButtonItem ActionButton { get; set; }
+	[Register ("BrowserView")]
+	partial class BrowserView
+	{
+		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem BackButton { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIBarButtonItem BackButton { get; set; }
+		[Outlet]
+        SmartWalk.Client.iOS.Controls.TransparentToolBar BottomToolbar { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIToolbar BottomToolbar { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem ForwardButton { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIBarButtonItem ForwardButton { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem LeftSpacer { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIBarButtonItem LeftSpacer { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem ProgressButton { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIBarButtonItem ProgressButton { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem RefreshButton { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIBarButtonItem RefreshButton { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ToolBarHeightConstraint { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.UIBarButtonItem RightSpacer { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.UIWebView WebView { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (BackButton != null) {
+				BackButton.Dispose ();
+				BackButton = null;
+			}
 
-        [Outlet]
-        MonoTouch.UIKit.UIWebView WebView { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (LeftSpacer != null) {
-                LeftSpacer.Dispose ();
-                LeftSpacer = null;
-            }
+			if (BottomToolbar != null) {
+				BottomToolbar.Dispose ();
+				BottomToolbar = null;
+			}
 
-            if (RightSpacer != null) {
-                RightSpacer.Dispose ();
-                RightSpacer = null;
-            }
+			if (ForwardButton != null) {
+				ForwardButton.Dispose ();
+				ForwardButton = null;
+			}
 
-            if (ActionButton != null) {
-                ActionButton.Dispose ();
-                ActionButton = null;
-            }
+			if (LeftSpacer != null) {
+				LeftSpacer.Dispose ();
+				LeftSpacer = null;
+			}
 
-            if (BackButton != null) {
-                BackButton.Dispose ();
-                BackButton = null;
-            }
+			if (ProgressButton != null) {
+				ProgressButton.Dispose ();
+				ProgressButton = null;
+			}
 
-            if (BottomToolbar != null) {
-                BottomToolbar.Dispose ();
-                BottomToolbar = null;
-            }
+			if (RefreshButton != null) {
+				RefreshButton.Dispose ();
+				RefreshButton = null;
+			}
 
-            if (ForwardButton != null) {
-                ForwardButton.Dispose ();
-                ForwardButton = null;
-            }
+			if (WebView != null) {
+				WebView.Dispose ();
+				WebView = null;
+			}
 
-            if (ProgressButton != null) {
-                ProgressButton.Dispose ();
-                ProgressButton = null;
-            }
-
-            if (RefreshButton != null) {
-                RefreshButton.Dispose ();
-                RefreshButton = null;
-            }
-
-            if (WebView != null) {
-                WebView.Dispose ();
-                WebView = null;
-            }
-        }
-    }
+			if (ToolBarHeightConstraint != null) {
+				ToolBarHeightConstraint.Dispose ();
+				ToolBarHeightConstraint = null;
+			}
+		}
+	}
 }

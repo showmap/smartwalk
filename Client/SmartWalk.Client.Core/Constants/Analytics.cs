@@ -36,6 +36,7 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionLabelSaveEvent = "save-event";
         public static readonly string ActionLabelCancelEvent = "cancel-event";
         public static readonly string ActionLabelShare = "share";
+        public static readonly string ActionLabelOpenLink = "open-link";
         public static readonly string ActionLabelCopyLink = "copy-link";
         public static readonly string ActionLabelCopyAddress = "copy-address";
     }

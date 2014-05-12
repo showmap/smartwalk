@@ -362,6 +362,7 @@
     <Compile Include="Views\OrgEventView\CustomUISearchBar.cs" />
     <Compile Include="Utils\UITouchGestureRecognizer.cs" />
     <Compile Include="Utils\UIBeingTouchedGestureRecognizer.cs" />
+    <Compile Include="Services\OpenURLTask.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

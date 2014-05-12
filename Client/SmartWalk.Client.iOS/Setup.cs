@@ -34,6 +34,7 @@ namespace SmartWalk.Client.iOS
             Mvx.LazyConstructAndRegisterSingleton<IReachabilityService, ReachabilityService>();
             Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
             Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();
+            Mvx.LazyConstructAndRegisterSingleton<IOpenURLTask, OpenURLTask>();
 
             return new SmartWalkApplication();
         }
