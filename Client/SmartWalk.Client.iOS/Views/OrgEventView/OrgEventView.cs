@@ -715,10 +715,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (tableSource != null &&
                 ViewModel.SelectedVenueOnMap != null)
             {
-                VenuesAndShowsTableView.SelectRow(
-                    tableSource.GetItemIndex(ViewModel.SelectedVenueOnMap), 
-                    true, 
-                    UITableViewScrollPosition.Top);
+                var index = tableSource.GetItemIndex(ViewModel.SelectedVenueOnMap);
+                VenuesAndShowsTableView.ScrollToRow(
+                    index, 
+                    UITableViewScrollPosition.Top,
+                    true);
             }
         }
 

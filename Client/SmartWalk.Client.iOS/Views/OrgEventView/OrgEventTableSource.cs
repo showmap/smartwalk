@@ -101,7 +101,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public NSIndexPath GetItemIndex(Venue venue)
         {
-            return NSIndexPath.FromItemSection(0, Array.IndexOf(CurrentItemsSource, venue));
+            var venueNumber = Array.IndexOf(CurrentItemsSource, venue);
+            return NSIndexPath.FromRowSection(int.MaxValue, venueNumber);
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
