@@ -107,6 +107,9 @@ EventViewModel = function (data) {
 inherits(EventViewModel, EventViewModelBase);
 
 EventViewModel.prototype.loadDataEventViewModel = function (data) {
+    if (this.prepareData)
+        this.prepareData();
+
     this.Description(data.Description);
     this.Latitude(data.Latitude);
     this.Longitude(data.Longitude);

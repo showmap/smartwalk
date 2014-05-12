@@ -68,7 +68,7 @@
 			<div class="well">							
 				<div class="row">
 					<div class="col-sm-8">
-						<div class="form-group">
+						<div class="form-group" data-bind="validationElement: Title">
 							<label for="titleTextInput">@T("Title"):</label>
 							<input type="text" class="form-control" id="titleTextInput" data-bind="value: Title">
 						</div>
@@ -85,7 +85,7 @@
 							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: StartTime, timepickerOptions: { stepMinute: 5 }" />
 						</div>
 									
-						<div class="form-group">
+						<div class="form-group" data-bind="validationElement: StartDate">
 							<label for="showStartDateInput">@T("Start Date"):</label><br/>
 							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />
 						</div>
@@ -97,7 +97,7 @@
 							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: EndTime, timepickerOptions: { stepMinute: 5 }" />
 						</div>
 									
-						<div class="form-group">
+						<div class="form-group" data-bind="validationElement: EndDate">
 							<label for="showEndDateInput">@T("End Date"):</label><br/>
 							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }" />
 						</div>
@@ -106,13 +106,13 @@
 							
 				<div class="row">
 					<div class="col-sm-4">
-						<div class="form-group">
+						<div class="form-group" data-bind="validationElement: Picture">
 							<label for="pictureTextInput">@T("Picture"):</label>
 							<input type="text" class="form-control" id="pictureTextInput" data-bind="value: Picture">
 						</div>
 					</div>
 					<div class="col-sm-4">
-						<div class="form-group">
+						<div class="form-group" data-bind="validationElement: DetailsUrl">
 							<label for="detailsURLTextInput">@T("Details URL"):</label><br/>
 							<input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: DetailsUrl" />
 						</div>

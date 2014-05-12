@@ -196,7 +196,7 @@ ko.validation.rules['contactValidation'] = {
 
 ko.validation.rules['dateCompareValidation'] = {
     validator: function (val, otherVal) {
-        if (otherVal.allowEmpty && !val)
+        if (otherVal.allowEmpty && (!val || !otherVal.compareVal()))
             return true;
         
         var dateFormat = $.datepicker.regional[''].dateFormat;
@@ -206,11 +206,17 @@ ko.validation.rules['dateCompareValidation'] = {
         
         if (otherVal.cmp == 'GREATER_THAN') {
             return curDate >= cmpDate;
+        } else if (otherVal.cmp == 'LESS_THAN') {
+            return curDate <= cmpDate;
+        } else if (otherVal.cmp == 'REGION') {
+            var cmpDateTo = $.datepicker.parseDate(dateFormat, otherVal.compareValTo());
+            return curDate <= cmpDateTo && curDate >= cmpDate;
         }
 
         return false;
     }
 };
+
 
 
 ko.validation.rules['urlValidation'] = {

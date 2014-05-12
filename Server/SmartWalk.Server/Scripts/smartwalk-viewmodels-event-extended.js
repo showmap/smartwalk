@@ -3,12 +3,16 @@ EventViewModelExtended = function (settings, data) {
     var self = this;
 
     this.setupValidations = function () {
-        this.StartTime.extend({
-            required: { message: settings.startTimeRequiredValidationMessage },
-        });
+        this.StartTime
+            .extend({ required: { message: settings.startTimeRequiredValidationMessage } })
+            .extend({
+                dateCompareValidation: { params: { allowEmpty: true, cmp: 'LESS_THAN', compareVal: this.EndTime }, message: settings.startTimeCompareValidationMessage }
+            });
+                
         this.EndTime.extend({
             dateCompareValidation: { params: { allowEmpty: true, cmp: 'GREATER_THAN', compareVal: this.StartTime }, message: settings.endTimeCompareValidationMessage },
         });
+        
         this.Host.extend({
             required: { message: settings.hostRequiredValidationMessage },
         });
@@ -28,6 +32,22 @@ EventViewModelExtended = function (settings, data) {
             return this.StartTime.isValidating() || this.Host.isValidating() || this.Picture.isValidating();
         }, this);
     };
+
+    this.PrepareCollectionData = function (collection, extData) {
+        if (collection && collection.length > 0) {
+            for (var i = 0; i < collection.length; i++) {
+                collection[i] = $.extend(collection[i], extData);
+            }
+        }
+    };
+
+    this.prepareData = function() {
+        for (var i = 0; i < data.AllVenues.length; i++) {
+            this.PrepareCollectionData(data.AllVenues[i].AllShows, { messages: settings.showMessages, eventDtFrom: this.StartTime, eventDtTo: this.EndTime });
+        }
+    };
+
+    
 
     EventViewModelExtended.superClass_.constructor.call(this, data);
 
@@ -148,7 +168,7 @@ EventViewModelExtended.prototype.cancelInner = function (root) {
 // Show
 EventViewModelExtended.prototype.addShow = function (root, item) {
     root.cancelInner(root);
-    root.selectedItem(item.addShow());
+    root.selectedItem(item.addShow(root));
 };
 
 EventViewModelExtended.prototype.cancelShow = function (root, item) {
@@ -167,19 +187,23 @@ EventViewModelExtended.prototype.cancelShow = function (root, item) {
 };
 
 EventViewModelExtended.prototype.saveShow = function (root, item) {
-    if (root.Id() != 0) {
-        var ajdata = ko.toJSON(item);
+    if (item.errors().length == 0) {
+        if (root.Id() != 0) {
+            var ajdata = ko.toJSON(item);
 
-        ajaxJsonRequest(ajdata, root.settings.showSaveUrl,
-            function(data) {
-                if (item.Id() == 0 || item.Id() != data)
-                    item.Id(data);
-                root.selectedItem(null);
-            }
-        );
+            ajaxJsonRequest(ajdata, root.settings.showSaveUrl,
+                function (data) {
+                    if (item.Id() == 0 || item.Id() != data)
+                        item.Id(data);
+                    root.selectedItem(null);
+                }
+            );
+        } else {
+            root.clearSelectedItem(root, false);
+        }
     } else {
-        root.clearSelectedItem(root, false);
-    }
+        item.errors.showAllMessages();
+    }    
 };
 
 EventViewModelExtended.prototype.deleteShow = function (root, item) {

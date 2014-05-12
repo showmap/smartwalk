@@ -152,4 +152,28 @@ function ShowViewModel(data) {
     };
 
     self.loadData(data);
+    
+    if (data.messages) {
+        self.Title
+            .extend({ required: { params: true, message: data.messages.titleRequiredValidationMessage } })
+            .extend({ maxLength: { params: 255, message: data.messages.titleLengthValidationMessage } });
+
+        self.Picture
+            .extend({ maxLength: { params: 255, message: data.messages.pictureLengthValidationMessage } })
+            .extend({ urlValidation: { params: { allowEmpty: true }, message: data.messages.pictureValidationMessage } });
+        
+        self.DetailsUrl
+            .extend({ maxLength: { params: 255, message: data.messages.detailsLengthValidationMessage } })
+            .extend({ urlValidation: { params: { allowEmpty: true }, message: data.messages.detailsValidationMessage } });
+
+        self.StartDate
+            .extend({ dateCompareValidation: { params: { allowEmpty: true, cmp: 'LESS_THAN', compareVal: self.EndDate }, message: data.messages.startDateValidationMessage } })
+            .extend({ dateCompareValidation: { params: { allowEmpty: true, cmp: 'REGION', compareVal: data.eventDtFrom, compareValTo: data.eventDtTo }, message: data.messages.startTimeValidationMessage } });
+
+        self.EndDate
+            .extend({ dateCompareValidation: { params: { allowEmpty: true, cmp: 'GREATER_THAN', compareVal: self.EndDate }, message: data.messages.endDateValidationMessage } })
+            .extend({ dateCompareValidation: { params: { allowEmpty: true, cmp: 'REGION', compareVal: data.eventDtFrom, compareValTo: data.eventDtTo }, message: data.messages.endTimeValidationMessage } });
+    };
+
+    self.errors = ko.validation.group(self);
 }

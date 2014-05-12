@@ -186,8 +186,8 @@ EntityViewModelExtended.prototype.deleteAddresses = function (root) {
 };        
 
 // Shows    
-EntityViewModel.prototype.addShow = function () {
-    var newShow = new ShowViewModel({ Id: 0, EventMetadataId: this.EventMetadataId(), VenueId: this.Id(), State: 1, StartDate: '', EndDate: '' });
+EntityViewModel.prototype.addShow = function (metadata) {
+    var newShow = new ShowViewModel({ Id: 0, EventMetadataId: metadata.Id(), VenueId: this.Id(), State: 1, StartDate: metadata.StartTime(), EndDate: metadata.StartTime(), messages: metadata.settings.showMessages, eventDtFrom: metadata.StartTime, eventDtTo: metadata.EndTime });
     //this.AllShows.splice(0, 0, newShow);
     this.AllShows.push(newShow);
     return newShow;
