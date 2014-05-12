@@ -285,6 +285,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
             ImageBackground.SubtitleButtonImage = 
                 DataContext != null &&
+                DataContext.Subtitle != null &&
                 DataContext.Mode == EntityViewModelWrapper.ModelMode.Venue
                     ? ThemeIcons.NavBarMapLandscape
                     : null;

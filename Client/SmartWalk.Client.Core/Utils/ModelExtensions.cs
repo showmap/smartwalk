@@ -120,7 +120,13 @@ namespace SmartWalk.Client.Core.Utils
 
         public static bool HasAddresses(this Entity entity)
         {
-            return entity != null && entity.Addresses != null && entity.Addresses.Length > 0;
+            return 
+                entity != null && 
+                entity.Addresses != null && 
+                entity.Addresses.Length > 0 &&
+                // Analysis disable RedundantCast
+                entity.Addresses.Any(a => (int)a.Latitude != 0 && (int)a.Longitude != 0);
+                // Analysis enable RedundantCast;
         }
 
         public static bool HasPicture(this Show show)
