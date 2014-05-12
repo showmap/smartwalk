@@ -35,6 +35,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private Parameters _parameters;
         private bool _isGroupedByLocation = true;
         private bool _isListOptionsShown;
+        private bool _isListOptionsAvailable;
         private SortBy _sortBy = SortBy.Time;
 
         private MvxCommand<Show> _expandCollapseShowCommand;
@@ -120,6 +121,14 @@ namespace SmartWalk.Client.Core.ViewModels
                     _orgEvent = value;
                     RaisePropertyChanged(() => OrgEvent);
                     RaisePropertyChanged(() => Title);
+
+                    IsListOptionsAvailable = 
+                        _orgEvent != null &&
+                        _orgEvent.Venues != null &&
+                        _orgEvent.Venues
+                            .Any(v => 
+                                v.Shows != null && 
+                                v.Shows.Length > 0);
                 }
             }
         }
@@ -188,18 +197,18 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public bool IsGroupedByLocation
+        public bool IsListOptionsAvailable
         {
             get
             {
-                return _isGroupedByLocation;
+                return _isListOptionsAvailable;
             }
             private set
             {
-                if (_isGroupedByLocation != value)
+                if (_isListOptionsAvailable != value)
                 {
-                    _isGroupedByLocation = value;
-                    RaisePropertyChanged(() => IsGroupedByLocation);
+                    _isListOptionsAvailable = value;
+                    RaisePropertyChanged(() => IsListOptionsAvailable);
                 }
             }
         }
@@ -216,6 +225,22 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _isListOptionsShown = value;
                     RaisePropertyChanged(() => IsListOptionsShown);
+                }
+            }
+        }
+
+        public bool IsGroupedByLocation
+        {
+            get
+            {
+                return _isGroupedByLocation;
+            }
+            private set
+            {
+                if (_isGroupedByLocation != value)
+                {
+                    _isGroupedByLocation = value;
+                    RaisePropertyChanged(() => IsGroupedByLocation);
                 }
             }
         }

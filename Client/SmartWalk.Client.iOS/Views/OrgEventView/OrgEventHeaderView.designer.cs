@@ -16,7 +16,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UIButton OptionsButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
+        SmartWalk.Client.iOS.Views.OrgEventView.CustomUISearchBar SearchBar { get; set; }
 
 		[Action ("OnOptionsButtonTouchUpInside:")]
 		partial void OnOptionsButtonTouchUpInside (MonoTouch.UIKit.UIButton sender);

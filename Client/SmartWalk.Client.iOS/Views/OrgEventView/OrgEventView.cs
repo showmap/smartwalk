@@ -365,6 +365,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     DisposeCalEventViewController();
                 }
             }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsAvailable))
+            {
+                UpdateTableHeaderState();
+            }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsShown))
             {
                 ShowHideListSettingsView(ViewModel.IsListOptionsShown);
@@ -557,6 +561,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _headerView = OrgEventHeaderView.Create();
             _headerView.ShowOptionsCommand = ViewModel.ShowHideListOptionsCommand;
 
+            UpdateTableHeaderState();
+
             VenuesAndShowsTableView.TableHeaderView = _headerView;
         }
 
@@ -566,6 +572,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 _headerView.Dispose();
                 _headerView = null;
+            }
+        }
+
+        private void UpdateTableHeaderState()
+        {
+            if (_headerView != null)
+            {
+                _headerView.IsListOptionsVisible = ViewModel.IsListOptionsAvailable;
+                _headerView.SearchBarControl.IsListOptionsVisible = ViewModel.IsListOptionsAvailable;
             }
         }
 

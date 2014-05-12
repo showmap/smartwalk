@@ -17,6 +17,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("OrgEventHeaderView", NSBundle.MainBundle);
 
         private bool _isStyleInitialized;
+        private bool _isListOptionsVisible;
 
         public OrgEventHeaderView(IntPtr handle) : base(handle)
         {
@@ -27,9 +28,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return (OrgEventHeaderView)Nib.Instantiate(null, null)[0];
         }
 
-        public UISearchBar SearchBarControl 
+        public CustomUISearchBar SearchBarControl 
         { 
             get { return SearchBar; }
+        }
+
+        public bool IsListOptionsVisible
+        {
+            get
+            {
+                return _isListOptionsVisible;
+            }
+            set
+            {
+                if (_isListOptionsVisible != value)
+                {
+                    _isListOptionsVisible = value;
+
+                    OptionsButton.Hidden = !_isListOptionsVisible;
+
+                    SetNeedsLayout();
+                }
+            }
         }
 
         public ICommand ShowOptionsCommand { get; set; }
@@ -61,11 +81,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             InitializeStyles();
 
+            var buttonWidth =
+                IsListOptionsVisible
+                    ? OptionsButtonWith
+                    : 0;
+
             SearchBar.Frame = 
                 new RectangleF(
                     PointF.Empty,
                     new SizeF(
-                        Frame.Width - OptionsButtonWith, 
+                        Frame.Width - buttonWidth, 
                         DefaultHeight));
 
             OptionsButton.Frame = 
@@ -74,7 +99,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         SearchBar.Frame.Width,
                         0),
                     new SizeF(
-                        OptionsButtonWith,
+                        buttonWidth,
                         DefaultHeight));
         }
 
@@ -91,7 +116,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var textField = SearchBar.Subviews.OfType<UITextField>().FirstOrDefault();
             if (textField != null)
             {
-                textField.Font = Theme.OrgEventHeaderFont;
+                //textField.Font = Theme.OrgEventHeaderFont;
             }
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
