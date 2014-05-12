@@ -6,6 +6,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
+using SmartWalk.Client.iOS.Controls;
 
 namespace SmartWalk.Client.iOS.Utils.Map
 {
@@ -108,9 +109,11 @@ namespace SmartWalk.Client.iOS.Utils.Map
         public override void DidSelectAnnotationView(MKMapView mapView, MKAnnotationView view)
         {
             var mapAnnotation = view.Annotation as IMapAnnotation;
+            var customMapView = mapView as CustomMKMapView;
 
             if (mapAnnotation != null &&
-                IsMapBeingTouched &&
+                customMapView != null &&
+                customMapView.IsBeingTouched &&
                 SelectAnnotationCommand != null &&
                 SelectAnnotationCommand.CanExecute(mapAnnotation.DataContext))
             {
@@ -120,7 +123,10 @@ namespace SmartWalk.Client.iOS.Utils.Map
 
         public override void DidDeselectAnnotationView(MKMapView mapView, MKAnnotationView view)
         {
-            if (IsMapBeingTouched &&
+            var customMapView = mapView as CustomMKMapView;
+
+            if (customMapView != null &&
+                customMapView.IsBeingTouched &&
                 SelectAnnotationCommand != null &&
                 SelectAnnotationCommand.CanExecute(null))
             {
