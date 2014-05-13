@@ -2,9 +2,7 @@ using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using System.Drawing;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
@@ -41,15 +39,19 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             base.InitializeListView();
 
             OrgCollectionView.Delegate = new HomeCollectionDelegate(
+                OrgCollectionView,
                 ViewModel, 
                 (HomeCollectionSource)OrgCollectionView.Source);
         }
 
         protected override IListViewSource CreateListViewSource()
         {
-            var collectionSource = new HomeCollectionSource(OrgCollectionView);
+            var collectionSource = 
+                new HomeCollectionSource(OrgCollectionView, ViewModel);
 
-            this.CreateBinding(collectionSource).To<HomeViewModel>(vm => vm.EventInfos).Apply();
+            this.CreateBinding(collectionSource)
+                .To<HomeViewModel>(vm => vm.EventInfos)
+                .Apply();
 
             return collectionSource;
         }

@@ -363,6 +363,11 @@
     <Compile Include="Utils\UITouchGestureRecognizer.cs" />
     <Compile Include="Services\OpenURLTask.cs" />
     <Compile Include="Controls\CustomMKMap.cs" />
+    <Compile Include="Views\HomeView\HomeHeaderView.cs" />
+    <Compile Include="Views\HomeView\HomeHeaderView.designer.cs">
+      <DependentUpon>HomeHeaderView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\ScrollUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -398,6 +403,7 @@
     <InterfaceDefinition Include="Views\OrgEventView\ListSettingsView.xib" />
     <InterfaceDefinition Include="Views\Common\ImageBackgroundView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
+    <InterfaceDefinition Include="Views\HomeView\HomeHeaderView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />

@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-            SetCellWidth();
+            UpdateLayoutSizes();
         }
 
         protected override void Dispose(bool disposing)
@@ -29,7 +29,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             ConsoleUtil.LogDisposed(this);
         }
 
-        private void SetCellWidth()
+        private void UpdateLayoutSizes()
         {
             var flowLayout = (UICollectionViewFlowLayout)CollectionViewLayout;
             var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
@@ -40,6 +40,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
                             flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
             flowLayout.ItemSize = new SizeF(cellWith, OrgCell.DefaultHeight);
+            flowLayout.HeaderReferenceSize = new SizeF(Frame.Width, HomeHeaderView.DefaultHeight);
         }
     }
 }

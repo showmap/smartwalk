@@ -31,6 +31,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static int CustomNavBarPaddingCompensate = -6;
         public static int ToolBarPaddingCompensate = -12;
 
+        public static readonly UIFont HomeHeaderFont = UIFont.FromName(HelveticaMedium, 16);
         public static readonly UIFont ActionSheetFont = UIFont.FromName(HelveticaBold, 17);
         public static readonly UIFont ActionSheetCancelFont = UIFont.FromName(HelveticaBold, 18);
         public static readonly UIColor ActionSheetText = UIColor.Black;

@@ -6,13 +6,12 @@ using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ListViewBase : CustomNavBarViewBase
     {
-        public const double ListViewShowAnimationDuration = 0.15;
-
         private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
         private UIView _progressView;
@@ -128,7 +127,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             UIView.Transition(
                 ListView.View,
-                ListViewShowAnimationDuration,
+                ScrollUtil.ShowViewAnimationDuration,
                 UIViewAnimationOptions.TransitionCrossDissolve,
                 new NSAction(() => ListView.View.Hidden = false),
                 null);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Drawing;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
@@ -10,11 +9,10 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    public class OrgEventTableSource : HiddenHeaderTableSource, IListViewSource
+    public class OrgEventTableSource : HiddenHeaderTableSource
     {
         private static readonly NSString EmptyCellKey = new NSString("empty");
 
@@ -231,10 +229,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     /// <summary>
     /// This is a helper base class that incapsulates the HACK for initial hiding of table's header view.
     /// </summary>
-    public class HiddenHeaderTableSource : MvxTableViewSource
+    public class HiddenHeaderTableSource : MvxTableViewSource, IListViewSource
     {
         private bool _isTouched;
-        private NSTimer _timer;
 
         protected HiddenHeaderTableSource(UITableView tableView) : base(tableView)
         {
@@ -264,43 +261,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ReloadTableData();
 
-            if (!IsHeaderViewHidden &&
-                ItemsSource != null &&
-                ItemsSource.Cast<object>().Any() && 
-                _timer == null)
+            if (!IsHeaderViewHidden)
             {
-                _timer = NSTimer.CreateRepeatingScheduledTimer(
-                    TimeSpan.MinValue, 
-                    new NSAction(() => 
-                    {
-                        if (TableView.ContentSize.Height > HeaderHeight)
-                        {
-                            ScrollOutHeader();
-
-                            _timer.Invalidate();
-                            _timer.Dispose();
-                            _timer = null;
-                        }
-                    }));
+                ScrollUtil.ScrollOutHeaderAfterReload(
+                    TableView, 
+                    HeaderHeight, 
+                    this, 
+                    _isTouched);
             }
         }
 
         public void ScrollOutHeader()
         {
-            if (TableView.ContentSize.Height > HeaderHeight)
-            {
-                TableView.SetContentOffset(new PointF(0, HeaderHeight), _isTouched);
-
-                if (TableView.Hidden)
-                {
-                    UIView.Transition(
-                        TableView,
-                        ListViewBase.ListViewShowAnimationDuration,
-                        UIViewAnimationOptions.TransitionCrossDissolve,
-                        new NSAction(() => TableView.Hidden = false),
-                        null);
-                }
-            }
+            ScrollUtil.ScrollOutHeader(TableView, HeaderHeight, _isTouched);
         }
 
         public override void DraggingStarted(UIScrollView scrollView)
@@ -312,16 +285,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (TableView.TableHeaderView == null) return;
 
-            if (TableView.ContentOffset.Y < 0 || scrollView.Decelerating) return;
-
-            if (TableView.ContentOffset.Y < HeaderHeight / 2)
-            {
-                TableView.SetContentOffset(new PointF(0, 0), true);
-            }
-            else if (TableView.ContentOffset.Y < HeaderHeight)
-            {
-                TableView.SetContentOffset(new PointF(0, HeaderHeight), true);
-            }
+            ScrollUtil.AdjustHeaderPosition(scrollView, HeaderHeight);
         }
 
         protected override UITableViewCell GetOrCreateCellFor(
