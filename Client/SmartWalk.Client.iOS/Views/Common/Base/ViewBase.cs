@@ -37,6 +37,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
 
             InitializeGesture();
+            InitializeStyle();
         }
 
         public override void WillMoveToParentViewController(UIViewController parent)
@@ -162,6 +163,11 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 _swipeRight.Dispose();
                 _swipeRight = null;
             }
+        }
+
+        private void InitializeStyle()
+        {
+            View.BackgroundColor = Theme.BackgroundPatternColor;
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

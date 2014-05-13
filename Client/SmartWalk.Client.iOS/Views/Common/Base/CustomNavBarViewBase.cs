@@ -31,8 +31,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 EdgesForExtendedLayout = UIRectEdge.None;
             }
 
-            View.BackgroundColor = Theme.BackgroundPatternColor;
-
             InitializeCustomNavBarItems();
         }
 

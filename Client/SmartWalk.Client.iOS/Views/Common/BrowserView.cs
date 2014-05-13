@@ -14,11 +14,36 @@ namespace SmartWalk.Client.iOS.Views.Common
     {
         private const string DocTitle = "document.title";
 
+        private bool _showToolbars = true;
         private UIActivityIndicatorView _indicatorView;
+        private UITapGestureRecognizer _browserTapGesture;
 
         public new BrowserViewModel ViewModel
         {
             get { return (BrowserViewModel)base.ViewModel; }
+        }
+
+        private bool ShowToolbars
+        {
+            get
+            {
+                return _showToolbars;
+            }
+            set
+            {
+                _showToolbars = value;
+
+                if (_showToolbars)
+                {
+                    NavBarManager.Instance.SetNavBarVisibility(false, false, true, true);
+                    BottomToolbar.Hidden = false;
+                }
+                else
+                {
+                    NavBarManager.Instance.SetNavBarVisibility(false, false, false, true);
+                    BottomToolbar.Hidden = true;
+                }
+            }
         }
 
         public override void ViewDidLoad()
@@ -27,6 +52,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             InitializeStyle();
             InitializeIndicator();
+            InitializeGestures();
             UpdateViewTitle();
 
             WebView.LoadStarted += OnWebViewLoadStarted;
@@ -37,6 +63,16 @@ namespace SmartWalk.Client.iOS.Views.Common
             UpdateNavButtonsState();
 
             BottomToolbar.Victim = WebView;
+        }
+
+        public override void WillMoveToParentViewController(UIViewController parent)
+        {
+            base.WillMoveToParentViewController(parent);
+
+            if (parent == null)
+            {
+                DisposeGestures();
+            }
         }
 
         public override void ViewWillAppear(bool animated)
@@ -131,6 +167,29 @@ namespace SmartWalk.Client.iOS.Views.Common
             ProgressButton.CustomView = _indicatorView;
         }
 
+        // TODO: To make it working
+        private void InitializeGestures()
+        {
+            _browserTapGesture = new UITapGestureRecognizer(
+                () => ShowToolbars = !ShowToolbars) 
+            {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
+            WebView.AddGestureRecognizer(_browserTapGesture);
+        }
+
+        private void DisposeGestures()
+        {
+            if (_browserTapGesture != null)
+            {
+                WebView.RemoveGestureRecognizer(_browserTapGesture);
+                _browserTapGesture.Dispose();
+                _browserTapGesture = null;
+            }
+        }
+
         private void LoadURL()
         {
             if (ViewModel.BrowserURL != null)
@@ -195,6 +254,8 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
+            WebView.BackgroundColor = Theme.BackgroundPatternColor;
+
             LeftSpacer.Width = 
                 UIDevice.CurrentDevice.CheckSystemVersion(7, 0)
                     ? Theme.NavBarPaddingCompensate

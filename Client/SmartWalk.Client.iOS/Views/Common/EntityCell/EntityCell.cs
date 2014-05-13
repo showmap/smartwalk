@@ -8,6 +8,7 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -97,7 +98,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
             if (ScreenUtil.IsVerticalOrientation)
             {
-                var result = goldenHeight - (!entity.HasAddresses() ? MapVerticalHeight : 0);
+                var result = 
+                    goldenHeight - 
+                    (!entity.HasAddresses() ? MapVerticalHeight : 0) +
+                    VenueHeaderView.DefaultHeight; // compensate to fit the header image
                 return result;
             }
 
