@@ -138,7 +138,9 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            return Json(_entityService.SaveOrAddAddress(item).Id);
+            var errors = ValidateAddress(item);
+
+            return Json(errors.Count > 0 ? 0 : _entityService.SaveOrAddAddress(item).Id);
         }
 
         [HttpPost]
@@ -226,7 +228,9 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            return Json(_entityService.SaveOrAddContact(item).Id);
+            var errors = ValidateContact(item);
+
+            return Json(errors.Count > 0 ? 0 :_entityService.SaveOrAddContact(item).Id);
         }
 
         [HttpPost]
@@ -259,6 +263,40 @@ namespace SmartWalk.Server.Controllers
         #endregion
 
         #region Shows
+        private IDictionary<string, string> ValidateShow(ShowVm model)
+        {
+            var res = new Dictionary<string, string>();
+
+            #region Title
+            if (string.IsNullOrEmpty(model.Title))
+                res.Add("Title", T("Title can not be empty!").Text);
+            else if (model.Title.Length > 255)
+                res.Add("Title", T("Title can not be larger than 255 characters!").Text);
+            #endregion
+
+            #region Picture
+            if (!string.IsNullOrEmpty(model.Picture))
+            {
+                if (model.Picture.Length > 255)
+                    res.Add("Picture", T("Picture url can not be larger than 255 characters!").Text);
+                else if (!model.Picture.IsUrlValid())
+                    res.Add("Picture", T("Picture url is in bad format!").Text);
+            }
+            #endregion
+
+            #region DetailsUrl
+            if (!string.IsNullOrEmpty(model.DetailsUrl))
+            {
+                if (model.DetailsUrl.Length > 255)
+                    res.Add("DetailsUrl", T("Details url can not be larger than 255 characters!").Text);
+                else if (!model.DetailsUrl.IsUrlValid())
+                    res.Add("DetailsUrl", T("Details url is in bad format!").Text);
+            }
+            #endregion
+
+            return res;
+        }
+
         [HttpPost]
         public ActionResult GetShow(ShowVm item)
         {
@@ -278,7 +316,9 @@ namespace SmartWalk.Server.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            return Json(_entityService.SaveOrAddShow(item).Id);
+            var errors = ValidateShow(item);
+
+            return Json(errors.Count > 0 ? 0 : _entityService.SaveOrAddShow(item).Id);
         }
 
         [HttpPost]
@@ -354,6 +394,33 @@ namespace SmartWalk.Server.Controllers
         #endregion
 
         #region Events
+        private IDictionary<string, string> ValidateEvent(EventMetadataVm model)
+        {
+            var res = new Dictionary<string, string>();
+
+            #region StartTime
+            if (string.IsNullOrEmpty(model.StartTime))
+                res.Add("StartTime", T("StartTime can not be empty!").Text);            
+            #endregion
+
+            #region Picture
+            if (!string.IsNullOrEmpty(model.Picture))
+            {
+                if (model.Picture.Length > 255)
+                    res.Add("Picture", T("Picture url can not be larger than 255 characters!").Text);
+                else if (!model.Picture.IsUrlValid())
+                    res.Add("Picture", T("Picture url is in bad format!").Text);
+            }
+            #endregion
+
+            #region EndTime
+            if (model.Host == null)
+                res.Add("Host", T("Event organizer can not be empty!").Text);
+            #endregion
+
+            return res;
+        }
+
         [HttpPost]
         [CompressFilter]
         public ActionResult GetEvents(int pageNumber, string query, ListViewParametersVm parameters)
@@ -391,8 +458,8 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-
-            return Json(_eventService.SaveOrAddEvent(user.Record, item));
+            var errors = ValidateEvent(item);
+            return Json(errors.Count > 0 ? null : _eventService.SaveOrAddEvent(user.Record, item));
         } 
 
         public ActionResult DeleteEvent(int eventId)

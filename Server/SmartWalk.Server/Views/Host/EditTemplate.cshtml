@@ -39,7 +39,7 @@
         @if (host.Id != 0) {
             using(Html.BeginForm("Delete", "Host", FormMethod.Get)) {
                 <input type="hidden" name="entityId" value="@host.Id" />
-                <button type="submit" class="btn btn-danger" >@T("Delete") <span class="hidden-xs">@T("Organizer")</span></button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you shure you wish to delete this organizer?")')">@T("Delete") <span class="hidden-xs">@T("Organizer")</span></button>
             } 
         }
             </div>

@@ -43,7 +43,7 @@
         @if (venue.Id != 0) {
             using(Html.BeginForm("Delete", "Venue", FormMethod.Get)) {
                 <input type="hidden" name="entityId" value="@venue.Id" />
-                <button type="submit" class="btn btn-danger" >@T("Delete") <span class="hidden-xs">@T("Venue")</span></button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you shure you wish to delete this venue?")')">@T("Delete") <span class="hidden-xs">@T("Venue")</span></button>
             }
         }
             </div>

@@ -165,9 +165,9 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            try
-            {
-                return Json(_entityService.SaveOrAddEntity(user.Record, venue));
+            try {
+                var errors = ValidateModel(venue);
+                return Json(errors.Count > 0 ? null : _entityService.SaveOrAddEntity(user.Record, venue));
             }
             catch
             {

@@ -144,7 +144,7 @@
                 @if (eventItem.Id != 0) {
                     using(Html.BeginForm("DeleteEvent", "Event", FormMethod.Get)) {
                         <input type="hidden" name="eventId" value="@eventItem.Id" />
-                        <button type="submit" class="btn btn-danger" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you shure you wish to delete this event?")')" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
                     }
                 }                
             </div>

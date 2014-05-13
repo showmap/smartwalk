@@ -209,6 +209,8 @@ ko.validation.rules['dateCompareValidation'] = {
         } else if (otherVal.cmp == 'LESS_THAN') {
             return curDate <= cmpDate;
         } else if (otherVal.cmp == 'REGION') {
+            if (!otherVal.compareValTo())
+                return true;
             var cmpDateTo = $.datepicker.parseDate(dateFormat, otherVal.compareValTo());
             return curDate <= cmpDateTo && curDate >= cmpDate;
         }
