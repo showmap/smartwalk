@@ -1,5 +1,6 @@
-Biiig update
-The new way of navigation / toolbar
-The new Event view with split screen
-Tons of internal performance improvements
-Enjoy
+SW-138 Reverting broken solution with Gestures
+SW-160 BrowserView's logic to ViewModel. Toolbar updated.
+SW-138 Gesture recognizers used for touch handle
+SW-160 Not showing and navigating map if no coords
+SW-138 Hide List Options if there is no shows
+SW-138 The exception on selection venue w/o shows
