@@ -2,6 +2,7 @@
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -37,6 +38,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 base.Frame = GetFixedFrame(value);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         private RectangleF GetFixedFrame(RectangleF frame)

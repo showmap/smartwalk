@@ -20,6 +20,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
 
+        // HACK: Can't call to Superview due to memory leak
+        private WeakReference<UIView> _parentTableRef;
         private UITapGestureRecognizer _descriptionTapGesture;
 
         public EntityCell(IntPtr handle) : base(handle)
@@ -134,6 +136,27 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             get { return (MapCell)MapCellPlaceholder.Content; }
         }
 
+        public override void WillMoveToSuperview(UIView newsuper)
+        {
+            base.WillMoveToSuperview(newsuper);
+
+            _parentTableRef = newsuper != null
+                ? new WeakReference<UIView>(newsuper)
+                : null;
+
+            if (newsuper == null)
+            {
+                ExpandCollapseCommand = null;
+                ShowImageFullscreenCommand = null;
+                NavigateWebSiteCommand = null;
+                NavigateAddressesCommand = null;
+
+                DisposeGestures();
+                DisposeHeaderImage();
+                DisposeMapCell();
+            }
+        }
+
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
@@ -145,10 +168,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             base.UpdateConstraints();
 
-            if (Superview == null) return;
+            UIView parentTable;
+            if (_parentTableRef == null || !_parentTableRef.TryGetTarget(out parentTable)) return;
 
             var entity = DataContext != null ? DataContext.Entity : null;
-            var headerHeight = GetHeaderHeight(Superview.Frame, entity);
+            var headerHeight = GetHeaderHeight(parentTable.Frame, entity);
             if (Frame.Height >= headerHeight)
             {
                 HeaderHeightConstraint.Constant = headerHeight;
@@ -234,23 +258,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             {
                 DescriptionTopConstraint.Constant = 0;
                 DescriptionBottomConstraint.Constant = 0;
-            }
-        }
-
-        public override void WillMoveToSuperview(UIView newsuper)
-        {
-            base.WillMoveToSuperview(newsuper);
-
-            if (newsuper == null)
-            {
-                ExpandCollapseCommand = null;
-                ShowImageFullscreenCommand = null;
-                NavigateWebSiteCommand = null;
-                NavigateAddressesCommand = null;
-
-                DisposeGestures();
-                DisposeHeaderImage();
-                DisposeMapCell();
             }
         }
 

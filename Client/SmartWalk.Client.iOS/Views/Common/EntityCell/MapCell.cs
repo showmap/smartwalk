@@ -50,12 +50,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            ConsoleUtil.LogDisposed(this);
-        }
-
         protected override void OnInitialize()
         {
             InitializeGestures();
