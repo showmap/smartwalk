@@ -26,17 +26,7 @@
 			<thead>
 				<tr>
 					<th><h4>@T("Addresses")</h4></th>
-					<th class="td-align">
-						<div class="input-group-btn" style="display:inline">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								<input type="checkbox" data-bind="checked: AllAddressesChecked"/><span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu">
-								<li><a href="#">@T("Duplicate")</a></li>
-								<li data-bind="visible: IsAnyAddressSelected"><a href="#" data-bind="click: function () { $root.deleteAddresses($root) }">@T("Delete")</a></li>
-							</ul>
-						</div>
-					</th>
+					<th class="td-align"></th>
 				</tr>
 			</thead>
 			<tbody data-bind="template: { name: getAddressView, foreach: Addresses() }"></tbody>
@@ -53,17 +43,7 @@
                 <tr>
                     <th>@T("Contact Type")</th>
                     <th><h4>@T("E-mail, Phone or Web-Site")</h4></th>
-                    <th class="td-align">
-                        <div class="input-group-btn" style="display:inline">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <input type="checkbox" data-bind="checked: AllContactsChecked"/><span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">@T("Duplicate")</a></li>
-                                <li data-bind="visible: IsAnyContactSelected"><a href="#" data-bind="click: function () { $root.deleteContacts($root) }">@T("Delete")</a></li>
-                            </ul>
-                        </div>
-                    </th>
+                    <th class="td-align"></th>
                 </tr>
             </thead>
             <tbody data-bind="template: { name: getContactView, foreach: Contacts() }"></tbody>

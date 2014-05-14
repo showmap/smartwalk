@@ -11,7 +11,7 @@ namespace SmartWalk.Server.Services.EntityService
         IList<EntityVm> GetEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, IComparable> orderBy, bool isDesc, string searchString);
         IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord);
         IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, string searchString);
-        bool IsNameExists(string name);
+        bool IsNameExists(EntityVm item, EntityType type);
         AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId);
         EntityVm GetEntityVmById(int entityId, EntityType type);
         EntityVm GetEntityVm(EntityRecord entity, LoadMode mode = LoadMode.Full);

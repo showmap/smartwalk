@@ -207,7 +207,7 @@ EventViewModelExtended.prototype.saveShow = function (root, item) {
 };
 
 EventViewModelExtended.prototype.deleteShow = function (root, item) {
-    root.selectedItem(null);
+    root.cancelInner(root);
     
     if (root.Id() != 0) {
         var ajdata = ko.toJSON(item);
@@ -312,9 +312,7 @@ EventViewModelExtended.prototype.deleteVenue = function (root, item) {
 
         ajaxJsonRequest(ajdata, root.settings.eventVenueDeleteUrl,
             function(data) {
-                if (data && data.length > 0) {
-                    root.DeleteItem_(item);
-                }
+                root.DeleteItem_(item);
             }
         );
     } else {

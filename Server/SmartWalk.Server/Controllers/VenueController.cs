@@ -92,7 +92,7 @@ namespace SmartWalk.Server.Controllers
                 res.Add("Name", T("Venue name can not be empty!").Text);
             else if(model.Name.Length > 255)
                 res.Add("Name", T("Venue name can not be larger than 255 characters!").Text);
-            else if (_entityService.IsNameExists(model.Name))
+            else if (_entityService.IsNameExists(model, EntityType.Venue))
                 res.Add("Name", T("Venue name must be unique!").Text);
             #endregion
 

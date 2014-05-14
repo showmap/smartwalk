@@ -121,18 +121,7 @@
 				<tr>
 					<th><h4>@T("Venues and Shows")</h4></th>
 					<th>@T("Show Time")</th>
-					<th class="td-align">
-					    <div class="input-group-btn" style="display:inline">
-					        <input type="checkbox" data-bind="checked: AllVenuesChecked">
-					        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					            <input type="checkbox" data-bind="checked: AllVenuesChecked" /> <span class="caret"></span>
-					        </button>
-					        <ul class="dropdown-menu">
-					            <li><a href="#">@T("Duplicate")</a></li>
-					            <li><a href="#" data-bind="click: function() { $root.deleteAction($root); }">@T("Delete")</a></li>
-					        </ul>
-					    </div>
-					</th>
+					<th class="td-align"></th>
 				</tr>
 			</thead>
 			<tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>

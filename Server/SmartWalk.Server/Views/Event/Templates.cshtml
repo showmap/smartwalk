@@ -15,7 +15,7 @@
         <div class="clearfix"></div>
         <button type="button" class="btn btn-default gap" data-bind="click: function(){$root.addShow($root, $data)}">@T("Create Show")</button>
     </td>
-    <td class="td-valign td-align"><input type="checkbox" data-bind="checked: AllShowsChecked"></td>
+	<td class="td-align"><button type="button" class="btn btn-default" data-bind="click: function() { if(confirm('@T("Are you shure you wish to remove this venue with all shows from event?")')) $root.deleteVenue($root, $data); }">@T("X")</button></td>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplateEdit">
@@ -58,7 +58,7 @@
         </td>
         
         <td data-bind="html: TimeText, click: $root.selectedItem"></td>
-        <td class="td-align"><input type="checkbox" data-bind="checked: IsChecked"></td>
+        <td class="td-align"><button type="button" class="btn btn-default" data-bind="click: function() { if(confirm('@T("Are you shure you wish to remove show?")    ')) $root.deleteShow($root, $data); }">@T("X")</button></td>
     </tr>    
 </script>
 

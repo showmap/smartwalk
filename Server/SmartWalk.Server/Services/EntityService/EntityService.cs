@@ -172,8 +172,8 @@ namespace SmartWalk.Server.Services.EntityService
 
         #region Entities
 
-        public bool IsNameExists(string name) {
-            return _entityRepository.Table.Any(e => e.Name == name);
+        public bool IsNameExists(EntityVm item, EntityType type) {
+            return _entityRepository.Table.Any(e => e.Type == (int)type && e.Id != item.Id && e.Name == item.Name);
         }
 
 
