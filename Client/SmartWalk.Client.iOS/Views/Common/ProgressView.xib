@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3">
+                <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Loading Panel">
                     <rect key="frame" x="105" y="218" width="110" height="25"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
@@ -44,13 +44,25 @@
                         <constraint firstAttribute="width" constant="110" id="29"/>
                     </constraints>
                 </view>
+                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Data Available" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="240" translatesAutoresizingMaskIntoConstraints="NO" id="nnS-3B-mna" userLabel="No Data Label">
+                    <rect key="frame" x="40" y="220" width="240" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="highlightedColor"/>
+                    <size key="shadowOffset" width="0.0" height="0.0"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="3" secondAttribute="centerX" id="26"/>
                 <constraint firstAttribute="centerY" secondItem="3" secondAttribute="centerY" id="27"/>
+                <constraint firstItem="nnS-3B-mna" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="40" id="KRf-8H-7LH"/>
+                <constraint firstAttribute="trailing" secondItem="nnS-3B-mna" secondAttribute="trailing" constant="40" id="p3I-qY-3LD"/>
+                <constraint firstAttribute="centerY" secondItem="nnS-3B-mna" secondAttribute="centerY" id="vNA-GD-KS7"/>
             </constraints>
             <connections>
+                <outlet property="LoadingView" destination="3" id="Y9O-sc-eNd"/>
+                <outlet property="NoDataLabel" destination="nnS-3B-mna" id="EQr-xA-Khs"/>
                 <outlet property="ProgressLabel" destination="4" id="30"/>
             </connections>
         </view>

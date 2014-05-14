@@ -129,7 +129,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 IsLoading = false;
 
                 Org = org;
-                RaiseRefreshCompleted();
+                RaiseRefreshCompleted(Org != null);
             }
             else
             {

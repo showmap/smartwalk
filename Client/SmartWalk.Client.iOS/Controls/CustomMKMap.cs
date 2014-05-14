@@ -2,6 +2,7 @@
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Controls
 {
@@ -33,6 +34,12 @@ namespace SmartWalk.Client.iOS.Controls
             base.TouchesCancelled(touches, evt);
 
             IsBeingTouched = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
     }
 }

@@ -7,6 +7,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -14,7 +15,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
     {
         private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
-        private UIView _progressView;
+        private UIView _progressViewContainer;
+        private ProgressView _progressView;
         private IListViewSource _listViewSource;
 
         protected string ViewTitle
@@ -43,22 +45,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 return _listView;
             }
         }
-
-        private UIView ProgressViewContainer 
-        { 
-            get
-            {
-                if (_progressView == null)
-                {
-                    _progressView = GetProgressViewContainer();
-                    var progress = ProgressView.Create();
-                    _progressView.AddSubview(progress);
-                }
-
-                return _progressView;
-            }
-        }
-
+            
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -67,14 +54,15 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             if (refreshableViewModel != null)
             {
                 InitializeRefreshControl();
-                refreshableViewModel.RefreshCompleted += OnViewModelRefreshCompleted;
+                refreshableViewModel.RefreshCompleted += OnRefreshCompleted;
             }
-
-            UpdateViewTitle();
-            UpdateViewState();
 
             InitializeConstraints();
             InitializeListView();
+            InitializeProgressView();
+
+            UpdateViewTitle();
+            UpdateViewLoadingState();
         }
 
         public override void ViewWillAppear(bool animated)
@@ -93,7 +81,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 var refreshableViewModel = ViewModel as IRefreshableViewModel;
                 if (refreshableViewModel != null)
                 {
-                    refreshableViewModel.RefreshCompleted -= OnViewModelRefreshCompleted;
+                    refreshableViewModel.RefreshCompleted -= OnRefreshCompleted;
                 }
 
                 DisposeRefreshControl();
@@ -176,7 +164,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             if (progressViewModel != null &&
                 propertyName == progressViewModel.GetPropertyName(p => p.IsLoading))
             {
-                UpdateViewState();
+                UpdateViewLoadingState();
                 UpdateStatusBarLoadingState(true);
             }
 
@@ -186,6 +174,13 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 UpdateViewTitle();
             }
+        }
+
+        private void InitializeProgressView()
+        {
+            _progressViewContainer = GetProgressViewContainer();
+            _progressView = ProgressView.Create();
+            _progressViewContainer.AddSubview(_progressView);
         }
 
         private void InitializeRefreshControl()
@@ -212,9 +207,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
-        private void OnViewModelRefreshCompleted(object sender, EventArgs e)
+        private void OnRefreshCompleted(object sender, MvxValueEventArgs<bool> e)
         {
             _refreshControl.EndRefreshing();
+            UpdateViewDataState(e.Value);
             OnViewModelRefreshed();
         }
 
@@ -234,32 +230,43 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 var progressViewTopConstraint = GetProgressViewTopConstraint();
 
-                if (ProgressViewContainer != null &&
+                if (_progressViewContainer != null &&
                     progressViewTopConstraint != null)
                 {
                     View.RemoveConstraint(progressViewTopConstraint);
 
-                    var views = new NSDictionary("topGuide", TopLayoutGuide, "view", ProgressViewContainer);
-                    var constraint = NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
+                    var views = new NSDictionary(
+                        "topGuide", 
+                        TopLayoutGuide, 
+                        "view", 
+                        _progressViewContainer);
+                    var constraint = 
+                        NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
                     View.AddConstraints(constraint);
                 }
             }
         }
 
-        private void UpdateViewState()
+        private void UpdateViewLoadingState()
         {
             if (ListView.Source != null && ListView.Source.ItemsSource != null) return;
 
             if (IsLoading)
             {
-                ProgressViewContainer.Hidden = false;
+                _progressView.IsDataUnavailable = false;
+                _progressView.IsLoading = true;
                 OnLoadingViewStateUpdate();
             }
             else
             {
-                ProgressViewContainer.Hidden = true;
+                _progressView.IsLoading = false;
                 OnLoadedViewStateUpdate();
             }
+        }
+
+        private void UpdateViewDataState(bool hasData)
+        {
+            _progressView.IsDataUnavailable = !hasData;
         }
     }
 }

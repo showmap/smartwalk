@@ -27,5 +27,6 @@
         public const string CantReadNetworkContent = "Can't read network content. Please try again later";
         public const string AccessDenied = "Access Denied";
         public const string UserDeniedAccessToCalendars = "User Denied Access to Calendars";
+        public const string NoContentAvailable = "No Content Available. \nPlease refresh or try later.";
     }
 }

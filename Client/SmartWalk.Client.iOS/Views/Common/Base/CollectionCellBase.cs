@@ -1,5 +1,6 @@
 using System;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -38,10 +39,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
         }
 
-        /*protected override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
-        }*/
+        }
     }
 }

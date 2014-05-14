@@ -133,7 +133,7 @@ namespace SmartWalk.Client.Core.ViewModels
             IsLoading = false;
 
             EventInfos = eventInfos;
-            RaiseRefreshCompleted();
+            RaiseRefreshCompleted(EventInfos != null);
         }
 
         private void UpdateLocationString()

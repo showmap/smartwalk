@@ -257,7 +257,7 @@ namespace SmartWalk.Client.Core.ViewModels
         protected override void OnShowNextEntity()
         {
             Venue = GetNextVenue();
-            RaiseRefreshCompleted();
+            RaiseRefreshCompleted(Venue != null);
         }
 
         private async Task UpdateOrgEventVenues(DataSource source)
@@ -282,7 +282,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 IsLoading = false;
                     
                 OrgEventVenues = venues;
-                RaiseRefreshCompleted();
+                RaiseRefreshCompleted(OrgEventVenues != null);
             }
             else
             {

@@ -1,6 +1,5 @@
 using System.Drawing;
 using MonoTouch.UIKit;
-using SmartWalk.Client.iOS.Views.HomeView;
 
 namespace SmartWalk.Client.iOS.Resources
 {
@@ -31,13 +30,15 @@ namespace SmartWalk.Client.iOS.Resources
         public static int CustomNavBarPaddingCompensate = -6;
         public static int ToolBarPaddingCompensate = -12;
 
+        public static readonly UIFont NoDataFont = UIFont.FromName(HelveticaMedium, 16);
+        public static readonly UIFont LoadingFont = UIFont.FromName(HelveticaMedium, 16);
+        public static readonly UIColor LoadingText = UIColor.FromRGB(170, 170, 170);
         public static readonly UIFont HomeHeaderFont = UIFont.FromName(HelveticaMedium, 16);
         public static readonly UIFont ActionSheetFont = UIFont.FromName(HelveticaBold, 17);
         public static readonly UIFont ActionSheetCancelFont = UIFont.FromName(HelveticaBold, 18);
         public static readonly UIColor ActionSheetText = UIColor.Black;
 
         public static readonly UIColor RefreshControl = UIColor.FromRGB(200, 200, 200);
-        public static readonly UIColor TextGradient = UIColor.FromRGB(240, 240, 240);
         public static readonly UIColor SearchControl = UIColor.FromRGB(230, 230, 230);
 
         public static readonly UIColor CellBackground = UIColor.White;
@@ -156,14 +157,6 @@ namespace SmartWalk.Client.iOS.Resources
             var buttonLabelAp = UILabel.AppearanceWhenContainedIn(typeof(UIButton));
             buttonLabelAp.Font = ButtonTextFont;
             buttonLabelAp.TextColor = CellText;
-
-            var cellAp = UICollectionViewCell.AppearanceWhenContainedIn(typeof(HomeView));
-            cellAp.BackgroundColor = Theme.CellBackground;
-
-            var labelAp = UILabel.AppearanceWhenContainedIn(typeof(OrgCell));
-            labelAp.Font = Theme.ImageTitleTextFont;
-            labelAp.TextColor = Theme.CellText;
-            labelAp.HighlightedTextColor = Theme.CellTextHighlight;
         }
     }
 }

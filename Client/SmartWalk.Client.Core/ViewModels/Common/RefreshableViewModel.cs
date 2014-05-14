@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Services;
@@ -25,7 +26,7 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             _analyticsService = analyticsService;
         }
 
-        public event EventHandler RefreshCompleted;
+        public event EventHandler<MvxValueEventArgs<bool>>  RefreshCompleted;
 
         public ICommand RefreshCommand
         {
@@ -65,11 +66,11 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             _reachabilityService.StateChanged -= OnReachableStateChanged;
         }
 
-        protected void RaiseRefreshCompleted()
+        protected void RaiseRefreshCompleted(bool hasData)
         {
             if (RefreshCompleted != null)
             {
-                RefreshCompleted(this, EventArgs.Empty);
+                RefreshCompleted(this, new MvxValueEventArgs<bool>(hasData));
             }
         }
 

@@ -812,7 +812,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 IsLoading = false;
 
                 OrgEvent = orgEvent;
-                RaiseRefreshCompleted();
+                RaiseRefreshCompleted(OrgEvent != null);
             }
             else
             {

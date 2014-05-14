@@ -9,18 +9,34 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    [Register ("ProgressView")]
-    partial class ProgressView
-    {
-        [Outlet]
-        MonoTouch.UIKit.UILabel ProgressLabel { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (ProgressLabel != null) {
-                ProgressLabel.Dispose ();
-                ProgressLabel = null;
-            }
-        }
-    }
+	[Register ("ProgressView")]
+	partial class ProgressView
+	{
+		[Outlet]
+		MonoTouch.UIKit.UIView LoadingView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UILabel NoDataLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UILabel ProgressLabel { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (LoadingView != null) {
+				LoadingView.Dispose ();
+				LoadingView = null;
+			}
+
+			if (ProgressLabel != null) {
+				ProgressLabel.Dispose ();
+				ProgressLabel = null;
+			}
+
+			if (NoDataLabel != null) {
+				NoDataLabel.Dispose ();
+				NoDataLabel = null;
+			}
+		}
+	}
 }
