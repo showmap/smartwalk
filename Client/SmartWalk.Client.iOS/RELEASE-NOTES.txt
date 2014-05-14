@@ -1,6 +1,6 @@
-SW-138 Reverting broken solution with Gestures
-SW-160 BrowserView's logic to ViewModel. Toolbar updated.
-SW-138 Gesture recognizers used for touch handle
-SW-160 Not showing and navigating map if no coords
-SW-138 Hide List Options if there is no shows
-SW-138 The exception on selection venue w/o shows
+SW-160 Memory leak with EntityCell was fixed
+SW-160 No Data msg is shown if no data loaded
+SW-160 The status bar is shown during loading data
+SW-160 Home header with location was added.
+SW-160 Better proportions for Entity View
+SW-160 Release note and version updated

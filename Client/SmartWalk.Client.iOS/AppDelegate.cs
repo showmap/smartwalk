@@ -5,7 +5,9 @@ using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
 using GoogleAnalytics;
 using MonoTouch.Foundation;
+#if ADHOC
 using MonoTouch.TestFlight;
+#endif
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Utils;
@@ -82,10 +84,12 @@ namespace SmartWalk.Client.iOS
             NavBarManager.Instance.Rotate();
         }
 
+#if ADHOC
         private static void InitializeTestFlight()
         {
             TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
         }
+#endif
 
         private static void InitializeVersion()
         {
@@ -100,6 +104,7 @@ namespace SmartWalk.Client.iOS
             NSUserDefaults.StandardUserDefaults[SettingKeys.VersionNumber] = new NSString(_version);
         }
 
+#if ADHOC || APPSTORE
         private static void InitializeGAI()
         {
             EasyTracker.GetTracker();
@@ -113,5 +118,6 @@ namespace SmartWalk.Client.iOS
                         .BoolForKey(SettingKeys.AnonymousStatsEnabled);
             }
         }
+#endif
     }
 }
