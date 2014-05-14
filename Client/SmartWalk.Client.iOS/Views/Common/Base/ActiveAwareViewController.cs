@@ -5,9 +5,14 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ActiveAwareViewController : MvxViewController
     {
-        public override void ViewDidAppear(bool animated)
+        protected bool IsActive
         {
-            base.ViewDidAppear(animated);
+            get { return !(ViewModel is IActiveAware) || ((IActiveAware)ViewModel).IsActive; }
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
 
             var activeViewModel = ViewModel as IActiveAware;
             if (activeViewModel != null)

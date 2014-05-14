@@ -108,7 +108,7 @@ namespace SmartWalk.Client.Core.ViewModels
             base.Start();
         }
 
-        protected override void Refresh(DataSource source = DataSource.Server)
+        protected override void Refresh(DataSource source)
         {
             UpdateEventInfos(source).ContinueWithThrow();
         }

@@ -47,15 +47,10 @@ namespace SmartWalk.Client.iOS.Utils
         }
 
         public void SetNavBarVisibility(
-            bool isStatusVisible,
             bool isNativeVisible, 
             bool isCustomVisible, 
             bool animated)
         {
-            UIApplication.SharedApplication.SetStatusBarHidden(
-                !isStatusVisible, 
-                animated ? UIStatusBarAnimation.Slide : UIStatusBarAnimation.None);
-
             NavController.SetNavigationBarHidden(!isNativeVisible, animated);
            
             if (isCustomVisible)

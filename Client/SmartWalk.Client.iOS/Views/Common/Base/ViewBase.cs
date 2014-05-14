@@ -90,6 +90,13 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
+        protected virtual void SetStatusBarVisibility(bool isVisible, bool animated)
+        {
+            UIApplication.SharedApplication.SetStatusBarHidden(
+                !isVisible, 
+                animated ? UIStatusBarAnimation.Slide : UIStatusBarAnimation.None);
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -168,6 +175,22 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private void InitializeStyle()
         {
             View.BackgroundColor = Theme.BackgroundPatternColor;
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                UIApplication.SharedApplication
+                    .SetStatusBarStyle(UIStatusBarStyle.Default, false);
+            }
+            else
+            {
+                #pragma warning disable 618
+
+                WantsFullScreenLayout = true;
+                UIApplication.SharedApplication
+                    .SetStatusBarStyle(UIStatusBarStyle.BlackTranslucent, false);
+
+                #pragma warning restore 618
+            }
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

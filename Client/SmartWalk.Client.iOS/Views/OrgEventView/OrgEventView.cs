@@ -65,6 +65,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewWillAppear(animated);
 
+            SetStatusBarVisibility(true, animated);
             UpdateNavBarState(animated);
 
             if (_tableContentOffset != PointF.Empty && _timer == null)
@@ -162,6 +163,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.UpdateViewConstraints();
 
             UpdateViewConstraints(false);
+        }
+
+        protected override void UpdateStatusBarLoadingState(bool animated)
+        {
+            // overriding the base class logic of showing status bar during loading
+            // status bar is always visible in this view
         }
 
         private void UpdateViewConstraints(bool animated)
@@ -895,7 +902,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (ViewModel.Mode == OrgEventViewMode.List)
             {
-                NavBarManager.Instance.SetNavBarVisibility(true, true, false, animated);
+                NavBarManager.Instance.SetNavBarVisibility(true, false, animated);
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                 {
@@ -915,7 +922,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else
             {
-                NavBarManager.Instance.SetNavBarVisibility(true, false, true, animated);
+                NavBarManager.Instance.SetNavBarVisibility(false, true, animated);
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                 {

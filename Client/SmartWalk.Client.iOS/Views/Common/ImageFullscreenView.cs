@@ -72,7 +72,11 @@ namespace SmartWalk.Client.iOS.Views.Common
                 NavBarManager.Instance.Window.RootViewController
                     .PresentViewController(this, true, null);
 
-                NavBarManager.Instance.SetNavBarVisibility(false, false, false, true);
+                UIApplication.SharedApplication.SetStatusBarHidden(
+                    true, 
+                    UIStatusBarAnimation.Slide);
+
+                NavBarManager.Instance.SetNavBarVisibility(false, false, true);
 
                 if (Shown != null)
                 {

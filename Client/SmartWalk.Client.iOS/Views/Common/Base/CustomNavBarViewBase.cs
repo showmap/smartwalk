@@ -38,13 +38,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewWillAppear(animated);
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                UIApplication.SharedApplication
-                    .SetStatusBarStyle(UIStatusBarStyle.LightContent, true);
-            }
-
-            NavBarManager.Instance.SetNavBarVisibility(false, false, true, animated);
+            SetStatusBarVisibility(false, animated);
+            NavBarManager.Instance.SetNavBarVisibility(false, true, animated);
             NavBarManager.Instance.NavBar.SetItems(_navBarItems, animated);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(_navBarItems);
         }
@@ -79,7 +74,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeCustomNavBarItems()
         {
-            // just in case replacing default iOS back button (it may not be visible)
+            // replacing default iOS back button
             if (NavigationController.ViewControllers.Length > 1)
             {
                 ButtonBarUtil.OverrideNavigatorBackButton(

@@ -26,6 +26,11 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
+        protected bool IsLoading
+        {
+            get { return ViewModel is IProgressViewModel && ((IProgressViewModel)ViewModel).IsLoading; }
+        }
+
         private ListViewDecorator ListView 
         { 
             get
@@ -72,6 +77,13 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             InitializeListView();
         }
 
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            UpdateStatusBarLoadingState(animated);
+        }
+
         public override void WillMoveToParentViewController(UIViewController parent)
         {
             base.WillMoveToParentViewController(parent);
@@ -103,6 +115,29 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         }
 
         protected abstract IListViewSource CreateListViewSource();
+
+        protected virtual void UpdateStatusBarLoadingState(bool animated)
+        {
+            if (IsLoading)
+            {
+                SetStatusBarVisibility(true, animated);
+            }
+            else
+            {
+                SetStatusBarVisibility(false, animated);
+            }
+        }
+
+        protected override void SetStatusBarVisibility(bool isVisible, bool animated)
+        {
+            // making sure that view is still visible on screen after loading finished
+            if (IsActive)
+            {
+                isVisible = IsLoading || isVisible;
+
+                base.SetStatusBarVisibility(isVisible, animated);
+            }
+        }
 
         protected virtual void UpdateViewTitle()
         {
@@ -142,6 +177,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 propertyName == progressViewModel.GetPropertyName(p => p.IsLoading))
             {
                 UpdateViewState();
+                UpdateStatusBarLoadingState(true);
             }
 
             var refreshableViewModel = ViewModel as IRefreshableViewModel;
@@ -214,8 +250,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             if (ListView.Source != null && ListView.Source.ItemsSource != null) return;
 
-            var progressViewModel = (IProgressViewModel)ViewModel;
-            if (progressViewModel.IsLoading)
+            if (IsLoading)
             {
                 ProgressViewContainer.Hidden = false;
                 OnLoadingViewStateUpdate();

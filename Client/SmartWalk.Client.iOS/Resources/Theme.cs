@@ -107,8 +107,6 @@ namespace SmartWalk.Client.iOS.Resources
             {
                 NavBarPaddingCompensate = -9;
 
-                UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
-
                 UINavigationBar.Appearance.BarTintColor = NavBarBackgroundiOS7;
                 UINavigationBar.Appearance.TintColor = Theme.NavBarText;
             }
