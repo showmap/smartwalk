@@ -5,5 +5,6 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string CFBundleShortVersionString = "CFBundleShortVersionString";
         public static readonly string VersionNumber = "VersionNumber";
         public static readonly string AnonymousStatsEnabled = "AnonymousStatsEnabled";
+        public static readonly string ResetCache = "ResetCache";
     }
 }

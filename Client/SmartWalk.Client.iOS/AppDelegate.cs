@@ -42,6 +42,8 @@ namespace SmartWalk.Client.iOS
             GoogleAnalyticsService.IsOptOut = true;
 #endif
 
+            HandleResetCache();
+
             Theme.Apply();
 
             Window = new UIWindow(UIScreen.MainScreen.Bounds);
@@ -77,6 +79,8 @@ namespace SmartWalk.Client.iOS
             {
                 EasyTracker.Current.OnApplicationActivated(application);
             }
+
+            HandleResetCache();
         }
 
         public override void WillChangeStatusBarFrame(UIApplication application, RectangleF newStatusBarFrame)
@@ -132,5 +136,15 @@ namespace SmartWalk.Client.iOS
             }
         }
 #endif
+
+        private static void HandleResetCache()
+        {
+            if (NSUserDefaults.StandardUserDefaults[SettingKeys.ResetCache] != null &&
+                NSUserDefaults.StandardUserDefaults.BoolForKey(SettingKeys.ResetCache))
+            {
+                // TODO: Reset cache
+                NSUserDefaults.StandardUserDefaults.SetBool(false, SettingKeys.ResetCache);
+            }
+        }
     }
 }

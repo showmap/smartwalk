@@ -69,7 +69,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             if (PresentingViewController == null)
             {
-                AppDelegate.Window.Window.RootViewController
+                AppDelegate.Window.RootViewController
                     .PresentViewController(this, true, null);
 
                 UIApplication.SharedApplication.SetStatusBarHidden(
