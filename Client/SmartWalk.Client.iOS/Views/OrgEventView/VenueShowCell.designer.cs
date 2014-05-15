@@ -13,6 +13,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class VenueShowCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UILabel AllDayLabel { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
 
 		[Outlet]
@@ -81,6 +84,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (EndTimeLabel != null) {
 				EndTimeLabel.Dispose ();
 				EndTimeLabel = null;
+			}
+
+			if (AllDayLabel != null) {
+				AllDayLabel.Dispose ();
+				AllDayLabel = null;
 			}
 
 			if (ImageAndDetailsSpaceConstraint != null) {

@@ -259,6 +259,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ? GetTimeText(DataContext.EndTime.Value, DataContext.GetStatus())
                 : new NSAttributedString();
 
+            AllDayLabel.Text = DataContext != null &&
+                    !DataContext.StartTime.HasValue &&
+                    !DataContext.EndTime.HasValue
+                ? Localization.AllDay
+                : null;
+
             DescriptionLabel.Text = DataContext != null 
                 ? DataContext.GetText() : null;
 
@@ -416,6 +422,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
             EndTimeLabel.TextColor = Theme.CellText;
+
+            AllDayLabel.Font = Theme.VenueShowCellTimeFont;
+            AllDayLabel.TextColor = Theme.CellText;
 
             DescriptionLabel.Font = Theme.VenueShowCellFont;
             DescriptionLabel.TextColor = Theme.CellText;
