@@ -738,10 +738,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.SelectedVenueOnMap != null)
             {
                 var index = tableSource.GetItemIndex(ViewModel.SelectedVenueOnMap);
-                VenuesAndShowsTableView.ScrollToRow(
-                    index, 
-                    UITableViewScrollPosition.Top,
-                    true);
+                if (index != null)
+                {
+                    VenuesAndShowsTableView.ScrollToRow(
+                        index, 
+                        UITableViewScrollPosition.Top,
+                        true);
+                }
             }
         }
 
