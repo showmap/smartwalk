@@ -19,7 +19,7 @@ namespace SmartWalk.Client.iOS.Services
 
         public void Trace(Exception ex, bool showAlert = true)
         {
-            _analyticsService.SendException(false, ex.ToString());
+            var sendToGA = false;
 
             if (showAlert)
             {
@@ -31,20 +31,28 @@ namespace SmartWalk.Client.iOS.Services
                     title = Localization.NetworkError;
                     message = Localization.CantAccessNetworkContent;
                 }
-
-                if (ex is JsonReaderException)
+                else if (ex is JsonReaderException)
                 {
                     title = Localization.ServerError;
                     message = Localization.CantReadNetworkContent;
+                    sendToGA = true;
                 }
-
-                if (ex is TaskCanceledException)
+                else if (ex is TaskCanceledException)
                 {
                     return;
+                }
+                else
+                {
+                    sendToGA = true;
                 }
 
                 var alert = new UIAlertView(title, message, null, Localization.OK, null);
                 alert.Show();
+            }
+
+            if (sendToGA)
+            {
+                _analyticsService.SendException(false, ex.ToString());
             }
         }
     }

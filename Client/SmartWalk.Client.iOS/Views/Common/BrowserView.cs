@@ -7,6 +7,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using System.Threading.Tasks;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -31,17 +32,20 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
             set
             {
-                _showToolbars = value;
+                if (_showToolbars != value)
+                {
+                    _showToolbars = value;
 
-                if (_showToolbars)
-                {
-                    NavBarManager.Instance.SetNavBarVisibility(false, true, true);
-                    BottomToolbar.Hidden = false;
-                }
-                else
-                {
-                    NavBarManager.Instance.SetNavBarVisibility(false, false, true);
-                    BottomToolbar.Hidden = true;
+                    if (_showToolbars)
+                    {
+                        NavBarManager.Instance.SetNavBarVisibility(false, true, true);
+                        BottomToolbar.Hidden = false;
+                    }
+                    else
+                    {
+                        NavBarManager.Instance.SetNavBarVisibility(false, false, true);
+                        BottomToolbar.Hidden = true;
+                    }
                 }
             }
         }
@@ -81,7 +85,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
         }
 
-        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        public override void WillAnimateRotation(
+            UIInterfaceOrientation toInterfaceOrientation, 
+            double duration)
         {
             base.WillAnimateRotation(toInterfaceOrientation, duration);
 
@@ -165,15 +171,20 @@ namespace SmartWalk.Client.iOS.Views.Common
             ProgressButton.CustomView = _indicatorView;
         }
 
-        // TODO: To make it working
         private void InitializeGestures()
         {
+            // TODO: Figure out how to cancel toolbar switch on link clicks
             _browserTapGesture = new UITapGestureRecognizer(
-                () => ShowToolbars = !ShowToolbars) 
-            {
-                NumberOfTouchesRequired = (uint)1,
-                NumberOfTapsRequired = (uint)1
-            };
+                () => Task.Run(async () => 
+                    {
+                        await Task.Delay(500);
+                        SwitchToolbarsState();
+                    })) 
+                {
+                    NumberOfTouchesRequired = (uint)1,
+                    NumberOfTapsRequired = (uint)1,
+                    Delegate = new WebViewTapGestureDelegate()
+                };
 
             WebView.AddGestureRecognizer(_browserTapGesture);
         }
@@ -270,6 +281,27 @@ namespace SmartWalk.Client.iOS.Views.Common
             button = ButtonBarUtil.Create(ThemeIcons.BrowserRefresh, ThemeIcons.BrowserRefreshLandscape, true);
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
+        }
+
+        private void SwitchToolbarsState()
+        {
+            InvokeOnMainThread(() =>
+                {
+                    if (!_indicatorView.IsAnimating)
+                    {
+                        ShowToolbars = !ShowToolbars;
+                    }
+                });
+        }
+    }
+
+    public class WebViewTapGestureDelegate : UIGestureRecognizerDelegate
+    {
+        public override bool ShouldRecognizeSimultaneously(
+            UIGestureRecognizer gestureRecognizer, 
+            UIGestureRecognizer otherGestureRecognizer)
+        {
+            return true;
         }
     }
 }

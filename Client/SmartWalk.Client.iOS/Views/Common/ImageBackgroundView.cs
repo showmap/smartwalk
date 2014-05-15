@@ -98,12 +98,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
                 if (value != null)
                 {
-                    ShowGradient();
                     BackgroundImage.StartProgress();
-                }
-                else
-                {
-                    HideGradient();
                 }
 
                 if (_resizeImage)
@@ -114,6 +109,8 @@ namespace SmartWalk.Client.iOS.Views.Common
                 {
                     _imageHelper.ImageUrl = value;
                 }
+
+                SetNeedsLayout();
             }
         }
 
@@ -193,6 +190,8 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.LayoutSubviews();
 
+            UpdateGradientState();
+
             if (_bottomGradient != null)
             {
                 _bottomGradient.Frame = GradientPlaceholder.Bounds;
@@ -216,34 +215,19 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeImageHelper()
         {
-            var afterImageChangeAction = new Action(() =>
-                {
-                    if (BackgroundImage != null &&
-                        (BackgroundImage.Image == null ||
-                        BackgroundImage.Image.Size == Theme.DefaultImageSize ||
-                        BackgroundImage.Image.Size == Theme.ErrorImageSize))
-                    {
-                        HideGradient();
-                    }
-                    else
-                    {
-                        ShowGradient();
-                    }
-                });
-
             if (_resizeImage)
             {
                 _resizedImageHelper = 
                     new MvxResizedImageViewLoader(
                         () => BackgroundImage,
-                        afterImageChangeAction);
+                        UpdateGradientState);
             }
             else
             {
                 _imageHelper = 
                     new MvxImageViewLoader(
                         () => BackgroundImage,
-                        afterImageChangeAction);
+                        UpdateGradientState);
                 _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
                 _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
             }
@@ -289,7 +273,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void ShowGradient()
         {
-            if (_bottomGradient != null)
+            if (GradientPlaceholder != null &&
+                GradientPlaceholder.Layer != null &&
+                _bottomGradient != null)
             {
                 GradientPlaceholder.Layer.InsertSublayer(_bottomGradient, 0);
             }
@@ -300,6 +286,21 @@ namespace SmartWalk.Client.iOS.Views.Common
             if (_bottomGradient != null)
             {
                 _bottomGradient.RemoveFromSuperLayer();
+            }
+        }
+
+        private void UpdateGradientState()
+        {
+            if (BackgroundImage != null &&
+                (BackgroundImage.Image == null ||
+                    BackgroundImage.Image.Size == Theme.DefaultImageSize ||
+                    BackgroundImage.Image.Size == Theme.ErrorImageSize))
+            {
+                HideGradient();
+            }
+            else
+            {
+                ShowGradient();
             }
         }
 

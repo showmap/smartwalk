@@ -22,14 +22,10 @@ namespace SmartWalk.Client.iOS.Utils
 
                 if (!UIApplication.SharedApplication.StatusBarFrame.IsEmpty)
                 {
-                    if (ScreenUtil.IsVerticalOrientation)
-                    {
-                        result = UIApplication.SharedApplication.StatusBarFrame.Height;
-                    }
-                    else
-                    {
-                        result = UIApplication.SharedApplication.StatusBarFrame.Width;
-                    }
+                    result = 
+                        ScreenUtil.IsVerticalOrientation 
+                            ? UIApplication.SharedApplication.StatusBarFrame.Height 
+                            : UIApplication.SharedApplication.StatusBarFrame.Width;
                 }
                 else
                 {
@@ -79,8 +75,7 @@ namespace SmartWalk.Client.iOS.Utils
             {
                 if (CustomNavBar.Superview == null)
                 {
-                    AppDelegate.Window.RootViewController.View
-                        .Add(CustomNavBar);
+                    NavController.View.Add(CustomNavBar);
                 }
             }
             else
