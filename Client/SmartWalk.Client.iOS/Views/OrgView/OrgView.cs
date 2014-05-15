@@ -8,7 +8,7 @@ using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {
-    public partial class OrgView : ListViewBase
+    public partial class OrgView : EntityViewBase
     {
         public new OrgViewModel ViewModel
         {

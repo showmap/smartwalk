@@ -10,7 +10,7 @@ using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
-    public partial class VenueView : ListViewBase
+    public partial class VenueView : EntityViewBase
     {
         public new VenueViewModel ViewModel
         {

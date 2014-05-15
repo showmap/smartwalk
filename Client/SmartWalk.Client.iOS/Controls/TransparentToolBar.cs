@@ -16,10 +16,9 @@ namespace SmartWalk.Client.iOS.Controls
         {
         }
 
-        public UIView Victim { get; set; }
-
         public override void Draw(RectangleF rect)
         {
+            // just cancel all drawings to keep it transparent
         }
 
         // TODO: To figure out how to hitTest map callout views

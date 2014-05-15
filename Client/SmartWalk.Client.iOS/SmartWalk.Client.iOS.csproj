@@ -368,6 +368,7 @@
       <DependentUpon>HomeHeaderView.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\ScrollUtil.cs" />
+    <Compile Include="Views\Common\Base\EntityViewBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

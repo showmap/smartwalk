@@ -1,49 +1,69 @@
 ﻿using System.Drawing;
 using MonoTouch.UIKit;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Utils
 {
     public sealed class NavBarManager
     {
-        private float _statusBarHeight = 20;
+        private static NavBarManager _instance;
 
-        public static NavBarManager Instance { get; private set; }
-
-        internal static void Initialize(UIWindow window)
+        private static UINavigationController NavController 
         {
-            if (Instance == null)
+            get { return (UINavigationController)AppDelegate.Window.RootViewController; }
+        }
+
+        private static float StatusBarHeight
+        {
+            get
             {
-                Instance = new NavBarManager(window);
+                float result;
+
+                if (!UIApplication.SharedApplication.StatusBarFrame.IsEmpty)
+                {
+                    if (ScreenUtil.IsVerticalOrientation)
+                    {
+                        result = UIApplication.SharedApplication.StatusBarFrame.Height;
+                    }
+                    else
+                    {
+                        result = UIApplication.SharedApplication.StatusBarFrame.Width;
+                    }
+                }
+                else
+                {
+                    result = 20;
+                }
+
+                return result;
             }
         }
 
-        private NavBarManager(UIWindow window)
-        {
-            // just in case, you know
-            if (!UIApplication.SharedApplication.StatusBarFrame.IsEmpty)
+        public static NavBarManager Instance 
+        { 
+            get
             {
-                _statusBarHeight = UIApplication.SharedApplication.StatusBarFrame.Height;
+                if (_instance == null)
+                {
+                    _instance = new NavBarManager();
+                }
+
+                return _instance;
             }
+        }
 
-            Window = window;
-
+        private NavBarManager()
+        {
             InitializeBars();
         }
 
-        public UIWindow Window { get; private set; }
-        public TransparentToolBar NavBar { get; private set; }
+        public TransparentToolBar CustomNavBar { get; private set; }
 
-        private UINavigationController NavController 
+        public void Layout()
         {
-            get { return (UINavigationController)Window.RootViewController; }
-        }
-
-        public void Rotate()
-        {
-            UpdateFrames();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavBar.Items);
+            UpdateCustomNavBarFrame();
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(CustomNavBar.Items);
         }
 
         public void SetNavBarVisibility(
@@ -52,37 +72,40 @@ namespace SmartWalk.Client.iOS.Utils
             bool animated)
         {
             NavController.SetNavigationBarHidden(!isNativeVisible, animated);
+
+            UpdateCustomNavBarFrame();
            
             if (isCustomVisible)
             {
-                if (NavBar.Superview == null)
+                if (CustomNavBar.Superview == null)
                 {
-                    Window.RootViewController.View.Add(NavBar);
+                    AppDelegate.Window.RootViewController.View
+                        .Add(CustomNavBar);
                 }
             }
             else
             {
-                if (NavBar.Superview != null)
+                if (CustomNavBar.Superview != null)
                 {
-                    NavBar.RemoveFromSuperview();
+                    CustomNavBar.RemoveFromSuperview();
                 }
             }
         }
 
         private void InitializeBars()
         {
-            NavBar = new TransparentToolBar();
-            NavBar.Translucent = true;
-            NavBar.BackgroundColor = UIColor.Clear;
+            CustomNavBar = new TransparentToolBar();
+            CustomNavBar.Translucent = true;
+            CustomNavBar.BackgroundColor = UIColor.Clear;
 
-            UpdateFrames();
+            UpdateCustomNavBarFrame();
         }
 
-        private void UpdateFrames()
+        private void UpdateCustomNavBarFrame()
         {
-            NavBar.Frame = ScreenUtil.IsVerticalOrientation
-                ? new RectangleF(0, _statusBarHeight, Window.Bounds.Width, 44)
-                : new RectangleF(0, _statusBarHeight, Window.Bounds.Height, 33);
+            CustomNavBar.Frame = ScreenUtil.IsVerticalOrientation
+                ? new RectangleF(0, StatusBarHeight, AppDelegate.Window.Bounds.Width, 44)
+                : new RectangleF(0, StatusBarHeight, AppDelegate.Window.Bounds.Height, 33);
         }
     }
 }

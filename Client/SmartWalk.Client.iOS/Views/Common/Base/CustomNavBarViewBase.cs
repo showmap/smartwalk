@@ -26,11 +26,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewDidLoad();
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                EdgesForExtendedLayout = UIRectEdge.None;
-            }
-
             InitializeCustomNavBarItems();
         }
 
@@ -40,7 +35,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             SetStatusBarVisibility(false, animated);
             NavBarManager.Instance.SetNavBarVisibility(false, true, animated);
-            NavBarManager.Instance.NavBar.SetItems(_navBarItems, animated);
+            NavBarManager.Instance.CustomNavBar.SetItems(_navBarItems, animated);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(_navBarItems);
         }
 
@@ -48,7 +43,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewWillDisappear(animated);
 
-            NavBarManager.Instance.NavBar.SetItems(new UIBarButtonItem[]{}, animated);
+            NavBarManager.Instance.CustomNavBar.SetItems(new UIBarButtonItem[]{}, animated);
         }
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)

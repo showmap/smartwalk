@@ -7,7 +7,7 @@ using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    public partial class OrgEventInfoView : ListViewBase
+    public partial class OrgEventInfoView : EntityViewBase
     {
         public OrgEventInfoView()
         {

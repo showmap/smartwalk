@@ -61,8 +61,6 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             LoadURL();
             UpdateNavButtonsState();
-
-            BottomToolbar.Victim = WebView;
         }
 
         public override void WillMoveToParentViewController(UIViewController parent)

@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Threading;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;
@@ -5,15 +6,15 @@ using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
 using GoogleAnalytics;
 using MonoTouch.Foundation;
-#if ADHOC
-using MonoTouch.TestFlight;
-#endif
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Services;
 using SmartWalk.Client.iOS.Utils;
+#if ADHOC
+using MonoTouch.TestFlight;
+#endif
 
 namespace SmartWalk.Client.iOS
 {
@@ -21,6 +22,8 @@ namespace SmartWalk.Client.iOS
     public class AppDelegate : MvxApplicationDelegate
     {
         private static string _version;
+
+        internal static new UIWindow Window { get; private set; }
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
@@ -41,10 +44,9 @@ namespace SmartWalk.Client.iOS
 
             Theme.Apply();
 
-            var window = new UIWindow(UIScreen.MainScreen.Bounds);
-            NavBarManager.Initialize(window);
+            Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-            var presenter = new MvxTouchViewPresenter(this, window);
+            var presenter = new MvxTouchViewPresenter(this, Window);
 
             var setup = new Setup(this, presenter);
             setup.Initialize();
@@ -52,7 +54,7 @@ namespace SmartWalk.Client.iOS
             var startup = Mvx.Resolve<IMvxAppStart>();
             startup.Start();
 
-            window.MakeKeyAndVisible();
+            Window.MakeKeyAndVisible();
             
             return true;
         }
@@ -77,11 +79,22 @@ namespace SmartWalk.Client.iOS
             }
         }
 
+        public override void WillChangeStatusBarFrame(UIApplication application, RectangleF newStatusBarFrame)
+        {
+            if (Window != null)
+            {
+                NavBarManager.Instance.Layout();
+            }
+        }
+
         public override void DidChangeStatusBarOrientation(
             UIApplication application, 
             UIInterfaceOrientation oldStatusBarOrientation)
         {
-            NavBarManager.Instance.Rotate();
+            if (Window != null)
+            {
+                NavBarManager.Instance.Layout();
+            }
         }
 
 #if ADHOC

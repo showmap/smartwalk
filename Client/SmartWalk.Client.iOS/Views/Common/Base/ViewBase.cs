@@ -1,16 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using Cirrious.CrossCore.Core;
-using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -18,7 +14,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
     {
         private UISwipeGestureRecognizer _swipeRight;
         private ImageFullscreenView _imageFullscreenView;
-        private ContactsView _contactsView;
 
         public override void ViewDidLoad()
         {
@@ -60,7 +55,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
                 DisposeGesture();
                 DisposeFullscreenView();
-                DisposeContactsView();
             }
         }
 
@@ -70,11 +64,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
-
-            if (_contactsView != null)
-            {
-                SetDialogViewFullscreenFrame(_contactsView);
-            }
         }
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
@@ -83,11 +72,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
-
-            if (_contactsView != null)
-            {
-                SetDialogViewFullscreenFrame(_contactsView);
-            }
         }
 
         protected virtual void SetStatusBarVisibility(bool isVisible, bool animated)
@@ -178,6 +162,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
+                EdgesForExtendedLayout = UIRectEdge.None;
                 UIApplication.SharedApplication
                     .SetStatusBarStyle(UIStatusBarStyle.Default, false);
             }
@@ -200,13 +185,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 e.PropertyName == fullscreenProvider.GetPropertyName(p => p.CurrentFullscreenImage))
             {
                 ShowHideImageFullscreenView(fullscreenProvider.CurrentFullscreenImage);
-            }
-
-            var contactsProvider = ViewModel as IContactsEntityProvider;
-            if (contactsProvider != null &&
-                e.PropertyName == contactsProvider.GetPropertyName(p => p.CurrentContactsEntityInfo))
-            {
-                ShowHideContactsView(contactsProvider.CurrentContactsEntityInfo);
             }
 
             OnViewModelPropertyChanged(e.PropertyName);
@@ -244,61 +222,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 _imageFullscreenView.Hide();
                 _imageFullscreenView.Dispose();
                 _imageFullscreenView = null;
-            }
-        }
-
-        private void ShowHideContactsView(Entity entity)
-        {
-            var contactsProvider = ViewModel as IContactsEntityProvider;
-            if (entity != null && contactsProvider != null)
-            {
-                _contactsView = View.Subviews.OfType<ContactsView>().FirstOrDefault();
-                if (_contactsView == null)
-                {
-                    InitializeContactsView(contactsProvider);
-
-                    _contactsView.Alpha = 0;
-                    View.Add(_contactsView);
-                    UIView.BeginAnimations(null);
-                    _contactsView.Alpha = 1;
-                    UIView.CommitAnimations();
-                }
-
-                _contactsView.Entity = entity;
-            }
-            else if (_contactsView != null)
-            {
-                UIView.Animate(
-                    0.2, 
-                    new NSAction(() => _contactsView.Alpha = 0),
-                    new NSAction(_contactsView.RemoveFromSuperview));
-
-                DisposeContactsView();
-            }
-        }
-
-        private void InitializeContactsView(IContactsEntityProvider contactsProvider)
-        {
-            _contactsView = ContactsView.Create();
-
-            SetDialogViewFullscreenFrame(_contactsView);
-
-            _contactsView.CloseCommand = contactsProvider.ShowHideContactsCommand;
-            _contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
-            _contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
-            _contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;
-        }
-
-        private void DisposeContactsView()
-        {
-            if (_contactsView != null)
-            {
-                _contactsView.CloseCommand = null;
-                _contactsView.CallPhoneCommand = null;
-                _contactsView.ComposeEmailCommand = null;
-                _contactsView.NavigateWebSiteCommand = null;
-                _contactsView.Dispose();
-                _contactsView = null;
             }
         }
 
