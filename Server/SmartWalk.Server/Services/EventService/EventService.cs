@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.Services.EntityService;
+using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared.Utils;
 
@@ -126,10 +128,16 @@ namespace SmartWalk.Server.Services.EventService
         public EventMetadataVm SaveOrAddEvent(SmartWalkUserRecord user, EventMetadataVm item) {
             var host = _entityRepository.Get(item.Host.Id);
             var dtFrom = item.StartTime.ParseDateTime(_cultureInfo.Value);
-            
 
             if (host == null || dtFrom == null)
                 return null;
+
+            var coords = item.AllVenues.Where(v => v.State != VmItemState.Deleted)
+                .SelectMany(v => v.AllAddresses)
+                .Where(a => a.State != VmItemState.Deleted)
+                .Select(address => new PointF((float) address.Latitude, (float) address.Longitude)).ToList();
+
+            var eventCoord =  coords.Count > 0 ? MapUtil.GetMiddleCoordinate(coords.ToArray()) : new PointF(0 , 0);            
 
             var metadata =_eventMetadataRepository.Get(item.Id);
             var dtTo = item.EndTime.ParseDateTime(_cultureInfo.Value);
@@ -150,6 +158,8 @@ namespace SmartWalk.Server.Services.EventService
                     IsDeleted = false,
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
+                    Latitude = eventCoord.X,
+                    Longitude = eventCoord.Y
                 };
 
                 _eventMetadataRepository.Create(metadata);
@@ -165,6 +175,8 @@ namespace SmartWalk.Server.Services.EventService
                 metadata.Picture = item.Picture;
                 metadata.IsPublic = item.IsPublic;
                 metadata.DateModified = DateTime.Now;
+                metadata.Latitude = eventCoord.X;
+                metadata.Longitude = eventCoord.Y;
 
                 _eventMetadataRepository.Flush();
             }
