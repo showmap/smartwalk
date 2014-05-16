@@ -24,7 +24,8 @@ namespace SmartWalk.Client.Core.Model
             var venue = obj as Venue;
             if (venue != null)
             {
-                return Info.Id == venue.Info.Id;
+                return Equals(_entity, venue._entity) &&
+                    Shows.EnumerableEquals(venue.Shows);
             }
 
             return false;

@@ -28,7 +28,15 @@ namespace SmartWalk.Client.Core.Model.DataContracts
             var show = obj as Show;
             if (show != null)
             {
-                return Id == show.Id;
+                return Id == show.Id &&
+                    Venue.EnumerableEquals(show.Venue) &&
+                    IsReference == show.IsReference &&
+                    Title == show.Title &&
+                    Description == show.Description &&
+                    StartTime == show.StartTime &&
+                    EndTime == show.EndTime &&
+                    Picture == show.Picture &&
+                    DetailsUrl == show.DetailsUrl;
             }
 
             return false;

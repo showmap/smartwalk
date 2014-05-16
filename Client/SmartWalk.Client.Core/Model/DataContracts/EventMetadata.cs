@@ -30,10 +30,21 @@ namespace SmartWalk.Client.Core.Model.DataContracts
 
         public override bool Equals(object obj)
         {
-            var eventMetadata = obj as EventMetadata;
-            if (eventMetadata != null)
+            var em = obj as EventMetadata;
+            if (em != null)
             {
-                return Id == eventMetadata.Id;
+                return 
+                    Id == em.Id &&
+                    Host.EnumerableEquals(em.Host) &&
+                    Title == em.Title &&
+                    Description == em.Description &&
+                    Picture == em.Picture &&
+                    StartTime == em.StartTime &&
+                    EndTime == em.EndTime &&
+                    Latitude == em.Latitude &&
+                    Longitude == em.Longitude &&
+                    CombineType == em.CombineType &&
+                    Shows.EnumerableEquals(em.Shows);
             }
 
             return false;

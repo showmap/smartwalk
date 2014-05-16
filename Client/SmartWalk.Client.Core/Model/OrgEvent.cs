@@ -89,10 +89,12 @@ namespace SmartWalk.Client.Core.Model
 
         public override bool Equals(object obj)
         {
-            var orgEvent = obj as OrgEvent;
-            if (orgEvent != null)
+            var oe = obj as OrgEvent;
+            if (oe != null)
             {
-                return Id == orgEvent.Id;
+                return Equals(_eventMetadata, oe._eventMetadata) &&
+                    Equals(_host, oe._host) &&
+                    _venues.EnumerableEquals(oe._venues);
             }
 
             return false;

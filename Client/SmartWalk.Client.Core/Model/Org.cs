@@ -24,7 +24,8 @@ namespace SmartWalk.Client.Core.Model
             var org = obj as Org;
             if (org != null)
             {
-                return Info.Id == org.Info.Id;
+                return Equals(_entity, org._entity) &&
+                    OrgEvents.EnumerableEquals(org.OrgEvents);
             }
 
             return false;

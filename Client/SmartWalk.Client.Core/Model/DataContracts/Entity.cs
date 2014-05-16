@@ -25,10 +25,16 @@ namespace SmartWalk.Client.Core.Model.DataContracts
 
         public override bool Equals(object obj)
         {
-            var entity = obj as Entity;
-            if (entity != null)
+            var en = obj as Entity;
+            if (en != null)
             {
-                return Id == entity.Id;
+                return Id == en.Id &&
+                    Type == en.Type &&
+                    Name == en.Name &&
+                    Description == en.Description &&
+                    Picture == en.Picture &&
+                    Contacts.EnumerableEquals(en.Contacts) &&
+                    Addresses.EnumerableEquals(en.Addresses);
             }
 
             return false;
