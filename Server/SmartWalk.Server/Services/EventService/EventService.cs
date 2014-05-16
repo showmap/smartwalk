@@ -125,19 +125,32 @@ namespace SmartWalk.Server.Services.EventService
             _eventMetadataRepository.Flush();
         }
 
+
+        public void RecalculateEventCoordinates(EventMetadataRecord eventRecord) {
+            var coords = eventRecord.ShowRecords
+                                    .Where(s => !s.IsDeleted)
+                                    .Select(s => s.EntityRecord)
+                                    .Where(v => !v.IsDeleted)
+                                    .SelectMany(v => v.AddressRecords)
+                                    .Select(address => new PointF((float) address.Latitude, (float) address.Longitude)).ToList();
+
+            if (coords.Count == 0)
+                return;
+
+            var eventCoord = MapUtil.GetMiddleCoordinate(coords.ToArray());
+
+            eventRecord.Latitude = eventCoord.X;
+            eventRecord.Longitude = eventCoord.Y;
+
+            _eventMetadataRepository.Flush();
+        }
+
         public EventMetadataVm SaveOrAddEvent(SmartWalkUserRecord user, EventMetadataVm item) {
             var host = _entityRepository.Get(item.Host.Id);
             var dtFrom = item.StartTime.ParseDateTime(_cultureInfo.Value);
 
             if (host == null || dtFrom == null)
-                return null;
-
-            var coords = item.AllVenues.Where(v => v.State != VmItemState.Deleted)
-                .SelectMany(v => v.AllAddresses)
-                .Where(a => a.State != VmItemState.Deleted)
-                .Select(address => new PointF((float) address.Latitude, (float) address.Longitude)).ToList();
-
-            var eventCoord =  coords.Count > 0 ? MapUtil.GetMiddleCoordinate(coords.ToArray()) : new PointF(0 , 0);            
+                return null;            
 
             var metadata =_eventMetadataRepository.Get(item.Id);
             var dtTo = item.EndTime.ParseDateTime(_cultureInfo.Value);
@@ -158,12 +171,9 @@ namespace SmartWalk.Server.Services.EventService
                     IsDeleted = false,
                     DateCreated = DateTime.Now,
                     DateModified = DateTime.Now,
-                    Latitude = eventCoord.X,
-                    Longitude = eventCoord.Y
                 };
 
                 _eventMetadataRepository.Create(metadata);
-                _eventMetadataRepository.Flush();
             }
             else {
                 metadata.EntityRecord = host;
@@ -174,17 +184,17 @@ namespace SmartWalk.Server.Services.EventService
                 metadata.CombineType = item.CombineType;
                 metadata.Picture = item.Picture;
                 metadata.IsPublic = item.IsPublic;
-                metadata.DateModified = DateTime.Now;
-                metadata.Latitude = eventCoord.X;
-                metadata.Longitude = eventCoord.Y;
-
-                _eventMetadataRepository.Flush();
+                metadata.DateModified = DateTime.Now;                
             }
+
+            _eventMetadataRepository.Flush();
 
             foreach (var showVm in item.AllVenues.Where(venueVm => venueVm.State != VmItemState.Deleted).SelectMany(venueVm => venueVm.AllShows.Where(showVm => showVm.State != VmItemState.Deleted))) {
                 showVm.EventMetadataId = metadata.Id;
                 _entityService.SaveOrAddShow(showVm);
             }
+
+            RecalculateEventCoordinates(metadata);
 
             return CreateViewModelContract(metadata);
         }
