@@ -10,10 +10,11 @@
                 <outlet property="FullscreenHeightConstraint" destination="md5-ps-WtX" id="feX-rG-OhP"/>
                 <outlet property="FullscreenWidthConstraint" destination="MIn-AC-Za0" id="aMx-JS-yfq"/>
                 <outlet property="MapBottomSeparator" destination="gqO-ij-gFx" id="RhB-c2-QC5"/>
+                <outlet property="MapContentView" destination="4" id="kVd-sI-Bk2"/>
                 <outlet property="MapFullscreenButton" destination="wMm-c6-vk5" id="uXS-h6-EOi"/>
-                <outlet property="MapHeightConstraint" destination="Qt2-5E-lXP" id="lXf-CU-Frw"/>
-                <outlet property="MapPanel" destination="4" id="31"/>
-                <outlet property="MapToTableConstraint" destination="98y-zL-Ah9" id="XeK-qh-4SO"/>
+                <outlet property="MapHeightConstraint" destination="UAL-EJ-R9g" id="o4c-qj-9PU"/>
+                <outlet property="MapPanel" destination="eV0-UF-nAt" id="Uca-e0-Ifa"/>
+                <outlet property="MapToTableConstraint" destination="xQg-6g-bhd" id="VLH-Nn-UgK"/>
                 <outlet property="ProgressViewContainer" destination="45" id="57"/>
                 <outlet property="ProgressViewTopConstraint" destination="53" id="jLH-7i-74i"/>
                 <outlet property="TableHeightConstraint" destination="FGU-MD-xHT" id="aPL-u6-D5k"/>
@@ -28,47 +29,60 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="MapView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eV0-UF-nAt" userLabel="MapView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="14" customClass="CustomMKMapView">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="MapContentView">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        </mapView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wMm-c6-vk5" userLabel="Fullscreen Button" customClass="ButtonBarButton">
-                            <rect key="frame" x="269" y="148" width="44" height="44"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="44" id="MIn-AC-Za0"/>
-                                <constraint firstAttribute="height" constant="44" id="md5-ps-WtX"/>
-                            </constraints>
-                            <connections>
-                                <action selector="OnMapFullscreenTouchUpInside:" destination="-1" eventType="touchUpInside" id="lEs-Lf-ddT"/>
-                            </connections>
-                        </button>
-                        <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gqO-ij-gFx" userLabel="BottomSeparator" customClass="Line">
-                            <rect key="frame" x="0.0" y="199" width="320" height="1"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="14" customClass="CustomMKMapView">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </mapView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wMm-c6-vk5" userLabel="Fullscreen Button" customClass="ButtonBarButton">
+                                    <rect key="frame" x="269" y="148" width="44" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="44" id="MIn-AC-Za0"/>
+                                        <constraint firstAttribute="height" constant="44" id="md5-ps-WtX"/>
+                                    </constraints>
+                                    <connections>
+                                        <action selector="OnMapFullscreenTouchUpInside:" destination="-1" eventType="touchUpInside" id="lEs-Lf-ddT"/>
+                                    </connections>
+                                </button>
+                                <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gqO-ij-gFx" userLabel="BottomSeparator" customClass="Line">
+                                    <rect key="frame" x="0.0" y="199" width="320" height="1"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="ZOu-J7-DHD"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="1" id="ZOu-J7-DHD"/>
+                                <constraint firstItem="14" firstAttribute="top" secondItem="4" secondAttribute="top" id="15"/>
+                                <constraint firstItem="14" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="16"/>
+                                <constraint firstItem="14" firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="17"/>
+                                <constraint firstItem="14" firstAttribute="bottom" secondItem="4" secondAttribute="bottom" id="18"/>
+                                <constraint firstItem="gqO-ij-gFx" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="62t-7Z-Fon"/>
+                                <constraint firstAttribute="bottom" secondItem="gqO-ij-gFx" secondAttribute="bottom" id="eik-5x-tL6"/>
+                                <constraint firstItem="gqO-ij-gFx" firstAttribute="top" secondItem="wMm-c6-vk5" secondAttribute="bottom" constant="7" id="iiy-0Q-NBt"/>
+                                <constraint firstAttribute="trailing" secondItem="gqO-ij-gFx" secondAttribute="trailing" id="tJB-th-cjf"/>
+                                <constraint firstAttribute="trailing" secondItem="wMm-c6-vk5" secondAttribute="trailing" constant="7" id="yYM-1u-4F8"/>
                             </constraints>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="14" firstAttribute="top" secondItem="4" secondAttribute="top" id="15"/>
-                        <constraint firstItem="14" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="16"/>
-                        <constraint firstItem="14" firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="17"/>
-                        <constraint firstItem="14" firstAttribute="bottom" secondItem="4" secondAttribute="bottom" id="18"/>
-                        <constraint firstItem="gqO-ij-gFx" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="62t-7Z-Fon"/>
-                        <constraint firstAttribute="height" constant="200" id="Qt2-5E-lXP"/>
-                        <constraint firstAttribute="bottom" secondItem="gqO-ij-gFx" secondAttribute="bottom" id="eik-5x-tL6"/>
-                        <constraint firstItem="gqO-ij-gFx" firstAttribute="top" secondItem="wMm-c6-vk5" secondAttribute="bottom" constant="7" id="iiy-0Q-NBt"/>
-                        <constraint firstAttribute="trailing" secondItem="gqO-ij-gFx" secondAttribute="trailing" id="tJB-th-cjf"/>
-                        <constraint firstAttribute="trailing" secondItem="wMm-c6-vk5" secondAttribute="trailing" constant="7" id="yYM-1u-4F8"/>
+                        <constraint firstItem="4" firstAttribute="leading" secondItem="eV0-UF-nAt" secondAttribute="leading" id="0Fu-HY-vDr"/>
+                        <constraint firstAttribute="height" constant="200" id="UAL-EJ-R9g"/>
+                        <constraint firstItem="4" firstAttribute="top" secondItem="eV0-UF-nAt" secondAttribute="top" id="dAG-H4-FW2"/>
+                        <constraint firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="frI-UQ-s1A"/>
+                        <constraint firstAttribute="bottom" secondItem="4" secondAttribute="bottom" id="nlQ-wb-7ZJ"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5" userLabel="TableView">
@@ -99,17 +113,17 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="4" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="6"/>
                 <constraint firstItem="5" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="9"/>
-                <constraint firstItem="4" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="10"/>
-                <constraint firstItem="4" firstAttribute="top" secondItem="1" secondAttribute="top" id="11"/>
                 <constraint firstItem="5" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="12"/>
                 <constraint firstItem="5" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="13"/>
                 <constraint firstItem="45" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="50"/>
                 <constraint firstItem="45" firstAttribute="top" secondItem="1" secondAttribute="top" id="53"/>
                 <constraint firstItem="45" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="54"/>
                 <constraint firstItem="45" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="55"/>
-                <constraint firstItem="5" firstAttribute="top" secondItem="4" secondAttribute="bottom" id="98y-zL-Ah9"/>
+                <constraint firstItem="eV0-UF-nAt" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="7iR-1J-dzH"/>
+                <constraint firstAttribute="trailing" secondItem="eV0-UF-nAt" secondAttribute="trailing" id="a7s-3p-LpB"/>
+                <constraint firstItem="eV0-UF-nAt" firstAttribute="top" secondItem="1" secondAttribute="top" id="f44-xG-fek"/>
+                <constraint firstItem="5" firstAttribute="top" secondItem="eV0-UF-nAt" secondAttribute="bottom" id="xQg-6g-bhd"/>
             </constraints>
         </view>
     </objects>

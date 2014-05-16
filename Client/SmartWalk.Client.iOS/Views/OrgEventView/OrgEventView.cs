@@ -409,8 +409,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             InitializeSearchDisplayController();
         }
 
+        protected override void OnLoadingViewStateUpdate()
+        {
+            base.OnLoadingViewStateUpdate();
+
+            if (ViewModel.OrgEvent == null)
+            {
+                MapContentView.Hidden = true;
+            }
+        }
+
         protected override void OnLoadedViewStateUpdate()
         {
+            UIView.Transition(
+                MapContentView,
+                ScrollUtil.ShowViewAnimationDuration,
+                UIViewAnimationOptions.TransitionCrossDissolve,
+                new NSAction(() => MapContentView.Hidden = false),
+                null);
+
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource;
             if (tableSource == null || tableSource.IsHeaderViewHidden)
             {
