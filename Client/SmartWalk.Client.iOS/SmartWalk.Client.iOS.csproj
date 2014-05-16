@@ -369,6 +369,8 @@
     </Compile>
     <Compile Include="Utils\ScrollUtil.cs" />
     <Compile Include="Views\Common\Base\EntityViewBase.cs" />
+    <Compile Include="Utils\Settings.cs" />
+    <Compile Include="Utils\SettingsUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -495,6 +497,6 @@
     <Content Include="Settings.bundle\Acknowledgements.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="analytics.xml" />
+    <Content Include="settings.xml" />
   </ItemGroup>
 </Project>

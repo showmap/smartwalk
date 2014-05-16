@@ -21,7 +21,8 @@ namespace SmartWalk.Client.iOS
     [Register("AppDelegate")]
     public class AppDelegate : MvxApplicationDelegate
     {
-        private static string _version;
+        private string _version;
+        private Settings _settings;
 
         internal static new UIWindow Window { get; private set; }
 
@@ -29,12 +30,14 @@ namespace SmartWalk.Client.iOS
         {
             UISynchronizationContext.Current = SynchronizationContext.Current;
 
+            _settings = SettingsUtil.LoadSettings();
+
 #if ADHOC
             InitializeTestFlight();
 #endif
 
             InitializeVersion();
-            InitializeSettings();
+            InitializeUserDefaults();
 
 #if ADHOC || APPSTORE
             InitializeGAI();
@@ -42,7 +45,7 @@ namespace SmartWalk.Client.iOS
             GoogleAnalyticsService.IsOptOut = true;
 #endif
 
-            HandleResetCache();
+            SettingsUtil.HandleResetCache(_settings);
 
             Theme.Apply();
 
@@ -50,7 +53,7 @@ namespace SmartWalk.Client.iOS
 
             var presenter = new MvxTouchViewPresenter(this, Window);
 
-            var setup = new Setup(this, presenter);
+            var setup = new Setup(this, presenter, _settings);
             setup.Initialize();
 
             var startup = Mvx.Resolve<IMvxAppStart>();
@@ -80,10 +83,12 @@ namespace SmartWalk.Client.iOS
                 EasyTracker.Current.OnApplicationActivated(application);
             }
 
-            HandleResetCache();
+            SettingsUtil.HandleResetCache(_settings);
         }
 
-        public override void WillChangeStatusBarFrame(UIApplication application, RectangleF newStatusBarFrame)
+        public override void WillChangeStatusBarFrame(
+            UIApplication application, 
+            RectangleF newStatusBarFrame)
         {
             if (Window != null)
             {
@@ -102,13 +107,13 @@ namespace SmartWalk.Client.iOS
         }
 
 #if ADHOC
-        private static void InitializeTestFlight()
+        private void InitializeTestFlight()
         {
-            TestFlight.TakeOffThreadSafe("23af84a9-44e6-4716-996d-a4f5dd72d6ba");
+            TestFlight.TakeOffThreadSafe(_settings.TestFlightToken);
         }
 #endif
 
-        private static void InitializeVersion()
+        private void InitializeVersion()
         {
             using (var versionString = new NSString(SettingKeys.CFBundleShortVersionString))
             {
@@ -116,15 +121,16 @@ namespace SmartWalk.Client.iOS
             }
         }
 
-        private static void InitializeSettings()
+        private void InitializeUserDefaults()
         {
             NSUserDefaults.StandardUserDefaults[SettingKeys.VersionNumber] = new NSString(_version);
         }
 
 #if ADHOC || APPSTORE
-        private static void InitializeGAI()
+        private void InitializeGAI()
         {
             EasyTracker.GetTracker();
+            EasyTracker.Current.Config.TrackingId = _settings.TrackingId;
             EasyTracker.Current.Config.ReportUncaughtExceptions = true;
             EasyTracker.Current.Config.AutoAppLifetimeTracking = true;
 
@@ -136,15 +142,5 @@ namespace SmartWalk.Client.iOS
             }
         }
 #endif
-
-        private static void HandleResetCache()
-        {
-            if (NSUserDefaults.StandardUserDefaults[SettingKeys.ResetCache] != null &&
-                NSUserDefaults.StandardUserDefaults.BoolForKey(SettingKeys.ResetCache))
-            {
-                // TODO: Reset cache
-                NSUserDefaults.StandardUserDefaults.SetBool(false, SettingKeys.ResetCache);
-            }
-        }
     }
 }

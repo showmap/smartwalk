@@ -8,17 +8,28 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.iOS.Services;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
+using MvxDownloadCacheConfiguration = Cirrious.MvvmCross.Plugins.DownloadCache.Touch.MvxDownloadCacheConfiguration;
 
 namespace SmartWalk.Client.iOS
 {
     public class Setup : MvxTouchSetup
     {
-        private const string Host = "smartwalk.azurewebsites.net";
+        private readonly Settings _settings;
 
-        public Setup(MvxApplicationDelegate appDelegate, IMvxTouchViewPresenter presenter)
+        private MvxDownloadCacheConfiguration _picsCacheConfig;
+        private MvxDownloadCacheConfiguration _resizedPicsCacheConfig;
+        private MvxDownloadCacheConfiguration _dataCacheConfig;
+
+        public Setup(
+            MvxApplicationDelegate appDelegate, 
+            IMvxTouchViewPresenter presenter,
+            Settings settings)
             : base(appDelegate, presenter)
         {
+            _settings = settings;
+            InitializeCacheSettings();
         }
 
         protected override IMvxApplication CreateApp()
@@ -33,6 +44,7 @@ namespace SmartWalk.Client.iOS
             Mvx.LazyConstructAndRegisterSingleton<ICalendarService, CalendarService>();
             Mvx.LazyConstructAndRegisterSingleton<IReachabilityService, ReachabilityService>();
             Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
+            Mvx.RegisterSingleton<ICacheService>(new CacheService(_dataCacheConfig.CacheFolderPath));
             Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();
             Mvx.LazyConstructAndRegisterSingleton<IOpenURLTask, OpenURLTask>();
 
@@ -52,7 +64,7 @@ namespace SmartWalk.Client.iOS
         protected override IMvxPluginConfiguration GetPluginConfiguration(Type plugin)
         {
             return plugin == typeof(Cirrious.MvvmCross.Plugins.DownloadCache.PluginLoader) 
-                ? MvxPlus.CacheConfig 
+                ? _picsCacheConfig
                 : null;
         }
 
@@ -65,18 +77,46 @@ namespace SmartWalk.Client.iOS
             Cirrious.MvvmCross.Plugins.Json.PluginLoader.Instance.EnsureLoaded();
 
             Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxImageCache<UIImage>>(
-                MvxPlus.CreateImageCache);
-            Mvx.RegisterSingleton<IMvxResizedImageCache<UIImage>>(MvxPlus.CreateResizedImageCache);
+                () => MvxPlus.CreateImageCache(_picsCacheConfig));
+
+            Mvx.RegisterSingleton<IMvxResizedImageCache<UIImage>>(
+                () => MvxPlus.CreateResizedImageCache(_resizedPicsCacheConfig));
+
             Mvx.RegisterType<IMvxResizedImageHelper<UIImage>, MvxResizedDynamicImageHelper<UIImage>>();
+
             Mvx.RegisterSingleton<Cirrious.MvvmCross.Plugins.DownloadCache.IMvxHttpFileDownloader>(
                 MvxPlus.CreateHttpFileDownloader);
 
             base.InitializeLastChance();
         }
 
-        private static void InitializeConfiguration()
+        private void InitializeConfiguration()
         {
-            Mvx.RegisterSingleton<IConfiguration>(new Configuration(Host));
+            Mvx.RegisterSingleton<IConfiguration>(new Configuration(_settings.ServerHost));
+        }
+
+        private void InitializeCacheSettings()
+        {
+            foreach (var cache in _settings.Caches)
+            {
+                // TODO: Figure out how to deserialize this from xml
+                cache.MaxFileAge = TimeSpan.FromDays(10);
+
+                if (cache.CacheName == "Pictures.MvvmCross")
+                {
+                    _picsCacheConfig = cache;
+                }
+
+                if (cache.CacheName == "ResizedPictures.MvvmCross")
+                {
+                    _resizedPicsCacheConfig = cache;
+                }
+
+                if (cache.CacheName == "Data.SmartWalk")
+                {
+                    _dataCacheConfig = cache;
+                }
+            }
         }
     }
 }

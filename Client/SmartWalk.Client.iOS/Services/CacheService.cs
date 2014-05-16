@@ -12,10 +12,10 @@ namespace SmartWalk.Client.iOS.Services
 
         private readonly string _cacheFolderPath;
 
-        public CacheService()
+        public CacheService(string cacheFolderPath)
         {
             var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            _cacheFolderPath = Path.Combine(documents, "..", "Library", "Caches", "SmartWalkData.Cache");
+            _cacheFolderPath = Path.Combine(documents, cacheFolderPath);
         }
 
         public string GetString(string key)

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<settings>
+    <trackingId>UA-44480601-1</trackingId>
+    <testFlightToken>23af84a9-44e6-4716-996d-a4f5dd72d6ba</testFlightToken>
+    <serverHost>smartwalk.azurewebsites.net</serverHost>
+    <caches>
+        <cache>
+            <CacheName>Pictures.MvvmCross</CacheName>
+            <CacheFolderPath>../Library/Caches/Pictures.MvvmCross/</CacheFolderPath>
+            <MaxFiles>500</MaxFiles>
+            <MaxFileAge>10</MaxFileAge> <!-- 10 days, it's set in Setup, it isn't deserializable -->
+            <MaxInMemoryBytes>1000000</MaxInMemoryBytes> <!-- 1 MB -->
+            <MaxInMemoryFiles>10</MaxInMemoryFiles>
+        </cache>
+        <cache>
+            <CacheName>ResizedPictures.MvvmCross</CacheName>
+            <CacheFolderPath>../Library/Caches/ResizedPictures.MvvmCross/</CacheFolderPath>
+            <MaxFiles>1000</MaxFiles>
+            <MaxFileAge>10</MaxFileAge>
+            <MaxInMemoryBytes>3000000</MaxInMemoryBytes> <!-- 3 MB -->
+            <MaxInMemoryFiles>30</MaxInMemoryFiles>
+        </cache>
+        <cache>
+            <CacheName>Data.SmartWalk</CacheName>
+            <CacheFolderPath>../Library/Caches/SmartWalkData.Cache/</CacheFolderPath>
+        </cache>
+    </caches>
+</settings>
