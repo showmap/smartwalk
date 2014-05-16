@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Data.Conventions;
 
 namespace SmartWalk.Server.Records
 {
@@ -15,6 +16,7 @@ namespace SmartWalk.Server.Records
         public virtual SmartWalkUserRecord SmartWalkUserRecord { get; set; }
         public virtual int Type { get; set; }
         public virtual string Name { get; set; }
+        [StringLengthMax]
         public virtual string Description { get; set; }
         public virtual string Picture { get; set; }
         public virtual bool IsDeleted { get; set; }

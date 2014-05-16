@@ -13,6 +13,7 @@ using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
 using SmartWalk.Server.Extensions;
+using System.Linq;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -121,7 +122,7 @@ namespace SmartWalk.Server.Controllers
         }
 
         [HttpPost]
-        public ActionResult AutoCompleteVenue(string term, int eventId)
+        public ActionResult AutoCompleteVenue(string term, int eventId, EventMetadataVm currentEvent)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {
@@ -129,8 +130,12 @@ namespace SmartWalk.Server.Controllers
             }
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+            var res = _entityService.GetAccesibleUserVenues(user.Record, eventId, 0, ViewSettings.ItemsLoad, term);
 
-            return Json(_entityService.GetAccesibleUserVenues(user.Record, eventId, 0, ViewSettings.ItemsLoad, term));
+            if (eventId == 0 && currentEvent != null)
+                res = res.Where(e => currentEvent.AllVenues.Where(v => v.State != VmItemState.Deleted && v.Id > 0).All(v => v.Id != e.Id)).ToList();
+
+            return Json(res);
         }
 
         [HttpPost]

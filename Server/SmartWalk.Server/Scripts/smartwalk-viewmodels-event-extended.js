@@ -325,8 +325,8 @@ EventViewModelExtended.prototype.createVenue = function (root) {
 };
 
 EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) {
-    var ajdata = JSON.stringify({ term: searchTerm, eventId: this.Id() });
-
+    var ajdata = JSON.stringify({ term: searchTerm, eventId: this.Id(), currentEvent: this.Id() == 0 ? this.toJSON() : null });
+    
     ajaxJsonRequest(ajdata, this.settings.venueAutocompleteUrl,
         function (data) {
             if (data && data.length > 0) {
