@@ -382,9 +382,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        protected override void OnViewModelRefreshed()
+        protected override void OnViewModelRefreshed(bool hasData)
         {
-            base.OnViewModelRefreshed();
+            base.OnViewModelRefreshed(hasData);
+
+            if (ViewModel.OrgEvent == null)
+            {
+                MapContentView.Hidden = true;
+            }
 
             _isMapViewInitialized = false;
 

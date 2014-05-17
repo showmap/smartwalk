@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using Cirrious.CrossCore.Core;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
@@ -7,7 +8,6 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -43,6 +43,14 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 }
 
                 return _listView;
+            }
+        }
+
+        private bool HasListData
+        {
+            get
+            {
+                return ListView.Source != null && ListView.Source.ItemsSource != null;
             }
         }
             
@@ -136,14 +144,24 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
         }
 
-        protected virtual void OnViewModelRefreshed()
+        protected virtual void OnViewModelRefreshed(bool hasData)
         {
-            ListView.View.SetContentOffset(PointF.Empty, true);
+            if (hasData)
+            {
+                ListView.View.SetContentOffset(PointF.Empty, true);
+            }
+            else
+            {
+                ListView.View.Hidden = true;
+            }
         }
 
         protected virtual void OnLoadingViewStateUpdate()
         {
-            ListView.View.Hidden = true;
+            if (!HasListData)
+            {
+                ListView.View.Hidden = true;
+            }
         }
 
         protected virtual void OnLoadedViewStateUpdate()
@@ -211,7 +229,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             _refreshControl.EndRefreshing();
             UpdateViewDataState(e.Value);
-            OnViewModelRefreshed();
+            OnViewModelRefreshed(e.Value);
         }
 
         private void OnRefreshControlValueChanged(object sender, EventArgs e)
@@ -249,12 +267,14 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void UpdateViewLoadingState()
         {
-            if (ListView.Source != null && ListView.Source.ItemsSource != null) return;
-
             if (IsLoading)
             {
-                _progressView.IsDataUnavailable = false;
-                _progressView.IsLoading = true;
+                if (!HasListData)
+                {
+                    _progressView.IsDataUnavailable = false;
+                    _progressView.IsLoading = true;
+                }
+
                 OnLoadingViewStateUpdate();
             }
             else
