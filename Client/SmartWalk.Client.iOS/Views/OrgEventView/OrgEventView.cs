@@ -19,6 +19,7 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
+using MonoTouch.MapKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -534,6 +535,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeStyle()
         {
             MapFullscreenButton.IsSemiTransparent = true;
+            MapTypeButton.Font = Theme.MapTypeFont;
 
             _customDayButton.Font = Theme.NavBarFont;
             _customDayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
@@ -619,12 +621,35 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ShowActionSheet();
         }
 
-        partial void OnMapFullscreenTouchUpInside (NSObject sender)
+        partial void OnMapFullscreenTouchUpInside(NSObject sender)
         {
             if (ViewModel.SwitchMapFullscreenCommand.CanExecute(null))
             {
                 ViewModel.SwitchMapFullscreenCommand.Execute(null);
             }
+        }
+
+        partial void OnMapTypeTouchUpInside(NSObject sender)
+        {
+            switch (VenuesMapView.MapType)
+            {
+                case MKMapType.Standard:
+                    VenuesMapView.MapType = MKMapType.Satellite;
+                    break;
+
+                case MKMapType.Satellite:
+                    VenuesMapView.MapType = MKMapType.Hybrid;
+                    break;
+
+                case MKMapType.Hybrid:
+                    VenuesMapView.MapType = MKMapType.Standard;
+                    break;
+            }
+
+            MapTypeButton.SetTitle(
+                string.Format(" {0} ", VenuesMapView.MapType), 
+                UIControlState.Normal);
+            ReloadMap();
         }
 
         private void InitializeTableHeader()

@@ -37,6 +37,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.NSLayoutConstraint MapToTableConstraint { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIButton MapTypeButton { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
 
 		[Outlet]
@@ -56,6 +59,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Action ("OnMapFullscreenTouchUpInside:")]
 		partial void OnMapFullscreenTouchUpInside (MonoTouch.Foundation.NSObject sender);
+
+		[Action ("OnMapTypeTouchUpInside:")]
+		partial void OnMapTypeTouchUpInside (MonoTouch.Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -69,9 +75,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				FullscreenWidthConstraint = null;
 			}
 
+			if (MapTypeButton != null) {
+				MapTypeButton.Dispose ();
+				MapTypeButton = null;
+			}
+
 			if (MapBottomSeparator != null) {
 				MapBottomSeparator.Dispose ();
 				MapBottomSeparator = null;
+			}
+
+			if (MapContentView != null) {
+				MapContentView.Dispose ();
+				MapContentView = null;
 			}
 
 			if (MapFullscreenButton != null) {
@@ -87,11 +103,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (MapPanel != null) {
 				MapPanel.Dispose ();
 				MapPanel = null;
-			}
-
-			if (MapContentView != null) {
-				MapContentView.Dispose ();
-				MapContentView = null;
 			}
 
 			if (MapToTableConstraint != null) {
