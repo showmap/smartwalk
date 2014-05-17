@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Controls
         public static readonly SizeF DefaultVerticalSize = new SizeF(44, 44);
         public static readonly SizeF DefaultLandscapeSize = new SizeF(33, 33);
 
-        private UIImageView _imageView;
+        private UIImageView _iconImageView;
         private bool _isSemiTransparent;
 
         public ButtonBarButton(IntPtr handle) : base(handle)
@@ -85,6 +85,20 @@ namespace SmartWalk.Client.iOS.Controls
             }
         }
 
+        private UIImageView IconImageView
+        {
+            get
+            {
+                if (_iconImageView == null)
+                {
+                    _iconImageView = new UIImageView();
+                    AddSubview(_iconImageView);
+                }
+
+                return _iconImageView;
+            }
+        }
+
         public void UpdateState()
         {
             var frame = Frame;
@@ -92,14 +106,22 @@ namespace SmartWalk.Client.iOS.Controls
             if (ScreenUtil.IsVerticalOrientation)
             {
                 Frame = new RectangleF(frame.Location, VerticalSize);
-                _imageView.Frame = new RectangleF(PointF.Empty, VerticalSize);
-                _imageView.Image = VerticalIcon;
+
+                if (VerticalIcon != null || LandscapeIcon != null)
+                {
+                    IconImageView.Frame = new RectangleF(PointF.Empty, VerticalSize);
+                    IconImageView.Image = VerticalIcon;
+                }
             }
             else
             {
                 Frame = new RectangleF(frame.Location, LandscapeSize);
-                _imageView.Frame = new RectangleF(PointF.Empty, LandscapeSize);
-                _imageView.Image = LandscapeIcon ?? VerticalIcon;
+
+                if (VerticalIcon != null || LandscapeIcon != null)
+                {
+                    IconImageView.Frame = new RectangleF(PointF.Empty, LandscapeSize);
+                    IconImageView.Image = LandscapeIcon ?? VerticalIcon;
+                }
             }
         }
 
@@ -117,9 +139,6 @@ namespace SmartWalk.Client.iOS.Controls
             IsSemiTransparent = isSemiTransparent;
 
             SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
-
-            _imageView = new UIImageView();
-            AddSubview(_imageView);
         }
     }
 }

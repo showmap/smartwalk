@@ -25,17 +25,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     public partial class OrgEventView : ListViewBase
     {
         private OrgEventHeaderView _headerView;
-        private UIBarButtonItem _modeButton;
-        private UIBarButtonItem _customModeButton;
+        private UIBarButtonItem _modeButtonItem;
+        private UIBarButtonItem _dayButtonItem;
+        private UIBarButtonItem _customModeButtonItem;
+        private UIBarButtonItem _customDayButtonItem;
         private UISearchDisplayController _searchDisplayController;
         private EKEventEditViewController _editCalEventController;
         private ListSettingsView _listSettingsView;
         private bool _isMapViewInitialized;
         private PointF _tableContentOffset;
         private Show _previousExpandedShow;
-        private ButtonBarButton _modeButtonList;
-        private ButtonBarButton _modeButtonMap;
+        private ButtonBarButton _modeListButton;
+        private ButtonBarButton _modeMapButton;
         private ButtonBarButton _moreButton;
+        private ButtonBarButton _dayButton;
+        private ButtonBarButton _customDayButton;
         private NSLayoutConstraint[] _topLayoutGuideConstraint;
 
         private NSTimer _timer;
@@ -52,11 +56,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ViewModel.ZoomSelectedVenue += OnZoomSelectedVenue;
             ViewModel.ScrollSelectedVenue += OnScrollSelectedVenue;
 
-            InitializeStyle();
             InitializeToolBar();
+            InitializeStyle();
             InitializeGestures();
 
             UpdateViewState(false);
+            UpdateDayButtonState();
         }
 
         // TODO: Find another soltuion. It must be much simpler.
@@ -93,7 +98,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             ButtonBarUtil.UpdateButtonsFrameOnRotation(
-                new [] {_modeButtonList, _modeButtonMap, MapFullscreenButton});
+                new [] {_modeListButton, _modeMapButton, MapFullscreenButton});
         }
 
         // HACK: To persist table scroll offset
@@ -132,7 +137,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             UpdateViewConstraints();
             ButtonBarUtil.UpdateButtonsFrameOnRotation(
-                new [] {_modeButtonList, _modeButtonMap, MapFullscreenButton});
+                new [] {_modeListButton, _modeMapButton, MapFullscreenButton});
 
             // HACK: hiding jerking search bar on rotation
             if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
@@ -326,9 +331,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 UpdateViewState(true);
             }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
+            {
+                ReloadMap();
+            }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
-                if (ViewModel.Mode == OrgEventViewMode.Map || 
+                if (ViewModel.Mode == OrgEventViewMode.Map ||
                     ViewModel.Mode == OrgEventViewMode.Combo ||
                     ViewModel.SelectedVenueOnMap == null)
                 {
@@ -336,7 +345,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 }
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation) ||
-                propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
+                     propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
             {
                 VenuesAndShowsTableView.ReloadData();
 
@@ -380,6 +389,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 ShowHideListSettingsView(ViewModel.IsListOptionsShown);
             }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsMultiday) ||
+                propertyName == ViewModel.GetPropertyName(vm => vm.CurrentDayTitle))
+            {
+                UpdateDayButtonState();
+            }
         }
 
         protected override void OnViewModelRefreshed(bool hasData)
@@ -389,14 +403,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.OrgEvent == null)
             {
                 MapContentView.Hidden = true;
-            }
-
-            _isMapViewInitialized = false;
-
-            if (ViewModel.Mode == OrgEventViewMode.Map ||
-                ViewModel.Mode == OrgEventViewMode.Combo)
-            {
-                InitializeMapView();
             }
 
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource;
@@ -513,14 +519,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.OnInitializeCustomNavBarItems(navBarItems);
 
-            _customModeButton = new UIBarButtonItem();
+            _customDayButton = ButtonBarUtil.Create(true);
+            _customDayButton.TouchUpInside += OnDayButtonClicked;
 
-            navBarItems.Add(_customModeButton);
+            _customDayButtonItem = new UIBarButtonItem();
+            _customDayButtonItem.CustomView = _customDayButton;
+
+            _customModeButtonItem = new UIBarButtonItem();
+
+            navBarItems.Add(_customDayButtonItem);
+            navBarItems.Add(_customModeButtonItem);
         }
 
         private void InitializeStyle()
         {
             MapFullscreenButton.IsSemiTransparent = true;
+
+            _customDayButton.Font = Theme.NavBarFont;
+            _customDayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
+
+            _dayButton.Font = Theme.NavBarFont;
+            _dayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
@@ -530,37 +549,52 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeToolBar()
         {
-            _modeButtonList = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
-            _modeButtonList.TouchUpInside += OnModeButtonClicked;
+            _modeListButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
+            _modeListButton.TouchUpInside += OnModeButtonClicked;
 
-            _modeButtonMap = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
-            _modeButtonMap.TouchUpInside += OnModeButtonClicked;
+            _modeMapButton = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
+            _modeMapButton.TouchUpInside += OnModeButtonClicked;
 
-            _modeButton = new UIBarButtonItem();
+            _dayButton = ButtonBarUtil.Create();
+            _dayButton.TouchUpInside += OnDayButtonClicked;
+            _dayButtonItem = new UIBarButtonItem();
+            _dayButtonItem.CustomView = _dayButton;
+
+            _modeButtonItem = new UIBarButtonItem();
             var gap = ButtonBarUtil.CreateGapSpacer();
 
             _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
             _moreButton.TouchUpInside += OnMoreButtonClicked;
 
             var moreBarButton = new UIBarButtonItem(_moreButton);
-            NavigationItem.SetRightBarButtonItems(new [] {gap, moreBarButton, _modeButton}, true);
+            NavigationItem.SetRightBarButtonItems(new [] {gap, moreBarButton, _modeButtonItem, _dayButtonItem}, true);
         }
 
         private void DisposeToolBar()
         {
-            if (_modeButtonList != null)
+            if (_modeListButton != null)
             {
-                _modeButtonList.TouchUpInside -= OnModeButtonClicked;
+                _modeListButton.TouchUpInside -= OnModeButtonClicked;
             }
 
-            if (_modeButtonMap != null)
+            if (_modeMapButton != null)
             {
-                _modeButtonMap.TouchUpInside -= OnModeButtonClicked;
+                _modeMapButton.TouchUpInside -= OnModeButtonClicked;
             }
 
             if (_moreButton != null)
             {
                 _moreButton.TouchUpInside -= OnMoreButtonClicked;
+            }
+
+            if (_dayButton != null)
+            {
+                _dayButton.TouchUpInside -= OnDayButtonClicked;
+            }
+
+            if (_customDayButton != null)
+            {
+                _customDayButton.TouchUpInside -= OnDayButtonClicked;
             }
         }
 
@@ -569,6 +603,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.SwitchModeCommand.CanExecute(null))
             {
                 ViewModel.SwitchModeCommand.Execute(null);
+            }
+        }
+
+        private void OnDayButtonClicked(object sender, EventArgs e)
+        {
+            if (ViewModel.SetCurrentDayCommand.CanExecute(null))
+            {
+                ViewModel.SetCurrentDayCommand.Execute(null);
             }
         }
 
@@ -647,6 +689,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void DisposeGestures()
         {
+        }
+
+        private void ReloadMap()
+        {
+            _isMapViewInitialized = false;
+
+            if (ViewModel.Mode == OrgEventViewMode.Map ||
+                ViewModel.Mode == OrgEventViewMode.Combo)
+            {
+                InitializeMapView();
+            }
         }
 
         private void InitializeMapView()
@@ -885,8 +938,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             switch (ViewModel.Mode)
             {
                 case OrgEventViewMode.Combo:
-                    _modeButton.CustomView = new UIView();
-                    _customModeButton.CustomView = _modeButtonList;
+                    _modeButtonItem.CustomView = new UIView();
+                    _customModeButtonItem.CustomView = _modeListButton;
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;
                     MapFullscreenButton.UpdateState();
@@ -898,8 +951,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case OrgEventViewMode.Map:
-                    _modeButton.CustomView = new UIView();
-                    _customModeButton.CustomView = _modeButtonList;
+                    _modeButtonItem.CustomView = new UIView();
+                    _customModeButtonItem.CustomView = _modeListButton;
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.ExitFullscreen;
                     MapFullscreenButton.UpdateState();
@@ -911,8 +964,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case OrgEventViewMode.List:
-                    _customModeButton.CustomView = new UIView();
-                    _modeButton.CustomView = _modeButtonMap;
+                    _customModeButtonItem.CustomView = new UIView();
+                    _modeButtonItem.CustomView = _modeMapButton;
 
                     TablePanel.Hidden = false;
                     MapPanel.Hidden = true;
@@ -964,6 +1017,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     #pragma warning restore 618
                 }
+            }
+        }
+
+        private void UpdateDayButtonState()
+        {
+            if (ViewModel.IsMultiday)
+            {
+                _dayButton.Hidden = false;
+                _customDayButton.Hidden = false;
+                _dayButton.SetTitle(ViewModel.CurrentDayTitle, UIControlState.Normal);
+                _customDayButton.SetTitle(ViewModel.CurrentDayTitle, UIControlState.Normal);
+            }
+            else
+            {
+                _dayButton.Hidden = true;
+                _customDayButton.Hidden = true;
+                _dayButton.SetTitle(null, UIControlState.Normal);
+                _customDayButton.SetTitle(null, UIControlState.Normal);
             }
         }
 

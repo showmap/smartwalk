@@ -25,6 +25,16 @@ namespace SmartWalk.Client.Core.Model
             _venues = venues;
         }
 
+        internal EventMetadata EventMetadata
+        {
+            get { return _eventMetadata; }
+        }
+
+        internal Entity Host
+        {
+            get { return _host; }
+        }
+
         public int Id
         {
             get { return _eventMetadata.Id; }

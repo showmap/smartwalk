@@ -17,11 +17,22 @@ namespace SmartWalk.Client.iOS.Utils
         }
 
         public static ButtonBarButton Create(
+            bool isSemiTransparent = false)
+        {
+            var button = new ButtonBarButton(null, null, isSemiTransparent);
+            return button;
+        }
+
+        public static ButtonBarButton Create(
             UIImage verticalIcon,
             UIImage landscapeIcon,
             bool isSemiTransparent = false)
         {
-            var button = new ButtonBarButton(verticalIcon, landscapeIcon, isSemiTransparent);
+            var button = 
+                new ButtonBarButton(
+                    verticalIcon, 
+                    landscapeIcon, 
+                    isSemiTransparent);
             return button;
         }
 

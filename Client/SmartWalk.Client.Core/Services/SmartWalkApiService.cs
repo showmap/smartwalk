@@ -430,10 +430,17 @@ namespace SmartWalk.Client.Core.Services
         {
             entity.Type = EntityType.Venue; // saving a bit traffic here
 
-            var venueShows = shows
-                .Where(s => entity.Id == s.Venue.Id() && s.IsReference != true)
-                .ToArray();
-            var result = new Venue(entity) { Shows = venueShows };
+            var venueShows = 
+                shows
+                    .Where(
+                        s => 
+                            entity.Id == s.Venue.Id() && 
+                            s.IsReference != true)
+                    .ToArray();
+            var result = new Venue(entity) 
+                { 
+                    Shows = venueShows.Length > 0 ? venueShows : null
+                };
             return result;
         }
 

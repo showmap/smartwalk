@@ -26,8 +26,11 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly ICalendarService _calendarService;
         private readonly IExceptionPolicy _exceptionPolicy;
 
+        private OrgEvent _allDaysOrgEvent;
         private OrgEventViewMode _mode = OrgEventViewMode.Combo;
         private OrgEvent _orgEvent;
+        private int? _currentDay;
+        private int _daysCount;
         private Show _expandedShow;
         private Venue _selectedVenueOnMap;
         private string _currentFullscreenImage;
@@ -40,6 +43,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private MvxCommand<Show> _expandCollapseShowCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
+        private MvxCommand<int?> _setCurrentDayCommand;
         private MvxCommand _switchMapFullscreenCommand;
         private MvxCommand _navigateOrgCommand;
         private MvxCommand _navigateOrgEventInfoCommand;
@@ -85,7 +89,34 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (OrgEvent != null && OrgEvent.StartTime.HasValue)
                 {
-                    return string.Format("{0:d MMMM yyyy}", OrgEvent.StartTime.Value);
+                    var startDate = OrgEvent.StartTime.Value;
+                    var endDate = OrgEvent.EndTime.HasValue 
+                        ? OrgEvent.EndTime.Value 
+                        : default(DateTime);
+
+                    if (!IsMultiday || CurrentDay.HasValue)
+                    {
+                        var currentDate = 
+                            IsMultiday
+                                ? (startDate.Date.AddDays(CurrentDay.Value - 1))
+                                : startDate;
+
+                        return string.Format("{0:ddd, d MMMM}", currentDate);
+                    }
+
+                    if (startDate.Month == endDate.Month)
+                    {
+                        return string.Format(
+                            "{0}-{1} {2:MMM}", 
+                            startDate.Day,
+                            endDate.Day,
+                            startDate);
+                    }
+
+                    return string.Format(
+                        "{0:d MMMM} - {1:d MMMM}", 
+                        startDate,
+                        endDate);
                 }
 
                 return null;
@@ -131,6 +162,65 @@ namespace SmartWalk.Client.Core.ViewModels
                                 v.Shows.Length > 0);
                 }
             }
+        }
+
+        public int? CurrentDay
+        {
+            get
+            {
+                return _currentDay;
+            }
+            private set
+            {
+                if (_currentDay != value)
+                {
+                    _currentDay = value;
+                    RaisePropertyChanged(() => CurrentDay);
+                    RaisePropertyChanged(() => CurrentDayTitle);
+                    OrgEvent = GetOrgEventByDay(_allDaysOrgEvent);
+                }
+            }
+        }
+
+        public int DaysCount
+        {
+            get
+            {
+                return _daysCount;
+            }
+            private set
+            {
+                if (_daysCount != value)
+                {
+                    _daysCount = value;
+                    RaisePropertyChanged(() => DaysCount);
+                    RaisePropertyChanged(() => IsMultiday);
+                    RaisePropertyChanged(() => CurrentDayTitle);
+                }
+            }
+        }
+
+        public string CurrentDayTitle
+        {
+            get
+            {
+                if (DaysCount > 1)
+                {
+                    if (!CurrentDay.HasValue)
+                    {
+                        return "All";
+                    }
+
+                    return string.Format("{0}/{1}", CurrentDay.Value, DaysCount);
+                }
+
+                return null;
+            }
+        }
+
+        public bool IsMultiday
+        {
+            get { return DaysCount > 1; }
         }
 
         public Show ExpandedShow
@@ -368,6 +458,46 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _switchMapFullscreenCommand;
+            }
+        }
+
+        public ICommand SetCurrentDayCommand
+        {
+            get
+            {
+                if (_setCurrentDayCommand == null)
+                {
+                    _setCurrentDayCommand = new MvxCommand<int?>(
+                        day => 
+                            {
+                                if (day.HasValue)
+                                {
+                                    CurrentDay = day;
+                                }
+                                else
+                                {
+                                    if (CurrentDay.HasValue && CurrentDay.Value < DaysCount)
+                                    {
+                                        CurrentDay++;
+                                    }
+                                    else if (!CurrentDay.HasValue)
+                                    {
+                                        CurrentDay = 1;
+                                    }
+                                    else 
+                                    {
+                                        CurrentDay = null;
+                                    }
+                                }
+                            },
+                        day => 
+                            OrgEvent != null &&
+                            IsMultiday &&
+                            (!day.HasValue ||
+                                day.Value < (DaysCount + 1)));
+                }
+
+                return _setCurrentDayCommand;
             }
         }
 
@@ -811,13 +941,93 @@ namespace SmartWalk.Client.Core.ViewModels
 
                 IsLoading = false;
 
-                OrgEvent = orgEvent;
+                UpdateDaysState(orgEvent);
+                _allDaysOrgEvent = orgEvent;
+
+                if (!CurrentDay.HasValue)
+                {
+                    OrgEvent = orgEvent;
+                }
+                else
+                {
+                    OrgEvent = GetOrgEventByDay(orgEvent);
+                }
+
                 RaiseRefreshCompleted(OrgEvent != null);
             }
             else
             {
+                _allDaysOrgEvent = null;
                 OrgEvent = null;
             }
+        }
+
+        private void UpdateDaysState(OrgEvent orgEvent)
+        {
+            if (orgEvent == null
+                ||
+                (!orgEvent.StartTime.HasValue ||
+                    !orgEvent.EndTime.HasValue)
+                ||
+                (orgEvent.StartTime.Value.Date ==
+                    orgEvent.EndTime.Value.Date))
+            {
+                DaysCount = 0;
+                CurrentDay = null;
+            }
+            else
+            {
+                var startDate = orgEvent.StartTime.Value;
+                var endDate = orgEvent.EndTime.Value;
+
+                var span = endDate - startDate;
+                DaysCount = span.Days + 1;
+
+                if (startDate <= DateTime.Now.Date &&
+                    DateTime.Now.Date <= endDate)
+                {
+                    CurrentDay = (DateTime.Now.Date - startDate).Days + 1;
+                }
+                else
+                {
+                    CurrentDay = 1; // Maybe persist day on refresh
+                }
+            }
+        }
+
+        private OrgEvent GetOrgEventByDay(OrgEvent orgEvent)
+        {
+            if (orgEvent == null || !CurrentDay.HasValue) return orgEvent;
+
+            var dayDate = orgEvent.StartTime.Value.Date
+                .AddDays(CurrentDay.Value - 1);
+            var venues = 
+                orgEvent.Venues
+                .Select(
+                    v => 
+                        new Venue(v.Info)
+                        { 
+                            Shows = 
+                                v.Shows != null
+                                    ? v.Shows
+                                        .Where(
+                                            s => 
+                                                s.StartTime.HasValue &&
+                                                s.StartTime.Value.Date == dayDate)
+                                        .ToArray() 
+                                    : null
+                        })
+                    // taking venues without any shows or the ones that has shows for current day
+                    .Where(v => v.Shows == null || v.Shows.Length > 0)
+                    .ToArray();
+
+
+            var orgEventByDay = 
+                new OrgEvent(
+                    orgEvent.EventMetadata,
+                    orgEvent.Host,
+                    venues);
+            return orgEventByDay;
         }
 
         private Venue GetVenueByShow(Show show)

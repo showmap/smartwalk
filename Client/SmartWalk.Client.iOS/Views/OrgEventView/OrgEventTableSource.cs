@@ -57,12 +57,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     _flattenItemsSource = 
                         VenueItemsSource
-                            .SelectMany(v => v.Shows.Select(
-                                s =>
-                                { 
-                                    var venue = new Venue(v.Info) { Shows = new [] { s } }; 
-                                    return venue;
-                                }))
+                            .SelectMany(
+                                v => 
+                                    v.Shows != null
+                                        ? v.Shows.Select(
+                                            s =>
+                                            { 
+                                                var venue = new Venue(v.Info) 
+                                                    { 
+                                                        Shows = new [] { s } 
+                                                    }; 
+                                                return venue;
+                                            })
+                                        : Enumerable.Empty<Venue>())
                             .ToArray();
                 }
 
