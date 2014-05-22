@@ -205,14 +205,14 @@ ko.validation.rules['dateCompareValidation'] = {
         var cmpDate = $.datepicker.parseDate(dateFormat, otherVal.compareVal()); 
         
         if (otherVal.cmp == 'GREATER_THAN') {
-            return curDate >= cmpDate;
+            return curDate >= cmpDate.setDate(cmpDate.getDate() - 1);
         } else if (otherVal.cmp == 'LESS_THAN') {
-            return curDate <= cmpDate;
+            return curDate <= cmpDate.setDate(cmpDate.getDate() + 1);
         } else if (otherVal.cmp == 'REGION') {
             if (!otherVal.compareValTo())
                 return true;
             var cmpDateTo = $.datepicker.parseDate(dateFormat, otherVal.compareValTo());
-            return curDate <= cmpDateTo && curDate >= cmpDate;
+            return curDate <= cmpDateTo.setDate(cmpDateTo.getDate() + 1) && curDate >= cmpDate.setDate(cmpDate.getDate() - 1);
         }
 
         return false;
