@@ -15,7 +15,9 @@ namespace SmartWalk.Server.Services.QueryService
     [UsedImplicitly]
     public class QueryService : IQueryService
     {
-        private const int DefaultLimit = 100;
+        private const int DefaultEventsLimit = 50;
+        private const int DefaultEntitiesLimit = 200;
+        private const int DefaultShowsLimit = 1000;
 
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
@@ -94,6 +96,7 @@ namespace SmartWalk.Server.Services.QueryService
                 };
         }
 
+        // ReSharper disable CoVariantArrayConversion
         private object[] ExecuteSelectQuery(
             RequestSelect select,
             string[] storages,
@@ -104,17 +107,18 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.EventMetadata))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_eventMetadataRepository.Table, select, results);
-                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultEventsLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
+
                 return dataContracts;
             }
 
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.GroupedEventMetadata))
             {
                 var session = _sessionLocator.For(typeof(EventMetadataRecord));
-                var sqlQuery = QueryFactory.CreateGroupedEventsQuery(session, DefaultLimit, select, results);
+                var sqlQuery = QueryFactory.CreateGroupedEventsQuery(session, DefaultEventsLimit, select, results);
                 var records = sqlQuery.List<EventMetadataRecord>();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
@@ -125,7 +129,7 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Entity))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_entityRepository.Table, select, results);
-                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultEntitiesLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
                     .ToArray();
@@ -135,7 +139,7 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Show))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_showRepository.Table, select, results);
-                var records = queryable.SortBy(select).Take(DefaultLimit).ToArray();
+                var records = queryable.SortBy(select).Take(DefaultShowsLimit).ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
@@ -144,5 +148,6 @@ namespace SmartWalk.Server.Services.QueryService
 
             throw new InvalidExpressionException(string.Format(Localization.CantFindTable, select.From));
         }
+        // ReSharper restore CoVariantArrayConversion
     }
 }

@@ -11,7 +11,11 @@ namespace SmartWalk.Labs.Api
     // ReSharper disable LocalizableElement
     public class MainClass
     {
+#if LOCAL
+        private const string SmartWalkUrl = "http://smartwalk.com:8091/api";
+#else
         private const string SmartWalkUrl = "http://smartwalk.azurewebsites.net/api";
+#endif
 
         public static void Main(string[] args)
         {
