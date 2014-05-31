@@ -7,7 +7,7 @@
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
 
-namespace SmartWalk.Client.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 {
     [Register ("OrgEventInfoView")]
     partial class OrgEventInfoView

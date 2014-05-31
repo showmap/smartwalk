@@ -190,6 +190,7 @@
     <Folder Include="Views\Common\GroupHeader\" />
     <Folder Include="Views\Common\Base\" />
     <Folder Include="Utils\MvvmCross\" />
+    <Folder Include="Views\OrgEventInfoView\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -307,12 +308,6 @@
     <Compile Include="Services\Clipboard.cs" />
     <Compile Include="Services\HttpService.cs" />
     <Compile Include="Utils\ActionSheetUtil.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventInfoView.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventInfoView.designer.cs">
-      <DependentUpon>OrgEventInfoView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OrgEventView\OrgEventInfoTableSource.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventInfoTableSourceConverter.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Utils\ShareUtil.cs" />
     <Compile Include="Views\Common\GroupHeader\GroupContainer.cs" />
@@ -371,6 +366,12 @@
     <Compile Include="Views\Common\Base\EntityViewBase.cs" />
     <Compile Include="Utils\Settings.cs" />
     <Compile Include="Utils\SettingsUtil.cs" />
+    <Compile Include="Views\OrgEventInfoView\OrgEventInfoTableSource.cs" />
+    <Compile Include="Views\OrgEventInfoView\OrgEventInfoTableSourceConverter.cs" />
+    <Compile Include="Views\OrgEventInfoView\OrgEventInfoView.cs" />
+    <Compile Include="Views\OrgEventInfoView\OrgEventInfoView.designer.cs">
+      <DependentUpon>OrgEventInfoView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -400,13 +401,13 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactsView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\ContactCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueHeaderContentView.xib" />
-    <InterfaceDefinition Include="Views\OrgEventView\OrgEventInfoView.xib" />
     <InterfaceDefinition Include="Views\Common\GroupHeader\GroupHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\VenueView\NextVenueCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\ListSettingsView.xib" />
     <InterfaceDefinition Include="Views\Common\ImageBackgroundView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\HomeView\HomeHeaderView.xib" />
+    <InterfaceDefinition Include="Views\OrgEventInfoView\OrgEventInfoView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />

@@ -158,6 +158,20 @@ namespace SmartWalk.Client.Core.Utils
                 : null;
             return result;
         }
+
+        public static string GetCurrentDayString(this DateTime date)
+        {
+            var result = string.Format("{0:ddd, d MMMM}", date);
+            return result;
+        }
+
+        public static string GetCurrentDayString(this DateTime? date)
+        {
+            var result = date.HasValue 
+                ? date.Value.GetCurrentDayString() 
+                : null;
+            return result;
+        }
     }
 
     public enum ShowStatus

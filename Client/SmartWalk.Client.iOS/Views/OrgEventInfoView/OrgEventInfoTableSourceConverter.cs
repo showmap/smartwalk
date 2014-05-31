@@ -5,7 +5,7 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
-namespace SmartWalk.Client.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 {
     public class OrgEventInfoTableSourceConverter : IMvxValueConverter
     {

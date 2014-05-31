@@ -101,7 +101,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 ? (startDate.Date.AddDays(CurrentDay.Value - 1))
                                 : startDate;
 
-                        return string.Format("{0:ddd, d MMMM}", currentDate);
+                        return currentDate.GetCurrentDayString();
                     }
 
                     if (startDate.Month == endDate.Month)

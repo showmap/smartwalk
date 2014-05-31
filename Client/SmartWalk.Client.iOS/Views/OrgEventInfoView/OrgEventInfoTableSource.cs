@@ -7,7 +7,7 @@ using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 
-namespace SmartWalk.Client.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 {
     public class OrgEventInfoTableSource : MvxTableViewSource, IListViewSource
     {
