@@ -1,6 +1,11 @@
-SW-160 Memory leak with EntityCell was fixed
-SW-160 No Data msg is shown if no data loaded
-SW-160 The status bar is shown during loading data
-SW-160 Home header with location was added.
-SW-160 Better proportions for Entity View
-SW-160 Release note and version updated
+SW-136 MapType switch was implemented
+SW-136 The basic multi-days support was done
+SW-160 Better handling loading state.
+SW-160 Correct Equals methods were added.
+SW-160 The map is hidden during first loading
+SW-160 Clean Cache button was implemented
+SW-160 Partial implementation of Reset Cache
+SW-160 "All Day" is shown if there is no time
+SW-160 Browsers toolbar are hidden on click
+SW-160 Tall status bar was supported.
+SW-160 Unexpected exception on map click fixed

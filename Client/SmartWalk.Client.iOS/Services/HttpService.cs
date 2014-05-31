@@ -46,7 +46,7 @@ namespace SmartWalk.Client.iOS.Services
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
-                result = new HttpClient(new NSUrlSessionHandler());
+                result = new HttpClient(new NativeMessageHandler());
             }
             else
             {

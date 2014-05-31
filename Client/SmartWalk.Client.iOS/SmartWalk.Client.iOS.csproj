@@ -164,11 +164,11 @@
       <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="ModernHttpClient.iOS">
-      <HintPath>..\..\packages\modernhttpclient.1.2.2\lib\MonoTouch\ModernHttpClient.iOS.dll</HintPath>
-    </Reference>
     <Reference Include="GoogleAnalytics">
       <HintPath>..\..\..\smartwalk-binaries\Client\GAN\GoogleAnalytics.dll</HintPath>
+    </Reference>
+    <Reference Include="ModernHttpClient">
+      <HintPath>..\..\packages\modernhttpclient.2.0.1\lib\MonoTouch\ModernHttpClient.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
