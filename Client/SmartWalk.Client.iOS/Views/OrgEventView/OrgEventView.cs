@@ -8,6 +8,7 @@ using MonoTouch.CoreLocation;
 using MonoTouch.EventKit;
 using MonoTouch.EventKitUI;
 using MonoTouch.Foundation;
+using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -19,7 +20,6 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
-using MonoTouch.MapKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -320,6 +320,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             this.CreateBinding(tableSource)
                 .For(ts => ts.ItemsSource)
                 .To<OrgEventViewModel>(vm => vm.ListItems)
+                .WithConversion(new OrgEventTableSourceConverter(), ViewModel)
                 .Apply();
 
             return tableSource;
@@ -677,6 +678,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var searchDelegate = new OrgEventSearchDelegate(ViewModel);
             _searchDisplayController.Delegate = searchDelegate;
+
+            _searchDisplayController.SearchResultsTableView.SeparatorStyle = 
+                UITableViewCellSeparatorStyle.None;
+
+            var searchTableSource = new OrgEventTableSource(
+                _searchDisplayController.SearchResultsTableView,
+                ViewModel)
+            {
+                IsSearchSource = true
+            };
+
+            this.CreateBinding(searchTableSource)
+                .For(ts => ts.ItemsSource)
+                .To<OrgEventViewModel>(vm => vm.SearchResults)
+                .WithConversion(new OrgEventTableSourceConverter(), ViewModel)
+                .Apply();
+
+            _searchDisplayController.SearchResultsTableView.Source = searchTableSource;
         }
 
         // To avoid iOS exception sometimes

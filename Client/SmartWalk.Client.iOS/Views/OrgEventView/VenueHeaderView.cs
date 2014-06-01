@@ -4,6 +4,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -20,6 +21,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ContentView = VenueHeaderContentView.Create();
             ContentView.BackgroundView = BackgroundView;
             Frame = ContentView.Bounds;
+            base.ContentView.RemoveSubviews();
             base.ContentView.Add(ContentView);
         }
 

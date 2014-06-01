@@ -46,30 +46,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_viewModel.SearchCommand.CanExecute(forSearchString))
             {
                 _viewModel.SearchCommand.Execute(forSearchString);
-
-                if (controller.SearchResultsTableView.Source != null)
-                {
-                    var tableSource = (OrgEventTableSource)controller.SearchResultsTableView.Source;
-
-                    tableSource.IsSearchSource = _viewModel.SearchResults != null;
-                    tableSource.ItemsSource = _viewModel.SearchResults;
-                }
             }
 
             return false;
-        }
-
-        public override void WillShowSearchResults(UISearchDisplayController controller, UITableView tableView)
-        {
-            tableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
-
-            if (tableView.Source == null)
-            {
-                var tableSource = new OrgEventTableSource(tableView, _viewModel);
-                tableView.Source = tableSource;
-                tableSource.IsSearchSource = _viewModel.SearchResults != null;
-                tableSource.ItemsSource = _viewModel.SearchResults;
-            }
         }
 
         protected override void Dispose(bool disposing)

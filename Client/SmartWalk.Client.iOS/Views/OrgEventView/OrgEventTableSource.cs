@@ -26,7 +26,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
             tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
-            tableView.RegisterClassForCellReuse(typeof(DateHeaderCell), DateHeaderCell.Key);
+            tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
@@ -87,13 +87,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var item = GetItemAt(indexPath);
-            var venueShow = item as Show;
-            if (venueShow != null)
+            var show = item as Show;
+            if (show != null && show.Id == DayBlankShow.Id)
             {
-                var height = VenueShowCell.CalculateCellHeight(
-                    tableView.Frame.Width,
-                    Equals(_viewModel.ExpandedShow, venueShow),
-                    venueShow);
+                return DayHeaderCell.DefaultHeight;
+            }
+
+            if (show != null)
+            {
+                var height = 
+                    VenueShowCell.CalculateCellHeight(
+                        tableView.Frame.Width,
+                        Equals(_viewModel.ExpandedShow, show),
+                        show);
                 return height;
             }
 
@@ -155,7 +161,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var cell = default(UITableViewCell);
 
             var show = item as Show;
-            if (show != null)
+            if (show != null && show.Id == DayBlankShow.Id)
+            {
+                cell = tableView.DequeueReusableCell(DayHeaderCell.Key, indexPath);
+                ((DayHeaderCell)cell).DataContext = show;
+            }
+            else if (show != null)
             {
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
                 ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
@@ -163,7 +174,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = show;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
-                ((VenueShowCell)cell).IsHighlighted = ((VenueShowCell)cell).IsExpanded && 
+                ((VenueShowCell)cell).IsHighlighted = ((VenueShowCell)cell).IsExpanded &&
                     !_viewModel.IsGroupedByLocation;
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     !_viewModel.IsGroupedByLocation ||

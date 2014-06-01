@@ -372,7 +372,8 @@
     <Compile Include="Views\OrgEventInfoView\OrgEventInfoView.designer.cs">
       <DependentUpon>OrgEventInfoView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrgEventView\DateHeaderCell.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventTableSourceConverter.cs" />
+    <Compile Include="Views\OrgEventView\DayHeaderCell.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
