@@ -34,6 +34,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get { return ContentView.NavigateVenueCommand; }
             set { ContentView.NavigateVenueCommand = value; }
         }
+
         public ICommand NavigateVenueOnMapCommand 
         { 
             get { return ContentView.NavigateVenueOnMapCommand; }

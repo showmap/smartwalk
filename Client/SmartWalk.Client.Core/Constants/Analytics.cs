@@ -8,6 +8,7 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionPull = "pull";
 
         public static readonly string ActionLabelRefresh = "refresh";
+        public static readonly string ActionLabelSearchInEvent = "search-in-event";
         public static readonly string ActionLabelCallPhone = "call-phone";
         public static readonly string ActionLabelComposeEmail = "compose-email";
         public static readonly string ActionLabelShowDirections = "show-directions";

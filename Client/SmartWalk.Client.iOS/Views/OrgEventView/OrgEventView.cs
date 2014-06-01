@@ -318,7 +318,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel);
 
             this.CreateBinding(tableSource)
-                .To<OrgEventViewModel>(vm => vm.OrgEvent.Venues)
+                .For(ts => ts.ItemsSource)
+                .To<OrgEventViewModel>(vm => vm.ListItems)
                 .Apply();
 
             return tableSource;
@@ -343,17 +344,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ViewModel.SelectedVenueOnMap == null)
                 {
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
-                }
-            }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsGroupedByLocation) ||
-                     propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
-            {
-                VenuesAndShowsTableView.ReloadData();
-
-                if (SearchDisplayController.SearchResultsTableView.Superview != null &&
-                    !SearchDisplayController.SearchResultsTableView.Hidden)
-                {
-                    SearchDisplayController.SearchResultsTableView.ReloadData();
                 }
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
@@ -407,7 +397,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource;
-            if (tableSource != null && !tableSource.IsHeaderViewHidden)
+            if (tableSource != null)
             {
                 tableSource.ScrollOutHeader();
             }
@@ -687,11 +677,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var searchDelegate = new OrgEventSearchDelegate(ViewModel);
             _searchDisplayController.Delegate = searchDelegate;
-
-            this.CreateBinding(searchDelegate)
-                .For(p => p.ItemsSource)
-                    .To<OrgEventViewModel>(vm => vm.OrgEvent.Venues)
-                    .Apply();
         }
 
         // To avoid iOS exception sometimes
@@ -907,6 +892,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     new NSAction(_listSettingsView.RemoveFromSuperview));
 
                 DisposeListSettingsView();
+            }
+
+            var tableSoure = (HiddenHeaderTableSource)VenuesAndShowsTableView.WeakDataSource;
+            if (tableSoure != null)
+            {
+                tableSoure.IsAutohidingEnabled = !isShown;
             }
         }
 

@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Shared.DataContracts;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -40,7 +42,11 @@ namespace SmartWalk.Client.Core.ViewModels
         private bool _isListOptionsShown;
         private bool _isListOptionsAvailable;
         private SortBy _sortBy = SortBy.Time;
+        private Venue[] _searchResults;
+        private Dictionary<SearchKey, string> _searchableTexts;
+        private Venue[] _allShows;
 
+        private MvxCommand<string> _searchCommand;
         private MvxCommand<Show> _expandCollapseShowCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
         private MvxCommand<int?> _setCurrentDayCommand;
@@ -150,7 +156,10 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (!Equals(_orgEvent, value))
                 {
                     _orgEvent = value;
+                    _allShows = null;
+                    _searchableTexts = null;
                     RaisePropertyChanged(() => OrgEvent);
+                    RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => Title);
 
                     IsListOptionsAvailable = 
@@ -161,6 +170,16 @@ namespace SmartWalk.Client.Core.ViewModels
                                 v.Shows != null && 
                                 v.Shows.Length > 0);
                 }
+            }
+        }
+
+        public Venue[] ListItems
+        {
+            get
+            {
+                return IsGroupedByLocation 
+                    ? (OrgEvent != null ? OrgEvent.Venues : null)
+                    : AllShows; 
             }
         }
 
@@ -331,6 +350,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _isGroupedByLocation = value;
                     RaisePropertyChanged(() => IsGroupedByLocation);
+                    RaisePropertyChanged(() => ListItems);
                 }
             }
         }
@@ -346,8 +366,80 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_sortBy != value)
                 {
                     _sortBy = value;
+                    SortAllShowsBy();
                     RaisePropertyChanged(() => SortBy);
+                    RaisePropertyChanged(() => ListItems);
                 }
+            }
+        }
+
+        public Venue[] SearchResults
+        {
+            get
+            {
+                return _searchResults;
+            }
+            private set
+            {
+                if (!_searchResults.EnumerableEquals(value))
+                {
+                    _searchResults = value;
+                    RaisePropertyChanged(() => SearchResults);
+                }
+            }
+        }
+
+        public ICommand SearchCommand
+        {
+            get
+            {
+                if (_searchCommand == null)
+                {
+                    _searchCommand = new MvxCommand<string>(query => 
+                        {
+                            var searchResults = new List<Venue>();
+
+                            if (!string.IsNullOrWhiteSpace(query))
+                            {
+                                _analyticsService.SendEvent(
+                                    Analytics.CategoryUI,
+                                    Analytics.ActionTouch,
+                                    Analytics.ActionLabelSearchInEvent);
+
+                                var matches = SearchableTexts
+                                    .Where(kvp => kvp.Value != null && 
+                                        kvp.Value.Contains(query.ToLower()))
+                                    .ToArray();
+
+                                foreach (var match in matches)
+                                {
+                                    // Analysis disable AccessToModifiedClosure
+                                    var venue = searchResults
+                                        .FirstOrDefault(v => Equals(v.Info, match.Key.Item1.Info));
+                                    // Analysis restore AccessToModifiedClosure
+                                    if (venue == null)
+                                    {
+                                        var shows = match.Key.Item2 != null 
+                                            ? new [] { match.Key.Item2 } 
+                                            : new Show[0];
+                                        venue = new Venue(match.Key.Item1.Info) { Shows = shows };
+                                        searchResults.Add(venue);
+                                    }
+                                    else
+                                    {
+                                        venue.Shows = venue.Shows.Union(new [] {match.Key.Item2}).ToArray();
+                                    }
+                                }
+                            }
+
+                            SearchResults = searchResults.Count > 0 
+                                ? searchResults.ToArray() 
+                                : null;
+                        },
+                        query => SearchableTexts != null);
+                }
+
+                return _searchCommand;
             }
         }
 
@@ -738,7 +830,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 sortBy == SortBy.Time
                                     ? Analytics.ActionLabelSortShowsByTime
                                     : Analytics.ActionLabelSortShowsByTitle);
-
+                            
                             SortBy = sortBy;
                         });
                 }
@@ -908,6 +1000,70 @@ namespace SmartWalk.Client.Core.ViewModels
             get { return _parameters; }
         }
 
+        private Venue[] AllShows
+        {
+            get
+            {
+                if (_allShows == null &&
+                    OrgEvent != null &&
+                    OrgEvent.Venues != null)
+                {
+                    _allShows = 
+                        OrgEvent.Venues
+                            .SelectMany(
+                                v => 
+                                    v.Shows != null
+                                        ? v.Shows.Select(
+                                            s =>
+                                            { 
+                                                var venue = new Venue(v.Info) 
+                                                    { 
+                                                        Shows = new [] { s } 
+                                                    }; 
+                                                return venue;
+                                            })
+                                        : Enumerable.Empty<Venue>())
+                            .ToArray();
+
+                    SortAllShowsBy();
+                }
+
+                return _allShows;
+            }
+        }
+
+        private Dictionary<SearchKey, string> SearchableTexts
+        {
+            get
+            {
+                if (_searchableTexts == null && 
+                    OrgEvent != null &&
+                    OrgEvent.Venues != null)
+                {
+                    _searchableTexts = new Dictionary<SearchKey, string>();
+
+                    foreach (var venue in OrgEvent.Venues)
+                    {
+                        var text = venue.GetSearchableText();
+                        _searchableTexts[new SearchKey(venue)] = 
+                            text != null ? text.ToLower() : null;
+
+                        if (venue.Shows != null)
+                        {
+                            foreach (var show in venue.Shows)
+                            {
+                                text = show.GetSearchableText();
+                                _searchableTexts[new SearchKey(venue, show)] = 
+                                    text != null ? text.ToLower() : null;
+                            }
+                        }
+                    }
+                }
+
+                return _searchableTexts;
+            }
+        }
+
         public void Init(Parameters parameters)
         {
             _parameters = parameters;
@@ -1007,15 +1163,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     v => 
                         new Venue(v.Info)
                         { 
-                            Shows = 
-                                v.Shows != null
-                                    ? v.Shows
-                                        .Where(
-                                            s => 
-                                                s.StartTime.HasValue &&
-                                                s.StartTime.Value.Date == dayDate)
-                                        .ToArray() 
-                                    : null
+                            Shows = GetShowsByDay(v.Shows, dayDate)
                         })
                     // taking venues without any shows or the ones that has shows for current day
                     .Where(v => v.Shows == null || v.Shows.Length > 0)
@@ -1028,6 +1176,21 @@ namespace SmartWalk.Client.Core.ViewModels
                     orgEvent.Host,
                     venues);
             return orgEventByDay;
+        }
+
+        private Show[] GetShowsByDay(Show[] shows, DateTime dayDate)
+        {
+            if (shows == null) return null;
+
+            var result = 
+                shows
+                    .Where(
+                        s => 
+                            s.StartTime.HasValue &&
+                            s.StartTime.Value.Date == dayDate)
+                    .ToArray();
+
+            return result;
         }
 
         private Venue GetVenueByShow(Show show)
@@ -1057,10 +1220,28 @@ namespace SmartWalk.Client.Core.ViewModels
             return 0;
         }
 
+        private void SortAllShowsBy()
+        {
+            if (_allShows != null)
+            {
+                _allShows = 
+                    _allShows
+                        .OrderBy(v => v.Shows[0], new ShowComparer(SortBy))
+                        .ToArray();
+
+            }
+        }
+
         public class Parameters : ParametersBase
         {
             public int EventId { get; set; }
             public bool Current { get; set; }
+        }
+
+        private class SearchKey : Tuple<Venue, Show>
+        {
+            public SearchKey(Venue venue) : base(venue, null) {}
+            public SearchKey(Venue venue, Show show) : base(venue, show) {}
         }
     }
 

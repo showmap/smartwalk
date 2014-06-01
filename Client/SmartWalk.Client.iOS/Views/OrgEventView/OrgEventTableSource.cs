@@ -7,6 +7,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 
@@ -18,85 +19,43 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private readonly OrgEventViewModel _viewModel;
 
-        private Venue[] _flattenItemsSource;
-
         public OrgEventTableSource(UITableView tableView, OrgEventViewModel viewModel)
             : base(tableView)
         {
             _viewModel = viewModel;
 
-            UseAnimations = true;
-
             tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
             tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
+            tableView.RegisterClassForCellReuse(typeof(DateHeaderCell), DateHeaderCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
         public bool IsSearchSource { get; set; }
 
-        public override IEnumerable ItemsSource
-        {
-            set
-            {
-                _flattenItemsSource = null;
-                base.ItemsSource = value;
-            }
-        }
-
-        private Venue[] VenueItemsSource
-        {
-            get { return (Venue[])ItemsSource; }
-        }
-
-        private Venue[] FlattenItemsSource
+        public new Venue[] ItemsSource
         {
             get
             {
-                if (_flattenItemsSource == null &&
-                    VenueItemsSource != null)
-                {
-                    _flattenItemsSource = 
-                        VenueItemsSource
-                            .SelectMany(
-                                v => 
-                                    v.Shows != null
-                                        ? v.Shows.Select(
-                                            s =>
-                                            { 
-                                                var venue = new Venue(v.Info) 
-                                                    { 
-                                                        Shows = new [] { s } 
-                                                    }; 
-                                                return venue;
-                                            })
-                                        : Enumerable.Empty<Venue>())
-                            .ToArray();
-                }
-
-                return _flattenItemsSource;
+                return (Venue[])base.ItemsSource;
             }
-        }
-
-        private Venue[] CurrentItemsSource
-        {
-            get 
-            { 
-                return _viewModel.IsGroupedByLocation 
-                    ? VenueItemsSource 
-                    : FlattenItemsSource
-                        .OrderBy(v => v.Shows[0], new ShowComparer(_viewModel.SortBy))
-                        .ToArray(); 
+            set
+            {
+                if (!((Venue[])base.ItemsSource).EnumerableEquals(value))
+                {
+                    base.ItemsSource = value;
+                    ReloadTableData();
+                }
             }
         }
 
         public NSIndexPath GetItemIndex(Show show)
         {
-            for (var i = 0; i < CurrentItemsSource.Length; i++)
+            for (var i = 0; i < ItemsSource.Length; i++)
             {
-                if (CurrentItemsSource[i].Shows.Contains(show))
+                if (ItemsSource[i].Shows.Contains(show))
                 {
                     return NSIndexPath.FromItemSection(
-                        Array.IndexOf(CurrentItemsSource[i].Shows, show), 
+                        Array.IndexOf(ItemsSource[i].Shows, show), 
                         i);
                 }
             }
@@ -106,7 +65,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public NSIndexPath GetItemIndex(Venue venue)
         {
-            var venueNumber = Array.IndexOf(CurrentItemsSource, venue);
+            var venueNumber = Array.IndexOf(ItemsSource, venue);
             return venueNumber >= 0 
                 ? NSIndexPath.FromRowSection(int.MaxValue, venueNumber)
                 : null;
@@ -121,7 +80,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             return _viewModel.IsGroupedByLocation || 
                 (_viewModel.ExpandedShow != null && 
-                CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)) 
+                ItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)) 
                     ? VenueHeaderView.DefaultHeight : 0;
         }
 
@@ -143,7 +102,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override int NumberOfSections(UITableView tableView)
         {
-            return CurrentItemsSource != null ? CurrentItemsSource.Length : 0;
+            return ItemsSource != null ? ItemsSource.Length : 0;
         }
 
         public override int RowsInSection(UITableView tableview, int section)
@@ -151,10 +110,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var emptyRow = IsSearchSource &&
                 section == NumberOfSections(tableview) - 1 ? 1 : 0; // empty row for search
 
-            return (CurrentItemsSource != null &&
-            CurrentItemsSource[section].Shows != null 
-                    ? CurrentItemsSource[section].Shows.Length 
-                    : 0) + emptyRow;
+            return 
+                (ItemsSource != null &&
+                    ItemsSource[section].Shows != null 
+                        ? ItemsSource[section].Shows.Length 
+                        : 0) + emptyRow;
         }
 
         public override string TitleForHeader(UITableView tableView, int section)
@@ -166,11 +126,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (_viewModel.IsGroupedByLocation || 
                 (_viewModel.ExpandedShow != null && 
-                    CurrentItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)))
+                    ItemsSource[section].Shows.Contains(_viewModel.ExpandedShow)))
             {
                 var headerView = (VenueHeaderView)tableView.DequeueReusableHeaderFooterView(VenueHeaderView.Key);
 
-                headerView.DataContext = CurrentItemsSource[section];
+                headerView.DataContext = ItemsSource[section];
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
                 headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
 
@@ -207,8 +167,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     !_viewModel.IsGroupedByLocation;
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     !_viewModel.IsGroupedByLocation ||
-                    indexPath.Row < CurrentItemsSource[indexPath.Section].Shows.Length - 1 ||
-                    indexPath.Section == CurrentItemsSource.Length - 1;
+                    indexPath.Row < ItemsSource[indexPath.Section].Shows.Length - 1 ||
+                    indexPath.Section == ItemsSource.Length - 1;
             }
 
             return cell;
@@ -216,12 +176,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override object GetItemAt(NSIndexPath indexPath)
         {
-            if (CurrentItemsSource != null &&
-                CurrentItemsSource[indexPath.Section].Shows != null)
+            if (ItemsSource != null &&
+                ItemsSource[indexPath.Section].Shows != null)
             {
                 // Asumming that there may be an empty row for search
-                return indexPath.Row < CurrentItemsSource[indexPath.Section].Shows.Length
-                    ? CurrentItemsSource[indexPath.Section].Shows[indexPath.Row] 
+                return indexPath.Row < ItemsSource[indexPath.Section].Shows.Length
+                    ? ItemsSource[indexPath.Section].Shows[indexPath.Row] 
                     : null;
             }
            
@@ -236,15 +196,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     }
 
     /// <summary>
-    /// This is a helper base class that incapsulates the HACK for initial hiding of table's header view.
+    /// A helper base class that incapsulates the HACK for initial hiding of table's header view.
     /// </summary>
-    public class HiddenHeaderTableSource : MvxTableViewSource, IListViewSource
+    public abstract class HiddenHeaderTableSource : MvxBaseTableViewSource, IListViewSource
     {
         private bool _isTouched;
 
         protected HiddenHeaderTableSource(UITableView tableView) : base(tableView)
         {
+            IsAutohidingEnabled = true;
         }
+
+        public bool IsAutohidingEnabled { get; set; }
+        public IEnumerable ItemsSource { get; protected set; }
 
         public bool IsHeaderViewHidden
         {
@@ -270,7 +234,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ReloadTableData();
 
-            if (!IsHeaderViewHidden)
+            if (IsAutohidingEnabled && !IsHeaderViewHidden)
             {
                 ScrollUtil.ScrollOutHeaderAfterReload(
                     TableView, 
@@ -282,7 +246,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public void ScrollOutHeader()
         {
-            ScrollUtil.ScrollOutHeader(TableView, HeaderHeight, _isTouched);
+            if (IsAutohidingEnabled && !IsHeaderViewHidden)
+            {
+                ScrollUtil.ScrollOutHeader(
+                    TableView, 
+                    HeaderHeight, 
+                    _isTouched);
+            }
         }
 
         public override void DraggingStarted(UIScrollView scrollView)
@@ -297,10 +267,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ScrollUtil.AdjustHeaderPosition(scrollView, HeaderHeight);
         }
 
+        public override int RowsInSection(UITableView tableview, int section)
+        {
+            return 0;
+        }
+
         protected override UITableViewCell GetOrCreateCellFor(
             UITableView tableView,
             NSIndexPath indexPath,
             object item)
+        {
+            return null;
+        }
+
+        protected override object GetItemAt(NSIndexPath indexPath)
         {
             return null;
         }

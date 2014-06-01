@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Model.DataContracts;
-using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
@@ -15,56 +9,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         private readonly OrgEventViewModel _viewModel;
 
-        private Dictionary<SearchKey, string> _searchableTexts;
-        private Venue[] _itemsSource;
-        private Venue[] _searchResults;
-
         public OrgEventSearchDelegate(OrgEventViewModel viewModel)
         {
             _viewModel = viewModel;
-        }
-
-        public Venue[] ItemsSource
-        {
-            get
-            {
-                return _itemsSource;
-            }
-            set
-            {
-                _itemsSource = value;
-                _searchableTexts = null;
-            }
-        }
-
-        private Dictionary<SearchKey, string> SearchableTexts
-        {
-            get
-            {
-                if (_searchableTexts == null && ItemsSource != null)
-                {
-                    _searchableTexts = new Dictionary<SearchKey, string>();
-
-                    foreach (var venue in ItemsSource)
-                    {
-                        var text = venue.GetSearchableText();
-                        _searchableTexts[new SearchKey(venue)] = 
-                            text != null ? text.ToLower() : null;
-
-                        if (venue.Shows != null)
-                        {
-                            foreach (var show in venue.Shows)
-                            {
-                                text = show.GetSearchableText();
-                                _searchableTexts[new SearchKey(venue, show)] = 
-                                    text != null ? text.ToLower() : null;
-                            }
-                        }
-                    }
-                }
-
-                return _searchableTexts;
-            }
         }
 
         public override void WillBeginSearch(UISearchDisplayController controller)
@@ -96,46 +43,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UISearchDisplayController controller,
             string forSearchString)
         {
-            if (SearchableTexts == null) return false;
-
-            var matches = SearchableTexts
-                .Where(kvp => kvp.Value != null && 
-                       kvp.Value.Contains(forSearchString.ToLower()))
-                    .ToArray();
-
-            var searchResults = new List<Venue>();
-            foreach (var match in matches)
+            if (_viewModel.SearchCommand.CanExecute(forSearchString))
             {
-                var venue = searchResults.FirstOrDefault(v => Equals(v.Info, match.Key.Item1.Info));
-                if (venue == null)
+                _viewModel.SearchCommand.Execute(forSearchString);
+
+                if (controller.SearchResultsTableView.Source != null)
                 {
-                    var shows = match.Key.Item2 != null 
-                        ? new [] { match.Key.Item2 } 
-                        : new Show[0];
-                    venue = new Venue(match.Key.Item1.Info) { Shows = shows };
-                    searchResults.Add(venue);
+                    var tableSource = (OrgEventTableSource)controller.SearchResultsTableView.Source;
+
+                    tableSource.IsSearchSource = _viewModel.SearchResults != null;
+                    tableSource.ItemsSource = _viewModel.SearchResults;
                 }
-                else
-                {
-                    venue.Shows = venue.Shows.Union(new [] {match.Key.Item2}).ToArray();
-                }
-            }
-
-            if (searchResults.Count > 0)
-            {
-                _searchResults = searchResults.ToArray();
-            }
-            else
-            {
-                _searchResults = null;
-            }
-
-            if (controller.SearchResultsTableView.Source != null)
-            {
-                var tableSource = (OrgEventTableSource)controller.SearchResultsTableView.Source;
-
-                tableSource.IsSearchSource = _searchResults != null;
-                tableSource.ItemsSource = _searchResults;
             }
 
             return false;
@@ -149,8 +67,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 var tableSource = new OrgEventTableSource(tableView, _viewModel);
                 tableView.Source = tableSource;
-                tableSource.IsSearchSource = _searchResults != null;
-                tableSource.ItemsSource = _searchResults;
+                tableSource.IsSearchSource = _viewModel.SearchResults != null;
+                tableSource.ItemsSource = _viewModel.SearchResults;
             }
         }
 
@@ -158,12 +76,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
-        }
-
-        private class SearchKey : Tuple<Venue, Show>
-        {
-            public SearchKey(Venue venue) : base(venue, null) {}
-            public SearchKey(Venue venue, Show show) : base(venue, show) {}
         }
     }
 }
