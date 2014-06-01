@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
+using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
@@ -15,31 +17,42 @@ namespace SmartWalk.Client.iOS.Views.VenueView
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var venue = value as Venue;
-            var venueViewModel = parameter as VenueViewModel;
-            if (venue != null && venueViewModel != null)
+            var viewModel = parameter as VenueViewModel;
+            if (venue != null && viewModel != null)
             {
                 var result = new List<GroupContainer>();
 
                 result.Add(new GroupContainer(new [] { 
                     new EntityViewModelWrapper(
-                        venueViewModel, 
+                        viewModel, 
                         EntityViewModelWrapper.ModelMode.Venue) 
                 }));
 
                 if (venue.Shows != null &&
                     venue.Shows.Length > 0)
                 {
-                    result.Add(
-                        new GroupContainer(venue.Shows) 
-                        {
-                            Key = Localization.Shows
+                    var groupes = DayHeaderShow.GetShowsGroupedByDay(venue.Shows);
+
+                    result.Add(new GroupContainer(groupes != null ? new object[]{ } : venue.Shows) 
+                        { 
+                            Key = Localization.Shows 
                         });
+
+                    if (groupes != null)
+                    {
+                        foreach (var day in groupes.Keys)
+                        {
+                            result.Add(new GroupContainer(groupes[day]) {
+                                Key = day.GetCurrentDayString()
+                            });
+                        }
+                    }
                 }
 
-                if (venueViewModel.CanShowNextEntity)
+                if (viewModel.CanShowNextEntity)
                 {
                     result.Add(new GroupContainer(new [] { 
-                        venueViewModel.NextEntityTitle
+                        viewModel.NextEntityTitle
                     }));
                 }
 

@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var result = 
                     venues.Select(
                         v => new Venue(v.Info) {
-                            Shows = GetShowsGroupedByDay(v.Shows)
+                            Shows = DayHeaderShow.GetShowsWithDayHeaders(v.Shows)
                     }).ToArray();
                 return result;
             }
@@ -37,21 +37,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             throw new NotImplementedException();
         }
+    }
 
-        private static Show[] GetShowsGroupedByDay(Show[] shows)
+    public static class DayHeaderShow
+    {
+        public const int Id = -1000;
+
+        public static Dictionary<DateTime, Show[]> GetShowsGroupedByDay(Show[] shows)
         {
             if (shows == null || 
                 shows.Length == 0 || 
-                !shows.Any(s => s.StartTime.HasValue)) return shows;
+                !shows.Any(s => s.StartTime.HasValue)) return null;
 
-            var venue = shows[0].Venue;
             var orderedShows = shows.OrderBy(s => s.StartTime).ToArray();
             var day = orderedShows
                 .FirstOrDefault(s => s.StartTime.HasValue)
                 .StartTime.Value.Date;
 
-            var result = new List<Show>();
-            result.Add(GetDayBlankShow(day, venue));
+            var result = new Dictionary<DateTime, List<Show>>();
+            result[day] = new List<Show>();
 
             foreach (var show in orderedShows)
             {
@@ -59,28 +63,40 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     show.StartTime.Value.Date != day)
                 {
                     day = show.StartTime.Value.Date;
-                    result.Add(GetDayBlankShow(day, venue));
+                    result[day] = new List<Show>();
                 }
 
-                result.Add(show);
+                result[day].Add(show);
+            }
+
+            return result.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray());
+        }
+
+        public static Show[] GetShowsWithDayHeaders(Show[] shows)
+        {
+            var groupes = GetShowsGroupedByDay(shows);
+            if (groupes == null) return shows;
+
+            var venue = shows[0].Venue;
+            var result = new List<Show>();
+
+            foreach (var day in groupes.Keys)
+            {
+                result.Add(GetDayBlankShow(day, venue));
+                result.AddRange(groupes[day]);
             }
 
             return result.ToArray();
         }
 
-        private static Show GetDayBlankShow(DateTime day, Reference[] venue)
+        public static Show GetDayBlankShow(DateTime day, Reference[] venue)
         {
             return new Show 
                 {
-                    Id = DayBlankShow.Id,
+                    Id = DayHeaderShow.Id,
                     StartTime = day,
                     Venue = venue
                 };
         }
-    }
-
-    public static class DayBlankShow
-    {
-        public const int Id = -1000;
     }
 }

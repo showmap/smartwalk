@@ -88,7 +88,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             var item = GetItemAt(indexPath);
             var show = item as Show;
-            if (show != null && show.Id == DayBlankShow.Id)
+            if (show != null && show.Id == DayHeaderShow.Id)
             {
                 return DayHeaderCell.DefaultHeight;
             }
@@ -161,7 +161,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var cell = default(UITableViewCell);
 
             var show = item as Show;
-            if (show != null && show.Id == DayBlankShow.Id)
+            if (show != null && show.Id == DayHeaderShow.Id)
             {
                 cell = tableView.DequeueReusableCell(DayHeaderCell.Key, indexPath);
                 ((DayHeaderCell)cell).DataContext = show;
