@@ -172,6 +172,21 @@ namespace SmartWalk.Client.Core.Utils
                 : null;
             return result;
         }
+
+        public static bool IsShowThisDay(this Show show, DateTime day, DateTime firstDay)
+        {
+            if (!show.StartTime.HasValue) return false;
+
+            var showTime = show.StartTime.Value;
+            var nextDay = day.AddDays(1);
+
+            var result = 
+                (showTime.Date == day && day == firstDay) ||
+                (showTime.Date == day && showTime.Hour >= 6) ||
+                (showTime.Date == nextDay && showTime.Hour < 6); // late night shows go to next day
+
+            return result;
+        }
     }
 
     public enum ShowStatus

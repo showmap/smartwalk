@@ -5,6 +5,7 @@ using System.Linq;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -50,9 +51,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 !shows.Any(s => s.StartTime.HasValue)) return null;
 
             var orderedShows = shows.OrderBy(s => s.StartTime).ToArray();
-            var day = orderedShows
+            var firstDay = orderedShows
                 .FirstOrDefault(s => s.StartTime.HasValue)
                 .StartTime.Value.Date;
+            var day = firstDay;
 
             var result = new Dictionary<DateTime, List<Show>>();
             result[day] = new List<Show>();
@@ -60,7 +62,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             foreach (var show in orderedShows)
             {
                 if (show.StartTime.HasValue &&
-                    show.StartTime.Value.Date != day)
+                    !show.IsShowThisDay(day, firstDay))
                 {
                     day = show.StartTime.Value.Date;
                     result[day] = new List<Show>();

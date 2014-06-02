@@ -415,19 +415,19 @@ namespace SmartWalk.Client.Core.ViewModels
                                 {
                                     // Analysis disable AccessToModifiedClosure
                                     var venue = searchResults
-                                        .FirstOrDefault(v => Equals(v.Info, match.Key.Item1.Info));
+                                        .FirstOrDefault(v => Equals(v.Info, match.Key.Venue.Info));
                                     // Analysis restore AccessToModifiedClosure
                                     if (venue == null)
                                     {
-                                        var shows = match.Key.Item2 != null 
-                                            ? new [] { match.Key.Item2 } 
+                                        var shows = match.Key.Show != null 
+                                            ? new [] { match.Key.Show } 
                                             : new Show[0];
-                                        venue = new Venue(match.Key.Item1.Info) { Shows = shows };
+                                        venue = new Venue(match.Key.Venue.Info) { Shows = shows };
                                         searchResults.Add(venue);
                                     }
                                     else
                                     {
-                                        venue.Shows = venue.Shows.Union(new [] {match.Key.Item2}).ToArray();
+                                        venue.Shows = venue.Shows.Union(new [] {match.Key.Show}).ToArray();
                                     }
                                 }
                             }
@@ -1155,15 +1155,16 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             if (orgEvent == null || !CurrentDay.HasValue) return orgEvent;
 
-            var dayDate = orgEvent.StartTime.Value.Date
-                .AddDays(CurrentDay.Value - 1);
+            var firstDay = orgEvent.StartTime.Value.Date;
+            var day = firstDay.AddDays(CurrentDay.Value - 1);
+
             var venues = 
                 orgEvent.Venues
                 .Select(
                     v => 
                         new Venue(v.Info)
                         { 
-                            Shows = GetShowsByDay(v.Shows, dayDate)
+                            Shows = GetShowsByDay(v.Shows, day, firstDay)
                         })
                     // taking venues without any shows or the ones that has shows for current day
                     .Where(v => v.Shows == null || v.Shows.Length > 0)
@@ -1178,16 +1179,14 @@ namespace SmartWalk.Client.Core.ViewModels
             return orgEventByDay;
         }
 
-        private Show[] GetShowsByDay(Show[] shows, DateTime dayDate)
+        private Show[] GetShowsByDay(Show[] shows, DateTime day, DateTime firstDay)
         {
             if (shows == null) return null;
 
             var result = 
                 shows
                     .Where(
-                        s => 
-                            s.StartTime.HasValue &&
-                            s.StartTime.Value.Date == dayDate)
+                        s => s.IsShowThisDay(day, firstDay)) 
                     .ToArray();
 
             return result;
@@ -1238,10 +1237,20 @@ namespace SmartWalk.Client.Core.ViewModels
             public bool Current { get; set; }
         }
 
-        private class SearchKey : Tuple<Venue, Show>
+        private class SearchKey
         {
-            public SearchKey(Venue venue) : base(venue, null) {}
-            public SearchKey(Venue venue, Show show) : base(venue, show) {}
+            public SearchKey(Venue venue)
+            {
+                Venue = venue;
+            }
+
+            public SearchKey(Venue venue, Show show) : this(venue)
+            {
+                Show = show;
+            }
+
+            public Venue Venue { get; private set; }
+            public Show Show { get; private set; }
         }
     }
 
