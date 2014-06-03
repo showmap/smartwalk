@@ -129,7 +129,8 @@ namespace SmartWalk.Client.iOS.Views.Common
             };
 
             _swipeRecognizer = new UISwipeGestureRecognizer(Hide) {
-                Direction = UISwipeGestureRecognizerDirection.Down
+                Direction = UISwipeGestureRecognizerDirection.Down | 
+                    UISwipeGestureRecognizerDirection.Up
             };
 
             _singleTapRecognizer.RequireGestureRecognizerToFail(_doubleTapRecognizer);

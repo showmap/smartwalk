@@ -207,8 +207,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 TintColor = Theme.RefreshControl
             };
 
-            // make sure that it's under all other views
-            _refreshControl.Layer.ZPosition = -1;
+            // make sure that it's behind all other views
+            _refreshControl.Layer.ZPosition = -100;
 
             _refreshControl.ValueChanged += OnRefreshControlValueChanged;
 
