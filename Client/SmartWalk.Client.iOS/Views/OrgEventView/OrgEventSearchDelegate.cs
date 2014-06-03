@@ -7,15 +7,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public class OrgEventSearchDelegate : UISearchDisplayDelegate
     {
+        private readonly OrgEventHeaderView _headerView;
         private readonly OrgEventViewModel _viewModel;
 
-        public OrgEventSearchDelegate(OrgEventViewModel viewModel)
+        private bool _previousIsListOptVisible;
+
+        public OrgEventSearchDelegate(
+            OrgEventHeaderView headerView, 
+            OrgEventViewModel viewModel)
         {
+            _headerView = headerView;
             _viewModel = viewModel;
         }
 
         public override void WillBeginSearch(UISearchDisplayController controller)
         {
+            _previousIsListOptVisible = _headerView.IsListOptionsVisible;
+            _headerView.IsListOptionsVisible = false;
+
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
                 controller.SearchBar.BarTintColor = Theme.NavBarBackgroundiOS7;
@@ -28,10 +37,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void WillEndSearch(UISearchDisplayController controller)
         {
+            _headerView.IsListOptionsVisible = _previousIsListOptVisible;
+
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
                 controller.SearchBar.BarTintColor = null;
-
             }
             else
             {

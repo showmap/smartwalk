@@ -51,7 +51,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (Superview != null)
             {
                 frame.Width = Superview.Frame.Width - 
-                    (IsListOptionsVisible 
+                    (IsListOptionsVisible
                         ? OrgEventHeaderView.OptionsButtonWith
                         : 0);
                 frame.Height = OrgEventHeaderView.DefaultHeight;

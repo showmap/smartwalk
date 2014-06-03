@@ -593,6 +593,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void OnModeButtonClicked(object sender, EventArgs e)
         {
+            if (_searchDisplayController != null)
+            {
+                _searchDisplayController.SetActive(false, false);
+            }
+
             if (ViewModel.SwitchModeCommand.CanExecute(null))
             {
                 ViewModel.SwitchModeCommand.Execute(null);
@@ -667,7 +672,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_headerView != null)
             {
                 _headerView.IsListOptionsVisible = ViewModel.IsListOptionsAvailable;
-                _headerView.SearchBarControl.IsListOptionsVisible = ViewModel.IsListOptionsAvailable;
             }
         }
 
@@ -676,7 +680,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _searchDisplayController = 
                 new UISearchDisplayController(_headerView.SearchBarControl, this);
 
-            var searchDelegate = new OrgEventSearchDelegate(ViewModel);
+            var searchDelegate = 
+                new OrgEventSearchDelegate(_headerView, ViewModel);
             _searchDisplayController.Delegate = searchDelegate;
 
             _searchDisplayController.SearchResultsTableView.SeparatorStyle = 

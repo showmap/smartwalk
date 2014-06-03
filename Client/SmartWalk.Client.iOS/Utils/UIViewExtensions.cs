@@ -11,5 +11,12 @@ namespace SmartWalk.Client.iOS.Utils
                 subView.RemoveFromSuperview();
             }
         }
+
+        public static bool IsChildOf<T>(this UIView view)
+        {
+            return view.Superview != null &&
+                (view.Superview is T || 
+                    view.Superview.IsChildOf<T>());
+        }
     }
 }

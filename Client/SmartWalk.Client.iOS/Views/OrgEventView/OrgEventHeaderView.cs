@@ -45,7 +45,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     _isListOptionsVisible = value;
 
-                    OptionsButton.Hidden = !_isListOptionsVisible;
+                    SearchBarControl.IsListOptionsVisible = _isListOptionsVisible;
+
+                    UIView.Transition(
+                        OptionsButton,
+                        ScrollUtil.ShowViewAnimationDuration,
+                        UIViewAnimationOptions.TransitionCrossDissolve,
+                        new NSAction(() => OptionsButton.Hidden = !_isListOptionsVisible),
+                        null);
 
                     SetNeedsLayout();
                 }
@@ -96,10 +103,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             OptionsButton.Frame = 
                 new RectangleF(
                     new PointF(
-                        SearchBar.Frame.Width,
+                        Frame.Width - OptionsButtonWith,
                         0),
                     new SizeF(
-                        buttonWidth,
+                        OptionsButtonWith,
                         DefaultHeight));
         }
 
