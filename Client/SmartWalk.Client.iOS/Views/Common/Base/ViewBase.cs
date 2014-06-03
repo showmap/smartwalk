@@ -62,6 +62,12 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewWillAppear(animated);
 
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                NavigationController.InteractivePopGestureRecognizer.Enabled = true;
+                NavigationController.InteractivePopGestureRecognizer.WeakDelegate = this;
+            }
+
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
         }
@@ -138,12 +144,16 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeGesture()
         {
-            _swipeRight = new UISwipeGestureRecognizer(() => 
+            // in iOS 7 using built-in pop gesture recognizer
+            if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                _swipeRight = new UISwipeGestureRecognizer(() => 
                 NavigationController.PopViewControllerAnimated(true));
 
-            _swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
+                _swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
 
-            View.AddGestureRecognizer(_swipeRight);
+                View.AddGestureRecognizer(_swipeRight);
+            }
         }
 
         private void DisposeGesture()
