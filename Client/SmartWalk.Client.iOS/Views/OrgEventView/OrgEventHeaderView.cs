@@ -120,16 +120,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (_isStyleInitialized || SearchBar == null) return;
 
-            var textField = SearchBar.Subviews.OfType<UITextField>().FirstOrDefault();
+            var textField = SearchBar
+                .GetAllSubViews()
+                .OfType<UITextField>()
+                .FirstOrDefault();
             if (textField != null)
             {
-                //textField.Font = Theme.OrgEventHeaderFont;
+                if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                {
+                    textField.TextColor = UIColor.White;
+                }
+                else
+                {
+                    textField.Font = Theme.OrgEventHeaderFont;
+                }
             }
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
                 SearchBar.SearchBarStyle = UISearchBarStyle.Minimal;
-                SearchBar.TintColor = UIColor.Black;
             }
 
             OptionsButton.SetImage(ThemeIcons.ListOptions, UIControlState.Normal);

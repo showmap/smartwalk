@@ -1,6 +1,5 @@
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -10,43 +9,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly OrgEventHeaderView _headerView;
         private readonly OrgEventViewModel _viewModel;
 
+        private OrgEventViewMode _previousMode;
         private bool _previousIsListOptVisible;
 
         public OrgEventSearchDelegate(
-            OrgEventHeaderView headerView, 
+            OrgEventHeaderView headerView,
             OrgEventViewModel viewModel)
         {
             _headerView = headerView;
             _viewModel = viewModel;
-        }
-
-        public override void WillBeginSearch(UISearchDisplayController controller)
-        {
-            _previousIsListOptVisible = _headerView.IsListOptionsVisible;
-            _headerView.IsListOptionsVisible = false;
-
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                controller.SearchBar.BarTintColor = Theme.NavBarBackgroundiOS7;
-            }
-            else
-            {
-                controller.SearchBar.TintColor = Theme.NavBarBackground;
-            }
-        }
-
-        public override void WillEndSearch(UISearchDisplayController controller)
-        {
-            _headerView.IsListOptionsVisible = _previousIsListOptVisible;
-
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                controller.SearchBar.BarTintColor = null;
-            }
-            else
-            {
-                controller.SearchBar.TintColor = Theme.SearchControl;
-            }
         }
 
         public override bool ShouldReloadForSearchString(
@@ -59,6 +30,31 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             return false;
+        }
+
+        public override void WillBeginSearch(UISearchDisplayController controller)
+        {
+            if (_viewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
+            {
+                _previousMode = _viewModel.Mode;
+                _viewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
+            }
+
+            _previousIsListOptVisible = _headerView.IsListOptionsVisible;
+            _headerView.IsListOptionsVisible = false;
+        }
+
+        public override void WillEndSearch(UISearchDisplayController controller)
+        {
+            _headerView.IsListOptionsVisible = _previousIsListOptVisible;
+        }
+
+        public override void DidEndSearch(UISearchDisplayController controller)
+        {
+            if (_viewModel.SwitchModeCommand.CanExecute(_previousMode))
+            {
+                _viewModel.SwitchModeCommand.Execute(_previousMode);
+            }
         }
 
         protected override void Dispose(bool disposing)

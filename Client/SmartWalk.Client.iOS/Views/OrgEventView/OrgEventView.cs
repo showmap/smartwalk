@@ -65,8 +65,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateDayButtonState();
         }
 
-        // TODO: Find another soltuion. It must be much simpler.
-        // HACK: To persist table scroll offset on rotation and appearing
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
@@ -74,6 +72,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             SetStatusBarVisibility(true, animated);
             UpdateNavBarState(animated);
 
+            // TODO: Find another soltuion. It must be much simpler.
+            // HACK: To persist table scroll offset on rotation and appearing
             if (_tableContentOffset != PointF.Empty && _timer == null)
             {
                 _timer = NSTimer.CreateRepeatingScheduledTimer(
@@ -102,11 +102,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 new [] {_modeListButton, _modeMapButton, MapFullscreenButton});
         }
 
-        // HACK: To persist table scroll offset
         public override void ViewDidDisappear(bool animated)
         {
             base.ViewDidDisappear(animated);
 
+            // HACK: To persist table scroll offset
             _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
         }
 
@@ -593,11 +593,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void OnModeButtonClicked(object sender, EventArgs e)
         {
-            if (_searchDisplayController != null)
-            {
-                _searchDisplayController.SetActive(false, false);
-            }
-
             if (ViewModel.SwitchModeCommand.CanExecute(null))
             {
                 ViewModel.SwitchModeCommand.Execute(null);
@@ -701,6 +696,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 .Apply();
 
             _searchDisplayController.SearchResultsTableView.Source = searchTableSource;
+        }
+
+        private void DeactivateSearchController()
+        {
+            if (_searchDisplayController != null &&
+                _searchDisplayController.Active)
+            {
+                _searchDisplayController.SetActive(false, false);
+            }
         }
 
         // To avoid iOS exception sometimes
@@ -987,6 +991,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     TablePanel.Hidden = false;
                     MapPanel.Hidden = false;
 
+                    DeactivateSearchController();
                     InitializeMapView();
                     break;
 
@@ -1000,6 +1005,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     TablePanel.Hidden = true;
                     MapPanel.Hidden = false;
 
+                    DeactivateSearchController();
                     InitializeMapView();
                     break;
 
