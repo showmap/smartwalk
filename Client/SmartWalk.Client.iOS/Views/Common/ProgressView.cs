@@ -35,15 +35,18 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         public override void LayoutSubviews()
         {
-            base.LayoutSubviews();
-
-            if (NoDataLabel != null && !_isInitialized)
+            if (NoDataLabel != null && 
+                ProgressLabel != null &&
+                !_isInitialized)
             {
                 NoDataLabel.Text = Localization.NoContentAvailable;
+                ProgressLabel.Text = Localization.Loading + "...";
 
                 InitializeStyle();
                 _isInitialized = true;
             }
+
+            base.LayoutSubviews();
         }
 
         protected override void Dispose(bool disposing)

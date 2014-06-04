@@ -2,6 +2,7 @@
 {
     public static class Localization
     {
+        public const string Loading = "Loading";
         public const string OK = "OK";
         public const string CurrentEvents = "Current Events";
         public const string UpcomingEvents = "Upcoming Events";
