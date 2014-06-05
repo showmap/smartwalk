@@ -57,6 +57,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        public override void WillShowSearchResults(UISearchDisplayController controller, UITableView tableView)
+        {
+            tableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
+
+            ((OrgEventTableSource)controller.SearchResultsSource).TableView = tableView;
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

@@ -313,9 +313,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override IListViewSource CreateListViewSource()
         {
-            var tableSource = new OrgEventTableSource(
-                VenuesAndShowsTableView,
-                ViewModel);
+            var tableSource = new OrgEventTableSource(ViewModel)
+                {
+                    TableView = VenuesAndShowsTableView
+                };
 
             this.CreateBinding(tableSource)
                 .For(ts => ts.ItemsSource)
@@ -397,7 +398,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 MapContentView.Hidden = true;
             }
 
-            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource;
+            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource != null)
             {
                 tableSource.ScrollOutHeader();
@@ -431,7 +432,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 new NSAction(() => MapContentView.Hidden = false),
                 null);
 
-            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource;
+            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource == null || tableSource.IsHeaderViewHidden)
             {
                 base.OnLoadedViewStateUpdate();
@@ -674,20 +675,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             _searchDisplayController = 
                 new UISearchDisplayController(_headerView.SearchBarControl, this);
-
-            var searchDelegate = 
+            _searchDisplayController.Delegate = 
                 new OrgEventSearchDelegate(_headerView, ViewModel);
-            _searchDisplayController.Delegate = searchDelegate;
 
-            _searchDisplayController.SearchResultsTableView.SeparatorStyle = 
-                UITableViewCellSeparatorStyle.None;
-
-            var searchTableSource = new OrgEventTableSource(
-                _searchDisplayController.SearchResultsTableView,
-                ViewModel)
-            {
-                IsSearchSource = true
-            };
+            var searchTableSource = new OrgEventTableSource(ViewModel)
+                {
+                    IsSearchSource = true,
+                    TableView = _searchDisplayController.SearchResultsTableView
+                };
 
             this.CreateBinding(searchTableSource)
                 .For(ts => ts.ItemsSource)
@@ -695,7 +690,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 .WithConversion(new OrgEventTableSourceConverter(), ViewModel)
                 .Apply();
 
-            _searchDisplayController.SearchResultsTableView.Source = searchTableSource;
+            _searchDisplayController.SearchResultsSource = searchTableSource;
         }
 
         private void DeactivateSearchController()
@@ -922,7 +917,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 DisposeListSettingsView();
             }
 
-            var tableSoure = (HiddenHeaderTableSource)VenuesAndShowsTableView.WeakDataSource;
+            var tableSoure = VenuesAndShowsTableView.WeakDataSource as HiddenHeaderTableSource<Venue>;
             if (tableSoure != null)
             {
                 tableSoure.IsAutohidingEnabled = !isShown;
@@ -1095,9 +1090,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 cell.IsHighlighted = cell.IsExpanded && !ViewModel.IsGroupedByLocation;
             }
 
-            if (!ViewModel.IsGroupedByLocation)
+            var tableSoure = tableView.WeakDataSource as OrgEventTableSource;
+            if (!ViewModel.IsGroupedByLocation && tableSoure != null)
             {
-                var tableSoure = (OrgEventTableSource)tableView.WeakDataSource;
                 var previousOffset = tableView.ContentOffset;
 
                 var previousIndex = _previousExpandedShow != null

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
@@ -13,40 +12,18 @@ using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    public class OrgEventTableSource : HiddenHeaderTableSource
+    public class OrgEventTableSource : HiddenHeaderTableSource<Venue>
     {
         private static readonly NSString EmptyCellKey = new NSString("empty");
 
         private readonly OrgEventViewModel _viewModel;
 
-        public OrgEventTableSource(UITableView tableView, OrgEventViewModel viewModel)
-            : base(tableView)
+        public OrgEventTableSource(OrgEventViewModel viewModel)
         {
             _viewModel = viewModel;
-
-            tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
-            tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
-            tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
-            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
         public bool IsSearchSource { get; set; }
-
-        public new Venue[] ItemsSource
-        {
-            get
-            {
-                return (Venue[])base.ItemsSource;
-            }
-            set
-            {
-                if (!((Venue[])base.ItemsSource).EnumerableEquals(value))
-                {
-                    base.ItemsSource = value;
-                    ReloadTableData();
-                }
-            }
-        }
 
         public NSIndexPath GetItemIndex(Show show)
         {
@@ -73,7 +50,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            TableView.DeselectRow(indexPath, false);
+            tableView.DeselectRow(indexPath, false);
         }
 
         public override float GetHeightForHeader(UITableView tableView, int section)
@@ -146,7 +123,31 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return null;
         }
 
-        protected override UITableViewCell GetOrCreateCellFor(
+        public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+        {
+            var item = GetItemAt(indexPath);
+            var cell = GetOrCreateCellFor(tableView, indexPath, item);
+            return cell;
+        }
+
+        protected override void OnTableViewReset(UITableView previousTableView, UITableView tableView)
+        {
+            if (tableView != null)
+            {
+                tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
+                tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
+                tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
+                tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
+        }
+
+        private UITableViewCell GetOrCreateCellFor(
             UITableView tableView,
             NSIndexPath indexPath,
             object item)
@@ -185,7 +186,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return cell;
         }
 
-        protected override object GetItemAt(NSIndexPath indexPath)
+        private object GetItemAt(NSIndexPath indexPath)
         {
             if (ItemsSource != null &&
                 ItemsSource[indexPath.Section].Shows != null)
@@ -198,28 +199,61 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
            
             return null;
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            ConsoleUtil.LogDisposed(this);
-        }
     }
 
     /// <summary>
     /// A helper base class that incapsulates the HACK for initial hiding of table's header view.
     /// </summary>
-    public abstract class HiddenHeaderTableSource : MvxBaseTableViewSource, IListViewSource
+    public abstract class HiddenHeaderTableSource<T> : UITableViewSource, IListViewSource
     {
+        private UITableView _tableView;
+        private T[] _itemsSource;
         private bool _isTouched;
 
-        protected HiddenHeaderTableSource(UITableView tableView) : base(tableView)
+        protected HiddenHeaderTableSource()
         {
             IsAutohidingEnabled = true;
         }
 
         public bool IsAutohidingEnabled { get; set; }
-        public IEnumerable ItemsSource { get; protected set; }
+
+        public UITableView TableView
+        {
+            get
+            {
+                return _tableView;
+            }
+            set
+            {
+                if (_tableView != value)
+                {
+                    var previousTable = _tableView;
+                    _tableView = value;
+                    OnTableViewReset(previousTable, _tableView);
+                }
+            }
+        }
+
+        public T[] ItemsSource
+        {
+            get
+            {
+                return _itemsSource;
+            }
+            set
+            {
+                if (!_itemsSource.EnumerableEquals(value))
+                {
+                    _itemsSource = value;
+                    ReloadTableData();
+                }
+            }
+        }
+
+        IEnumerable IListViewSource.ItemsSource
+        {
+            get { return ItemsSource; }
+        }
 
         public bool IsHeaderViewHidden
         {
@@ -241,9 +275,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        public override void ReloadTableData()
+        public void ReloadTableData()
         {
-            base.ReloadTableData();
+            TableView.ReloadData();
 
             if (IsAutohidingEnabled && !IsHeaderViewHidden)
             {
@@ -273,7 +307,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
         {
-            if (TableView.TableHeaderView == null) return;
+            if (((UITableView)scrollView).TableHeaderView == null) return;
 
             ScrollUtil.AdjustHeaderPosition(scrollView, HeaderHeight);
         }
@@ -283,17 +317,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return 0;
         }
 
-        protected override UITableViewCell GetOrCreateCellFor(
-            UITableView tableView,
-            NSIndexPath indexPath,
-            object item)
+        protected virtual void OnTableViewReset(UITableView previousTableView, UITableView tableView)
         {
-            return null;
-        }
-
-        protected override object GetItemAt(NSIndexPath indexPath)
-        {
-            return null;
         }
     }
 }

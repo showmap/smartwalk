@@ -10,7 +10,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     [Register("CustomUISearchBar")]
     public class CustomUISearchBar : UISearchBar
     {
-        private bool _isListOptionsVisible = true;
+        private bool _isListOptionsVisible;
 
         public CustomUISearchBar(IntPtr Handle) : base(Handle)
         {
