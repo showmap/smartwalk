@@ -211,7 +211,8 @@ EntityViewModelExtended.prototype.GetMapLink = function () {
 
 EntityViewModelExtended.prototype.cancel = function () {
     $(this.settings.entityFormName).trigger({
-        type: this.settings.entityCancelEvent
+        type: this.settings.entityCancelEvent,
+        item: this
     });
 };
 

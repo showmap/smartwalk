@@ -114,8 +114,10 @@ EventViewModelExtended.prototype.attachEvents = function () {
     });
 
     $(self.settings.hostFormName).bind(EntityViewModelExtended.HOST_SAVE_EVENT, function (event) {
-        self.AllHosts.push(event.item);
-        self.Host(event.item);
+        var newHost = new EntityViewModel(event.item.toJSON());
+        self.AllHosts.push(newHost);
+        self.Host(newHost);
+        event.item.loadData(self.getNewHost().toJSON());
         $(self.settings.hostFormName).dialog("close");
     });
 
@@ -124,9 +126,10 @@ EventViewModelExtended.prototype.attachEvents = function () {
     });
 
     $(self.settings.venueFormName).bind(EntityViewModelExtended.VENUE_SAVE_EVENT, function (event) {
-        self.OtherVenues.push(event.item);
-        self.selectedVenue(event.item);
-
+        var newVenue = new EntityViewModel(event.item.toJSON());
+        self.OtherVenues.push(newVenue);
+        self.selectedVenue(newVenue);
+        event.item.loadData(self.getNewVenue().toJSON());
         $(self.settings.venueFormName).dialog("close");
     });
 };
@@ -338,10 +341,18 @@ EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) 
     );
 };
 
+EventViewModel.prototype.getNewHost = function () {
+    return new EntityViewModel({ Id: 0, Type: 0, State: 1 });
+};
+
+EventViewModel.prototype.getNewVenue = function () {
+    return new EntityViewModel({ Id: 0, Type: 1, State: 1 });
+};
+
 EventViewModel.prototype.addVenue = function (root) {
     root.cancelInner(root);
-    
-    var newVenue = new EntityViewModel({ Id: 0, Type: 1, State: 1 });
+
+    var newVenue = root.getNewVenue();
     root.AllVenues.push(newVenue);
     root.selectedItem(newVenue);
     //root.selectedItem(root.AllVenues()[root.AllVenues().length-1]);
