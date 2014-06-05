@@ -34,6 +34,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel EndTimeLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIView HeaderContainer { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
 
 		[Outlet]
@@ -56,6 +62,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (AllDayLabel != null) {
+				AllDayLabel.Dispose ();
+				AllDayLabel = null;
+			}
+
 			if (DescriptionAndImageSpaceConstraint != null) {
 				DescriptionAndImageSpaceConstraint.Dispose ();
 				DescriptionAndImageSpaceConstraint = null;
@@ -84,11 +95,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (EndTimeLabel != null) {
 				EndTimeLabel.Dispose ();
 				EndTimeLabel = null;
-			}
-
-			if (AllDayLabel != null) {
-				AllDayLabel.Dispose ();
-				AllDayLabel = null;
 			}
 
 			if (ImageAndDetailsSpaceConstraint != null) {
@@ -124,6 +130,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TimeBackgroundView != null) {
 				TimeBackgroundView.Dispose ();
 				TimeBackgroundView = null;
+			}
+
+			if (HeaderContainer != null) {
+				HeaderContainer.Dispose ();
+				HeaderContainer = null;
+			}
+
+			if (HeaderHeightConstraint != null) {
+				HeaderHeightConstraint.Dispose ();
+				HeaderHeightConstraint = null;
 			}
 		}
 	}

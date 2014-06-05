@@ -66,6 +66,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 var height = VenueShowCell.CalculateCellHeight(
                     tableView.Frame.Width,
                     Equals(_viewModel.ExpandedShow, venueShow),
+                    false,
                     venueShow);
                 return height;
             }

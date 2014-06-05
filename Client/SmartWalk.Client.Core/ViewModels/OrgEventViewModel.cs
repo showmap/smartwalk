@@ -1009,21 +1009,15 @@ namespace SmartWalk.Client.Core.ViewModels
                     OrgEvent.Venues != null)
                 {
                     _allShows = 
-                        OrgEvent.Venues
-                            .SelectMany(
-                                v => 
-                                    v.Shows != null
-                                        ? v.Shows.Select(
-                                            s =>
-                                            { 
-                                                var venue = new Venue(v.Info) 
-                                                    { 
-                                                        Shows = new [] { s } 
-                                                    }; 
-                                                return venue;
-                                            })
-                                        : Enumerable.Empty<Venue>())
-                            .ToArray();
+                        new [] {
+                            new Venue(new Entity()) 
+                            {
+                                Shows = 
+                                    OrgEvent.Venues
+                                        .SelectMany(v => v.Shows ?? new Show[] {})
+                                        .ToArray()
+                            }
+                        };
 
                     SortAllShowsBy();
                 }
@@ -1192,24 +1186,11 @@ namespace SmartWalk.Client.Core.ViewModels
             return result;
         }
 
-        private Venue GetVenueByShow(Show show)
-        {
-            if (OrgEvent != null && show != null)
-            {
-                return 
-                    OrgEvent.Venues
-                        .FirstOrDefault(v => v.Info.Id == show.Venue
-                            .First(r => r.Storage == Storage.SmartWalk).Id);
-            }
-
-            return null;
-        }
-
         private int GetExpandedShowNumber()
         {
             if (OrgEvent != null && ExpandedShow != null)
             {
-                var venue = GetVenueByShow(ExpandedShow);
+                var venue = OrgEvent.Venues.GetVenueByShow(ExpandedShow);
                 var venueNumber = Array.IndexOf(OrgEvent.Venues, venue);
                 var showNumber = Array.IndexOf(venue.Shows, ExpandedShow);
 
@@ -1223,9 +1204,11 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             if (_allShows != null)
             {
-                _allShows = 
-                    _allShows
-                        .OrderBy(v => v.Shows[0], new ShowComparer(SortBy))
+                var fooVenue = _allShows[0];
+
+                fooVenue.Shows = 
+                    fooVenue.Shows
+                        .OrderBy(v => v, new ShowComparer(SortBy))
                         .ToArray();
 
             }

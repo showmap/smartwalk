@@ -187,6 +187,19 @@ namespace SmartWalk.Client.Core.Utils
 
             return result;
         }
+
+        public static Venue GetVenueByShow(this Venue[] venues, Show show)
+        {
+            if (venues != null && show != null)
+            {
+                return 
+                    venues
+                        .FirstOrDefault(v => v.Info.Id == show.Venue
+                            .First(r => r.Storage == Storage.SmartWalk).Id);
+            }
+
+            return null;
+        }
     }
 
     public enum ShowStatus

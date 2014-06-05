@@ -20,6 +20,7 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -1081,17 +1082,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateTableViewOnShowExpanding(UITableView tableView)
         {
+            var tableSoure = tableView.WeakDataSource as OrgEventTableSource;
             if (tableView.VisibleCells.Length == 0 ||
-                tableView.WeakDataSource == null) return;
+                tableSoure == null) return;
 
             foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
             {
                 cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
-                cell.IsHighlighted = cell.IsExpanded && !ViewModel.IsGroupedByLocation;
+                cell.HeaderView = 
+                    tableSoure.GetHeaderForShowCell(
+                        tableView, 
+                        cell.IsExpanded, 
+                        cell.DataContext);
             }
 
-            var tableSoure = tableView.WeakDataSource as OrgEventTableSource;
-            if (!ViewModel.IsGroupedByLocation && tableSoure != null)
+            if (!ViewModel.IsGroupedByLocation)
             {
                 var previousOffset = tableView.ContentOffset;
 
@@ -1106,14 +1111,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var delta = 
                     (ViewModel.ExpandedShow != null ? 1: -1) * 
                         VenueHeaderView.DefaultHeight -
-                    (previousIndex != null && 
-                        currentIndex != null && 
-                            previousIndex.Section < currentIndex.Section
-                        ? VenueShowCell.CalculateCellHeight(
-                            tableView.Frame.Width,
-                            true,
-                            _previousExpandedShow) + 25 // just a magic number, really
-                        : 0);
+                        (previousIndex != null && 
+                            currentIndex != null && 
+                                previousIndex.Section < currentIndex.Section
+                            ? VenueShowCell.CalculateCellHeight(
+                                tableView.Frame.Width,
+                                true,
+                                false,
+                                _previousExpandedShow) + 25 // just a magic number, really
+                            : 0);
 
                 // Compensating the shift created by expanded headers or previous cells
                 if (tableView.ScrollEnabled &&
@@ -1122,20 +1128,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     tableView.SetContentOffset(
                         new PointF(previousOffset.X, previousOffset.Y + delta), 
                         true);
-                }
-
-                if (previousIndex != null)
-                {
-                    tableView.ReloadSections(
-                        NSIndexSet.FromIndex(previousIndex.Section),
-                        UITableViewRowAnimation.Fade);
-                }
-
-                if (currentIndex != null)
-                {
-                    tableView.ReloadSections(
-                        NSIndexSet.FromIndex(currentIndex.Section), 
-                        UITableViewRowAnimation.Fade);
                 }
             }
 

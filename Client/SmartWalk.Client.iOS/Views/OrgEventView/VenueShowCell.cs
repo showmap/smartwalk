@@ -9,6 +9,7 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -33,12 +34,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _detailsTapGesture;
         private bool _isExpanded;
-        private bool _isHighlighted;
+        private UIView _headerView;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView();
-            UpdateBackgroundColor();
+            BackgroundView = new UIView { BackgroundColor = Theme.CellBackground };
 
             _imageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
@@ -59,11 +59,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return (VenueShowCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static float CalculateCellHeight(float frameWidth, bool isExpanded, Show show)
+        public static float CalculateCellHeight(
+            float frameWidth, 
+            bool isExpanded, 
+            bool isHeaderVisible, 
+            Show show)
         {
             if (isExpanded)
             {
-                var cellHeight = default(float);
+                var cellHeight = isHeaderVisible 
+                    ? VenueHeaderView.DefaultHeight 
+                    : 0f;
 
                 var showText = show.GetText();  
                 if (showText != null)
@@ -74,7 +80,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         : 0;
                     var textHeight = 
                         (float)Math.Ceiling(CalculateTextHeight(GetTextWidth(frameWidth), showText));
-                    cellHeight = Gap + textHeight + logoHeight + detailsHeight + Gap;
+                    cellHeight += Math.Max(
+                        DefaultHeight, 
+                        Gap + textHeight + logoHeight + detailsHeight + Gap); // if no text, we still show times
                 }
 
                 return cellHeight;
@@ -137,24 +145,35 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     if (!_isExpanded)
                     {
-                        IsHighlighted = false;
+                        HeaderView = null;
                     }
                 }
             }
         }
 
-        public bool IsHighlighted
+        public UIView HeaderView
         {
             get
             {
-                return _isHighlighted;
+                return _headerView;
             }
             set
             {
-                if (_isHighlighted != value)
+                if (_headerView != value)
                 {
-                    _isHighlighted = value;
-                    UpdateBackgroundColor();
+                    if (_headerView != null)
+                    {
+                        _headerView.RemoveFromSuperview();
+                    }
+
+                    _headerView = value;
+                    UpdateVisibility();
+                    UpdateConstraints();
+
+                    if (_headerView != null)
+                    {
+                        HeaderContainer.AddSubview(_headerView);
+                    }
                 }
             }
         }
@@ -183,11 +202,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.UpdateConstraints();
 
+            var calculatedHeight = 
+                DataContext != null 
+                    ? CalculateCellHeight(
+                        Frame.Width, 
+                        IsExpanded, 
+                        HeaderView != null, 
+                        DataContext)
+                    : 0;
+
+            HeaderHeightConstraint.Constant = 
+                IsExpanded && 
+                HeaderView != null &&
+                Frame.Height >= calculatedHeight
+                    ? VenueHeaderView.DefaultHeight
+                    : 0;
+
             DescriptionLeftConstraint.Constant = TimeBlockWidth;
 
             if (IsExpanded &&
                 DataContext.HasPicture() &&
-                Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
+                Frame.Height >= calculatedHeight)
             {
                 ImageHeightConstraint.Constant = ImageHeight;
                 ImageWidthConstraint.Constant = GetImageProportionalWidth();
@@ -202,7 +237,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (IsExpanded && 
                 DataContext.HasDetailsUrl() &&
-                Frame.Height >= CalculateCellHeight(Frame.Width, IsExpanded, DataContext))
+                Frame.Height >= calculatedHeight)
             {
                 DetailsHeightConstraint.Constant = 
                     (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight);
@@ -233,6 +268,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ExpandCollapseShowCommand = null;
                 ShowImageFullscreenCommand = null;
                 NavigateDetailsLinkCommand = null;
+                HeaderView = null;
 
                 DisposeGestures();
             }
@@ -324,6 +360,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             DetailsLabel.Hidden = !IsExpanded || 
                 !DataContext.HasDetailsUrl();
+
+            var isHeaderHidden = !IsExpanded || HeaderView == null;
+            if (isHeaderHidden)
+            {
+                HeaderContainer.Hidden = true;
+            }
+            else
+            {
+                UIView.Transition(
+                    HeaderContainer,
+                    ScrollUtil.ShowViewAnimationDuration,
+                    UIViewAnimationOptions.TransitionCrossDissolve,
+                    new NSAction(() => 
+                        HeaderContainer.Hidden = false),
+                    null);
+            }
         }
 
         private float GetImageProportionalWidth()
@@ -431,6 +483,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             DetailsLabel.Font = Theme.VenueShowCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
+
+            HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
+            HeaderContainer.Layer.ShadowOffset = new SizeF(0, 4);
+            HeaderContainer.Layer.ShadowOpacity = 0.2f;
         }
 
         private void UpdateClockIcon()
@@ -455,14 +511,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
                     break;
             }
-        }
-
-        private void UpdateBackgroundColor()
-        {
-            BackgroundView.BackgroundColor = 
-                IsHighlighted 
-                    ? Theme.CellSemiHighlight 
-                    : Theme.CellBackground;
         }
     }
 }
