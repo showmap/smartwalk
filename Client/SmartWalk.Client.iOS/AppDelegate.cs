@@ -7,7 +7,6 @@ using Cirrious.MvvmCross.ViewModels;
 using GoogleAnalytics;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Services;

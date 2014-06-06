@@ -4,7 +4,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using GoogleAnalytics;
 using MonoTouch.Foundation;
-using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Services;
 

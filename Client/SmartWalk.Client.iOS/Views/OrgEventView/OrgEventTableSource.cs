@@ -10,6 +10,8 @@ using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -25,6 +27,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         }
 
         public bool IsSearchSource { get; set; }
+
+        private bool ShowVenueGroupHeader
+        {
+            get
+            {
+                return
+                    !_viewModel.IsGroupedByLocation &&
+                    _viewModel.IsMultiday &&
+                    _viewModel.SortBy == SortBy.Time &&
+                    !_viewModel.CurrentDay.HasValue;
+            }
+        }
 
         public NSIndexPath GetItemIndex(Show show)
         {
@@ -56,14 +70,23 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return _viewModel.IsGroupedByLocation
-                    ? VenueHeaderView.DefaultHeight : 0;
+            if (_viewModel.IsGroupedByLocation)
+            {
+                return VenueHeaderView.DefaultHeight;
+            }
+
+            if (ShowVenueGroupHeader)
+            {
+                return GroupHeaderView.DefaultHeight;
+            }
+
+            return 0;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var show = GetItemAt(indexPath);
-            if (show != null && show.Id == DayHeaderShow.Id)
+            if (show != null && show.Id == Show.DayGroupId)
             {
                 return DayHeaderCell.DefaultHeight;
             }
@@ -107,35 +130,47 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
+            var venue = ItemsSource[section];
+
             if (_viewModel.IsGroupedByLocation)
             {
-                var headerView = DequeueVenueHeaderView(tableView, ItemsSource[section]);
+                var headerView = (VenueHeaderView)tableView.DequeueReusableHeaderFooterView(VenueHeaderView.Key);
+
+                headerView.DataContext = venue;
+                headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
+                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
+
                 return headerView;
+            }
+
+            if (ShowVenueGroupHeader)
+            {
+                var groupView = (GroupHeaderView)tableView.DequeueReusableHeaderFooterView(GroupHeaderView.Key);
+
+                groupView.DataContext = venue.Info.Name;
+
+                return groupView;
             }
 
             return null;
         }
 
-        public VenueHeaderView DequeueVenueHeaderView(UITableView tableView, Venue venue)
+        public UIView GetHeaderForShowCell(bool isCellExpanded, Show show)
         {
-            var headerView = (VenueHeaderView)tableView.DequeueReusableHeaderFooterView(VenueHeaderView.Key);
-
-            headerView.DataContext = venue;
-            headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
-            headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
-
-            return headerView;
-        }
-
-        public VenueHeaderView GetHeaderForShowCell(UITableView tableView, bool isCellExpanded, Show show)
-        {
-            var headerView = 
-                isCellExpanded &&
-                !_viewModel.IsGroupedByLocation
-                ? DequeueVenueHeaderView(
-                    tableView,
-                    _viewModel.OrgEvent.Venues.GetVenueByShow(show))
+            var headerView = isCellExpanded && !_viewModel.IsGroupedByLocation
+                ? VenueHeaderContentView.Create()
                 : null;
+
+            if (headerView != null)
+            {
+                headerView.BackgroundColor = Theme.BackgroundPatternColor;
+                headerView.BackgroundView = headerView;
+
+                headerView.DataContext = _viewModel.OrgEvent.Venues.GetVenueByShow(show);
+                headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
+                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
+            }
+
             return headerView;
         }
 
@@ -152,7 +187,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var cell = default(UITableViewCell);
 
-            if (show != null && show.Id == DayHeaderShow.Id)
+            if (show != null && show.Id == Show.DayGroupId)
             {
                 cell = tableView.DequeueReusableCell(DayHeaderCell.Key, indexPath);
                 ((DayHeaderCell)cell).DataContext = show;
@@ -167,7 +202,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.DataContext = show;
 
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
-                venueCell.HeaderView = GetHeaderForShowCell(tableView, venueCell.IsExpanded, show);
+                venueCell.HeaderView = GetHeaderForShowCell(venueCell.IsExpanded, show);
 
                 venueCell.IsSeparatorVisible = 
                     !_viewModel.IsGroupedByLocation ||
@@ -183,6 +218,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (tableView != null)
             {
                 tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
+                tableView.RegisterClassForHeaderFooterViewReuse(typeof(GroupHeaderView), GroupHeaderView.Key);
                 tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
                 tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
                 tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);

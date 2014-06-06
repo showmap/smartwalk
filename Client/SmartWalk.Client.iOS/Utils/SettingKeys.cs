@@ -1,4 +1,4 @@
-namespace SmartWalk.Client.Core.Constants
+namespace SmartWalk.Client.iOS.Utils
 {
     public static class SettingKeys
     {

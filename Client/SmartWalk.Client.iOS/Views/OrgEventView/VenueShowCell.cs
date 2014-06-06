@@ -169,9 +169,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     _headerView = value;
                     UpdateVisibility();
                     UpdateConstraints();
+                    UpdateBackgroundColor();
 
                     if (_headerView != null)
                     {
+                        _headerView.Frame = HeaderContainer.Bounds;
+
                         HeaderContainer.AddSubview(_headerView);
                     }
                 }
@@ -362,20 +365,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 !DataContext.HasDetailsUrl();
 
             var isHeaderHidden = !IsExpanded || HeaderView == null;
-            if (isHeaderHidden)
-            {
-                HeaderContainer.Hidden = true;
-            }
-            else
-            {
-                UIView.Transition(
-                    HeaderContainer,
-                    ScrollUtil.ShowViewAnimationDuration,
-                    UIViewAnimationOptions.TransitionCrossDissolve,
-                    new NSAction(() => 
-                        HeaderContainer.Hidden = false),
-                    null);
-            }
+            HeaderContainer.SetHidden(isHeaderHidden, !isHeaderHidden);
         }
 
         private float GetImageProportionalWidth()
@@ -485,8 +475,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             DetailsLabel.TextColor = Theme.HyperlinkText;
 
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
-            HeaderContainer.Layer.ShadowOffset = new SizeF(0, 4);
-            HeaderContainer.Layer.ShadowOpacity = 0.2f;
+            HeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);
+            HeaderContainer.Layer.ShadowOpacity = 0.1f;
         }
 
         private void UpdateClockIcon()
@@ -511,6 +501,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
                     break;
             }
+        }
+
+        private void UpdateBackgroundColor()
+        {
+            BackgroundView.BackgroundColor = 
+                HeaderView != null 
+                    ? Theme.CellSemiHighlight 
+                    : Theme.CellBackground;
         }
     }
 }

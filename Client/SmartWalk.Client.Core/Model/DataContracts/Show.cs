@@ -8,6 +8,8 @@ namespace SmartWalk.Client.Core.Model.DataContracts
 {
     public class Show : IShow
     {
+        public const int DayGroupId = -1000;
+
         public int Id { get; set; }
         public Reference[] Venue { get; set; }
         public bool? IsReference { get; set; }

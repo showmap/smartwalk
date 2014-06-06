@@ -1,11 +1,13 @@
-SW-136 MapType switch was implemented
-SW-136 The basic multi-days support was done
-SW-160 Better handling loading state.
-SW-160 Correct Equals methods were added.
-SW-160 The map is hidden during first loading
-SW-160 Clean Cache button was implemented
-SW-160 Partial implementation of Reset Cache
-SW-160 "All Day" is shown if there is no time
-SW-160 Browsers toolbar are hidden on click
-SW-160 Tall status bar was supported.
-SW-160 Unexpected exception on map click fixed
+SW-160 Refactoring of VenueShow with header. New way of setting the ItemsSource while grouping is off.
+SW-160 SearchBar layout/issues fixed for iOS 6/7
+SW-160 The weird bug that crashed iOS 6 fixed. Just moved base.LayoutSubviews call in the end
+SW-160 Better handling of SearchBar. Bugs fixed.
+SW-160 The layout of SearchBar was fixed.
+SW-160 Small fixes. Up and Down swipe to close fullscreen image now.
+SW-160 The built-in pop gesture is used in iOS 7
+SW-160 Late night shows are set to previous day.
+SW-160 Grouping by day was supported. Now VenueView was integrated with multi-day events.
+SW-160 Day groups for multiday events supported. Very basic implementation for OrgEventView, it needs to be improved in future.
+SW-160 Refactoring. The search and flattering shows logic was moved to ViewModel.
+SW-160 Refactoring. Moving OrgEventInfo into separate folder
+SW-160 The bug on production was fixed. We have to keep GA config xml in the project.
