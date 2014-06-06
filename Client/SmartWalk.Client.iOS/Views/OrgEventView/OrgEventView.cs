@@ -426,12 +426,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnLoadedViewStateUpdate()
         {
-            UIView.Transition(
-                MapContentView,
-                ScrollUtil.ShowViewAnimationDuration,
-                UIViewAnimationOptions.TransitionCrossDissolve,
-                new NSAction(() => MapContentView.Hidden = false),
-                null);
+            MapContentView.SetHidden(false, true);
 
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource == null || tableSource.IsHeaderViewHidden)
@@ -1090,10 +1085,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
                 cell.HeaderView = 
-                    tableSoure.GetHeaderForShowCell(
-                        tableView, 
-                        cell.IsExpanded, 
-                        cell.DataContext);
+                    tableSoure.GetHeaderForShowCell(cell.IsExpanded, cell.DataContext);
             }
 
             if (!ViewModel.IsGroupedByLocation)

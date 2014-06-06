@@ -133,7 +133,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (_viewModel.IsGroupedByLocation)
             {
-                var headerView = DequeueVenueHeaderView(tableView, venue);
+                var headerView = (VenueHeaderView)tableView.DequeueReusableHeaderFooterView(VenueHeaderView.Key);
+
+                headerView.DataContext = venue;
+                headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
+                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
+
                 return headerView;
             }
 
@@ -149,26 +154,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return null;
         }
 
-        public VenueHeaderView DequeueVenueHeaderView(UITableView tableView, Venue venue)
+        public UIView GetHeaderForShowCell(bool isCellExpanded, Show show)
         {
-            var headerView = (VenueHeaderView)tableView.DequeueReusableHeaderFooterView(VenueHeaderView.Key);
-
-            headerView.DataContext = venue;
-            headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
-            headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
-
-            return headerView;
-        }
-
-        public VenueHeaderView GetHeaderForShowCell(UITableView tableView, bool isCellExpanded, Show show)
-        {
-            var headerView = 
-                isCellExpanded &&
-                !_viewModel.IsGroupedByLocation
-                ? DequeueVenueHeaderView(
-                    tableView,
-                    _viewModel.OrgEvent.Venues.GetVenueByShow(show))
+            var headerView = isCellExpanded && !_viewModel.IsGroupedByLocation
+                ? VenueHeaderContentView.Create()
                 : null;
+
+            if (headerView != null)
+            {
+                headerView.DataContext = _viewModel.OrgEvent.Venues.GetVenueByShow(show);
+                headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
+                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
+            }
+
             return headerView;
         }
 
@@ -200,7 +198,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.DataContext = show;
 
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
-                venueCell.HeaderView = GetHeaderForShowCell(tableView, venueCell.IsExpanded, show);
+                venueCell.HeaderView = GetHeaderForShowCell(venueCell.IsExpanded, show);
 
                 venueCell.IsSeparatorVisible = 
                     !_viewModel.IsGroupedByLocation ||

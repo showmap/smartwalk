@@ -166,12 +166,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void OnLoadedViewStateUpdate()
         {
-            UIView.Transition(
-                ListView.View,
-                ScrollUtil.ShowViewAnimationDuration,
-                UIViewAnimationOptions.TransitionCrossDissolve,
-                new NSAction(() => ListView.View.Hidden = false),
-                null);
+            ListView.View.SetHidden(false, true);
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)

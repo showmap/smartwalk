@@ -10,8 +10,6 @@ namespace SmartWalk.Client.iOS.Utils
 {
     public static class ScrollUtil
     {
-        public const double ShowViewAnimationDuration = 0.15;
-
         private static readonly Dictionary<WeakReference<UIScrollView>, NSTimer> _timers = 
             new Dictionary<WeakReference<UIScrollView>, NSTimer>();
 
@@ -26,12 +24,7 @@ namespace SmartWalk.Client.iOS.Utils
 
                 if (scrollView.Hidden)
                 {
-                    UIView.Transition(
-                        scrollView,
-                        ShowViewAnimationDuration,
-                        UIViewAnimationOptions.TransitionCrossDissolve,
-                        new NSAction(() => scrollView.Hidden = false),
-                        null);
+                    scrollView.SetHidden(false, true);
                 }
             }
         }
