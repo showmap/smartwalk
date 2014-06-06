@@ -11,6 +11,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -162,6 +163,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (headerView != null)
             {
+                headerView.BackgroundColor = Theme.BackgroundPatternColor;
+                headerView.BackgroundView = headerView;
+
                 headerView.DataContext = _viewModel.OrgEvent.Venues.GetVenueByShow(show);
                 headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
                 headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;

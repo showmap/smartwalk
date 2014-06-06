@@ -1011,6 +1011,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     
             UpdateNavBarState(animated);
             UpdateViewConstraints(animated);
+
+            // hiding ListOptions on switching to any state
+            if (ViewModel.ShowHideListOptionsCommand.CanExecute(false))
+            {
+                ViewModel.ShowHideListOptionsCommand.Execute(false);
+            }
         }
 
         private void UpdateNavBarState(bool animated)

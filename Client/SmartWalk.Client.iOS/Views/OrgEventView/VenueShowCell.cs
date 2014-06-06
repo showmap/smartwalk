@@ -173,7 +173,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     if (_headerView != null)
                     {
-                        _headerView.BackgroundColor = Theme.BackgroundPatternColor;
                         _headerView.Frame = HeaderContainer.Bounds;
 
                         HeaderContainer.AddSubview(_headerView);
