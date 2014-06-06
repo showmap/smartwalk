@@ -3,6 +3,7 @@ using System.Linq;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
+using System.Collections.Generic;
 
 namespace SmartWalk.Client.Core.Utils
 {
@@ -199,6 +200,88 @@ namespace SmartWalk.Client.Core.Utils
             }
 
             return null;
+        }
+
+        public static Dictionary<DateTime, Show[]> GroupByDay(this Show[] shows)
+        {
+            if (shows == null || 
+                shows.Length == 0 || 
+                !shows.Any(s => s.StartTime.HasValue)) return null;
+
+            var orderedShows = shows.OrderBy(s => s.StartTime).ToArray();
+            var firstDay = orderedShows
+                .FirstOrDefault(s => s.StartTime.HasValue)
+                .StartTime.Value.Date;
+            var day = firstDay;
+
+            var result = new Dictionary<DateTime, List<Show>>();
+            result[day] = new List<Show>();
+
+            foreach (var show in orderedShows)
+            {
+                if (show.StartTime.HasValue &&
+                    !show.IsShowThisDay(day, firstDay))
+                {
+                    day = show.StartTime.Value.Date;
+                    result[day] = new List<Show>();
+                }
+
+                result[day].Add(show);
+            }
+
+            return result.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray());
+        }
+
+        public static Show[] GroupByDayShow(this Show[] shows)
+        {
+            var groupes = GroupByDay(shows);
+            if (groupes == null) return shows;
+
+            var venue = shows[0].Venue;
+            var result = new List<Show>();
+
+            foreach (var day in groupes.Keys)
+            {
+                result.Add(GetDayGroupShow(day, venue));
+                result.AddRange(groupes[day]);
+            }
+
+            return result.ToArray();
+        }
+
+        public static Venue[] GroupByDayVenue(this Show[] shows)
+        {
+            var groupes = GroupByDay(shows);
+            if (groupes == null) return null;
+
+            var result = new List<Venue>();
+
+            foreach (var day in groupes.Keys)
+            {
+                var groupVenue = GetDayGroupVenue(day);
+                groupVenue.Shows = groupes[day];
+                result.Add(groupVenue);
+            }
+
+            return result.ToArray();
+        }
+
+        private static Show GetDayGroupShow(DateTime day, Reference[] venue)
+        {
+            return new Show 
+            {
+                Id = Show.DayGroupId,
+                StartTime = day,
+                Venue = venue
+            };
+        }
+
+        private static Venue GetDayGroupVenue(DateTime day)
+        {
+            return new Venue(new Entity {
+                Id = Venue.DayGroupId,
+                Name = day.GetCurrentDayString()
+            });
         }
     }
 

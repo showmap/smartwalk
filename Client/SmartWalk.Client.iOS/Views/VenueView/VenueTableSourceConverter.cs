@@ -8,7 +8,6 @@ using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
-using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
@@ -31,9 +30,12 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 if (venue.Shows != null &&
                     venue.Shows.Length > 0)
                 {
-                    var groupes = DayHeaderShow.GetShowsGroupedByDay(venue.Shows);
+                    var groupes = venue.Shows.GroupByDay();
 
-                    result.Add(new GroupContainer(groupes != null ? new object[]{ } : venue.Shows) 
+                    result.Add(new GroupContainer(
+                        groupes != null 
+                            ? new object[]{ } 
+                            : venue.Shows) 
                         { 
                             Key = Localization.Shows 
                         });

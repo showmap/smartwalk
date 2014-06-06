@@ -366,7 +366,12 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_sortBy != value)
                 {
                     _sortBy = value;
-                    SortAllShowsBy();
+
+                    if (_allShows != null)
+                    {
+                        _allShows = GetAllShowsSortBy(_allShows[0].Shows);
+                    }
+
                     RaisePropertyChanged(() => SortBy);
                     RaisePropertyChanged(() => ListItems);
                 }
@@ -1008,18 +1013,10 @@ namespace SmartWalk.Client.Core.ViewModels
                     OrgEvent != null &&
                     OrgEvent.Venues != null)
                 {
-                    _allShows = 
-                        new [] {
-                            new Venue(new Entity()) 
-                            {
-                                Shows = 
-                                    OrgEvent.Venues
-                                        .SelectMany(v => v.Shows ?? new Show[] {})
-                                        .ToArray()
-                            }
-                        };
-
-                    SortAllShowsBy();
+                    var shows = OrgEvent.Venues
+                        .SelectMany(v => v.Shows ?? new Show[] { })
+                        .ToArray();
+                    _allShows = GetAllShowsSortBy(shows);
                 }
 
                 return _allShows;
@@ -1200,18 +1197,18 @@ namespace SmartWalk.Client.Core.ViewModels
             return 0;
         }
 
-        private void SortAllShowsBy()
+        private Venue[] GetAllShowsSortBy(Show[] shows)
         {
-            if (_allShows != null)
-            {
-                var fooVenue = _allShows[0];
-
-                fooVenue.Shows = 
-                    fooVenue.Shows
-                        .OrderBy(v => v, new ShowComparer(SortBy))
-                        .ToArray();
-
-            }
+            var result = 
+                new [] {
+                    new Venue(new Entity()) 
+                    {
+                        Shows = shows
+                            .OrderBy(v => v, new ShowComparer(SortBy))
+                            .ToArray()
+                    }
+                };
+            return result;
         }
 
         public class Parameters : ParametersBase

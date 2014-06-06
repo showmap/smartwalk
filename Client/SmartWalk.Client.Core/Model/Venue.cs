@@ -5,6 +5,8 @@ namespace SmartWalk.Client.Core.Model
 {
     public class Venue
     {
+        public const int DayGroupId = -1000;
+
         private readonly Entity _entity;
 
         public Venue(Entity entity)

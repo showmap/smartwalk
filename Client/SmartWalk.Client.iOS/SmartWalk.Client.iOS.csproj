@@ -374,6 +374,7 @@
     </Compile>
     <Compile Include="Views\OrgEventView\OrgEventTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventView\DayHeaderCell.cs" />
+    <Compile Include="Utils\SettingKeys.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

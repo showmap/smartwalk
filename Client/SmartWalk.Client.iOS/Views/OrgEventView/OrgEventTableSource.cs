@@ -10,6 +10,7 @@ using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -25,6 +26,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         }
 
         public bool IsSearchSource { get; set; }
+
+        private bool ShowVenueGroupHeader
+        {
+            get
+            {
+                return
+                    !_viewModel.IsGroupedByLocation &&
+                    _viewModel.IsMultiday &&
+                    _viewModel.SortBy == SortBy.Time &&
+                    !_viewModel.CurrentDay.HasValue;
+            }
+        }
 
         public NSIndexPath GetItemIndex(Show show)
         {
@@ -56,14 +69,23 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override float GetHeightForHeader(UITableView tableView, int section)
         {
-            return _viewModel.IsGroupedByLocation
-                    ? VenueHeaderView.DefaultHeight : 0;
+            if (_viewModel.IsGroupedByLocation)
+            {
+                return VenueHeaderView.DefaultHeight;
+            }
+
+            if (ShowVenueGroupHeader)
+            {
+                return GroupHeaderView.DefaultHeight;
+            }
+
+            return 0;
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var show = GetItemAt(indexPath);
-            if (show != null && show.Id == DayHeaderShow.Id)
+            if (show != null && show.Id == Show.DayGroupId)
             {
                 return DayHeaderCell.DefaultHeight;
             }
@@ -107,10 +129,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override UIView GetViewForHeader(UITableView tableView, int section)
         {
+            var venue = ItemsSource[section];
+
             if (_viewModel.IsGroupedByLocation)
             {
-                var headerView = DequeueVenueHeaderView(tableView, ItemsSource[section]);
+                var headerView = DequeueVenueHeaderView(tableView, venue);
                 return headerView;
+            }
+
+            if (ShowVenueGroupHeader)
+            {
+                var groupView = (GroupHeaderView)tableView.DequeueReusableHeaderFooterView(GroupHeaderView.Key);
+
+                groupView.DataContext = venue.Info.Name;
+
+                return groupView;
             }
 
             return null;
@@ -152,7 +185,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var cell = default(UITableViewCell);
 
-            if (show != null && show.Id == DayHeaderShow.Id)
+            if (show != null && show.Id == Show.DayGroupId)
             {
                 cell = tableView.DequeueReusableCell(DayHeaderCell.Key, indexPath);
                 ((DayHeaderCell)cell).DataContext = show;
@@ -183,6 +216,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (tableView != null)
             {
                 tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
+                tableView.RegisterClassForHeaderFooterViewReuse(typeof(GroupHeaderView), GroupHeaderView.Key);
                 tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
                 tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
                 tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
