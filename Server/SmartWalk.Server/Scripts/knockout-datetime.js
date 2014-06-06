@@ -41,7 +41,7 @@ ko.bindingHandlers.datepicker = {
         } else {
             ko.utils.registerEventHandler(element, "change", function () {
                 var value = valueAccessor();
-                var calcDate = new Date(element.valueAsDate.getFullYear(), element.valueAsDate.getMonth(), element.valueAsDate.getDate(), 12);
+                var calcDate = new Date(element.valueAsDate.getFullYear(), element.valueAsDate.getMonth(), element.valueAsDate.getDate(), 1);
                 value($.datepicker.formatDate(dateFormat, calcDate));
             });
         }
@@ -60,7 +60,7 @@ ko.bindingHandlers.datepicker = {
             }
         } else {
             if(valueDate!= null)
-                element.valueAsDate = new Date(valueDate.getFullYear(), valueDate.getMonth(), valueDate.getDate(), 12);
+                element.valueAsDate = new Date(valueDate.getFullYear(), valueDate.getMonth(), valueDate.getDate(), 1);
         }
     }
 };
