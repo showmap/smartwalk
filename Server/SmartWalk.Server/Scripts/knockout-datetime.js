@@ -40,8 +40,9 @@ ko.bindingHandlers.datepicker = {
             });
         } else {
             ko.utils.registerEventHandler(element, "change", function () {
-                var value = valueAccessor();
-                var calcDate = new Date(element.valueAsDate.getFullYear(), element.valueAsDate.getMonth(), element.valueAsDate.getDate(), 1);
+                var value = valueAccessor();                
+                var calcDate = new Date(element.valueAsDate.getFullYear(), element.valueAsDate.getMonth(), element.valueAsDate.getDate(), 12);
+                //alert('CALCDATE=' + calcDate + '\r\ndate=' + element.valueAsDate + '\r\nformated=' + $.datepicker.formatDate(dateFormat, calcDate));
                 value($.datepicker.formatDate(dateFormat, calcDate));
             });
         }
@@ -60,7 +61,7 @@ ko.bindingHandlers.datepicker = {
             }
         } else {
             if(valueDate!= null)
-                element.valueAsDate = new Date(valueDate.getFullYear(), valueDate.getMonth(), valueDate.getDate(), 1);
+                element.valueAsDate = new Date(Date.UTC(valueDate.getFullYear(), valueDate.getMonth(), valueDate.getDate(), 12));
         }
     }
 };
