@@ -3,7 +3,7 @@ using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
-    public abstract class ActiveAwareViewController : MvxViewController
+    public abstract class ActiveAwareViewBase : MvxViewController
     {
         protected bool IsActive
         {

@@ -321,7 +321,6 @@
     <Compile Include="Views\Common\Base\ListViewBase.cs" />
     <Compile Include="Views\Common\Base\TableCellBase.cs" />
     <Compile Include="Views\Common\Base\TableHeaderBase.cs" />
-    <Compile Include="Views\Common\Base\ActiveAwareViewController.cs" />
     <Compile Include="Views\Common\EntityCell\EntityViewModelWrapper.cs" />
     <Compile Include="Views\VenueView\NextVenueCell.cs" />
     <Compile Include="Views\VenueView\NextVenueCell.designer.cs">
@@ -375,6 +374,7 @@
     <Compile Include="Views\OrgEventView\OrgEventTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventView\DayHeaderCell.cs" />
     <Compile Include="Utils\SettingKeys.cs" />
+    <Compile Include="Views\Common\Base\ActiveAwareViewBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

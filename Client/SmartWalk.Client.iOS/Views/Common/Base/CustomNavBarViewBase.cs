@@ -35,7 +35,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             SetStatusBarVisibility(false, animated);
             NavBarManager.Instance.SetNavBarVisibility(false, true, animated);
-            NavBarManager.Instance.CustomNavBar.SetItems(_navBarItems, animated);
+            NavBarManager.Instance.SetCustomItems(_navBarItems, animated);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(_navBarItems);
         }
 
@@ -43,7 +43,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewWillDisappear(animated);
 
-            NavBarManager.Instance.CustomNavBar.SetItems(new UIBarButtonItem[]{}, animated);
+            NavBarManager.Instance.SetCustomItems(new UIBarButtonItem[]{}, animated);
         }
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
@@ -53,9 +53,9 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             ButtonBarUtil.UpdateButtonsFrameOnRotation(_navBarItems);
         }
 
-        public override void WillMoveToParentViewController(UIViewController parent)
+        public override void DidMoveToParentViewController(UIViewController parent)
         {
-            base.WillMoveToParentViewController(parent);
+            base.DidMoveToParentViewController(parent);
 
             if (parent == null)
             {

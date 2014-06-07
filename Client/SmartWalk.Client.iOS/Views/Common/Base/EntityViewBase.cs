@@ -22,9 +22,9 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
-        public override void WillMoveToParentViewController(UIViewController parent)
+        public override void DidMoveToParentViewController(UIViewController parent)
         {
-            base.WillMoveToParentViewController(parent);
+            base.DidMoveToParentViewController(parent);
 
             if (parent == null)
             {

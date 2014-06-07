@@ -10,7 +10,7 @@ using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
-    public abstract class ViewBase : ActiveAwareViewController
+    public abstract class ViewBase : ActiveAwareViewBase
     {
         private UISwipeGestureRecognizer _swipeRight;
         private ImageFullscreenView _imageFullscreenView;
@@ -35,9 +35,9 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             InitializeStyle();
         }
 
-        public override void WillMoveToParentViewController(UIViewController parent)
+        public override void DidMoveToParentViewController(UIViewController parent)
         {
-            base.WillMoveToParentViewController(parent);
+            base.DidMoveToParentViewController(parent);
 
             if (parent == null)
             {
@@ -62,14 +62,19 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewWillAppear(animated);
 
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+        }
+
+        public override void ViewDidAppear(bool animated)
+        {
+            base.ViewDidAppear(animated);
+
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
                 NavigationController.InteractivePopGestureRecognizer.Enabled = true;
                 NavigationController.InteractivePopGestureRecognizer.WeakDelegate = this;
             }
-
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
         }
 
         public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)

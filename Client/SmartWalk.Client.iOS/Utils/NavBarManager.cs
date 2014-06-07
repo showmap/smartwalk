@@ -49,17 +49,17 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
+        private TransparentToolBar _customNavBar;
+
         private NavBarManager()
         {
             InitializeBars();
         }
 
-        public TransparentToolBar CustomNavBar { get; private set; }
-
         public void Layout()
         {
             UpdateCustomNavBarFrame();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(CustomNavBar.Items);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(_customNavBar.Items);
         }
 
         public void SetNavBarVisibility(
@@ -73,32 +73,37 @@ namespace SmartWalk.Client.iOS.Utils
            
             if (isCustomVisible)
             {
-                if (CustomNavBar.Superview == null)
+                if (_customNavBar.Superview == null)
                 {
-                    NavController.View.Add(CustomNavBar);
+                    NavController.View.Add(_customNavBar);
                 }
             }
             else
             {
-                if (CustomNavBar.Superview != null)
+                if (_customNavBar.Superview != null)
                 {
-                    CustomNavBar.RemoveFromSuperview();
+                    _customNavBar.RemoveFromSuperview();
                 }
             }
         }
 
+        public void SetCustomItems(UIBarButtonItem[] items, bool animated)
+        {
+            _customNavBar.SetItems(items, animated);
+        }
+
         private void InitializeBars()
         {
-            CustomNavBar = new TransparentToolBar();
-            CustomNavBar.Translucent = true;
-            CustomNavBar.BackgroundColor = UIColor.Clear;
+            _customNavBar = new TransparentToolBar();
+            _customNavBar.Translucent = true;
+            _customNavBar.BackgroundColor = UIColor.Clear;
 
             UpdateCustomNavBarFrame();
         }
 
         private void UpdateCustomNavBarFrame()
         {
-            CustomNavBar.Frame = ScreenUtil.IsVerticalOrientation
+            _customNavBar.Frame = ScreenUtil.IsVerticalOrientation
                 ? new RectangleF(0, StatusBarHeight, AppDelegate.Window.Bounds.Width, 44)
                 : new RectangleF(0, StatusBarHeight, AppDelegate.Window.Bounds.Height, 33);
         }
