@@ -69,14 +69,15 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             if (PresentingViewController == null)
             {
-                AppDelegate.Window.RootViewController
+                UIApplication.SharedApplication.KeyWindow
+                    .RootViewController
                     .PresentViewController(this, true, null);
 
                 UIApplication.SharedApplication.SetStatusBarHidden(
                     true, 
                     UIStatusBarAnimation.Slide);
 
-                NavBarManager.Instance.SetNavBarVisibility(false, false, true);
+                NavBarManager.Instance.SetNavBarHidden(true, true, true);
 
                 if (Shown != null)
                 {

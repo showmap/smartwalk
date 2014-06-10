@@ -85,10 +85,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
         }
 
-        protected virtual void SetStatusBarVisibility(bool isVisible, bool animated)
+        protected virtual void SetStatusBarHidden(bool hidden, bool animated)
         {
             UIApplication.SharedApplication.SetStatusBarHidden(
-                !isVisible, 
+                hidden, 
                 animated ? UIStatusBarAnimation.Slide : UIStatusBarAnimation.None);
         }
 

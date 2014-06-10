@@ -50,10 +50,22 @@ namespace SmartWalk.Client.iOS.Utils
         }
 
         private TransparentToolBar _customNavBar;
+        private bool _nativeHidden;
+        private bool _customHidden;
 
         private NavBarManager()
         {
             InitializeBars();
+        }
+
+        public bool NativeHidden
+        {
+            get { return _nativeHidden; }
+        }
+
+        public bool CustomHidden
+        {
+            get { return _customHidden; }
         }
 
         public void Layout()
@@ -62,27 +74,30 @@ namespace SmartWalk.Client.iOS.Utils
             ButtonBarUtil.UpdateButtonsFrameOnRotation(_customNavBar.Items);
         }
 
-        public void SetNavBarVisibility(
-            bool isNativeVisible, 
-            bool isCustomVisible, 
+        public void SetNavBarHidden(
+            bool nativeHidden, 
+            bool customHidden, 
             bool animated)
         {
-            NavController.SetNavigationBarHidden(!isNativeVisible, animated);
+            _nativeHidden = nativeHidden;
+            _customHidden = customHidden;
+
+            NavController.SetNavigationBarHidden(nativeHidden, animated);
 
             UpdateCustomNavBarFrame();
            
-            if (isCustomVisible)
-            {
-                if (_customNavBar.Superview == null)
-                {
-                    NavController.View.Add(_customNavBar);
-                }
-            }
-            else
+            if (customHidden)
             {
                 if (_customNavBar.Superview != null)
                 {
                     _customNavBar.RemoveFromSuperview();
+                }
+            }
+            else
+            {
+                if (_customNavBar.Superview == null)
+                {
+                    NavController.View.Add(_customNavBar);
                 }
             }
         }

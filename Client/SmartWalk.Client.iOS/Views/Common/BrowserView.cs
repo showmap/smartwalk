@@ -38,12 +38,12 @@ namespace SmartWalk.Client.iOS.Views.Common
 
                     if (_showToolbars)
                     {
-                        NavBarManager.Instance.SetNavBarVisibility(false, true, true);
+                        NavBarManager.Instance.SetNavBarHidden(true, false, true);
                         BottomToolbar.Hidden = false;
                     }
                     else
                     {
-                        NavBarManager.Instance.SetNavBarVisibility(false, false, true);
+                        NavBarManager.Instance.SetNavBarHidden(true, true, true);
                         BottomToolbar.Hidden = true;
                     }
                 }

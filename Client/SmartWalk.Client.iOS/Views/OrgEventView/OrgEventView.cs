@@ -20,7 +20,6 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
-using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -70,7 +69,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewWillAppear(animated);
 
-            SetStatusBarVisibility(true, animated);
+            SetStatusBarHidden(false, animated);
             UpdateNavBarState(animated);
 
             // TODO: Find another soltuion. It must be much simpler.
@@ -107,8 +106,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewDidDisappear(animated);
 
+            #region HACK
             // HACK: To persist table scroll offset
             _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
+
+            // HACK: To hide nav bar after iOS make it visible in next view
+            if (_searchDisplayController != null &&
+                _searchDisplayController.Active)
+            {
+                if (NavBarManager.Instance.NativeHidden !=
+                    NavigationController.NavigationBarHidden)
+                {
+                    NavigationController
+                        .SetNavigationBarHidden(NavBarManager.Instance.NativeHidden, false);
+                }
+                else
+                {
+                    UIApplication.SharedApplication.KeyWindow
+                        .RootViewController.View.LayoutSubviews();
+                }
+            }
+            #endregion
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -670,7 +688,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeSearchDisplayController()
         {
             _searchDisplayController = 
-                new UISearchDisplayController(_headerView.SearchBarControl, this);
+                new ExtendedSearchDisplayController(_headerView.SearchBarControl, this);
             _searchDisplayController.Delegate = 
                 new OrgEventSearchDelegate(_headerView, ViewModel);
 
@@ -1023,7 +1041,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (ViewModel.Mode == OrgEventViewMode.List)
             {
-                NavBarManager.Instance.SetNavBarVisibility(true, false, animated);
+                NavBarManager.Instance.SetNavBarHidden(false, true, animated);
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                 {
@@ -1043,7 +1061,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else
             {
-                NavBarManager.Instance.SetNavBarVisibility(false, true, animated);
+                NavBarManager.Instance.SetNavBarHidden(true, false, animated);
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                 {
@@ -1133,4 +1151,30 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             tableView.EndUpdates();
         }
     }
+
+    #region HACK
+    // HACK: To hide nav bar after iOS make it visible in next view
+    public class ExtendedSearchDisplayController : UISearchDisplayController
+    {
+        public ExtendedSearchDisplayController(
+            UISearchBar searchBar, 
+            UIViewController viewController) 
+            : base(searchBar, viewController) {}
+
+        public override void SetActive(bool visible, bool animated)
+        {
+            var navCtr = SearchContentsController.NavigationController;
+            if (navCtr.VisibleViewController is OrgEventView)
+            {
+                base.SetActive(visible, animated);
+            }
+            else
+            {
+                var previousHidden = NavBarManager.Instance.NativeHidden;
+                base.SetActive(visible, animated);
+                navCtr.SetNavigationBarHidden(previousHidden, false);
+            }
+        }
+    }
+    #endregion
 }

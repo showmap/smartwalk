@@ -33,8 +33,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewWillAppear(animated);
 
-            SetStatusBarVisibility(false, animated);
-            NavBarManager.Instance.SetNavBarVisibility(false, true, animated);
+            SetStatusBarHidden(true, animated);
+            NavBarManager.Instance.SetNavBarHidden(true, false, animated);
             NavBarManager.Instance.SetCustomItems(_navBarItems, animated);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(_navBarItems);
         }

@@ -116,22 +116,22 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             if (IsLoading)
             {
-                SetStatusBarVisibility(true, animated);
+                SetStatusBarHidden(false, animated);
             }
             else
             {
-                SetStatusBarVisibility(false, animated);
+                SetStatusBarHidden(true, animated);
             }
         }
 
-        protected override void SetStatusBarVisibility(bool isVisible, bool animated)
+        protected override void SetStatusBarHidden(bool hidden, bool animated)
         {
             // making sure that view is still visible on screen after loading finished
             if (IsActive)
             {
-                isVisible = IsLoading || isVisible;
+                hidden = !IsLoading && hidden;
 
-                base.SetStatusBarVisibility(isVisible, animated);
+                base.SetStatusBarHidden(hidden, animated);
             }
         }
 
