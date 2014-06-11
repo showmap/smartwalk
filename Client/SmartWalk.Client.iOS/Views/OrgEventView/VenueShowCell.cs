@@ -304,8 +304,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ? Localization.AllDay
                 : null;
 
-            DescriptionLabel.Text = DataContext != null 
-                ? DataContext.GetText() : null;
+            DescriptionLabel.AttributedText = DataContext != null 
+                ? GetShowText(DataContext) 
+                : new NSAttributedString();
 
             UpdateClockIcon();
             UpateImageState();
@@ -338,6 +339,30 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 result.SetAttributes(
                     new UIStringAttributes { Font = Theme.VenueShowCellTimeAmPmFont },
                     new NSRange(ampmIndex, timeStr.Length - ampmIndex));
+            }
+
+            return result;
+        }
+
+        private static NSAttributedString GetShowText(Show show)
+        {
+            var result = new NSMutableAttributedString(
+                show.GetText(),
+                Theme.VenueShowCellFont,
+                Theme.CellText
+            );
+
+            if (show.Title != null && show.Description != null)
+            {
+                result.SetAttributes(
+                    new UIStringAttributes 
+                    { 
+                        Font = Theme.VenueShowCellFont,
+                        ForegroundColor = Theme.CellTextPassive
+                    },
+                    new NSRange(
+                        show.Title.Length, 
+                        result.Length - show.Title.Length));
             }
 
             return result;
