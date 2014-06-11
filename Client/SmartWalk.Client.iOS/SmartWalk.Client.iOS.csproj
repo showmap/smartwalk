@@ -170,6 +170,12 @@
     <Reference Include="ModernHttpClient">
       <HintPath>..\..\packages\modernhttpclient.2.0.1\lib\MonoTouch\ModernHttpClient.dll</HintPath>
     </Reference>
+    <Reference Include="Refractored.MvxPlugins.Settings.Touch">
+      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.2.0.2\lib\monotouch\Refractored.MvxPlugins.Settings.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Refractored.MvxPlugins.Settings">
+      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.2.0.2\lib\monotouch\Refractored.MvxPlugins.Settings.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -191,6 +197,7 @@
     <Folder Include="Views\Common\Base\" />
     <Folder Include="Utils\MvvmCross\" />
     <Folder Include="Views\OrgEventInfoView\" />
+    <Folder Include="Bootstrap\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -375,6 +382,7 @@
     <Compile Include="Views\OrgEventView\DayHeaderCell.cs" />
     <Compile Include="Utils\SettingKeys.cs" />
     <Compile Include="Views\Common\Base\ActiveAwareViewBase.cs" />
+    <Compile Include="Bootstrap\SettingsPluginBootstrap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

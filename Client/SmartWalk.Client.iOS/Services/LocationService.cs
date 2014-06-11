@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MonoTouch.CoreLocation;
+using Refractored.MvxPlugins.Settings;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
@@ -10,14 +11,18 @@ namespace SmartWalk.Client.iOS.Services
 {
     public class LocationService : ILocationService
     {
+        private const string LastLocationLat = "LastLocationLat";
+        private const string LastLocationLong = "LastLocationLong";
         private const string UnknownLocation = "Unknown Location";
 
+        private readonly ISettings _settings;
         private readonly IExceptionPolicy _exceptionPolicy;
         private readonly CLLocationManager _locationManager;
         private readonly CLGeocoder _geocoder;
 
-        public LocationService(IExceptionPolicy exceptionPolicy)
+        public LocationService(ISettings settings, IExceptionPolicy exceptionPolicy)
         {
+            _settings = settings;
             _exceptionPolicy = exceptionPolicy;
 
             if (CLLocationManager.LocationServicesEnabled)
@@ -28,6 +33,7 @@ namespace SmartWalk.Client.iOS.Services
 
                 _locationManager.LocationsUpdated += (s, e) => 
                 {
+                    SaveLocationSettings();
                     UpdateLocationString().ContinueWithThrow();
 
                     if (LocationChanged != null)
@@ -37,6 +43,7 @@ namespace SmartWalk.Client.iOS.Services
                 };
             }
 
+            SaveLocationSettings();
             UpdateLocationString().ContinueWithThrow();
         }
 
@@ -47,12 +54,23 @@ namespace SmartWalk.Client.iOS.Services
         { 
             get
             { 
+                CLLocationCoordinate2D? coordinate;
+
                 if (_locationManager != null &&
                     _locationManager.Location != null)
                 {
+                    coordinate = _locationManager.Location.Coordinate;
+                }
+                else
+                {
+                    coordinate = LoadLocationSettings();
+                }
+
+                if (coordinate.HasValue)
+                {
                     var result = new Location(
-                        Math.Round(_locationManager.Location.Coordinate.Latitude, 2),
-                        Math.Round(_locationManager.Location.Coordinate.Longitude, 2));
+                        Math.Round(coordinate.Value.Latitude, 2),
+                        Math.Round(coordinate.Value.Longitude, 2));
                     return result;
                 }
 
@@ -64,15 +82,17 @@ namespace SmartWalk.Client.iOS.Services
 
         private async Task UpdateLocationString()
         {
-            if (_locationManager != null &&
-                _locationManager.Location != null)
+            if (CurrentLocation != Location.Empty)
             {
                 var placemarks = default(CLPlacemark[]);
 
                 try
                 {
+                    var location = new CLLocation(
+                        CurrentLocation.Latitude, 
+                        CurrentLocation.Longitude);
                     placemarks = await _geocoder
-                        .ReverseGeocodeLocationAsync(_locationManager.Location);
+                        .ReverseGeocodeLocationAsync(location);
                 }
                 catch (Exception ex)
                 {
@@ -99,6 +119,34 @@ namespace SmartWalk.Client.iOS.Services
             if (LocationStringChanged != null)
             {
                 LocationStringChanged(this, EventArgs.Empty);
+            }
+        }
+
+        private CLLocationCoordinate2D? LoadLocationSettings()
+        {
+            var latitude = _settings.GetValueOrDefault<double?>(LastLocationLat);
+            var longitude = _settings.GetValueOrDefault<double?>(LastLocationLong);
+
+            if (latitude.HasValue && longitude.HasValue)
+            {
+                return new CLLocationCoordinate2D(latitude.Value, longitude.Value);
+            }
+
+            return null;
+        }
+
+        private void SaveLocationSettings()
+        {
+            if (_locationManager != null &&
+                _locationManager.Location != null)
+            {
+                _settings.AddOrUpdateValue(
+                    LastLocationLat, 
+                    _locationManager.Location.Coordinate.Latitude);
+                _settings.AddOrUpdateValue(
+                    LastLocationLong, 
+                    _locationManager.Location.Coordinate.Longitude);
+                _settings.Save();
             }
         }
     }
