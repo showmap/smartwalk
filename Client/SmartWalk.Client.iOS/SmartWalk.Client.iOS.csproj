@@ -383,6 +383,7 @@
     <Compile Include="Utils\SettingKeys.cs" />
     <Compile Include="Views\Common\Base\ActiveAwareViewBase.cs" />
     <Compile Include="Bootstrap\SettingsPluginBootstrap.cs" />
+    <Compile Include="Utils\UIConstants.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

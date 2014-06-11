@@ -29,7 +29,7 @@ namespace SmartWalk.Client.iOS.Utils
                 }
                 else
                 {
-                    result = 20;
+                    result = UIConstants.StatusBarHeight;
                 }
 
                 return result;
@@ -119,8 +119,16 @@ namespace SmartWalk.Client.iOS.Utils
         private void UpdateCustomNavBarFrame()
         {
             _customNavBar.Frame = ScreenUtil.IsVerticalOrientation
-                ? new RectangleF(0, StatusBarHeight, AppDelegate.Window.Bounds.Width, 44)
-                : new RectangleF(0, StatusBarHeight, AppDelegate.Window.Bounds.Height, 33);
+                ? new RectangleF(
+                    0, 
+                    StatusBarHeight, 
+                    AppDelegate.Window.Bounds.Width,
+                    UIConstants.ToolBarVerticalHeight)
+                : new RectangleF(
+                    0, 
+                    StatusBarHeight, 
+                    AppDelegate.Window.Bounds.Height,
+                    UIConstants.ToolBarHorizontalHeight);
         }
     }
 }

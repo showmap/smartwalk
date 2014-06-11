@@ -18,6 +18,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private UIView _progressViewContainer;
         private ProgressView _progressView;
         private IListViewSource _listViewSource;
+        private UITapGestureRecognizer _viewTapGesture;
 
         protected string ViewTitle
         {
@@ -68,6 +69,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             InitializeConstraints();
             InitializeListView();
             InitializeProgressView();
+            InitializeGesture();
 
             UpdateViewTitle();
             UpdateViewLoadingState();
@@ -93,6 +95,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 }
 
                 DisposeRefreshControl();
+                DisposeGesture();
             }
         }
 
@@ -196,6 +199,27 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             _progressViewContainer.AddSubview(_progressView);
         }
 
+        private void InitializeGesture()
+        {
+            _viewTapGesture = new UITapGestureRecognizer(() => 
+                ListView.View.SetContentOffset(PointF.Empty, true))
+            {
+                Delegate = new ListViewTapGestureDelegate()
+            };
+
+            View.AddGestureRecognizer(_viewTapGesture);
+        }
+
+        private void DisposeGesture()
+        {
+            if (_viewTapGesture != null)
+            {
+                View.RemoveGestureRecognizer(_viewTapGesture);
+                _viewTapGesture.Dispose();
+                _viewTapGesture = null;
+            }
+        }
+
         private void InitializeRefreshControl()
         {
             _refreshControl = new UIRefreshControl {
@@ -282,6 +306,22 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private void UpdateViewDataState(bool hasData)
         {
             _progressView.IsDataUnavailable = !hasData;
+        }
+    }
+
+    public class ListViewTapGestureDelegate : UIGestureRecognizerDelegate
+    {
+        public override bool ShouldReceiveTouch(UIGestureRecognizer recognizer, UITouch touch)
+        {
+            return UIApplication.SharedApplication.StatusBarHidden &&
+                touch.LocationInView(recognizer.View).Y < UIConstants.StatusBarHeight;
+        }
+
+        public override bool ShouldBeRequiredToFailBy(
+            UIGestureRecognizer gestureRecognizer, 
+            UIGestureRecognizer otherGestureRecognizer)
+        {
+            return true;
         }
     }
 }

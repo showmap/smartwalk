@@ -1,13 +1,11 @@
-using MonoTouch.UIKit;
 using System.Collections.Generic;
 using MonoTouch.Foundation;
+using MonoTouch.UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
 {
     public static class UIViewExtensions
     {
-        public const double DefaultAnimationDuration = 0.15;
-
         public static IEnumerable<UIView> GetAllSubViews(this UIView view)
         {
             var result = new List<UIView>();
@@ -42,7 +40,7 @@ namespace SmartWalk.Client.iOS.Utils
             {
                 UIView.Transition(
                     view,
-                    DefaultAnimationDuration,
+                    UIConstants.AnimationDuration,
                     UIViewAnimationOptions.TransitionCrossDissolve,
                     new NSAction(() => view.Hidden = hidden),
                     null);

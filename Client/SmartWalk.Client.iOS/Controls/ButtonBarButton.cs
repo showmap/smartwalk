@@ -10,8 +10,14 @@ namespace SmartWalk.Client.iOS.Controls
     [Register("ButtonBarButton")]
     public class ButtonBarButton : UIButton
     {
-        public static readonly SizeF DefaultVerticalSize = new SizeF(44, 44);
-        public static readonly SizeF DefaultLandscapeSize = new SizeF(33, 33);
+        public static readonly SizeF DefaultVerticalSize = 
+            new SizeF(
+                UIConstants.ToolBarVerticalHeight,
+                UIConstants.ToolBarVerticalHeight);
+        public static readonly SizeF DefaultLandscapeSize = 
+            new SizeF(
+                UIConstants.ToolBarHorizontalHeight, 
+                UIConstants.ToolBarHorizontalHeight);
 
         private UIImageView _iconImageView;
         private bool _isSemiTransparent;

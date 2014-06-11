@@ -100,7 +100,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             base.UpdateViewConstraints();
 
             ToolBarHeightConstraint.Constant =
-                ScreenUtil.IsVerticalOrientation ? 44 : 33;
+                ScreenUtil.IsVerticalOrientation 
+                    ? UIConstants.ToolBarVerticalHeight 
+                    : UIConstants.ToolBarHorizontalHeight;
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)
