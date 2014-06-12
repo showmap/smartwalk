@@ -21,7 +21,7 @@ namespace SmartWalk.Client.iOS
     public class AppDelegate : MvxApplicationDelegate
     {
         private string _version;
-        private Settings _settings;
+        private AppSettings _settings;
 
         internal static new UIWindow Window { get; private set; }
 
@@ -29,7 +29,7 @@ namespace SmartWalk.Client.iOS
         {
             UISynchronizationContext.Current = SynchronizationContext.Current;
 
-            _settings = SettingsUtil.LoadSettings();
+            _settings = AppSettingsUtil.LoadSettings();
 
 #if ADHOC
             InitializeTestFlight();
@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS
             GoogleAnalyticsService.IsOptOut = true;
 #endif
 
-            SettingsUtil.HandleResetCache(_settings);
+            AppSettingsUtil.HandleResetCache(_settings);
 
             Theme.Apply();
 
@@ -82,7 +82,7 @@ namespace SmartWalk.Client.iOS
                 EasyTracker.Current.OnApplicationActivated(application);
             }
 
-            SettingsUtil.HandleResetCache(_settings);
+            AppSettingsUtil.HandleResetCache(_settings);
         }
 
         public override void WillChangeStatusBarFrame(

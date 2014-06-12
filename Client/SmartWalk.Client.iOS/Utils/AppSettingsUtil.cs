@@ -9,31 +9,28 @@ using SmartWalk.Client.iOS.Services;
 
 namespace SmartWalk.Client.iOS.Utils
 {
-    public static class SettingsUtil
+    public static class AppSettingsUtil
     {
-        public static Settings LoadSettings()
+        public static AppSettings LoadSettings()
         {
             using (var reader = XmlReader.Create("settings.xml"))
             {
-                var serializer = new XmlSerializer(typeof(Settings));
-                var settings = (Settings)serializer.Deserialize(reader);
+                var serializer = new XmlSerializer(typeof(AppSettings));
+                var settings = (AppSettings)serializer.Deserialize(reader);
                 return settings;
             }
         }
 
-        public static void HandleResetCache(Settings settings)
+        public static void HandleResetCache(AppSettings settings)
         {
             if (NSUserDefaults.StandardUserDefaults[SettingKeys.ResetCache] != null &&
                 NSUserDefaults.StandardUserDefaults.BoolForKey(SettingKeys.ResetCache))
             {
                 try
                 {
-                    foreach (var cache in settings.Caches)
+                    if (Directory.Exists(settings.CachesPath))
                     {
-                        if (Directory.Exists(cache.CacheFolderPath))
-                        {
-                            Directory.Delete(cache.CacheFolderPath, true);
-                        }
+                        Directory.Delete(settings.CachesPath, true);
                     }
 
                     NSUserDefaults.StandardUserDefaults.SetBool(false, SettingKeys.ResetCache);

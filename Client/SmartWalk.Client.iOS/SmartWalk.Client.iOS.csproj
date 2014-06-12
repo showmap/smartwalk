@@ -370,8 +370,6 @@
     </Compile>
     <Compile Include="Utils\ScrollUtil.cs" />
     <Compile Include="Views\Common\Base\EntityViewBase.cs" />
-    <Compile Include="Utils\Settings.cs" />
-    <Compile Include="Utils\SettingsUtil.cs" />
     <Compile Include="Views\OrgEventInfoView\OrgEventInfoTableSource.cs" />
     <Compile Include="Views\OrgEventInfoView\OrgEventInfoTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventInfoView\OrgEventInfoView.cs" />
@@ -384,6 +382,8 @@
     <Compile Include="Views\Common\Base\ActiveAwareViewBase.cs" />
     <Compile Include="Bootstrap\SettingsPluginBootstrap.cs" />
     <Compile Include="Utils\UIConstants.cs" />
+    <Compile Include="Utils\AppSettings.cs" />
+    <Compile Include="Utils\AppSettingsUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -6,7 +6,7 @@ namespace SmartWalk.Client.iOS.Utils
 {
     [Serializable]
     [XmlRoot(ElementName = "settings")]
-    public class Settings
+    public class AppSettings
     {
         [XmlElement("trackingId")]
         public string TrackingId { get;set; }
@@ -16,6 +16,9 @@ namespace SmartWalk.Client.iOS.Utils
 
         [XmlElement("serverHost")]
         public string ServerHost { get;set; }
+
+        [XmlElement("cachesPath")]
+        public string CachesPath { get;set; }
 
         [XmlArray("caches")]
         [XmlArrayItem("cache")]

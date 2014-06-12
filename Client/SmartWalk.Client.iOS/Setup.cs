@@ -16,7 +16,7 @@ namespace SmartWalk.Client.iOS
 {
     public class Setup : MvxTouchSetup
     {
-        private readonly Settings _settings;
+        private readonly AppSettings _settings;
 
         private MvxDownloadCacheConfiguration _picsCacheConfig;
         private MvxDownloadCacheConfiguration _resizedPicsCacheConfig;
@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS
         public Setup(
             MvxApplicationDelegate appDelegate, 
             IMvxTouchViewPresenter presenter,
-            Settings settings)
+            AppSettings settings)
             : base(appDelegate, presenter)
         {
             _settings = settings;
