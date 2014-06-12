@@ -27,7 +27,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
                 if (_defaultImagePath == value)
                     return;
                 _defaultImagePath = value;
-                OnDefaultImagePathChanged();
+                OnImagePathChanged();
 
                 if (string.IsNullOrEmpty(_errorImagePath))
                     ErrorImagePath = value;
@@ -42,7 +42,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
                 if (_errorImagePath == value)
                     return;
                 _errorImagePath = value;
-                OnErrorImagePathChanged();
+                OnImagePathChanged();
             }
         }
 
@@ -145,21 +145,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             ClearCurrentHttpImageRequest();
         }
 
-        protected virtual void OnDefaultImagePathChanged()
-        {
-            switch (_currentImageState)
-            {
-                case ImageState.DefaultShown:
-                    ShowDefaultImage();
-                    break;
-                case ImageState.ErrorShown:
-                case ImageState.HttpImageShown:
-                    // do nothing
-                    break;
-            }
-        }
-
-        private void OnErrorImagePathChanged()
+        private void OnImagePathChanged()
         {
             switch (_currentImageState)
             {
@@ -167,8 +153,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
                     ShowErrorImage();
                     break;
                 case ImageState.DefaultShown:
-                case ImageState.HttpImageShown:
-                    // do nothing
+                    ShowDefaultImage();
                     break;
             }
         }

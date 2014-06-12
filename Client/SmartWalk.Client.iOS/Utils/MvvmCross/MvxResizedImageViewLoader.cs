@@ -57,6 +57,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             GC.SuppressFinalize(this);
         }
 
+        // Note - this is public because we use it in weak referenced situations
         public virtual void ImageHelperOnImageChanged(
             object sender, 
             MvxValueEventArgs<UIImage> mvxValueEventArgs)

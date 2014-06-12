@@ -1,7 +1,7 @@
 using Cirrious.CrossCore;
+using Cirrious.CrossCore.IoC;
 using Cirrious.MvvmCross.Platform;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels;
 
 namespace SmartWalk.Client.Core
@@ -10,9 +10,12 @@ namespace SmartWalk.Client.Core
     {
         public SmartWalkApplication()
         {
-            Mvx.LazyConstructAndRegisterSingleton<ISmartWalkApiService, SmartWalkApiService>();
+            CreatableTypes()
+                .EndingWith("Service")
+                .AsInterfaces()
+                .RegisterAsLazySingleton();
 
-            Mvx.RegisterSingleton<IMvxAppStart>(new MvxAppStart<HomeViewModel>());
+            RegisterAppStart<HomeViewModel>();
 
             var parserDir = Mvx.Resolve<IMvxFillableStringToTypeParser>();
             parserDir.ExtraParsers.Add(new AddressesParser());
