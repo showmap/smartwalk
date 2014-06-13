@@ -1,13 +1,14 @@
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using System.Threading.Tasks;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using Cirrious.CrossCore.Core;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;

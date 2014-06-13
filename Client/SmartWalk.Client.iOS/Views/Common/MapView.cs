@@ -2,6 +2,7 @@ using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;

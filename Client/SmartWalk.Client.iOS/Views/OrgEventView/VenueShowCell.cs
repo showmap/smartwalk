@@ -5,11 +5,12 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {

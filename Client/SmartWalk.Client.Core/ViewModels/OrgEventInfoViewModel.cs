@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cirrious.MvvmCross.Plugins.Email;
-using Cirrious.MvvmCross.Plugins.PhoneCall;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
@@ -13,29 +11,21 @@ namespace SmartWalk.Client.Core.ViewModels
     public class OrgEventInfoViewModel : EntityViewModel
     {
         private readonly ISmartWalkApiService _apiService;
-        private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly IExceptionPolicyService _exceptionPolicy;
 
         private Parameters _parameters;
         private OrgEvent _orgEvent;
 
         public OrgEventInfoViewModel(
-            IClipboard clipboard,
+            IEnvironmentService environmentService,
             IConfiguration configuration,
             ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
-            IReachabilityService reachabilityService,
-            IMvxPhoneCallTask phoneCallTask,
-            IMvxComposeEmailTask composeEmailTask,
-            IShowDirectionsTask showDirectionsTask,
-            IExceptionPolicy exceptionPolicy) : 
+            IExceptionPolicyService exceptionPolicy) : 
                 base(
                     configuration,
-                    clipboard,
-                    analyticsService, 
-                    reachabilityService,
-                    phoneCallTask, 
-                    composeEmailTask, 
-                    showDirectionsTask)
+                    environmentService,
+                    analyticsService)
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;

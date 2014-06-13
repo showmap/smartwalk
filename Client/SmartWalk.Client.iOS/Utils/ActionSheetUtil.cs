@@ -1,5 +1,6 @@
 ﻿using System;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Utils

@@ -1,19 +1,22 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using MonoTouch.UIKit;
 using Newtonsoft.Json;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Services;
-using SmartWalk.Client.iOS.Resources;
 
-namespace SmartWalk.Client.iOS.Services
+namespace SmartWalk.Client.Core.Services
 {
-    public class ExceptionPolicy : IExceptionPolicy
+    public class ExceptionPolicyService : IExceptionPolicyService
     {
+        private readonly IEnvironmentService _environmentService;
         private readonly IAnalyticsService _analyticsService;
 
-        public ExceptionPolicy(IAnalyticsService analyticsService)
+        public ExceptionPolicyService(
+            IEnvironmentService environmentService,
+            IAnalyticsService analyticsService)
         {
+            _environmentService = environmentService;
             _analyticsService = analyticsService;
         }
 
@@ -46,8 +49,7 @@ namespace SmartWalk.Client.iOS.Services
                     sendToGA = true;
                 }
 
-                var alert = new UIAlertView(title, message, null, Localization.OK, null);
-                alert.Show();
+                _environmentService.Alert(title, message);
             }
 
             if (sendToGA)

@@ -4,11 +4,11 @@ using System.Globalization;
 using System.Linq;
 using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {

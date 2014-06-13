@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Cirrious.MvvmCross.Plugins.Email;
-using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
@@ -16,10 +14,10 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public class VenueViewModel : EntityViewModel
     {
-        private readonly IClipboard _clipboard;
+        private readonly IEnvironmentService _environmentService;
         private readonly ISmartWalkApiService _apiService;
         private readonly IAnalyticsService _analyticsService;
-        private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly IExceptionPolicyService _exceptionPolicy;
 
         private Parameters _parameters;
         private MvxCommand  _copyAddressCommand;
@@ -29,25 +27,17 @@ namespace SmartWalk.Client.Core.ViewModels
         private Venue[] _orgEventVenues;
 
         public VenueViewModel(
-            IClipboard clipboard,
+            IEnvironmentService environmentService,
             IConfiguration configuration,
             ISmartWalkApiService apiService, 
             IAnalyticsService analyticsService,
-            IReachabilityService reachabilityService,
-            IMvxPhoneCallTask phoneCallTask,
-            IMvxComposeEmailTask composeEmailTask,
-            IShowDirectionsTask showDirectionsTask,
-            IExceptionPolicy exceptionPolicy) : 
+            IExceptionPolicyService exceptionPolicy) : 
                 base(
                     configuration,
-                    clipboard,
-                    analyticsService, 
-                    reachabilityService,
-                    phoneCallTask, 
-                    composeEmailTask, 
-                    showDirectionsTask)
+                    environmentService,
+                    analyticsService)
         {
-            _clipboard = clipboard;
+            _environmentService = environmentService;
             _apiService = apiService;
             _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
@@ -212,7 +202,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             var address = Entity.Addresses
                                 .Select(a => a.AddressText)
                                 .FirstOrDefault();
-                            _clipboard.Copy(address);
+                            _environmentService.Copy(address);
                         },
                         () => 
                             Entity != null &&

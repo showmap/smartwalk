@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
 

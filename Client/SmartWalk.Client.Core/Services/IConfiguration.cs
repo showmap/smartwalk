@@ -6,6 +6,7 @@ namespace SmartWalk.Client.Core.Services
     {
         string Host { get; }
         string Api { get; }
+        string CacheFolderPath { get; }
 
         string GetEventUrl(int eventId);
         string GetEntityUrl(int entityId, EntityType type);

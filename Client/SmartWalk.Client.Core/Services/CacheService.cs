@@ -1,36 +1,42 @@
 using System;
 using System.IO;
 using System.Linq;
+using Cirrious.MvvmCross.Plugins.File;
 using Newtonsoft.Json;
-using SmartWalk.Client.Core.Services;
 
-namespace SmartWalk.Client.iOS.Services
+namespace SmartWalk.Client.Core.Services
 {
     public class CacheService : ICacheService
     {
         private const string CacheFileExt = ".json";
 
+        private readonly IConfiguration _configuration;
+        private readonly IMvxFileStore _fileStore;
         private readonly string _cacheFolderPath;
 
-        public CacheService(string cacheFolderPath)
+        public CacheService(IConfiguration configuration, IMvxFileStore fileStore)
         {
-            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            _cacheFolderPath = Path.Combine(documents, cacheFolderPath);
+            _configuration = configuration;
+            _fileStore = fileStore;
+            _cacheFolderPath = _fileStore.NativePath(_configuration.CacheFolderPath);
         }
 
         public string GetString(string key)
         {
             if (key == null) throw new ArgumentNullException("key");
 
-            if (Directory.Exists(_cacheFolderPath))
+            if (_fileStore.FolderExists(_cacheFolderPath))
             {
-                var files = Directory.EnumerateFiles(_cacheFolderPath).ToArray();
+                var files = _fileStore.GetFilesIn(_cacheFolderPath);
                 var fileName = key + CacheFileExt;
                 var file = Path.Combine(_cacheFolderPath, fileName);
 
-                if (files.Contains(file))
+                string contents;
+
+                if (files.Contains(file) &&
+                    _fileStore.TryReadTextFile(file, out contents))
                 {
-                    return File.ReadAllText(file);
+                    return contents;
                 }
             }
 
@@ -42,14 +48,11 @@ namespace SmartWalk.Client.iOS.Services
             if (key == null) throw new ArgumentNullException("key");
             if (value == null) throw new ArgumentNullException("value");
 
-            if (!Directory.Exists(_cacheFolderPath))
-            {
-                Directory.CreateDirectory(_cacheFolderPath);
-            }
+            _fileStore.EnsureFolderExists(_cacheFolderPath);
 
             var fileName = key + CacheFileExt;
 
-            File.WriteAllText(Path.Combine(_cacheFolderPath, fileName), value);
+            _fileStore.WriteFile(Path.Combine(_cacheFolderPath, fileName), value);
         }
 
         public T GetObject<T>(string key)

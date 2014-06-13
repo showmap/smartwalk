@@ -12,7 +12,7 @@ namespace SmartWalk.Client.Core.ViewModels
     public class HomeViewModel : RefreshableViewModel
     {
         private readonly ISmartWalkApiService _apiService;
-        private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly IExceptionPolicyService _exceptionPolicy;
         private readonly ILocationService _locationService;
         private readonly Parameters _parameters;
 
@@ -22,7 +22,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public HomeViewModel(
             ISmartWalkApiService apiService,
-            IExceptionPolicy exceptionPolicy,
+            IExceptionPolicyService exceptionPolicy,
             IAnalyticsService analyticsService,
             IReachabilityService reachabilityService,
             ILocationService locationService) 

@@ -14,9 +14,8 @@ namespace SmartWalk.Client.Core.ViewModels
 {
     public class MapViewModel : ActiveViewModel
     {
-        private readonly IClipboard _clipboard;
+        private readonly IEnvironmentService _environmentService;
         private readonly IAnalyticsService _analyticsService;
-        private readonly IShowDirectionsTask _showDirectionsTask;
 
         private Parameters _parameters;
         private MapAnnotation _annotation;
@@ -24,13 +23,11 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand  _copyAddressCommand;
 
         public MapViewModel(
-            IClipboard clipboard,
-            IAnalyticsService analyticsService,
-            IShowDirectionsTask showDirectionsTask) : base(analyticsService)
+            IEnvironmentService environmentService,
+            IAnalyticsService analyticsService) : base(analyticsService)
         {
-            _clipboard = clipboard;
+            _environmentService = environmentService;
             _analyticsService = analyticsService;
-            _showDirectionsTask = showDirectionsTask;
         }
 
         public MapAnnotation Annotation
@@ -65,7 +62,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             var address = Annotation.Addresses
                                 .Select(a => a.AddressText)
                                 .FirstOrDefault();
-                            _clipboard.Copy(address);
+                            _environmentService.Copy(address);
                         },
                         () => 
                             Annotation != null &&
@@ -91,7 +88,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionLabelShowDirections);
 
                             var address = Annotation.Addresses.FirstOrDefault();
-                            _showDirectionsTask.ShowDirections(address);
+                            _environmentService.ShowDirections(address);
                         },
                         () => 
                             Annotation != null &&

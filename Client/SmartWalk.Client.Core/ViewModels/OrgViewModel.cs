@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Cirrious.MvvmCross.Plugins.Email;
-using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
@@ -14,29 +12,21 @@ namespace SmartWalk.Client.Core.ViewModels
     public class OrgViewModel : EntityViewModel
     {
         private readonly ISmartWalkApiService _apiService;
-        private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly IExceptionPolicyService _exceptionPolicy;
 
         private Parameters _parameters;
         private Org _org;
         private ICommand _navigateOrgEventViewCommand;
 
         public OrgViewModel(
-            IClipboard clipboard,
+            IEnvironmentService environmentService,
             IConfiguration configuration,
             ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
-            IReachabilityService reachabilityService,
-            IMvxPhoneCallTask phoneCallTask,
-            IMvxComposeEmailTask composeEmailTask,
-            IShowDirectionsTask showDirectionsTask,
-            IExceptionPolicy exceptionPolicy) : 
+            IExceptionPolicyService exceptionPolicy) : 
                 base(configuration,
-                    clipboard,
-                    analyticsService,
-                    reachabilityService,
-                    phoneCallTask, 
-                    composeEmailTask, 
-                    showDirectionsTask)
+                    environmentService,
+                    analyticsService)
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;

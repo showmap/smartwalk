@@ -43,13 +43,13 @@
     <Folder Include="Constants\" />
     <Folder Include="Model\DataContracts\" />
     <Folder Include="Properties\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="SmartWalkApplication.cs" />
     <Compile Include="ViewModels\OrgViewModel.cs" />
-    <Compile Include="Services\IExceptionPolicy.cs" />
     <Compile Include="ViewModels\EntityViewModel.cs" />
     <Compile Include="ViewModels\OrgEventViewModel.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
@@ -69,7 +69,6 @@
     <Compile Include="Constants\Analytics.cs" />
     <Compile Include="ViewModels\Common\ActiveViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IActiveAware.cs" />
-    <Compile Include="Services\IShowDirectionsTask.cs" />
     <Compile Include="Services\IReachabilityService.cs" />
     <Compile Include="Utils\TaskExtensions.cs" />
     <Compile Include="Utils\UISynchronizationContext.cs" />
@@ -90,7 +89,6 @@
     <Compile Include="Services\ILocationService.cs" />
     <Compile Include="Services\IConfiguration.cs" />
     <Compile Include="ViewModels\Common\ParametersBase.cs" />
-    <Compile Include="Services\IClipboard.cs" />
     <Compile Include="Services\IHttpService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Configuration.cs" />
@@ -98,7 +96,11 @@
     <Compile Include="Services\ICalendarService.cs" />
     <Compile Include="Model\CalendarEvent.cs" />
     <Compile Include="ViewModels\Interfaces\IShareableViewModel.cs" />
-    <Compile Include="Services\IOpenURLTask.cs" />
+    <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\IEnvironmentService.cs" />
+    <Compile Include="Resources\Localization.cs" />
+    <Compile Include="Services\ExceptionPolicyService.cs" />
+    <Compile Include="Services\IExceptionPolicyService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
@@ -122,11 +124,8 @@
     <Reference Include="Cirrious.MvvmCross">
       <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.1.2-beta1\lib\portable-win+net45+sl50+wp8+MonoAndroid+MonoTouch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
-    <Reference Include="Cirrious.MvvmCross.Plugins.Email">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.Email.3.1.2-beta1\lib\portable-win+net45+sl50+wp8+MonoAndroid+MonoTouch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.PhoneCall.3.1.2-beta1\lib\portable-win+net45+sl50+wp8+MonoAndroid+MonoTouch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
+    <Reference Include="Cirrious.MvvmCross.Plugins.File">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.File.3.1.1\lib\portable-win+net45+sl50+wp8+MonoAndroid+MonoTouch\Cirrious.MvvmCross.Plugins.File.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

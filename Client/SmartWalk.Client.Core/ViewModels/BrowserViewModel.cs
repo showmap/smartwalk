@@ -14,9 +14,8 @@ namespace SmartWalk.Client.Core.ViewModels
         private const string Http = "http://";
         private const string Https = "https://";
 
-        private readonly IClipboard _clipboard;
+        private readonly IEnvironmentService _environmentService;
         private readonly IAnalyticsService _analyticsService;
-        private readonly IOpenURLTask _openURLTask;
 
         private Parameters _parameters;
         private string _browserURL;
@@ -25,13 +24,11 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand _shareCommand;
 
         public BrowserViewModel(
-            IClipboard clipboard,
-            IAnalyticsService analyticsService,
-            IOpenURLTask openURLTask) : base(analyticsService)
+            IEnvironmentService environmentService,
+            IAnalyticsService analyticsService) : base(analyticsService)
         {
-            _clipboard = clipboard;
+            _environmentService = environmentService;
             _analyticsService = analyticsService;
-            _openURLTask = openURLTask;
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
@@ -65,7 +62,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             Analytics.ActionTouch,
                             Analytics.ActionLabelOpenLink);
 
-                        _openURLTask.OpenURL(BrowserURL);
+                        _environmentService.OpenURL(BrowserURL);
                     },
                     () => BrowserURL != null);
                 }
@@ -87,7 +84,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             Analytics.ActionTouch,
                             Analytics.ActionLabelCopyLink);
 
-                        _clipboard.Copy(BrowserURL);
+                        _environmentService.Copy(BrowserURL);
                     },
                     () => BrowserURL != null);
                 }

@@ -41,7 +41,7 @@ namespace SmartWalk.Client.iOS
 #if ADHOC || APPSTORE
             InitializeGAI();
 #else
-            GoogleAnalyticsService.IsOptOut = true;
+            AnalyticsService.IsOptOut = true;
 #endif
 
             AppSettingsUtil.HandleResetCache(_settings);
@@ -67,7 +67,7 @@ namespace SmartWalk.Client.iOS
         {
             base.DidEnterBackground(application);
 
-            if (!GoogleAnalyticsService.IsOptOut)
+            if (!AnalyticsService.IsOptOut)
             {
                 EasyTracker.Current.OnApplicationDeactivated(application);
             }
@@ -77,7 +77,7 @@ namespace SmartWalk.Client.iOS
         {
             base.WillEnterForeground(application);
 
-            if (!GoogleAnalyticsService.IsOptOut)
+            if (!AnalyticsService.IsOptOut)
             {
                 EasyTracker.Current.OnApplicationActivated(application);
             }

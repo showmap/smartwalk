@@ -16,7 +16,7 @@ namespace SmartWalk.Client.iOS
             }
             catch (Exception ex)
             {
-                if (!GoogleAnalyticsService.IsOptOut)
+                if (!AnalyticsService.IsOptOut)
                 {
                     EasyTracker.Current
                         .OnApplicationUnhandledException(ex)

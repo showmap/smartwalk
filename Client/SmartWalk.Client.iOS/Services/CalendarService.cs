@@ -4,8 +4,8 @@ using MonoTouch.EventKit;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Services;
-using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Services
 {

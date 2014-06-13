@@ -16,11 +16,11 @@ namespace SmartWalk.Client.iOS.Services
         private const string UnknownLocation = "Unknown Location";
 
         private readonly ISettings _settings;
-        private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly IExceptionPolicyService _exceptionPolicy;
         private readonly CLLocationManager _locationManager;
         private readonly CLGeocoder _geocoder;
 
-        public LocationService(ISettings settings, IExceptionPolicy exceptionPolicy)
+        public LocationService(ISettings settings, IExceptionPolicyService exceptionPolicy)
         {
             _settings = settings;
             _exceptionPolicy = exceptionPolicy;

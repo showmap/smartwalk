@@ -249,7 +249,6 @@
     <Compile Include="Controls\ListViewDecorator.cs" />
     <Compile Include="Views\HomeView\HomeCollectionSource.cs" />
     <Compile Include="Views\HomeView\HomeCollectionDelegate.cs" />
-    <Compile Include="Services\ExceptionPolicy.cs" />
     <Compile Include="Views\Common\EntityCell\IEntityCellContext.cs" />
     <Compile Include="Views\OrgEventView\VenueShowCell.designer.cs">
       <DependentUpon>VenueShowCell.cs</DependentUpon>
@@ -292,14 +291,12 @@
     <Compile Include="Utils\Map\MapUtil.cs" />
     <Compile Include="Utils\Map\MapViewAnnotation.cs" />
     <Compile Include="Utils\UIViewExtensions.cs" />
-    <Compile Include="Services\GoogleAnalyticsService.cs" />
     <Compile Include="Resources\ThemeIcons.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCell.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCell.designer.cs">
       <DependentUpon>ContactCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ButtonBarButton.cs" />
-    <Compile Include="Services\ShowDirectionsTask.cs" />
     <Compile Include="Controls\Line.cs" />
     <Compile Include="Views\OrgEventView\VenueHeaderView.cs" />
     <Compile Include="Views\OrgEventView\VenueHeaderContentView.cs" />
@@ -309,10 +306,7 @@
     <Compile Include="Utils\Reachability.cs" />
     <Compile Include="Services\ReachabilityService.cs" />
     <Compile Include="Utils\ConsoleUtil.cs" />
-    <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\LocationService.cs" />
-    <Compile Include="Resources\Localization.cs" />
-    <Compile Include="Services\Clipboard.cs" />
     <Compile Include="Services\HttpService.cs" />
     <Compile Include="Utils\ActionSheetUtil.cs" />
     <Compile Include="Services\CalendarService.cs" />
@@ -362,7 +356,6 @@
     <Compile Include="Views\Common\Base\ViewBase.cs" />
     <Compile Include="Views\OrgEventView\CustomUISearchBar.cs" />
     <Compile Include="Utils\UITouchGestureRecognizer.cs" />
-    <Compile Include="Services\OpenURLTask.cs" />
     <Compile Include="Controls\CustomMKMap.cs" />
     <Compile Include="Views\HomeView\HomeHeaderView.cs" />
     <Compile Include="Views\HomeView\HomeHeaderView.designer.cs">
@@ -389,6 +382,8 @@
     <Compile Include="Bootstrap\JsonPluginBootstrap.cs" />
     <Compile Include="Bootstrap\FilePluginBootstrap.cs" />
     <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
+    <Compile Include="Services\EnvironmentService.cs" />
+    <Compile Include="Services\AnalyticsService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

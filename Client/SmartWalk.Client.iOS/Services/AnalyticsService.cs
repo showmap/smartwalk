@@ -9,7 +9,7 @@ using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Services
 {
-    public class GoogleAnalyticsService : IAnalyticsService
+    public class AnalyticsService : IAnalyticsService
     {
         public static bool IsOptOut { get; set; }
 

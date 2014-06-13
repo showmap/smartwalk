@@ -21,12 +21,12 @@ namespace SmartWalk.Client.Core.ViewModels
         IFullscreenImageProvider, 
         IShareableViewModel
     {
-        private readonly IClipboard _clipboard;
+        private readonly IEnvironmentService _environmentService;
         private readonly ISmartWalkApiService _apiService;
         private readonly IConfiguration _configuration;
         private readonly IAnalyticsService _analyticsService;
         private readonly ICalendarService _calendarService;
-        private readonly IExceptionPolicy _exceptionPolicy;
+        private readonly IExceptionPolicyService _exceptionPolicy;
 
         private OrgEvent _allDaysOrgEvent;
         private OrgEventViewMode _mode = OrgEventViewMode.Combo;
@@ -68,16 +68,15 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand _shareCommand;
 
         public OrgEventViewModel(
-            IClipboard clipboard,
+            IEnvironmentService environmentService,
             ISmartWalkApiService apiService,
             IConfiguration configuration,
             IAnalyticsService analyticsService,
             ICalendarService calendarService,
-            IReachabilityService reachabilityService,
-            IExceptionPolicy exceptionPolicy) 
-            : base(reachabilityService, analyticsService)
+            IExceptionPolicyService exceptionPolicy) 
+            : base(environmentService.Reachability, analyticsService)
         {
-            _clipboard = clipboard;
+            _environmentService = environmentService;
             _apiService = apiService;
             _configuration = configuration;
             _analyticsService = analyticsService;
@@ -961,7 +960,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionLabelCopyLink);
 
                             var eventUrl = _configuration.GetEventUrl(_parameters.EventId);
-                            _clipboard.Copy(eventUrl);
+                            _environmentService.Copy(eventUrl);
                         },
                         () => 
                             _parameters != null &&

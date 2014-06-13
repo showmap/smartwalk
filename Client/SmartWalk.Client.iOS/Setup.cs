@@ -1,5 +1,6 @@
 using System;
 using Cirrious.CrossCore;
+using Cirrious.CrossCore.IoC;
 using Cirrious.CrossCore.Plugins;
 using Cirrious.MvvmCross.Plugins.DownloadCache;
 using Cirrious.MvvmCross.Plugins.DownloadCache.Touch;
@@ -9,7 +10,6 @@ using Cirrious.MvvmCross.ViewModels;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core;
 using SmartWalk.Client.Core.Services;
-using SmartWalk.Client.iOS.Services;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 
@@ -36,19 +36,15 @@ namespace SmartWalk.Client.iOS
         {
             InitializeCacheSettings();
 
-            Mvx.RegisterSingleton<IConfiguration>(new Configuration(_settings.ServerHost));
+            Mvx.RegisterSingleton<IConfiguration>(
+                new Configuration(
+                    _settings.ServerHost,
+                    _dataCacheConfig.CacheFolderPath));
 
-            Mvx.LazyConstructAndRegisterSingleton<IClipboard, Clipboard>();
-            Mvx.LazyConstructAndRegisterSingleton<IHttpService, HttpService>();
-            Mvx.LazyConstructAndRegisterSingleton<IAnalyticsService, GoogleAnalyticsService>();
-            Mvx.LazyConstructAndRegisterSingleton<IExceptionPolicy, ExceptionPolicy>();
-            Mvx.LazyConstructAndRegisterSingleton<ILocationService, LocationService>();
-            Mvx.LazyConstructAndRegisterSingleton<ICalendarService, CalendarService>();
-            Mvx.LazyConstructAndRegisterSingleton<IReachabilityService, ReachabilityService>();
-            Mvx.LazyConstructAndRegisterSingleton<ICacheService, CacheService>();
-            Mvx.RegisterSingleton<ICacheService>(new CacheService(_dataCacheConfig.CacheFolderPath));
-            Mvx.LazyConstructAndRegisterSingleton<IShowDirectionsTask, ShowDirectionsTask>();
-            Mvx.LazyConstructAndRegisterSingleton<IOpenURLTask, OpenURLTask>();
+            CreatableTypes()
+                .EndingWith("Service")
+                .AsInterfaces()
+                .RegisterAsLazySingleton();
 
             return new SmartWalkApplication();
         }

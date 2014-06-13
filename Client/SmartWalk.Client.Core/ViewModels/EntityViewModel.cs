@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using System.Windows.Input;
 using Cirrious.CrossCore.Core;
-using Cirrious.MvvmCross.Plugins.Email;
-using Cirrious.MvvmCross.Plugins.PhoneCall;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -21,11 +19,8 @@ namespace SmartWalk.Client.Core.ViewModels
         IShareableViewModel
     {
         private readonly IConfiguration _configuration;
-        private readonly IClipboard _clipboard;
         private readonly IAnalyticsService _analyticsService;
-        private readonly IMvxPhoneCallTask _phoneCallTask;
-        private readonly IMvxComposeEmailTask _composeEmailTask;
-        private readonly IShowDirectionsTask _showDirectionsTask;
+        private readonly IEnvironmentService _environmentService;
 
         private Entity _entity;
         private bool _isDescriptionExpanded;
@@ -46,20 +41,13 @@ namespace SmartWalk.Client.Core.ViewModels
 
         protected EntityViewModel(
             IConfiguration configuration,
-            IClipboard clipboard,
-            IAnalyticsService analyticsService,
-            IReachabilityService reachabilityService,
-            IMvxPhoneCallTask phoneCallTask,
-            IMvxComposeEmailTask composeEmailTask,
-            IShowDirectionsTask showDirectionsTask) 
-            : base(reachabilityService, analyticsService)
+            IEnvironmentService environmentService,
+            IAnalyticsService analyticsService) 
+            : base(environmentService.Reachability, analyticsService)
         {
             _configuration = configuration;
-            _clipboard = clipboard;
+            _environmentService = environmentService;
             _analyticsService = analyticsService;
-            _phoneCallTask = phoneCallTask;
-            _composeEmailTask = composeEmailTask;
-            _showDirectionsTask = showDirectionsTask;
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
@@ -246,7 +234,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCallPhone);
 
-                            _phoneCallTask.MakePhoneCall(contact.Title, contact.ContactText);
+                            _environmentService.MakePhoneCall(contact.Title, contact.ContactText);
                         },
                         contact => 
                             contact != null && 
@@ -272,7 +260,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelComposeEmail);
 
-                            _composeEmailTask.ComposeEmail(contact.ContactText, null, null, null, true);
+                            _environmentService.ComposeEmail(contact.ContactText, null, null, null, true);
                         },
                         contact => 
                             contact != null &&
@@ -321,7 +309,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                     Analytics.ActionLabelShowDirections);
 
                                 var address = entity.Addresses.FirstOrDefault();
-                                _showDirectionsTask.ShowDirections(address);
+                                _environmentService.ShowDirections(address);
                             },
                         entity => 
                             entity != null &&
@@ -369,7 +357,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
                             var url = _configuration
                                 .GetEntityUrl(Entity.Id, Entity.Type.Value);
-                            _clipboard.Copy(url);
+                            _environmentService.Copy(url);
                         },
                         () => Entity != null && Entity.Type.HasValue);
                 }

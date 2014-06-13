@@ -12,6 +12,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;

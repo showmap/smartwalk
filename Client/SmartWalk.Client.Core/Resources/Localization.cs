@@ -1,4 +1,4 @@
-﻿namespace SmartWalk.Client.iOS.Resources
+﻿namespace SmartWalk.Client.Core.Resources
 {
     public static class Localization
     {
