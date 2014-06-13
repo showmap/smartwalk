@@ -695,6 +695,15 @@ namespace SmartWalk.Server
             SchemaBuilder.CreateForeignKey("ShowMappingRecord_StorageRecord", "ShowMappingRecord", new[] { "StorageRecord_Id" }, "StorageRecord", new[] { "Id" });
 
             return 5;
-        }  
+        }
+
+        [UsedImplicitly]
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("SmartWalkUserRecord", table => table
+               .AddColumn("TimeZone", DbType.String, c => c.WithLength(255))
+               );
+
+            return 6;
+        }
     }
 }

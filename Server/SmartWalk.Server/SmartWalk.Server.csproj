@@ -123,6 +123,7 @@
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\CompressFilter.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Shapes.cs" />
     <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
       <SubType>Code</SubType>
@@ -291,6 +292,10 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Orchard.Source.1.8\src\Orchard.Web\Modules\NGM.OpenAuthentication\NGM.OpenAuthentication.csproj">
+      <Project>{b262a7c7-8205-4b94-a359-f5379025df32}</Project>
+      <Name>NGM.OpenAuthentication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
       <Project>{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}</Project>
       <Name>SmartWalk.Shared</Name>
@@ -313,5 +318,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Event\Templates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\OpenAuthRegister.cshtml" />
   </ItemGroup>
 </Project>
