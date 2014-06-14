@@ -1,17 +1,23 @@
 using System;
-using System.Web;
 using System.Collections.Generic;
 using System.Text;
+using System.Web;
 using GoogleAnalytics;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Services
 {
     public class AnalyticsService : IAnalyticsService
     {
         public static bool IsOptOut { get; set; }
+
+        private readonly IEnvironmentService _environmentService;
+
+        public AnalyticsService(IEnvironmentService environmentService)
+        {
+            _environmentService = environmentService;
+        }
 
         public void SendView(string name, Dictionary<string, object> parameters = null)
         {
@@ -24,7 +30,7 @@ namespace SmartWalk.Client.iOS.Services
                 EasyTracker.GetTracker().SendView(viewPath);
             }
 
-            ConsoleUtil.Log("GA: Send View - {0}", viewPath);
+            _environmentService.WriteConsoleLine("GA: Send View - {0}", viewPath);
         }
 
         public void SendEvent(string category, string action, string label, int value = 0)
@@ -37,7 +43,7 @@ namespace SmartWalk.Client.iOS.Services
                 EasyTracker.GetTracker().SendEvent(category, action, label, value);
             }
 
-            ConsoleUtil.Log(
+            _environmentService.WriteConsoleLine(
                 "GA: Send Event - category:{0}, action:{1}, label:{2}, value:{3}",
                 category,
                 action,
@@ -52,7 +58,7 @@ namespace SmartWalk.Client.iOS.Services
                 EasyTracker.GetTracker().SendException(format, isFatal);
             }
 
-            ConsoleUtil.Log("GA: Send Exception - {0}", format);
+            _environmentService.WriteConsoleLine("GA: Send Exception - {0}", format);
         }
 
         private static string GetParametersString(Dictionary<string, object> parameters)

@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using Cirrious.MvvmCross.Plugins.File;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.Services
 {
@@ -11,14 +12,22 @@ namespace SmartWalk.Client.Core.Services
         private const string CacheFileExt = ".json";
 
         private readonly IConfiguration _configuration;
-        private readonly IMvxFileStore _fileStore;
+        private readonly IMvxExtendedFileStore _fileStore;
+        private readonly IExceptionPolicyService _exceptionPolicy;
         private readonly string _cacheFolderPath;
 
-        public CacheService(IConfiguration configuration, IMvxFileStore fileStore)
+        public CacheService(
+            IConfiguration configuration, 
+            IMvxExtendedFileStore fileStore,
+            IExceptionPolicyService exceptionPolicy)
         {
             _configuration = configuration;
             _fileStore = fileStore;
-            _cacheFolderPath = _fileStore.NativePath(_configuration.CacheFolderPath);
+            _exceptionPolicy = exceptionPolicy;
+            _cacheFolderPath = _fileStore.NativePath(
+                _configuration.CacheConfig.CacheFolderPath);
+
+            Task.Run((Action)CleanUpOldFiles).ContinueWithThrow();
         }
 
         public string GetString(string key)
@@ -34,6 +43,7 @@ namespace SmartWalk.Client.Core.Services
                 string contents;
 
                 if (files.Contains(file) &&
+                    !DeleteIfOld(file) &&
                     _fileStore.TryReadTextFile(file, out contents))
                 {
                     return contents;
@@ -55,6 +65,18 @@ namespace SmartWalk.Client.Core.Services
             _fileStore.WriteFile(Path.Combine(_cacheFolderPath, fileName), value);
         }
 
+        public void InvalidateString(string key)
+        {
+            if (key == null) throw new ArgumentNullException("key");
+
+            _fileStore.EnsureFolderExists(_cacheFolderPath);
+
+            var fileName = key + CacheFileExt;
+
+            _fileStore.DeleteFile(Path.Combine(_cacheFolderPath, fileName));
+
+        }
+
         public T GetObject<T>(string key)
         {
             if (key == null) throw new ArgumentNullException("key");
@@ -74,6 +96,38 @@ namespace SmartWalk.Client.Core.Services
 
             var str = JsonConvert.SerializeObject(obj);
             SetString(key, str);
+        }
+
+        private void CleanUpOldFiles()
+        {
+            if (_fileStore.FolderExists(_cacheFolderPath))
+            {
+                var files = _fileStore.GetFilesIn(_cacheFolderPath);
+                foreach (var file in files)
+                {
+                    DeleteIfOld(file);
+                }
+            }
+        }
+
+        private bool DeleteIfOld(string file)
+        {
+            var lastWriteTime = _fileStore.GetLastWriteTime(file);
+            var fileAge = DateTime.Now - lastWriteTime;
+            if (fileAge > _configuration.CacheConfig.MaxFileAge)
+            {
+                try
+                {
+                    _fileStore.DeleteFile(file);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    _exceptionPolicy.Trace(ex, false);
+                }
+            }
+
+            return false;
         }
     }
 }

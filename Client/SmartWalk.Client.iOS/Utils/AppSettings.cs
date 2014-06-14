@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
-using Cirrious.MvvmCross.Plugins.DownloadCache.Touch;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -22,6 +22,6 @@ namespace SmartWalk.Client.iOS.Utils
 
         [XmlArray("caches")]
         [XmlArrayItem("cache")]
-        public MvxDownloadCacheConfiguration[] Caches { get;set; }
+        public CacheConfiguration[] Caches { get;set; }
     }
 }

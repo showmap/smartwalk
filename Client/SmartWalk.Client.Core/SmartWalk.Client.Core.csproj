@@ -54,7 +54,6 @@
     <Compile Include="ViewModels\OrgEventViewModel.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Services\ICacheService.cs" />
-    <Compile Include="Services\DataSource.cs" />
     <Compile Include="ViewModels\VenueViewModel.cs" />
     <Compile Include="Converters\ValueConverter.cs" />
     <Compile Include="ViewModels\BrowserViewModel.cs" />
@@ -101,6 +100,8 @@
     <Compile Include="Resources\Localization.cs" />
     <Compile Include="Services\ExceptionPolicyService.cs" />
     <Compile Include="Services\IExceptionPolicyService.cs" />
+    <Compile Include="Services\IMvxExtendedFileStore.cs" />
+    <Compile Include="Services\SmartWalkApiFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

@@ -9,5 +9,7 @@ namespace SmartWalk.Client.Core.Services
         void SetString(string key, string value);
 
         void SetObject<T>(string key, T obj) where T : class;
+
+        void InvalidateString(string key);
     }
 }

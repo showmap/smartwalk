@@ -15,4 +15,10 @@ namespace SmartWalk.Client.Core.Services
 
         Task<Org> GetHost(int id, DataSource source);
     }
+
+    public enum DataSource
+    {
+        Cache,
+        Server
+    }
 }

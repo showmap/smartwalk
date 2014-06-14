@@ -1,4 +1,5 @@
-﻿using Cirrious.MvvmCross.Plugins.Email;
+﻿using System;
+using Cirrious.MvvmCross.Plugins.Email;
 using Cirrious.MvvmCross.Plugins.PhoneCall;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -70,6 +71,13 @@ namespace SmartWalk.Client.iOS.Services
         {
             var alert = new UIAlertView(title, message, null, Localization.OK, null);
             alert.Show();
+        }
+
+        public void WriteConsoleLine(string line, params object[] arg)
+        {
+#if DEBUG
+            Console.WriteLine(line, arg);
+#endif
         }
     }
 }

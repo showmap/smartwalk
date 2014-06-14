@@ -10,13 +10,11 @@ namespace SmartWalk.Client.Core.Services
         string Paste();
 
         void MakePhoneCall(string name, string number);
-
         void ComposeEmail(string to, string cc, string subject, string body, bool isHtml);
-
         void OpenURL(string url);
-
         void ShowDirections(Address address);
 
         void Alert(string title, string message);
+        void WriteConsoleLine(string line, params object[] arg);
     }
 }

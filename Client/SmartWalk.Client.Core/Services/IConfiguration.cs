@@ -1,4 +1,5 @@
-﻿using SmartWalk.Shared.DataContracts;
+﻿using System;
+using SmartWalk.Shared.DataContracts;
 
 namespace SmartWalk.Client.Core.Services
 {
@@ -6,9 +7,19 @@ namespace SmartWalk.Client.Core.Services
     {
         string Host { get; }
         string Api { get; }
-        string CacheFolderPath { get; }
+        ICacheConfiguration CacheConfig { get; }
 
         string GetEventUrl(int eventId);
         string GetEntityUrl(int entityId, EntityType type);
+    }
+
+    public interface ICacheConfiguration
+    {
+        string CacheFolderPath { get;set; }
+        string CacheName { get;set; }
+        TimeSpan MaxFileAge { get;set; }
+        int MaxFiles { get;set; }
+        int MaxInMemoryBytes { get;set; }
+        int MaxInMemoryFiles { get;set; }
     }
 }

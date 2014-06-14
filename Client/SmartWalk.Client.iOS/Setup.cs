@@ -3,7 +3,6 @@ using Cirrious.CrossCore;
 using Cirrious.CrossCore.IoC;
 using Cirrious.CrossCore.Plugins;
 using Cirrious.MvvmCross.Plugins.DownloadCache;
-using Cirrious.MvvmCross.Plugins.DownloadCache.Touch;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
@@ -19,9 +18,9 @@ namespace SmartWalk.Client.iOS
     {
         private readonly AppSettings _settings;
 
-        private MvxDownloadCacheConfiguration _picsCacheConfig;
-        private MvxDownloadCacheConfiguration _resizedPicsCacheConfig;
-        private MvxDownloadCacheConfiguration _dataCacheConfig;
+        private CacheConfiguration _picsCacheConfig;
+        private CacheConfiguration _resizedPicsCacheConfig;
+        private CacheConfiguration _dataCacheConfig;
 
         public Setup(
             MvxApplicationDelegate appDelegate, 
@@ -39,7 +38,7 @@ namespace SmartWalk.Client.iOS
             Mvx.RegisterSingleton<IConfiguration>(
                 new Configuration(
                     _settings.ServerHost,
-                    _dataCacheConfig.CacheFolderPath));
+                    _dataCacheConfig));
 
             CreatableTypes()
                 .EndingWith("Service")
@@ -63,8 +62,8 @@ namespace SmartWalk.Client.iOS
                 () => MvxPlus.CreateResizedImageCache(_resizedPicsCacheConfig));
 
             Mvx.RegisterType<IMvxResizedImageHelper<UIImage>, MvxResizedDynamicImageHelper<UIImage>>();
-
             Mvx.RegisterSingleton<IMvxHttpFileDownloader>(MvxPlus.CreateHttpFileDownloader);
+            Mvx.LazyConstructAndRegisterSingleton<IMvxExtendedFileStore, MvxExtendedFileStore>();
 
             base.InitializeLastChance();
         }
@@ -73,9 +72,6 @@ namespace SmartWalk.Client.iOS
         {
             foreach (var cache in _settings.Caches)
             {
-                // TODO: Figure out how to deserialize this from xml
-                cache.MaxFileAge = TimeSpan.FromDays(10);
-
                 if (cache.CacheName == "Pictures.MvvmCross")
                 {
                     _picsCacheConfig = cache;

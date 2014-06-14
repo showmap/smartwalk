@@ -9,7 +9,7 @@
             <CacheName>Pictures.MvvmCross</CacheName>
             <CacheFolderPath>../Library/Caches/Pictures.MvvmCross/</CacheFolderPath>
             <MaxFiles>500</MaxFiles>
-            <MaxFileAge>10</MaxFileAge> <!-- 10 days, it's set in Setup, it isn't deserializable -->
+            <MaxFileAgeDays>10</MaxFileAgeDays>
             <MaxInMemoryBytes>1000000</MaxInMemoryBytes> <!-- 1 MB -->
             <MaxInMemoryFiles>10</MaxInMemoryFiles>
         </cache>
@@ -17,13 +17,14 @@
             <CacheName>ResizedPictures.MvvmCross</CacheName>
             <CacheFolderPath>../Library/Caches/ResizedPictures.MvvmCross/</CacheFolderPath>
             <MaxFiles>1000</MaxFiles>
-            <MaxFileAge>10</MaxFileAge>
+            <MaxFileAgeDays>10</MaxFileAgeDays>
             <MaxInMemoryBytes>3000000</MaxInMemoryBytes> <!-- 3 MB -->
             <MaxInMemoryFiles>30</MaxInMemoryFiles>
         </cache>
         <cache>
             <CacheName>Data.SmartWalk</CacheName>
             <CacheFolderPath>../Library/Caches/SmartWalkData.Cache/</CacheFolderPath>
+            <MaxFileAgeDays>3</MaxFileAgeDays>
         </cache>
     </caches>
 </settings>

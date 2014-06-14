@@ -24,31 +24,33 @@ namespace SmartWalk.Client.Core.Services
         {
             var sendToGA = false;
 
+            string title = Localization.Error;
+            string message = ex.Message;
+
+            if (ex is WebException)
+            {
+                title = Localization.NetworkError;
+                message = Localization.CantAccessNetworkContent;
+            }
+            else if (ex is JsonReaderException)
+            {
+                title = Localization.ServerError;
+                message = Localization.CantReadNetworkContent;
+                sendToGA = true;
+            }
+            else if (ex is TaskCanceledException)
+            {
+                showAlert = false;
+            }
+            else
+            {
+                sendToGA = true;
+            }
+
+            _environmentService.WriteConsoleLine(ex.ToString());
+
             if (showAlert)
             {
-                string title = Localization.Error;
-                string message = ex.Message;
-
-                if (ex is WebException)
-                {
-                    title = Localization.NetworkError;
-                    message = Localization.CantAccessNetworkContent;
-                }
-                else if (ex is JsonReaderException)
-                {
-                    title = Localization.ServerError;
-                    message = Localization.CantReadNetworkContent;
-                    sendToGA = true;
-                }
-                else if (ex is TaskCanceledException)
-                {
-                    return;
-                }
-                else
-                {
-                    sendToGA = true;
-                }
-
                 _environmentService.Alert(title, message);
             }
 

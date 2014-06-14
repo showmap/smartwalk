@@ -30,41 +30,7 @@ namespace SmartWalk.Client.Core.Services
 
         public async Task<OrgEvent[]> GetOrgEvents(Location location, DataSource source)
         {
-            var request = new Request {
-                Selects = new[] {
-                    new RequestSelect {
-                        Fields = new[] { "Host", "Title", "Picture", "StartTime" },
-                        From = RequestSelectFromTables.GroupedEventMetadata,
-                        As = "em",
-                        SortBy = new[] {
-                            new RequestSelectSortBy {
-                                Field = "Latitude",
-                                OfDistance = location.Latitude,
-                            },
-                            new RequestSelectSortBy {
-                                Field = "Longitude",
-                                OfDistance = location.Longitude
-                            }
-                        }
-                    },
-                    new RequestSelect {
-                        Fields = new[] { "Name", "Picture" },
-                        From = RequestSelectFromTables.Entity,
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                SelectValue = new RequestSelectWhereSelectValue {
-                                    Field = "Host.Id",
-                                    SelectName = "em"
-                                }
-                            }
-                        }
-                    }
-                },
-                Storages = new[] { Storage.SmartWalk }
-            };
-
+            var request = SmartWalkApiFactory.CreateOrgEventsRequest(location);
             var response = await GetResponse(request, source);
             var result = default(OrgEvent[]);
 
@@ -95,67 +61,21 @@ namespace SmartWalk.Client.Core.Services
 
         public async Task<OrgEvent> GetOrgEvent(int id, DataSource source)
         {
-            var request = new Request {
-                Selects = new[] {
-                    new RequestSelect {
-                        Fields = new[] { "Host", "StartTime", "EndTime", "Shows" },
-                        From = RequestSelectFromTables.EventMetadata,
-                        As = "em",
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                Value = id
-                            }
-                        }
-                    },
-                    new RequestSelect {
-                        Fields = new[] {
-                            "Venue", "IsReference", "Title",
-                            "Description", "StartTime", "EndTime",
-                            "Picture", "DetailsUrl"
-                        },
-                        From = RequestSelectFromTables.Show,
-                        As = "s",
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                SelectValue = new RequestSelectWhereSelectValue {
-                                    Field = "Shows.Id",
-                                    SelectName = "em"
-                                }
-                            }
-                        }
-                    },
-                    new RequestSelect {
-                        Fields = new[] { "Name", "Picture", "Addresses" },
-                        From = RequestSelectFromTables.Entity,
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                SelectValue = new RequestSelectWhereSelectValue {
-                                    Field = "Venue.Id",
-                                    SelectName = "s"
-                                }
-                            }
-                        },
-                        SortBy = new[] {
-                            new RequestSelectSortBy {
-                                Field = "Name"
-                            }
-                        }
-                    }
-                },
-                Storages = new[] { Storage.SmartWalk }
-            };
-
+            var request = SmartWalkApiFactory.CreateOrgEventRequest(id);
             var response = await GetResponse(request, source);
             var result = default(OrgEvent);
 
             if (response != null)
             {
+                // reset event venues cache, if event is refreshed from server
+                // this is to keep views' content synced
+                if (source == DataSource.Server)
+                {
+                    var venuesRequest = 
+                        SmartWalkApiFactory.CreateOrgEventVenuesRequest(id);
+                    _cacheService.InvalidateString(GenerateKey(venuesRequest));
+                }
+
                 var eventMetadata = response
                     .Selects[0].Records
                     .Cast<JObject>()
@@ -185,41 +105,38 @@ namespace SmartWalk.Client.Core.Services
             return result;
         }
 
+        public async Task<Venue[]> GetOrgEventVenues(int id, DataSource source)
+        {
+            var request = SmartWalkApiFactory.CreateOrgEventVenuesRequest(id);
+            var response = await GetResponse(request, source);
+            var result = default(Venue[]);
+
+            if (response != null)
+            {
+                var shows = response
+                    .Selects[1].Records
+                    .Cast<JObject>()
+                    .Select(s => s.ToObject<Show>())
+                    .ToArray();
+
+                result = response
+                    .Selects[2].Records
+                    .Cast<JObject>()
+                    .Select(e =>
+                    {
+                        var entity = e.ToObject<Entity>();
+                        var venue = CreateVenue(entity, shows);
+                        return venue;
+                    })
+                    .ToArray();
+            }
+
+            return result;
+        }
+
         public async Task<OrgEvent> GetOrgEventInfo(int id, DataSource source)
         {
-            var request = new Request {
-                Selects = new[] {
-                    new RequestSelect {
-                        Fields = new[] { "Host", "StartTime", "EndTime", 
-                            "Title", "Description", "Picture", "Latitude", "Longitude" },
-                        From = RequestSelectFromTables.EventMetadata,
-                        As = "em",
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                Value = id
-                            }
-                        }
-                    },
-                    new RequestSelect {
-                        Fields = new[] { "Name", "Picture" },
-                        From = RequestSelectFromTables.Entity,
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                SelectValue = new RequestSelectWhereSelectValue {
-                                    Field = "Host.Id",
-                                    SelectName = "em"
-                                }
-                            }
-                        }
-                    }
-                },
-                Storages = new[] { Storage.SmartWalk }
-            };
-
+            var request = SmartWalkApiFactory.CreateOrgEventInfoRequest(id);
             var response = await GetResponse(request, source);
             var result = default(OrgEvent);
 
@@ -243,126 +160,9 @@ namespace SmartWalk.Client.Core.Services
             return result;
         }
 
-        public async Task<Venue[]> GetOrgEventVenues(int id, DataSource source)
-        {
-            var request = new Request {
-                Selects = new[] {
-                    new RequestSelect {
-                        Fields = new[] { "Shows" },
-                        From = RequestSelectFromTables.EventMetadata,
-                        As = "em",
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                Value = id
-                            }
-                        }
-                    },
-                    new RequestSelect {
-                        Fields = new[] {
-                            "Venue", "IsReference", "Title",
-                            "Description", "StartTime", "EndTime",
-                            "Picture", "DetailsUrl"
-                        },
-                        From = RequestSelectFromTables.Show,
-                        As = "s",
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                SelectValue = new RequestSelectWhereSelectValue {
-                                    Field = "Shows.Id",
-                                    SelectName = "em"
-                                }
-                            }
-                        }
-                    },
-                    new RequestSelect {
-                        Fields = new[] { "Name", "Description", "Picture", "Contacts", "Addresses" },
-                        From = RequestSelectFromTables.Entity,
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                SelectValue = new RequestSelectWhereSelectValue {
-                                    Field = "Venue.Id",
-                                    SelectName = "s"
-                                }
-                            }
-                        },
-                        SortBy = new[] {
-                            new RequestSelectSortBy {
-                                Field = "name"
-                            }
-                        }
-                    }
-                },
-                Storages = new[] { Storage.SmartWalk }
-            };
-
-            var response = await GetResponse(request, source);
-            var result = default(Venue[]);
-
-            if (response != null)
-            {
-                var shows = response
-                    .Selects[1].Records
-                    .Cast<JObject>()
-                    .Select(s => s.ToObject<Show>())
-                    .ToArray();
-
-                result = response
-                    .Selects[2].Records
-                    .Cast<JObject>()
-                    .Select(e =>
-                        {
-                            var entity = e.ToObject<Entity>();
-                            var venue = CreateVenue(entity, shows);
-                            return venue;
-                        })
-                    .ToArray();
-            }
-
-            return result;
-        }
-
         public async Task<Org> GetHost(int id, DataSource source)
         {
-            var request = new Request {
-                Selects = new[] {
-                    new RequestSelect {
-                        Fields = new[] { "Name", "Description", "Picture", "Contacts", "Addresses" },
-                        From = RequestSelectFromTables.Entity,
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                Value = id
-                            }
-                        }
-                    },
-                    new RequestSelect {
-                        Fields = new[] { "Host", "Title", "Picture", "StartTime" },
-                        From = RequestSelectFromTables.EventMetadata,
-                        Where = new[] {
-                            new RequestSelectWhere {
-                                Field = "Host.Id",
-                                Operator = RequestSelectWhereOperators.EqualsTo,
-                                Value = id
-                            }
-                        },
-                        SortBy = new[] {
-                            new RequestSelectSortBy {
-                                Field = "StartTime",
-                                IsDescending = true
-                            }
-                        }
-                    },
-                },
-                Storages = new[] { Storage.SmartWalk }
-            };
-
+            var request = SmartWalkApiFactory.CreateHostRequest(id);
             var response = await GetResponse(request, source);
             var result = default(Org);
 
@@ -389,16 +189,11 @@ namespace SmartWalk.Client.Core.Services
             return result;
         }
 
-        private Task<bool> GetIsConnected()
-        {
-            return _reachabilityService.GetIsReachable();
-        }
-
         private async Task<Response> GetResponse(Request request, DataSource source)
         {
             var result = default(Response);
             var key = GenerateKey(request);
-            var isConnected = await GetIsConnected();
+            var isConnected = await _reachabilityService.GetIsReachable();
 
             if (!isConnected || source == DataSource.Cache)
             {
@@ -421,9 +216,9 @@ namespace SmartWalk.Client.Core.Services
         private static string GenerateKey(Request request)
         {
             return KeyPrefix + 
-                request != null 
+                (request != null 
                     ? request.GetHashCode().ToString() 
-                    : string.Empty;
+                    : string.Empty);
         }
 
         private static Venue CreateVenue(Entity entity, Show[] shows)

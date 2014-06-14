@@ -305,7 +305,6 @@
     </Compile>
     <Compile Include="Utils\Reachability.cs" />
     <Compile Include="Services\ReachabilityService.cs" />
-    <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="Services\LocationService.cs" />
     <Compile Include="Services\HttpService.cs" />
     <Compile Include="Utils\ActionSheetUtil.cs" />
@@ -384,6 +383,9 @@
     <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\AnalyticsService.cs" />
+    <Compile Include="Utils\MvvmCross\MvxExtendedFileStore.cs" />
+    <Compile Include="Utils\MvvmCross\CacheConfiguration.cs" />
+    <Compile Include="Utils\ConsoleUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
