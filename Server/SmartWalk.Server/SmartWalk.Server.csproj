@@ -52,9 +52,6 @@
     <Reference Include="Orchard.Roles">
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Roles.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Users">
-      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Users.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -62,29 +59,27 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Source.1.8\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Source.1.8\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Source.1.8\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="Orchard.Core">
-      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Framework">
-      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Framework.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Helpers">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc">
-      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.1.2\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +110,7 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EventController.cs" />
@@ -122,7 +118,13 @@
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\CompressFilter.cs" />
+    <Compile Include="Extensions\SmartWalkConstants.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Models\SmartWalkUserParams.cs" />
+    <Compile Include="Services\SmartWalkUserService\ISmartWalkUserService.cs" />
+    <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
+    <Compile Include="ViewModels\SmartWalkUserVm.cs" />
     <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
       <SubType>Code</SubType>
@@ -291,9 +293,21 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Orchard.Source.1.8\src\Orchard.Web\Core\Orchard.Core.csproj">
+      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\Orchard.Source.1.8\src\Orchard.Web\Modules\NGM.OpenAuthentication\NGM.OpenAuthentication.csproj">
       <Project>{b262a7c7-8205-4b94-a359-f5379025df32}</Project>
       <Name>NGM.OpenAuthentication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Orchard.Source.1.8\src\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Orchard.Source.1.8\src\Orchard\Orchard.Framework.csproj">
+      <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
+      <Name>Orchard.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
       <Project>{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}</Project>

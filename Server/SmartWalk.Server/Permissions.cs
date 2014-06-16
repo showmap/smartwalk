@@ -26,10 +26,5 @@ namespace SmartWalk.Server
                 }
             };
         }
-    }
-
-    public static class SmartWalkRoles
-    {
-        public const string SmartWalkUser = "SmartWalk Users";
-    }
+    }  
 }

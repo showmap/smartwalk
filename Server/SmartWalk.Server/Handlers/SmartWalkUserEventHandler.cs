@@ -9,6 +9,7 @@ using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security;
 using Orchard.Users.Events;
+using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
 
 namespace SmartWalk.Server.Handlers
@@ -43,7 +44,7 @@ namespace SmartWalk.Server.Handlers
             swUser.CreatedAt = DateTime.UtcNow;
         }
         public void Created(UserContext context) {
-            var role = _roleService.GetRoleByName(SmartWalkRoles.SmartWalkUser);
+            var role = _roleService.GetRoleByName(SmartWalkConstants.SmartWalkUserRole);
             if (role != null)
             {
                 _userRolesRepository.Create(

@@ -1,9 +1,11 @@
-﻿@{
+﻿@using SmartWalk.Server.Extensions
+@{
     var userName = Request.QueryString["UserName"];
     var externalLoginData = Request.QueryString["ExternalLoginData"];
 }
 
 @T("Oppa")
+
 
 <h1>@Html.TitleForPage(T("Create a New Account").ToString())</h1>
 
@@ -21,7 +23,7 @@
     <p>@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"])</p>
     @Html.ValidationSummary(T("Account creation was unsuccessful. Please correct the errors and try again.").ToString()) 
 
-    @using (Html.BeginFormAntiForgeryPost()) { 
+    @using (Html.BeginFormAntiForgeryPost(Url.Register(userName, externalLoginData))) {
     <div>
         <label for="username">@T("Username:")</label>
         @Html.TextBox("username") 
