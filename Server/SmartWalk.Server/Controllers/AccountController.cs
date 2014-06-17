@@ -18,10 +18,12 @@ using System.Text.RegularExpressions;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Services.SmartWalkUserService;
 using SmartWalk.Server.ViewModels;
+using Orchard.Themes;
 
 
 namespace SmartWalk.Server.Controllers
 {
+    [Themed]
     public class AccountController : Controller {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
@@ -102,6 +104,31 @@ namespace SmartWalk.Server.Controllers
             var shape = _orchardServices.New.Register();
             return new ShapeResult(this, shape);
         }
+
+        [AlwaysAccessible]
+        public ActionResult EditProfile() {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+                return new HttpUnauthorizedResult();
+
+            var user = _orchardServices.WorkContext.CurrentUser;
+
+            return View(_swUserService.GetUserViewModel(user));
+        }
+
+        [HttpPost]
+        [AlwaysAccessible]
+        public ActionResult EditProfile(SmartWalkUserVm profile)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+                return new HttpUnauthorizedResult();
+
+            var user = _orchardServices.WorkContext.CurrentUser;
+            _swUserService.UpdateSmartWalkUser(profile, user);
+
+            return RedirectToAction("EditProfile");
+        }
+
+
 
         #region Helper Functions
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {

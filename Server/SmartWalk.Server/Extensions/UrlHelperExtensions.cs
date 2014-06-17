@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using NGM.OpenAuthentication.Extensions;
 
 namespace SmartWalk.Server.Extensions
 {
@@ -11,6 +12,16 @@ namespace SmartWalk.Server.Extensions
         public static string Register(this UrlHelper urlHelper, string userName, string loginData)
         {
             return urlHelper.Action("Register", "Account", new { area = SmartWalkConstants.SmartWalkArea, UserName = userName, ExternalLoginData = loginData });
+        }
+
+        public static string EditProfile(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("EditProfile", "Account", new { area = SmartWalkConstants.SmartWalkArea });
+        }
+
+        public static string ChangePassword(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("ChangePassword", "Account", new { area = Constants.OrchardUsersArea });
         }
 
         //public static string OpenAuthLogOn(this UrlHelper urlHelper, string returnUrl)

@@ -4,9 +4,6 @@
     var externalLoginData = Request.QueryString["ExternalLoginData"];
 }
 
-@T("Oppa")
-
-
 <h1>@Html.TitleForPage(T("Create a New Account").ToString())</h1>
 
 @if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(externalLoginData)) {

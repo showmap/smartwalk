@@ -13,6 +13,7 @@ using Orchard.DisplayManagement;
 using SmartWalk.Shared;
 using Orchard.Messaging.Services;
 using Orchard.Localization;
+using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.SmartWalkUserService
 {
@@ -29,13 +30,17 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
         public SmartWalkUserService(
             IOrchardServices orchardServices,
             IMembershipService membershipService,
+            IMessageService messageService,
             IEnumerable<IUserEventHandler> userEventHandlers,
-            IShapeFactory shapeFactory
+            IShapeFactory shapeFactory,
+            IShapeDisplay shapeDisplay
             ) {
             _orchardServices = orchardServices;
             _membershipService = membershipService;
+            _messageService = messageService;
             _userEventHandlers = userEventHandlers;
             _shapeFactory = shapeFactory;
+            _shapeDisplay = shapeDisplay;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -137,6 +142,33 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
             }
 
             return user;
+        }
+
+
+        public SmartWalkUserVm GetUserViewModel(IUser user)
+        {
+            var swUserPart = user.As<SmartWalkUserPart>();
+
+            if(swUserPart == null)
+                return new SmartWalkUserVm();
+
+            return new SmartWalkUserVm {
+                FirstName = swUserPart.FirstName,
+                LastName = swUserPart.LastName,
+                CreatedAt = swUserPart.CreatedAt,
+                LastLoiginAt = swUserPart.LastLoginAt,
+                TimeZone = swUserPart.TimeZone
+            };
+        }
+
+
+        public void UpdateSmartWalkUser(SmartWalkUserVm profile, IUser user) {
+            var swUserPart = user.As<SmartWalkUserPart>();
+
+            if (swUserPart == null)
+                return;
+
+            swUserPart.TimeZone = profile.TimeZone;
         }
     }
 }
