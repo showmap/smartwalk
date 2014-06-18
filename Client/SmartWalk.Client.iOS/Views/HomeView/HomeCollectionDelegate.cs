@@ -62,7 +62,13 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         public void ScrollOutHeader()
         {
-            ScrollUtil.ScrollOutHeader(_collectionView, HomeHeaderView.DefaultHeight, _isTouched);
+            if (!IsHeaderViewHidden)
+            {
+                ScrollUtil.ScrollOutHeader(
+                    _collectionView, 
+                    HomeHeaderView.DefaultHeight, 
+                    _isTouched);
+            }
         }
 
         public override void DraggingStarted(UIScrollView scrollView)

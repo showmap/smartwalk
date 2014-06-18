@@ -863,7 +863,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             {
                                 eventInfo = await _apiService.GetOrgEventInfo(
                                     _parameters.EventId, 
-                                    DataSource.Cache);
+                                    DataSource.CacheOrServer);
                             }
                             catch (Exception ex)
                             {
@@ -1058,7 +1058,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEvent(DataSource.Cache).ContinueWithThrow();
+            UpdateOrgEvent(DataSource.CacheOrServer).ContinueWithThrow();
         }
 
         protected override void Refresh(DataSource source)

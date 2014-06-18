@@ -91,7 +91,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrg(DataSource.Cache).ContinueWithThrow();
+            UpdateOrg(DataSource.CacheOrServer).ContinueWithThrow();
         }
 
         protected override void Refresh(DataSource source)

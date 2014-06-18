@@ -417,11 +417,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 MapContentView.Hidden = true;
             }
+        }
 
+        protected override void ScrollViewToTop()
+        {
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource != null)
             {
                 tableSource.ScrollOutHeader();
+            }
+            else
+            {
+                base.ScrollViewToTop();
             }
         }
 

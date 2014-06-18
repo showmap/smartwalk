@@ -193,9 +193,10 @@ namespace SmartWalk.Client.Core.Services
         {
             var result = default(Response);
             var key = GenerateKey(request);
-            var isConnected = await _reachabilityService.GetIsReachable();
+            var isConnected = source != DataSource.Cache && 
+                await _reachabilityService.GetIsReachable();
 
-            if (!isConnected || source == DataSource.Cache)
+            if (!isConnected || source != DataSource.Server)
             {
                 result = _cacheService.GetObject<Response>(key);
             }

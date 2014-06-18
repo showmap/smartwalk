@@ -84,7 +84,7 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             var isReachable = await _reachabilityService.GetIsReachable();
             if (isReachable)
             {
-                Refresh(DataSource.Cache);
+                Refresh(DataSource.CacheOrServer);
             }
         }
     }

@@ -151,12 +151,17 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             if (hasData)
             {
-                ListView.View.SetContentOffset(PointF.Empty, true);
+                ScrollViewToTop();
             }
             else
             {
                 ListView.View.Hidden = true;
             }
+        }
+
+        protected virtual void ScrollViewToTop()
+        {
+            ListView.View.SetContentOffset(PointF.Empty, true);
         }
 
         protected virtual void OnLoadingViewStateUpdate()

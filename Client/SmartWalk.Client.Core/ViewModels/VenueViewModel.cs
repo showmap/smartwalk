@@ -236,7 +236,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEventVenues(DataSource.Cache).ContinueWithThrow();
+            UpdateOrgEventVenues(DataSource.CacheOrServer).ContinueWithThrow();
         }
 
         protected override void Refresh(DataSource source)

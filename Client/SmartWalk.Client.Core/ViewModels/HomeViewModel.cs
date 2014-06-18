@@ -103,7 +103,10 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override void Start()
         {
-            UpdateEventInfos(DataSource.Cache).ContinueWithThrow();
+            // quickly loading from cache, and then loading from server in the background
+            UpdateEventInfos(DataSource.Cache)
+                .ContinueWithUIThread(previous => UpdateEventInfos(DataSource.Server, false))
+                .ContinueWithThrow();
 
             base.Start();
         }
@@ -113,9 +116,9 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateEventInfos(source).ContinueWithThrow();
         }
 
-        private async Task UpdateEventInfos(DataSource source)
+        private async Task UpdateEventInfos(DataSource source, bool showProgress = true)
         {
-            IsLoading = true;
+            if (showProgress) IsLoading = true;
 
             var eventInfos = default(OrgEvent[]);
 
@@ -130,10 +133,14 @@ namespace SmartWalk.Client.Core.ViewModels
                 _exceptionPolicy.Trace(ex);
             }
                 
-            IsLoading = false;
+            if (showProgress) IsLoading = false;
 
             EventInfos = eventInfos;
-            RaiseRefreshCompleted(EventInfos != null);
+
+            if (showProgress)
+            {
+                RaiseRefreshCompleted(EventInfos != null);
+            }
         }
 
         private void UpdateLocationString()
