@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using NGM.OpenAuthentication.Extensions;
+﻿using System.Web.Mvc;
 
 namespace SmartWalk.Server.Extensions
 {
@@ -21,7 +16,7 @@ namespace SmartWalk.Server.Extensions
 
         public static string ChangePassword(this UrlHelper urlHelper)
         {
-            return urlHelper.Action("ChangePassword", "Account", new { area = Constants.OrchardUsersArea });
+            return urlHelper.Action("ChangePassword", "Account", new { area = SmartWalkConstants.OrchardUsersArea });
         }
 
         //public static string OpenAuthLogOn(this UrlHelper urlHelper, string returnUrl)
