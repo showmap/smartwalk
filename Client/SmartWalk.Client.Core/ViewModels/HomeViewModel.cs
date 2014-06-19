@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
@@ -72,8 +73,11 @@ namespace SmartWalk.Client.Core.ViewModels
             }
             private set
             {
-                _eventInfos = value;
-                RaisePropertyChanged(() => EventInfos);
+                if (!_eventInfos.EnumerableEquals(value))
+                {
+                    _eventInfos = value;
+                    RaisePropertyChanged(() => EventInfos);
+                }
             }
         }
 

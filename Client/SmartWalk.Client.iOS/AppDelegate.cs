@@ -135,7 +135,7 @@ namespace SmartWalk.Client.iOS
 
             if (NSUserDefaults.StandardUserDefaults[SettingKeys.AnonymousStatsEnabled] != null)
             {
-                GoogleAnalyticsService.IsOptOut = 
+                AnalyticsService.IsOptOut = 
                     !NSUserDefaults.StandardUserDefaults
                         .BoolForKey(SettingKeys.AnonymousStatsEnabled);
             }

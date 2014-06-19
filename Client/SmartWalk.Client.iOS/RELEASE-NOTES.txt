@@ -1,13 +1,14 @@
-SW-160 Refactoring of VenueShow with header. New way of setting the ItemsSource while grouping is off.
-SW-160 SearchBar layout/issues fixed for iOS 6/7
-SW-160 The weird bug that crashed iOS 6 fixed. Just moved base.LayoutSubviews call in the end
-SW-160 Better handling of SearchBar. Bugs fixed.
-SW-160 The layout of SearchBar was fixed.
-SW-160 Small fixes. Up and Down swipe to close fullscreen image now.
-SW-160 The built-in pop gesture is used in iOS 7
-SW-160 Late night shows are set to previous day.
-SW-160 Grouping by day was supported. Now VenueView was integrated with multi-day events.
-SW-160 Day groups for multiday events supported. Very basic implementation for OrgEventView, it needs to be improved in future.
-SW-160 Refactoring. The search and flattering shows logic was moved to ViewModel.
-SW-160 Refactoring. Moving OrgEventInfo into separate folder
-SW-160 The bug on production was fixed. We have to keep GA config xml in the project.
+SW-160 Fix the model to avoid double updates
+SW-160 Cache version is loaded before server 
+SW-160 Time Expiration for SW data cache 
+SW-160 Refactoring. More code moved to the Core.
+SW-160 New version of MvvmCross was integrated.
+SW-160 Clean the whole Caches folder on reset
+SW-160 Description text is now supported for Show
+SW-160 Scroll Top supported in view w/o status bar
+SW-160 Last location is remembered in settings
+SW-160 Hack for hiding navbar if search is active
+SW-160 Fix the bug with navbar btns on pop back
+SW-160 Hide ListSettings on mode change.
+SW-160 The bug with header for expanded show fixe
+SW-138 Grouping by day was added
