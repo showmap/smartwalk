@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{50ED7805-208C-4E35-8360-572E8B4E9CC2}</ProjectGuid>
+    <ProjectGuid>{43787A98-8535-46BA-99B9-12FC621DE40A}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -149,7 +149,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Work\Orchard\src\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
+    <ProjectReference Include="..\..\..\..\Orchard.Source.1.8\src\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{cde24a24-01d3-403c-84b9-37722e18dfb7}</Project>
       <Name>Orchard.Themes</Name>
     </ProjectReference>

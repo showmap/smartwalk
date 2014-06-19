@@ -697,13 +697,13 @@ namespace SmartWalk.Server
             return 5;
         }
 
-        [UsedImplicitly]
-        public int UpdateFrom5() {
-            SchemaBuilder.AlterTable("SmartWalkUserRecord", table => table
-               .AddColumn("TimeZone", DbType.String, c => c.WithLength(255))
-               );
+        //[UsedImplicitly]
+        //public int UpdateFrom5() {
+        //    SchemaBuilder.AlterTable("SmartWalkUserRecord", table => table
+        //       .AddColumn("TimeZone", DbType.String, c => c.WithLength(255))
+        //       );
 
-            return 6;
-        }
+        //    return 6;
+        //}
     }
 }
