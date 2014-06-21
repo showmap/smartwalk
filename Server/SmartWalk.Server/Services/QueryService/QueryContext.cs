@@ -37,6 +37,10 @@ namespace SmartWalk.Server.Services.QueryService
                 Reflection<EventMetadataRecord>.GetProperty(p => p.Id).Name;
             EventMetadataHost =
                 Reflection<EventMetadata>.GetProperty(p => p.Host).Name;
+            EventMetadataIsDeleted =
+                Reflection<EventMetadataRecord>.GetProperty(p => p.IsDeleted).Name;
+            EventMetadataIsPublic =
+                Reflection<EventMetadataRecord>.GetProperty(p => p.IsPublic).Name;
             EventMetadataEntityRecord =
                 Reflection<EventMetadataRecord>.GetProperty(p => p.EntityRecord).Name;
             EventMetadataEntityRecordId = EventMetadataEntityRecord + "_Id";
@@ -58,6 +62,25 @@ namespace SmartWalk.Server.Services.QueryService
                 Reflection<EventMetadataRecord>.GetProperty(p => p.CombineType).Name;
             EventMetadataShows =
                 Reflection<EventMetadata>.GetProperty(p => p.Shows).Name;
+
+            EventMetadataProperties = new[]
+                {
+                    EventMetadataId,
+                    EventMetadataHost,
+                    EventMetadataEntityRecord,
+                    EventMetadataEntityRecordId,
+                    EventMetadataIsDeleted,
+                    EventMetadataIsPublic,
+                    EventMetadataTitle,
+                    EventMetadataDescription,
+                    EventMetadataPicture,
+                    EventMetadataStartTime,
+                    EventMetadataEndTime,
+                    EventMetadataLatitude,
+                    EventMetadataLongitude,
+                    EventMetadataCombineType,
+                    EventMetadataShows
+                };
 
             EntityType =
                 Reflection<Entity>.GetProperty(p => p.Type).Name;
@@ -101,6 +124,8 @@ namespace SmartWalk.Server.Services.QueryService
         public string EventMetadataHost { get; private set; }
         public string EventMetadataEntityRecord { get; private set; }
         public string EventMetadataEntityRecordId { get; private set; }
+        public string EventMetadataIsDeleted { get; private set; }
+        public string EventMetadataIsPublic { get; private set; }
         public string EventMetadataTitle { get; private set; }
         public string EventMetadataDescription { get; private set; }
         public string EventMetadataPicture { get; private set; }
@@ -110,6 +135,7 @@ namespace SmartWalk.Server.Services.QueryService
         public string EventMetadataLongitude { get; private set; }
         public string EventMetadataCombineType { get; private set; }
         public string EventMetadataShows { get; private set; }
+        public string[] EventMetadataProperties { get; private set; }
 
         public string EntityType { get; private set; }
         public string EntityName { get; private set; }

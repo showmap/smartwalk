@@ -14,28 +14,8 @@ using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.QueryService
 {
-    // TODO: To support Where for SQL queries
     public static class QueryFactory
     {
-        private const string Coma = ", ";
-        private const string Dot = ".";
-        private const char DotChar = '.';
-
-        private const string WhereMethod = "Where";
-        private const string OrderByMethod = "OrderBy";
-        private const string OrderByDescendingMethod = "OrderByDescending";
-        private const string ThenByMethod = "ThenBy";
-        private const string ThenByDescendingMethod = "ThenByDescending";
-        private const string ContainsMethod = "Contains";
-
-        private const string Asc = "ASC";
-        private const string Desc = "DESC";
-        private const string OrderBy = " ORDER BY ";
-
-        private const string Rec = "rec";
-        private const string Lat = "lat";
-        private const string Long = "long";
-
         /// <summary>
         /// Generates an expression for a generic query accross table's records with a where filter condition.
         /// </summary>
@@ -49,13 +29,13 @@ namespace SmartWalk.Server.Services.QueryService
             // if there is where condition then build where expression
             if (select.Where != null && select.Where.Length > 0)
             {
-                var recordExpr = Expression.Parameter(typeof(TRecord), Rec);
+                var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
                 var whereExpr = GetWhereExpression(select.Where, recordExpr, results);
                 if (whereExpr != null)
                 {
                     var whereCallExpression = Expression.Call(
                         typeof(Queryable),
-                        WhereMethod,
+                        "Where",
                         new[] { typeof(TRecord) },
                         table.Expression,
                         Expression.Lambda<Func<TRecord, bool>>(whereExpr, new[] { recordExpr }));
@@ -92,7 +72,8 @@ namespace SmartWalk.Server.Services.QueryService
 		                        {5}) {2}Groupped
                         INNER JOIN
 	                        {0}{1} {2} ON {2}Groupped.{3} = {2}.{3}
-                        {7}",
+                        {7}
+                        {8}",
                         QueryContext.Instance.DbPrefix,
                         QueryContext.Instance.EventMetadataTable,
                         QueryContext.Instance.EventMetadataTableAlias,
@@ -100,7 +81,11 @@ namespace SmartWalk.Server.Services.QueryService
                         QueryContext.Instance.EventMetadataStartTime,
                         QueryContext.Instance.EventMetadataEntityRecordId,
                         limit,
-                        SortBy<EventMetadataRecord>(
+                        GetWhereString(
+                            QueryContext.Instance.EventMetadataTableAlias,
+                            select,
+                            results),
+                        GetSortByString<EventMetadataRecord>(
                             QueryContext.Instance.EventMetadataTableAlias, 
                             select,
                             out latLong)))
@@ -109,8 +94,18 @@ namespace SmartWalk.Server.Services.QueryService
             if (latLong != null)
             {
                 result = (ISQLQuery)result
-                    .SetDouble(Lat, latLong[0])
-                    .SetDouble(Long, latLong[1]);
+                    .SetDouble("lat", latLong[0])
+                    .SetDouble("long", latLong[1]);
+            }
+
+            if (select.Where != null)
+            {
+                for (var i = 0; i < select.Where.Length; i++)
+                {
+                    result = 
+                        (ISQLQuery)result
+                            .SetParameter("v" + i, select.Where[i].Value);
+                }
             }
 
             return result;
@@ -128,7 +123,7 @@ namespace SmartWalk.Server.Services.QueryService
             // if there is sort by condition then build sort by expression
             if (select.SortBy != null && select.SortBy.Length > 0)
             {
-                var recordExpr = Expression.Parameter(typeof(TRecord), Rec);
+                var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
                 var expression = queryable.Expression;
 
                 double[] latLong;
@@ -137,7 +132,7 @@ namespace SmartWalk.Server.Services.QueryService
                 {
                     expression = Expression.Call(
                         typeof(Queryable),
-                        OrderByMethod,
+                        "OrderBy",
                         new[] { typeof(EventMetadataRecord), typeof(double) },
                         expression,
                         (Expression<Func<EventMetadataRecord, double>>)(emr => 
@@ -156,11 +151,11 @@ namespace SmartWalk.Server.Services.QueryService
                     var method =
                         expression == queryable.Expression
                             ? (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
-                                    ? OrderByDescendingMethod
-                                    : OrderByMethod)
+                                    ? "OrderByDescending"
+                                    : "OrderBy")
                             : (sortBy.IsDescending.HasValue && sortBy.IsDescending.Value
-                                    ? ThenByDescendingMethod
-                                    : ThenByMethod);
+                                    ? "ThenByDescending"
+                                    : "ThenBy");
                     var methodType = typeof(Func<,>).MakeGenericType(typeof(TRecord), sortByExpr.Type);
 
                     expression = Expression.Call(
@@ -180,7 +175,7 @@ namespace SmartWalk.Server.Services.QueryService
         /// <summary>
         /// Generates a string for a generic query accross table's records with sorting.
         /// </summary>
-        private static string SortBy<TRecord>(
+        private static string GetSortByString<TRecord>(
             string alias,
             RequestSelect select,
             out double[] latLong)
@@ -214,20 +209,20 @@ namespace SmartWalk.Server.Services.QueryService
                     }
 
                     result +=
-                        (result != string.Empty ? Coma : string.Empty) +
+                        (result != string.Empty ? ", " : string.Empty) +
                         string.Format(
                             "{0}.{1} {2}",
                             alias,
                             sortBy.Field,
                             sortBy.IsDescending.HasValue &&
                             sortBy.IsDescending.Value
-                                ? Desc
-                                : Asc);
+                                ? "DESC"
+                                : "ASC");
                 }
             }
 
             return result != string.Empty
-                ? OrderBy + result
+                ? " ORDER BY " + result
                 : string.Empty;
         }
 
@@ -303,6 +298,56 @@ namespace SmartWalk.Server.Services.QueryService
             return result;
         }
 
+        // TODO: To support the rest of where's value cases
+        /// <summary>
+        /// Generates a string for a generic query accross table's records with where expression.
+        /// </summary>
+        private static string GetWhereString(
+            string alias, 
+            RequestSelect select,
+            IDictionary<string, object[]> results)
+        {
+            var result = string.Empty;
+
+            if (select.Where != null && select.Where.Length > 0)
+            {
+                for (var i = 0; i < select.Where.Length; i++)
+                {
+                    var where = select.Where[i];
+                    if (QueryContext.Instance.EventMetadataProperties
+                            .Contains(where.Field, StringComparer.OrdinalIgnoreCase))
+                    {
+                        if (RequestSelectWhereOperators.All
+                                .Contains(where.Operator, StringComparer.OrdinalIgnoreCase))
+                        {
+                            result +=
+                                (result != string.Empty ? " AND " : string.Empty) +
+                                string.Format(
+                                    "({0}.{1}{2}:v{3})",
+                                    alias,
+                                    where.Field,
+                                    where.Operator,
+                                    i);
+                        }
+                        else
+                        {
+                            throw new InvalidExpressionException(
+                                string.Format("Operator '{0}' is not supported.", where.Operator));
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidExpressionException(
+                            string.Format("Can't find field '{0}'.", where.Field));
+                    }
+                }
+            }
+
+            return result != string.Empty
+                ? " WHERE " + result
+                : string.Empty;
+        }
+
         private static Expression GetWhereValueExpression(Expression fieldExpr, object value)
         {
             var valueExpr = Expression.Convert(Expression.Constant(value), fieldExpr.Type);
@@ -315,7 +360,7 @@ namespace SmartWalk.Server.Services.QueryService
             var valuesExpr = Expression.Constant(values.ToArray());
             var result = Expression.Call(
                 typeof(Enumerable),
-                ContainsMethod,
+                "Contains",
                 new[] { typeof(object) },
                 valuesExpr,
                 Expression.Convert(fieldExpr, typeof(object)));
@@ -454,9 +499,9 @@ namespace SmartWalk.Server.Services.QueryService
 
             string[] result;
 
-            if (fieldsPath.Contains(Dot))
+            if (fieldsPath.Contains("."))
             {
-                var properties = fieldsPath.Split(DotChar);
+                var properties = fieldsPath.Split('.');
                 result =
                     targetRecordType != null
                         ? properties

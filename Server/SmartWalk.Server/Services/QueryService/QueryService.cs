@@ -107,7 +107,11 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.EventMetadata))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_eventMetadataRepository.Table, select, results);
-                var records = queryable.SortBy(select).Take(DefaultEventsLimit).ToArray();
+                var records = queryable
+                    .Where(r => !r.IsDeleted && r.IsPublic)
+                    .SortBy(select)
+                    .Take(DefaultEventsLimit)
+                    .ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
@@ -118,7 +122,11 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.GroupedEventMetadata))
             {
                 var session = _sessionLocator.For(typeof(EventMetadataRecord));
-                var sqlQuery = QueryFactory.CreateGroupedEventsQuery(session, DefaultEventsLimit, select, results);
+                var sqlQuery = QueryFactory.CreateGroupedEventsQuery(
+                    session, 
+                    DefaultEventsLimit,
+                    select.AppendDefaultWhere(),
+                    results);
                 var records = sqlQuery.List<EventMetadataRecord>();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
@@ -129,7 +137,11 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Entity))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_entityRepository.Table, select, results);
-                var records = queryable.SortBy(select).Take(DefaultEntitiesLimit).ToArray();
+                var records = queryable
+                    .Where(r => !r.IsDeleted)
+                    .SortBy(select)
+                    .Take(DefaultEntitiesLimit)
+                    .ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
                     .ToArray();
@@ -139,7 +151,11 @@ namespace SmartWalk.Server.Services.QueryService
             if (select.From.EqualsIgnoreCase(RequestSelectFromTables.Show))
             {
                 var queryable = QueryFactory.CreateGenericQuery(_showRepository.Table, select, results);
-                var records = queryable.SortBy(select).Take(DefaultShowsLimit).ToArray();
+                var records = queryable
+                    .Where(r => !r.IsDeleted)
+                    .SortBy(select)
+                    .Take(DefaultShowsLimit)
+                    .ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
