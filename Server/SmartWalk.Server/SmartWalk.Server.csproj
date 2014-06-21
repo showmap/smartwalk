@@ -162,6 +162,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Models\SmartWalkUserParams.cs" />
+    <Compile Include="Services\QueryService\RequestSelectExtensions.cs" />
     <Compile Include="Services\SmartWalkUserService\ISmartWalkUserService.cs" />
     <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
