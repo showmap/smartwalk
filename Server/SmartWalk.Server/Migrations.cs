@@ -13,7 +13,6 @@ using Orchard.Core.Settings.Models;
 using Orchard.Users.Models;
 using System.Linq;
 
-
 namespace SmartWalk.Server
 {
     [UsedImplicitly]

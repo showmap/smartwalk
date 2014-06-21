@@ -1,12 +1,12 @@
 ﻿@using SmartWalk.Server.ViewModels
+@model EntityVm
 @{
     Style.Require("SmartWalk");
 
     Script.Require("jQueryUI").AtHead();
     Script.Require("SmartWalk.ViewModels.Entity.Extended").AtHead();
     
-    var venue = (EntityVm)Model;
-    var actionCaption = venue.Id == 0 ? T("Add <span class=\"hidden-xs\">Venue</span>") : T("Save <span class=\"hidden-xs\">Venue</span>");
+    var actionCaption = Model.Id == 0 ? T("Add <span class=\"hidden-xs\">Venue</span>") : T("Save <span class=\"hidden-xs\">Venue</span>");
 }
 <div id="edit-venue-form" 
      save-venue-url="@Url.Action("SaveOrAdd", "Venue", new {area = "SmartWalk.Server"})" 
@@ -40,9 +40,9 @@
 
         <div class="row double-gap">
             <div class="col-xs-4">
-        @if (venue.Id != 0) {
+        @if (Model.Id != 0) {
             using(Html.BeginForm("Delete", "Venue", FormMethod.Get)) {
-                <input type="hidden" name="entityId" value="@venue.Id" />
+                <input type="hidden" name="entityId" value="@Model.Id" />
                 <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you shure you wish to delete this venue?")')">@T("Delete") <span class="hidden-xs">@T("Venue")</span></button>
             }
         }
@@ -62,7 +62,7 @@
     $(function() {
         var formName = "#edit-venue-form";
         var form = $(formName);
-        var data = @Html.Raw(Json.Encode(venue));
+        var data = @Html.Raw(Json.Encode(Model));
         
         var settings = settings || [];
         settings = $.extend(settings, {

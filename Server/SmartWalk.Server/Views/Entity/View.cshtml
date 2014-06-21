@@ -1,9 +1,9 @@
 ﻿@using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
+@model ViewParametersVm
 @{
-    var model = (ViewParametersVm)Model;
-    var item = (EntityVm)model.Data; 
+    var item = (EntityVm)Model.Data; 
 }
 
 @if (item.AllAddresses.Any()) {

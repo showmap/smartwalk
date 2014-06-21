@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server.ViewModels
+@model ViewParametersVm
 @{
     Style.Require("SmartWalk");
     Style.Require("TextCollapse");
@@ -8,15 +9,14 @@
     Script.Require("ImageScale").AtFoot();
     Script.Require("TextCollapse").AtFoot();
     
-    var model = (ViewParametersVm)Model;
-    var host = (EntityVm)model.Data; 
+    var host = (EntityVm)Model.Data; 
 }
 <div id="view-host-form" get-host-events="@Url.Action("GetEvents", "Host", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
 	<div class="bg-image-container page-header-image">
 		<div class="header big">
 		    <h2>
-		    @if (!model.IsReadOnly) {
+		    @if (!Model.IsReadOnly) {
 		        <button type="button" class="btn" id="btn-edit-venue">@T("Edit Organizer")</button>
 		    }
 		        @host.DisplayName
@@ -27,7 +27,7 @@
 		</div>
 	</div>
         
-@Html.Partial("../Entity/View", model)
+@Html.Partial("../Entity/View", Model)
            
 </div>
 

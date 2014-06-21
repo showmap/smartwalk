@@ -17,15 +17,15 @@
     var cancelAction = eventItem.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @eventItem.Id });
 }
 <style type="text/css">
- .categoryIconContainer {
-	border-radius: 3px 3px 3px 3px;
-    float: left;
-    height: 32px;
-    margin-right: 5px;
-    overflow: hidden;
-    width: 32px;
-    vertical-align: middle;
-}
+     .categoryIconContainer {
+	    border-radius: 3px 3px 3px 3px;
+        float: left;
+        height: 32px;
+        margin-right: 5px;
+        overflow: hidden;
+        width: 32px;
+        vertical-align: middle;
+    }
 </style>
 
 <div id="event-item" 
@@ -39,8 +39,7 @@
     delete-event-shows-url="@Url.Action("DeleteEventShows", "Event")"
     save-venue-url="@Url.Action("SaveEventVenue", "Event")"
     host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
-    venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")"
-    >
+    venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")">
         @Html.AntiForgeryTokenOrchard()    
         <div class="row">
 			<div class="col-xs-8" data-bind="validationElement: Title">

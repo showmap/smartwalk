@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server.ViewModels
+@model ListViewVm
 @{
     Style.Require("SmartWalk");
 
@@ -6,13 +7,11 @@
     Script.Require("SmartWalk.ViewModels.Entity").AtFoot();
     Script.Require("ImageScale").AtFoot();
 
-    var model = (ListViewVm)Model;
-    var parameters = model.Parameters;
-    var items = (IList<EntityVm>)model.Data;
+    var items = (IList<EntityVm>)Model.Data;
 }
 <div id="entity-items" get-venues-url="@Url.Action("GetVenues", "Venue", new {area = "SmartWalk.Server"})">
         @Html.AntiForgeryTokenOrchard()  
-        @Html.HiddenFor(m => model.Parameters.Sort)  
+        @Html.HiddenFor(m => Model.Parameters.Sort)  
         <div class="row">
             <div class="col-xs-8">
                 <div class="input-group">
@@ -22,7 +21,7 @@
                     </span>
                 </div>
             </div>
-        @if (parameters.IsLoggedIn) {
+        @if (Model.Parameters.IsLoggedIn) {
             <div class="col-xs-4">
                 <form action="/venues/create">
                     <button type="submit" class="btn btn-primary">@T("Create") <span class="hidden-xs">@T("Venue")</span></button>
@@ -31,16 +30,16 @@
         }
         </div>
         
-    @if (parameters.IsLoggedIn) {
+    @if (Model.Parameters.IsLoggedIn) {
         <div class="gap">
             <small>
                 @{
-                     var linkClass = parameters.Display == DisplayType.All ? "selected" : "default";
+                     var linkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
                 }
                 <a class="@linkClass" href="/venues">@T("All Venues")</a>
                 &nbsp;|&nbsp;
                 @{
-                    linkClass = parameters.Display == DisplayType.My ? "selected" : "default";
+                    linkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
                 }
                 <a class="@linkClass" href="/venues/my">@T("My Venues")</a>
             </small>
@@ -101,7 +100,7 @@
     };
 
     $(document).ready(function() {
-        var viewModel = new VenuesViewModel(@Html.Raw(Json.Encode(parameters)), $("#entity-items").attr("get-venues-url"));
+        var viewModel = new VenuesViewModel(@Html.Raw(Json.Encode(Model.Parameters)), $("#entity-items").attr("get-venues-url"));
         ko.applyBindings(viewModel, document.getElementById('entity-items'));
         $("#btnSearch").click(function () { viewModel.search.call(viewModel); });
     });

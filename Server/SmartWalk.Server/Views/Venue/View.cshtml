@@ -1,6 +1,6 @@
-﻿@using SmartWalk.Server.Records
-@using SmartWalk.Server.ViewModels
+﻿@using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
+@model ViewParametersVm
 @{
     Style.Require("SmartWalk");
     Style.Require("TextCollapse");
@@ -10,15 +10,14 @@
     Script.Require("ImageScale").AtFoot();
     Script.Require("TextCollapse").AtFoot();
 
-    var model = (ViewParametersVm) Model;
-    var venue = (EntityVm)model.Data;
+    var venue = (EntityVm)Model.Data;
 }
 <div id="view-venue-form" title="@T("Add Host")" get-venue-events="@Url.Action("GetEvents", "Venue", new {area = "SmartWalk.Server"})">
     @Html.AntiForgeryTokenOrchard()
     <div class="bg-image-container page-header-image">
         <div class="header">
             <h2>
-                @if (!model.IsReadOnly) {
+                @if (!Model.IsReadOnly) {
                     <button type="button" class="btn" id="btn-edit-venue">@T("Edit Venue")</button>
                 }
                 @venue.DisplayName
@@ -35,7 +34,7 @@
         </div>	
     </div>
 
-@Html.Partial("../Entity/View", model)
+@Html.Partial("../Entity/View", Model)
 </div>
 
 <script type="text/html" id="eventItemTemplate">
