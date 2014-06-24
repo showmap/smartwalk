@@ -28,11 +28,8 @@
     this.errors = ko.validation.group(this);
 };
 
-EntityViewModelExtended.VENUE_CANCEL_EVENT = "OnVenueCancelled";
-EntityViewModelExtended.VENUE_SAVE_EVENT = "OnVenueSaved";
-
-EntityViewModelExtended.HOST_CANCEL_EVENT = "OnHostCancelled";
-EntityViewModelExtended.HOST_SAVE_EVENT = "OnHostSaved";
+EntityViewModelExtended.ENTITY_CANCEL_EVENT = "OnEntityCancelled";
+EntityViewModelExtended.ENTITY_SAVE_EVENT = "OnEntitySaved";
 
 inherits(EntityViewModelExtended, EntityViewModel);
 

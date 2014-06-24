@@ -1,54 +1,171 @@
-﻿@using SmartWalk.Server.Records
+﻿@using SmartWalk.Server.ViewModels
+@using SmartWalk.Server.Records
+@model EntityVm
+@{
+    Style.Require("SmartWalk");
 
-<div class="row">
-	<div class="col-sm-8">
-		<div class="form-group" data-bind="validationElement: Picture">
-			<label for="pictureTextInput">@T("Picture"):</label>
-			<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture" />
-		</div>
-	</div>
-</div>
-        
-<div class="row">
-	<div class="col-sm-8">
-		<div class="form-group">
-			<label for="descriptionTextArea">@T("Description"):</label>
-			<textarea class="form-control" id="descriptionTextArea" data-bind="value: Description"></textarea>
-		</div>
-	</div>
-</div>
-        
-<div class="map-container"><iframe data-bind="attr: { src: GetMapLink() }, visible: IsMapVisible"></iframe></div>
+    Script.Require("jQueryUI").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Entity.Extended").AtFoot();
 
-<div class="row" data-bind="visible: Type() == @Convert.ToInt32(EntityType.Venue)">
-	<div class="col-sm-8">
-		<table class="table table-hover addresses-table" data-bind="visible: Addresses().length > 0">
-			<thead>
-				<tr>
-					<th><h4>@T("Addresses")</h4></th>
-					<th class="td-align"></th>
-				</tr>
-			</thead>
-			<tbody data-bind="template: { name: getAddressView, foreach: Addresses() }"></tbody>
-		</table>
-				
-		<button type="button" class="btn btn-default" data-bind="click: addAddress">@T("Add Address")</button>
-	</div>
-</div>
+    var formId = ViewData["EntityFormId"];
+    var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";
+    var controllerName = Model.Type == (int)EntityType.Host ? "Host" : "Venue";
+
+    var actionCaption = Model.Id == 0 
+        ? T("Add <span class=\"hidden-xs\">" + entityTypeName + "</span>") 
+        : T("Save <span class=\"hidden-xs\">" + entityTypeName + "</span>");
+}
+
+<div id="@formId"  
+     save-entity-url="@Url.Action("SaveOrAdd", controllerName, new {area = "SmartWalk.Server"})" 
+     get-address-url="@Url.Action("GetAddress", "Event", new {area = "SmartWalk.Server"})"
+     save-address-url="@Url.Action("SaveAddress", "Event", new {area = "SmartWalk.Server"})"
+     delete-addresses-url="@Url.Action("DeleteAddresses", "Event", new {area = "SmartWalk.Server"})"
+     get-contact-url="@Url.Action("GetContact", "Event", new {area = "SmartWalk.Server"})"
+     save-contact-url="@Url.Action("SaveContact", "Event", new {area = "SmartWalk.Server"})"
+     delete-contacts-url="@Url.Action("DeleteContacts", "Event", new {area = "SmartWalk.Server"})"
+     validate-entity-url="@Url.Action("ValidateModel", controllerName, new {area = "SmartWalk.Server"})"
+     validate-address-url="@Url.Action("ValidateAddress", "Event", new {area = "SmartWalk.Server"})"
+     validate-contact-url="@Url.Action("ValidateContact", "Event", new {area = "SmartWalk.Server"})">
+        @Html.AntiForgeryTokenOrchard()
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="form-group" data-bind="validationElement: Name">
+                    <label class="titleLabel" for="entityNameTextInput">@T(entityTypeName + " Name"):</label>
+                    <input id="entityNameTextInput" class="form-control" type="text" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: Name" />
+                </div>
+            </div>
+            <div class="col-xs-4 text-right">
+                <button type="button" class="btn btn-success btn-top" data-bind="click: saveOrAdd">@actionCaption</button>
+            </div>
+        </div>
         
-<div class="row gap">
-    <div class="col-sm-8">
-        <table class="table table-hover" data-bind="visible: Contacts().length > 0">
-            <thead>
-                <tr>
-                    <th>@T("Contact Type")</th>
-                    <th><h4>@T("E-mail, Phone or Web-Site")</h4></th>
-                    <th class="td-align"></th>
-                </tr>
-            </thead>
-            <tbody data-bind="template: { name: getContactView, foreach: Contacts() }"></tbody>
-        </table>
+        <div class="row">
+	        <div class="col-sm-8">
+		        <div class="form-group" data-bind="validationElement: Picture">
+			        <label for="pictureTextInput">@T("Picture"):</label>
+			        <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture" />
+		        </div>
+	        </div>
+        </div>
+        
+        <div class="row">
+	        <div class="col-sm-8">
+		        <div class="form-group">
+			        <label for="descriptionTextArea">@T("Description"):</label>
+			        <textarea class="form-control" id="descriptionTextArea" data-bind="value: Description"></textarea>
+		        </div>
+	        </div>
+        </div>
+        
+        <div class="map-container"><iframe data-bind="attr: { src: GetMapLink() }, visible: IsMapVisible"></iframe></div>
+
+        <div class="row" data-bind="visible: Type() == @Convert.ToInt32(EntityType.Venue)">
+	        <div class="col-sm-8">
+		        <table class="table table-hover addresses-table" data-bind="visible: Addresses().length > 0">
+			        <thead>
+				        <tr>
+					        <th><h4>@T("Addresses")</h4></th>
+					        <th class="td-align"></th>
+				        </tr>
+			        </thead>
+			        <tbody data-bind="template: { name: getAddressView, foreach: Addresses() }"></tbody>
+		        </table>
 				
-        <button type="button" class="btn btn-default" data-bind="click: addContact">@T("Add Contact")</button>
-    </div>
-</div>
+		        <button type="button" class="btn btn-default" data-bind="click: addAddress">@T("Add Address")</button>
+	        </div>
+        </div>
+        
+        <div class="row gap">
+            <div class="col-sm-8">
+                <table class="table table-hover" data-bind="visible: Contacts().length > 0">
+                    <thead>
+                        <tr>
+                            <th>@T("Contact Type")</th>
+                            <th><h4>@T("E-mail, Phone or Web-Site")</h4></th>
+                            <th class="td-align"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="template: { name: getContactView, foreach: Contacts() }"></tbody>
+                </table>
+				
+                <button type="button" class="btn btn-default" data-bind="click: addContact">@T("Add Contact")</button>
+            </div>
+        </div>
+
+        <div class="row double-gap">
+            <div class="col-xs-4">
+        @if (Model.Id != 0) {
+            using(Html.BeginForm("Delete", controllerName, FormMethod.Get)) {
+                <input type="hidden" name="entityId" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you sure you want to delete this " + entityTypeName.ToLower() + "?")')">@T("Delete <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
+            } 
+        }
+            </div>
+            
+            <div class="col-xs-8 text-right">                
+                <button type="submit" class="btn btn-default" data-bind="click: cancel">@T("Cancel")</button>
+                <button type="button" class="btn btn-success" data-bind="click: saveOrAdd">@actionCaption</button>
+            </div>
+        </div>   
+    </div> 
+
+@using (Script.Foot())
+{
+    @Html.Partial("../Entity/Templates")
+
+<script>
+    $(function() {
+        var formName = "#@formId";
+        var form = $(formName);
+
+        var data = @Html.Raw(Json.Encode(Model));
+
+        var settings = settings || [];
+        settings = $.extend(settings, {
+            pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
+            picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
+
+            addressMessages: {
+                addressLengthValidationMessage: '@T("Address can not be longer than 255 characters.")',
+                addressRequiredValidationMessage: '@T("Address can not be empty!")',
+                addressTipValidationMessage: '@T("Address tip can not be longer than 255 characters.")',
+            },
+
+            contactMessages: {
+                contactLengthValidationMessage: '@T("Contact can not be longer than 255 characters.")',
+                contactRequiredValidationMessage: '@T("Contact can not be empty!")',
+                contactTitleValidationMessage: '@T("Contact title can not be longer than 255 characters.")',
+                contactWebValidationMessage: '@T("Contact does not match url pattern.")',
+                contactEmailValidationMessage: '@T("Contact does not match email pattern.")',
+                contactPhoneValidationMessage: '@T("Contact does not match phone pattern.")',
+            },
+
+            entityFormName: formName,
+            entityCancelEvent: EntityViewModelExtended.ENTITY_CANCEL_EVENT,
+            entitySaveEvent: EntityViewModelExtended.ENTITY_SAVE_EVENT,
+
+            validationUrl: form.attr("validate-entity-url"),
+            entitySaveUrl: form.attr("save-entity-url"),
+
+            addressGetUrl: form.attr("get-address-url"),
+            addressSaveUrl: form.attr("save-address-url"),
+            addressDeleteUrl: form.attr("delete-addresses-url"),
+            addressValidationUrl: form.attr("validate-address-url"),
+            addressView: "ViewAddressTemplate",
+            addressEditView: "EditAddressTemplate",
+
+            contactGetUrl: form.attr("get-contact-url"),
+            contactSaveUrl: form.attr("save-contact-url"),
+            contactDeleteUrl: form.attr("delete-contacts-url"),
+            contactValidationUrl: form.attr("validate-contact-url"),
+            contactView: "ViewContactTemplate",
+            contactEditView: "EditContactTemplate",
+            contactTypes: ["@T("E-mail")", "@T("Web")", "@T("Phone")"],
+        });
+
+        var vmHost = new EntityViewModelExtended(settings, data);
+        ko.applyBindings(vmHost, document.getElementById("@formId"));
+    });
+</script>
+}

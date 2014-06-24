@@ -2,8 +2,11 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
+using SmartWalk.Shared;
 
 namespace SmartWalk.Server {
+
+    [UsedImplicitly]
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
             foreach (var routeDescriptor in GetRoutes()) {

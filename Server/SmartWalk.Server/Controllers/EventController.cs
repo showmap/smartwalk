@@ -4,6 +4,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Themes;
+using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Services.EntityService;

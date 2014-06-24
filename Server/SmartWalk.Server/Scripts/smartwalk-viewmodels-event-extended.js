@@ -109,11 +109,11 @@ EventViewModelExtended.prototype.setupDialogs = function () {
 EventViewModelExtended.prototype.attachEvents = function () {
     var self = this;
 
-    $(self.settings.hostFormName).bind(EntityViewModelExtended.HOST_CANCEL_EVENT, function (event) {
+    $(self.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function (event) {
         $(self.settings.hostFormName).dialog("close");
     });
 
-    $(self.settings.hostFormName).bind(EntityViewModelExtended.HOST_SAVE_EVENT, function (event) {
+    $(self.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
         var newHost = new EntityViewModel(event.item.toJSON());
         self.AllHosts.push(newHost);
         self.Host(newHost);
@@ -121,11 +121,11 @@ EventViewModelExtended.prototype.attachEvents = function () {
         $(self.settings.hostFormName).dialog("close");
     });
 
-    $(self.settings.venueFormName).bind(EntityViewModelExtended.VENUE_CANCEL_EVENT, function (event) {
+    $(self.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function (event) {
         $(self.settings.venueFormName).dialog("close");
     });
 
-    $(self.settings.venueFormName).bind(EntityViewModelExtended.VENUE_SAVE_EVENT, function (event) {
+    $(self.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
         var newVenue = new EntityViewModel(event.item.toJSON());
         self.OtherVenues.push(newVenue);
         self.selectedVenue(newVenue);

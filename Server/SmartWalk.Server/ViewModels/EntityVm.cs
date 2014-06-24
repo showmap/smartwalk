@@ -7,7 +7,6 @@ namespace SmartWalk.Server.ViewModels
         public int Id { get; set; }
         public int EventMetadataId { get; set; }
         public VmItemState State { get; set; }
-        //public int UserId { get; set; }
         public int Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

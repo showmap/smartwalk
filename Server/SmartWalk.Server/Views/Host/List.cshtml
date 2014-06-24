@@ -9,7 +9,7 @@
 
     var items = (IList<EntityVm>)Model.Data;
 }
-<div id="entity-items" get-hosts-url="@Url.Action("GetHosts", "Host", new {area = "SmartWalk.Server"})">
+<div id="entity-items" get-hosts-url="@Url.Action("GetEntities", "Host", new {area = "SmartWalk.Server"})">
         @Html.AntiForgeryTokenOrchard()    
         <div class="row">
             <div class="col-xs-8">

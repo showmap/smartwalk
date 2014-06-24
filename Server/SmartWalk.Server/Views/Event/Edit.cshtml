@@ -1,20 +1,24 @@
 ﻿@using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Records
+@model EventMetadataVm
 
 @Display(New.DatePickerLocalization())
 @Display(New.TimePickerLocalization())
 
 @{
     Style.Require("SmartWalk");
-
     Style.Require("jQueryUI_Orchard");
 
     Script.Require("jQueryUI").AtFoot();
     Script.Require("SmartWalk.ViewModels.Event.Extended").AtFoot();
     Script.Require("ImageScale").AtFoot();
 
-    var eventItem = (EventMetadataVm)Model;
-    var cancelAction = eventItem.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @eventItem.Id });
+    const string hostFormId = "edit-host-form";
+    const string venueFormId = "edit-venue-form";
+
+    var cancelAction = Model.Id == 0 
+        ? Url.Action("List") 
+        : Url.Action("View", new { entityId = @Model.Id });
 }
 <style type="text/css">
      .categoryIconContainer {
@@ -129,9 +133,9 @@
 		
         <div class="row double-gap">
             <div class="col-xs-4">
-                @if (eventItem.Id != 0) {
+                @if (Model.Id != 0) {
                     using(Html.BeginForm("DeleteEvent", "Event", FormMethod.Get)) {
-                        <input type="hidden" name="eventId" value="@eventItem.Id" />
+                        <input type="hidden" name="eventId" value="@Model.Id" />
                         <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you shure you wish to delete this event?")')" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
                     }
                 }                
@@ -145,27 +149,42 @@
         </div>
     </div>
 
-@Html.Partial("../Host/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, State = VmItemState.Normal, Type = (int)EntityType.Host})
-@Html.Partial("../Venue/EditTemplate", new EntityVm{Id = 0, EventMetadataId = eventItem.Id, State = VmItemState.Normal, Type = (int)EntityType.Venue})
+@Html.Partial(
+    "../Entity/EditTemplate", 
+    new EntityVm
+        {
+            Id = 0, 
+            EventMetadataId = Model.Id, 
+            State = VmItemState.Normal, 
+            Type = (int)EntityType.Host
+        },
+    new ViewDataDictionary {{"EntityFormId", hostFormId }})
 
-@Html.Partial("Templates")
+@Html.Partial(
+    "../Entity/EditTemplate", 
+    new EntityVm
+        {
+            Id = 0, 
+            EventMetadataId = Model.Id, 
+            State = VmItemState.Normal, 
+            Type = (int)EntityType.Venue
+        },
+    new ViewDataDictionary {{"EntityFormId", venueFormId }})
 
 @using (Script.Foot())
 {
+    @Html.Partial("Templates")
+
 <script type="text/javascript">
     $(function() {
         $("img.scale").imageScale();
     });
 
     (function($) {
-        
         $(document).ready(function() {
             
             var form = $("#event-item");
-            var hostFormName = "#edit-host-form";
-            var venueFormName = "#edit-venue-form";
-            
-            var data = @Html.Raw(Json.Encode(eventItem));
+            var data = @Html.Raw(Json.Encode(Model));
             
             var settings = {
                 startTimeRequiredValidationMessage: '@T("Start time is required!")',
@@ -194,8 +213,8 @@
                     endTimeValidationMessage: '@T("Show end time has bo be bigger than start time!")',
                 },
 
-                hostFormName: hostFormName,
-                venueFormName: venueFormName,
+                hostFormName: "#@hostFormId",
+                venueFormName: "#@venueFormId",
                 
                 eventSaveUrl: form.attr("save-event-url"),
     
@@ -220,7 +239,7 @@
             };
 
             var vm = new EventViewModelExtended(settings, data);
-            ko.applyBindings(vm, document.getElementById('event-item'));
+            ko.applyBindings(vm, document.getElementById("event-item"));
         });
     })(jQuery);
 </script>

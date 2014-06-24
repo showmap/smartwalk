@@ -1,11 +1,19 @@
 ﻿using System.Text;
 using System.Web.Mvc;
+using Orchard.Localization;
 using SmartWalk.Server.Extensions;
 
-namespace SmartWalk.Server.Controllers
+namespace SmartWalk.Server.Controllers.Base
 {
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
+        protected BaseController()
+        {
+            T = NullLocalizer.Instance;
+        }
+
+        protected Localizer T { get; private set; }
+
         protected override JsonResult Json(
             object data, 
             string contentType, 

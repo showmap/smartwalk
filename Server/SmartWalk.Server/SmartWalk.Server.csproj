@@ -140,7 +140,8 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\Base\BaseController.cs" />
+    <Compile Include="Controllers\Base\EntityBaseController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HostController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
@@ -247,9 +248,6 @@
     <Content Include="Views\Venue\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Host\EditTemplate.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Images\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -333,13 +331,7 @@
     <Content Include="Views\Host\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Venue\EditTemplate.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\image-scale.jquery.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Entity\EditTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Entity\View.cshtml" />
@@ -350,7 +342,9 @@
   <ItemGroup>
     <Content Include="Views\OpenAuthRegister.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Entity\EditTemplate.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\EditProfile.cshtml" />
   </ItemGroup>

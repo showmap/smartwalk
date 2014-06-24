@@ -1,21 +1,24 @@
 ﻿@using SmartWalk.Server.ViewModels
 @model EntityVm
 @{
-    Style.Require("SmartWalk");
-
-    Script.Require("jQueryUI").AtHead();
-    
-    var cancelAction = Model.Id == 0 ? Url.Action("List") : Url.Action("View", new { entityId = @Model.Id });    
+    const string formId = "edit-host-form";
+    var cancelAction = Model.Id == 0 
+        ? Url.Action("List") 
+        : Url.Action("View", new { entityId = @Model.Id });    
 }
-@Html.Partial("EditTemplate", Model)
+@Html.Partial("../Entity/EditTemplate", Model, new ViewDataDictionary {{"EntityFormId", formId }})
+
+@using (Script.Foot())
+{
 <script>
-    $(function () {
-        $("#edit-host-form").bind('OnHostCancelled', function (event) {
+    $(function() {
+        $("#@formId").bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function(event) {
             window.location.href = "@cancelAction";
         });
-        
-        $("#edit-host-form").bind('OnHostSaved', function (event) {
-            window.location.href = window.location.href = "/organizer/" + event.item.Id();
+
+        $("#@formId").bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function(event) {
+            window.location.href = "/organizer/" + event.item.Id();
         });
     });
 </script>
+}

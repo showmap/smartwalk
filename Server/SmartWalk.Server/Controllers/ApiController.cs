@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Services.QueryService;
 using SmartWalk.Shared.DataContracts.Api;
 
