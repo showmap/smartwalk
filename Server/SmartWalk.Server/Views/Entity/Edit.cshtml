@@ -1,0 +1,27 @@
+﻿@using SmartWalk.Server.ViewModels
+@model EntityVm
+@{
+    var formId = ViewData["EntityFormId"] ?? "edit-entity-form";
+    var cancelAction = Model.Id == 0 
+        ? Url.Action("List") 
+        : Url.Action("View", new { entityId = @Model.Id });    
+}
+
+@Html.Partial("../Entity/EditTemplate", Model, new ViewDataDictionary {{"EntityFormId", formId }})
+
+@using (Script.Foot())
+{
+<script>
+    $(function() {
+        var form = $("#@formId");
+
+        form.bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function() {
+            window.location.href = "@cancelAction";
+        });
+
+        form.bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function(event) {
+            window.location.href = "@Url.Action("View", new { entityId = ""})/" + event.item.Id();
+        });
+    });
+</script>
+}

@@ -348,4 +348,10 @@
   <ItemGroup>
     <Content Include="Views\Account\EditProfile.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Entity\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Entity\List.cshtml" />
+  </ItemGroup>
 </Project>

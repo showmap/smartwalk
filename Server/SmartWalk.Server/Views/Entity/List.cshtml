@@ -1,0 +1,112 @@
+﻿@using SmartWalk.Server.Records
+@using SmartWalk.Server.ViewModels
+@model ListViewVm
+@{
+    Style.Require("SmartWalk");
+
+    Script.Require("jQueryUI").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Entity").AtFoot();
+    Script.Require("ImageScale").AtFoot();
+
+    var entities = (IList<EntityVm>)Model.Data;
+    var entityTypeName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizer" : "Venue";
+    var entityTypesName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizers" : "Venues";
+}
+<div id="entity-items" get-entities-url="@Url.Action("GetEntities")">
+        @Html.AntiForgeryTokenOrchard()
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: query">
+                    <span class="input-group-btn">
+                        <button id="btnSearch" class="btn btn-default" type="button">@T("Search")</button>
+                    </span>
+                </div>
+            </div>
+        @if (Model.Parameters.IsLoggedIn) {
+            <div class="col-xs-4">
+                <form action="@Url.Action("Create")">
+                    <button type="submit" class="btn btn-primary">@T("Create <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
+                </form>                
+            </div>
+        }
+        </div>
+        
+    @if (Model.Parameters.IsLoggedIn) {
+        <div class="gap">
+            <small>
+                @{
+                     var allLinkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
+                }
+                <a class="@allLinkClass" href="@Url.Action("List")">@T("All " + entityTypesName)</a>
+                &nbsp;|&nbsp;
+                @{
+                    var myLinkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
+                }
+                <a class="@myLinkClass" href="@Url.Action("List")/my">@T("My " + entityTypesName)</a>
+            </small>
+        </div>
+    }
+
+        <div class="floating-container small-gap">
+        @foreach (var entityVm in entities) {
+            <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {entityId = entityVm.Id})">
+                <div class="header">
+                    <h3>@entityVm.DisplayName</h3>
+			
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@entityVm.Picture">
+                </div>
+				
+                <!-- TODO: to render address
+                <div class="info">
+                    <h4></h4>
+                </div> -->
+            </a>
+        }
+            <!-- ko template: {name: "EntityItemTemplate", foreach: Items() } -->    
+            <!-- /ko -->
+            <div class="clearfix"></div>
+        </div>                   
+    </div>
+
+@using (Script.Foot())
+{
+<script type="text/html" id="EntityItemTemplate">
+    <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '@Url.Action("View", new { entityId = ""})/' + Id()}">
+        <div class="header">
+            <h3 data-bind="text: Name"></h3>
+			
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture}">
+        </div>
+				
+        <!-- TODO: to render address
+        <div class="info">
+            <h4></h4>
+        </div>-->
+    </a>
+</script>
+
+<script type="text/javascript">
+    EntitiesViewModel = function(data, url) {
+        EntitiesViewModel.superClass_.constructor.call(this, data, url);
+    };
+
+    inherits(EntitiesViewModel, ListViewModel);
+
+    EntitiesViewModel.prototype.addItem = function(data) {
+        this.Items.push(new EntityViewModelBase(data));
+        $("img.scale").imageScale(); // TODO: Move to KO's onTemplateLoaded
+    };
+
+    $(function() {
+        var viewModel = new EntitiesViewModel(
+            @Html.Raw(Json.Encode(Model.Parameters)), 
+            $("#entity-items").attr("get-entities-url"));
+        
+        ko.applyBindings(viewModel, document.getElementById("entity-items"));
+        
+        $("#btnSearch").click(function () { viewModel.search.call(viewModel); });
+        $("img.scale").imageScale();
+    });
+</script>
+}

@@ -9,24 +9,22 @@
 
     var formId = ViewData["EntityFormId"];
     var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";
-    var controllerName = Model.Type == (int)EntityType.Host ? "Host" : "Venue";
-
     var actionCaption = Model.Id == 0 
         ? T("Add <span class=\"hidden-xs\">" + entityTypeName + "</span>") 
         : T("Save <span class=\"hidden-xs\">" + entityTypeName + "</span>");
 }
 
 <div id="@formId"  
-     save-entity-url="@Url.Action("SaveOrAdd", controllerName, new {area = "SmartWalk.Server"})" 
-     get-address-url="@Url.Action("GetAddress", "Event", new {area = "SmartWalk.Server"})"
-     save-address-url="@Url.Action("SaveAddress", "Event", new {area = "SmartWalk.Server"})"
-     delete-addresses-url="@Url.Action("DeleteAddresses", "Event", new {area = "SmartWalk.Server"})"
-     get-contact-url="@Url.Action("GetContact", "Event", new {area = "SmartWalk.Server"})"
-     save-contact-url="@Url.Action("SaveContact", "Event", new {area = "SmartWalk.Server"})"
-     delete-contacts-url="@Url.Action("DeleteContacts", "Event", new {area = "SmartWalk.Server"})"
-     validate-entity-url="@Url.Action("ValidateModel", controllerName, new {area = "SmartWalk.Server"})"
-     validate-address-url="@Url.Action("ValidateAddress", "Event", new {area = "SmartWalk.Server"})"
-     validate-contact-url="@Url.Action("ValidateContact", "Event", new {area = "SmartWalk.Server"})">
+     save-entity-url="@Url.Action("SaveOrAdd")" 
+     get-address-url="@Url.Action("GetAddress", "Event")"
+     save-address-url="@Url.Action("SaveAddress", "Event")"
+     delete-addresses-url="@Url.Action("DeleteAddresses", "Event")"
+     get-contact-url="@Url.Action("GetContact", "Event")"
+     save-contact-url="@Url.Action("SaveContact", "Event")"
+     delete-contacts-url="@Url.Action("DeleteContacts", "Event")"
+     validate-entity-url="@Url.Action("ValidateModel")"
+     validate-address-url="@Url.Action("ValidateAddress", "Event")"
+     validate-contact-url="@Url.Action("ValidateContact", "Event")">
         @Html.AntiForgeryTokenOrchard()
         <div class="row">
             <div class="col-xs-8">
@@ -96,7 +94,7 @@
         <div class="row double-gap">
             <div class="col-xs-4">
         @if (Model.Id != 0) {
-            using(Html.BeginForm("Delete", controllerName, FormMethod.Get)) {
+            using(Html.BeginForm("Delete", null, FormMethod.Get)) {
                 <input type="hidden" name="entityId" value="@Model.Id" />
                 <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you sure you want to delete this " + entityTypeName.ToLower() + "?")')">@T("Delete <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
             } 
@@ -112,7 +110,7 @@
 
 @using (Script.Foot())
 {
-    @Html.Partial("../Entity/Templates")
+    @Html.Partial("../Entity/Templates") // TODO: To put into a separate js file
 
 <script>
     $(function() {

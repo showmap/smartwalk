@@ -3,57 +3,98 @@
 @using System.Text.RegularExpressions
 @model ViewParametersVm
 @{
-    var item = (EntityVm)Model.Data; 
+    Style.Require("SmartWalk");
+    Style.Require("TextCollapse");
+
+    Script.Require("jQueryUI").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Event").AtFoot();
+    Script.Require("ImageScale").AtFoot();
+    Script.Require("TextCollapse").AtFoot();
+
+    var entityVm = (EntityVm)Model.Data;
+    var entityTypeName = entityVm.Type == (int)EntityType.Host ? "Organizer" : "Venue";
 }
 
-@if (item.AllAddresses.Any()) {
-    var addressFirst = item.AllAddresses.First();
+<div id="view-entity-form" get-entity-events="@Url.Action("GetEvents")">
+    @Html.AntiForgeryTokenOrchard()
+    <div class="bg-image-container page-header-image">
+        <div class="header">
+            <h2>
+            @if (!Model.IsReadOnly)
+            {
+                <button type="button" id="btn-edit-entity" class="btn">@T("Edit " + entityTypeName)</button>
+            }
+                @entityVm.DisplayName
+            </h2>
+            @if (!string.IsNullOrEmpty(entityVm.Picture))
+            {
+                <img class="scale" data-scale="best-fill" data-align="center" src="@entityVm.Picture" />
+            }
+        </div>
+			
+@if (entityVm.AllAddresses.Any()) {
+        <div class="info addresses-container">
+            @foreach (var address in entityVm.AllAddresses) {
+                <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address>@if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">&nbsp;@address.Tip</i>}</h4></div>                        
+            }
+        </div>	
+}
+    </div>
+
+@if (entityVm.AllAddresses.Any()) {
+    var addressFirst = entityVm.AllAddresses.First();
     var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
     query = Regex.Replace(query, @"\s+", "+");
-<div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>
+    <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>
 }
         
-<div class="row gap">
-    <div class="col-md-7"><p class="description">@item.Description</p></div>
-    <div class="col-md-5 contact-container">
-    @if (item.AllContacts.Any()) {
-        <div class="well">
-            <h4 class="text-center">@T("Contacts and Links")</h4>
-            <dl class="dl-horizontal">
-    @foreach (var contact in item.AllContacts) {
-        var title = contact.Title ?? contact.Contact;                             
+    <div class="row gap">
+        <div class="col-md-7"><p class="description">@entityVm.Description</p></div>
+        <div class="col-md-5 contact-container">
+    @if (entityVm.AllContacts.Any()) {
+            <div class="well">
+                <h4 class="text-center">@T("Contacts and Links")</h4>
+                <dl class="dl-horizontal">
+        @foreach (var contact in entityVm.AllContacts)
+        {
+            var title = contact.Title ?? contact.Contact;                             
                              
-        switch ((ContactType)contact.Type) {
-            case ContactType.Url:
-                var url = contact.Contact.StartsWith("http") ? contact.Contact : string.Format("http://{0}", contact.Contact);
-                <dt>@T("web"):</dt>
-                <dd><a href="@url">@title</a></dd>
-                break;
-            case ContactType.Phone:
-                <dt>@T("phone"):</dt>
-                <dd>@contact.Contact</dd>
-                break;
-            case ContactType.Email:
-                <dt>@T("email"):</dt>
-                <dd><a href="mailto:@contact.Contact">@title</a></dd>
-                break;
+            switch ((ContactType)contact.Type) {
+                case ContactType.Url:
+                    var url = contact.Contact.StartsWith("http") ? contact.Contact : string.Format("http://{0}", contact.Contact);
+                    <dt>@T("web"):</dt>
+                    <dd><a href="@url">@title</a></dd>
+                    break;
+
+                case ContactType.Phone:
+                    <dt>@T("phone"):</dt>
+                    <dd>@contact.Contact</dd>
+                    break;
+
+                case ContactType.Email:
+                    <dt>@T("email"):</dt>
+                    <dd><a href="mailto:@contact.Contact">@title</a></dd>
+                    break;
+            }
         }
-    }
-            </dl>
-        </div>   
+                </dl>
+            </div>   
     }                
+        </div>
     </div>
-</div>
 
-<!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
+    <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root)"></textarea>-->
 
-<table class="table table-content" data-bind="visible: EventItems().length > 0">
-    <thead>
-        <tr><th><h4>@T("Recent Events")</h4></th><th>@T("Date")</th></tr>
-    </thead>
-    <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems() }'></tbody>
-</table>        
+    <table class="table table-content" data-bind="visible: EventItems().length > 0">
+        <thead>
+            <tr><th><h4>@T("Recent Events")</h4></th><th>@T("Date")</th></tr>
+        </thead>
+        <tbody data-bind='template: {name: "eventItemTemplate", foreach: EventItems() }'></tbody>
+    </table>   
+</div>     
 
+@using (Script.Foot())
+{
 <script type="text/html" id="eventItemTemplate">
     <tr>
         <td>
@@ -64,10 +105,33 @@
     </tr>       
 </script>
 
-@using (Script.Foot())
-{
 <script type="text/javascript">
     $(function() {
+        $("#btn-edit-entity").click(function() {
+            window.location.href = "@Url.Action("Edit")";
+        });
+
+        function eventsViewModel() {
+            var self = this;
+
+            self.EventItems = ko.observableArray();
+
+            self.loadData = function() {
+                var ajdata = ko.toJSON({ entityId: @entityVm.Id });
+                var urlUpdate = $("#view-entity-form").attr("get-entity-events");
+
+                ajaxJsonRequest(ajdata, urlUpdate, function(data) {
+                    if (data) {
+                        self.EventItems($.map(data, function(item) { return new EventViewModel(item); }));                            
+                    }
+                });
+            };
+
+            self.loadData();
+        }
+
+        ko.applyBindings(new eventsViewModel(), document.getElementById("view-entity-form"));
+
         $("img.scale").imageScale();
         $("p.description").textCollapse($(".contact-container").first().height());
     });
