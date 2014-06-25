@@ -152,7 +152,7 @@ namespace SmartWalk.Server {
                         "organizers/my",
                         new RouteValueDictionary {
                             {"area", "SmartWalk.Server"},
-                            {"controller", "Event"},
+                            {"controller", "Host"},
                             {"action", "List"},
                             {"Parameters.Display", "My"},
                         },
@@ -234,7 +234,7 @@ namespace SmartWalk.Server {
                         "venues/my",
                         new RouteValueDictionary {
                             {"area", "SmartWalk.Server"},
-                            {"controller", "Event"},
+                            {"controller", "Venue"},
                             {"action", "List"},
                             {"Parameters.Display", "My"},
                         },
