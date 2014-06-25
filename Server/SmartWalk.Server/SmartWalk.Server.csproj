@@ -134,10 +134,16 @@
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\SmartWalk.Shared\Properties\AssemblySharedInfo.cs">
+      <Link>Properties\AssemblySharedInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SmartWalk.Server.Common\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\Base\BaseController.cs" />
@@ -326,6 +332,10 @@
       <Project>{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01}</Project>
       <Name>SmartWalk.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartWalk.Server.Common\SmartWalk.Server.Common.csproj">
+      <Project>{f7e6aafc-f878-4914-9b6f-31ba6adaf387}</Project>
+      <Name>SmartWalk.Server.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Host\Edit.cshtml" />
@@ -354,4 +364,5 @@
   <ItemGroup>
     <Content Include="Views\Entity\List.cshtml" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

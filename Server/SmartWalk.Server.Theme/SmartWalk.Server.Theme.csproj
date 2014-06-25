@@ -99,7 +99,9 @@
     <Content Include="Styles\smartwalk-theme.css" />
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="fonts\Web.config" />
@@ -117,6 +119,13 @@
     <Content Include="Views\Document.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\SmartWalk.Shared\Properties\AssemblySharedInfo.cs">
+      <Link>Properties\AssemblySharedInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SmartWalk.Server.Common\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +174,11 @@
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
       <Project>{cfea2cf4-c0c6-47a4-9549-2acd230abd01}</Project>
       <Name>SmartWalk.Shared</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWalk.Server.Common\SmartWalk.Server.Common.csproj">
+      <Project>{f7e6aafc-f878-4914-9b6f-31ba6adaf387}</Project>
+      <Name>SmartWalk.Server.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +192,7 @@
   <ItemGroup>
     <Content Include="img\Web.config" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

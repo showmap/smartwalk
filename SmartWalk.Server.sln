@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Server.UnitTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Server.Theme", "Server\SmartWalk.Server.Theme\SmartWalk.Server.Theme.csproj", "{50ED7805-208C-4E35-8360-572E8B4E9CC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Server.Common", "Server\SmartWalk.Server.Common\SmartWalk.Server.Common.csproj", "{F7E6AAFC-F878-4914-9B6F-31BA6ADAF387}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{50ED7805-208C-4E35-8360-572E8B4E9CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50ED7805-208C-4E35-8360-572E8B4E9CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50ED7805-208C-4E35-8360-572E8B4E9CC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E6AAFC-F878-4914-9B6F-31BA6ADAF387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E6AAFC-F878-4914-9B6F-31BA6ADAF387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E6AAFC-F878-4914-9B6F-31BA6ADAF387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E6AAFC-F878-4914-9B6F-31BA6ADAF387}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

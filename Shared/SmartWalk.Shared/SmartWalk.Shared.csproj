@@ -74,6 +74,7 @@
     <Compile Include="DataContracts\Api\RequestSelectWhereSelectValue.cs" />
     <Compile Include="DataContracts\Api\RequestSelectWhereOperators.cs" />
     <Compile Include="DataContracts\Api\RequestSelectFromTables.cs" />
+    <Compile Include="Properties\AssemblySharedInfo.cs" />
     <Compile Include="Resources\Localization.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

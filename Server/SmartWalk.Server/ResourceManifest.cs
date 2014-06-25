@@ -1,4 +1,5 @@
-﻿using SmartWalk.Shared;
+﻿using SmartWalk.Server.Common.Utils;
+using SmartWalk.Shared;
 using Orchard.UI.Resources;
 
 namespace SmartWalk.Server
@@ -10,73 +11,87 @@ namespace SmartWalk.Server
         {
             var manifest = builder.Add();
 
-            // TODO: To setup *.min.css and version
-            manifest.DefineStyle("SmartWalk").SetUrl("smartwalk.css");
+            // TODO: To setup *.min.css
+            manifest.DefineStyle("SmartWalk")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk.css");
 
-            manifest.DefineScript("SmartWalk.AntiForgery").SetUrl("antiforgery.js");
+            manifest.DefineScript("SmartWalk.AntiForgery")
+                .SetVersion("1.0")
+                .SetVersionUrl("antiforgery.js");
 
             manifest.DefineScript("ko")
                 .SetVersion("3.1.0")
-                .SetUrl("knockout-3.1.0.js")
+                .SetVersionUrl("knockout-3.1.0.js")
                 .SetDependencies("jQuery");
 
-            // TODO: Why these are depended on AntiForgery?
             manifest.DefineScript("ko.validation")
                 .SetVersion("1.0.2")
-                .SetUrl("knockout-validation.js")
+                .SetVersionUrl("knockout-validation.js")
                 .SetDependencies("ko");
 
             manifest.DefineScript("SmartWalk.Utilites")
-                .SetUrl("smartwalk-utilites.js?ver=1.0.0")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-utilites.js")
                 .SetDependencies("ko", "ko.validation");            
 
             manifest.DefineScript("ko.datetime")
                 .SetVersion("1.2")
-                .SetUrl("knockout-datetime.js")
+                .SetVersionUrl("knockout-datetime.js")
                 .SetDependencies("ko", "SmartWalk.Utilites");
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion("1.2")
-                .SetUrl("knockout-switcher.js")
+                .SetVersionUrl("knockout-switcher.js")
                 .SetDependencies("ko", "SmartWalk.Utilites");
 
             manifest.DefineScript("ko.autocomplete")
                 .SetVersion("1.1")
-                .SetUrl("knockout-autocomplete.js")
+                .SetVersionUrl("knockout-autocomplete.js")
                 .SetDependencies("ko", "SmartWalk.AntiForgery", "SmartWalk.Utilites");            
             
             manifest.DefineScript("SmartWalk.ViewModels.Common")
-                .SetUrl("smartwalk-viewmodels-common.js")
-                .SetDependencies("ko.validation", "ko.datetime", "ko.switcher", "ko.autocomplete", "SmartWalk.Utilites");
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-viewmodels-common.js")
+                .SetDependencies(
+                    "ko.validation", 
+                    "ko.datetime", 
+                    "ko.switcher", 
+                    "ko.autocomplete", 
+                    "SmartWalk.Utilites");
 
             manifest.DefineScript("SmartWalk.ViewModels.Entity")
-                .SetUrl("smartwalk-viewmodels-entity.js?ver=1.1")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-viewmodels-entity.js")
                 .SetDependencies("SmartWalk.ViewModels.Common");
 
             manifest.DefineScript("SmartWalk.ViewModels.Entity.Extended")
-                .SetUrl("smartwalk-viewmodels-entity-extended.js?ver=1.1")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-viewmodels-entity-extended.js")
                 .SetDependencies("SmartWalk.ViewModels.Entity");
 
             manifest.DefineScript("SmartWalk.ViewModels.Event")
-                .SetUrl("smartwalk-viewmodels-event.js?ver=1.5")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-viewmodels-event.js")
                 .SetDependencies("SmartWalk.ViewModels.Entity");
 
             manifest.DefineScript("SmartWalk.ViewModels.Event.Extended")
-                .SetUrl("smartwalk-viewmodels-event-extended.js?ver=1.5")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-viewmodels-event-extended.js")
                 .SetDependencies("SmartWalk.ViewModels.Event");
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")
-                .SetUrl("text-collapse.css");
+                .SetVersionUrl("text-collapse.css");
 
             manifest.DefineScript("TextCollapse")
                 .SetVersion("1.0")
-                .SetUrl("text-collapse.js")
+                .SetVersionUrl("text-collapse.js")
                 .SetDependencies("jQuery");
 
             manifest.DefineScript("ImageScale")
                 .SetVersion("1.3.1")
-                .SetUrl("image-scale.min.js", "image-scale.js")
+                .SetVersionUrl("image-scale.min.js", "image-scale.js")
                 .SetDependencies("jQuery");
 
             manifest.DefineScript("AddThisEvent")
