@@ -5,6 +5,7 @@
     this.State = ko.observable();
     this.Type = ko.observable();
     this.Name = ko.observable();
+    this.Abbreviation = ko.observable();
     this.Picture = ko.observable();
     this.EventMetadataId = ko.observable();
     this.Description = ko.observable();
@@ -106,6 +107,7 @@
             State: this.State(),
             Type: this.Type(),
             Name: this.Name(),
+            Abbreviation: this.Abbreviation(),
             Picture: this.Picture(),
             EventMetadataId: this.EventMetadataId(),
             Description: this.Description(),
@@ -140,6 +142,7 @@ EntityViewModelBase.prototype.loadData = function (data) {
     this.State(data.State);
     this.Type(data.Type);
     this.Name(data.Name);
+    this.Abbreviation(data.Abbreviation);
     this.Picture(data.Picture);
     this.EventMetadataId(data.EventMetadataId);
     this.Description(data.Description);

@@ -71,6 +71,11 @@ namespace SmartWalk.Server.Controllers.Base
                     });
         }
 
+        public ActionResult Create()
+        {
+            return Edit(0);
+        }
+
         public ActionResult Edit(int entityId)
         {
             var entityVm = _entityService.GetEntityVmById(entityId, EntityType);

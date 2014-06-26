@@ -12,6 +12,7 @@
     var eventMetadata = (EventMetadataVm)Model.Data;
 }
         @Html.AntiForgeryTokenOrchard()
+
         <div class="bg-image-container page-header-image">
             <div class="header">
                 <h2>
@@ -78,26 +79,29 @@
                     <td colspan="2" class="venue">
                         <a class="bg-image" href="@Url.Action("View", "Venue", new { entityId = venue.Id })">
                             <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
+                            <span class="abbr">@venue.Abbreviation</span>
                         </a>
                         <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.DisplayName</h4></a>
                     @if (venue.AllAddresses.Any())
                     {
+                        <br />
                         <address>@venue.AllAddresses.First().Address</address>
+                        <i class="tip description">@venue.AllAddresses.First().Tip</i>
                     }                            
                     </td>
                 </tr>
                     foreach (var show in venue.AllShows.Where(s => !s.IsReference))
                     {
-                <tr class="venue-Sshow">
+                <tr class="venue-show">
                     <td>@show.Title<br/>@if (@show.Description != null)
                        {<span class="description">@show.Description</span>}</td>                        
                 @if (string.IsNullOrEmpty(show.EndTime))
                 {
-                    <td>@show.StartTime</td>
+                    <td class="td-valign">@show.StartTime</td>
                 }
                 else
                 {
-                    <td>@show.StartTime&nbsp;-&nbsp;@show.EndTime</td>
+                    <td class="td-valign">@show.StartTime&nbsp;-&nbsp;@show.EndTime</td>
                 }
                 </tr>   
                     }
@@ -108,15 +112,11 @@
 @using (Script.Foot())
 {
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(function () {
         $("#btn-edit-event").click(function() {
             window.location.href = "@Url.Action("View")" + "/edit";
         });
-    });
 
-
-
-    $(function() {
         $("img.scale").imageScale();
         $("p.description").textCollapse();
     });

@@ -116,11 +116,9 @@ function EntityViewModel(data) {
 
     self.Id = ko.observable();
     self.EventMetadataId = ko.observable();
-
     self.Type = ko.observable();
-
     self.Name = ko.observable();
-
+    self.Abbreviation = ko.observable();
     self.Description = ko.observable();
     self.Picture = ko.observable();
     self.State = ko.observable();
@@ -135,9 +133,8 @@ function EntityViewModel(data) {
         self.Id(data.Id);
         self.EventMetadataId(data.EventMetadataId);
         self.Type(data.Type);
-
         self.Name(data.Name);
-
+        self.Abbreviation(data.Abbreviation);
         self.Description(data.Description);
         self.Picture(data.Picture);
         self.State(data.State);

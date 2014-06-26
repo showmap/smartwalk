@@ -70,7 +70,9 @@
 			        <tbody data-bind="template: { name: getAddressView, foreach: Addresses() }"></tbody>
 		        </table>
 				
-		        <button type="button" class="btn btn-default" data-bind="click: addAddress">@T("Add Address")</button>
+                <div class="add-item-container">
+                    <a data-bind="click: addAddress"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
+                </div>
 	        </div>
         </div>
         
@@ -86,8 +88,10 @@
                     </thead>
                     <tbody data-bind="template: { name: getContactView, foreach: Contacts() }"></tbody>
                 </table>
-				
-                <button type="button" class="btn btn-default" data-bind="click: addContact">@T("Add Contact")</button>
+                
+                <div class="add-item-container">
+                    <a data-bind="click: addContact"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Contact")</a>
+                </div>
             </div>
         </div>
 

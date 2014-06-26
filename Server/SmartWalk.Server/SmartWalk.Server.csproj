@@ -364,5 +364,10 @@
   <ItemGroup>
     <Content Include="Views\Entity\List.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Host\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Venue\Create.cshtml" />
+  </ItemGroup>
 </Project>

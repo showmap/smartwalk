@@ -383,13 +383,10 @@ EventViewModelExtended.prototype.getHosts = function(searchTerm, sourceArray) {
 
 EventViewModelExtended.prototype.getAutoItem = function(item) {
     var text = "<div>";
-    //text += "<div class='categoryIconContainer'><img src='" + (item.Picture() == "" ? "" : item.Picture()) + "' /></div>";
     text += "<div class='autocomplete-name'>" + item.Name() + "</div>";
     if (item.DisplayAddress()) {
         if (item.DisplayAddress().Address() != "")
             text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Address() + "</div>";
-        //if (item.DisplayAddress().Tip() != "")
-        //    text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Tip() + "</div>";
     }
 
     text += "</div>";

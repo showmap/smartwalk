@@ -1,7 +1,7 @@
 ﻿<script type="text/html" id="ViewAddressTemplate">
     <tr>
 		<td data-bind="text: Address, click: $root.selectedItem"></td>
-		<td class="td-align"><button type="button" class="btn btn-default" data-bind="click: function() { if(confirm('@T("Are you shure you wish to delete this address?")')) $root.deleteAddress($data); }">@T("X")</button></td>
+		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.deleteAddress($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 
@@ -55,7 +55,7 @@
     <tr>
 		<td data-bind="text: $root.GetContactType($data), click: $root.selectedItem"></td>
 		<td data-bind="text: DisplayContact, click: $root.selectedItem"></td>
-		<td class="td-align"><button type="button" class="btn btn-default" data-bind="click: function() { if(confirm('@T("Are you shure you wish to delete this contact?")')) $root.deleteContact($data); }">@T("X")</button></td>
+		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.deleteContact($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 

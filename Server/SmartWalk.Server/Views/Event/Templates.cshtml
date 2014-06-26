@@ -1,21 +1,25 @@
 ﻿<script type="text/html" id="EntityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.getVenueView }"></tr>
+    <tr class="venue"><td colspan="3"><div class="add-venue-show"><a data-bind="click: function(){$root.addShow($root, $data)}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
     <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
-    <!-- /ko -->   
+    <!-- /ko -->
+    <tr class="venue" data-bind="visible: Shows().length > 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function(){$root.addShow($root, $data)}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
     <td class="venue" colspan="2">
         <div>
-            <a class="bg-image" data-bind="attr:{href: '/venue/'+Id()}"><img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/></a>
+            <a class="bg-image" data-bind="attr:{href: '/venue/'+Id()}">
+                <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/>
+                <span class="abbr" data-bind="text: Abbreviation()"></span>
+            </a>
             <a data-bind="attr:{href: '/venue/'+Id()}"><h4 data-bind="text: Name"></h4></a>
+            <br />
             <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : ''"></address>
-            <i class="tip" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
+            <i class="tip description" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
         </div>
-        <div class="clearfix"></div>
-        <button type="button" class="btn btn-default gap" data-bind="click: function(){$root.addShow($root, $data)}">@T("Create Show")</button>
     </td>
-	<td class="td-align"><button type="button" class="btn btn-default" data-bind="click: function() { if(confirm('@T("Are you shure you wish to remove this venue with all shows from event?")')) $root.deleteVenue($root, $data); }">@T("X")</button></td>
+	<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.deleteVenue($root, $data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplateEdit">
@@ -57,8 +61,8 @@
             <span class="description" data-bind="text: Description"></span>
         </td>
         
-        <td data-bind="html: TimeText, click: $root.selectedItem"></td>
-        <td class="td-align"><button type="button" class="btn btn-default" data-bind="click: function() { if(confirm('@T("Are you shure you wish to remove show?")    ')) $root.deleteShow($root, $data); }">@T("X")</button></td>
+        <td class="td-valign" data-bind="html: TimeText, click: $root.selectedItem"></td>
+        <td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $root.deleteShow($root, $data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
     </tr>    
 </script>
 

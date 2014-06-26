@@ -1,10 +1,6 @@
 ﻿@using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Records
 @model EventMetadataVm
-
-@Display(New.DatePickerLocalization())
-@Display(New.TimePickerLocalization())
-
 @{
     Style.Require("SmartWalk");
     Style.Require("jQueryUI_Orchard");
@@ -20,17 +16,6 @@
         ? Url.Action("List") 
         : Url.Action("View", new { entityId = @Model.Id });
 }
-<style type="text/css">
-     .categoryIconContainer {
-	    border-radius: 3px 3px 3px 3px;
-        float: left;
-        height: 32px;
-        margin-right: 5px;
-        overflow: hidden;
-        width: 32px;
-        vertical-align: middle;
-    }
-</style>
 
 <div id="event-item" 
     save-event-url="@Url.Action("SaveEvent", "Event")" 
@@ -44,7 +29,8 @@
     save-venue-url="@Url.Action("SaveEventVenue", "Event")"
     host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
     venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")">
-        @Html.AntiForgeryTokenOrchard()    
+        @Html.AntiForgeryTokenOrchard()
+
         <div class="row">
 			<div class="col-xs-8" data-bind="validationElement: Title">
 			    <div class="form-group">
@@ -118,7 +104,11 @@
 				</div>
 			</div>
 		</div>                                                               
-        
+ 
+        <div class="row add-venue" data-bind="visible: Venues().length > 0">
+            <a data-bind="click: function(){ $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+        </div>
+       
         <table class="table table-hover">
 			<thead>
 				<tr>
@@ -129,8 +119,11 @@
 			</thead>
 			<tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
 		</table>
-        <button type="button" class="btn btn-default" data-bind="click: function(){ $root.addVenue($root); }">@T("Add Venue")</button>
-		
+    
+        <div class="row add-venue">
+            <a data-bind="click: function(){ $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+        </div>
+
         <div class="row double-gap">
             <div class="col-xs-4">
                 @if (Model.Id != 0) {
@@ -173,74 +166,72 @@
 
 @using (Script.Foot())
 {
+    @Display(New.DatePickerLocalization())
+    @Display(New.TimePickerLocalization())
+
     @Html.Partial("Templates")
 
 <script type="text/javascript">
     $(function() {
+        var form = $("#event-item");
+        var data = @Html.Raw(Json.Encode(Model));
+            
+        var settings = {
+            startTimeRequiredValidationMessage: '@T("Start time is required!")',
+            endTimeCompareValidationMessage: '@T("End time has to be greater or equal than start time!")',
+            startTimeCompareValidationMessage: '@T("Start time has to be less or equal than end time!")',
+            hostRequiredValidationMessage: '@T("Organizer is required!")',
+            venueRequiredValidationMessage: '@T("Venue is required!")',
+
+            pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
+            picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
+                  
+            showMessages: {
+                titleRequiredValidationMessage: '@T("Show title is required!")',
+                titleLengthValidationMessage: '@T("Show title can not be longer than 255 characters!")',
+                    
+                pictureValidationMessage: '@T("Picture does not match url pattern.!")',
+                pictureLengthValidationMessage: '@T("Picture can not be longer than 255 characters!")',
+                    
+                detailsValidationMessage: '@T("Details does not match url pattern.!")',
+                detailsLengthValidationMessage: '@T("Details can not be longer than 255 characters!")',
+                    
+                startDateValidationMessage: '@T("Show start date has to be between event start and end dates.!")',
+                startTimeValidationMessage: '@T("Show start time has bo be less than start time!")',
+                    
+                endDateValidationMessage: '@T("Show end date has to be between event start and end dates.!")',
+                endTimeValidationMessage: '@T("Show end time has bo be bigger than start time!")',
+            },
+
+            hostFormName: "#@hostFormId",
+            venueFormName: "#@venueFormId",
+                
+            eventSaveUrl: form.attr("save-event-url"),
+    
+            showGetUrl: form.attr("get-show-url"),
+            showSaveUrl: form.attr("save-show-url"),
+            showDeleteUrl: form.attr("delete-show-url"),
+    
+            showView: "ShowItemTemplate",
+            showEditView: "ShowItemTemplateEdit",
+
+            eventVenueSaveUrl: form.attr("save-venue-url"),
+            eventVenueDeleteUrl: form.attr("delete-venue-url"),
+            eventVenuesDeleteUrl: form.attr("delete-venues-url"),
+
+            eventVenueView: "EventVenueItemTemplate",
+            eventVenueEditView: "EventVenueItemTemplateEdit",
+
+            eventShowsDeleteUrl: form.attr("delete-event-shows-url"),
+
+            hostAutocompleteUrl: form.attr("host-autocomplete-url"),
+            venueAutocompleteUrl: form.attr("venue-autocomplete-url"),                               
+        };
+
+        var vm = new EventViewModelExtended(settings, data);
+        ko.applyBindings(vm, document.getElementById("event-item"));
+
         $("img.scale").imageScale();
     });
-
-    (function($) {
-        $(document).ready(function() {
-            
-            var form = $("#event-item");
-            var data = @Html.Raw(Json.Encode(Model));
-            
-            var settings = {
-                startTimeRequiredValidationMessage: '@T("Start time is required!")',
-                endTimeCompareValidationMessage: '@T("End time has to be greater or equal than start time!")',
-                startTimeCompareValidationMessage: '@T("Start time has to be less or equal than end time!")',
-                hostRequiredValidationMessage: '@T("Organizer is required!")',
-                venueRequiredValidationMessage: '@T("Venue is required!")',
-
-                pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
-                picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
-                  
-                showMessages: {
-                    titleRequiredValidationMessage: '@T("Show title is required!")',
-                    titleLengthValidationMessage: '@T("Show title can not be longer than 255 characters!")',
-                    
-                    pictureValidationMessage: '@T("Picture does not match url pattern.!")',
-                    pictureLengthValidationMessage: '@T("Picture can not be longer than 255 characters!")',
-                    
-                    detailsValidationMessage: '@T("Details does not match url pattern.!")',
-                    detailsLengthValidationMessage: '@T("Details can not be longer than 255 characters!")',
-                    
-                    startDateValidationMessage: '@T("Show start date has to be between event start and end dates.!")',
-                    startTimeValidationMessage: '@T("Show start time has bo be less than start time!")',
-                    
-                    endDateValidationMessage: '@T("Show end date has to be between event start and end dates.!")',
-                    endTimeValidationMessage: '@T("Show end time has bo be bigger than start time!")',
-                },
-
-                hostFormName: "#@hostFormId",
-                venueFormName: "#@venueFormId",
-                
-                eventSaveUrl: form.attr("save-event-url"),
-    
-                showGetUrl: form.attr("get-show-url"),
-                showSaveUrl: form.attr("save-show-url"),
-                showDeleteUrl: form.attr("delete-show-url"),
-    
-                showView: "ShowItemTemplate",
-                showEditView: "ShowItemTemplateEdit",
-
-                eventVenueSaveUrl: form.attr("save-venue-url"),
-                eventVenueDeleteUrl: form.attr("delete-venue-url"),
-                eventVenuesDeleteUrl: form.attr("delete-venues-url"),
-
-                eventVenueView: "EventVenueItemTemplate",
-                eventVenueEditView: "EventVenueItemTemplateEdit",
-
-                eventShowsDeleteUrl: form.attr("delete-event-shows-url"),
-
-                hostAutocompleteUrl: form.attr("host-autocomplete-url"),
-                venueAutocompleteUrl: form.attr("venue-autocomplete-url"),                               
-            };
-
-            var vm = new EventViewModelExtended(settings, data);
-            ko.applyBindings(vm, document.getElementById("event-item"));
-        });
-    })(jQuery);
 </script>
 }

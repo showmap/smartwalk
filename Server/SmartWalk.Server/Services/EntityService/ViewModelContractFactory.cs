@@ -6,6 +6,7 @@ using System.Web;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.EntityService
 {
@@ -27,6 +28,7 @@ namespace SmartWalk.Server.Services.EntityService
                         Id = record.Id,
                         State = state,
                         Name = record.Name,
+                        Abbreviation = record.Name.GetAbbreviation(2),
                         Picture = record.Picture,
                         AllAddresses = record.AddressRecords.FirstOrDefault() == null ? new List<AddressVm>() : new List<AddressVm> { CreateViewModelContract(record.AddressRecords.FirstOrDefault()) },
                     };
@@ -38,6 +40,7 @@ namespace SmartWalk.Server.Services.EntityService
                         State = state,
                         Type = record.Type,
                         Name = record.Name,
+                        Abbreviation = record.Name.GetAbbreviation(2),
                         Picture = record.Picture,
                         Description = record.Description,
                         AllContacts = record.ContactRecords.Select(CreateViewModelContract).ToList(),
