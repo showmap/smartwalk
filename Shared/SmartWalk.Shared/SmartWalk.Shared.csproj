@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="DataContracts\Api\RequestSelectSortBy.cs" />
     <Compile Include="DataContracts\Api\ResponseSelect.cs" />
-    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Annotations.cs" />
     <Compile Include="DataContracts\CombineType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataContracts\ContactType.cs" />

@@ -117,10 +117,10 @@
 					<th class="td-align"></th>
 				</tr>
 			</thead>
-			<tbody data-bind='template: {name: "EntityItemTemplate", foreach: Venues() }'></tbody>
+			<tbody data-bind="template: {name: 'EntityItemTemplate', foreach: Venues(), afterRender: afterItemTemplateRender }"></tbody>
 		</table>
     
-        <div class="row add-venue">
+        <div class="row add-venue" data-bind="visible: selectedItem() == null">
             <a data-bind="click: function(){ $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
 

@@ -402,15 +402,10 @@ EventViewModelExtended.prototype.createHost = function() {
     $(this.settings.hostFormName).dialog("open");
 };
 
+EventViewModelExtended.prototype.afterItemTemplateRender = function (elements) {
+    /*$('html, body').animate({
+        scrollTop: $(elements[0]).offset().top
+    }, 2000);*/
 
-
-//EventViewModelExtended.prototype.deleteEvent = function(item) {
-//    var ajdata = ko.toJSON(item);
-//    var urlUpdate = $("#event-item").attr("delete-event-url");
-
-//    ajaxJsonRequest(ajdata, urlUpdate,
-//        function (data) {
-//            window.location.href = "@Url.Action("List")";
-//        }
-//    );   
-//};  
+    // TODO: Scroll to the template edit form
+};

@@ -1,25 +1,29 @@
 ﻿<script type="text/html" id="EntityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.getVenueView }"></tr>
-    <tr class="venue"><td colspan="3"><div class="add-venue-show"><a data-bind="click: function(){$root.addShow($root, $data)}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="venue" data-bind="visible: Id() != 0"><td colspan="3"><div class="add-venue-show"><a data-bind="click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
     <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
     <!-- /ko -->
-    <tr class="venue" data-bind="visible: Shows().length > 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function(){$root.addShow($root, $data)}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="venue" data-bind="visible: Shows().length > 0 && Id() != 0"><td colspan="3"><div class="add-venue-show"><a data-bind="click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
     <td class="venue" colspan="2">
         <div>
-            <a class="bg-image" data-bind="attr:{href: '/venue/'+Id()}">
+            <a class="bg-image" data-bind="attr: {href: '/venue/' + Id()}">
                 <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/>
                 <span class="abbr" data-bind="text: Abbreviation()"></span>
             </a>
-            <a data-bind="attr:{href: '/venue/'+Id()}"><h4 data-bind="text: Name"></h4></a>
+            <a data-bind="attr: {href: '/venue/' + Id()}"><h4 data-bind="text: Name"></h4></a>
             <br />
             <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : ''"></address>
             <i class="tip description" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
         </div>
     </td>
-	<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.deleteVenue($root, $data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+    <td class="td-align td-valign">
+        <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.deleteVenue($root, $data); }">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </td>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplateEdit">
@@ -30,22 +34,22 @@
                     <div class="form-group">
                         <label for="venueComboBox">@T("Venue"):</label>
                         <div class="input-group" data-bind="validationElement: $root.selectedVenue">
-                        <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default pull-right" id="createVenueButton" data-bind="click: function(){ $root.createVenue($root); }">@T("Create")<span class="hidden-xs"> @T("Venue")</span>...</button>
-                        </span>
+                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
+                            <span class="input-group-btn">
+                                <button type="button" id="createVenueButton" class="btn btn-default pull-right" data-bind="click: function(){ $root.createVenue($root); }">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 									   							
-        <div class="row">			
+            <div class="row">			
                 <div class="col-sm-8"></div>
                 <div class="col-sm-4 text-right">
 				    <div class="form-group">
 					    <label for="saveShowButton">&nbsp;</label><br/>
-					    <button type="button" class="btn btn-default" data-bind="click: function(){ $root.cancelVenue($root, $data); }">@T("Cancel")</button>
-					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function(){ $root.saveVenue($root, $data); } ">@T("Save Venue")</button>
+					    <button type="button" class="btn btn-default" data-bind="click: function() { $root.cancelVenue($root, $data); }">@T("Cancel")</button>
+					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function() { $root.saveVenue($root, $data); } ">@T("Save Venue")</button>
 				    </div>
 			    </div>
 		    </div>
@@ -62,7 +66,11 @@
         </td>
         
         <td class="td-valign" data-bind="html: TimeText, click: $root.selectedItem"></td>
-        <td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $root.deleteShow($root, $data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+        <td class="td-align td-valign">
+            <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $root.deleteShow($root, $data); }">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </td>
     </tr>    
 </script>
 

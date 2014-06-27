@@ -169,9 +169,15 @@ textarea {
 }
 
 .add-venue a:hover,
-.add-venue-show a:hover {
+.add-venue-show a:hover,
+.add-item-container a:hover {
     border-bottom: dashed;
     text-decoration: none; 
+}
+
+.add-venue-show a:hover,
+.add-item-container a:hover {
+    border-bottom-width: 2px;
 }
 
 .map-container {
@@ -389,6 +395,10 @@ td.editing-container {
 	padding: 0 !important;
 }
 
+.editing-container .form-group .input-group-btn,
+.input-group .input-group-btn {
+    vertical-align: top;
+}
 
 /* jQuery overrides */
 
