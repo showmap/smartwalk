@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
-using Orchard.Localization;
 using Orchard.Themes;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
@@ -21,16 +20,14 @@ namespace SmartWalk.Server.Controllers
         private readonly IEventService _eventService;
         private readonly IEntityService _entityService;
 
-        public Localizer T { get; set; }
-
-
-        public EventController(IEventService eventService, IEntityService entityService, IOrchardServices orchardServices) {
+        public EventController(
+            IEventService eventService, 
+            IEntityService entityService, 
+            IOrchardServices orchardServices)
+        {
             _orchardServices = orchardServices;
-
             _eventService = eventService;
             _entityService = entityService;
-
-            T = NullLocalizer.Instance;
         }
 
         public ActionResult List(ListViewParametersVm parameters, string sort)

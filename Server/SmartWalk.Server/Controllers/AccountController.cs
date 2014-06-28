@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using System.Web.Security;
 using Orchard;
-using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
@@ -12,6 +11,7 @@ using Orchard.Mvc;
 using Orchard.Utility.Extensions;
 using Orchard.Mvc.Extensions;
 using System.Text.RegularExpressions;
+using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Services.SmartWalkUserService;
 using SmartWalk.Server.ViewModels;
@@ -20,7 +20,8 @@ using Orchard.Themes;
 namespace SmartWalk.Server.Controllers
 {
     [Themed]
-    public class AccountController : Controller {
+    public class AccountController : BaseController
+    {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
         private readonly ISmartWalkUserService _swUserService;
@@ -34,18 +35,15 @@ namespace SmartWalk.Server.Controllers
             IMembershipService membershipService,
             IUserService userService,
             IOrchardServices orchardServices,
-            IUserEventHandler userEventHandler) {
+            IUserEventHandler userEventHandler)
+        {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
             _swUserService = swUserService;
             _userService = userService;
             _orchardServices = orchardServices;
             _userEventHandler = userEventHandler;
-            T = NullLocalizer.Instance;
         }
-
-        public Localizer T { get; set; }
-
 
         private int MinPasswordLength {
             get { return _membershipService.GetSettings().MinRequiredPasswordLength; }
