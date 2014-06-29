@@ -1,13 +1,13 @@
 ﻿<script type="text/html" id="EntityItemTemplate">
-    <tr class="venue" data-bind="template: {name: $root.getVenueView }"></tr>
-    <tr class="venue" data-bind="visible: Id() != 0"><td colspan="3"><div class="add-venue-show"><a data-bind="click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="venue" data-bind="template: {name: $root.getVenueView}"></tr>
+    <tr class="add-venue-show" data-bind="visible: Id() != 0 && Shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
     <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
     <!-- /ko -->
-    <tr class="venue" data-bind="visible: Shows().length > 0 && Id() != 0"><td colspan="3"><div class="add-venue-show"><a data-bind="click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="visible: Id() != 0 && Shows().indexOf($root.selectedItem()) < 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
-    <td class="venue" colspan="2">
+    <td colspan="2">
         <div>
             <a class="bg-image" data-bind="attr: {href: '/venue/' + Id()}">
                 <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/>
@@ -27,7 +27,7 @@
 </script>
 
 <script type="text/html" id="EventVenueItemTemplateEdit">
-    <td colspan="3" class="editing-container">
+    <td colspan="3" class="venue editing-container" data-bind="fadeInVisible: 'fast', scrollVisible: 'slow'">
         <div class="well">
             <div class="row">
                 <div class="col-sm-8">
@@ -76,7 +76,7 @@
 
 <script type="text/html" id="ShowItemTemplateEdit">
     <tr>
-		<td colspan="3" class="editing-container">
+		<td colspan="3" class="editing-container" data-bind="fadeInVisible: 'fast', scrollVisible: 'slow'">
 			<div class="well">							
 				<div class="row">
 					<div class="col-sm-8">

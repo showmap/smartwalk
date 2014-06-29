@@ -16,9 +16,11 @@ EventViewModelExtended = function (settings, data) {
         this.Host.extend({
             required: { message: settings.hostRequiredValidationMessage },
         });
+
         this.Picture
             .extend({ maxLength: { params: 255, message: settings.pictureLengthValidationMessage } })
             .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.picturePatternValidationMessage } });
+
         this.selectedVenue.extend({
             required: {
                 message: settings.venueRequiredValidationMessage,
@@ -46,8 +48,6 @@ EventViewModelExtended = function (settings, data) {
             this.PrepareCollectionData(data.AllVenues[i].AllShows, { messages: settings.showMessages, eventDtFrom: this.StartTime, eventDtTo: this.EndTime });
         }
     };
-
-    
 
     EventViewModelExtended.superClass_.constructor.call(this, data);
 
@@ -376,7 +376,7 @@ EventViewModelExtended.prototype.getHosts = function(searchTerm, sourceArray) {
     ajaxJsonRequest(ajdata, this.settings.hostAutocompleteUrl,
         function (data) {
             if (data && data.length > 0)
-                sourceArray($.map(data, function(item) { return new EntityViewModel(item); }));
+                sourceArray($.map(data, function (item) { return new EntityViewModel(item); }));
         }
     );
 };
@@ -400,12 +400,4 @@ EventViewModelExtended.prototype.deleteAction = function (root) {
 
 EventViewModelExtended.prototype.createHost = function() {
     $(this.settings.hostFormName).dialog("open");
-};
-
-EventViewModelExtended.prototype.afterItemTemplateRender = function (elements) {
-    /*$('html, body').animate({
-        scrollTop: $(elements[0]).offset().top
-    }, 2000);*/
-
-    // TODO: Scroll to the template edit form
 };

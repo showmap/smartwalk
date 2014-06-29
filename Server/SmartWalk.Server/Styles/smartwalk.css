@@ -66,20 +66,26 @@ textarea {
 }
 
 .table-hover > tbody > tr.venue:hover > td,
-.table-hover > tbody > tr.venue:hover > th {
+.table-hover > tbody > tr.venue:hover > th,
+.table-hover > tbody > tr.add-venue-show:hover > td {
   background-color: #fff;
 }
 
 .table-hover > tbody > tr.venue-show:hover > td,
-.table-hover > tbody > tr.venue-show:hover > th {
+.table-hover > tbody > tr.venue-show:hover > th,
+.table-hover > tbody > tr.add-venue-show:hover > td {
   cursor: pointer;
 }
 
-.table td.venue {
-	padding-top: 20px;
+.table tr.venue td {
+	padding-top: 35px;
 }
 
-.table td.venue a.bg-image {
+.table.edit tr.venue td {
+    border-top-style: none;
+}
+
+.table tr.venue a.bg-image {
     position: relative;
     overflow: hidden;
     width: 60px;
@@ -90,11 +96,11 @@ textarea {
     text-decoration: none;
 }
 
-.table td.venue a.bg-image:hover {
+.table tr.venue a.bg-image:hover {
     text-decoration: none;
 }
 
-.table td.venue img {
+.table tr.venue img {
     position: absolute;
     top: 0;
     left: 0;
@@ -105,7 +111,7 @@ textarea {
     color: #fff;
 }
 
-.table td.venue span.abbr {
+.table tr.venue span.abbr {
     width: 60px;
 	height: 60px;
     display: block;
@@ -113,7 +119,7 @@ textarea {
     margin-top: 10px;
 }
 
-.table td.venue h4 {
+.table tr.venue h4 {
     display: inline-block;
 	margin-top: 8px;
     margin-bottom: 8px;
@@ -124,7 +130,7 @@ textarea {
 	display: inline-block;
 }
 
-.table td.venue address {
+.table tr.venue address {
 	margin-bottom: 0;
     display: inline;
 }
@@ -158,7 +164,7 @@ textarea {
     cursor: pointer;
 }
 
-.add-venue-show {
+.add-venue-show div {
     text-align: center;
 }
 
@@ -398,6 +404,10 @@ td.editing-container {
 .editing-container .form-group .input-group-btn,
 .input-group .input-group-btn {
     vertical-align: top;
+}
+
+.venue.editing-container .well {
+    margin-top: 25px;
 }
 
 /* jQuery overrides */

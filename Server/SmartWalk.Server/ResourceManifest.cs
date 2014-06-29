@@ -11,29 +11,15 @@ namespace SmartWalk.Server
         {
             var manifest = builder.Add();
 
-            // TODO: To setup *.min.css
-            manifest.DefineStyle("SmartWalk")
-                .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk.css");
-
-            manifest.DefineScript("SmartWalk.AntiForgery")
-                .SetVersion("1.0")
-                .SetVersionUrl("antiforgery.js");
-
             manifest.DefineScript("ko")
                 .SetVersion("3.1.0")
-                .SetVersionUrl("knockout-3.1.0.js")
+                .SetVersionUrl("knockout-3.1.0.js", "knockout-3.1.0.debug.js")
                 .SetDependencies("jQuery");
 
             manifest.DefineScript("ko.validation")
                 .SetVersion("1.0.2")
-                .SetVersionUrl("knockout-validation.js")
+                .SetVersionUrl("knockout.validation.js")
                 .SetDependencies("ko");
-
-            manifest.DefineScript("SmartWalk.Utilites")
-                .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-utilites.js")
-                .SetDependencies("ko", "ko.validation");            
 
             manifest.DefineScript("ko.datetime")
                 .SetVersion("1.2")
@@ -45,10 +31,25 @@ namespace SmartWalk.Server
                 .SetVersionUrl("knockout-switcher.js")
                 .SetDependencies("ko", "SmartWalk.Utilites");
 
-            manifest.DefineScript("ko.autocomplete")
-                .SetVersion("1.1")
-                .SetVersionUrl("knockout-autocomplete.js")
-                .SetDependencies("ko", "SmartWalk.AntiForgery", "SmartWalk.Utilites");            
+            manifest.DefineScript("jquery.visible")
+                .SetVersion("1.2.0")
+                .SetVersionUrl("jquery.visible.min.js", "jquery.visible.js")
+                .SetDependencies("jQuery");
+
+            // TODO: To setup *.min.css
+            manifest.DefineStyle("SmartWalk")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk.css");
+
+            manifest.DefineScript("SmartWalk.AntiForgery")
+                .SetVersion("1.0")
+                .SetVersionUrl("antiforgery.js")
+                .SetDependencies("jQuery");
+
+            manifest.DefineScript("SmartWalk.Utilites")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-utilites.js")
+                .SetDependencies("ko", "ko.validation", "jquery.visible"); 
             
             manifest.DefineScript("SmartWalk.ViewModels.Common")
                 .SetVersion(VersionUtil.CurrentVersion)

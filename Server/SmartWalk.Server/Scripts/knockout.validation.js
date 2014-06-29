@@ -784,7 +784,7 @@
 
             var origTitle = element.getAttribute('data-orig-title');
             var elementTitle = element.title;
-            var titleIsErrorMsg = element.getAttribute('data-orig-title') == "true";
+            var titleIsErrorMsg = element.getAttribute('data-orig-title') == "true"
 
             var errorMsgTitleAccessor = function () {
                 if (!config.errorsAsTitleOnModified || isModified) {

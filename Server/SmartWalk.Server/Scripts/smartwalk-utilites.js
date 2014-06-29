@@ -247,6 +247,24 @@ ko.validation.rules['asyncValidation'] = {
     }
 };
 
+ko.bindingHandlers.fadeInVisible = {
+    init: function (element, valueAccessor) {
+        var duration = ko.utils.unwrapObservable(valueAccessor());
+        $(element).hide().fadeIn(duration);
+    }
+};
+
+ko.bindingHandlers.scrollVisible = {
+    init: function (element, valueAccessor) {
+        if (!$(element).visible(false, false, "vertical")) {
+            var duration = ko.utils.unwrapObservable(valueAccessor());
+            $("html, body").animate({
+                scrollTop: $(element).offset().top - 80 // minus small top margin
+            }, duration);
+        }
+    }
+};
+
 ko.validation.registerExtenders();
 
 ko.validation.init({

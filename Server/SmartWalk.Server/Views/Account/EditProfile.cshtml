@@ -1,6 +1,9 @@
 ﻿@using SmartWalk.Server.Extensions
 @using SmartWalk.Server.ViewModels
 @model SmartWalkUserVm
+@{
+    Script.Require("SmartWalk.AntiForgery").AtFoot();
+}
 
 <h1>@Html.TitleForPage(T("User Profile").ToString())</h1>
 

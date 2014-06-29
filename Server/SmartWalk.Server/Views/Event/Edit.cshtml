@@ -8,6 +8,7 @@
     Script.Require("jQueryUI").AtFoot();
     Script.Require("SmartWalk.ViewModels.Event.Extended").AtFoot();
     Script.Require("ImageScale").AtFoot();
+    Script.Require("SmartWalk.AntiForgery").AtFoot();
 
     const string hostFormId = "edit-host-form";
     const string venueFormId = "edit-venue-form";
@@ -106,10 +107,10 @@
 		</div>                                                               
  
         <div class="row add-venue" data-bind="visible: Venues().length > 0">
-            <a data-bind="click: function(){ $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+            <a data-bind="click: function() { $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
        
-        <table class="table table-hover">
+        <table class="table table-hover edit">
 			<thead>
 				<tr>
 					<th><h4>@T("Venues and Shows")</h4></th>
@@ -117,10 +118,10 @@
 					<th class="td-align"></th>
 				</tr>
 			</thead>
-			<tbody data-bind="template: {name: 'EntityItemTemplate', foreach: Venues(), afterRender: afterItemTemplateRender }"></tbody>
+			<tbody data-bind="template: { name: 'EntityItemTemplate', foreach: Venues() }"></tbody>
 		</table>
     
-        <div class="row add-venue" data-bind="visible: selectedItem() == null">
+        <div class="row add-venue" data-bind="visible: selectedItem() == null || selectedItem().hasOwnProperty('VenueId')">
             <a data-bind="click: function(){ $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
 
@@ -135,7 +136,7 @@
             </div>
             <div class="col-xs-8 text-right">
                 <form method="get" action="@cancelAction">
-                    <button type="submit" class="btn btn-default" >@T("Cancel")</button>
+                    <button type="submit" class="btn btn-default">@T("Cancel")</button>
                     <button type="button" class="btn btn-success" data-bind="click: function(){ $root.saveEvent($root); }">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
                 </form>		        
             </div>

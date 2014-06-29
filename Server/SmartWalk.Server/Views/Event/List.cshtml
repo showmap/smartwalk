@@ -2,9 +2,9 @@
 @{
     Style.Require("SmartWalk");
 
-    Script.Require("jQueryUI").AtFoot();
     Script.Require("SmartWalk.ViewModels.Event").AtFoot();
     Script.Require("ImageScale").AtFoot();
+    Script.Require("SmartWalk.AntiForgery").AtFoot();
 
     var model = (ListViewVm)Model;
     var parameters = model.Parameters;
@@ -12,8 +12,9 @@
     var linkClass = "";
     var baseLink = string.Format("/events{0}", parameters.Url);
 }
-<div id="event-items" get-events-url="@Url.Action("GetEvents", "Event", new {area = "SmartWalk.Server"})">
+    <div id="event-items" get-events-url="@Url.Action("GetEvents", "Event", new {area = "SmartWalk.Server"})">
         @Html.AntiForgeryTokenOrchard()    
+    
         <div class="row">
             <div class="col-xs-8">
                 <div class="input-group">
@@ -110,14 +111,16 @@
         $("img.scale").imageScale();
     };    
 
-    $(document).ready(function() {
-        var viewModel = new EventsViewModel(@Html.Raw(Json.Encode(parameters)), $("#event-items").attr("get-events-url"));
-        ko.applyBindings(viewModel, document.getElementById('event-items'));
-        $("#btnSearch").click(function () { viewModel.search.call(viewModel); });
-    });
-    
     $(function() {
+        var viewModel = new EventsViewModel(
+            @Html.Raw(Json.Encode(parameters)), 
+            $("#event-items").attr("get-events-url"));
+
+        ko.applyBindings(viewModel, document.getElementById('event-items'));
+
         $("img.scale").imageScale();
+
+        $("#btnSearch").click(function () { viewModel.search.call(viewModel); });
     });    
 </script>
 }
