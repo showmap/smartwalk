@@ -1,127 +1,81 @@
 ﻿EntityViewModelBase = function (data) {
-    EntityViewModelBase.superClass_.constructor.call(this);
+    var self = this;
 
-    this.Id = ko.observable();
-    this.State = ko.observable();
-    this.Type = ko.observable();
-    this.Name = ko.observable();
-    this.Abbreviation = ko.observable();
-    this.Picture = ko.observable();
-    this.EventMetadataId = ko.observable();
-    this.Description = ko.observable();
+    EntityViewModelBase.superClass_.constructor.call(self);
 
-    this.AllContacts = ko.observableArray();
-    this.AllAddresses = ko.observableArray();
-    this.AllShows = ko.observableArray();
+    self.Id = ko.observable();
+    self.State = ko.observable();
+    self.Type = ko.observable();
+    self.Name = ko.observable();
+    self.Abbreviation = ko.observable();
+    self.Picture = ko.observable();
+    self.EventMetadataId = ko.observable();
+    self.Description = ko.observable();
+
+    self.AllContacts = ko.observableArray();
+    self.AllAddresses = ko.observableArray();
+    self.AllShows = ko.observableArray();
 
     //Contacts computed
-    this.Contacts = ko.computed(function () {
-        return this.Items_(this.AllContacts());
-    }, this);
+    self.Contacts = ko.computed(function () {
+        return self.Items_(self.AllContacts());
+    }, self);
 
-    this.DeletedContacts = ko.computed(function () {
-        return this.DeletedItems_(this.AllContacts());
-    }, this);
+    self.DeletedContacts = ko.computed(function () {
+        return self.DeletedItems_(self.AllContacts());
+    }, self);
 
-    this.CheckedContacts = ko.computed(function () {
-        return this.CheckedItems_(this.Contacts());
-    }, this);
-
-    this.IsAnyContactSelected = ko.computed(function () {
-        return this.IsAnyItemSelected_(this.Contacts());
-    }, this);
-
-    this.AllContactsChecked = ko.computed({
-        read: function () {
-            return this.GetAllItemsChecked_(this.Contacts());
-        },
-        write: function (value) {
-            this.SetAllItemsChecked_(this.Contacts(), value);
-        },
-    }, this);
 
     //Addresses computed
-    this.Addresses = ko.computed(function () {
-        return this.Items_(this.AllAddresses());
-    }, this);
+    self.Addresses = ko.computed(function () {
+        return self.Items_(self.AllAddresses());
+    }, self);
 
-    this.DeletedAddresses = ko.computed(function () {
-        return this.DeletedItems_(this.AllAddresses());
-    }, this);
+    self.DeletedAddresses = ko.computed(function () {
+        return self.DeletedItems_(self.AllAddresses());
+    }, self);
 
-    this.CheckedAddresses = ko.computed(function () {
-        return this.CheckedItems_.call(this, this.Addresses());
-    }, this);
-    
-    this.IsAnyAddressSelected = ko.computed(function () {
-        return this.IsAnyItemSelected_(this.Addresses());
-    }, this);
-
-    this.AllAddressesChecked = ko.computed({
-        read: function () {
-            return this.GetAllItemsChecked_(this.Addresses());
-        },
-        write: function (value) {
-            this.SetAllItemsChecked_(this.Addresses(), value);
-        }
-    }, this);
-
-    this.IsMapVisible = ko.computed(function () {
-        if (this.Addresses().length > 1)
+    self.IsMapVisible = ko.computed(function () {
+        if (self.Addresses().length > 1)
             return true;
-        if (this.Addresses().length == 1 && this.Addresses()[0] != this.selectedItem())
+        if (self.Addresses().length == 1 && !self.Addresses()[0].IsEditing())
             return true;
         return false;
-    }, this);
+    }, self);
 
     //Shows computed
-    this.Shows = ko.computed(function () {
-        return this.Items_(this.AllShows());
-    }, this);
+    self.Shows = ko.computed(function () {
+        return self.Items_(self.AllShows());
+    }, self);
 
-    this.CheckedShows = ko.computed(function () {
-        return this.CheckedItems_.call(this, this.Shows());
-    }, this);
-
-    this.AllShowsChecked = ko.computed({
-        read: function () {
-            return this.GetAllItemsChecked_(this.AllShows());
-        },
-        write: function (value) {
-            this.SetAllItemsChecked_(this.AllShows(), value);
-        }
-    }, this);
-
-    this.IsChecked = this.AllShowsChecked;
+    self.IsEditing = ko.observable(false);
     
-    this.DisplayAddress = ko.computed(function () {
-        if (!this.AllAddresses || this.AllAddresses().length <= 0)
+    self.DisplayAddress = ko.computed(function () {
+        if (!self.AllAddresses || self.AllAddresses().length <= 0)
             return '';
-        return this.AllAddresses()[0];
-    }, this);
+        return self.AllAddresses()[0];
+    }, self);
 
   
-    this.toJSON = ko.computed(function () {
+    // TODO: Should not be computed, 'cause it's slows down shit
+    self.toJSON = ko.computed(function () {
         return {
-            Id: this.Id(),
-            State: this.State(),
-            Type: this.Type(),
-            Name: this.Name(),
-            Abbreviation: this.Abbreviation(),
-            Picture: this.Picture(),
-            EventMetadataId: this.EventMetadataId(),
-            Description: this.Description(),
+            Id: self.Id(),
+            State: self.State(),
+            Type: self.Type(),
+            Name: self.Name(),
+            Abbreviation: self.Abbreviation(),
+            Picture: self.Picture(),
+            EventMetadataId: self.EventMetadataId(),
+            Description: self.Description(),
 
-            AllContacts: this.AllContacts(),
-            AllAddresses: this.AllAddresses(),
-            AllShows: this.AllShows(),
+            AllContacts: ko.utils.arrayMap(self.AllContacts(), function (contact) { return contact.toJSON(); }),
+            AllAddresses: ko.utils.arrayMap(self.AllAddresses(), function (address) { return address.toJSON(); }),
+            AllShows: ko.utils.arrayMap(self.AllShows(), function (show) { return show.toJSON(); }),
         };
-    }, this);
+    }, self);
 
-    this.loadData(data);
-
-    if (this.setupValidations)
-        this.setupValidations(this);    
+    self.loadData(data);  
 };
 
 inherits(EntityViewModelBase, ViewModelBase);
@@ -130,24 +84,28 @@ EntityViewModelBase.prototype.loadCollections_ = function (data) {
     var self = this;
     
     if (data.AllContacts)
-        this.AllContacts($.map(data.AllContacts, function(item) { return new ContactViewModel(item); }));
+        self.AllContacts($.map(data.AllContacts, function (item) { return new ContactViewModel(item); }));
+
     if (data.AllAddresses)
-        this.AllAddresses($.map(data.AllAddresses, function(item) { return new AddressViewModel(item); }));
+        self.AllAddresses($.map(data.AllAddresses, function (item) { return new AddressViewModel(item); }));
+
     if (data.AllShows)
-        this.AllShows($.map(data.AllShows, function(item) { return new ShowViewModel(item); }));
+        self.AllShows($.map(data.AllShows, function (item) { return new ShowViewModel(item); }));
 };
 
 EntityViewModelBase.prototype.loadData = function (data) {
-    this.Id(data.Id);
-    this.State(data.State);
-    this.Type(data.Type);
-    this.Name(data.Name);
-    this.Abbreviation(data.Abbreviation);
-    this.Picture(data.Picture);
-    this.EventMetadataId(data.EventMetadataId);
-    this.Description(data.Description);
+    var self = this;
 
-    this.loadCollections_(data);
+    self.Id(data.Id);
+    self.State(data.State);
+    self.Type(data.Type);
+    self.Name(data.Name);
+    self.Abbreviation(data.Abbreviation);
+    self.Picture(data.Picture);
+    self.EventMetadataId(data.EventMetadataId);
+    self.Description(data.Description);
+
+    self.loadCollections_(data);
 };
 
 EntityViewModel = function (data) {

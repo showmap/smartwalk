@@ -21,15 +21,24 @@ namespace SmartWalk.Server
                 .SetVersionUrl("knockout.validation.js")
                 .SetDependencies("ko");
 
+            manifest.DefineScript("ko.autocomplete")
+                .SetVersion("1.1")
+                .SetVersionUrl("knockout-autocomplete.js")
+                .SetDependencies("ko", "ko.validation",
+                "SmartWalk.Utilites"); // TODO: How we ended up having ko 3rd party lib depended on our JS code?
+
             manifest.DefineScript("ko.datetime")
                 .SetVersion("1.2")
                 .SetVersionUrl("knockout-datetime.js")
-                .SetDependencies("ko", "SmartWalk.Utilites");
+                .SetDependencies("ko",
+                "SmartWalk.Utilites");  // TODO: How we ended up having ko 3rd party lib depended on our JS code?
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion("1.2")
                 .SetVersionUrl("knockout-switcher.js")
-                .SetDependencies("ko", "SmartWalk.Utilites");
+                .SetDependencies("ko",
+                "SmartWalk.Utilites");  // TODO: How we ended up having ko 3rd party lib depended on our JS code?
+            // seems like a bad dependency design. We need to review the usage of addValidationCodeToCustomBinding()
 
             manifest.DefineScript("jquery.visible")
                 .SetVersion("1.2.0")

@@ -6,9 +6,10 @@
     Style.Require("jQueryUI_Orchard");
 
     Script.Require("jQueryUI").AtFoot();
-    Script.Require("SmartWalk.ViewModels.Event.Extended").AtFoot();
     Script.Require("ImageScale").AtFoot();
+    Script.Require("ko.autocomplete").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Event.Extended").AtFoot();
 
     const string hostFormId = "edit-host-form";
     const string venueFormId = "edit-venue-form";
@@ -43,8 +44,6 @@
 				<button type="button" class="btn btn-success" data-bind="click: function(){ $root.saveEvent($root); }">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
 			</div>
 		</div>
-
-        <!--<textarea style="width: 100%" id="tasks" data-bind="value: ko.toJSON($root.StartTime())"></textarea>-->
 
         <div class="row">
 			<div class="col-sm-4" data-bind="validationElement: StartTime">

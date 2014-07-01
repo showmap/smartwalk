@@ -1,15 +1,17 @@
 ﻿function addValidationCodeToCustomBinding(binding) {
     var init = ko.bindingHandlers[binding].init;
-    ko.bindingHandlers[binding].init = function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-        init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
-        return ko.bindingHandlers['validationCore'].init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
-    };
+    ko.bindingHandlers[binding].init =
+        function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            return ko.bindingHandlers['validationCore'].init(
+                element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+        };
 };
 
 function inherits(child, parent) {
-    var F = function () { };
-    F.prototype = parent.prototype;
-    child.prototype = new F();
+    var f = function () { };
+    f.prototype = parent.prototype;
+    child.prototype = new f();
     child.prototype.constructor = child;
 
     // `child` function is an object like all functions    
@@ -84,9 +86,11 @@ ListViewModel.prototype.getData = function(pageNumber) {
         );
     }
 };
+
 ListViewModel.prototype.getNextPage = function() {
     return this.getData(this.currentPage() + 1);
 };
+
 ListViewModel.prototype.search = function (data) {
     $("a").remove(".default-rows");
     this.Items.removeAll();
@@ -96,7 +100,6 @@ ListViewModel.prototype.search = function (data) {
 
 //ViewModelBase Class
 ViewModelBase = function() {
-    this.selectedItem = ko.observable();
 };
 
 ViewModelBase.prototype.DeleteItem_ = function(item) {
@@ -113,45 +116,6 @@ ViewModelBase.prototype.DeletedItems_ = function(itemCollection) {
     return ko.utils.arrayFilter(itemCollection, function(item) {
         return item.State() == 2;
     });
-};
-
-ViewModelBase.prototype.CheckedItems_ = function (itemCollection) {
-    var selectedItem = this.selectedItem();
-    return ko.utils.arrayFilter(itemCollection, function(item) {
-        return item.IsChecked() && item != selectedItem;
-    });
-};
-
-ViewModelBase.prototype.IsAnyItemSelected_ = function(itemCollection) {
-    if (itemCollection.length == 0)
-        return false;
-
-    for (var i = 0; i < itemCollection.length; i++) {
-        if (itemCollection[i].IsChecked()) {
-            return true;
-        }
-    }
-    return false;
-};
-
-ViewModelBase.prototype.GetAllItemsChecked_ = function(itemCollection) {
-    if (itemCollection.length == 0)
-        return false;
-
-    for (var i = 0; i < itemCollection.length; i++) {
-        if (!itemCollection[i].IsChecked()) {
-            return false;
-        }
-    }
-    return true;
-};
-
-ViewModelBase.prototype.SetAllItemsChecked_ = function(itemsCollection, value) {
-    for (var i = 0; i < itemsCollection.length; i++) {
-        if (itemsCollection[i].IsChecked() != value) {
-            itemsCollection[i].IsChecked(value);
-        }
-    }
 };
 
 ko.validation.rules['dependencies'] = {
@@ -218,8 +182,6 @@ ko.validation.rules['dateCompareValidation'] = {
         return false;
     }
 };
-
-
 
 ko.validation.rules['urlValidation'] = {
     validator: function (val, otherVal) {

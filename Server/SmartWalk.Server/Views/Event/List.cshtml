@@ -107,7 +107,7 @@
 
     EventsViewModel.prototype.addItem = function(data) {
         //VenuesViewModel.superClass_.Items.push(new EntityViewModel(data));
-        this.Items.push(new EventViewModelBase(data));
+        this.Items.push(new EventViewModel(data));
         $("img.scale").imageScale();
     };    
 
