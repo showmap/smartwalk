@@ -15,8 +15,8 @@
             </a>
             <a data-bind="attr: {href: '/venue/' + Id()}"><h4 data-bind="text: Name"></h4></a>
             <br />
-            <address data-bind="text: Addresses().length > 0 ? Addresses()[0].Address() : ''"></address>
-            <i class="tip description" data-bind="text: Addresses().length > 0 ? Addresses()[0].Tip() : ''"></i>
+            <address data-bind="text: AllAddresses() && AllAddresses().length > 0 ? AllAddresses()[0].Address() : ''"></address>
+            <i class="tip description" data-bind="text: AllAddresses() && AllAddresses().length > 0 ? AllAddresses()[0].Tip() : ''"></i>
         </div>
     </td>
     <td class="td-align td-valign">

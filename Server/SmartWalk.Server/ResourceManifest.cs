@@ -24,21 +24,17 @@ namespace SmartWalk.Server
             manifest.DefineScript("ko.autocomplete")
                 .SetVersion("1.1")
                 .SetVersionUrl("knockout-autocomplete.js")
-                .SetDependencies("ko", "ko.validation",
-                "SmartWalk.Utilites"); // TODO: How we ended up having ko 3rd party lib depended on our JS code?
+                .SetDependencies("ko", "ko.validation");
 
             manifest.DefineScript("ko.datetime")
                 .SetVersion("1.2")
                 .SetVersionUrl("knockout-datetime.js")
-                .SetDependencies("ko",
-                "SmartWalk.Utilites");  // TODO: How we ended up having ko 3rd party lib depended on our JS code?
+                .SetDependencies("ko");
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion("1.2")
                 .SetVersionUrl("knockout-switcher.js")
-                .SetDependencies("ko",
-                "SmartWalk.Utilites");  // TODO: How we ended up having ko 3rd party lib depended on our JS code?
-            // seems like a bad dependency design. We need to review the usage of addValidationCodeToCustomBinding()
+                .SetDependencies("ko");
 
             manifest.DefineScript("jquery.visible")
                 .SetVersion("1.2.0")
@@ -58,37 +54,38 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Utilites")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("smartwalk-utilites.js")
-                .SetDependencies("ko", "ko.validation", "jquery.visible"); 
+                .SetDependencies("ko", "jquery.visible");
+
+            manifest.DefineScript("SmartWalk.Validation")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("smartwalk-validation.js")
+                .SetDependencies("ko", "ko.validation"); 
             
             manifest.DefineScript("SmartWalk.ViewModels.Common")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("smartwalk-viewmodels-common.js")
-                .SetDependencies(
-                    "ko.validation", 
-                    "ko.datetime", 
-                    "ko.switcher", 
-                    "ko.autocomplete", 
-                    "SmartWalk.Utilites");
-
-            manifest.DefineScript("SmartWalk.ViewModels.Entity")
-                .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-viewmodels-entity.js")
-                .SetDependencies("SmartWalk.ViewModels.Common");
+                .SetDependencies("ko");
 
             manifest.DefineScript("SmartWalk.ViewModels.Entity.Extended")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("smartwalk-viewmodels-entity-extended.js")
-                .SetDependencies("SmartWalk.ViewModels.Entity");
-
-            manifest.DefineScript("SmartWalk.ViewModels.Event")
-                .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-viewmodels-event.js")
-                .SetDependencies("SmartWalk.ViewModels.Entity");
+                .SetDependencies(
+                    "ko.validation",
+                    "SmartWalk.Utilites",
+                    "SmartWalk.Validation",
+                    "SmartWalk.ViewModels.Common");
 
             manifest.DefineScript("SmartWalk.ViewModels.Event.Extended")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("smartwalk-viewmodels-event-extended.js")
-                .SetDependencies("SmartWalk.ViewModels.Event");
+                .SetDependencies(
+                    "ko.validation",
+                    "ko.datetime",
+                    "ko.switcher",
+                    "ko.autocomplete",
+                    "SmartWalk.Utilites",
+                    "SmartWalk.Validation",
+                    "SmartWalk.ViewModels.Common");
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")

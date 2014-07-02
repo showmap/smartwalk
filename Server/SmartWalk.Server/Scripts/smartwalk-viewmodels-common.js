@@ -1,4 +1,56 @@
-﻿function ContactViewModel(data) {
+﻿ListViewModel = function (parameters, url) {
+    this.parameters_ = parameters;
+    this.url_ = url;
+    this.query = ko.observable();
+
+    attachVerticalScroll.call(this, this.getNextPage);
+};
+
+ListViewModel.prototype.Items = ko.observableArray();
+ListViewModel.prototype.currentPage = ko.observable(0);
+
+// TODO: What "this" is doing in here?
+ListViewModel.prototype.getData = function (pageNumber) {
+    var self = this;
+
+    if (self.currentPage() != pageNumber) {
+        var ajData = JSON.stringify({
+            pageNumber: pageNumber,
+            query: self.query(),
+            parameters: self.parameters_
+        });
+
+        ajaxJsonRequest.call(
+            self,
+            ajData,
+            self.url_,
+            function (data) {
+                if (data.length > 0) {
+                    self.currentPage(self.currentPage() + 1);
+
+                    for (var i = 0; i < data.length; i++) {
+                        self.addItem(data[i]);
+                    }
+                }
+            }
+        );
+    }
+};
+
+// TODO: What "this" is doing in here?
+ListViewModel.prototype.getNextPage = function () {
+    return this.getData(this.currentPage() + 1);
+};
+
+// TODO: What "this" is doing in here?
+ListViewModel.prototype.search = function (data) {
+    $("a").remove(".default-rows");
+    this.Items.removeAll();
+    this.currentPage(-1);
+    this.getNextPage();
+};
+
+function ContactViewModel(data) {
     var self = this;
 
     self.Id = ko.observable();
@@ -8,8 +60,6 @@
 
     self.Title = ko.observable();
     self.Contact = ko.observable();
-
-    self.IsEditing = ko.observable(false);
 
     self.DisplayContact = ko.computed(function () {
         return (self.Title() ? self.Title() : "") + (self.Contact() ? ' [' + self.Contact() + ']' : "");
@@ -38,30 +88,6 @@
             Contact: self.Contact()
         };
     }, self);
-    
-    // TODO: To refactor initializing of validation like ShowViewModel
-    if (data.validationUrl) {
-        self.Contact.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Contact', model: $.parseJSON(ko.toJSON(self.toJSON())) } });
-        self.Title.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Title', model: $.parseJSON(ko.toJSON(self.toJSON())) } });
-
-        self.isValidating = ko.computed(function () {
-            return self.Contact.isValidating() || self.Title.isValidating();
-        }, self);
-    };
-
-    if (data.messages) {
-        self.Type.extend({ dependencies: [self.Contact] });
-
-        self.Contact
-            .extend({ required: { params: true, message: data.messages.contactRequiredValidationMessage } })
-            .extend({ maxLength: { params: 255, message: data.messages.contactLengthValidationMessage } })
-            .extend({ contactValidation: { allowEmpty: true, contactType: self.Type, messages: data.messages } });
-        
-        self.Title
-            .extend({ maxLength: { params: 255, message: data.messages.contactTitleValidationMessage } });
-    };
-
-    self.errors = ko.validation.group(self);
 }
 
 function AddressViewModel(data) {
@@ -76,13 +102,12 @@ function AddressViewModel(data) {
     self.Latitude = ko.observable();
     self.Longitude = ko.observable();
 
-    self.IsEditing = ko.observable(false);
-
     self.GetMapLink = function () {
         if (!self.Address())
             return "";
         var res = self.Address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
-        return "https://www.google.com/maps/embed/v1/place?q=" + res + "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
+        return "https://www.google.com/maps/embed/v1/place?q=" + res +
+            "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
     };    
 
     self.loadData = function (addressData) {
@@ -110,28 +135,150 @@ function AddressViewModel(data) {
             Longitude: self.Longitude()
         };
     }, self);
-    
-    // TODO: To refactor initializing of validation like ShowViewModel
-    if (data.validationUrl) {
-        self.Address.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Address', model: $.parseJSON(ko.toJSON(self.toJSON())) } });
-        self.Tip.extend({ asyncValidation: { validationUrl: data.validationUrl, propName: 'Tip', model: $.parseJSON(ko.toJSON(self.toJSON())) } });
-
-        self.isValidating = ko.computed(function () {
-            return self.Address.isValidating() || self.Tip.isValidating();
-        }, self);
-    };
-    
-    if (data.messages) {
-        self.Address
-            .extend({ required: { params: true, message: data.messages.addressRequiredValidationMessage } })
-            .extend({ maxLength: { params: 255, message: data.messages.addressLengthValidationMessage } });
-
-        self.Tip
-            .extend({ maxLength: { params: 255, message: data.messages.addressTipValidationMessage } });
-    };
-
-    self.errors = ko.validation.group(self);
 }
+
+function EventViewModel(data) {
+    var self = this;
+
+    self.Id = ko.observable();
+    self.Title = ko.observable();
+    self.StartTime = ko.observable();
+    self.EndTime = ko.observable();
+    self.DisplayDate = ko.observable();
+    self.IsPublic = ko.observable();
+    self.Picture = ko.observable();
+    self.CombineType = ko.observable(data.CombineType);
+    self.Description = ko.observable(data.Description);
+    self.Latitude = ko.observable(data.Latitude);
+    self.Longitude = ko.observable(data.Longitude);
+
+    self.Host = ko.observable();
+    self.AllVenues = ko.observableArray();
+
+    self.loadData = function (eventData) {
+        self.Id(eventData.Id);
+        self.Title(eventData.Title);
+        self.StartTime(eventData.StartTime ? eventData.StartTime : "");
+        self.EndTime(eventData.EndTime ? eventData.EndTime : "");
+        self.DisplayDate(eventData.DisplayDate);
+        self.IsPublic(eventData.IsPublic);
+        self.Picture(eventData.Picture);
+        self.CombineType(eventData.CombineType);
+        self.Description(eventData.Description);
+        self.Latitude(eventData.Latitude);
+        self.Longitude(eventData.Longitude);
+
+        self.Host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
+        self.AllVenues(
+            data.AllVenues
+                ? $.map(data.AllVenues,
+                    function (venue) { return new EntityViewModel(venue); })
+                : undefined);
+    };
+
+    // TODO: Should not be computed, 'cause it's slows down shit
+    // There is only one place where it's needed as computed, 
+    // for ValidateModel async request, maybe use something else there?
+    self.toJSON = ko.computed(function () {
+        return {
+            Id: self.Id(),
+            CombineType: self.CombineType(),
+            Title: self.Title(),
+            StartTime: self.StartTime(),
+            EndTime: self.EndTime(),
+            IsPublic: self.IsPublic(),
+            Picture: self.Picture(),
+
+            Description: self.Description(),
+            Latitude: self.Latitude(),
+            Longitude: self.Longitude(),
+
+            Host: self.Host() ? self.Host().toJSON() : undefined,
+            AllVenues: self.AllVenues() 
+                ? $.map(self.AllVenues(), function (venue) { return venue.toJSON(); })
+                : undefined,
+        };
+    }, self);
+
+    self.loadData(data);
+};
+
+function EntityViewModel(data) {
+    var self = this;
+
+    self.Id = ko.observable();
+    self.EventMetadataId = ko.observable();
+    self.State = ko.observable();
+    self.Type = ko.observable();
+    self.Name = ko.observable();
+    self.Abbreviation = ko.observable();
+    self.Picture = ko.observable();
+    self.Description = ko.observable();
+
+    self.AllContacts = ko.observableArray();
+    self.AllAddresses = ko.observableArray();
+    self.AllShows = ko.observableArray();
+
+    self.DisplayAddress = ko.computed(function () {
+        return self.AllAddresses() && self.AllAddresses().length > 0
+            ? self.AllAddresses()[0] : "";
+    }, self);
+
+    self.loadData = function (entityData) {
+        self.Id(entityData.Id);
+        self.EventMetadataId(entityData.EventMetadataId);
+        self.State(entityData.State);
+        self.Type(entityData.Type);
+        self.Name(entityData.Name);
+        self.Abbreviation(entityData.Abbreviation);
+        self.Picture(entityData.Picture);
+        self.Description(entityData.Description);
+
+        self.AllContacts(
+            data.AllContacts
+                ? $.map(data.AllContacts,
+                    function (contact) { return new ContactViewModel(contact); })
+                : undefined);
+
+        self.AllAddresses(
+            data.AllAddresses
+                ? $.map(data.AllAddresses,
+                    function (address) { return new AddressViewModel(address); })
+                : undefined);
+
+        self.AllShows(
+            data.AllShows
+                ? $.map(data.AllShows,
+                    function (show) { return new ShowViewModel(show); })
+                : undefined);
+    };
+
+    // TODO: Should not be computed, 'cause it's slows down shit
+    self.toJSON = ko.computed(function () {
+        return {
+            Id: self.Id(),
+            EventMetadataId: self.EventMetadataId(),
+            State: self.State(),
+            Type: self.Type(),
+            Name: self.Name(),
+            Abbreviation: self.Abbreviation(),
+            Picture: self.Picture(),
+            Description: self.Description(),
+
+            AllContacts: self.AllContacts() 
+                ? $.map(self.AllContacts(), function (contact) { return contact.toJSON(); })
+                : undefined,
+            AllAddresses: self.AllAddresses()
+                ? $.map(self.AllAddresses(), function (address) { return address.toJSON(); })
+                : undefined,
+            AllShows: self.AllShows()
+                ? $.map(self.AllShows(), function (show) { return show.toJSON(); })
+                : undefined,
+        };
+    }, self);
+
+    self.loadData(data);
+};
 
 function ShowViewModel(data) {
     var self = this;
@@ -150,14 +297,10 @@ function ShowViewModel(data) {
     self.DetailsUrl = ko.observable();
     self.State = ko.observable();
 
-    self.IsEditing = ko.observable(false);
-
     self.TimeText = ko.computed(function () {
-        if (self.EndTime()) {
-            return self.StartTime() + '&nbsp-&nbsp' + self.EndTime();
-        }
-
-        return self.StartTime();
+        return self.EndTime()
+            ? self.StartTime() + '&nbsp-&nbsp' + self.EndTime()
+            : self.StartTime();
     }, self);
 
     self.loadData = function (showData) {
@@ -167,16 +310,14 @@ function ShowViewModel(data) {
         self.IsReference(showData.IsReference);
         self.Title(showData.Title);
         self.Description(showData.Description);
-        self.StartDate(showData.StartDate ? showData.StartDate : '');
-        self.StartTime(showData.StartTime ? showData.StartTime : '');
-        self.EndDate(showData.EndDate ? showData.EndDate : '');
-        self.EndTime(showData.EndTime ? showData.EndTime : '');
+        self.StartDate(showData.StartDate ? showData.StartDate : "");
+        self.StartTime(showData.StartTime ? showData.StartTime : "");
+        self.EndDate(showData.EndDate ? showData.EndDate : "");
+        self.EndTime(showData.EndTime ? showData.EndTime : "");
         self.Picture(showData.Picture);
         self.DetailsUrl(showData.DetailsUrl);
         self.State(showData.State);
-    };
-
-    self.loadData(data);
+    }
 
     // TODO: Should not be computed, 'cause it's slows down shit
     self.toJSON = ko.computed(function () {
@@ -197,49 +338,5 @@ function ShowViewModel(data) {
         };
     }, self);
 
-    self.extendValidation = function (validationData) {
-        self.Title
-            .extend({ required: { params: true, message: validationData.messages.titleRequiredValidationMessage } })
-            .extend({ maxLength: { params: 255, message: validationData.messages.titleLengthValidationMessage } });
-
-        self.Picture
-            .extend({ maxLength: { params: 255, message: validationData.messages.pictureLengthValidationMessage } })
-            .extend({ urlValidation: { params: { allowEmpty: true }, message: validationData.messages.pictureValidationMessage } });
-
-        self.DetailsUrl
-            .extend({ maxLength: { params: 255, message: validationData.messages.detailsLengthValidationMessage } })
-            .extend({ urlValidation: { params: { allowEmpty: true }, message: validationData.messages.detailsValidationMessage } });
-
-        self.StartDate
-            .extend({ dateCompareValidation: { params: {
-                allowEmpty: true,
-                cmp: 'LESS_THAN',
-                compareVal: self.EndDate
-            }, message: validationData.messages.startDateValidationMessage } })
-            .extend({ dateCompareValidation: { params: {
-                allowEmpty: true,
-                cmp: 'REGION',
-                compareVal: validationData.eventDtFrom,
-                compareValTo: validationData.eventDtTo
-            }, message: validationData.messages.startTimeValidationMessage } });
-
-        self.EndDate
-            .extend({ dateCompareValidation: { params: {
-                allowEmpty: true,
-                cmp: 'GREATER_THAN',
-                compareVal: self.EndDate
-            }, message: validationData.messages.endDateValidationMessage } })
-            .extend({ dateCompareValidation: { params: {
-                allowEmpty: true,
-                cmp: 'REGION',
-                compareVal: validationData.eventDtFrom,
-                compareValTo: validationData.eventDtTo
-            }, message: validationData.messages.endTimeValidationMessage } });
-    };
-    
-    if (data.messages) {
-        self.extendValidation(data);
-    };
-
-    self.errors = ko.validation.group(self);
+    self.loadData(data);
 }

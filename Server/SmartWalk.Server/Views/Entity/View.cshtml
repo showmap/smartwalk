@@ -6,11 +6,11 @@
     Style.Require("SmartWalk");
     Style.Require("TextCollapse");
 
-    Script.Require("jQueryUI").AtFoot();
-    Script.Require("SmartWalk.AntiForgery").AtFoot();
-    Script.Require("SmartWalk.ViewModels.Event").AtFoot();
     Script.Require("ImageScale").AtFoot();
     Script.Require("TextCollapse").AtFoot();
+    Script.Require("SmartWalk.AntiForgery").AtFoot();
+    Script.Require("SmartWalk.Utilites").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Common").AtFoot();
 
     var entityVm = (EntityVm)Model.Data;
     var entityTypeName = entityVm.Type == (int)EntityType.Host ? "Organizer" : "Venue";
@@ -98,39 +98,38 @@
 <script type="text/html" id="eventItemTemplate">
     <tr>
         <td>
-            <a data-bind="attr: {href: '/event/'+Id()}, text: Title"></a><br/>
-            <span class="description" data-bind="text: Description"></span>
+            <a data-bind="attr: {href: '/event/'+Id()}, text: Title"></a>
         </td>
         <td data-bind="text: StartTime"></td>        
     </tr>       
 </script>
 
 <script type="text/javascript">
+    function EventsViewModel() {
+        var self = this;
+
+        self.EventItems = ko.observableArray();
+
+        self.loadData = function() {
+            var ajdata = ko.toJSON({ entityId: @entityVm.Id });
+            var urlUpdate = $("#view-entity-form").attr("get-entity-events");
+
+            ajaxJsonRequest(ajdata, urlUpdate, function(data) {
+                if (data) {
+                    self.EventItems($.map(data, function(item) { return new EventViewModel(item); }));                            
+                }
+            });
+        };
+
+        self.loadData();
+    } 
+
     $(function() {
         $("#btn-edit-entity").click(function() {
             window.location.href = "@Url.Action("Edit")";
         });
 
-        function eventsViewModel() {
-            var self = this;
-
-            self.EventItems = ko.observableArray();
-
-            self.loadData = function() {
-                var ajdata = ko.toJSON({ entityId: @entityVm.Id });
-                var urlUpdate = $("#view-entity-form").attr("get-entity-events");
-
-                ajaxJsonRequest(ajdata, urlUpdate, function(data) {
-                    if (data) {
-                        self.EventItems($.map(data, function(item) { return new EventViewModel(item); }));                            
-                    }
-                });
-            };
-
-            self.loadData();
-        }
-
-        ko.applyBindings(new eventsViewModel(), document.getElementById("view-entity-form"));
+        ko.applyBindings(new EventsViewModel(), document.getElementById("view-entity-form"));
 
         $("img.scale").imageScale();
         $("p.description").textCollapse($(".contact-container").first().height());

@@ -2,9 +2,10 @@
 @{
     Style.Require("SmartWalk");
 
-    Script.Require("SmartWalk.ViewModels.Event").AtFoot();
     Script.Require("ImageScale").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
+    Script.Require("SmartWalk.Utilites").AtFoot();
+    Script.Require("SmartWalk.ViewModels.Common").AtFoot();
 
     var model = (ListViewVm)Model;
     var parameters = model.Parameters;
@@ -106,7 +107,6 @@
     inherits(EventsViewModel, ListViewModel);
 
     EventsViewModel.prototype.addItem = function(data) {
-        //VenuesViewModel.superClass_.Items.push(new EntityViewModel(data));
         this.Items.push(new EventViewModel(data));
         $("img.scale").imageScale();
     };    

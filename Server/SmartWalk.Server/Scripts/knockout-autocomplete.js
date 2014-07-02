@@ -129,8 +129,3 @@ ko.bindingHandlers.jqAuto = {
         $(element).val(modelValue && inputValueProp !== valueProp ? unwrap(modelValue[inputValueProp]) : modelValue.toString());
     }
 };
-
-(
-function () {
-    addValidationCodeToCustomBinding("jqAuto");
-}());

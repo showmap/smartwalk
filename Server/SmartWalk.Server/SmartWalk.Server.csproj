@@ -118,10 +118,9 @@
     <Content Include="Scripts\knockout-autocomplete.js" />
     <Content Include="Scripts\knockout-switcher.js" />
     <Content Include="Scripts\knockout.validation.js" />
+    <Content Include="Scripts\smartwalk-validation.js" />
     <Content Include="Scripts\smartwalk-viewmodels-event-extended.js" />
     <Content Include="Scripts\smartwalk-viewmodels-entity-extended.js" />
-    <Content Include="Scripts\smartwalk-viewmodels-event.js" />
-    <Content Include="Scripts\smartwalk-viewmodels-entity.js" />
     <Content Include="Scripts\smartwalk-viewmodels-common.js" />
     <Content Include="Scripts\image-scale.js" />
     <Content Include="Scripts\image-scale.min.js" />

@@ -1,7 +1,7 @@
 ﻿EntityViewModelExtended = function (settings, data) {
     var self = this;
 
-    EntityViewModelExtended.superClass_.constructor.call(self, data, settings);
+    EntityViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
 
@@ -13,41 +13,49 @@
         write: function (value) {
             self._selectedItem(value);
 
-            self.AllAddresses().forEach(
-                function (address) {
+            if (self.AllAddresses()) {
+                self.AllAddresses().forEach(function(address) {
                     address.IsEditing(value == address);
                 });
+            }
 
-            self.AllContacts().forEach(
-                function (contact) {
+            if (self.AllContacts()) {
+                self.AllContacts().forEach(function(contact) {
                     contact.IsEditing(value == contact);
                 });
-        }
-    }, self);
-
-    self.Name
-        .extend({ asyncValidation: { validationUrl: settings.validationUrl, propName: 'Name', model: self.toJSON() } });
-
-    self.Picture
-        .extend({ maxLength: { params: 255, message: settings.pictureLengthValidationMessage } })
-        .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.picturePatternValidationMessage } });
-
-    self.isValidating = ko.computed(function () {
-        return self.Name.isValidating() || self.Picture.isValidating();
-    }, self);
-
-    self.PrepareCollectionData = function (collection, extData) {
-        if (collection && collection.length > 0) {
-            for (var i = 0; i < collection.length; i++) {
-                collection[i] = $.extend(collection[i], extData);
             }
         }
-    };
+    }, self);
 
-    self.PrepareCollectionData(data.AllContacts, { messages: settings.contactMessages });
-    self.PrepareCollectionData(data.AllAddresses, { messages: settings.addressMessages });
-    
-    self.errors = ko.validation.group(self);
+    self.AllContacts().forEach(function (contact) {
+        EntityViewModelExtended.initContactViewModel(contact, self);
+    });
+
+    self.AllAddresses().forEach(function (address) {
+        EntityViewModelExtended.initAddressViewModel(address, self);
+    });
+
+    self.Contacts = ko.computed(function () {
+        return VmItemUtil.AvailableItems(self.AllContacts());
+    }, self);
+
+    self.Addresses = ko.computed(function () {
+        return VmItemUtil.AvailableItems(self.AllAddresses());
+    }, self);
+
+    self.IsMapVisible = ko.computed(function () {
+        if (self.Addresses() && self.Addresses().length > 1)
+            return true;
+
+        if (self.Addresses() &&
+            self.Addresses().length == 1 &&
+            !self.Addresses()[0].IsEditing())
+            return true;
+
+        return false;
+    }, self);
+
+    self.setupValidation(self, settings);
 };
 
 EntityViewModelExtended.ENTITY_CANCEL_EVENT = "OnEntityCancelled";
@@ -55,17 +63,111 @@ EntityViewModelExtended.ENTITY_SAVE_EVENT = "OnEntitySaved";
 
 inherits(EntityViewModelExtended, EntityViewModel);
 
+EntityViewModelExtended.prototype.setupValidation = function (model, settings) {
+    model.Name
+        .extend({ asyncValidation: {
+            validationUrl: settings.validationUrl,
+            propName: "Name",
+            model: model.toJSON() // TODO: To figure if there are other ways to pass model, also traffic issues
+    } });
+
+    model.Picture
+        .extend({ maxLength: { params: 255, message: settings.pictureLengthValidationMessage } })
+        .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.picturePatternValidationMessage } });
+
+    model.isValidating = ko.computed(function () {
+        return model.Name.isValidating() || model.Picture.isValidating();
+    }, model);
+
+    model.errors = ko.validation.group(model);
+}
+
+EntityViewModelExtended.prototype.setupContactValidation = function (contactModel, settings) {
+    contactModel.Contact.extend({ asyncValidation: {
+        validationUrl: settings.contactValidationUrl,
+        propName: "Contact",
+        model: $.parseJSON(ko.toJSON(contactModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+    } });
+    contactModel.Title.extend({ asyncValidation: {
+        validationUrl: settings.contactValidationUrl,
+        propName: "Title",
+        model: $.parseJSON(ko.toJSON(contactModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+    } });
+
+    contactModel.isValidating = ko.computed(function () {
+        return contactModel.Contact.isValidating() || contactModel.Title.isValidating();
+    }, contactModel);
+
+    contactModel.Type.extend({ dependencies: [contactModel.Contact] });
+
+    contactModel.Contact
+        .extend({ required: { params: true, message: settings.contactMessages.contactRequiredValidationMessage } })
+        .extend({ maxLength: { params: 255, message: settings.contactMessages.contactLengthValidationMessage } })
+        .extend({ contactValidation: { allowEmpty: true, contactType: contactModel.Type, messages: settings.contactMessages } });
+
+    contactModel.Title
+        .extend({ maxLength: { params: 255, message: settings.contactMessages.contactTitleValidationMessage } });
+
+    contactModel.errors = ko.validation.group(contactModel);
+}
+
+EntityViewModelExtended.prototype.setupAddressValidation = function (addressModel, settings) {
+    addressModel.Address.extend({ asyncValidation: {
+        validationUrl: settings.addressValidationUrl,
+        propName: "Address",
+        model: $.parseJSON(ko.toJSON(addressModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+    }
+    });
+
+    addressModel.Tip.extend({ asyncValidation: {
+        validationUrl: settings.addressValidationUrl,
+        propName: "Tip",
+        model: $.parseJSON(ko.toJSON(addressModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+    } });
+
+    addressModel.isValidating = ko.computed(function () {
+        return addressModel.Address.isValidating() || addressModel.Tip.isValidating();
+    }, addressModel);
+
+    addressModel.Address
+        .extend({ required: { params: true, message: settings.addressMessages.addressRequiredValidationMessage } })
+        .extend({ maxLength: { params: 255, message: settings.addressMessages.addressLengthValidationMessage } });
+
+    addressModel.Tip
+        .extend({ maxLength: { params: 255, message: settings.addressMessages.addressTipValidationMessage } });
+
+    addressModel.errors = ko.validation.group(addressModel);
+}
 
 //Contacts
-// TODO: What "this" is doing in here?
-EntityViewModelExtended.prototype.addContact = function () {
-    this.AllContacts.push(new ContactViewModel({ Id: 0, EntityId: this.Id(), Type: 1, State: 1, messages: this.settings.contactMessages }));
-    this.selectedItem(this.AllContacts()[this.AllContacts().length - 1]);
+EntityViewModelExtended.createContactViewModel = function (contactData, entityModel) {
+    var model = new ContactViewModel(contactData);
+    EntityViewModelExtended.initContactViewModel(model, entityModel);
+    return model;
+}
+
+EntityViewModelExtended.initContactViewModel = function (model, entityModel) {
+    model.IsEditing = ko.observable(false);
+    entityModel.setupContactValidation(model, entityModel.settings);
+}
+
+EntityViewModelExtended.prototype.addContact = function (root) {
+    var newContactModel =
+        EntityViewModelExtended.createContactViewModel(
+        {
+            Id: 0,
+            EntityId: root.Id(),
+            Type: 1,
+            State: VmItemState.Added
+        },
+        root);
+
+    root.AllContacts.push(newContactModel);
+    root.selectedItem(newContactModel);
 };
 
-// TODO: What "this" is doing in here?
 EntityViewModelExtended.prototype.deleteContact = function (item) {
-    this.DeleteItem_(item);
+    VmItemUtil.DeleteItem(item);
 };
 
 EntityViewModelExtended.prototype.getContactView = function (item, bindingContext) {
@@ -115,15 +217,33 @@ EntityViewModelExtended.prototype.saveContact = function (item, root) {
 };
 
 //Addresses
-// TODO: What "this" is doing in here?
-EntityViewModelExtended.prototype.addAddress = function () {
-    this.AllAddresses.push(new AddressViewModel({ Id: 0, EntityId: this.Id(), State: 1, Address: "", messages: this.settings.addressMessages }));
-    this.selectedItem(this.AllAddresses()[this.AllAddresses().length - 1]);
+EntityViewModelExtended.createAddressViewModel = function (addressData, entityModel) {
+    var model = new AddressViewModel(addressData);
+    EntityViewModelExtended.initAddressViewModel(model, entityModel);
+    return model;
+}
+
+EntityViewModelExtended.initAddressViewModel = function (model, entityModel) {
+    model.IsEditing = ko.observable(false);
+    entityModel.setupAddressValidation(model, entityModel.settings);
+}
+
+EntityViewModelExtended.prototype.addAddress = function (root) {
+    var newAddressModel =
+        EntityViewModelExtended.createAddressViewModel({
+            Id: 0,
+            EntityId: root.Id(),
+            State: VmItemState.Added,
+            Address: ""
+        },
+        root);
+
+    root.AllAddresses.push(newAddressModel);
+    root.selectedItem(newAddressModel);
 };
 
-// TODO: What "this" is doing in here?
 EntityViewModelExtended.prototype.deleteAddress = function (item) {
-    this.DeleteItem_(item);
+    VmItemUtil.DeleteItem(item);
 };
 
 EntityViewModelExtended.prototype.getAddressView = function (item, bindingContext) {
@@ -167,20 +287,6 @@ EntityViewModelExtended.prototype.saveAddress = function (item, root) {
     }
 };
 
-// Shows 
-// TODO: What "this" is doing in here?
-EntityViewModel.prototype.addShow = function (metadata) {
-    var newShow = new ShowViewModel({ Id: 0, EventMetadataId: metadata.Id(), VenueId: this.Id(), State: 1, StartDate: metadata.StartTime(), EndDate: metadata.StartTime(), messages: metadata.settings.showMessages, eventDtFrom: metadata.StartTime, eventDtTo: metadata.EndTime });
-    //this.AllShows.splice(0, 0, newShow);
-    this.AllShows.push(newShow);
-    return newShow;
-};
-
-// TODO: What "this" is doing in here?
-EntityViewModel.prototype.removeShow = function (item) {
-    this.DeleteItem_(item);
-};
-
 // TODO: What "this" is doing in here?
 EntityViewModelExtended.prototype.GetMapLink = function () {
     var res = "";
@@ -201,10 +307,7 @@ EntityViewModelExtended.prototype.cancel = function () {
     });
 };
 
-// TODO: What "this" is doing in here?
 EntityViewModelExtended.prototype.saveOrAdd = function (root) {
-    var self = this;
-
     if (root.isValidating()) {
         setTimeout(function () {
             root.saveOrAdd(root);
@@ -217,13 +320,13 @@ EntityViewModelExtended.prototype.saveOrAdd = function (root) {
 
         ajaxJsonRequest(
             ajdata,
-            this.settings.entitySaveUrl,
+            root.settings.entitySaveUrl,
             function (data) {
-                if (self.Id() == 0) self.loadData(data);
+                if (root.Id() == 0) root.loadData(data);
 
-                $(self.settings.entityFormName).trigger({
-                    type: self.settings.entitySaveEvent,
-                    item: self
+                $(root.settings.entityFormName).trigger({
+                    type: root.settings.entitySaveEvent,
+                    item: root
                 });
             }
         );

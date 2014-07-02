@@ -121,9 +121,3 @@ ko.bindingHandlers.timepicker = {
         }
     }
 };
-
-(
-function () {
-    addValidationCodeToCustomBinding("datepicker");
-    addValidationCodeToCustomBinding("timepicker");
-}());
