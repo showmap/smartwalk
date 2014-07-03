@@ -5,43 +5,43 @@
 
     self.settings = settings;
 
-    self._selectedItem = ko.observable();
-    self.selectedItem = ko.computed({
-        read: function () {
-            return self._selectedItem();
-        },
-        write: function (value) {
-            self._selectedItem(value);
+    self.Contacts = ko.computed(function () {
+        return self.AllContacts()
+            ? VmItemUtil.AvailableItems(self.AllContacts()) : undefined;
+    });
 
-            if (self.AllAddresses()) {
-                self.AllAddresses().forEach(function(address) {
-                    address.IsEditing(value == address);
-                });
-            }
+    self.Addresses = ko.computed(function () {
+        return self.AllAddresses()
+            ? VmItemUtil.AvailableItems(self.AllAddresses()) : undefined;
+    });
 
-            if (self.AllContacts()) {
-                self.AllContacts().forEach(function(contact) {
-                    contact.IsEditing(value == contact);
-                });
-            }
-        }
-    }, self);
-
-    self.AllContacts().forEach(function (contact) {
+    self.Contacts().forEach(function (contact) {
         EntityViewModelExtended.initContactViewModel(contact, self);
     });
 
-    self.AllAddresses().forEach(function (address) {
+    self.Addresses().forEach(function (address) {
         EntityViewModelExtended.initAddressViewModel(address, self);
     });
 
-    self.Contacts = ko.computed(function () {
-        return VmItemUtil.AvailableItems(self.AllContacts());
-    }, self);
+    self.Contacts.subscribe(function (contacts) {
+        if (contacts) {
+            contacts.forEach(function (contact) {
+                if (contact.IsEditing === undefined) {
+                    EntityViewModelExtended.initContactViewModel(contact, self);
+                }
+            });
+        }
+    });
 
-    self.Addresses = ko.computed(function () {
-        return VmItemUtil.AvailableItems(self.AllAddresses());
-    }, self);
+    self.Addresses.subscribe(function (addresses) {
+        if (addresses) {
+            addresses.forEach(function (address) {
+                if (address.IsEditing === undefined) {
+                    EntityViewModelExtended.initAddressViewModel(address, self);
+                }
+            });
+        }
+    });
 
     self.IsMapVisible = ko.computed(function () {
         if (self.Addresses() && self.Addresses().length > 1)
@@ -55,6 +55,7 @@
         return false;
     }, self);
 
+    self.initSelectedItem(self);
     self.setupValidation(self, settings);
 };
 
@@ -63,104 +64,120 @@ EntityViewModelExtended.ENTITY_SAVE_EVENT = "OnEntitySaved";
 
 inherits(EntityViewModelExtended, EntityViewModel);
 
-EntityViewModelExtended.prototype.setupValidation = function (model, settings) {
-    model.Name
+EntityViewModelExtended.prototype.initSelectedItem = function (model) {
+    model._selectedItem = ko.observable();
+    model.selectedItem = ko.computed({
+        read: function () {
+            return model._selectedItem();
+        },
+        write: function (value) {
+            model._selectedItem(value);
+
+            if (model.Addresses()) {
+                model.Addresses().forEach(function (address) {
+                    address.IsEditing(value == address);
+                });
+            }
+
+            if (model.Contacts()) {
+                model.Contacts().forEach(function (contact) {
+                    contact.IsEditing(value == contact);
+                });
+            }
+        }
+    }, model);
+}
+
+EntityViewModelExtended.prototype.setupValidation = function (entity, settings) {
+    entity.Name
         .extend({ asyncValidation: {
             validationUrl: settings.validationUrl,
             propName: "Name",
-            model: model.toJSON() // TODO: To figure if there are other ways to pass model, also traffic issues
+            model: entity.toJSON() // TODO: To figure if there are other ways to pass model, also traffic issues
     } });
 
-    model.Picture
+    entity.Picture
         .extend({ maxLength: { params: 255, message: settings.pictureLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.picturePatternValidationMessage } });
 
-    model.isValidating = ko.computed(function () {
-        return model.Name.isValidating() || model.Picture.isValidating();
-    }, model);
+    entity.isValidating = ko.computed(function () {
+        return entity.Name.isValidating() || entity.Picture.isValidating();
+    }, entity);
 
-    model.errors = ko.validation.group(model);
+    entity.errors = ko.validation.group(entity);
 }
 
-EntityViewModelExtended.prototype.setupContactValidation = function (contactModel, settings) {
-    contactModel.Contact.extend({ asyncValidation: {
+EntityViewModelExtended.prototype.setupContactValidation = function (contact, settings) {
+    contact.Contact.extend({ asyncValidation: {
         validationUrl: settings.contactValidationUrl,
         propName: "Contact",
-        model: $.parseJSON(ko.toJSON(contactModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        model: $.parseJSON(ko.toJSON(contact.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
     } });
-    contactModel.Title.extend({ asyncValidation: {
+    contact.Title.extend({ asyncValidation: {
         validationUrl: settings.contactValidationUrl,
         propName: "Title",
-        model: $.parseJSON(ko.toJSON(contactModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        model: $.parseJSON(ko.toJSON(contact.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
     } });
 
-    contactModel.isValidating = ko.computed(function () {
-        return contactModel.Contact.isValidating() || contactModel.Title.isValidating();
-    }, contactModel);
+    contact.isValidating = ko.computed(function () {
+        return contact.Contact.isValidating() || contact.Title.isValidating();
+    }, contact);
 
-    contactModel.Type.extend({ dependencies: [contactModel.Contact] });
+    contact.Type.extend({ dependencies: [contact.Contact] });
 
-    contactModel.Contact
+    contact.Contact
         .extend({ required: { params: true, message: settings.contactMessages.contactRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.contactMessages.contactLengthValidationMessage } })
-        .extend({ contactValidation: { allowEmpty: true, contactType: contactModel.Type, messages: settings.contactMessages } });
+        .extend({ contactValidation: { allowEmpty: true, contactType: contact.Type, messages: settings.contactMessages } });
 
-    contactModel.Title
+    contact.Title
         .extend({ maxLength: { params: 255, message: settings.contactMessages.contactTitleValidationMessage } });
 
-    contactModel.errors = ko.validation.group(contactModel);
+    contact.errors = ko.validation.group(contact);
 }
 
-EntityViewModelExtended.prototype.setupAddressValidation = function (addressModel, settings) {
-    addressModel.Address.extend({ asyncValidation: {
+EntityViewModelExtended.prototype.setupAddressValidation = function (address, settings) {
+    address.Address.extend({ asyncValidation: {
         validationUrl: settings.addressValidationUrl,
         propName: "Address",
-        model: $.parseJSON(ko.toJSON(addressModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        model: $.parseJSON(ko.toJSON(address.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
     }
     });
 
-    addressModel.Tip.extend({ asyncValidation: {
+    address.Tip.extend({ asyncValidation: {
         validationUrl: settings.addressValidationUrl,
         propName: "Tip",
-        model: $.parseJSON(ko.toJSON(addressModel.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        model: $.parseJSON(ko.toJSON(address.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
     } });
 
-    addressModel.isValidating = ko.computed(function () {
-        return addressModel.Address.isValidating() || addressModel.Tip.isValidating();
-    }, addressModel);
+    address.isValidating = ko.computed(function () {
+        return address.Address.isValidating() || address.Tip.isValidating();
+    }, address);
 
-    addressModel.Address
+    address.Address
         .extend({ required: { params: true, message: settings.addressMessages.addressRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressLengthValidationMessage } });
 
-    addressModel.Tip
+    address.Tip
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressTipValidationMessage } });
 
-    addressModel.errors = ko.validation.group(addressModel);
+    address.errors = ko.validation.group(address);
 }
 
 //Contacts
-EntityViewModelExtended.createContactViewModel = function (contactData, entityModel) {
-    var model = new ContactViewModel(contactData);
-    EntityViewModelExtended.initContactViewModel(model, entityModel);
-    return model;
-}
-
-EntityViewModelExtended.initContactViewModel = function (model, entityModel) {
-    model.IsEditing = ko.observable(false);
-    entityModel.setupContactValidation(model, entityModel.settings);
+EntityViewModelExtended.initContactViewModel = function (contact, entity) {
+    contact.IsEditing = ko.observable(false);
+    entity.setupContactValidation(contact, entity.settings);
 }
 
 EntityViewModelExtended.prototype.addContact = function (root) {
-    var newContactModel =
-        EntityViewModelExtended.createContactViewModel(
+    var newContactModel = new ContactViewModel(
         {
             Id: 0,
             EntityId: root.Id(),
-            Type: 1,
+            Type: ContactType.Url,
             State: VmItemState.Added
-        },
-        root);
+        });
 
     root.AllContacts.push(newContactModel);
     root.selectedItem(newContactModel);
@@ -217,26 +234,18 @@ EntityViewModelExtended.prototype.saveContact = function (item, root) {
 };
 
 //Addresses
-EntityViewModelExtended.createAddressViewModel = function (addressData, entityModel) {
-    var model = new AddressViewModel(addressData);
-    EntityViewModelExtended.initAddressViewModel(model, entityModel);
-    return model;
-}
-
-EntityViewModelExtended.initAddressViewModel = function (model, entityModel) {
-    model.IsEditing = ko.observable(false);
-    entityModel.setupAddressValidation(model, entityModel.settings);
+EntityViewModelExtended.initAddressViewModel = function (address, entity) {
+    address.IsEditing = ko.observable(false);
+    entity.setupAddressValidation(address, entity.settings);
 }
 
 EntityViewModelExtended.prototype.addAddress = function (root) {
-    var newAddressModel =
-        EntityViewModelExtended.createAddressViewModel({
+    var newAddressModel = new AddressViewModel({
             Id: 0,
             EntityId: root.Id(),
             State: VmItemState.Added,
             Address: ""
-        },
-        root);
+        });
 
     root.AllAddresses.push(newAddressModel);
     root.selectedItem(newAddressModel);

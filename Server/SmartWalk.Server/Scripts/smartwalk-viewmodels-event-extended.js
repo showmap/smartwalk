@@ -5,12 +5,23 @@
 
     self.settings = settings;
 
-    self.AllVenues().forEach(function(venue) {
-        EventViewModelExtended.initEntityViewModel(venue);
-        venue.AllShows().forEach(
-            function (showModel) {
-                EventViewModelExtended.initShowViewModel(showModel, self);
+    self.Venues = ko.computed(function() {
+        return self.AllVenues()
+            ? VmItemUtil.AvailableItems(self.AllVenues()) : undefined;
+    });
+
+    self.Venues().forEach(function (venue) {
+        EventViewModelExtended.initVenueViewModel(venue, self);
+    });
+
+    self.Venues.subscribe(function (venues) {
+        if (venues) {
+            venues.forEach(function(venue) {
+                if (venue.IsEditing === undefined) {
+                    EventViewModelExtended.initVenueViewModel(venue, self);
+                }
             });
+        }
     });
 
     self.AllHosts = ko.observableArray();
@@ -20,34 +31,9 @@
         self.AllHosts.push(self.Host());
     }
 
-    self.Venues = ko.computed(
-        function () { return VmItemUtil.AvailableItems(self.AllVenues()); },
-        self);
+    self.Host.subscribe(function (host) { if (host) self.AllHosts.push(host); });
 
-    self._selectedItem = ko.observable();
-    self.selectedItem = ko.computed({
-        read: function () {
-            return self._selectedItem();
-        },
-        write: function (value) {
-            self._selectedItem(value);
-
-            self.AllVenues().forEach(
-                function (venue) {
-                    venue.IsEditing(self._selectedItem() == venue);
-
-                    if (venue.AllShows()) {
-                        venue.AllShows().forEach(
-                            function(show) {
-                                show.IsEditing(self._selectedItem() == show);
-                            });
-                    }
-                });
-        }
-    }, self);
-
-    self.selectedVenue = ko.observable();
-
+    self.initSelectedItem(self);
     self.setupValidation(self, settings);
     self.attachEvents();
     self.setupDialogs();
@@ -55,36 +41,62 @@
 
 inherits(EventViewModelExtended, EventViewModel);
 
-EventViewModelExtended.prototype.setupValidation = function (model, settings) {
-    model.StartTime
+EventViewModelExtended.prototype.initSelectedItem = function (model) {
+    model._selectedItem = ko.observable();
+    model.selectedItem = ko.computed({
+        read: function () {
+            return model._selectedItem();
+        },
+        write: function (value) {
+            model._selectedItem(value);
+
+            if (model.Venues()) {
+                model.Venues().forEach(function (venue) {
+                    venue.IsEditing(value == venue);
+
+                    if (venue.Shows()) {
+                        venue.Shows().forEach(function (show) {
+                            show.IsEditing(value == show);
+                        });
+                    }
+                });
+            }
+        }
+    }, model);
+
+    model.selectedVenue = ko.observable();
+}
+
+EventViewModelExtended.prototype.setupValidation = function (event, settings) {
+    event.StartTime
         .extend({ required: { message: settings.startTimeRequiredValidationMessage } })
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: "LESS_THAN",
-                    compareVal: model.EndTime
+                    compareVal: event.EndTime
                 },
                 message: settings.startTimeCompareValidationMessage
             }
         });
 
-    model.EndTime.extend({
+    event.EndTime.extend({
         dateCompareValidation: {
             params: {
                 allowEmpty: true,
                 cmp: "GREATER_THAN",
-                compareVal: model.StartTime
+                compareVal: event.StartTime
             },
             message: settings.endTimeCompareValidationMessage
         },
     });
 
-    model.Host.extend({
+    event.Host.extend({
         required: { message: settings.hostRequiredValidationMessage },
     });
 
-    model.Picture
+    event.Picture
         .extend({
             maxLength: {
                 params: 255,
@@ -98,52 +110,52 @@ EventViewModelExtended.prototype.setupValidation = function (model, settings) {
             }
         });
 
-    model.selectedVenue.extend({
+    event.selectedVenue.extend({
         required: {
             message: settings.venueRequiredValidationMessage,
-            onlyIf: function () { return model.selectedItem() != null; }
+            onlyIf: function () { return event.selectedItem() != null; }
         },
     });
 
-    model.isValidating = ko.computed(function () {
-        return model.StartTime.isValidating() ||
-            model.Host.isValidating() ||
-            model.Picture.isValidating();
-    }, model);
+    event.isValidating = ko.computed(function () {
+        return event.StartTime.isValidating() ||
+            event.Host.isValidating() ||
+            event.Picture.isValidating();
+    }, event);
 
-    model.errors = ko.validation.group({
-        StartTime: model.StartTime,
-        EndTime: model.EndTime,
-        Host: model.Host,
-        Picture: model.Picture,
+    event.errors = ko.validation.group({
+        StartTime: event.StartTime,
+        EndTime: event.EndTime,
+        Host: event.Host,
+        Picture: event.Picture,
     });
 
-    model.venueErrors = ko.validation.group({
-        selectedVenue: model.selectedVenue
+    event.venueErrors = ko.validation.group({
+        selectedVenue: event.selectedVenue
     });
 };
 
-EventViewModelExtended.prototype.setupShowValidation = function(eventModel, showModel, settings) {
-    showModel.Title
+EventViewModelExtended.prototype.setupShowValidation = function (show, event, settings) {
+    show.Title
         .extend({ required: { params: true, message: settings.showMessages.titleRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.showMessages.titleLengthValidationMessage } });
 
-    showModel.Picture
+    show.Picture
         .extend({ maxLength: { params: 255, message: settings.showMessages.pictureLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.pictureValidationMessage } });
 
-    showModel.DetailsUrl
+    show.DetailsUrl
         .extend({ maxLength: { params: 255, message: settings.showMessages.detailsLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.detailsValidationMessage } });
 
     // TODO: To setup validation for show Time too
-    showModel.StartDate
+    show.StartDate
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: 'LESS_THAN',
-                    compareVal: showModel.EndDate
+                    compareVal: show.EndDate
                 },
                 message: settings.showMessages.startDateValidationMessage
             }
@@ -153,20 +165,20 @@ EventViewModelExtended.prototype.setupShowValidation = function(eventModel, show
                 params: {
                     allowEmpty: true,
                     cmp: 'REGION',
-                    compareVal: eventModel.StartTime,
-                    compareValTo: eventModel.EndTime
+                    compareVal: event.StartTime,
+                    compareValTo: event.EndTime
                 },
                 message: settings.showMessages.startTimeValidationMessage
             }
         });
 
-    showModel.EndDate
+    show.EndDate
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: 'GREATER_THAN',
-                    compareVal: showModel.EndDate
+                    compareVal: show.EndDate
                 },
                 message: settings.showMessages.endDateValidationMessage
             }
@@ -176,37 +188,44 @@ EventViewModelExtended.prototype.setupShowValidation = function(eventModel, show
                 params: {
                     allowEmpty: true,
                     cmp: 'REGION',
-                    compareVal: eventModel.StartTime,
-                    compareValTo: eventModel.EndTime
+                    compareVal: event.StartTime,
+                    compareValTo: event.EndTime
                 },
                 message: settings.showMessages.endTimeValidationMessage
             }
         });
 
-    showModel.errors = ko.validation.group(showModel);
+    show.errors = ko.validation.group(show);
 }
 
-EventViewModelExtended.createEntityViewModel = function (entityData) {
-    var model = new EntityViewModel(entityData);
-    EventViewModelExtended.initEntityViewModel(model);
-    return model;
+EventViewModelExtended.initVenueViewModel = function (venue, event) {
+    venue.IsEditing = ko.observable(false);
+
+    venue.Shows = ko.computed(function () {
+        return venue.AllShows()
+            ? VmItemUtil.AvailableItems(venue.AllShows()) : undefined;
+    });
+
+    if (venue.Shows()) {
+        venue.Shows().forEach(function (show) {
+            EventViewModelExtended.initShowViewModel(show, event);
+        });
+    }
+
+    venue.Shows.subscribe(function (shows) {
+        if (shows) {
+            shows.forEach(function(show) {
+                if (show.IsEditing === undefined) {
+                    EventViewModelExtended.initShowViewModel(show, event);
+                }
+            });
+        }
+    });
 }
 
-EventViewModelExtended.initEntityViewModel = function (model) {
-    model.Shows = ko.computed(
-        function () { return VmItemUtil.AvailableItems(model.AllShows()); }, self);
-    model.IsEditing = ko.observable(false);
-}
-
-EventViewModelExtended.createShowViewModel = function (showData, eventModel) {
-    var model = new ShowViewModel(showData);
-    EventViewModelExtended.initShowViewModel(model, eventModel);
-    return model;
-}
-
-EventViewModelExtended.initShowViewModel = function (showModel, eventModel) {
-    showModel.IsEditing = ko.observable(false);
-    eventModel.setupShowValidation(eventModel, showModel, eventModel.settings);
+EventViewModelExtended.initShowViewModel = function (show, event) {
+    show.IsEditing = ko.observable(false);
+    event.setupShowValidation(show, event, event.settings);
 }
 
 EventViewModelExtended.prototype.setupDialogs = function () {
@@ -253,8 +272,7 @@ EventViewModelExtended.prototype.attachEvents = function () {
     });
 
     $(self.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
-        var newHost = EventViewModelExtended.createEntityViewModel(event.item.toJSON());
-        self.AllHosts.push(newHost);
+        var newHost = new EntityViewModel(event.item.toJSON());
         self.Host(newHost);
         event.item.loadData(self.getNewHost().toJSON());
         $(self.settings.hostFormName).dialog("close");
@@ -265,7 +283,7 @@ EventViewModelExtended.prototype.attachEvents = function () {
     });
 
     $(self.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
-        var newVenue = EventViewModelExtended.createEntityViewModel(event.item.toJSON());
+        var newVenue = new EntityViewModel(event.item.toJSON());
         self.OtherVenues.push(newVenue);
         self.selectedVenue(newVenue);
         event.item.loadData(self.getNewVenue().toJSON());
@@ -318,7 +336,7 @@ EventViewModelExtended.prototype.clearInner = function (root) {
 EventViewModelExtended.prototype.addShow = function (root, venue) {
     root.clearInner(root);
 
-    var newShowModel = EventViewModelExtended.createShowViewModel({
+    var newShowModel = new ShowViewModel({
         Id: 0,
         EventMetadataId: root.Id(),
         VenueId: venue.Id(),
@@ -404,7 +422,7 @@ EventViewModelExtended.prototype.saveVenue = function (root, item) {
                 ajdata,
                 root.settings.eventVenueSaveUrl,
                 function (data) {
-                    if (data) venue.AllShows.push(EventViewModelExtended.createShowViewModel(data), root);
+                    if (data) venue.AllShows.push(new ShowViewModel(data));
 
                     root.AllVenues.push(venue);
                     root.clearSelectedItem(root, true);
@@ -458,7 +476,7 @@ EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) 
                 for (var i = 0; i < data.length; i++) {
                     sourceArray($.map(
                         data,
-                        function (venue) { return EventViewModelExtended.createEntityViewModel(venue); }));
+                        function (venue) { return new EntityViewModel(venue); }));
                 }
             }
         }
@@ -466,11 +484,11 @@ EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) 
 };
 
 EventViewModelExtended.prototype.getNewHost = function () {
-    return EventViewModelExtended.createEntityViewModel({ Id: 0, Type: 0, State: VmItemState.Added });
+    return new EntityViewModel({ Id: 0, Type: EntityType.Host, State: VmItemState.Added });
 };
 
 EventViewModelExtended.prototype.getNewVenue = function () {
-    return EventViewModelExtended.createEntityViewModel({ Id: 0, Type: 1, State: VmItemState.Added });
+    return new EntityViewModel({ Id: 0, Type: EntityType.Venue, State: VmItemState.Added });
 };
 
 EventViewModelExtended.prototype.addVenue = function (root) {
@@ -503,7 +521,7 @@ EventViewModelExtended.prototype.getHosts = function(searchTerm, sourceArray) {
             if (data && data.length > 0) {
                 sourceArray($.map(
                     data,
-                    function (host) { return EventViewModelExtended.createEntityViewModel(host); }));
+                    function (host) { return new EntityViewModel(host); }));
             }
         }
     );

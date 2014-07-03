@@ -50,6 +50,12 @@ ListViewModel.prototype.search = function (data) {
     this.getNextPage();
 };
 
+ContactType = {
+    Email: 0,
+    Url: 1,
+    Phone: 2
+};
+
 function ContactViewModel(data) {
     var self = this;
 
@@ -201,6 +207,12 @@ function EventViewModel(data) {
     }, self);
 
     self.loadData(data);
+};
+
+EntityType =
+{
+    Host: 0,
+    Venue: 1
 };
 
 function EntityViewModel(data) {
