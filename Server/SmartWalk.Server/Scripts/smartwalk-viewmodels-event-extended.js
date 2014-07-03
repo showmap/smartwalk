@@ -33,25 +33,16 @@
 
     self.host.subscribe(function (host) { if (host) self.allHosts.push(host); });
 
-    self.initSelectedItem(self);
-    self.setupValidation(self, settings);
-    self.attachEvents();
-    self.setupDialogs();
-};
-
-inherits(EventViewModelExtended, EventViewModel);
-
-EventViewModelExtended.prototype.initSelectedItem = function (model) {
-    model._selectedItem = ko.observable();
-    model.selectedItem = ko.computed({
+    self._selectedItem = ko.observable();
+    self.selectedItem = ko.computed({
         read: function () {
-            return model._selectedItem();
+            return self._selectedItem();
         },
         write: function (value) {
-            model._selectedItem(value);
+            self._selectedItem(value);
 
-            if (model.venues()) {
-                model.venues().forEach(function (venue) {
+            if (self.venues()) {
+                self.venues().forEach(function (venue) {
                     venue.IsEditing(value == venue);
 
                     if (venue.Shows()) {
@@ -62,12 +53,212 @@ EventViewModelExtended.prototype.initSelectedItem = function (model) {
                 });
             }
         }
-    }, model);
+    }, self);
 
-    model.selectedVenue = ko.observable();
-}
+    self.selectedVenue = ko.observable();
 
-EventViewModelExtended.prototype.setupValidation = function (event, settings) {
+    EventViewModelExtended.setupValidation(self, settings);
+    EventViewModelExtended.attachEvents(self);
+    EventViewModelExtended.setupDialogs(self);
+
+    self.saveEvent = function () {
+        if (self.errors().length == 0) {
+            ajaxJsonRequest(self.toJSON(), self.settings.eventSaveUrl,
+                function (eventData) {
+                    window.location.href = "/event/" + eventData.Id; // TODO: replace by settings property
+                }
+            );
+        } else {
+            self.errors.showAllMessages();
+        }
+    };
+
+    self.clearSelectedItem = function (deleteItem) {
+        EventViewModelExtended.clearItem(self.selectedItem,
+            function () { return self.selectedItem().id() == 0; }, deleteItem);
+    };
+
+    self.clearSelectedVenue = function (deleteItem) {
+        EventViewModelExtended.clearItem(self.selectedVenue,
+            function () { return true; }, deleteItem);
+    };
+
+    self.clearInner = function () {
+        self.clearSelectedItem(true);
+        self.clearSelectedVenue(true);
+    };
+
+    // Shows
+    self.addShow = function (venue) {
+        self.clearInner();
+
+        var show = new ShowViewModel({
+            Id: 0,
+            EventMetadataId: self.id(),
+            VenueId: venue.id(),
+            State: VmItemState.Added,
+            StartDate: self.startTime(),
+            EndDate: self.startTime()
+        });
+
+        venue.allShows.push(show);
+        self.selectedItem(show);
+    };
+
+    self.cancelShow = function (show) {
+        self.clearInner();
+
+        if (show.id() != 0) {
+            ajaxJsonRequest(show.toJSON(), self.settings.showGetUrl,
+                function (showData) {
+                    if (showData) show.loadData(showData);
+                }
+            );
+        }
+    };
+
+    self.saveShow = function (show) {
+        if (show.errors().length == 0) {
+            if (self.id() != 0) {
+                ajaxJsonRequest(show.toJSON(), self.settings.showSaveUrl,
+                    function (showId) {
+                        if (show.id() == 0 || show.id() != showId) show.id(showId);
+
+                        self.selectedItem(null);
+                    }
+                );
+            } else {
+                self.clearSelectedItem(false);
+            }
+        } else {
+            show.errors.showAllMessages();
+        }
+    };
+
+    self.deleteShow = function (show) {
+        self.clearInner();
+
+        if (self.id() != 0) {
+            ajaxJsonRequest(show.toJSON(), self.settings.showDeleteUrl,
+                function () { VmItemUtil.DeleteItem(show); }
+            );
+        } else {
+            VmItemUtil.DeleteItem(show);
+        }
+    };
+
+    self.getShowView = function (show) {
+        return show.IsEditing()
+            ? self.settings.showEditView
+            : self.settings.showView;
+    };
+
+    // Venues
+    self.saveVenue = function () {
+        if (self.venueErrors().length == 0) {
+            var venue = self.selectedVenue();
+
+            if (self.id() != 0) {
+                venue.eventMetadataId(self.id());
+
+                ajaxJsonRequest(venue.toJSON(), self.settings.eventVenueSaveUrl,
+                    function (referenceShowData) {
+                        if (referenceShowData) {
+                            venue.allShows.push(new ShowViewModel(referenceShowData));
+                        }
+
+                        self.allVenues.push(venue);
+                        self.clearSelectedItem(true);
+                        self.clearSelectedVenue(false);
+                    }
+                );
+            } else {
+                self.allVenues.push(venue);
+                self.clearSelectedItem(true);
+                self.clearSelectedVenue(false);
+            }
+        } else {
+            self.venueErrors.showAllMessages();
+        }
+    };
+
+    self.deleteVenue = function (venue) {
+        self.clearInner();
+
+        if (self.id() != 0) {
+            ajaxJsonRequest(venue.toJSON(), self.settings.eventVenueDeleteUrl,
+                function () {
+                    VmItemUtil.DeleteItem(venue);
+                }
+            );
+        } else {
+            VmItemUtil.DeleteItem(venue);
+        }
+    };
+
+    self.createVenue = function () {
+        $(self.settings.venueFormName).dialog("open");
+    };
+
+    self.getVenues = function (searchTerm, sourceArray) {
+        ajaxJsonRequest(
+            {
+                term: searchTerm,
+                eventId: self.id(),
+                // TODO: Why passing whole event, maybe just venue ids
+                currentEvent: self.id() == 0 ? self.toJSON() : null
+            },
+            self.settings.venueAutocompleteUrl,
+            function (venues) {
+                if (venues && venues.length > 0) {
+                    sourceArray($.map(venues,
+                        function (venue) { return new EntityViewModel(venue); }));
+                }
+            }
+        );
+    };
+
+    self.addVenue = function () {
+        self.clearInner();
+
+        var venue = EventViewModelExtended.getNewVenue();
+        self.allVenues.push(venue);
+        self.selectedItem(venue);
+    };
+
+    self.cancelVenue = function () {
+        self.clearInner();
+    };
+
+    self.getVenueView = function (venue) {
+        return venue.IsEditing()
+            ? self.settings.eventVenueEditView
+            : self.settings.eventVenueView;
+    };
+
+    self.getHosts = function (searchTerm, sourceArray) {
+        ajaxJsonRequest(
+            { term: searchTerm },
+            self.settings.hostAutocompleteUrl,
+            function (hosts) {
+                if (hosts && hosts.length > 0) {
+                    sourceArray($.map(
+                        hosts,
+                        function (host) { return new EntityViewModel(host); }));
+                }
+            }
+        );
+    };
+
+    self.createHost = function () {
+        $(self.settings.hostFormName).dialog("open");
+    };
+};
+
+inherits(EventViewModelExtended, EventViewModel);
+
+// Static Methods
+EventViewModelExtended.setupValidation = function (event, settings) {
     event.startTime
         .extend({ required: { message: settings.startTimeRequiredValidationMessage } })
         .extend({
@@ -135,7 +326,7 @@ EventViewModelExtended.prototype.setupValidation = function (event, settings) {
     });
 };
 
-EventViewModelExtended.prototype.setupShowValidation = function (show, event, settings) {
+EventViewModelExtended.setupShowValidation = function (show, event, settings) {
     show.title
         .extend({ required: { params: true, message: settings.showMessages.titleRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.showMessages.titleLengthValidationMessage } });
@@ -225,11 +416,11 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
 
 EventViewModelExtended.initShowViewModel = function (show, event) {
     show.IsEditing = ko.observable(false);
-    event.setupShowValidation(show, event, event.settings);
+    EventViewModelExtended.setupShowValidation(show, event, event.settings);
 }
 
-EventViewModelExtended.prototype.setupDialogs = function () {
-    $(this.settings.hostFormName).dialog({
+EventViewModelExtended.setupDialogs = function (event) {
+    $(event.settings.hostFormName).dialog({
         modal: true,
         autoOpen: false,
         dialogClass: 'noTitleStuff',
@@ -245,7 +436,7 @@ EventViewModelExtended.prototype.setupDialogs = function () {
         },
     });
 
-    $(this.settings.venueFormName).dialog({
+    $(event.settings.venueFormName).dialog({
         modal: true,
         autoOpen: false,
         dialogClass: 'noTitleStuff',
@@ -264,52 +455,32 @@ EventViewModelExtended.prototype.setupDialogs = function () {
     $(".ui-dialog-titlebar").hide();
 };
 
-EventViewModelExtended.prototype.attachEvents = function () {
-    var self = this;
-
-    $(self.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function (event) {
-        $(self.settings.hostFormName).dialog("close");
+EventViewModelExtended.attachEvents = function (event) {
+    $(event.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function () {
+        $(event.settings.hostFormName).dialog("close");
     });
 
-    $(self.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
-        var newHost = new EntityViewModel(event.item.toJSON());
-        self.host(newHost);
-        event.item.loadData(self.getNewHost().toJSON());
-        $(self.settings.hostFormName).dialog("close");
+    $(event.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (e) {
+        var newHost = new EntityViewModel(e.item.toJSON());
+        event.host(newHost);
+        e.item.loadData(EventViewModelExtended.getNewHost().toJSON());
+        $(event.settings.hostFormName).dialog("close");
     });
 
-    $(self.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function (event) {
-        $(self.settings.venueFormName).dialog("close");
+    $(event.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_CANCEL_EVENT, function () {
+        $(event.settings.venueFormName).dialog("close");
     });
 
-    $(self.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
-        var newVenue = new EntityViewModel(event.item.toJSON());
-        self.otherVenues.push(newVenue);
-        self.selectedVenue(newVenue);
-        event.item.loadData(self.getNewVenue().toJSON());
-        $(self.settings.venueFormName).dialog("close");
+    $(event.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (e) {
+        var newVenue = new EntityViewModel(e.item.toJSON());
+        event.otherVenues.push(newVenue);
+        event.selectedVenue(newVenue);
+        e.item.loadData(EventViewModelExtended.getNewVenue().toJSON());
+        $(event.settings.venueFormName).dialog("close");
     });
 };
 
-EventViewModelExtended.prototype.saveEvent = function (root) {
-    var self = this;
-
-    if (root.errors().length == 0) {
-        var ajdata = ko.toJSON(self.toJSON());
-
-        ajaxJsonRequest(
-            ajdata,
-            self.settings.eventSaveUrl,
-            function (data) {
-                window.location.href = "/event/" + data.Id; // TODO: replace by settings property
-            }
-        );
-    } else {
-        root.errors.showAllMessages();
-    }    
-};
-
-EventViewModelExtended.prototype.clearItem = function (root, item, condition, deleteItem) {
+EventViewModelExtended.clearItem = function (item, condition, deleteItem) {
     if (item() != null) {
         if (condition() && deleteItem) {
             VmItemUtil.DeleteItem(item());
@@ -319,214 +490,19 @@ EventViewModelExtended.prototype.clearItem = function (root, item, condition, de
     }
 };
 
-EventViewModelExtended.prototype.clearSelectedItem = function (root, deleteItem) {
-    root.clearItem(root, root.selectedItem, function () { return root.selectedItem().id() == 0; }, deleteItem);
-};
-
-EventViewModelExtended.prototype.clearSelectedVenue = function (root, deleteItem) {
-    root.clearItem(root, root.selectedVenue, function () { return true; }, deleteItem);
-};
-
-EventViewModelExtended.prototype.clearInner = function (root) {
-    root.clearSelectedItem(root, true);
-    root.clearSelectedVenue(root, true);
-};
-
-// Show
-EventViewModelExtended.prototype.addShow = function (root, venue) {
-    root.clearInner(root);
-
-    var newShowModel = new ShowViewModel({
-        Id: 0,
-        EventMetadataId: root.id(),
-        VenueId: venue.id(),
-        State: VmItemState.Added,
-        StartDate: root.startTime(),
-        EndDate: root.startTime()
-    },
-    root);
-
-    venue.allShows.push(newShowModel);
-    root.selectedItem(newShowModel);
-};
-
-EventViewModelExtended.prototype.cancelShow = function (root, item) {
-    root.clearInner(root);
-    
-    if (item.id() != 0) {
-        var ajdata = ko.toJSON(item.toJSON());
-
-        ajaxJsonRequest(
-            ajdata,
-            root.settings.showGetUrl,
-            function (data) {
-                if (data) item.loadData(data);
-            }
-        );
-    }
-};
-
-EventViewModelExtended.prototype.saveShow = function (root, item) {
-    if (item.errors().length == 0) {
-        if (root.id() != 0) {
-            var ajdata = ko.toJSON(item.toJSON());
-
-            ajaxJsonRequest(
-                ajdata,
-                root.settings.showSaveUrl,
-                function (data) {
-                    if (item.id() == 0 || item.id() != data) item.id(data);
-
-                    root.selectedItem(null);
-                }
-            );
-        } else {
-            root.clearSelectedItem(root, false);
-        }
-    } else {
-        item.errors.showAllMessages();
-    }    
-};
-
-EventViewModelExtended.prototype.deleteShow = function (root, item) {
-    root.clearInner(root);
-    
-    if (root.id() != 0) {
-        var ajdata = ko.toJSON(item.toJSON());
-
-        ajaxJsonRequest(
-            ajdata,
-            root.settings.showDeleteUrl,
-            function () { VmItemUtil.DeleteItem(item); }
-        );
-    } else {
-        VmItemUtil.DeleteItem(item);
-    }
-};
-
-EventViewModelExtended.prototype.getShowView = function (item, bindingContext) {
-    return item.IsEditing()
-        ? bindingContext.$root.settings.showEditView
-        : bindingContext.$root.settings.showView;
-};
-
-EventViewModelExtended.prototype.saveVenue = function (root, item) {
-    if (root.venueErrors().length == 0) {
-        var venue = root.selectedVenue();
-
-        if (root.id() != 0) {
-            venue.eventMetadataId(root.id());
-            var ajdata = ko.toJSON(venue.toJSON());
-
-            ajaxJsonRequest(
-                ajdata,
-                root.settings.eventVenueSaveUrl,
-                function (data) {
-                    if (data) venue.allShows.push(new ShowViewModel(data));
-
-                    root.allVenues.push(venue);
-                    root.clearSelectedItem(root, true);
-                    root.clearSelectedVenue(root, false);
-                }
-            );
-        } else {
-            root.allVenues.push(venue);
-            root.clearSelectedItem(root, true);
-            root.clearSelectedVenue(root, false);
-        }
-    } else {
-        root.venueErrors.showAllMessages();
-    }
-};
-
-EventViewModelExtended.prototype.deleteVenue = function (root, item) {
-    root.clearInner(root);
-
-    if (root.id() != 0) {
-        var ajdata = ko.toJSON(item.toJSON());
-
-        ajaxJsonRequest(ajdata, root.settings.eventVenueDeleteUrl,
-            function(data) {
-                VmItemUtil.DeleteItem(item);
-            }
-        );
-    } else {
-        VmItemUtil.DeleteItem(item);
-    }
-};
-
-EventViewModelExtended.prototype.createVenue = function (root) {
-    $(root.settings.venueFormName).dialog("open");
-};
-
-EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) {
-    var self = this;
-
-    var ajdata = JSON.stringify({
-        term: searchTerm,
-        eventId: self.id(),
-        currentEvent: self.id() == 0 ? self.toJSON() : null
-    });
-    
-    ajaxJsonRequest(
-        ajdata,
-        self.settings.venueAutocompleteUrl,
-        function (data) {
-            if (data && data.length > 0) {
-                sourceArray($.map(data,
-                    function (venue) { return new EntityViewModel(venue); }));
-            }
-        }
-    );
-};
-
-EventViewModelExtended.prototype.getNewHost = function () {
+EventViewModelExtended.getNewHost = function () {
     return new EntityViewModel({ Id: 0, Type: EntityType.Host, State: VmItemState.Added });
 };
 
-EventViewModelExtended.prototype.getNewVenue = function () {
+EventViewModelExtended.getNewVenue = function () {
     return new EntityViewModel({ Id: 0, Type: EntityType.Venue, State: VmItemState.Added });
 };
 
-EventViewModelExtended.prototype.addVenue = function (root) {
-    root.clearInner(root);
-
-    var newVenue = root.getNewVenue();
-    root.allVenues.push(newVenue);
-    root.selectedItem(newVenue);
-};
-
-EventViewModelExtended.prototype.removeVenue = function (item) {
-    VmItemUtil.DeleteItem(item);
-};
-
-EventViewModelExtended.prototype.cancelVenue = function (root) {
-    root.clearInner(root);    
-};
-
-EventViewModelExtended.prototype.getVenueView = function (item, bindingContext) {
-    return item.IsEditing()
-        ? bindingContext.$root.settings.eventVenueEditView
-        : bindingContext.$root.settings.eventVenueView;
-};
-
-EventViewModelExtended.prototype.getHosts = function(searchTerm, sourceArray) {
-    var ajdata = JSON.stringify({ term: searchTerm });
-
-    ajaxJsonRequest(ajdata, this.settings.hostAutocompleteUrl,
-        function (data) {
-            if (data && data.length > 0) {
-                sourceArray($.map(
-                    data,
-                    function (host) { return new EntityViewModel(host); }));
-            }
-        }
-    );
-};
-
-EventViewModelExtended.prototype.getAutoItem = function(item) {
+// TODO: To update with bootstrap CSS styles
+EventViewModelExtended.getAutoItem = function (item) {
     var text = "<div>";
     text += "<div class='autocomplete-name'>" + item.name() + "</div>";
+
     if (item.displayAddress()) {
         if (item.displayAddress().address() != "")
             text += "<div class='autocomplete-detail'>" + item.displayAddress().address() + "</div>";
@@ -534,13 +510,4 @@ EventViewModelExtended.prototype.getAutoItem = function(item) {
 
     text += "</div>";
     return text;
-};
-
-EventViewModelExtended.prototype.deleteAction = function (root) {
-    root.deleteVenues(root);
-};
-
-// TODO: What "this" is doing in here?
-EventViewModelExtended.prototype.createHost = function() {
-    $(this.settings.hostFormName).dialog("open");
 };

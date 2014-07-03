@@ -77,17 +77,21 @@ ko.validation.rules['urlValidation'] = {
 ko.validation.rules['asyncValidation'] = {
     async: true,
     validator: function (val, otherVal, callback) {
-        otherVal.model[otherVal.propName] = val;
-        var ajdata = ko.toJSON({ propName: otherVal.propName, model: otherVal.model });
+        var model = otherVal.model || otherVal.modelHandler();
+        if (model) {
+            model[otherVal.propName] = val;
 
-        ajaxJsonRequest(ajdata, otherVal.validationUrl,
-            function (response, statusText, xhr) {
-                callback(true);
-            },
-            function (response, statusText, xhr) {
-                callback({ isValid: false, message: $.parseJSON(response.responseText).Message });
-            }
-        );
+            ajaxJsonRequest(
+                { propName: otherVal.propName, model: model }, 
+                otherVal.validationUrl,
+                function(response, statusText, xhr) {
+                    callback(true);
+                },
+                function(response, statusText, xhr) {
+                    callback({ isValid: false, message: $.parseJSON(response.responseText).Message });
+                }
+            );
+        }
     }
 };
 

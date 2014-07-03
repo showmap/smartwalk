@@ -1,9 +1,9 @@
 ﻿<script type="text/html" id="EntityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.getVenueView}"></tr>
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
     <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
     <!-- /ko -->
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().indexOf($root.selectedItem()) < 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().indexOf($root.selectedItem()) < 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
@@ -20,7 +20,7 @@
         </div>
     </td>
     <td class="td-align td-valign">
-        <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.deleteVenue($root, $data); }">
+        <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.deleteVenue($data); }">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </td>
@@ -34,9 +34,9 @@
                     <div class="form-group">
                         <label for="venueComboBox">@T("Venue"):</label>
                         <div class="input-group" data-bind="validationElement: $root.selectedVenue">
-                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.otherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'name', jqAutoSourceInputValue: 'name', jqAutoSourceValue: 'id', jqAutoItemText: $root.getAutoItem"/>
+                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.otherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'name', jqAutoSourceInputValue: 'name', jqAutoSourceValue: 'id', jqAutoItemText: EventViewModelExtended.getAutoItem"/>
                             <span class="input-group-btn">
-                                <button type="button" id="createVenueButton" class="btn btn-default pull-right" data-bind="click: function(){ $root.createVenue($root); }">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
+                                <button type="button" id="createVenueButton" class="btn btn-default pull-right" data-bind="click: $root.createVenue">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
                             </span>
                         </div>
                     </div>
@@ -48,8 +48,8 @@
                 <div class="col-sm-4 text-right">
 				    <div class="form-group">
 					    <label for="saveShowButton">&nbsp;</label><br/>
-					    <button type="button" class="btn btn-default" data-bind="click: function() { $root.cancelVenue($root, $data); }">@T("Cancel")</button>
-					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function() { $root.saveVenue($root, $data); } ">@T("Save Venue")</button>
+					    <button type="button" class="btn btn-default" data-bind="click: $root.cancelVenue">@T("Cancel")</button>
+					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: $root.saveVenue">@T("Save Venue")</button>
 				    </div>
 			    </div>
 		    </div>
@@ -67,7 +67,7 @@
         
         <td class="td-valign" data-bind="html: timeText, click: $root.selectedItem"></td>
         <td class="td-align td-valign">
-            <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $root.deleteShow($root, $data); }">
+            <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $root.deleteShow($data); }">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </td>
@@ -132,8 +132,8 @@
 					<div class="col-sm-4 text-right">
 						<div class="form-group">
 							<label for="saveShowButton">&nbsp;</label><br/>
-							<button type="button" class="btn btn-default" data-bind="click: function() {$root.cancelShow($root, $data); }">@T("Cancel")</button>
-							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$root.saveShow($root, $data); } ">@T("Save Show")</button>
+							<button type="button" class="btn btn-default" data-bind="click: function() {$root.cancelShow($data); }">@T("Cancel")</button>
+							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$root.saveShow($data); } ">@T("Save Show")</button>
 						</div>
 					</div>
 				</div>

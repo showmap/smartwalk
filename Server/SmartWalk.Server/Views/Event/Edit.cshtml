@@ -41,7 +41,7 @@
 			    </div>
 			</div>
 			<div class="col-xs-4 text-right">
-				<button type="button" class="btn btn-success" data-bind="click: function(){ $root.saveEvent($root); }">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
+				<button type="button" class="btn btn-success" data-bind="click: saveEvent">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
 			</div>
 		</div>
 
@@ -71,9 +71,9 @@
                 <div class="form-group">
                     <label for="organizedByComboBox">@T("Organized By"):</label>
                     <div class="input-group" data-bind="validationElement: host">
-                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: host, jqOptions: { autoFocus: true }, jqAutoSource: allHosts, jqAutoValue: host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'name', jqAutoSourceInputValue: 'name', jqAutoSourceValue: 'id', jqAutoItemText: getAutoItem"/>
+                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: host, jqOptions: { autoFocus: true }, jqAutoSource: allHosts, jqAutoValue: host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'name', jqAutoSourceInputValue: 'name', jqAutoSourceValue: 'id', jqAutoItemText: EventViewModelExtended.getAutoItem"/>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
+                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
                         </span>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
 		</div>                                                               
  
         <div class="row add-venue" data-bind="visible: venues().length > 0">
-            <a data-bind="click: function() { $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+            <a data-bind="click: addVenue"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
        
         <table class="table table-hover edit">
@@ -121,7 +121,7 @@
 		</table>
     
         <div class="row add-venue" data-bind="visible: selectedItem() == null || selectedItem().hasOwnProperty('venueId')">
-            <a data-bind="click: function(){ $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+            <a data-bind="click: addVenue"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
 
         <div class="row double-gap">
@@ -136,7 +136,7 @@
             <div class="col-xs-8 text-right">
                 <form method="get" action="@cancelAction">
                     <button type="submit" class="btn btn-default">@T("Cancel")</button>
-                    <button type="button" class="btn btn-success" data-bind="click: function(){ $root.saveEvent($root); }">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
+                    <button type="button" class="btn btn-success" data-bind="click: saveEvent">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
                 </form>		        
             </div>
         </div>

@@ -9,17 +9,17 @@
 
     self.getData = function (pageNumber) {
         if (self.currentPage() != pageNumber) {
-            var ajData = JSON.stringify({
-                pageNumber: pageNumber,
-                query: self.query(),
-                parameters: parameters
-            });
-
-            ajaxJsonRequest.call(self, ajData, url,
-                function (data) {
-                    if (data && data.length > 0) {
+            ajaxJsonRequest(
+                {
+                    pageNumber: pageNumber,
+                    query: self.query(),
+                    parameters: parameters
+                },
+                url,
+                function (items) {
+                    if (items && items.length > 0) {
                         self.currentPage(self.currentPage() + 1);
-                        data.forEach(function(item) { self.addItem(item); });
+                        items.forEach(function (item) { self.addItem(item); });
                     }
                 }
             );
@@ -70,8 +70,7 @@ function ContactViewModel(data) {
 
     self.loadData(data);
 
-    // TODO: Should not be computed, 'cause it's slows down shit
-    self.toJSON = ko.computed(function () {
+    self.toJSON = function () {
         return {
             Id: self.id(),
             EntityId: self.entityId(),
@@ -80,7 +79,7 @@ function ContactViewModel(data) {
             Title: self.title(),
             Contact: self.contact()
         };
-    });
+    };
 }
 
 function AddressViewModel(data) {
@@ -96,8 +95,7 @@ function AddressViewModel(data) {
     self.longitude = ko.observable();
 
     self.getMapLink = function () {
-        if (!self.address())
-            return "";
+        if (!self.address()) return "";
         var res = self.address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
         return "https://www.google.com/maps/embed/v1/place?q=" + res +
             "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
@@ -116,8 +114,7 @@ function AddressViewModel(data) {
 
     self.loadData(data);
 
-    // TODO: Should not be computed, 'cause it's slows down shit
-    self.toJSON = ko.computed(function () {
+    self.toJSON = function () {
         return {
             Id: self.id(),
             EntityId: self.entityId(),
@@ -127,7 +124,7 @@ function AddressViewModel(data) {
             Latitude: self.latitude(),
             Longitude: self.longitude()
         };
-    });
+    };
 }
 
 function EventViewModel(data) {
@@ -169,10 +166,7 @@ function EventViewModel(data) {
                 : undefined);
     };
 
-    // TODO: Should not be computed, 'cause it's slows down shit
-    // There is only one place where it's needed as computed, 
-    // for ValidateModel async request, maybe use something else there?
-    self.toJSON = ko.computed(function () {
+    self.toJSON = function () {
         return {
             Id: self.id(),
             CombineType: self.combineType(),
@@ -191,7 +185,7 @@ function EventViewModel(data) {
                 ? $.map(self.allVenues(), function (venue) { return venue.toJSON(); })
                 : undefined,
         };
-    });
+    };
 
     self.loadData(data);
 };
@@ -252,8 +246,7 @@ function EntityViewModel(data) {
                 : undefined);
     };
 
-    // TODO: Should not be computed, 'cause it's slows down shit
-    self.toJSON = ko.computed(function () {
+    self.toJSON = function () {
         return {
             Id: self.id(),
             EventMetadataId: self.eventMetadataId(),
@@ -274,7 +267,7 @@ function EntityViewModel(data) {
                 ? $.map(self.allShows(), function (show) { return show.toJSON(); })
                 : undefined,
         };
-    });
+    };
 
     self.loadData(data);
 };
@@ -318,8 +311,7 @@ function ShowViewModel(data) {
         self.state(showData.State);
     }
 
-    // TODO: Should not be computed, 'cause it's slows down shit
-    self.toJSON = ko.computed(function () {
+    self.toJSON = function () {
         return {
             Id: self.id(),
             EventMetadataId: self.eventMetadataId(),
@@ -335,7 +327,7 @@ function ShowViewModel(data) {
             DetailsUrl: self.detailsUrl(),
             State: self.state()
         };
-    });
+    };
 
     self.loadData(data);
 }

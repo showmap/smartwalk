@@ -55,45 +55,198 @@
         return false;
     }, self);
 
-    self.initSelectedItem(self);
-    self.setupValidation(self, settings);
-};
-
-EntityViewModelExtended.ENTITY_CANCEL_EVENT = "OnEntityCancelled";
-EntityViewModelExtended.ENTITY_SAVE_EVENT = "OnEntitySaved";
-
-inherits(EntityViewModelExtended, EntityViewModel);
-
-EntityViewModelExtended.prototype.initSelectedItem = function (model) {
-    model._selectedItem = ko.observable();
-    model.selectedItem = ko.computed({
+    self._selectedItem = ko.observable();
+    self.selectedItem = ko.computed({
         read: function () {
-            return model._selectedItem();
+            return self._selectedItem();
         },
         write: function (value) {
-            model._selectedItem(value);
+            self._selectedItem(value);
 
-            if (model.addresses()) {
-                model.addresses().forEach(function (address) {
+            if (self.addresses()) {
+                self.addresses().forEach(function (address) {
                     address.IsEditing(value == address);
                 });
             }
 
-            if (model.contacts()) {
-                model.contacts().forEach(function (contact) {
+            if (self.contacts()) {
+                self.contacts().forEach(function (contact) {
                     contact.IsEditing(value == contact);
                 });
             }
         }
-    }, model);
-}
+    });
 
-EntityViewModelExtended.prototype.setupValidation = function (entity, settings) {
+    EntityViewModelExtended.setupValidation(self, settings);
+
+    // Contacts
+    self.addContact = function () {
+        var contact = new ContactViewModel(
+            {
+                Id: 0,
+                EntityId: self.id(),
+                Type: ContactType.Url,
+                State: VmItemState.Added
+            });
+
+        self.allContacts.push(contact);
+        self.selectedItem(contact);
+    };
+
+    self.deleteContact = function (contact) {
+        VmItemUtil.DeleteItem(contact);
+    };
+
+    self.getContactView = function (contact) {
+        return contact.IsEditing()
+            ? self.settings.contactEditView : self.settings.contactView;
+    };
+
+    self.getContactType = function (contact) {
+        return self.settings.contactTypes[contact.type()];
+    };
+
+    self.cancelContact = function (contact) {
+        self.selectedItem(null);
+
+        if (contact.id() == 0) {
+            self.allContacts.remove(contact);
+        } else {
+            ajaxJsonRequest(contact.toJSON(), self.settings.contactGetUrl,
+                function (contactData) {
+                    contact.loadData(contactData);
+                }
+            );
+        }
+    };
+
+    self.saveContact = function (contact) {
+        if (contact.errors().length == 0) {
+            self.selectedItem(null);
+
+            if (self.id() != 0) {
+                ajaxJsonRequest(contact.toJSON(), self.settings.contactSaveUrl,
+                    function (contactId) {
+                        if (contact.id() == 0 || contact.id() != contactId) {
+                            contact.id(contactId);
+                        }
+                    }
+                );
+            }
+        } else {
+            contact.errors.showAllMessages();
+        }
+    };
+
+    // Addresses
+    self.addAddress = function () {
+        var address = new AddressViewModel({
+            Id: 0,
+            EntityId: self.id(),
+            State: VmItemState.Added,
+            Address: ""
+        });
+
+        self.allAddresses.push(address);
+        self.selectedItem(address);
+    };
+
+    self.deleteAddress = function (contact) {
+        VmItemUtil.DeleteItem(contact);
+    };
+
+    self.getAddressView = function (address) {
+        return address.IsEditing()
+            ? self.settings.addressEditView : self.settings.addressView;
+    };
+
+    self.cancelAddress = function (address) {
+        self.selectedItem(null);
+
+        if (address.id() == 0) {
+            self.allAddresses.remove(address);
+        } else {
+            ajaxJsonRequest(address.toJSON(), self.settings.addressGetUrl,
+                function (addressData) {
+                    address.loadData(addressData);
+                }
+            );
+        }
+    };
+
+    self.saveAddress = function (address) {
+        if (address.errors().length == 0) {
+            self.selectedItem(null);
+
+            if (self.id() != 0) {
+                ajaxJsonRequest(address.toJSON(), self.settings.addressSaveUrl,
+                    function (addressId) {
+                        if (address.id() == 0 || address.id() != addressId) {
+                            address.id(addressId);
+                        }
+                    }
+                );
+            }
+        } else {
+            address.errors.showAllMessages();
+        }
+    };
+
+    self.getMapLink = function () {
+        if (self.addresses() && self.addresses().length > 0) {
+            var addr = self.addresses()[0];
+            return addr.getMapLink();
+        }
+
+        return "";
+    };
+
+    self.cancel = function () {
+        $(self.settings.entityFormName).trigger({
+            type: self.settings.entityCancelEvent,
+            item: self
+        });
+    };
+
+    self.saveOrAdd = function () {
+        if (self.isValidating()) {
+            setTimeout(function () {
+                self.saveOrAdd(self);
+            }, 50);
+            return false;
+        }
+
+        if (self.errors().length == 0) {
+            ajaxJsonRequest(self.toJSON(), self.settings.entitySaveUrl,
+                function (entityData) {
+                    if (self.id() == 0) self.loadData(entityData);
+
+                    $(self.settings.entityFormName).trigger({
+                        type: self.settings.entitySaveEvent,
+                        item: self
+                    });
+                }
+            );
+        } else {
+            self.errors.showAllMessages();
+        }
+
+        return true;
+    };
+};
+
+inherits(EntityViewModelExtended, EntityViewModel);
+
+EntityViewModelExtended.ENTITY_CANCEL_EVENT = "OnEntityCancelled";
+EntityViewModelExtended.ENTITY_SAVE_EVENT = "OnEntitySaved";
+
+// Static Methods
+EntityViewModelExtended.setupValidation = function (entity, settings) {
     entity.name
         .extend({ asyncValidation: {
             validationUrl: settings.validationUrl,
             propName: "Name",
-            model: entity.toJSON() // TODO: To figure if there are other ways to pass model, also traffic issues
+            modelHandler: entity.toJSON
     } });
 
     entity.picture
@@ -107,16 +260,16 @@ EntityViewModelExtended.prototype.setupValidation = function (entity, settings) 
     entity.errors = ko.validation.group(entity);
 }
 
-EntityViewModelExtended.prototype.setupContactValidation = function (contact, settings) {
+EntityViewModelExtended.setupContactValidation = function (contact, settings) {
     contact.contact.extend({ asyncValidation: {
         validationUrl: settings.contactValidationUrl,
         propName: "Contact",
-        model: $.parseJSON(ko.toJSON(contact.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        modelHandler: contact.toJSON
     } });
     contact.title.extend({ asyncValidation: {
         validationUrl: settings.contactValidationUrl,
         propName: "Title",
-        model: $.parseJSON(ko.toJSON(contact.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        modelHandler: contact.toJSON
     } });
 
     contact.isValidating = ko.computed(function () {
@@ -136,18 +289,18 @@ EntityViewModelExtended.prototype.setupContactValidation = function (contact, se
     contact.errors = ko.validation.group(contact);
 }
 
-EntityViewModelExtended.prototype.setupAddressValidation = function (address, settings) {
+EntityViewModelExtended.setupAddressValidation = function (address, settings) {
     address.address.extend({ asyncValidation: {
         validationUrl: settings.addressValidationUrl,
         propName: "Address",
-        model: $.parseJSON(ko.toJSON(address.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        modelHandler: address.toJSON
     }
     });
 
     address.tip.extend({ asyncValidation: {
         validationUrl: settings.addressValidationUrl,
         propName: "Tip",
-        model: $.parseJSON(ko.toJSON(address.toJSON())) // TODO: To figure if there are other ways to pass model, also traffic issues
+        modelHandler: address.toJSON
     } });
 
     address.isValidating = ko.computed(function () {
@@ -164,184 +317,12 @@ EntityViewModelExtended.prototype.setupAddressValidation = function (address, se
     address.errors = ko.validation.group(address);
 }
 
-//Contacts
 EntityViewModelExtended.initContactViewModel = function (contact, entity) {
     contact.IsEditing = ko.observable(false);
-    entity.setupContactValidation(contact, entity.settings);
+    EntityViewModelExtended.setupContactValidation(contact, entity.settings);
 }
 
-EntityViewModelExtended.prototype.addContact = function (root) {
-    var newContactModel = new ContactViewModel(
-        {
-            Id: 0,
-            EntityId: root.id(),
-            Type: ContactType.Url,
-            State: VmItemState.Added
-        });
-
-    root.allContacts.push(newContactModel);
-    root.selectedItem(newContactModel);
-};
-
-EntityViewModelExtended.prototype.deleteContact = function (item) {
-    VmItemUtil.DeleteItem(item);
-};
-
-EntityViewModelExtended.prototype.getContactView = function (item, bindingContext) {
-    return item.IsEditing()
-        ? bindingContext.$root.settings.contactEditView
-        : bindingContext.$root.settings.contactView;
-};
-
-// TODO: What "this" is doing in here?
-EntityViewModelExtended.prototype.GetContactType = function (item) {
-    return this.settings.contactTypes[item.type()];
-};
-
-EntityViewModelExtended.prototype.cancelContact = function (item, root) {
-    root.selectedItem(null);
-    
-    if (item.id() == 0) {
-        root.allContacts.remove(item);
-    } else {
-        var ajdata = ko.toJSON(item.toJSON());
-
-        ajaxJsonRequest(ajdata, root.settings.contactGetUrl,
-            function (data) {
-                item.loadData(data);
-            }
-        );
-    }
-};
-
-EntityViewModelExtended.prototype.saveContact = function (item, root) {
-    if (item.errors().length == 0) {
-        root.selectedItem(null);
-
-        if (root.id() != 0) {
-            var ajdata = ko.toJSON(item.toJSON());
-
-            ajaxJsonRequest(ajdata, root.settings.contactSaveUrl,
-                function (data) {
-                    if (item.id() == 0 || item.id() != data)
-                        item.id(data);
-                }
-            );
-        }
-    } else {
-        item.errors.showAllMessages();
-    }    
-};
-
-//Addresses
 EntityViewModelExtended.initAddressViewModel = function (address, entity) {
     address.IsEditing = ko.observable(false);
-    entity.setupAddressValidation(address, entity.settings);
+    EntityViewModelExtended.setupAddressValidation(address, entity.settings);
 }
-
-EntityViewModelExtended.prototype.addAddress = function (root) {
-    var newAddressModel = new AddressViewModel({
-            Id: 0,
-            EntityId: root.id(),
-            State: VmItemState.Added,
-            Address: ""
-        });
-
-    root.allAddresses.push(newAddressModel);
-    root.selectedItem(newAddressModel);
-};
-
-EntityViewModelExtended.prototype.deleteAddress = function (item) {
-    VmItemUtil.DeleteItem(item);
-};
-
-EntityViewModelExtended.prototype.getAddressView = function (item, bindingContext) {
-    return item.IsEditing()
-        ? bindingContext.$root.settings.addressEditView
-        : bindingContext.$root.settings.addressView;
-};
-
-EntityViewModelExtended.prototype.cancelAddress = function (item, root) {
-    root.selectedItem(null);
-    
-    if (item.id() == 0) {
-        root.allAddresses.remove(item);
-    } else {
-        var ajdata = ko.toJSON(item.toJSON());
-
-        ajaxJsonRequest(ajdata, root.settings.addressGetUrl,
-            function(data) {
-                item.loadData(data);
-            }
-        );
-    }
-};        
-
-EntityViewModelExtended.prototype.saveAddress = function (item, root) {
-    if (item.errors().length == 0) {
-        root.selectedItem(null);
-
-        if (root.id() != 0) {
-            var ajdata = ko.toJSON(item.toJSON());
-
-            ajaxJsonRequest(ajdata, root.settings.addressSaveUrl,
-                function(data) {
-                    if (item.id() == 0 || item.id() != data)
-                        item.id(data);
-                }
-            );
-        }
-    } else {
-        item.errors.showAllMessages();
-    }
-};
-
-// TODO: What "this" is doing in here?
-EntityViewModelExtended.prototype.getMapLink = function () {
-    var res = "";
-
-    if (this.addresses().length > 0) {
-        var addr = this.addresses()[0];
-        return addr.getMapLink();
-    }
-
-    return res;
-};
-
-// TODO: What "this" is doing in here?
-EntityViewModelExtended.prototype.cancel = function () {
-    $(this.settings.entityFormName).trigger({
-        type: this.settings.entityCancelEvent,
-        item: this
-    });
-};
-
-EntityViewModelExtended.prototype.saveOrAdd = function (root) {
-    if (root.isValidating()) {
-        setTimeout(function () {
-            root.saveOrAdd(root);
-        }, 50);
-        return false;
-    }
-
-    if (root.errors().length == 0) {
-        var ajdata = ko.toJSON(root.toJSON());
-
-        ajaxJsonRequest(
-            ajdata,
-            root.settings.entitySaveUrl,
-            function (data) {
-                if (root.id() == 0) root.loadData(data);
-
-                $(root.settings.entityFormName).trigger({
-                    type: root.settings.entitySaveEvent,
-                    item: root
-                });
-            }
-        );
-    } else {
-        root.errors.showAllMessages();
-    }
-
-    return true;
-};

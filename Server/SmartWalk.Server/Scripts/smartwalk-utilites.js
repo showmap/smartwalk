@@ -26,7 +26,7 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
         async: true,
         url: url,
         type: "POST",
-        data: ajData,
+        data: JSON.stringify(ajData),
         dataType: "json",
         cache: false,
         contentType: "application/json; charset=utf-8",
@@ -34,10 +34,10 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
 
     $.ajax(config)
         .done(function(response, statusText, xhr) {
-            onSuccess.call(self, response, statusText, xhr);
+            if (onSuccess) onSuccess.call(self, response, statusText, xhr);
         })
         .fail(function (response, statusText, xhr) {
-            onError.call(self, response, statusText, xhr);
+            if (onError) onError.call(self, response, statusText, xhr);
         });
 };
 
@@ -67,6 +67,7 @@ VmItemState =
     Hidden: 3
 };
 
+// static
 function VmItemUtil() {
 };
 
@@ -77,7 +78,8 @@ VmItemUtil.DeleteItem = function (item) {
 VmItemUtil.AvailableItems = function (items) {
     return items
         ? $.grep(items, function (item) {
-                return item.state() != VmItemState.Deleted && item.state() != VmItemState.Hidden;
+                return item.state() != VmItemState.Deleted &&
+                    item.state() != VmItemState.Hidden;
             })
         : undefined;
 };
