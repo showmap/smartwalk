@@ -29,9 +29,9 @@
         @Html.AntiForgeryTokenOrchard()
         <div class="row">
             <div class="col-xs-8">
-                <div class="form-group" data-bind="validationElement: Name">
+                <div class="form-group" data-bind="validationElement: name">
                     <label class="titleLabel" for="entityNameTextInput">@T(entityTypeName + " Name"):</label>
-                    <input id="entityNameTextInput" class="form-control" type="text" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: Name" />
+                    <input id="entityNameTextInput" class="form-control" type="text" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: name" />
                 </div>
             </div>
             <div class="col-xs-4 text-right">
@@ -41,9 +41,9 @@
         
         <div class="row">
 	        <div class="col-sm-8">
-		        <div class="form-group" data-bind="validationElement: Picture">
+		        <div class="form-group" data-bind="validationElement: picture">
 			        <label for="pictureTextInput">@T("Picture"):</label>
-			        <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture" />
+			        <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: picture" />
 		        </div>
 	        </div>
         </div>
@@ -52,23 +52,23 @@
 	        <div class="col-sm-8">
 		        <div class="form-group">
 			        <label for="descriptionTextArea">@T("Description"):</label>
-			        <textarea class="form-control" id="descriptionTextArea" data-bind="value: Description"></textarea>
+			        <textarea class="form-control" id="descriptionTextArea" data-bind="value: description"></textarea>
 		        </div>
 	        </div>
         </div>
         
-        <div class="map-container"><iframe data-bind="attr: { src: GetMapLink() }, visible: IsMapVisible"></iframe></div>
+        <div class="map-container"><iframe data-bind="attr: { src: getMapLink() }, visible: isMapVisible"></iframe></div>
 
-        <div class="row" data-bind="visible: Type() == @Convert.ToInt32(EntityType.Venue)">
+        <div class="row" data-bind="visible: type() == @Convert.ToInt32(EntityType.Venue)">
 	        <div class="col-sm-8">
-		        <table class="table table-hover addresses-table" data-bind="visible: Addresses().length > 0">
+		        <table class="table table-hover addresses-table" data-bind="visible: addresses().length > 0">
 			        <thead>
 				        <tr>
 					        <th><h4>@T("Addresses")</h4></th>
 					        <th class="td-align"></th>
 				        </tr>
 			        </thead>
-			        <tbody data-bind="template: { name: getAddressView, foreach: Addresses() }"></tbody>
+			        <tbody data-bind="template: { name: getAddressView, foreach: addresses() }"></tbody>
 		        </table>
 				
                 <div class="add-item-container">
@@ -79,7 +79,7 @@
         
         <div class="row gap">
             <div class="col-sm-8">
-                <table class="table table-hover" data-bind="visible: Contacts().length > 0">
+                <table class="table table-hover" data-bind="visible: contacts().length > 0">
                     <thead>
                         <tr>
                             <th>@T("Contact Type")</th>
@@ -87,7 +87,7 @@
                             <th class="td-align"></th>
                         </tr>
                     </thead>
-                    <tbody data-bind="template: { name: getContactView, foreach: Contacts() }"></tbody>
+                    <tbody data-bind="template: { name: getContactView, foreach: contacts() }"></tbody>
                 </table>
                 
                 <div class="add-item-container">

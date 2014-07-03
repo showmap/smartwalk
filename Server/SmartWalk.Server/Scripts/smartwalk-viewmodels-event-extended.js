@@ -5,16 +5,16 @@
 
     self.settings = settings;
 
-    self.Venues = ko.computed(function() {
-        return self.AllVenues()
-            ? VmItemUtil.AvailableItems(self.AllVenues()) : undefined;
+    self.venues = ko.computed(function() {
+        return self.allVenues()
+            ? VmItemUtil.AvailableItems(self.allVenues()) : undefined;
     });
 
-    self.Venues().forEach(function (venue) {
+    self.venues().forEach(function (venue) {
         EventViewModelExtended.initVenueViewModel(venue, self);
     });
 
-    self.Venues.subscribe(function (venues) {
+    self.venues.subscribe(function (venues) {
         if (venues) {
             venues.forEach(function(venue) {
                 if (venue.IsEditing === undefined) {
@@ -24,14 +24,14 @@
         }
     });
 
-    self.AllHosts = ko.observableArray();
-    self.OtherVenues = ko.observableArray();
+    self.allHosts = ko.observableArray();
+    self.otherVenues = ko.observableArray();
 
-    if (self.Host()) {
-        self.AllHosts.push(self.Host());
+    if (self.host()) {
+        self.allHosts.push(self.host());
     }
 
-    self.Host.subscribe(function (host) { if (host) self.AllHosts.push(host); });
+    self.host.subscribe(function (host) { if (host) self.allHosts.push(host); });
 
     self.initSelectedItem(self);
     self.setupValidation(self, settings);
@@ -50,8 +50,8 @@ EventViewModelExtended.prototype.initSelectedItem = function (model) {
         write: function (value) {
             model._selectedItem(value);
 
-            if (model.Venues()) {
-                model.Venues().forEach(function (venue) {
+            if (model.venues()) {
+                model.venues().forEach(function (venue) {
                     venue.IsEditing(value == venue);
 
                     if (venue.Shows()) {
@@ -68,35 +68,35 @@ EventViewModelExtended.prototype.initSelectedItem = function (model) {
 }
 
 EventViewModelExtended.prototype.setupValidation = function (event, settings) {
-    event.StartTime
+    event.startTime
         .extend({ required: { message: settings.startTimeRequiredValidationMessage } })
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: "LESS_THAN",
-                    compareVal: event.EndTime
+                    compareVal: event.endTime
                 },
                 message: settings.startTimeCompareValidationMessage
             }
         });
 
-    event.EndTime.extend({
+    event.endTime.extend({
         dateCompareValidation: {
             params: {
                 allowEmpty: true,
                 cmp: "GREATER_THAN",
-                compareVal: event.StartTime
+                compareVal: event.startTime
             },
             message: settings.endTimeCompareValidationMessage
         },
     });
 
-    event.Host.extend({
+    event.host.extend({
         required: { message: settings.hostRequiredValidationMessage },
     });
 
-    event.Picture
+    event.picture
         .extend({
             maxLength: {
                 params: 255,
@@ -118,16 +118,16 @@ EventViewModelExtended.prototype.setupValidation = function (event, settings) {
     });
 
     event.isValidating = ko.computed(function () {
-        return event.StartTime.isValidating() ||
-            event.Host.isValidating() ||
-            event.Picture.isValidating();
+        return event.startTime.isValidating() ||
+            event.host.isValidating() ||
+            event.picture.isValidating();
     }, event);
 
     event.errors = ko.validation.group({
-        StartTime: event.StartTime,
-        EndTime: event.EndTime,
-        Host: event.Host,
-        Picture: event.Picture,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        host: event.host,
+        picture: event.picture,
     });
 
     event.venueErrors = ko.validation.group({
@@ -136,26 +136,26 @@ EventViewModelExtended.prototype.setupValidation = function (event, settings) {
 };
 
 EventViewModelExtended.prototype.setupShowValidation = function (show, event, settings) {
-    show.Title
+    show.title
         .extend({ required: { params: true, message: settings.showMessages.titleRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.showMessages.titleLengthValidationMessage } });
 
-    show.Picture
+    show.picture
         .extend({ maxLength: { params: 255, message: settings.showMessages.pictureLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.pictureValidationMessage } });
 
-    show.DetailsUrl
+    show.detailsUrl
         .extend({ maxLength: { params: 255, message: settings.showMessages.detailsLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.detailsValidationMessage } });
 
     // TODO: To setup validation for show Time too
-    show.StartDate
+    show.startDate
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: 'LESS_THAN',
-                    compareVal: show.EndDate
+                    compareVal: show.endDate
                 },
                 message: settings.showMessages.startDateValidationMessage
             }
@@ -165,20 +165,20 @@ EventViewModelExtended.prototype.setupShowValidation = function (show, event, se
                 params: {
                     allowEmpty: true,
                     cmp: 'REGION',
-                    compareVal: event.StartTime,
-                    compareValTo: event.EndTime
+                    compareVal: event.startTime,
+                    compareValTo: event.endTime
                 },
                 message: settings.showMessages.startTimeValidationMessage
             }
         });
 
-    show.EndDate
+    show.endDate
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: 'GREATER_THAN',
-                    compareVal: show.EndDate
+                    compareVal: show.endDate
                 },
                 message: settings.showMessages.endDateValidationMessage
             }
@@ -188,8 +188,8 @@ EventViewModelExtended.prototype.setupShowValidation = function (show, event, se
                 params: {
                     allowEmpty: true,
                     cmp: 'REGION',
-                    compareVal: event.StartTime,
-                    compareValTo: event.EndTime
+                    compareVal: event.startTime,
+                    compareValTo: event.endTime
                 },
                 message: settings.showMessages.endTimeValidationMessage
             }
@@ -202,8 +202,8 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.IsEditing = ko.observable(false);
 
     venue.Shows = ko.computed(function () {
-        return venue.AllShows()
-            ? VmItemUtil.AvailableItems(venue.AllShows()) : undefined;
+        return venue.allShows()
+            ? VmItemUtil.AvailableItems(venue.allShows()) : undefined;
     });
 
     if (venue.Shows()) {
@@ -273,7 +273,7 @@ EventViewModelExtended.prototype.attachEvents = function () {
 
     $(self.settings.hostFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
         var newHost = new EntityViewModel(event.item.toJSON());
-        self.Host(newHost);
+        self.host(newHost);
         event.item.loadData(self.getNewHost().toJSON());
         $(self.settings.hostFormName).dialog("close");
     });
@@ -284,7 +284,7 @@ EventViewModelExtended.prototype.attachEvents = function () {
 
     $(self.settings.venueFormName).bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function (event) {
         var newVenue = new EntityViewModel(event.item.toJSON());
-        self.OtherVenues.push(newVenue);
+        self.otherVenues.push(newVenue);
         self.selectedVenue(newVenue);
         event.item.loadData(self.getNewVenue().toJSON());
         $(self.settings.venueFormName).dialog("close");
@@ -320,7 +320,7 @@ EventViewModelExtended.prototype.clearItem = function (root, item, condition, de
 };
 
 EventViewModelExtended.prototype.clearSelectedItem = function (root, deleteItem) {
-    root.clearItem(root, root.selectedItem, function () { return root.selectedItem().Id() == 0; }, deleteItem);
+    root.clearItem(root, root.selectedItem, function () { return root.selectedItem().id() == 0; }, deleteItem);
 };
 
 EventViewModelExtended.prototype.clearSelectedVenue = function (root, deleteItem) {
@@ -338,22 +338,22 @@ EventViewModelExtended.prototype.addShow = function (root, venue) {
 
     var newShowModel = new ShowViewModel({
         Id: 0,
-        EventMetadataId: root.Id(),
-        VenueId: venue.Id(),
+        EventMetadataId: root.id(),
+        VenueId: venue.id(),
         State: VmItemState.Added,
-        StartDate: root.StartTime(),
-        EndDate: root.StartTime()
+        StartDate: root.startTime(),
+        EndDate: root.startTime()
     },
     root);
 
-    venue.AllShows.push(newShowModel);
+    venue.allShows.push(newShowModel);
     root.selectedItem(newShowModel);
 };
 
 EventViewModelExtended.prototype.cancelShow = function (root, item) {
     root.clearInner(root);
     
-    if (item.Id() != 0) {
+    if (item.id() != 0) {
         var ajdata = ko.toJSON(item.toJSON());
 
         ajaxJsonRequest(
@@ -368,14 +368,14 @@ EventViewModelExtended.prototype.cancelShow = function (root, item) {
 
 EventViewModelExtended.prototype.saveShow = function (root, item) {
     if (item.errors().length == 0) {
-        if (root.Id() != 0) {
+        if (root.id() != 0) {
             var ajdata = ko.toJSON(item.toJSON());
 
             ajaxJsonRequest(
                 ajdata,
                 root.settings.showSaveUrl,
                 function (data) {
-                    if (item.Id() == 0 || item.Id() != data) item.Id(data);
+                    if (item.id() == 0 || item.id() != data) item.id(data);
 
                     root.selectedItem(null);
                 }
@@ -391,7 +391,7 @@ EventViewModelExtended.prototype.saveShow = function (root, item) {
 EventViewModelExtended.prototype.deleteShow = function (root, item) {
     root.clearInner(root);
     
-    if (root.Id() != 0) {
+    if (root.id() != 0) {
         var ajdata = ko.toJSON(item.toJSON());
 
         ajaxJsonRequest(
@@ -414,23 +414,23 @@ EventViewModelExtended.prototype.saveVenue = function (root, item) {
     if (root.venueErrors().length == 0) {
         var venue = root.selectedVenue();
 
-        if (root.Id() != 0) {
-            venue.EventMetadataId(root.Id());
+        if (root.id() != 0) {
+            venue.eventMetadataId(root.id());
             var ajdata = ko.toJSON(venue.toJSON());
 
             ajaxJsonRequest(
                 ajdata,
                 root.settings.eventVenueSaveUrl,
                 function (data) {
-                    if (data) venue.AllShows.push(new ShowViewModel(data));
+                    if (data) venue.allShows.push(new ShowViewModel(data));
 
-                    root.AllVenues.push(venue);
+                    root.allVenues.push(venue);
                     root.clearSelectedItem(root, true);
                     root.clearSelectedVenue(root, false);
                 }
             );
         } else {
-            root.AllVenues.push(venue);
+            root.allVenues.push(venue);
             root.clearSelectedItem(root, true);
             root.clearSelectedVenue(root, false);
         }
@@ -442,7 +442,7 @@ EventViewModelExtended.prototype.saveVenue = function (root, item) {
 EventViewModelExtended.prototype.deleteVenue = function (root, item) {
     root.clearInner(root);
 
-    if (root.Id() != 0) {
+    if (root.id() != 0) {
         var ajdata = ko.toJSON(item.toJSON());
 
         ajaxJsonRequest(ajdata, root.settings.eventVenueDeleteUrl,
@@ -464,8 +464,8 @@ EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) 
 
     var ajdata = JSON.stringify({
         term: searchTerm,
-        eventId: self.Id(),
-        currentEvent: self.Id() == 0 ? self.toJSON() : null
+        eventId: self.id(),
+        currentEvent: self.id() == 0 ? self.toJSON() : null
     });
     
     ajaxJsonRequest(
@@ -473,11 +473,8 @@ EventViewModelExtended.prototype.getVenues = function (searchTerm, sourceArray) 
         self.settings.venueAutocompleteUrl,
         function (data) {
             if (data && data.length > 0) {
-                for (var i = 0; i < data.length; i++) {
-                    sourceArray($.map(
-                        data,
-                        function (venue) { return new EntityViewModel(venue); }));
-                }
+                sourceArray($.map(data,
+                    function (venue) { return new EntityViewModel(venue); }));
             }
         }
     );
@@ -495,7 +492,7 @@ EventViewModelExtended.prototype.addVenue = function (root) {
     root.clearInner(root);
 
     var newVenue = root.getNewVenue();
-    root.AllVenues.push(newVenue);
+    root.allVenues.push(newVenue);
     root.selectedItem(newVenue);
 };
 
@@ -529,10 +526,10 @@ EventViewModelExtended.prototype.getHosts = function(searchTerm, sourceArray) {
 
 EventViewModelExtended.prototype.getAutoItem = function(item) {
     var text = "<div>";
-    text += "<div class='autocomplete-name'>" + item.Name() + "</div>";
-    if (item.DisplayAddress()) {
-        if (item.DisplayAddress().Address() != "")
-            text += "<div class='autocomplete-detail'>" + item.DisplayAddress().Address() + "</div>";
+    text += "<div class='autocomplete-name'>" + item.name() + "</div>";
+    if (item.displayAddress()) {
+        if (item.displayAddress().address() != "")
+            text += "<div class='autocomplete-detail'>" + item.displayAddress().address() + "</div>";
     }
 
     text += "</div>";

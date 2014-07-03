@@ -1,53 +1,40 @@
 ﻿ListViewModel = function (parameters, url) {
-    this.parameters_ = parameters;
-    this.url_ = url;
-    this.query = ko.observable();
-
-    attachVerticalScroll.call(this, this.getNextPage);
-};
-
-ListViewModel.prototype.Items = ko.observableArray();
-ListViewModel.prototype.currentPage = ko.observable(0);
-
-// TODO: What "this" is doing in here?
-ListViewModel.prototype.getData = function (pageNumber) {
     var self = this;
 
-    if (self.currentPage() != pageNumber) {
-        var ajData = JSON.stringify({
-            pageNumber: pageNumber,
-            query: self.query(),
-            parameters: self.parameters_
-        });
+    self.query = ko.observable();
+    self.items = ko.observableArray();
+    self.currentPage = ko.observable(0);
 
-        ajaxJsonRequest.call(
-            self,
-            ajData,
-            self.url_,
-            function (data) {
-                if (data.length > 0) {
-                    self.currentPage(self.currentPage() + 1);
+    self.addItem = function(data) {}; // abstract ;-)
 
-                    for (var i = 0; i < data.length; i++) {
-                        self.addItem(data[i]);
+    self.getData = function (pageNumber) {
+        if (self.currentPage() != pageNumber) {
+            var ajData = JSON.stringify({
+                pageNumber: pageNumber,
+                query: self.query(),
+                parameters: parameters
+            });
+
+            ajaxJsonRequest.call(self, ajData, url,
+                function (data) {
+                    if (data && data.length > 0) {
+                        self.currentPage(self.currentPage() + 1);
+                        data.forEach(function(item) { self.addItem(item); });
                     }
                 }
-            }
-        );
-    }
-};
+            );
+        }
+    };
 
-// TODO: What "this" is doing in here?
-ListViewModel.prototype.getNextPage = function () {
-    return this.getData(this.currentPage() + 1);
-};
+    self.getNextPage = function () {
+        return self.getData(self.currentPage() + 1);
+    };
 
-// TODO: What "this" is doing in here?
-ListViewModel.prototype.search = function (data) {
-    $("a").remove(".default-rows");
-    this.Items.removeAll();
-    this.currentPage(-1);
-    this.getNextPage();
+    self.search = function () {
+        self.items.removeAll();
+        self.currentPage(-1);
+        self.getNextPage();
+    };
 };
 
 ContactType = {
@@ -59,26 +46,26 @@ ContactType = {
 function ContactViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable();
-    self.EntityId = ko.observable();
-    self.Type = ko.observable();
-    self.State = ko.observable();
+    self.id = ko.observable();
+    self.entityId = ko.observable();
+    self.type = ko.observable();
+    self.state = ko.observable();
 
-    self.Title = ko.observable();
-    self.Contact = ko.observable();
+    self.title = ko.observable();
+    self.contact = ko.observable();
 
-    self.DisplayContact = ko.computed(function () {
-        return (self.Title() ? self.Title() : "") + (self.Contact() ? ' [' + self.Contact() + ']' : "");
-    }, self);    
+    self.displayContact = ko.computed(function () {
+        return (self.title() ? self.title() : "") + (self.contact() ? ' [' + self.contact() + ']' : "");
+    });    
 
     self.loadData = function (contactData) {
-        self.Id(contactData.Id);
-        self.EntityId(contactData.EntityId);
-        self.Type(contactData.Type);
-        self.State(contactData.State);
+        self.id(contactData.Id);
+        self.entityId(contactData.EntityId);
+        self.type(contactData.Type);
+        self.state(contactData.State);
 
-        self.Title(contactData.Title);
-        self.Contact(contactData.Contact);
+        self.title(contactData.Title);
+        self.contact(contactData.Contact);
     };
 
     self.loadData(data);
@@ -86,45 +73,45 @@ function ContactViewModel(data) {
     // TODO: Should not be computed, 'cause it's slows down shit
     self.toJSON = ko.computed(function () {
         return {
-            Id: self.Id(),
-            EntityId: self.EntityId(),
-            Type: self.Type(),
-            State: self.State(),
-            Title: self.Title(),
-            Contact: self.Contact()
+            Id: self.id(),
+            EntityId: self.entityId(),
+            Type: self.type(),
+            State: self.state(),
+            Title: self.title(),
+            Contact: self.contact()
         };
-    }, self);
+    });
 }
 
 function AddressViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable();
-    self.EntityId = ko.observable();
-    self.Address = ko.observable();
-    self.Tip = ko.observable();
-    self.State = ko.observable();
+    self.id = ko.observable();
+    self.entityId = ko.observable();
+    self.address = ko.observable();
+    self.tip = ko.observable();
+    self.state = ko.observable();
 
-    self.Latitude = ko.observable();
-    self.Longitude = ko.observable();
+    self.latitude = ko.observable();
+    self.longitude = ko.observable();
 
-    self.GetMapLink = function () {
-        if (!self.Address())
+    self.getMapLink = function () {
+        if (!self.address())
             return "";
-        var res = self.Address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
+        var res = self.address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
         return "https://www.google.com/maps/embed/v1/place?q=" + res +
             "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
     };    
 
     self.loadData = function (addressData) {
-        self.Id(addressData.Id);
-        self.EntityId(addressData.EntityId);
-        self.Address(addressData.Address);
-        self.Tip(addressData.Tip);
-        self.State(addressData.State);
+        self.id(addressData.Id);
+        self.entityId(addressData.EntityId);
+        self.address(addressData.Address);
+        self.tip(addressData.Tip);
+        self.state(addressData.State);
 
-        self.Latitude(addressData.Latitude);
-        self.Longitude(addressData.Longitude);
+        self.latitude(addressData.Latitude);
+        self.longitude(addressData.Longitude);
     };
 
     self.loadData(data);
@@ -132,50 +119,50 @@ function AddressViewModel(data) {
     // TODO: Should not be computed, 'cause it's slows down shit
     self.toJSON = ko.computed(function () {
         return {
-            Id: self.Id(),
-            EntityId: self.EntityId(),
-            State: self.State(),
-            Address: self.Address(),
-            Tip: self.Tip(),
-            Latitude: self.Latitude(),
-            Longitude: self.Longitude()
+            Id: self.id(),
+            EntityId: self.entityId(),
+            State: self.state(),
+            Address: self.address(),
+            Tip: self.tip(),
+            Latitude: self.latitude(),
+            Longitude: self.longitude()
         };
-    }, self);
+    });
 }
 
 function EventViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable();
-    self.Title = ko.observable();
-    self.StartTime = ko.observable();
-    self.EndTime = ko.observable();
-    self.DisplayDate = ko.observable();
-    self.IsPublic = ko.observable();
-    self.Picture = ko.observable();
-    self.CombineType = ko.observable(data.CombineType);
-    self.Description = ko.observable(data.Description);
-    self.Latitude = ko.observable(data.Latitude);
-    self.Longitude = ko.observable(data.Longitude);
+    self.id = ko.observable();
+    self.title = ko.observable();
+    self.startTime = ko.observable();
+    self.endTime = ko.observable();
+    self.displayDate = ko.observable();
+    self.isPublic = ko.observable();
+    self.picture = ko.observable();
+    self.combineType = ko.observable(data.combineType);
+    self.description = ko.observable(data.description);
+    self.latitude = ko.observable(data.latitude);
+    self.longitude = ko.observable(data.longitude);
 
-    self.Host = ko.observable();
-    self.AllVenues = ko.observableArray();
+    self.host = ko.observable();
+    self.allVenues = ko.observableArray();
 
     self.loadData = function (eventData) {
-        self.Id(eventData.Id);
-        self.Title(eventData.Title);
-        self.StartTime(eventData.StartTime ? eventData.StartTime : "");
-        self.EndTime(eventData.EndTime ? eventData.EndTime : "");
-        self.DisplayDate(eventData.DisplayDate);
-        self.IsPublic(eventData.IsPublic);
-        self.Picture(eventData.Picture);
-        self.CombineType(eventData.CombineType);
-        self.Description(eventData.Description);
-        self.Latitude(eventData.Latitude);
-        self.Longitude(eventData.Longitude);
+        self.id(eventData.Id);
+        self.title(eventData.Title);
+        self.startTime(eventData.StartTime ? eventData.StartTime : "");
+        self.endTime(eventData.EndTime ? eventData.EndTime : "");
+        self.displayDate(eventData.DisplayDate);
+        self.isPublic(eventData.IsPublic);
+        self.picture(eventData.Picture);
+        self.combineType(eventData.CombineType);
+        self.description(eventData.Description);
+        self.latitude(eventData.Latitude);
+        self.longitude(eventData.Longitude);
 
-        self.Host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
-        self.AllVenues(
+        self.host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
+        self.allVenues(
             data.AllVenues
                 ? $.map(data.AllVenues,
                     function (venue) { return new EntityViewModel(venue); })
@@ -187,24 +174,24 @@ function EventViewModel(data) {
     // for ValidateModel async request, maybe use something else there?
     self.toJSON = ko.computed(function () {
         return {
-            Id: self.Id(),
-            CombineType: self.CombineType(),
-            Title: self.Title(),
-            StartTime: self.StartTime(),
-            EndTime: self.EndTime(),
-            IsPublic: self.IsPublic(),
-            Picture: self.Picture(),
+            Id: self.id(),
+            CombineType: self.combineType(),
+            Title: self.title(),
+            StartTime: self.startTime(),
+            EndTime: self.endTime(),
+            IsPublic: self.isPublic(),
+            Picture: self.picture(),
 
-            Description: self.Description(),
-            Latitude: self.Latitude(),
-            Longitude: self.Longitude(),
+            Description: self.description(),
+            Latitude: self.latitude(),
+            Longitude: self.longitude(),
 
-            Host: self.Host() ? self.Host().toJSON() : undefined,
-            AllVenues: self.AllVenues() 
-                ? $.map(self.AllVenues(), function (venue) { return venue.toJSON(); })
+            Host: self.host() ? self.host().toJSON() : undefined,
+            AllVenues: self.allVenues() 
+                ? $.map(self.allVenues(), function (venue) { return venue.toJSON(); })
                 : undefined,
         };
-    }, self);
+    });
 
     self.loadData(data);
 };
@@ -218,47 +205,47 @@ EntityType =
 function EntityViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable();
-    self.EventMetadataId = ko.observable();
-    self.State = ko.observable();
-    self.Type = ko.observable();
-    self.Name = ko.observable();
-    self.Abbreviation = ko.observable();
-    self.Picture = ko.observable();
-    self.Description = ko.observable();
+    self.id = ko.observable();
+    self.eventMetadataId = ko.observable();
+    self.state = ko.observable();
+    self.type = ko.observable();
+    self.name = ko.observable();
+    self.abbreviation = ko.observable();
+    self.picture = ko.observable();
+    self.description = ko.observable();
 
-    self.AllContacts = ko.observableArray();
-    self.AllAddresses = ko.observableArray();
-    self.AllShows = ko.observableArray();
+    self.allContacts = ko.observableArray();
+    self.allAddresses = ko.observableArray();
+    self.allShows = ko.observableArray();
 
-    self.DisplayAddress = ko.computed(function () {
-        return self.AllAddresses() && self.AllAddresses().length > 0
-            ? self.AllAddresses()[0] : "";
-    }, self);
+    self.displayAddress = ko.computed(function () {
+        return self.allAddresses() && self.allAddresses().length > 0
+            ? self.allAddresses()[0] : "";
+    });
 
     self.loadData = function (entityData) {
-        self.Id(entityData.Id);
-        self.EventMetadataId(entityData.EventMetadataId);
-        self.State(entityData.State);
-        self.Type(entityData.Type);
-        self.Name(entityData.Name);
-        self.Abbreviation(entityData.Abbreviation);
-        self.Picture(entityData.Picture);
-        self.Description(entityData.Description);
+        self.id(entityData.Id);
+        self.eventMetadataId(entityData.EventMetadataId);
+        self.state(entityData.State);
+        self.type(entityData.Type);
+        self.name(entityData.Name);
+        self.abbreviation(entityData.Abbreviation);
+        self.picture(entityData.Picture);
+        self.description(entityData.Description);
 
-        self.AllContacts(
+        self.allContacts(
             data.AllContacts
                 ? $.map(data.AllContacts,
                     function (contact) { return new ContactViewModel(contact); })
                 : undefined);
 
-        self.AllAddresses(
+        self.allAddresses(
             data.AllAddresses
                 ? $.map(data.AllAddresses,
                     function (address) { return new AddressViewModel(address); })
                 : undefined);
 
-        self.AllShows(
+        self.allShows(
             data.AllShows
                 ? $.map(data.AllShows,
                     function (show) { return new ShowViewModel(show); })
@@ -268,26 +255,26 @@ function EntityViewModel(data) {
     // TODO: Should not be computed, 'cause it's slows down shit
     self.toJSON = ko.computed(function () {
         return {
-            Id: self.Id(),
-            EventMetadataId: self.EventMetadataId(),
-            State: self.State(),
-            Type: self.Type(),
-            Name: self.Name(),
-            Abbreviation: self.Abbreviation(),
-            Picture: self.Picture(),
-            Description: self.Description(),
+            Id: self.id(),
+            EventMetadataId: self.eventMetadataId(),
+            State: self.state(),
+            Type: self.type(),
+            Name: self.name(),
+            Abbreviation: self.abbreviation(),
+            Picture: self.picture(),
+            Description: self.description(),
 
-            AllContacts: self.AllContacts() 
-                ? $.map(self.AllContacts(), function (contact) { return contact.toJSON(); })
+            AllContacts: self.allContacts() 
+                ? $.map(self.allContacts(), function (contact) { return contact.toJSON(); })
                 : undefined,
-            AllAddresses: self.AllAddresses()
-                ? $.map(self.AllAddresses(), function (address) { return address.toJSON(); })
+            AllAddresses: self.allAddresses()
+                ? $.map(self.allAddresses(), function (address) { return address.toJSON(); })
                 : undefined,
-            AllShows: self.AllShows()
-                ? $.map(self.AllShows(), function (show) { return show.toJSON(); })
+            AllShows: self.allShows()
+                ? $.map(self.allShows(), function (show) { return show.toJSON(); })
                 : undefined,
         };
-    }, self);
+    });
 
     self.loadData(data);
 };
@@ -295,60 +282,60 @@ function EntityViewModel(data) {
 function ShowViewModel(data) {
     var self = this;
 
-    self.Id = ko.observable();
-    self.EventMetadataId = ko.observable();
-    self.VenueId = ko.observable();
-    self.IsReference = ko.observable();
-    self.Title = ko.observable();
-    self.Description = ko.observable();
-    self.StartDate = ko.observable();
-    self.StartTime = ko.observable();
-    self.EndDate = ko.observable();
-    self.EndTime = ko.observable();
-    self.Picture = ko.observable();
-    self.DetailsUrl = ko.observable();
-    self.State = ko.observable();
+    self.id = ko.observable();
+    self.eventMetadataId = ko.observable();
+    self.venueId = ko.observable();
+    self.isReference = ko.observable();
+    self.title = ko.observable();
+    self.description = ko.observable();
+    self.startDate = ko.observable();
+    self.startTime = ko.observable();
+    self.endDate = ko.observable();
+    self.endTime = ko.observable();
+    self.picture = ko.observable();
+    self.detailsUrl = ko.observable();
+    self.state = ko.observable();
 
-    self.TimeText = ko.computed(function () {
-        return self.EndTime()
-            ? self.StartTime() + '&nbsp-&nbsp' + self.EndTime()
-            : self.StartTime();
-    }, self);
+    self.timeText = ko.computed(function () {
+        return self.endTime()
+            ? self.startTime() + '&nbsp-&nbsp' + self.endTime()
+            : self.startTime();
+    });
 
     self.loadData = function (showData) {
-        self.Id(showData.Id);
-        self.EventMetadataId(showData.EventMetadataId);
-        self.VenueId(showData.VenueId);
-        self.IsReference(showData.IsReference);
-        self.Title(showData.Title);
-        self.Description(showData.Description);
-        self.StartDate(showData.StartDate ? showData.StartDate : "");
-        self.StartTime(showData.StartTime ? showData.StartTime : "");
-        self.EndDate(showData.EndDate ? showData.EndDate : "");
-        self.EndTime(showData.EndTime ? showData.EndTime : "");
-        self.Picture(showData.Picture);
-        self.DetailsUrl(showData.DetailsUrl);
-        self.State(showData.State);
+        self.id(showData.Id);
+        self.eventMetadataId(showData.EventMetadataId);
+        self.venueId(showData.VenueId);
+        self.isReference(showData.IsReference);
+        self.title(showData.Title);
+        self.description(showData.Description);
+        self.startDate(showData.StartDate ? showData.StartDate : "");
+        self.startTime(showData.StartTime ? showData.StartTime : "");
+        self.endDate(showData.EndDate ? showData.EndDate : "");
+        self.endTime(showData.EndTime ? showData.EndTime : "");
+        self.picture(showData.Picture);
+        self.detailsUrl(showData.DetailsUrl);
+        self.state(showData.State);
     }
 
     // TODO: Should not be computed, 'cause it's slows down shit
     self.toJSON = ko.computed(function () {
         return {
-            Id: self.Id(),
-            EventMetadataId: self.EventMetadataId(),
-            VenueId: self.VenueId(),
-            IsReference: self.IsReference(),
-            Title: self.Title(),
-            Description: self.Description(),
-            StartDate: self.StartDate(),
-            StartTime: self.StartTime(),
-            EndDate: self.EndDate(),
-            EndTime: self.EndTime(),
-            Picture: self.Picture(),
-            DetailsUrl: self.DetailsUrl(),
-            State: self.State()
+            Id: self.id(),
+            EventMetadataId: self.eventMetadataId(),
+            VenueId: self.venueId(),
+            IsReference: self.isReference(),
+            Title: self.title(),
+            Description: self.description(),
+            StartDate: self.startDate(),
+            StartTime: self.startTime(),
+            EndDate: self.endDate(),
+            EndTime: self.endTime(),
+            Picture: self.picture(),
+            DetailsUrl: self.detailsUrl(),
+            State: self.state()
         };
-    }, self);
+    });
 
     self.loadData(data);
 }

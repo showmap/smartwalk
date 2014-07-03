@@ -1,22 +1,22 @@
 ﻿<script type="text/html" id="EntityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.getVenueView}"></tr>
-    <tr class="add-venue-show" data-bind="visible: Id() != 0 && Shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
     <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
     <!-- /ko -->
-    <tr class="add-venue-show" data-bind="visible: Id() != 0 && Shows().indexOf($root.selectedItem()) < 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().indexOf($root.selectedItem()) < 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($root, $data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
     <td colspan="2">
         <div>
-            <a class="bg-image" data-bind="attr: {href: '/venue/' + Id()}">
-                <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: Picture }"/>
-                <span class="abbr" data-bind="text: Abbreviation()"></span>
+            <a class="bg-image" data-bind="attr: {href: '/venue/' + id()}">
+                <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }"/>
+                <span class="abbr" data-bind="text: abbreviation()"></span>
             </a>
-            <a data-bind="attr: {href: '/venue/' + Id()}"><h4 data-bind="text: Name"></h4></a>
+            <a data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>
             <br />
-            <address data-bind="text: AllAddresses() && AllAddresses().length > 0 ? AllAddresses()[0].Address() : ''"></address>
-            <i class="tip description" data-bind="text: AllAddresses() && AllAddresses().length > 0 ? AllAddresses()[0].Tip() : ''"></i>
+            <address data-bind="text: allAddresses() && allAddresses().length > 0 ? allAddresses()[0].address() : ''"></address>
+            <i class="tip description" data-bind="text: allAddresses() && allAddresses().length > 0 ? allAddresses()[0].tip() : ''"></i>
         </div>
     </td>
     <td class="td-align td-valign">
@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label for="venueComboBox">@T("Venue"):</label>
                         <div class="input-group" data-bind="validationElement: $root.selectedVenue">
-                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.OtherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: $root.getAutoItem"/>
+                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.otherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'name', jqAutoSourceInputValue: 'name', jqAutoSourceValue: 'id', jqAutoItemText: $root.getAutoItem"/>
                             <span class="input-group-btn">
                                 <button type="button" id="createVenueButton" class="btn btn-default pull-right" data-bind="click: function(){ $root.createVenue($root); }">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
                             </span>
@@ -60,12 +60,12 @@
 <script type="text/html" id="ShowItemTemplate">
     <tr class="venue-show">
         <td data-bind="click: $root.selectedItem">
-            <span data-bind="text: Title"></span>
+            <span data-bind="text: title"></span>
             <br/>
-            <span class="description" data-bind="text: Description"></span>
+            <span class="description" data-bind="text: description"></span>
         </td>
         
-        <td class="td-valign" data-bind="html: TimeText, click: $root.selectedItem"></td>
+        <td class="td-valign" data-bind="html: timeText, click: $root.selectedItem"></td>
         <td class="td-align td-valign">
             <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $root.deleteShow($root, $data); }">
                 <span class="glyphicon glyphicon-remove"></span>
@@ -80,53 +80,53 @@
 			<div class="well">							
 				<div class="row">
 					<div class="col-sm-8">
-						<div class="form-group" data-bind="validationElement: Title">
+						<div class="form-group" data-bind="validationElement: title">
 							<label for="titleTextInput">@T("Title"):</label>
-							<input type="text" class="form-control" id="titleTextInput" data-bind="value: Title">
+							<input type="text" class="form-control" id="titleTextInput" data-bind="value: title">
 						</div>
 									
 						<div class="form-group">
 							<label for="showDescriptionTextArea">@T("Description"):</label>
-							<textarea class="form-control" id="showDescriptionTextArea" data-bind="value: Description"></textarea>
+							<textarea class="form-control" id="showDescriptionTextArea" data-bind="value: description"></textarea>
 						</div>
 					</div>
 							
 					<div class="col-sm-2">
 						<div class="form-group">
 							<label for="showStartTimeInput">@T("Start Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: StartTime, timepickerOptions: { stepMinute: 5 }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, timepickerOptions: { stepMinute: 5 }" />
 						</div>
 									
-						<div class="form-group" data-bind="validationElement: StartDate">
+						<div class="form-group" data-bind="validationElement: startDate">
 							<label for="showStartDateInput">@T("Start Date"):</label><br/>
-							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: StartDate, datepickerOptions: { showAnim: '' }" />
+							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startDate, datepickerOptions: { showAnim: '' }" />
 						</div>
 					</div>
 							
 					<div class="col-sm-2">
 						<div class="form-group">
 							<label for="showStartTimeInput">@T("End Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: EndTime, timepickerOptions: { stepMinute: 5 }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, timepickerOptions: { stepMinute: 5 }" />
 						</div>
 									
-						<div class="form-group" data-bind="validationElement: EndDate">
+						<div class="form-group" data-bind="validationElement: endDate">
 							<label for="showEndDateInput">@T("End Date"):</label><br/>
-							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: EndDate, datepickerOptions: { showAnim: '' }" />
+							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endDate, datepickerOptions: { showAnim: '' }" />
 						</div>
 					</div>
 				</div>
 							
 				<div class="row">
 					<div class="col-sm-4">
-						<div class="form-group" data-bind="validationElement: Picture">
+						<div class="form-group" data-bind="validationElement: picture">
 							<label for="pictureTextInput">@T("Picture"):</label>
-							<input type="text" class="form-control" id="pictureTextInput" data-bind="value: Picture">
+							<input type="text" class="form-control" id="pictureTextInput" data-bind="value: picture">
 						</div>
 					</div>
 					<div class="col-sm-4">
-						<div class="form-group" data-bind="validationElement: DetailsUrl">
+						<div class="form-group" data-bind="validationElement: detailsUrl">
 							<label for="detailsURLTextInput">@T("Details URL"):</label><br/>
-							<input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: DetailsUrl" />
+							<input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: detailsUrl" />
 						</div>
 					</div>
 					<div class="col-sm-4 text-right">

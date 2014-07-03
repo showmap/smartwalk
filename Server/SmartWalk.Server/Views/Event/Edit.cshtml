@@ -34,10 +34,10 @@
         @Html.AntiForgeryTokenOrchard()
 
         <div class="row">
-			<div class="col-xs-8" data-bind="validationElement: Title">
+			<div class="col-xs-8" data-bind="validationElement: title">
 			    <div class="form-group">
 			        <label class="titleLabel" for="eventTitleTextInput">@T("Event Title"):</label>
-			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: Title" />
+			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: title" />
 			    </div>
 			</div>
 			<div class="col-xs-4 text-right">
@@ -46,22 +46,22 @@
 		</div>
 
         <div class="row">
-			<div class="col-sm-4" data-bind="validationElement: StartTime">
+			<div class="col-sm-4" data-bind="validationElement: startTime">
 				<div class="form-group">
 					<label for="startDateInput">@T("Start Date"):</label>
-					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: StartTime, datepickerOptions: { showAnim: '' }">
+					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: startTime, datepickerOptions: { showAnim: '' }">
 				</div>
 			</div>
-			<div class="col-sm-4" data-bind="validationElement: EndTime">
+			<div class="col-sm-4" data-bind="validationElement: endTime">
 				<div class="form-group">
 					<label for="endDateInput">@T("End Date"):</label>
-					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: EndTime, datepickerOptions: { showAnim: '' }">
+					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: endTime, datepickerOptions: { showAnim: '' }">
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="form-group">
 					<label for="visibilityButtonsGroup">@T("Visibility"):</label><br/>
-					<div class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: IsPublic, switcherOptions: { values: [{'val':true, 'disp':'@T("Public")'}, {'val':false, 'disp':'@T("Private")'}]}"></div>
+					<div class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: isPublic, switcherOptions: { values: [{'val':true, 'disp':'@T("Public")'}, {'val':false, 'disp':'@T("Private")'}]}"></div>
 				</div>
 			</div>
 		</div>	    
@@ -70,8 +70,8 @@
             <div class="col-sm-8">
                 <div class="form-group">
                     <label for="organizedByComboBox">@T("Organized By"):</label>
-                    <div class="input-group" data-bind="validationElement: Host">
-                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: Host, jqOptions: { autoFocus: true }, jqAutoSource: AllHosts, jqAutoValue: Host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'Name', jqAutoSourceInputValue: 'Name', jqAutoSourceValue: 'Id', jqAutoItemText: getAutoItem"/>
+                    <div class="input-group" data-bind="validationElement: host">
+                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="jqAuto: host, jqOptions: { autoFocus: true }, jqAutoSource: allHosts, jqAutoValue: host, jqAutoQuery: getHosts, jqAutoSourceLabel: 'name', jqAutoSourceInputValue: 'name', jqAutoSourceValue: 'id', jqAutoItemText: getAutoItem"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: $root.createHost">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
                         </span>
@@ -80,18 +80,18 @@
             </div>
             @*<div class="col-sm-4">
 				<div class="form-group">
-					<label for="combineTypeButtonsGroup">@T("Combine Type"):</label><br/>
-					<div class="btn-group" id="combineTypeButtonsGroup" data-bind="switcher: CombineType, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}]}"></div>
+					<label for="combinetypeButtonsGroup">@T("Combine type"):</label><br/>
+					<div class="btn-group" id="combinetypeButtonsGroup" data-bind="switcher: Combinetype, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}]}"></div>
 				</div>
 			</div>            
             *@
 		</div>		       
         
         <div class="row">
-			<div class="col-sm-8" data-bind="validationElement: Picture">
+			<div class="col-sm-8" data-bind="validationElement: picture">
 				<div class="form-group">
 					<label for="pictureTextInput">@T("Picture"):</label>
-					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: Picture"/>
+					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: picture"/>
 				</div>
 			</div>
 		</div>
@@ -100,12 +100,12 @@
 			<div class="col-sm-8">
 				<div class="form-group">
 					<label for="descriptionTextArea">@T("Description"):</label>
-					<textarea class="form-control" id="descriptionTextArea" data-bind="value: Description"></textarea>
+					<textarea class="form-control" id="descriptionTextArea" data-bind="value: description"></textarea>
 				</div>
 			</div>
 		</div>                                                               
  
-        <div class="row add-venue" data-bind="visible: Venues().length > 0">
+        <div class="row add-venue" data-bind="visible: venues().length > 0">
             <a data-bind="click: function() { $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
        
@@ -117,10 +117,10 @@
 					<th class="td-align"></th>
 				</tr>
 			</thead>
-			<tbody data-bind="template: { name: 'EntityItemTemplate', foreach: Venues() }"></tbody>
+			<tbody data-bind="template: { name: 'EntityItemTemplate', foreach: venues() }"></tbody>
 		</table>
     
-        <div class="row add-venue" data-bind="visible: selectedItem() == null || selectedItem().hasOwnProperty('VenueId')">
+        <div class="row add-venue" data-bind="visible: selectedItem() == null || selectedItem().hasOwnProperty('venueId')">
             <a data-bind="click: function(){ $root.addVenue($root); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
 

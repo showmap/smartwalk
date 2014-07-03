@@ -22,17 +22,17 @@ namespace SmartWalk.Server
                 .SetDependencies("ko");
 
             manifest.DefineScript("ko.autocomplete")
-                .SetVersion("1.1")
+                .SetVersion("1.2")
                 .SetVersionUrl("knockout-autocomplete.js")
                 .SetDependencies("ko", "ko.validation");
 
             manifest.DefineScript("ko.datetime")
-                .SetVersion("1.2")
+                .SetVersion("1.3")
                 .SetVersionUrl("knockout-datetime.js")
                 .SetDependencies("ko");
 
             manifest.DefineScript("ko.switcher")
-                .SetVersion("1.2")
+                .SetVersion("1.3")
                 .SetVersionUrl("knockout-switcher.js")
                 .SetDependencies("ko");
 
@@ -47,7 +47,7 @@ namespace SmartWalk.Server
                 .SetVersionUrl("smartwalk.css");
 
             manifest.DefineScript("SmartWalk.AntiForgery")
-                .SetVersion("1.0")
+                .SetVersion("1.1")
                 .SetVersionUrl("antiforgery.js")
                 .SetDependencies("jQuery");
 

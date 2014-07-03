@@ -20,7 +20,7 @@
         });
 
         form.bind(EntityViewModelExtended.ENTITY_SAVE_EVENT, function(event) {
-            window.location.href = "@Url.Action("View", new { entityId = ""})/" + event.item.Id();
+            window.location.href = "@Url.Action("View", new { entityId = ""})/" + event.item.id();
         });
     });
 </script>

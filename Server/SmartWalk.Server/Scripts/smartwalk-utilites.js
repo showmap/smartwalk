@@ -9,11 +9,12 @@
 };
 
 function attachVerticalScroll(callback) {
-    var self = this;
     $(window).scroll(function (evt) {
         evt.preventDefault();
-        if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
-            callback.call(self);
+
+        if ($(window).scrollTop() >=
+            $(document).height() - $(window).height()) {
+            callback();
         }
     });
 };
@@ -70,19 +71,19 @@ function VmItemUtil() {
 };
 
 VmItemUtil.DeleteItem = function (item) {
-    item.State(VmItemState.Deleted);
+    item.state(VmItemState.Deleted);
 };
 
 VmItemUtil.AvailableItems = function (items) {
     return items
         ? $.grep(items, function (item) {
-                return item.State() != VmItemState.Deleted && item.State() != VmItemState.Hidden;
+                return item.state() != VmItemState.Deleted && item.state() != VmItemState.Hidden;
             })
         : undefined;
 };
 
 VmItemUtil.DeletedItems = function (items) {
     return items
-        ? $.grep(items, function (item) { return item.State() == VmItemState.Deleted; })
+        ? $.grep(items, function (item) { return item.state() == VmItemState.Deleted; })
         : undefined;
 };

@@ -1,6 +1,6 @@
 ﻿<script type="text/html" id="ViewAddressTemplate">
     <tr>
-		<td data-bind="text: Address, click: $root.selectedItem"></td>
+		<td data-bind="text: address, click: $root.selectedItem"></td>
 		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.deleteAddress($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
@@ -11,31 +11,31 @@
             <div class="well">
                 <div class="row">
                     <div class="col-sm-6">
-                        <div class="form-group" data-bind="validationElement: Address">
+                        <div class="form-group" data-bind="validationElement: address">
                             <label for="addressTextInput">@T("Address"):</label>
-                            <input type="text" class="form-control" id="addressTextInput" data-bind="value: Address" />
+                            <input type="text" class="form-control" id="addressTextInput" data-bind="value: address" />
                         </div>
 									
                         <div class="form-group">
                             <label for="latitudeTextInput">@T("Latitude"):</label>
-                            <input type="text" class="form-control" id="latitudeTextInput" data-bind="value: Latitude" />
+                            <input type="text" class="form-control" id="latitudeTextInput" data-bind="value: latitude" />
                         </div>
 									
                         <div class="form-group">
                             <label for="longitudeTextInput">@T("Longitude"):</label>
-                            <input type="text" class="form-control" id="longitudeTextInput" data-bind="value: Longitude" />
+                            <input type="text" class="form-control" id="longitudeTextInput" data-bind="value: longitude" />
                         </div>
                         
-                        <div class="form-group" data-bind="validationElement: Tip">
+                        <div class="form-group" data-bind="validationElement: tip">
 						    <label for="tipTextInput">@T("Tip"):</label>
-						    <input type="text" class="form-control" id="tipTextInput" data-bind="value: Tip" />
+						    <input type="text" class="form-control" id="tipTextInput" data-bind="value: tip" />
 					    </div>
                     </div>				                    
                     	
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="addressTextInput">&nbsp;</label>
-                            <iframe width="100%" height="240" frameborder="0" data-bind="attr: { src: GetMapLink() }"></iframe>
+                            <iframe width="100%" height="240" frameborder="0" data-bind="attr: { src: getMapLink() }"></iframe>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
 <script type="text/html" id="ViewContactTemplate">
     <tr>
 		<td data-bind="text: $root.GetContactType($data), click: $root.selectedItem"></td>
-		<td data-bind="text: DisplayContact, click: $root.selectedItem"></td>
+		<td data-bind="text: displayContact, click: $root.selectedItem"></td>
 		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.deleteContact($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
@@ -67,21 +67,21 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="addressTextInput">@T("Type"):</label>                            
-                            <select class="form-control" data-bind="value: Type, foreach: $root.settings.contactTypes">
+                            <select class="form-control" data-bind="value: type, foreach: $root.settings.contactTypes">
                                 <option data-bind="text: $data, value: $root.settings.contactTypes.indexOf($data)"></option>                                
                             </select>
                         </div>
                     </div>
 								
                     <div class="col-sm-9">	
-                        <div class="form-group" data-bind="validationElement: Title">
+                        <div class="form-group" data-bind="validationElement: title">
                             <label for="contactTitleTextInput">@T("Title"):</label>
-                            <input type="text" class="form-control" id="contactTitleTextInput" data-bind="value: Title" />
+                            <input type="text" class="form-control" id="contactTitleTextInput" data-bind="value: title" />
                         </div>
 									
-                        <div class="form-group" data-bind="validationElement: Contact">
+                        <div class="form-group" data-bind="validationElement: contact">
                             <label for="contactValueTextInput">@T("Contact"):</label>
-                            <input type="text" class="form-control" id="contactValueTextInput" data-bind="value: Contact" />
+                            <input type="text" class="form-control" id="contactValueTextInput" data-bind="value: contact" />
                         </div>
                     </div>
                 </div>
