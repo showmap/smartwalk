@@ -37,6 +37,37 @@
     };
 };
 
+VmItemState =
+{
+    Normal: 0,
+    Added: 1,
+    Deleted: 2,
+    Hidden: 3
+};
+
+// static
+function VmItemUtil() {
+};
+
+VmItemUtil.deleteItem = function (item) {
+    item.state(VmItemState.Deleted);
+};
+
+VmItemUtil.availableItems = function (items) {
+    return items
+        ? $.grep(items, function (item) {
+            return item.state() != VmItemState.Deleted &&
+                item.state() != VmItemState.Hidden;
+        })
+        : undefined;
+};
+
+VmItemUtil.deletedItems = function (items) {
+    return items
+        ? $.grep(items, function (item) { return item.state() == VmItemState.Deleted; })
+        : undefined;
+};
+
 ContactType = {
     Email: 0,
     Url: 1,
@@ -55,7 +86,8 @@ function ContactViewModel(data) {
     self.contact = ko.observable();
 
     self.displayContact = ko.computed(function () {
-        return (self.title() ? self.title() : "") + (self.contact() ? ' [' + self.contact() + ']' : "");
+        return (self.title() ? self.title() : "") +
+            (self.contact() ? ' [' + self.contact() + ']' : "");
     });    
 
     self.loadData = function (contactData) {

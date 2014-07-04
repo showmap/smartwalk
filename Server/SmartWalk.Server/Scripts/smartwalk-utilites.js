@@ -58,34 +58,3 @@ ko.bindingHandlers.scrollVisible = {
         }
     }
 };
-
-VmItemState =
-{
-    Normal: 0,
-    Added: 1,
-    Deleted: 2,
-    Hidden: 3
-};
-
-// static
-function VmItemUtil() {
-};
-
-VmItemUtil.DeleteItem = function (item) {
-    item.state(VmItemState.Deleted);
-};
-
-VmItemUtil.AvailableItems = function (items) {
-    return items
-        ? $.grep(items, function (item) {
-                return item.state() != VmItemState.Deleted &&
-                    item.state() != VmItemState.Hidden;
-            })
-        : undefined;
-};
-
-VmItemUtil.DeletedItems = function (items) {
-    return items
-        ? $.grep(items, function (item) { return item.state() == VmItemState.Deleted; })
-        : undefined;
-};

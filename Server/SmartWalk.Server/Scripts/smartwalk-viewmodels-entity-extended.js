@@ -7,12 +7,12 @@
 
     self.contacts = ko.computed(function () {
         return self.allContacts()
-            ? VmItemUtil.AvailableItems(self.allContacts()) : undefined;
+            ? VmItemUtil.availableItems(self.allContacts()) : undefined;
     });
 
     self.addresses = ko.computed(function () {
         return self.allAddresses()
-            ? VmItemUtil.AvailableItems(self.allAddresses()) : undefined;
+            ? VmItemUtil.availableItems(self.allAddresses()) : undefined;
     });
 
     self.contacts().forEach(function (contact) {
@@ -94,7 +94,7 @@
     };
 
     self.deleteContact = function (contact) {
-        VmItemUtil.DeleteItem(contact);
+        VmItemUtil.deleteItem(contact);
     };
 
     self.getContactView = function (contact) {
@@ -152,7 +152,7 @@
     };
 
     self.deleteAddress = function (contact) {
-        VmItemUtil.DeleteItem(contact);
+        VmItemUtil.deleteItem(contact);
     };
 
     self.getAddressView = function (address) {

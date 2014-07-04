@@ -7,7 +7,7 @@
 
     self.venues = ko.computed(function() {
         return self.allVenues()
-            ? VmItemUtil.AvailableItems(self.allVenues()) : undefined;
+            ? VmItemUtil.availableItems(self.allVenues()) : undefined;
     });
 
     self.venues().forEach(function (venue) {
@@ -140,10 +140,10 @@
 
         if (self.id() != 0) {
             ajaxJsonRequest(show.toJSON(), self.settings.showDeleteUrl,
-                function () { VmItemUtil.DeleteItem(show); }
+                function () { VmItemUtil.deleteItem(show); }
             );
         } else {
-            VmItemUtil.DeleteItem(show);
+            VmItemUtil.deleteItem(show);
         }
     };
 
@@ -188,11 +188,11 @@
         if (self.id() != 0) {
             ajaxJsonRequest(venue.toJSON(), self.settings.eventVenueDeleteUrl,
                 function () {
-                    VmItemUtil.DeleteItem(venue);
+                    VmItemUtil.deleteItem(venue);
                 }
             );
         } else {
-            VmItemUtil.DeleteItem(venue);
+            VmItemUtil.deleteItem(venue);
         }
     };
 
@@ -394,7 +394,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
 
     venue.Shows = ko.computed(function () {
         return venue.allShows()
-            ? VmItemUtil.AvailableItems(venue.allShows()) : undefined;
+            ? VmItemUtil.availableItems(venue.allShows()) : undefined;
     });
 
     if (venue.Shows()) {
@@ -483,7 +483,7 @@ EventViewModelExtended.attachEvents = function (event) {
 EventViewModelExtended.clearItem = function (item, condition, deleteItem) {
     if (item() != null) {
         if (condition() && deleteItem) {
-            VmItemUtil.DeleteItem(item());
+            VmItemUtil.deleteItem(item());
         }
 
         item(null);
