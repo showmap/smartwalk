@@ -34,7 +34,16 @@
                     <div class="form-group">
                         <label for="venueComboBox">@T("Venue"):</label>
                         <div class="input-group" data-bind="validationElement: $root.selectedVenue">
-                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="jqAuto: $root.selectedVenue, jqOptions: { autoFocus: true }, jqAutoSource: $root.otherVenues, jqAutoValue: $root.selectedVenue, jqAutoQuery: $root.getVenues, jqAutoSourceLabel: 'name', jqAutoSourceInputValue: 'name', jqAutoSourceValue: 'id', jqAutoItemText: EventViewModelExtended.getAutoItem"/>
+                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="
+                                jqAuto: $root.selectedVenue, 
+                                jqOptions: EventViewModelExtended.AutocompleteOptions, 
+                                jqAutoSource: $root.otherVenues, 
+                                jqAutoValue: $root.selectedVenue, 
+                                jqAutoQuery: $root.getVenues, 
+                                jqAutoSourceLabel: 'name', 
+                                jqAutoSourceInputValue: 'name', 
+                                jqAutoSourceValue: 'id', 
+                                jqAutoItemText: EventViewModelExtended.getAutoEntityItem" />
                             <span class="input-group-btn">
                                 <button type="button" id="createVenueButton" class="btn btn-default pull-right" data-bind="click: $root.createVenue">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
                             </span>

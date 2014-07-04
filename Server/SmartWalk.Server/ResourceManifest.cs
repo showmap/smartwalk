@@ -11,6 +11,8 @@ namespace SmartWalk.Server
         {
             var manifest = builder.Add();
 
+            // KnockoutJS
+
             manifest.DefineScript("ko")
                 .SetVersion("3.1.0")
                 .SetVersionUrl("knockout-3.1.0.js", "knockout-3.1.0.debug.js")
@@ -24,12 +26,12 @@ namespace SmartWalk.Server
             manifest.DefineScript("ko.autocomplete")
                 .SetVersion("1.2")
                 .SetVersionUrl("knockout-autocomplete.js")
-                .SetDependencies("ko", "ko.validation");
+                .SetDependencies("ko", "jQueryUI");
 
             manifest.DefineScript("ko.datetime")
                 .SetVersion("1.3")
                 .SetVersionUrl("knockout-datetime.js")
-                .SetDependencies("ko");
+                .SetDependencies("ko", "jQueryUI");
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion("1.3")
@@ -40,6 +42,8 @@ namespace SmartWalk.Server
                 .SetVersion("1.2.0")
                 .SetVersionUrl("jquery.visible.min.js", "jquery.visible.js")
                 .SetDependencies("jQuery");
+
+            // SmartWalk
 
             // TODO: To setup *.min.css
             manifest.DefineStyle("SmartWalk")
@@ -54,7 +58,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Utilites")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("smartwalk-utilites.js")
-                .SetDependencies("ko", "jquery.visible");
+                .SetDependencies("ko", "jquery.visible", "jQueryUI"); // TODO: to extract 3rd party override code
 
             manifest.DefineScript("SmartWalk.Validation")
                 .SetVersion(VersionUtil.CurrentVersion)
@@ -70,7 +74,6 @@ namespace SmartWalk.Server
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("smartwalk-viewmodels-entity-extended.js")
                 .SetDependencies(
-                    "ko.validation",
                     "SmartWalk.Utilites",
                     "SmartWalk.Validation",
                     "SmartWalk.ViewModels.Common");
@@ -79,13 +82,12 @@ namespace SmartWalk.Server
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("smartwalk-viewmodels-event-extended.js")
                 .SetDependencies(
-                    "ko.validation",
-                    "ko.datetime",
-                    "ko.switcher",
-                    "ko.autocomplete",
+                    "jQueryUI",
                     "SmartWalk.Utilites",
                     "SmartWalk.Validation",
                     "SmartWalk.ViewModels.Common");
+
+            // 3rd Party
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")

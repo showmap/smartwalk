@@ -58,3 +58,25 @@ ko.bindingHandlers.scrollVisible = {
         }
     }
 };
+
+// restyle with bootstrap
+$.widget("ui.autocomplete", $.ui.autocomplete,
+    {
+        options: {
+            focus: function (event) {
+                $(event.currentTarget)
+                    .find(".ui-menu-item a")
+                    .removeClass("ui-corner-all ui-state-focus");
+            }
+        },
+
+        _renderMenu: function (ul, items) {
+            var that = this;
+            $.each(items, function (index, item) {
+                that._renderItemData(ul, item);
+            });
+            $(ul)
+                .addClass("dropdown-menu")
+                .removeClass("ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all");
+        },
+    });

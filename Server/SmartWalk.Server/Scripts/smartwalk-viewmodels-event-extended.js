@@ -498,16 +498,17 @@ EventViewModelExtended.getNewVenue = function () {
     return new EntityViewModel({ Id: 0, Type: EntityType.Venue, State: VmItemState.Added });
 };
 
-// TODO: To update with bootstrap CSS styles
-EventViewModelExtended.getAutoItem = function (item) {
-    var text = "<div>";
-    text += "<div class='autocomplete-name'>" + item.name() + "</div>";
+EventViewModelExtended.AutocompleteOptions = {
+    autoFocus: true
+};
 
-    if (item.displayAddress()) {
-        if (item.displayAddress().address() != "")
-            text += "<div class='autocomplete-detail'>" + item.displayAddress().address() + "</div>";
+EventViewModelExtended.getAutoEntityItem = function (entity) {
+    var text = entity.name();
+
+    if (entity.displayAddress()) {
+        if (entity.displayAddress().address() != "")
+            text += "<br /><i class='description'>" + entity.displayAddress().address() + "</i>";
     }
 
-    text += "</div>";
     return text;
 };
