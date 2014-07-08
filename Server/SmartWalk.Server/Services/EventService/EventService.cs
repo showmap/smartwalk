@@ -194,6 +194,23 @@ namespace SmartWalk.Server.Services.EventService
                 _entityService.SaveOrAddShow(showVm);
             }
 
+            foreach (var venueVm in item.AllVenues.Where(venueVm => venueVm.State != VmItemState.Deleted)) {
+                var currentVenue = venueVm;
+
+                if (venueVm.State == VmItemState.Added) {
+                    currentVenue = _entityService.SaveOrAddEntity(user, venueVm);
+
+                    if (currentVenue == null)
+                        continue;
+                }
+
+                foreach (var showVm in venueVm.AllShows.Where(showVm => showVm.State != VmItemState.Deleted)) {
+                    showVm.EventMetadataId = metadata.Id;
+                    showVm.VenueId = currentVenue.Id;
+                    _entityService.SaveOrAddShow(showVm);
+                }
+            }
+
             RecalculateEventCoordinates(metadata);
 
             return CreateViewModelContract(metadata);
