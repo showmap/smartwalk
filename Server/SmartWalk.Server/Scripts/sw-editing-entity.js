@@ -243,11 +243,13 @@ EntityViewModelExtended.ENTITY_SAVE_EVENT = "OnEntitySaved";
 // Static Methods
 EntityViewModelExtended.setupValidation = function (entity, settings) {
     entity.name
-        .extend({ asyncValidation: {
-            validationUrl: settings.validationUrl,
-            propName: "Name",
-            modelHandler: entity.toJSON
-    } });
+        .extend({
+            asyncValidation: {
+                validationUrl: settings.validationUrl,
+                propName: "Name",
+                modelHandler: entity.toJSON
+            }
+        });
 
     entity.picture
         .extend({ maxLength: { params: 255, message: settings.pictureLengthValidationMessage } })
@@ -258,19 +260,23 @@ EntityViewModelExtended.setupValidation = function (entity, settings) {
     }, entity);
 
     entity.errors = ko.validation.group(entity);
-}
+};
 
 EntityViewModelExtended.setupContactValidation = function (contact, settings) {
-    contact.contact.extend({ asyncValidation: {
-        validationUrl: settings.contactValidationUrl,
-        propName: "Contact",
-        modelHandler: contact.toJSON
-    } });
-    contact.title.extend({ asyncValidation: {
-        validationUrl: settings.contactValidationUrl,
-        propName: "Title",
-        modelHandler: contact.toJSON
-    } });
+    contact.contact.extend({
+        asyncValidation: {
+            validationUrl: settings.contactValidationUrl,
+            propName: "Contact",
+            modelHandler: contact.toJSON
+        }
+    });
+    contact.title.extend({
+        asyncValidation: {
+            validationUrl: settings.contactValidationUrl,
+            propName: "Title",
+            modelHandler: contact.toJSON
+        }
+    });
 
     contact.isValidating = ko.computed(function () {
         return contact.contact.isValidating() || contact.title.isValidating();
@@ -287,21 +293,24 @@ EntityViewModelExtended.setupContactValidation = function (contact, settings) {
         .extend({ maxLength: { params: 255, message: settings.contactMessages.contactTitleValidationMessage } });
 
     contact.errors = ko.validation.group(contact);
-}
+};
 
 EntityViewModelExtended.setupAddressValidation = function (address, settings) {
-    address.address.extend({ asyncValidation: {
-        validationUrl: settings.addressValidationUrl,
-        propName: "Address",
-        modelHandler: address.toJSON
-    }
+    address.address.extend({
+        asyncValidation: {
+            validationUrl: settings.addressValidationUrl,
+            propName: "Address",
+            modelHandler: address.toJSON
+        }
     });
 
-    address.tip.extend({ asyncValidation: {
-        validationUrl: settings.addressValidationUrl,
-        propName: "Tip",
-        modelHandler: address.toJSON
-    } });
+    address.tip.extend({
+        asyncValidation: {
+            validationUrl: settings.addressValidationUrl,
+            propName: "Tip",
+            modelHandler: address.toJSON
+        }
+    });
 
     address.isValidating = ko.computed(function () {
         return address.address.isValidating() || address.tip.isValidating();
@@ -315,14 +324,14 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressTipValidationMessage } });
 
     address.errors = ko.validation.group(address);
-}
+};
 
 EntityViewModelExtended.initContactViewModel = function (contact, entity) {
     contact.IsEditing = ko.observable(false);
     EntityViewModelExtended.setupContactValidation(contact, entity.settings);
-}
+};
 
 EntityViewModelExtended.initAddressViewModel = function (address, entity) {
     address.IsEditing = ko.observable(false);
     EntityViewModelExtended.setupAddressValidation(address, entity.settings);
-}
+};

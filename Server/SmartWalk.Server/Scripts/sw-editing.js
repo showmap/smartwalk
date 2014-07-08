@@ -1,4 +1,7 @@
-﻿ko.validation.rules['dependencies'] = {
+﻿
+// #########    V a l i d a t i o n    R u l e s     ################
+
+ko.validation.rules["dependencies"] = {
     validator: function (val, dependencies) {
         if (!dependencies) return true;
         ko.utils.arrayForEach(dependencies, function (dependency) {
@@ -13,7 +16,7 @@
     message: 'error.depencies'
 };
 
-ko.validation.rules['contactValidation'] = {
+ko.validation.rules["contactValidation"] = {
     validator: function (val, otherVal) {
         if (otherVal.allowEmpty && !val)
             return true;
@@ -40,21 +43,21 @@ ko.validation.rules['contactValidation'] = {
     }
 };
 
-ko.validation.rules['dateCompareValidation'] = {
+ko.validation.rules["dateCompareValidation"] = {
     validator: function (val, otherVal) {
         if (otherVal.allowEmpty && (!val || !otherVal.compareVal()))
             return true;
 
-        var dateFormat = $.datepicker.regional[''].dateFormat;
+        var dateFormat = $.datepicker.regional[""].dateFormat;
 
         var curDate = $.datepicker.parseDate(dateFormat, val);
         var cmpDate = $.datepicker.parseDate(dateFormat, otherVal.compareVal());
 
-        if (otherVal.cmp == 'GREATER_THAN') {
+        if (otherVal.cmp == "GREATER_THAN") {
             return curDate >= cmpDate.setDate(cmpDate.getDate() - 1);
-        } else if (otherVal.cmp == 'LESS_THAN') {
+        } else if (otherVal.cmp == "LESS_THAN") {
             return curDate <= cmpDate.setDate(cmpDate.getDate() + 1);
-        } else if (otherVal.cmp == 'REGION') {
+        } else if (otherVal.cmp == "REGION") {
             if (!otherVal.compareValTo())
                 return true;
             var cmpDateTo = $.datepicker.parseDate(dateFormat, otherVal.compareValTo());
@@ -65,7 +68,7 @@ ko.validation.rules['dateCompareValidation'] = {
     }
 };
 
-ko.validation.rules['urlValidation'] = {
+ko.validation.rules["urlValidation"] = {
     validator: function (val, otherVal) {
         if (otherVal.allowEmpty && !val)
             return true;
@@ -74,7 +77,7 @@ ko.validation.rules['urlValidation'] = {
     }
 };
 
-ko.validation.rules['asyncValidation'] = {
+ko.validation.rules["asyncValidation"] = {
     async: true,
     validator: function (val, otherVal, callback) {
         var model = otherVal.model || otherVal.modelHandler();
@@ -82,12 +85,12 @@ ko.validation.rules['asyncValidation'] = {
             model[otherVal.propName] = val;
 
             ajaxJsonRequest(
-                { propName: otherVal.propName, model: model }, 
+                { propName: otherVal.propName, model: model },
                 otherVal.validationUrl,
-                function(response, statusText, xhr) {
+                function (response, statusText, xhr) {
                     callback(true);
                 },
-                function(response, statusText, xhr) {
+                function (response, statusText, xhr) {
                     callback({ isValid: false, message: $.parseJSON(response.responseText).Message });
                 }
             );
@@ -98,8 +101,8 @@ ko.validation.rules['asyncValidation'] = {
 ko.validation.registerExtenders();
 
 ko.validation.init({
-    errorElementClass: 'has-error',
-    errorMessageClass: 'help-block',
+    errorElementClass: "has-error",
+    errorMessageClass: "help-block",
     decorateElement: true,
     messageOnModified: true
 });
@@ -108,7 +111,7 @@ function addValidationCoreToCustomBinding(binding) {
     if (ko.bindingHandlers[binding]) {
         var init = ko.bindingHandlers[binding].init;
         ko.bindingHandlers[binding].init =
-            function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
                 init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
                 return ko.bindingHandlers["validationCore"].init(
                     element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
@@ -119,3 +122,52 @@ function addValidationCoreToCustomBinding(binding) {
 addValidationCoreToCustomBinding("jqAuto");
 addValidationCoreToCustomBinding("datepicker");
 addValidationCoreToCustomBinding("timepicker");
+
+// ###############    E d i t i n g    U t i l s     ####################
+
+// static
+function VmItemUtil() {
+};
+
+VmItemUtil.deleteItem = function (item) {
+    item.state(VmItemState.Deleted);
+};
+
+VmItemUtil.availableItems = function (items) {
+    return items
+        ? $.grep(items, function (item) {
+            return item.state() != VmItemState.Deleted &&
+                item.state() != VmItemState.Hidden;
+        })
+        : undefined;
+};
+
+VmItemUtil.deletedItems = function (items) {
+    return items
+        ? $.grep(items, function (item) { return item.state() == VmItemState.Deleted; })
+        : undefined;
+};
+
+// ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
+
+// restyle with bootstrap
+$.widget("ui.autocomplete", $.ui.autocomplete,
+    {
+        options: {
+            focus: function (event) {
+                $(event.currentTarget)
+                    .find(".ui-menu-item a")
+                    .removeClass("ui-corner-all ui-state-focus");
+            }
+        },
+
+        _renderMenu: function (ul, items) {
+            var that = this;
+            $.each(items, function (index, item) {
+                that._renderItemData(ul, item);
+            });
+            $(ul)
+                .addClass("dropdown-menu")
+                .removeClass("ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all");
+        },
+    });

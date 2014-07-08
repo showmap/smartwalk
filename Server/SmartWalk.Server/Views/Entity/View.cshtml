@@ -9,8 +9,7 @@
     Script.Require("ImageScale").AtFoot();
     Script.Require("TextCollapse").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
-    Script.Require("SmartWalk.Utilites").AtFoot();
-    Script.Require("SmartWalk.ViewModels.Common").AtFoot();
+    Script.Require("SmartWalk.Common").AtFoot();
 
     var entityVm = (EntityVm)Model.Data;
     var entityTypeName = entityVm.Type == (int)EntityType.Host ? "Organizer" : "Venue";

@@ -5,7 +5,7 @@
 
     self.settings = settings;
 
-    self.venues = ko.computed(function() {
+    self.venues = ko.computed(function () {
         return self.allVenues()
             ? VmItemUtil.availableItems(self.allVenues()) : undefined;
     });
@@ -16,7 +16,7 @@
 
     self.venues.subscribe(function (venues) {
         if (venues) {
-            venues.forEach(function(venue) {
+            venues.forEach(function (venue) {
                 if (venue.IsEditing === undefined) {
                     EventViewModelExtended.initVenueViewModel(venue, self);
                 }
@@ -387,7 +387,7 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
         });
 
     show.errors = ko.validation.group(show);
-}
+};
 
 EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.IsEditing = ko.observable(false);
@@ -405,19 +405,19 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
 
     venue.Shows.subscribe(function (shows) {
         if (shows) {
-            shows.forEach(function(show) {
+            shows.forEach(function (show) {
                 if (show.IsEditing === undefined) {
                     EventViewModelExtended.initShowViewModel(show, event);
                 }
             });
         }
     });
-}
+};
 
 EventViewModelExtended.initShowViewModel = function (show, event) {
     show.IsEditing = ko.observable(false);
     EventViewModelExtended.setupShowValidation(show, event, event.settings);
-}
+};
 
 EventViewModelExtended.setupDialogs = function (event) {
     $(event.settings.hostFormName).dialog({

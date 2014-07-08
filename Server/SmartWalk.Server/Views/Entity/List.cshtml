@@ -6,8 +6,7 @@
 
     Script.Require("ImageScale").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
-    Script.Require("SmartWalk.Utilites").AtFoot();
-    Script.Require("SmartWalk.ViewModels.Common").AtFoot();
+    Script.Require("SmartWalk.Common").AtFoot();
 
     var entities = (IList<EntityVm>)Model.Data;
     var entityTypeName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizer" : "Venue";
@@ -112,7 +111,7 @@
         ko.applyBindings(viewModel, document.getElementById("entity-items"));
         
         $("#btnSearch").click(function() {
-            $("a").remove(".default-rows");
+            $("a").remove(".default-rows");  // TODO: What's this for?
             viewModel.search();
         });
         $("img.scale").imageScale();

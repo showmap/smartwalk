@@ -5,7 +5,7 @@
     Style.Require("SmartWalk");
 
     Script.Require("SmartWalk.AntiForgery").AtFoot();
-    Script.Require("SmartWalk.ViewModels.Entity.Extended").AtFoot();
+    Script.Require("SmartWalk.Editing.Entity").AtFoot();
 
     var formId = ViewData["EntityFormId"];
     var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";

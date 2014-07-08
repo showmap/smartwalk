@@ -15,8 +15,7 @@ namespace SmartWalk.Server
 
             manifest.DefineScript("ko")
                 .SetVersion("3.1.0")
-                .SetVersionUrl("knockout-3.1.0.js", "knockout-3.1.0.debug.js")
-                .SetDependencies("jQuery");
+                .SetVersionUrl("knockout-3.1.0.js", "knockout-3.1.0.debug.js");
 
             manifest.DefineScript("ko.validation")
                 .SetVersion("1.0.2")
@@ -38,6 +37,8 @@ namespace SmartWalk.Server
                 .SetVersionUrl("knockout-switcher.js")
                 .SetDependencies("ko");
 
+            // 3rd Party - jQuery Visible
+
             manifest.DefineScript("jquery.visible")
                 .SetVersion("1.2.0")
                 .SetVersionUrl("jquery.visible.min.js", "jquery.visible.js")
@@ -52,42 +53,32 @@ namespace SmartWalk.Server
 
             manifest.DefineScript("SmartWalk.AntiForgery")
                 .SetVersion("1.1")
-                .SetVersionUrl("antiforgery.js")
+                .SetVersionUrl("sw-antiforgery.js")
                 .SetDependencies("jQuery");
 
-            manifest.DefineScript("SmartWalk.Utilites")
+            manifest.DefineScript("SmartWalk.Common")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-utilites.js")
-                .SetDependencies("ko", "jquery.visible", "jQueryUI"); // TODO: to extract 3rd party override code
+                .SetVersionUrl("sw-common.js")
+                .SetDependencies("jQuery", "ko", "jquery.visible");
 
-            manifest.DefineScript("SmartWalk.Validation")
+            manifest.DefineScript("SmartWalk.Editing")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-validation.js")
-                .SetDependencies("ko", "ko.validation"); 
-            
-            manifest.DefineScript("SmartWalk.ViewModels.Common")
-                .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-viewmodels-common.js")
-                .SetDependencies("ko");
+                .SetVersionUrl("sw-editing.js")
+                .SetDependencies("SmartWalk.Common", "ko.validation", "jQueryUI",
+                    // TODO: Maybe to fully relocate validation init into 3rd party components files
+                    "ko.autocomplete", "ko.datetime", "ko.switcher");
 
-            manifest.DefineScript("SmartWalk.ViewModels.Entity.Extended")
+            manifest.DefineScript("SmartWalk.Editing.Entity")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-viewmodels-entity-extended.js")
-                .SetDependencies(
-                    "SmartWalk.Utilites",
-                    "SmartWalk.Validation",
-                    "SmartWalk.ViewModels.Common");
+                .SetVersionUrl("sw-editing-entity.js")
+                .SetDependencies("SmartWalk.Editing");
 
-            manifest.DefineScript("SmartWalk.ViewModels.Event.Extended")
+            manifest.DefineScript("SmartWalk.Editing.Event")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk-viewmodels-event-extended.js")
-                .SetDependencies(
-                    "jQueryUI",
-                    "SmartWalk.Utilites",
-                    "SmartWalk.Validation",
-                    "SmartWalk.ViewModels.Common");
+                .SetVersionUrl("sw-editing-event.js")
+                .SetDependencies("SmartWalk.Editing");
 
-            // 3rd Party
+            // 3rd Party - Text Collapse
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")
@@ -98,10 +89,14 @@ namespace SmartWalk.Server
                 .SetVersionUrl("text-collapse.js")
                 .SetDependencies("jQuery");
 
+            // 3rd Party - Image Scale
+
             manifest.DefineScript("ImageScale")
                 .SetVersion("1.3.1")
                 .SetVersionUrl("image-scale.min.js", "image-scale.js")
                 .SetDependencies("jQuery");
+
+            // 3rd Party - Add This Event
 
             manifest.DefineScript("AddThisEvent")
                 .SetCdn("http://js.addthisevent.com/atemay.js")

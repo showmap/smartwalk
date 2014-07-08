@@ -1,11 +1,84 @@
-﻿ListViewModel = function (parameters, url) {
+﻿
+// #####################   C o m m o n    ##########################
+
+
+function inherits(child, parent) {
+    var f = function () { };
+    f.prototype = parent.prototype;
+    child.prototype = new f();
+    child.prototype.constructor = child;
+
+    // `child` function is an object like all functions    
+    child.superClass_ = parent.prototype;
+};
+
+function attachVerticalScroll(callback) {
+    $(window).scroll(function (evt) {
+        evt.preventDefault();
+
+        if ($(window).scrollTop() >=
+            $(document).height() - $(window).height()) {
+            callback();
+        }
+    });
+};
+
+function ajaxJsonRequest(ajData, url, onSuccess, onError) {
+    var self = this;
+
+    var config = {
+        async: true,
+        url: url,
+        type: "POST",
+        data: JSON.stringify(ajData),
+        dataType: "json",
+        cache: false,
+        contentType: "application/json; charset=utf-8",
+    };
+
+    $.ajax(config)
+        .done(function (response, statusText, xhr) {
+            if (onSuccess) onSuccess.call(self, response, statusText, xhr);
+        })
+        .fail(function (response, statusText, xhr) {
+            if (onError) onError.call(self, response, statusText, xhr);
+        });
+};
+
+
+// #########    B i n d i n g    H a n d l e r s     ################
+
+
+ko.bindingHandlers.fadeInVisible = {
+    init: function (element, valueAccessor) {
+        var duration = ko.utils.unwrapObservable(valueAccessor());
+        $(element).hide().fadeIn(duration);
+    }
+};
+
+ko.bindingHandlers.scrollVisible = {
+    init: function (element, valueAccessor) {
+        if (!$(element).visible(false, false, "vertical")) {
+            var duration = ko.utils.unwrapObservable(valueAccessor());
+            $("html, body").animate({
+                scrollTop: $(element).offset().top - 80 // minus small top margin
+            }, duration);
+        }
+    }
+};
+
+
+// ###############    V i e w    M o d e l s     ####################
+
+
+ListViewModel = function (parameters, url) {
     var self = this;
 
     self.query = ko.observable();
     self.items = ko.observableArray();
     self.currentPage = ko.observable(0);
 
-    self.addItem = function(data) {}; // abstract ;-)
+    self.addItem = function () { }; // abstract ;-)
 
     self.getData = function (pageNumber) {
         if (self.currentPage() != pageNumber) {
@@ -45,29 +118,6 @@ VmItemState =
     Hidden: 3
 };
 
-// static
-function VmItemUtil() {
-};
-
-VmItemUtil.deleteItem = function (item) {
-    item.state(VmItemState.Deleted);
-};
-
-VmItemUtil.availableItems = function (items) {
-    return items
-        ? $.grep(items, function (item) {
-            return item.state() != VmItemState.Deleted &&
-                item.state() != VmItemState.Hidden;
-        })
-        : undefined;
-};
-
-VmItemUtil.deletedItems = function (items) {
-    return items
-        ? $.grep(items, function (item) { return item.state() == VmItemState.Deleted; })
-        : undefined;
-};
-
 ContactType = {
     Email: 0,
     Url: 1,
@@ -88,7 +138,7 @@ function ContactViewModel(data) {
     self.displayContact = ko.computed(function () {
         return (self.title() ? self.title() : "") +
             (self.contact() ? ' [' + self.contact() + ']' : "");
-    });    
+    });
 
     self.loadData = function (contactData) {
         self.id(contactData.Id);
@@ -131,7 +181,7 @@ function AddressViewModel(data) {
         var res = self.address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
         return "https://www.google.com/maps/embed/v1/place?q=" + res +
             "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
-    };    
+    };
 
     self.loadData = function (addressData) {
         self.id(addressData.Id);
@@ -213,7 +263,7 @@ function EventViewModel(data) {
             Longitude: self.longitude(),
 
             Host: self.host() ? self.host().toJSON() : undefined,
-            AllVenues: self.allVenues() 
+            AllVenues: self.allVenues()
                 ? $.map(self.allVenues(), function (venue) { return venue.toJSON(); })
                 : undefined,
         };
@@ -289,7 +339,7 @@ function EntityViewModel(data) {
             Picture: self.picture(),
             Description: self.description(),
 
-            AllContacts: self.allContacts() 
+            AllContacts: self.allContacts()
                 ? $.map(self.allContacts(), function (contact) { return contact.toJSON(); })
                 : undefined,
             AllAddresses: self.allAddresses()
@@ -341,7 +391,7 @@ function ShowViewModel(data) {
         self.picture(showData.Picture);
         self.detailsUrl(showData.DetailsUrl);
         self.state(showData.State);
-    }
+    };
 
     self.toJSON = function () {
         return {
