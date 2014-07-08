@@ -1,4 +1,9 @@
-﻿.description {
+﻿.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}
+
+.description {
     white-space: pre-line;
 }
 
@@ -408,10 +413,4 @@ td.editing-container {
 
 .venue.editing-container .well {
     margin-top: 25px;
-}
-
-/* jQuery overrides */
-
-.ui-datepicker {
-    z-index: 100!important; 
 }

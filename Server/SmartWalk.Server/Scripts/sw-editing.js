@@ -171,3 +171,53 @@ $.widget("ui.autocomplete", $.ui.autocomplete,
                 .removeClass("ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all");
         },
     });
+
+// restyle with bootstrap
+$.widget("ui.dialog", $.ui.dialog,
+    {
+        options: {
+            dialogClass: "panel panel-default",
+            show: {
+                effect: "fade",
+                duration: 250
+            },
+            hide: {
+                effect: "fade",
+                duration: 100
+            },
+            create: function (event) {
+                var dialog = $(event.target.parentElement);
+                dialog
+                    .find(".ui-dialog-titlebar")
+                    .removeClass("ui-widget-header ui-corner-all")
+                    .addClass("panel-heading");
+                
+                dialog
+                    .find(".ui-dialog-content")
+                    .removeClass("ui-widget-content")
+                    .addClass("panel-body");
+
+                dialog
+                    .find(".ui-dialog-titlebar-close")
+                    .removeClass("ui-corner-all");
+
+                dialog
+                    .find(".ui-icon-closethick")
+                    .removeClass("ui-icon ui-icon-closethick")
+                    .addClass("glyphicon glyphicon-remove")
+                    .html(null);
+
+                dialog.removeClass("ui-widget-content ui-corner-all");
+            },
+            open: function () {
+                $("body")
+                    .addClass("stop-scrolling")
+                    .bind("touchmove", function(e) { e.preventDefault(); });
+            },
+            beforeClose: function () {
+                $("body")
+                    .removeClass("stop-scrolling")
+                    .unbind("touchmove");
+            }
+        }
+    });

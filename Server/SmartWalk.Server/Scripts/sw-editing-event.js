@@ -420,39 +420,17 @@ EventViewModelExtended.initShowViewModel = function (show, event) {
 };
 
 EventViewModelExtended.setupDialogs = function (event) {
-    $(event.settings.hostFormName).dialog({
+    var dialogOptions = {
         modal: true,
         autoOpen: false,
-        dialogClass: 'noTitleStuff',
-        width: 800,
-        height: 600,
-        show: {
-            effect: "blind",
-            duration: 1000
-        },
-        hide: {
-            effect: "explode",
-            duration: 1000
-        },
-    });
-
-    $(event.settings.venueFormName).dialog({
-        modal: true,
-        autoOpen: false,
-        dialogClass: 'noTitleStuff',
-        width: 800,
-        height: 600,
-        show: {
-            effect: "blind",
-            duration: 1000
-        },
-        hide: {
-            effect: "explode",
-            duration: 1000
-        },
-    });
-
-    $(".ui-dialog-titlebar").hide();
+        resizable: false,
+        width: 700,
+        maxHeight: 600,
+        title: "<h3 class=\"panel-title\">Create</h3>" // TODO: to parametrize
+    };
+    
+    $(event.settings.hostFormName).dialog(dialogOptions);
+    $(event.settings.venueFormName).dialog(dialogOptions);
 };
 
 EventViewModelExtended.attachEvents = function (event) {

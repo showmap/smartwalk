@@ -92,11 +92,14 @@
     <Content Include="img\bg.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.1.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Styles\bootstrap-theme.css" />
     <Content Include="Styles\bootstrap-theme.min.css" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
-    <Content Include="Styles\smartwalk-theme.css" />
+    <Content Include="Styles\sw-theme.css" />
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">
@@ -110,6 +113,7 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\bootstrap-theme.css.map" />
