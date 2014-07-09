@@ -9,10 +9,8 @@ ko.bindingHandlers.datepicker = {
             var options = allBindingsAccessor().datepickerOptions || {};
 
             $(element).datepicker({
-                showAnim: options.showAnim,
                 onSelect: function(value) {
                     var observable = valueAccessor();
-                    //observable($(element).datepicker('getDate'));
                     observable(value);
                 }
             });
@@ -42,7 +40,6 @@ ko.bindingHandlers.datepicker = {
             ko.utils.registerEventHandler(element, "change", function () {
                 var value = valueAccessor();                
                 var calcDate = new Date(element.valueAsDate.getFullYear(), element.valueAsDate.getMonth(), element.valueAsDate.getDate(), 12);
-                //alert('CALCDATE=' + calcDate + '\r\ndate=' + element.valueAsDate + '\r\nformated=' + $.datepicker.formatDate(dateFormat, calcDate));
                 value($.datepicker.formatDate(dateFormat, calcDate));
             });
         }
@@ -75,21 +72,12 @@ ko.bindingHandlers.timepicker = {
 
             $(element).timepicker({
                 stepMinute: options.stepMinute,
+                controlType: options.controlType,
                 onSelect: function(value) {
                     var observable = valueAccessor();
-                    //observable($(element).datepicker('getDate'));
                     observable(value);
                 }
             });
-
-            //alert(simpleObjInspect(options));
-
-            //alert($(element).timepicker("getTime"));
-            //handle the field changing
-            //                ko.utils.registerEventHandler(element, "change", function () {
-            //                    var observable = valueAccessor();
-            //                    observable($(element).datepicker('getDate'));
-            //                });
 
             //handle disposal (if KO removes by the template binding)
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
@@ -112,7 +100,6 @@ ko.bindingHandlers.timepicker = {
             var value = ko.utils.unwrapObservable(observable);
             var valueDate = new Date(myDate + " " + value);
             var current = $(element).datepicker("getDate");
-            //if (value.getTime() - current.getTime() !== 0) {
             if (valueDate - current !== 0) {
                 $(element).timepicker("setDate", valueDate);
             }
