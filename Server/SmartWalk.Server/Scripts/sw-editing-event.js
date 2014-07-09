@@ -426,7 +426,7 @@ EventViewModelExtended.setupDialogs = function (event) {
         resizable: false,
         width: 700,
         maxHeight: 600,
-        title: "<h3 class=\"panel-title\">Create</h3>" // TODO: to parametrize
+        title: "Create" // TODO: to parametrize
     };
     
     $(event.settings.hostFormName).dialog(dialogOptions);

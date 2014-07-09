@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{43787A98-8535-46BA-99B9-12FC621DE40A}</ProjectGuid>
+    <ProjectGuid>{50ED7805-208C-4E35-8360-572E8B4E9CC2}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -93,12 +93,81 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.min.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-af.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-am.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-bg.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-ca.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-cs.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-da.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-de.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-el.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-es.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-et.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-eu.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-fi.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-fr.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-gl.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-he.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-hr.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-hu.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-id.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-it.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-ja.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-ko.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-lt.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-nl.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-no.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-pl.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-pt-BR.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-pt.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-ro.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-ru.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-sk.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-sr-RS.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-sr-YU.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-sv.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-th.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-tr.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-uk.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-vi.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-zh-CN.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-zh-TW.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\jquery-ui-sliderAccess.js" />
+    <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
+    <Content Include="Scripts\jquery-ui-timepicker-addon.min.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Styles\bootstrap-theme.css" />
     <Content Include="Styles\bootstrap-theme.min.css" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\images\animated-overlay.gif" />
+    <Content Include="Styles\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Styles\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Styles\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="Styles\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Styles\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Styles\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Styles\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Styles\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Styles\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Styles\images\ui-icons_222222_256x240.png" />
+    <Content Include="Styles\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Styles\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Styles\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Styles\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Styles\jquery-ui-timepicker-addon.css" />
+    <Content Include="Styles\jquery-ui-timepicker-addon.min.css" />
+    <Content Include="Styles\jquery-ui.css" />
+    <Content Include="Styles\jquery-ui.min.css" />
+    <Content Include="Styles\jquery-ui.structure.css" />
+    <Content Include="Styles\jquery-ui.structure.min.css" />
+    <Content Include="Styles\jquery-ui.theme.css" />
+    <Content Include="Styles\jquery-ui.theme.min.css" />
     <Content Include="Styles\sw-theme.css" />
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
@@ -113,6 +182,10 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\CalendarsPickerLocalization.cshtml" />
+    <Content Include="Views\DatePickerLocalization.cshtml" />
+    <Content Include="Views\TimeEntryLocalization.cshtml" />
+    <Content Include="Views\TimePickerLocalization.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>

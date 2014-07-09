@@ -126,8 +126,7 @@
     <Content Include="Scripts\sw-editing-event.js" />
     <Content Include="Scripts\text-collapse.js" />
     <Content Include="Scripts\knockout-datetime.js" />
-    <Content Include="Styles\smartwalk.css" />
-    <Content Include="Styles\sw-jquery-ui.css" />
+    <Content Include="Styles\sw.css" />
     <Content Include="Styles\text-collapse.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">

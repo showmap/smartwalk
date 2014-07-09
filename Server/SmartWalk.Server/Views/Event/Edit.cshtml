@@ -2,9 +2,12 @@
 @using SmartWalk.Server.Records
 @model EventMetadataVm
 @{
+    Style.Require("jQueryUI");
+    Style.Require("jQueryUI.TimePicker");
     Style.Require("SmartWalk");
 
     Script.Require("ImageScale").AtFoot();
+    Script.Require("jQueryUI.TimePicker").AtFoot();
     Script.Require("ko.datetime").AtFoot();
     Script.Require("ko.switcher").AtFoot();
     Script.Require("ko.autocomplete").AtFoot();

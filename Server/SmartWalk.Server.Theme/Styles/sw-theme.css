@@ -40,3 +40,59 @@ only screen and (                min-resolution: 2dppx)
 .small-gap {
 	margin-top: 10px;
 }
+
+/* jQueryUI Overrides */
+
+.ui-datepicker { z-index: 100 !important; }
+
+.ui-dialog { padding: 0; }
+.ui-dialog .ui-dialog-titlebar { padding: 10px 15px;  }
+.ui-dialog .ui-dialog-title { margin: 0; }
+.ui-dialog .ui-dialog-titlebar-close {
+    width: 23px;
+    height: 23px;
+    top: 50%; 
+    right: 15px; 
+    color: #000;
+    padding: 2px;
+}
+.ui-dialog .ui-dialog-content { padding: 15px; }
+
+.ui-autocomplete .ui-state-hover,
+.ui-autocomplete .ui-state-focus {
+    border: none;
+	background: none;
+	font-weight: normal;
+	color: #000;
+}
+
+.ui-widget {
+     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+     font-size: 14px;
+}
+.ui-widget .ui-widget { font-size: 14px }
+
+.ui-widget input, 
+.ui-widget select, 
+.ui-widget textarea, 
+.ui-widget button {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    font-size: 14px;
+}
+
+.ui-widget-overlay {
+     background: #333; 
+     opacity: .7; 
+     filter:Alpha(Opacity=70);
+}
+.ui-widget-shadow {
+     margin: -8px 0 0 -8px; 
+     padding: 8px; 
+     background: #aaaaaa; 
+     opacity: .3;
+     filter:Alpha(Opacity=30); 
+     -moz-border-radius: 8px; 
+     -khtml-border-radius: 8px; 
+     -webkit-border-radius: 8px; 
+     border-radius: 8px;
+}

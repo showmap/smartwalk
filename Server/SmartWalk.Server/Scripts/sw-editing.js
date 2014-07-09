@@ -154,21 +154,23 @@ VmItemUtil.deletedItems = function (items) {
 $.widget("ui.autocomplete", $.ui.autocomplete,
     {
         options: {
-            focus: function (event) {
+            create: function (event) {
                 $(event.currentTarget)
                     .find(".ui-menu-item a")
-                    .removeClass("ui-corner-all ui-state-focus");
+                    .removeClass("ui-corner-all");
             }
         },
 
         _renderMenu: function (ul, items) {
-            var that = this;
+            var self = this;
+            
             $.each(items, function (index, item) {
-                that._renderItemData(ul, item);
+                self._renderItemData(ul, item);
             });
+            
             $(ul)
                 .addClass("dropdown-menu")
-                .removeClass("ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all");
+                .removeClass("ui-menu ui-widget ui-widget-content ui-corner-all");
         },
     });
 
@@ -187,6 +189,15 @@ $.widget("ui.dialog", $.ui.dialog,
             },
             create: function (event) {
                 var dialog = $(event.target.parentElement);
+
+                var title = dialog
+                    .find(".ui-dialog-title");
+                title
+                    .replaceWith($("<h3></h3>")
+                        .attr("id", title.attr("id"))
+                        .addClass("panel-title")
+                        .text(title.text()));
+                
                 dialog
                     .find(".ui-dialog-titlebar")
                     .removeClass("ui-widget-header ui-corner-all")
@@ -199,13 +210,8 @@ $.widget("ui.dialog", $.ui.dialog,
 
                 dialog
                     .find(".ui-dialog-titlebar-close")
-                    .removeClass("ui-corner-all");
-
-                dialog
-                    .find(".ui-icon-closethick")
-                    .removeClass("ui-icon ui-icon-closethick")
-                    .addClass("glyphicon glyphicon-remove")
-                    .html(null);
+                    .addClass("btn btn-default")
+                    .append($("<span></span>").addClass("glyphicon glyphicon-remove"));
 
                 dialog.removeClass("ui-widget-content ui-corner-all");
             },

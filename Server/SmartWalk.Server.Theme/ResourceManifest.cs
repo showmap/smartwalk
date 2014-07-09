@@ -26,6 +26,54 @@ namespace SmartWalk.Server.Theme
                     "//code.jquery.com/jquery-2.1.1.js",
                     true);
 
+            // HACK Using fake "9." prefix due to Orchard's isuse https://orchard.codeplex.com/workitem/20798
+            const string jQueryUIVersion = "9.1.11.0";
+
+            manifest.DefineScript("jQueryUI")
+                .SetVersion(jQueryUIVersion)
+                .SetVersionUrl("jquery-ui.min.js", "jquery-ui.js")
+                .SetDependencies("jQuery")
+                .SetCdn(
+                    "//code.jquery.com/ui/1.11.0/jquery-ui.min.js",
+                    "//code.jquery.com/ui/1.11.0/jquery-ui.js", 
+                    true);
+
+            manifest
+                .DefineStyle("jQueryUI")
+                .SetVersion(jQueryUIVersion)
+                .SetVersionUrl("jquery-ui.min.css", "jquery-ui.css");
+
+            #region jQueryUI is not used
+
+            manifest
+                .DefineStyle("jQueryUI.Structure")
+                .SetVersion(jQueryUIVersion)
+                .SetVersionUrl("jquery-ui.structure.min.css", "jquery-ui.structure.css")
+                .SetDependencies("jQueryUI");
+
+            manifest
+                .DefineStyle("jQueryUI.Theme")
+                .SetVersion(jQueryUIVersion)
+                .SetVersionUrl("jquery-ui.theme.min.css", "jquery-ui.theme.css")
+                .SetDependencies("jQueryUI.Structure", "jQueryUI");
+
+            #endregion
+
+            manifest.DefineScript("jQueryUI.SliderAccess")
+                .SetVersion("0.3")
+                .SetVersionUrl("jquery-ui-sliderAccess.js")
+                .SetDependencies("jQueryUI");
+
+            manifest.DefineScript("jQueryUI.TimePicker")
+                .SetVersion("1.4.5")
+                .SetVersionUrl("jquery-ui-timepicker-addon.min.js", "jquery-ui-timepicker-addon.js")
+                .SetDependencies("jQueryUI", "jQueryUI.SliderAccess");
+
+            manifest.DefineStyle("jQueryUI.TimePicker")
+                .SetVersion("1.4.5")
+                .SetVersionUrl("jquery-ui-timepicker-addon.min.css", "jquery-ui-timepicker-addon.css")
+                .SetDependencies("jQueryUI");
+
             // Bootstrap
 
             manifest.DefineStyle("Bootstrap")

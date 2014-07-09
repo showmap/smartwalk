@@ -11,10 +11,6 @@ namespace SmartWalk.Server
         {
             var manifest = builder.Add();
 
-            manifest.DefineStyle("jQueryUI_Orchard")
-                .SetVersion("1.9.2.1")
-                .SetVersionUrl("sw-jquery-ui.css");
-
             // KnockoutJS
 
             manifest.DefineScript("ko")
@@ -29,13 +25,12 @@ namespace SmartWalk.Server
             manifest.DefineScript("ko.autocomplete")
                 .SetVersion("1.2")
                 .SetVersionUrl("knockout-autocomplete.js")
-                // TODO: To refactor Orchard.jQuery and to use only jQueryUI.js
-                .SetDependencies("ko", "jQueryUI_Autocomplete");
+                .SetDependencies("ko", "jQueryUI");
 
             manifest.DefineScript("ko.datetime")
                 .SetVersion("1.3")
                 .SetVersionUrl("knockout-datetime.js")
-                .SetDependencies("ko", "jQueryUI_DatePicker", "jQueryUI_TimePicker");
+                .SetDependencies("ko", "jQueryUI", "jQueryUI");
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion("1.3")
@@ -54,7 +49,7 @@ namespace SmartWalk.Server
             // TODO: To setup *.min.css
             manifest.DefineStyle("SmartWalk")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("smartwalk.css")
+                .SetVersionUrl("sw.css")
                 .SetDependencies("SmartWalk.Theme");
 
             manifest.DefineScript("SmartWalk.AntiForgery")
@@ -70,10 +65,9 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Editing")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-editing.js")
-                .SetDependencies("SmartWalk.Common", "ko.validation",
+                .SetDependencies("SmartWalk.Common", "jQueryUI", "ko.validation",
                     // TODO: Maybe to fully relocate validation init into 3rd party components files
-                    "ko.autocomplete", "ko.datetime", "ko.switcher", 
-                    "jQueryUI_Dialog", "jQueryEffects_Fade");
+                    "ko.autocomplete", "ko.datetime", "ko.switcher");
 
             manifest.DefineScript("SmartWalk.Editing.Entity")
                 .SetVersion(VersionUtil.CurrentVersion)
@@ -83,7 +77,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Editing.Event")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-editing-event.js")
-                .SetDependencies("SmartWalk.Editing", "jQueryUI_Dialog");
+                .SetDependencies("SmartWalk.Editing");
 
             // 3rd Party - Text Collapse
 
