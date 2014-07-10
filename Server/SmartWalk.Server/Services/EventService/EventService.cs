@@ -189,15 +189,10 @@ namespace SmartWalk.Server.Services.EventService
 
             _eventMetadataRepository.Flush();
 
-            foreach (var showVm in item.AllVenues.Where(venueVm => venueVm.State != VmItemState.Deleted).SelectMany(venueVm => venueVm.AllShows.Where(showVm => showVm.State != VmItemState.Deleted))) {
-                showVm.EventMetadataId = metadata.Id;
-                _entityService.SaveOrAddShow(showVm);
-            }
-
             foreach (var venueVm in item.AllVenues.Where(venueVm => venueVm.State != VmItemState.Deleted)) {
                 var currentVenue = venueVm;
 
-                if (venueVm.State == VmItemState.Added) {
+                if (venueVm.Id < 0) {
                     currentVenue = _entityService.SaveOrAddEntity(user, venueVm);
 
                     if (currentVenue == null)
