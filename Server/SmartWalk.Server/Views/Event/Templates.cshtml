@@ -1,9 +1,9 @@
 ﻿<script type="text/html" id="EntityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.getVenueView}"></tr>
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
-    <!-- ko template: {name: $root.getShowView, foreach: Shows() } -->    
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && shows() && shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <!-- ko template: {name: $root.getShowView, foreach: shows() } -->    
     <!-- /ko -->
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && Shows().indexOf($root.selectedItem()) < 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $root.addShow($data) }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && shows() && $.grep(shows(), function (show) { return show.isEditing() }).length == 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
@@ -20,7 +20,7 @@
         </div>
     </td>
     <td class="td-align td-valign">
-        <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.deleteVenue($data); }">
+        <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.venuesManager.deleteItem($data); }">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </td>
@@ -37,7 +37,7 @@
                             <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="
                                 jqAuto: $root.selectedVenue, 
                                 jqOptions: EventViewModelExtended.AutocompleteOptions, 
-                                jqAutoSource: $root.otherVenues, 
+                                jqAutoSource: $root.autocompleteVenues, 
                                 jqAutoValue: $root.selectedVenue, 
                                 jqAutoQuery: $root.getVenues, 
                                 jqAutoSourceLabel: 'name', 
@@ -57,8 +57,8 @@
                 <div class="col-sm-4 text-right">
 				    <div class="form-group">
 					    <label for="saveShowButton">&nbsp;</label><br/>
-					    <button type="button" class="btn btn-default" data-bind="click: $root.cancelVenue">@T("Cancel")</button>
-					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: $root.saveVenue">@T("Save Venue")</button>
+					    <button type="button" class="btn btn-default" data-bind="click: function() { $root.venuesManager.cancelItem() }">@T("Cancel")</button>
+					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function() { $root.venuesManager.saveItem($data) }">@T("Save Venue")</button>
 				    </div>
 			    </div>
 		    </div>
@@ -68,15 +68,15 @@
 
 <script type="text/html" id="ShowItemTemplate">
     <tr class="venue-show">
-        <td data-bind="click: $root.selectedItem">
+        <td data-bind="click: function() { $parent.showsManager.editItem($data) }">
             <span data-bind="text: title"></span>
             <br/>
             <span class="description" data-bind="text: description"></span>
         </td>
         
-        <td class="td-valign" data-bind="html: timeText, click: $root.selectedItem"></td>
+        <td class="td-valign" data-bind="html: timeText, click: function() { $parent.showsManager.editItem($data) }"></td>
         <td class="td-align td-valign">
-            <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $root.deleteShow($data); }">
+            <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $parent.showsManager.deleteItem($data); }">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </td>
@@ -141,8 +141,8 @@
 					<div class="col-sm-4 text-right">
 						<div class="form-group">
 							<label for="saveShowButton">&nbsp;</label><br/>
-							<button type="button" class="btn btn-default" data-bind="click: function() {$root.cancelShow($data); }">@T("Cancel")</button>
-							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$root.saveShow($data); } ">@T("Save Show")</button>
+							<button type="button" class="btn btn-default" data-bind="click: function() {$parent.showsManager.cancelItem(); }">@T("Cancel")</button>
+							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$parent.showsManager.saveItem($data); } ">@T("Save Show")</button>
 						</div>
 					</div>
 				</div>

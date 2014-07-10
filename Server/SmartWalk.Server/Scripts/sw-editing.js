@@ -148,14 +148,14 @@ VmItemUtil.deletedItems = function (items) {
         : undefined;
 };
 
-function VmItemsManager(allItems, setEditingItem, createItem) {
+function VmItemsManager(allItems, setEditingItem, createItemHandler, afterSaveHandler) {
     var self = this;
 
     self.allItems = allItems;
     self.previousItemData = ko.observable(null);
 
     self.addItem = function () {
-        var item = createItem();
+        var item = createItemHandler();
         allItems.push(item);
         self.editItem(item);
     };
@@ -181,6 +181,10 @@ function VmItemsManager(allItems, setEditingItem, createItem) {
         if (item.errors().length == 0) {
             if (item.id() == 0) {
                 item.id(-1);
+            }
+            
+            if (afterSaveHandler) {
+                afterSaveHandler(item);
             }
 
             self.previousItemData(null);

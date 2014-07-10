@@ -18,16 +18,13 @@ namespace SmartWalk.Server.Controllers
         private readonly IOrchardServices _orchardServices;
 
         private readonly IEventService _eventService;
-        private readonly IEntityService _entityService;
 
         public EventController(
-            IEventService eventService, 
-            IEntityService entityService, 
+            IEventService eventService,
             IOrchardServices orchardServices)
         {
             _orchardServices = orchardServices;
             _eventService = eventService;
-            _entityService = entityService;
         }
 
         public ActionResult List(ListViewParametersVm parameters, string sort)
@@ -159,6 +156,8 @@ namespace SmartWalk.Server.Controllers
         #endregion
 
         #region Shows
+
+        // TODO: To validate show on event Save
         private IDictionary<string, string> ValidateShow(ShowVm model)
         {
             var res = new Dictionary<string, string>();
@@ -191,100 +190,6 @@ namespace SmartWalk.Server.Controllers
             #endregion
 
             return res;
-        }
-
-        [HttpPost]
-        public ActionResult GetShow(ShowVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            return Json(_entityService.GetShow(item.Id));
-        }
-
-        [HttpPost]
-        public ActionResult SaveShow(ShowVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            var errors = ValidateShow(item);
-
-            return Json(errors.Count > 0 ? 0 : _entityService.SaveOrAddShow(item).Id);
-        }
-
-        [HttpPost]
-        public ActionResult DeleteShow(ShowVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            _entityService.DeleteShow(item.Id);
-
-            return Json(true);
-        }
-
-        [HttpPost]
-        public ActionResult DeleteEventShows(ShowVm[] items) {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            foreach (var showVm in items)
-            {
-                _entityService.DeleteShow(showVm.Id);
-            }
-            
-            return Json(true);
-        }
-
-        #endregion
-
-        #region Venues
-        [HttpPost]
-        public ActionResult SaveEventVenue(EntityVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            return Json(_entityService.SaveEventVenue(item));
-        }
-
-        [HttpPost]
-        public ActionResult DeleteEventVenue(EntityVm item) {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            _entityService.DeleteEventVenue(item);
-
-            return Json(true);
-        }
-
-
-        [HttpPost]
-        public ActionResult DeleteEventVenues(EntityVm[] venues) {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            foreach (var venueVm in venues)
-            {
-                _entityService.DeleteEventVenue(venueVm);
-            }
-
-            return Json(true);
         }
 
         #endregion

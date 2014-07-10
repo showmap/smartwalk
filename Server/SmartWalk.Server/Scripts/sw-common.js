@@ -244,8 +244,8 @@ function EventViewModel(data) {
 
         self.host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
         self.allVenues(
-            data.AllVenues
-                ? $.map(data.AllVenues,
+            eventData.AllVenues
+                ? $.map(eventData.AllVenues,
                     function (venue) { return new EntityViewModel(venue); })
                 : undefined);
     };
@@ -312,20 +312,20 @@ function EntityViewModel(data) {
         self.description(entityData.Description);
 
         self.allContacts(
-            data.AllContacts
-                ? $.map(data.AllContacts,
+            entityData.AllContacts
+                ? $.map(entityData.AllContacts,
                     function (contact) { return new ContactViewModel(contact); })
                 : undefined);
 
         self.allAddresses(
-            data.AllAddresses
-                ? $.map(data.AllAddresses,
+            entityData.AllAddresses
+                ? $.map(entityData.AllAddresses,
                     function (address) { return new AddressViewModel(address); })
                 : undefined);
 
         self.allShows(
-            data.AllShows
-                ? $.map(data.AllShows,
+            entityData.AllShows
+                ? $.map(entityData.AllShows,
                     function (show) { return new ShowViewModel(show); })
                 : undefined);
     };

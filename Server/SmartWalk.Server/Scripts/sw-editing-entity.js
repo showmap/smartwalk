@@ -166,7 +166,7 @@ EntityViewModelExtended.setupValidation = function (entity, settings) {
 
     entity.isValidating = ko.computed(function () {
         return entity.name.isValidating() || entity.picture.isValidating();
-    }, entity);
+    });
 
     entity.errors = ko.validation.group(entity);
 };
@@ -189,7 +189,7 @@ EntityViewModelExtended.setupContactValidation = function (contact, settings) {
 
     contact.isValidating = ko.computed(function () {
         return contact.contact.isValidating() || contact.title.isValidating();
-    }, contact);
+    });
 
     contact.type.extend({ dependencies: [contact.contact] });
 
@@ -223,7 +223,7 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
 
     address.isValidating = ko.computed(function () {
         return address.address.isValidating() || address.tip.isValidating();
-    }, address);
+    });
 
     address.address
         .extend({ required: { params: true, message: settings.addressMessages.addressRequiredValidationMessage } })

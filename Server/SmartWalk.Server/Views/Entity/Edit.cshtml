@@ -58,7 +58,7 @@
 
         <div class="row" data-bind="visible: type() == @Convert.ToInt32(EntityType.Venue)">
 	        <div class="col-sm-8">
-		        <table class="table table-hover addresses-table" data-bind="visible: addresses().length > 0">
+		        <table class="table table-hover addresses-table" data-bind="visible: addresses() && addresses().length > 0">
 			        <thead>
 				        <tr>
 					        <th><h4>@T("Addresses")</h4></th>
@@ -76,7 +76,7 @@
         
         <div class="row gap">
             <div class="col-sm-8">
-                <table class="table table-hover" data-bind="visible: contacts().length > 0">
+                <table class="table table-hover" data-bind="visible: contacts() && contacts().length > 0">
                     <thead>
                         <tr>
                             <th>@T("Contact Type")</th>

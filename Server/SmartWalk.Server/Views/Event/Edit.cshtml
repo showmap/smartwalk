@@ -23,15 +23,8 @@
 }
 
 <div id="event-item" 
-    save-event-url="@Url.Action("SaveEvent", "Event")" 
-    save-show-url="@Url.Action("SaveShow", "Event")"
-    get-show-url="@Url.Action("GetShow", "Event")"
-    delete-show-url="@Url.Action("DeleteShow", "Event")"
+    save-event-url="@Url.Action("SaveEvent", "Event")"
     delete-event-url="@Url.Action("DeleteEvent", "Event")"
-    delete-venue-url="@Url.Action("DeleteEventVenue", "Event")"
-    delete-venues-url="@Url.Action("DeleteEventVenues", "Event")"
-    delete-event-shows-url="@Url.Action("DeleteEventShows", "Event")"
-    save-venue-url="@Url.Action("SaveEventVenue", "Event")"
     host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
     venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")">
         @Html.AntiForgeryTokenOrchard()
@@ -77,7 +70,7 @@
                         <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="
                             jqAuto: host,
                             jqOptions: EventViewModelExtended.AutocompleteOptions, 
-                            jqAutoSource: allHosts, 
+                            jqAutoSource: autocompleteHosts, 
                             jqAutoValue: host, 
                             jqAutoQuery: getHosts, 
                             jqAutoSourceLabel: 'name', 
@@ -118,7 +111,7 @@
 		</div>                                                               
  
         <div class="row add-venue" data-bind="visible: venues().length > 0">
-            <a data-bind="click: addVenue"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+            <a data-bind="click: function() { $root.venuesManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
        
         <table class="table table-hover edit">
@@ -132,8 +125,8 @@
 			<tbody data-bind="template: { name: 'EntityItemTemplate', foreach: venues() }"></tbody>
 		</table>
     
-        <div class="row add-venue" data-bind="visible: selectedItem() == null || selectedItem().hasOwnProperty('venueId')">
-            <a data-bind="click: addVenue"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+        <div class="row add-venue" data-bind="visible: $.grep($root.venues(), function (venue) { return venue.isEditing() }).length == 0">
+            <a data-bind="click: function() { $root.venuesManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
 
         <div class="row double-gap">
@@ -229,21 +222,11 @@
                 window.location.href = '@Url.Action("View", new { eventId = ""})/' + id;
             },
     
-            showGetUrl: form.attr("get-show-url"),
-            showSaveUrl: form.attr("save-show-url"),
-            showDeleteUrl: form.attr("delete-show-url"),
-    
             showView: "ShowItemTemplate",
             showEditView: "ShowItemTemplateEdit",
 
-            eventVenueSaveUrl: form.attr("save-venue-url"),
-            eventVenueDeleteUrl: form.attr("delete-venue-url"),
-            eventVenuesDeleteUrl: form.attr("delete-venues-url"),
-
             eventVenueView: "EventVenueItemTemplate",
             eventVenueEditView: "EventVenueItemTemplateEdit",
-
-            eventShowsDeleteUrl: form.attr("delete-event-shows-url"),
 
             hostAutocompleteUrl: form.attr("host-autocomplete-url"),
             venueAutocompleteUrl: form.attr("venue-autocomplete-url"),                               
