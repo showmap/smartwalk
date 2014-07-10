@@ -150,7 +150,7 @@ namespace SmartWalk.Server.Controllers.Base
         }
 
         [HttpPost]
-        public ActionResult SaveOrAdd(EntityVm host)
+        public ActionResult SaveEntity(EntityVm host)
         {
             if (_orchardServices.WorkContext.CurrentUser == null)
             {

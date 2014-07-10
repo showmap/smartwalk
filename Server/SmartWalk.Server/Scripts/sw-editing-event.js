@@ -17,7 +17,7 @@
     self.venues.subscribe(function (venues) {
         if (venues) {
             venues.forEach(function (venue) {
-                if (venue.IsEditing === undefined) {
+                if (venue.isEditing === undefined) {
                     EventViewModelExtended.initVenueViewModel(venue, self);
                 }
             });
@@ -43,11 +43,11 @@
 
             if (self.venues()) {
                 self.venues().forEach(function (venue) {
-                    venue.IsEditing(value == venue);
+                    venue.isEditing(value == venue);
 
                     if (venue.Shows()) {
                         venue.Shows().forEach(function (show) {
-                            show.IsEditing(value == show);
+                            show.isEditing(value == show);
                         });
                     }
                 });
@@ -157,7 +157,7 @@
     };
 
     self.getShowView = function (show) {
-        return show.IsEditing()
+        return show.isEditing()
             ? self.settings.showEditView
             : self.settings.showView;
     };
@@ -240,7 +240,7 @@
     };
 
     self.getVenueView = function (venue) {
-        return venue.IsEditing()
+        return venue.isEditing()
             ? self.settings.eventVenueEditView
             : self.settings.eventVenueView;
     };
@@ -399,7 +399,7 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
 };
 
 EventViewModelExtended.initVenueViewModel = function (venue, event) {
-    venue.IsEditing = ko.observable(false);
+    venue.isEditing = ko.observable(false);
 
     venue.Shows = ko.computed(function () {
         return venue.allShows()
@@ -415,7 +415,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.Shows.subscribe(function (shows) {
         if (shows) {
             shows.forEach(function (show) {
-                if (show.IsEditing === undefined) {
+                if (show.isEditing === undefined) {
                     EventViewModelExtended.initShowViewModel(show, event);
                 }
             });
@@ -424,7 +424,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
 };
 
 EventViewModelExtended.initShowViewModel = function (show, event) {
-    show.IsEditing = ko.observable(false);
+    show.isEditing = ko.observable(false);
     EventViewModelExtended.setupShowValidation(show, event, event.settings);
 };
 

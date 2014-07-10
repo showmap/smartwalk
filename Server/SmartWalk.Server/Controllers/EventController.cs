@@ -116,58 +116,7 @@ namespace SmartWalk.Server.Controllers
 
             return Json(true);
         }
-        
-        [HttpPost]
-        public ActionResult GetAddress(AddressVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
 
-            return Json(_entityService.GetAddress(item.Id));
-        }
-
-        [HttpPost]
-        public ActionResult SaveAddress(AddressVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            var errors = ValidateAddress(item);
-
-            return Json(errors.Count > 0 ? 0 : _entityService.SaveOrAddAddress(item).Id);
-        }
-
-        [HttpPost]
-        public ActionResult DeleteAddress(AddressVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            _entityService.DeleteAddress(item.Id);
-
-            return Json(true);
-        }
-
-        [HttpPost]
-        public ActionResult DeleteAddresses(IList<AddressVm> items)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            foreach (var item in items) {
-                _entityService.DeleteAddress(item.Id);
-            }
-
-            return Json(true);
-        }
         #endregion
 
         #region Contacts
@@ -207,57 +156,6 @@ namespace SmartWalk.Server.Controllers
             return Json(true);
         }
 
-        [HttpPost]
-        public ActionResult GetContact(ContactVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            return Json(_entityService.GetContact(item.Id));
-        }
-
-        [HttpPost]
-        public ActionResult SaveContact(ContactVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            var errors = ValidateContact(item);
-
-            return Json(errors.Count > 0 ? 0 :_entityService.SaveOrAddContact(item).Id);
-        }
-
-        [HttpPost]
-        public ActionResult DeleteContact(ContactVm item)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            _entityService.DeleteContact(item.Id);
-
-            return Json(true);
-        }
-
-        [HttpPost]
-        public ActionResult DeleteContacts(ContactVm[] items)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            foreach (var item in items) {
-                _entityService.DeleteContact(item.Id);
-            }
-
-            return Json(true);
-        }
         #endregion
 
         #region Shows

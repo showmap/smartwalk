@@ -26,7 +26,7 @@
     self.contacts.subscribe(function (contacts) {
         if (contacts) {
             contacts.forEach(function (contact) {
-                if (contact.IsEditing === undefined) {
+                if (contact.isEditing === undefined) {
                     EntityViewModelExtended.initContactViewModel(contact, self);
                 }
             });
@@ -36,7 +36,7 @@
     self.addresses.subscribe(function (addresses) {
         if (addresses) {
             addresses.forEach(function (address) {
-                if (address.IsEditing === undefined) {
+                if (address.isEditing === undefined) {
                     EntityViewModelExtended.initAddressViewModel(address, self);
                 }
             });
@@ -49,147 +49,66 @@
 
         if (self.addresses() &&
             self.addresses().length == 1 &&
-            !self.addresses()[0].IsEditing())
+            !self.addresses()[0].isEditing())
             return true;
 
         return false;
     }, self);
 
-    self._selectedItem = ko.observable();
-    self.selectedItem = ko.computed({
-        read: function () {
-            return self._selectedItem();
-        },
-        write: function (value) {
-            self._selectedItem(value);
-
-            if (self.addresses()) {
-                self.addresses().forEach(function (address) {
-                    address.IsEditing(value == address);
-                });
-            }
-
-            if (self.contacts()) {
-                self.contacts().forEach(function (contact) {
-                    contact.IsEditing(value == contact);
-                });
-            }
-        }
-    });
-
     EntityViewModelExtended.setupValidation(self, settings);
+    
+    self.setEditingItem = function(item) {
+        if (self.addresses()) {
+            self.addresses().forEach(function (address) {
+                address.isEditing(item == address);
+            });
+        }
 
-    // Contacts
-    self.addContact = function () {
-        var contact = new ContactViewModel(
-            {
+        if (self.contacts()) {
+            self.contacts().forEach(function (contact) {
+                contact.isEditing(item == contact);
+            });
+        }
+    };
+
+    self.contactsManager = new VmItemsManager(
+        self.allContacts,
+        self.setEditingItem,
+        function() {
+            var contact = new ContactViewModel({
+                    Id: 0,
+                    EntityId: self.id(),
+                    Type: ContactType.Url,
+                    State: VmItemState.Added
+                });
+            return contact;
+        });
+    
+    self.addressesManager = new VmItemsManager(
+        self.allAddresses,
+        self.setEditingItem,
+        function () {
+            var address = new AddressViewModel({
                 Id: 0,
                 EntityId: self.id(),
-                Type: ContactType.Url,
-                State: VmItemState.Added
+                State: VmItemState.Added,
+                Address: ""
             });
-
-        self.allContacts.push(contact);
-        self.selectedItem(contact);
-    };
-
-    self.deleteContact = function (contact) {
-        VmItemUtil.deleteItem(contact);
-    };
-
+            return address;
+        });
+    
     self.getContactView = function (contact) {
-        return contact.IsEditing()
+        return contact.isEditing()
             ? self.settings.contactEditView : self.settings.contactView;
     };
 
     self.getContactType = function (contact) {
         return self.settings.contactTypes[contact.type()];
     };
-
-    self.cancelContact = function (contact) {
-        self.selectedItem(null);
-
-        if (contact.id() == 0) {
-            self.allContacts.remove(contact);
-        } else {
-            ajaxJsonRequest(contact.toJSON(), self.settings.contactGetUrl,
-                function (contactData) {
-                    contact.loadData(contactData);
-                }
-            );
-        }
-    };
-
-    self.saveContact = function (contact) {
-        if (contact.errors().length == 0) {
-            self.selectedItem(null);
-
-            if (self.id() != 0) {
-                ajaxJsonRequest(contact.toJSON(), self.settings.contactSaveUrl,
-                    function (contactId) {
-                        if (contact.id() == 0 || contact.id() != contactId) {
-                            contact.id(contactId);
-                        }
-                    }
-                );
-            }
-        } else {
-            contact.errors.showAllMessages();
-        }
-    };
-
-    // Addresses
-    self.addAddress = function () {
-        var address = new AddressViewModel({
-            Id: 0,
-            EntityId: self.id(),
-            State: VmItemState.Added,
-            Address: ""
-        });
-
-        self.allAddresses.push(address);
-        self.selectedItem(address);
-    };
-
-    self.deleteAddress = function (contact) {
-        VmItemUtil.deleteItem(contact);
-    };
-
+    
     self.getAddressView = function (address) {
-        return address.IsEditing()
+        return address.isEditing()
             ? self.settings.addressEditView : self.settings.addressView;
-    };
-
-    self.cancelAddress = function (address) {
-        self.selectedItem(null);
-
-        if (address.id() == 0) {
-            self.allAddresses.remove(address);
-        } else {
-            ajaxJsonRequest(address.toJSON(), self.settings.addressGetUrl,
-                function (addressData) {
-                    address.loadData(addressData);
-                }
-            );
-        }
-    };
-
-    self.saveAddress = function (address) {
-        if (address.errors().length == 0) {
-            self.selectedItem(null);
-
-            if (self.id() != 0) {
-                ajaxJsonRequest(address.toJSON(), self.settings.addressSaveUrl,
-                    function (addressId) {
-                        if (address.id() == 0 || address.id() != addressId) {
-                            address.id(addressId);
-                        }
-                    }
-                );
-            }
-        } else {
-            address.errors.showAllMessages();
-        }
     };
 
     self.getMapLink = function () {
@@ -210,7 +129,7 @@
         if (self.errors().length == 0) {
             ajaxJsonRequest(self.toJSON(), self.settings.entitySaveUrl,
                 function (entityData) {
-                    if (resultHandler) {
+                    if (resultHandler && $.isFunction(resultHandler)) {
                         resultHandler(entityData);
                     } else {
                         self.settings.entityAfterSaveUrlHandler(entityData.Id);
@@ -317,11 +236,27 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
 };
 
 EntityViewModelExtended.initContactViewModel = function (contact, entity) {
-    contact.IsEditing = ko.observable(false);
+    contact.isEditing = ko.observable(false);
+    contact.isEditing.subscribe(function (isEditing) {
+        VmItemsManager.processIsEditingChange(
+            contact,
+            isEditing,
+            entity.contactsManager
+        );
+    });
+    
     EntityViewModelExtended.setupContactValidation(contact, entity.settings);
 };
 
 EntityViewModelExtended.initAddressViewModel = function (address, entity) {
-    address.IsEditing = ko.observable(false);
+    address.isEditing = ko.observable(false);
+    address.isEditing.subscribe(function (isEditing) {
+        VmItemsManager.processIsEditingChange(
+            address,
+            isEditing,
+            entity.addressesManager
+        );
+    });
+
     EntityViewModelExtended.setupAddressValidation(address, entity.settings);
 };

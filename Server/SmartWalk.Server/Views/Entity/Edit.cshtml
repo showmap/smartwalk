@@ -19,13 +19,7 @@
 }
 
 <div id="@formId"  
-     save-entity-url="@Url.Action("SaveOrAdd", entityController)" 
-     get-address-url="@Url.Action("GetAddress", "Event")"
-     save-address-url="@Url.Action("SaveAddress", "Event")"
-     delete-addresses-url="@Url.Action("DeleteAddresses", "Event")"
-     get-contact-url="@Url.Action("GetContact", "Event")"
-     save-contact-url="@Url.Action("SaveContact", "Event")"
-     delete-contacts-url="@Url.Action("DeleteContacts", "Event")"
+     save-entity-url="@Url.Action("SaveEntity", entityController)"
      validate-entity-url="@Url.Action("ValidateModel", entityController)"
      validate-address-url="@Url.Action("ValidateAddress", "Event")"
      validate-contact-url="@Url.Action("ValidateContact", "Event")">
@@ -75,7 +69,7 @@
 		        </table>
 				
                 <div class="add-item-container">
-                    <a data-bind="click: function() { $root.addAddress(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
+                    <a data-bind="click: function() { $root.addressesManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
                 </div>
 	        </div>
         </div>
@@ -94,7 +88,7 @@
                 </table>
                 
                 <div class="add-item-container">
-                    <a data-bind="click: function() { $root.addContact(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Contact")</a>
+                    <a data-bind="click: function() { $root.contactsManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Contact")</a>
                 </div>
             </div>
         </div>
@@ -157,20 +151,14 @@
                 window.location.href = '@Url.Action("View", entityController, new { entityId = ""})/' + id;
             },
 
-            addressGetUrl: form.attr("get-address-url"),
-            addressSaveUrl: form.attr("save-address-url"),
-            addressDeleteUrl: form.attr("delete-addresses-url"),
             addressValidationUrl: form.attr("validate-address-url"),
             addressView: "ViewAddressTemplate",
             addressEditView: "EditAddressTemplate",
 
-            contactGetUrl: form.attr("get-contact-url"),
-            contactSaveUrl: form.attr("save-contact-url"),
-            contactDeleteUrl: form.attr("delete-contacts-url"),
             contactValidationUrl: form.attr("validate-contact-url"),
             contactView: "ViewContactTemplate",
             contactEditView: "EditContactTemplate",
-            contactTypes: ["@T("E-mail")", "@T("Web")", "@T("Phone")"],
+            contactTypes: ['@T("E-mail")', '@T("Web")', '@T("Phone")'],
         });
 
         var vmHost = new EntityViewModelExtended(settings, data);

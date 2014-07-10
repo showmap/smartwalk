@@ -1,7 +1,7 @@
 ﻿<script type="text/html" id="ViewAddressTemplate">
     <tr>
-		<td data-bind="text: address, click: $root.selectedItem"></td>
-		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.deleteAddress($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+		<td data-bind="text: address, click: function () { $root.addressesManager.editItem($data) } "></td>
+		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.addressesManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 
@@ -42,8 +42,8 @@
 							
                 <div class="text-right">
                     <div class="form-group">
-                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.cancelAddress($data) }">@T("Cancel")</button>
-                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.saveAddress($data) }">@T("Save Address")</button>
+                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.addressesManager.cancelItem() }">@T("Cancel")</button>
+                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.addressesManager.saveItem($data) }">@T("Save Address")</button>
                     </div>
                 </div>
             </div>
@@ -53,9 +53,9 @@
 
 <script type="text/html" id="ViewContactTemplate">
     <tr>
-		<td data-bind="text: $root.getContactType($data), click: $root.selectedItem"></td>
-		<td data-bind="text: displayContact, click: $root.selectedItem"></td>
-		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.deleteContact($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+		<td data-bind="text: $root.getContactType($data), click: function () { $root.contactsManager.editItem($data) }"></td>
+		<td data-bind="text: displayContact, click: function () { $root.contactsManager.editItem($data) }"></td>
+		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.contactsManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 
@@ -88,8 +88,8 @@
 							
                 <div class="text-right">
                     <div class="form-group">
-                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.cancelContact($data) }">@T("Cancel")</button>
-                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.saveContact($data) }">@T("Save Contact")</button>
+                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.contactsManager.cancelItem() }">@T("Cancel")</button>
+                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.contactsManager.saveItem($data) }">@T("Save Contact")</button>
                     </div>
                 </div>
             </div>

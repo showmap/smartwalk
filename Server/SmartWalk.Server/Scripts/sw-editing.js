@@ -148,6 +148,69 @@ VmItemUtil.deletedItems = function (items) {
         : undefined;
 };
 
+function VmItemsManager(allItems, setEditingItem, createItem) {
+    var self = this;
+
+    self.allItems = allItems;
+    self.previousItemData = ko.observable(null);
+
+    self.addItem = function () {
+        var item = createItem();
+        allItems.push(item);
+        self.editItem(item);
+    };
+
+    self.editItem = function (item) {
+        setEditingItem(item);
+    };
+
+    self.deleteItem = function (item) {
+        VmItemUtil.deleteItem(item);
+    };
+
+    self.cancelItem = function () {
+        setEditingItem(null);
+    };
+
+    self.saveItem = function (item) {
+        if (item.isValidating()) {
+            setTimeout(function () { self.saveItem(item); }, 50);
+            return false;
+        }
+
+        if (item.errors().length == 0) {
+            if (item.id() == 0) {
+                item.id(-1);
+            }
+
+            self.previousItemData(null);
+            setEditingItem(null);
+        } else {
+            item.errors.showAllMessages();
+        }
+
+        return true;
+    };
+};
+
+VmItemsManager.processIsEditingChange = function (item, isEditing, manager) {
+    if (isEditing) {
+        if (item.id() != 0) {
+            manager.previousItemData(item.toJSON());
+        }
+    } else {
+        if (item.id() != 0) {
+            if (manager.previousItemData() != null) {
+                item.loadData(manager.previousItemData());
+            }
+        } else {
+            manager.allItems.remove(item);
+        }
+
+        manager.previousItemData(null);
+    }
+};
+
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
 
 // restyle with bootstrap
@@ -223,7 +286,7 @@ $.widget("ui.dialog", $.ui.dialog,
             open: function () {
                 $("body")
                     .addClass("stop-scrolling")
-                    .bind("touchmove", function(e) { e.preventDefault(); });
+                    .bind("touchmove", function(e) { e.preventDefault(); }); // TODO: to allow scroll inside dialog
             },
             beforeClose: function () {
                 $("body")
