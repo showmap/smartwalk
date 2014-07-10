@@ -16,8 +16,8 @@ textarea {
 	height: 100px !important;
 }
 
-.ui-dialog .btn-top {
-    visibility: hidden;
+.ui-dialog .action-buttons {
+    display: none;
 }
 
 .titleLabel {
@@ -25,7 +25,7 @@ textarea {
 }
 
 .ui-dialog .titleLabel {
-    display: inline;
+    display: inline-block;
 }
 
 .td-align {

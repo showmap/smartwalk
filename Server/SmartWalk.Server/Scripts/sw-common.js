@@ -58,8 +58,10 @@ ko.bindingHandlers.fadeInVisible = {
 
 ko.bindingHandlers.scrollVisible = {
     init: function (element, valueAccessor) {
-        if (!$(element).visible(false, false, "vertical")) {
+        if (!$(element).parents(".ui-dialog").length && // don't scroll if content in dialog
+            !$(element).visible(false, false, "vertical")) {
             var duration = ko.utils.unwrapObservable(valueAccessor());
+            
             $("html, body").animate({
                 scrollTop: $(element).offset().top - 80 // minus small top margin
             }, duration);

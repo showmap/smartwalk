@@ -201,30 +201,23 @@
         return "";
     };
 
-    self.cancel = function () {
-        $(self.settings.entityFormName).trigger({
-            type: self.settings.entityCancelEvent,
-            item: self
-        });
-    };
-
-    self.saveOrAdd = function () {
+    self.saveEntity = function (resultHandler) {
         if (self.isValidating()) {
-            setTimeout(function () {
-                self.saveOrAdd(self);
-            }, 50);
+            setTimeout(function () { self.saveEntity(); }, 50);
             return false;
         }
 
         if (self.errors().length == 0) {
             ajaxJsonRequest(self.toJSON(), self.settings.entitySaveUrl,
                 function (entityData) {
-                    if (self.id() == 0) self.loadData(entityData);
-
-                    $(self.settings.entityFormName).trigger({
-                        type: self.settings.entitySaveEvent,
-                        item: self
-                    });
+                    if (resultHandler) {
+                        resultHandler(entityData);
+                    } else {
+                        self.settings.entityAfterSaveUrlHandler(entityData.Id);
+                    }
+                },
+                function () {
+                    // TODO: To show error message
                 }
             );
         } else {
@@ -236,9 +229,6 @@
 };
 
 inherits(EntityViewModelExtended, EntityViewModel);
-
-EntityViewModelExtended.ENTITY_CANCEL_EVENT = "OnEntityCancelled";
-EntityViewModelExtended.ENTITY_SAVE_EVENT = "OnEntitySaved";
 
 // Static Methods
 EntityViewModelExtended.setupValidation = function (entity, settings) {

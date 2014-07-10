@@ -353,9 +353,6 @@
     <Content Include="Views\OpenAuthRegister.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Entity\EditTemplate.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Account\EditProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>

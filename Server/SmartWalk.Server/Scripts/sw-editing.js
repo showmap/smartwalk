@@ -213,6 +213,11 @@ $.widget("ui.dialog", $.ui.dialog,
                     .addClass("btn btn-default")
                     .append($("<span></span>").addClass("glyphicon glyphicon-remove"));
 
+                dialog
+                    .find(".ui-dialog-buttonpane")
+                    .removeClass("ui-widget-content")
+                    .addClass("panel-footer");
+
                 dialog.removeClass("ui-widget-content ui-corner-all");
             },
             open: function () {
