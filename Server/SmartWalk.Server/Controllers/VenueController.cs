@@ -58,8 +58,8 @@ namespace SmartWalk.Server.Controllers
                 result =
                     result.Where(
                         e =>
-                            currentEvent.AllVenues
-                                .Where(v => v.State != VmItemState.Deleted && v.Id > 0)
+                            currentEvent.Venues
+                                .Where(v => !v.Destroy && v.Id > 0)
                                 .All(v => v.Id != e.Id))
                         .ToList();
             }

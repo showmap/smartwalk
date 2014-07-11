@@ -246,7 +246,6 @@
     <Compile Include="ViewModels\ListViewVm.cs" />
     <Compile Include="ViewModels\ShowVm.cs" />
     <Compile Include="ViewModels\ViewParametersVm.cs" />
-    <Compile Include="ViewModels\VmItemState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Tools\ImportXmlData.cshtml" />

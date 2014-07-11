@@ -53,8 +53,10 @@
 
 <script type="text/html" id="ViewContactTemplate">
     <tr>
-		<td data-bind="text: $root.getContactType($data), click: function () { $root.contactsManager.editItem($data) }"></td>
-		<td data-bind="text: displayContact, click: function () { $root.contactsManager.editItem($data) }"></td>
+        <td data-bind="text: $root.getContactType($data), click: function () { $root.contactsManager.editItem($data) }"></td>
+        <td data-bind="
+            text: (title() ? title() : '') + (contact() ? ' [' + contact() + ']' : ''), 
+            click: function () { $root.contactsManager.editItem($data) }"></td>
 		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.contactsManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>

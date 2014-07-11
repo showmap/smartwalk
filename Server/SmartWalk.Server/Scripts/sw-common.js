@@ -112,14 +112,6 @@ ListViewModel = function (parameters, url) {
     };
 };
 
-VmItemState =
-{
-    Normal: 0,
-    Added: 1,
-    Deleted: 2,
-    Hidden: 3
-};
-
 ContactType = {
     Email: 0,
     Url: 1,
@@ -130,24 +122,13 @@ function ContactViewModel(data) {
     var self = this;
 
     self.id = ko.observable();
-    self.entityId = ko.observable();
     self.type = ko.observable();
-    self.state = ko.observable();
-
     self.title = ko.observable();
     self.contact = ko.observable();
 
-    self.displayContact = ko.computed(function () {
-        return (self.title() ? self.title() : "") +
-            (self.contact() ? ' [' + self.contact() + ']' : "");
-    });
-
     self.loadData = function (contactData) {
         self.id(contactData.Id);
-        self.entityId(contactData.EntityId);
         self.type(contactData.Type);
-        self.state(contactData.State);
-
         self.title(contactData.Title);
         self.contact(contactData.Contact);
     };
@@ -157,11 +138,10 @@ function ContactViewModel(data) {
     self.toJSON = function () {
         return {
             Id: self.id(),
-            EntityId: self.entityId(),
             Type: self.type(),
-            State: self.state(),
             Title: self.title(),
-            Contact: self.contact()
+            Contact: self.contact(),
+            Destroy: self._destroy
         };
     };
 }
@@ -170,11 +150,8 @@ function AddressViewModel(data) {
     var self = this;
 
     self.id = ko.observable();
-    self.entityId = ko.observable();
     self.address = ko.observable();
     self.tip = ko.observable();
-    self.state = ko.observable();
-
     self.latitude = ko.observable();
     self.longitude = ko.observable();
 
@@ -187,11 +164,8 @@ function AddressViewModel(data) {
 
     self.loadData = function (addressData) {
         self.id(addressData.Id);
-        self.entityId(addressData.EntityId);
         self.address(addressData.Address);
         self.tip(addressData.Tip);
-        self.state(addressData.State);
-
         self.latitude(addressData.Latitude);
         self.longitude(addressData.Longitude);
     };
@@ -201,12 +175,11 @@ function AddressViewModel(data) {
     self.toJSON = function () {
         return {
             Id: self.id(),
-            EntityId: self.entityId(),
-            State: self.state(),
             Address: self.address(),
             Tip: self.tip(),
             Latitude: self.latitude(),
-            Longitude: self.longitude()
+            Longitude: self.longitude(),
+            Destroy: self._destroy
         };
     };
 }
@@ -227,13 +200,13 @@ function EventViewModel(data) {
     self.longitude = ko.observable(data.longitude);
 
     self.host = ko.observable();
-    self.allVenues = ko.observableArray();
+    self.venues = ko.observableArray();
 
     self.loadData = function (eventData) {
         self.id(eventData.Id);
         self.title(eventData.Title);
-        self.startTime(eventData.StartTime ? eventData.StartTime : "");
-        self.endTime(eventData.EndTime ? eventData.EndTime : "");
+        self.startTime(eventData.StartTime);
+        self.endTime(eventData.EndTime);
         self.displayDate(eventData.DisplayDate);
         self.isPublic(eventData.IsPublic);
         self.picture(eventData.Picture);
@@ -243,9 +216,9 @@ function EventViewModel(data) {
         self.longitude(eventData.Longitude);
 
         self.host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
-        self.allVenues(
-            eventData.AllVenues
-                ? $.map(eventData.AllVenues,
+        self.venues(
+            eventData.Venues
+                ? $.map(eventData.Venues,
                     function (venue) { return new EntityViewModel(venue); })
                 : undefined);
     };
@@ -265,9 +238,11 @@ function EventViewModel(data) {
             Longitude: self.longitude(),
 
             Host: self.host() ? self.host().toJSON() : undefined,
-            AllVenues: self.allVenues()
-                ? $.map(self.allVenues(), function (venue) { return venue.toJSON(); })
+            Venues: self.venues()
+                ? $.map(self.venues(), function (venue) { return venue.toJSON(); })
                 : undefined,
+            
+            Destroy: self._destroy
         };
     };
 
@@ -284,48 +259,39 @@ function EntityViewModel(data) {
     var self = this;
 
     self.id = ko.observable();
-    self.eventMetadataId = ko.observable();
-    self.state = ko.observable();
     self.type = ko.observable();
     self.name = ko.observable();
     self.abbreviation = ko.observable();
     self.picture = ko.observable();
     self.description = ko.observable();
 
-    self.allContacts = ko.observableArray();
-    self.allAddresses = ko.observableArray();
-    self.allShows = ko.observableArray();
-
-    self.displayAddress = ko.computed(function () {
-        return self.allAddresses() && self.allAddresses().length > 0
-            ? self.allAddresses()[0] : "";
-    });
+    self.contacts = ko.observableArray();
+    self.addresses = ko.observableArray();
+    self.shows = ko.observableArray();
 
     self.loadData = function (entityData) {
         self.id(entityData.Id);
-        self.eventMetadataId(entityData.EventMetadataId);
-        self.state(entityData.State);
         self.type(entityData.Type);
         self.name(entityData.Name);
         self.abbreviation(entityData.Abbreviation);
         self.picture(entityData.Picture);
         self.description(entityData.Description);
 
-        self.allContacts(
-            entityData.AllContacts
-                ? $.map(entityData.AllContacts,
+        self.contacts(
+            entityData.Contacts
+                ? $.map(entityData.Contacts,
                     function (contact) { return new ContactViewModel(contact); })
                 : undefined);
 
-        self.allAddresses(
-            entityData.AllAddresses
-                ? $.map(entityData.AllAddresses,
+        self.addresses(
+            entityData.Addresses
+                ? $.map(entityData.Addresses,
                     function (address) { return new AddressViewModel(address); })
                 : undefined);
 
-        self.allShows(
-            entityData.AllShows
-                ? $.map(entityData.AllShows,
+        self.shows(
+            entityData.Shows
+                ? $.map(entityData.Shows,
                     function (show) { return new ShowViewModel(show); })
                 : undefined);
     };
@@ -333,23 +299,23 @@ function EntityViewModel(data) {
     self.toJSON = function () {
         return {
             Id: self.id(),
-            EventMetadataId: self.eventMetadataId(),
-            State: self.state(),
             Type: self.type(),
             Name: self.name(),
             Abbreviation: self.abbreviation(),
             Picture: self.picture(),
             Description: self.description(),
 
-            AllContacts: self.allContacts()
-                ? $.map(self.allContacts(), function (contact) { return contact.toJSON(); })
+            Contacts: self.contacts()
+                ? $.map(self.contacts(), function (contact) { return contact.toJSON(); })
                 : undefined,
-            AllAddresses: self.allAddresses()
-                ? $.map(self.allAddresses(), function (address) { return address.toJSON(); })
+            Addresses: self.addresses()
+                ? $.map(self.addresses(), function (address) { return address.toJSON(); })
                 : undefined,
-            AllShows: self.allShows()
-                ? $.map(self.allShows(), function (show) { return show.toJSON(); })
+            Shows: self.shows()
+                ? $.map(self.shows(), function (show) { return show.toJSON(); })
                 : undefined,
+            
+            Destroy: self._destroy
         };
     };
 
@@ -360,9 +326,6 @@ function ShowViewModel(data) {
     var self = this;
 
     self.id = ko.observable();
-    self.eventMetadataId = ko.observable();
-    self.venueId = ko.observable();
-    self.isReference = ko.observable();
     self.title = ko.observable();
     self.description = ko.observable();
     self.startDate = ko.observable();
@@ -371,36 +334,22 @@ function ShowViewModel(data) {
     self.endTime = ko.observable();
     self.picture = ko.observable();
     self.detailsUrl = ko.observable();
-    self.state = ko.observable();
-
-    self.timeText = ko.computed(function () {
-        return self.endTime()
-            ? self.startTime() + '&nbsp-&nbsp' + self.endTime()
-            : self.startTime();
-    });
 
     self.loadData = function (showData) {
         self.id(showData.Id);
-        self.eventMetadataId(showData.EventMetadataId);
-        self.venueId(showData.VenueId);
-        self.isReference(showData.IsReference);
         self.title(showData.Title);
         self.description(showData.Description);
-        self.startDate(showData.StartDate ? showData.StartDate : "");
-        self.startTime(showData.StartTime ? showData.StartTime : "");
-        self.endDate(showData.EndDate ? showData.EndDate : "");
-        self.endTime(showData.EndTime ? showData.EndTime : "");
+        self.startDate(showData.StartDate);
+        self.startTime(showData.StartTime);
+        self.endDate(showData.EndDate);
+        self.endTime(showData.EndTime);
         self.picture(showData.Picture);
         self.detailsUrl(showData.DetailsUrl);
-        self.state(showData.State);
     };
 
     self.toJSON = function () {
         return {
             Id: self.id(),
-            EventMetadataId: self.eventMetadataId(),
-            VenueId: self.venueId(),
-            IsReference: self.isReference(),
             Title: self.title(),
             Description: self.description(),
             StartDate: self.startDate(),
@@ -409,7 +358,7 @@ function ShowViewModel(data) {
             EndTime: self.endTime(),
             Picture: self.picture(),
             DetailsUrl: self.detailsUrl(),
-            State: self.state()
+            Destroy: self._destroy
         };
     };
 

@@ -25,7 +25,7 @@
             {
                 <button type="button" id="btn-edit-entity" class="btn">@T("Edit " + entityTypeName)</button>
             }
-                @entityVm.DisplayName
+                @entityVm.Name
             </h2>
             @if (!string.IsNullOrEmpty(entityVm.Picture))
             {
@@ -33,17 +33,17 @@
             }
         </div>
 			
-@if (entityVm.AllAddresses.Any()) {
+@if (entityVm.Addresses.Any()) {
         <div class="info addresses-container">
-            @foreach (var address in entityVm.AllAddresses) {
+            @foreach (var address in entityVm.Addresses) {
                 <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address>@if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">&nbsp;@address.Tip</i>}</h4></div>                        
             }
         </div>	
 }
     </div>
 
-@if (entityVm.AllAddresses.Any()) {
-    var addressFirst = entityVm.AllAddresses.First();
+@if (entityVm.Addresses.Any()) {
+    var addressFirst = entityVm.Addresses.First();
     var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
     query = Regex.Replace(query, @"\s+", "+");
     <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>
@@ -52,11 +52,11 @@
     <div class="row gap">
         <div class="col-md-7"><p class="description">@entityVm.Description</p></div>
         <div class="col-md-5 contact-container">
-    @if (entityVm.AllContacts.Any()) {
+    @if (entityVm.Contacts.Any()) {
             <div class="well">
                 <h4 class="text-center">@T("Contacts and Links")</h4>
                 <dl class="dl-horizontal">
-        @foreach (var contact in entityVm.AllContacts)
+        @foreach (var contact in entityVm.Contacts)
         {
             var title = contact.Title ?? contact.Contact;                             
                              

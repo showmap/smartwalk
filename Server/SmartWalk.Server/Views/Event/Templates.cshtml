@@ -15,8 +15,8 @@
             </a>
             <a data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>
             <br />
-            <address data-bind="text: allAddresses() && allAddresses().length > 0 ? allAddresses()[0].address() : ''"></address>
-            <i class="tip description" data-bind="text: allAddresses() && allAddresses().length > 0 ? allAddresses()[0].tip() : ''"></i>
+            <address data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></address>
+            <i class="tip description" data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].tip() : ''"></i>
         </div>
     </td>
     <td class="td-align td-valign">
@@ -74,7 +74,9 @@
             <span class="description" data-bind="text: description"></span>
         </td>
         
-        <td class="td-valign" data-bind="html: timeText, click: function() { $parent.showsManager.editItem($data) }"></td>
+        <td class="td-valign" data-bind="
+            html: endTime() ? startTime() + '&nbsp;-&nbsp;' + endTime() : startTime(), 
+            click: function() { $parent.showsManager.editItem($data) }"></td>
         <td class="td-align td-valign">
             <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $parent.showsManager.deleteItem($data); }">
                 <span class="glyphicon glyphicon-remove"></span>

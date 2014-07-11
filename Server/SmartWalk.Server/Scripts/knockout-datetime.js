@@ -5,11 +5,21 @@ ko.bindingHandlers.datepicker = {
         var dateFormat = $.datepicker.regional[''].dateFormat;
 
         element.setAttribute("type", "date");
-        if (element.type != "date") {
+        if (element.type == "date") {
+            ko.utils.registerEventHandler(element, "change", function () {
+                var observable = valueAccessor();
+                var calcDate = new Date(
+                    element.valueAsDate.getFullYear(),
+                    element.valueAsDate.getMonth(),
+                    element.valueAsDate.getDate(),
+                    12);
+                observable($.datepicker.formatDate(dateFormat, calcDate));
+            });
+        } else {
             var options = allBindingsAccessor().datepickerOptions || {};
 
             $(element).datepicker({
-                onSelect: function(value) {
+                onSelect: function (value) {
                     var observable = valueAccessor();
                     observable(value);
                 }
@@ -26,39 +36,46 @@ ko.bindingHandlers.datepicker = {
             }
 
             //handle the field changing
-            ko.utils.registerEventHandler(element, "change", function() {
-                var observable = valueAccessor();                
+            ko.utils.registerEventHandler(element, "change", function () {
+                var observable = valueAccessor();
                 var newDate = $(element).datepicker("getDate");
-                observable($.datepicker.formatDate(dateFormat, newDate));
+                observable(newDate ? $.datepicker.formatDate(dateFormat, newDate) : null);
             });
 
             //handle disposal (if KO removes by the template binding)
-            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
                 $(element).datepicker("destroy");
-            });
-        } else {
-            ko.utils.registerEventHandler(element, "change", function () {
-                var value = valueAccessor();                
-                var calcDate = new Date(element.valueAsDate.getFullYear(), element.valueAsDate.getMonth(), element.valueAsDate.getDate(), 12);
-                value($.datepicker.formatDate(dateFormat, calcDate));
             });
         }
     },
     //update the control when the view model changes
     update: function (element, valueAccessor) {
-        var value = valueAccessor();
-        var dateFormat = $.datepicker.regional[''].dateFormat;
-        var valueDate = $.datepicker.parseDate(dateFormat, ko.utils.unwrapObservable(value));
-        if (element.type != "date") {            
-            //alert($.datepicker.parseDate(dateFormat, value));
-            var current = $(element).datepicker("getDate");
-
-            if (valueDate - current !== 0) {
-                $(element).datepicker("setDate", valueDate);
+        var dateFormat = $.datepicker.regional[""].dateFormat;
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        if (value) {
+            var valueDate = $.datepicker.parseDate(dateFormat, value);
+            
+            if (element.type == "date") {
+                // TODO: Why?
+                element.valueAsDate = new Date(Date.UTC(
+                    valueDate.getFullYear(),
+                    valueDate.getMonth(),
+                    valueDate.getDate(),
+                    12));
+            } else {
+                var current = $(element).datepicker("getDate");
+                
+                // TODO: To figure this out, looks like WTF
+                if (valueDate - current !== 0) {
+                    $(element).datepicker("setDate", valueDate);
+                }
             }
         } else {
-            if(valueDate!= null)
-                element.valueAsDate = new Date(Date.UTC(valueDate.getFullYear(), valueDate.getMonth(), valueDate.getDate(), 12));
+            if (element.type == "date") {
+                element.valueAsDate = null;
+            } else {
+                $(element).datepicker("setDate", null);
+            }
         }
     }
 };
@@ -91,20 +108,21 @@ ko.bindingHandlers.timepicker = {
         }
     },
     //update the control when the view model changes
-    update: function (element, valueAccessor) {
-        var observable = valueAccessor();
-        if (!observable())
-            observable("00:00");
-        
-        if (element.type != "time") {
-            var value = ko.utils.unwrapObservable(observable);
-            var valueDate = new Date(myDate + " " + value);
-            var current = $(element).datepicker("getDate");
-            if (valueDate - current !== 0) {
-                $(element).timepicker("setDate", valueDate);
-            }
+    update: function(element, valueAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+
+        if (element.type == "time") {
+            element.value = value;
         } else {
-            element.value = observable();
+            if (value) {
+                var valueDate = new Date(myDate + " " + value);
+                var current = $(element).datepicker("getDate");
+                if (valueDate - current !== 0) {
+                    $(element).timepicker("setDate", valueDate);
+                }
+            } else {
+                $(element).timepicker("setDate", null);
+            }
         }
     }
 };

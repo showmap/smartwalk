@@ -22,13 +22,9 @@
     };
 
     self.contactsManager = new VmItemsManager(
-        self.allContacts,
+        self.contacts,
         function() {
-            var contact = new ContactViewModel({
-                    Id: 0,
-                    EntityId: self.id(), // TODO: To delete
-                    Type: ContactType.Url
-                });
+            var contact = new ContactViewModel({ Type: ContactType.Url });
             return contact;
         },
         {
@@ -41,12 +37,9 @@
         });
     
     self.addressesManager = new VmItemsManager(
-        self.allAddresses,
+        self.addresses,
         function () {
-            var address = new AddressViewModel({
-                Id: 0,
-                EntityId: self.id(), // TODO: To delete
-            });
+            var address = new AddressViewModel({});
             return address;
         },
         {

@@ -66,7 +66,6 @@ namespace SmartWalk.Server.Services.EventService
             var eventMetadata = user.EventMetadataRecords.FirstOrDefault(u => u.Id == id);
 
             var vm = CreateViewModelContract(user, eventMetadata);
-            //vm.AllHosts = _entityService.GetUserEntities(user, EntityType.Host, 0, 8, e => e.Name, false, "");
 
             return vm;
         }
@@ -104,7 +103,7 @@ namespace SmartWalk.Server.Services.EventService
             res.Host = _entityService.GetEntityVm(record.EntityRecord, LoadMode.Compact);
 
             if (mode == LoadMode.Full) {
-                res.AllVenues = _entityService.GetEventEntities(record);
+                res.Venues = _entityService.GetEventEntities(record);
             }
 
             return res;
@@ -189,7 +188,7 @@ namespace SmartWalk.Server.Services.EventService
 
             _eventMetadataRepository.Flush();
 
-            foreach (var venueVm in item.AllVenues.Where(venueVm => venueVm.State != VmItemState.Deleted)) {
+            foreach (var venueVm in item.Venues.Where(venueVm => !venueVm.Destroy)) {
                 var currentVenue = venueVm;
 
                 if (venueVm.Id < 0) {
@@ -199,10 +198,8 @@ namespace SmartWalk.Server.Services.EventService
                         continue;
                 }
 
-                foreach (var showVm in venueVm.AllShows.Where(showVm => showVm.State != VmItemState.Deleted)) {
-                    showVm.EventMetadataId = metadata.Id;
-                    showVm.VenueId = currentVenue.Id;
-                    _entityService.SaveOrAddShow(showVm);
+                foreach (var showVm in venueVm.Shows.Where(showVm => !showVm.Destroy)) {
+                    _entityService.SaveOrAddShow(showVm, metadata.Id, currentVenue.Id);
                 }
             }
 

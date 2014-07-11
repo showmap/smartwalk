@@ -21,12 +21,9 @@
     EventViewModelExtended.setupDialogs(self);
     
     self.venuesManager = new VmItemsManager(
-        self.allVenues,
+        self.venues,
         function () {
-            var venue = new EntityViewModel({
-                Id: 0,
-                Type: EntityType.Venue
-            });
+            var venue = new EntityViewModel({ Type: EntityType.Venue });
             return venue;
         },
         {
@@ -48,8 +45,6 @@
             },
             afterSave: function(venue) {
                 venue.loadData(self.selectedVenue().toJSON());
-                venue.eventMetadataId(self.id());
-
                 self.selectedVenue(null);
             },
             itemView: self.settings.eventVenueView,
@@ -264,12 +259,9 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     });
     
     venue.showsManager = new VmItemsManager(
-        venue.allShows,
+        venue.shows,
         function () {
             var show = new ShowViewModel({
-                Id: 0,
-                EventMetadataId: event.id(),
-                VenueId: venue.id(),
                 StartDate: event.startTime(), // TODO: To check this out
                 EndDate: event.endTime()
             });
@@ -357,9 +349,11 @@ EventViewModelExtended.AutocompleteOptions = {
 EventViewModelExtended.getAutoEntityItem = function (entity) {
     var text = entity.name();
 
-    if (entity.displayAddress()) {
-        if (entity.displayAddress().address() != "")
-            text += "<br /><i class='description'>" + entity.displayAddress().address() + "</i>";
+    var displayAddress = entity.addresses() && entity.addresses().length > 0
+        ? entity.addresses()[0].address() : null;
+    
+    if (displayAddress != null) {
+        text += "<br /><i class='description'>" + displayAddress + "</i>";
     }
 
     return text;

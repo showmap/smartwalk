@@ -31,7 +31,7 @@
         <div class="info">
             <div class="pull-left">
                 <div><h3>@eventMetadata.DisplayDate</h3></div>
-                <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new { entityId = eventMetadata.Host.Id })">@eventMetadata.Host.DisplayName</a></h4></div>
+                <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new { entityId = eventMetadata.Host.Id })">@eventMetadata.Host.Name</a></h4></div>
             </div>
 				
             <!-- TODO: To initialize "Add To Calendar" values -->
@@ -54,10 +54,10 @@
         </div>	
     </div>
         
-@if (eventMetadata.AllVenues.Any() && eventMetadata.AllVenues.First().AllAddresses.Any())
+@if (eventMetadata.Venues.Any() && eventMetadata.Venues.First().Addresses.Any())
 {
-    var venue = eventMetadata.AllVenues.First();
-    var addressFirst = venue.AllAddresses.First();
+    var venue = eventMetadata.Venues.First();
+    var addressFirst = venue.Addresses.First();
     var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
     query = Regex.Replace(query, @"\s+", "+");
     <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>                       
@@ -74,7 +74,7 @@
             <tr><th><h4>@T("Venues and Shows")</h4></th><th>@T("Time")</th></tr>
         </thead>
         <tbody>
-        @foreach (var venue in eventMetadata.AllVenues.Where(v => v.State == VmItemState.Normal))
+        @foreach (var venue in eventMetadata.Venues)
         {
             <tr class="venue">
                 <td colspan="2" class="venue">
@@ -82,16 +82,16 @@
                         <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
                         <span class="abbr">@venue.Abbreviation</span>
                     </a>
-                    <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.DisplayName</h4></a>
-                @if (venue.AllAddresses.Any())
+                    <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.Name</h4></a>
+                @if (venue.Addresses.Any())
                 {
                     <br />
-                    <address>@venue.AllAddresses.First().Address</address>
-                    <i class="tip description">@venue.AllAddresses.First().Tip</i>
+                    <address>@venue.Addresses.First().Address</address>
+                    <i class="tip description">@venue.Addresses.First().Tip</i>
                 }                            
                 </td>
             </tr>
-                foreach (var show in venue.AllShows.Where(s => !s.IsReference))
+                foreach (var show in venue.Shows)
                 {
             <tr class="venue-show">
                 <td>@show.Title<br/>@if (@show.Description != null)

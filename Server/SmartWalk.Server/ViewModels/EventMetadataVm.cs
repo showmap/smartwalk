@@ -7,7 +7,6 @@ namespace SmartWalk.Server.ViewModels
         public int Id { get; set; }
         public int CombineType { get; set; }
         public bool IsPublic { get; set; }
-
         public string Title { get; set; }
         public string Description { get; set; }
         public string StartTime { get; set; }
@@ -17,8 +16,9 @@ namespace SmartWalk.Server.ViewModels
         public double Longitude { get; set; }
 
         public EntityVm Host { get; set; }
-        public IList<EntityVm> AllVenues { get; set; }
+        public IList<EntityVm> Venues { get; set; }
 
+        // TODO: Possible should be dropped
         public string DisplayDate { get; set; }
 
         public string DisplayName
@@ -32,7 +32,7 @@ namespace SmartWalk.Server.ViewModels
         }
 
         public EventMetadataVm() {
-            AllVenues = new List<EntityVm>();
+            Venues = new List<EntityVm>();
         }
     }
 }

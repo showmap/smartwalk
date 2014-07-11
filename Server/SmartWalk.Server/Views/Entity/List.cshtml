@@ -53,7 +53,7 @@
         @foreach (var entityVm in entities) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {entityId = entityVm.Id})">
                 <div class="header">
-                    <h3>@entityVm.DisplayName</h3>
+                    <h3>@entityVm.Name</h3>
 			
                     <img class="scale" data-scale="best-fill" data-align="center" src="@entityVm.Picture">
                 </div>

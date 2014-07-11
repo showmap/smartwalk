@@ -152,16 +152,16 @@ function VmItemsManager(allItems, createItemHandler, settings) {
 
     self._processIsEditingChange = function (item, isEditing) {
         if (isEditing) {
-            if (item.id() != 0) {
+            if (item.id() && item.id() != 0) {
                 self._previousItemData(item.toJSON());
             }
         } else {
-            if (item.id() != 0) {
+            if (item.id() && item.id() != 0) {
                 if (self._previousItemData() != null) {
                     item.loadData(self._previousItemData());
                 }
             } else {
-                allItems.remove(item);
+                self.items.remove(item);
             }
 
             self._previousItemData(null);
@@ -181,13 +181,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     
     // public
     
-    self.items = ko.computed(function() {
-        return allItems() // TODO: Use built-in KO's delete framework
-            ? $.grep(allItems(), function(item) {
-                return item.state() != VmItemState.Deleted;
-            })
-            : undefined;
-    });
+    self.items = allItems;
 
     if (self.items()) {
         self.items().forEach(function(item) {
@@ -219,7 +213,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
 
     self.addItem = function () {
         var item = createItemHandler();
-        allItems.push(item);
+        self.items.push(item);
         self.editItem(item);
     };
 
@@ -228,7 +222,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     };
 
     self.deleteItem = function (item) {
-        item.state(VmItemState.Deleted); // TODO: Use built-in KO's delete framework
+        self.items.destroy(item);
     };
 
     self.cancelItem = function () {
@@ -242,7 +236,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
 
         if (item.errors() && item.errors().length == 0) {
-            if (item.id() == 0) {
+            if (!item.id() || item.id() == 0) {
                 item.id(-1);
             }
             

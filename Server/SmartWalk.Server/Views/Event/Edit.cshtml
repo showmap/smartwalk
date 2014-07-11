@@ -149,22 +149,12 @@
 
 @Html.Partial(
     "../Entity/Edit", 
-    new EntityVm
-        {
-            Id = 0, 
-            EventMetadataId = Model.Id,
-            Type = (int)EntityType.Host
-        },
+    new EntityVm { Type = (int)EntityType.Host },
     new ViewDataDictionary {{"EntityFormId", hostFormId }})
 
 @Html.Partial(
     "../Entity/Edit", 
-    new EntityVm
-        {
-            Id = 0, 
-            EventMetadataId = Model.Id,
-            Type = (int)EntityType.Venue
-        },
+    new EntityVm { Type = (int)EntityType.Venue },
     new ViewDataDictionary {{"EntityFormId", venueFormId }})
 
 @using (Script.Foot())
