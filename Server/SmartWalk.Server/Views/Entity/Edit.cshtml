@@ -54,29 +54,29 @@
 	        </div>
         </div>
         
-        <div class="map-container"><iframe data-bind="attr: { src: getMapLink() }, visible: isMapVisible"></iframe></div>
+        <div class="map-container"><iframe data-bind="attr: { src: getMapLink() }, visible: addressesManager.items() && $.grep(addressesManager.items(), function (item) { return item.id() != 0; }).length > 0"></iframe></div>
 
         <div class="row" data-bind="visible: type() == @Convert.ToInt32(EntityType.Venue)">
 	        <div class="col-sm-8">
-		        <table class="table table-hover addresses-table" data-bind="visible: addresses() && addresses().length > 0">
+		        <table class="table table-hover addresses-table" data-bind="visible: addressesManager.items() && addressesManager.items().length > 0">
 			        <thead>
 				        <tr>
 					        <th><h4>@T("Addresses")</h4></th>
 					        <th class="td-align"></th>
 				        </tr>
 			        </thead>
-			        <tbody data-bind="template: { name: getAddressView, foreach: addresses() }"></tbody>
+			        <tbody data-bind="template: { name: addressesManager.getItemView, foreach: addressesManager.items() }"></tbody>
 		        </table>
 				
                 <div class="add-item-container">
-                    <a data-bind="click: function() { $root.addressesManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
+                    <a data-bind="click: function() { addressesManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
                 </div>
 	        </div>
         </div>
         
         <div class="row gap">
             <div class="col-sm-8">
-                <table class="table table-hover" data-bind="visible: contacts() && contacts().length > 0">
+                <table class="table table-hover" data-bind="visible: contactsManager.items() && contactsManager.items().length > 0">
                     <thead>
                         <tr>
                             <th>@T("Contact Type")</th>
@@ -84,11 +84,11 @@
                             <th class="td-align"></th>
                         </tr>
                     </thead>
-                    <tbody data-bind="template: { name: getContactView, foreach: contacts() }"></tbody>
+                    <tbody data-bind="template: { name: contactsManager.getItemView, foreach: contactsManager.items() }"></tbody>
                 </table>
                 
                 <div class="add-item-container">
-                    <a data-bind="click: function() { $root.contactsManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Contact")</a>
+                    <a data-bind="click: function() { contactsManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Contact")</a>
                 </div>
             </div>
         </div>
@@ -147,7 +147,7 @@
 
             validationUrl: form.attr("validate-entity-url"),
             entitySaveUrl: form.attr("save-entity-url"),
-            entityAfterSaveUrlHandler: function(id) {
+            entityAfterSaveAction: function(id) {
                 window.location.href = '@Url.Action("View", entityController, new { entityId = ""})/' + id;
             },
 

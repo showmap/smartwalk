@@ -109,6 +109,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\SmartWalk.Server.Theme\Scripts\bootstrap.js">
+      <Link>Scripts\_links\bootstrap.js</Link>
+    </None>
+    <None Include="..\SmartWalk.Server.Theme\Scripts\jquery-2.1.1.js">
+      <Link>Scripts\_links\jquery-2.1.1.js</Link>
+    </None>
+    <None Include="..\SmartWalk.Server.Theme\Scripts\jquery-ui-sliderAccess.js">
+      <Link>Scripts\_links\jquery-ui-sliderAccess.js</Link>
+    </None>
+    <None Include="..\SmartWalk.Server.Theme\Scripts\jquery-ui-timepicker-addon.js">
+      <Link>Scripts\_links\jquery-ui-timepicker-addon.js</Link>
+    </None>
+    <None Include="..\SmartWalk.Server.Theme\Scripts\jquery-ui.js">
+      <Link>Scripts\_links\jquery-ui.js</Link>
+    </None>
     <Content Include="Images\loading.gif" />
     <Content Include="Scripts\sw-antiforgery.js" />
     <Content Include="Scripts\jquery.visible.js" />

@@ -5,67 +5,17 @@
 
     self.settings = settings;
 
-    self.contacts = ko.computed(function () {
-        return self.allContacts()
-            ? VmItemUtil.availableItems(self.allContacts()) : undefined;
-    });
-
-    self.addresses = ko.computed(function () {
-        return self.allAddresses()
-            ? VmItemUtil.availableItems(self.allAddresses()) : undefined;
-    });
-
-    self.contacts().forEach(function (contact) {
-        EntityViewModelExtended.initContactViewModel(contact, self);
-    });
-
-    self.addresses().forEach(function (address) {
-        EntityViewModelExtended.initAddressViewModel(address, self);
-    });
-
-    self.contacts.subscribe(function (contacts) {
-        if (contacts) {
-            contacts.forEach(function (contact) {
-                if (contact.isEditing === undefined) {
-                    EntityViewModelExtended.initContactViewModel(contact, self);
-                }
-            });
-        }
-    });
-
-    self.addresses.subscribe(function (addresses) {
-        if (addresses) {
-            addresses.forEach(function (address) {
-                if (address.isEditing === undefined) {
-                    EntityViewModelExtended.initAddressViewModel(address, self);
-                }
-            });
-        }
-    });
-
-    self.isMapVisible = ko.computed(function () {
-        if (self.addresses() && self.addresses().length > 1)
-            return true;
-
-        if (self.addresses() &&
-            self.addresses().length == 1 &&
-            !self.addresses()[0].isEditing())
-            return true;
-
-        return false;
-    }, self);
-
     EntityViewModelExtended.setupValidation(self, settings);
     
     self.setEditingItem = function(item) {
-        if (self.addresses()) {
-            self.addresses().forEach(function (address) {
+        if (self.addressesManager.items()) {
+            self.addressesManager.items().forEach(function (address) {
                 address.isEditing(item == address);
             });
         }
 
-        if (self.contacts()) {
-            self.contacts().forEach(function (contact) {
+        if (self.contactsManager.items()) {
+            self.contactsManager.items().forEach(function (contact) {
                 contact.isEditing(item == contact);
             });
         }
@@ -73,47 +23,49 @@
 
     self.contactsManager = new VmItemsManager(
         self.allContacts,
-        self.setEditingItem,
         function() {
             var contact = new ContactViewModel({
                     Id: 0,
-                    EntityId: self.id(),
-                    Type: ContactType.Url,
-                    State: VmItemState.Added
+                    EntityId: self.id(), // TODO: To delete
+                    Type: ContactType.Url
                 });
             return contact;
+        },
+        {
+            setEditingItem: self.setEditingItem,
+            initItem: function(contact) {
+                EntityViewModelExtended.setupContactValidation(contact, self.settings);
+            },
+            itemView: self.settings.contactView,
+            itemEditView: self.settings.contactEditView
         });
     
     self.addressesManager = new VmItemsManager(
         self.allAddresses,
-        self.setEditingItem,
         function () {
             var address = new AddressViewModel({
                 Id: 0,
-                EntityId: self.id(),
-                State: VmItemState.Added,
-                Address: ""
+                EntityId: self.id(), // TODO: To delete
             });
             return address;
+        },
+        {
+            setEditingItem: self.setEditingItem,
+            initItem: function(address) {
+                EntityViewModelExtended.setupAddressValidation(address, self.settings);
+            },
+            itemView: self.settings.addressView,
+            itemEditView: self.settings.addressEditView
         });
-    
-    self.getContactView = function (contact) {
-        return contact.isEditing()
-            ? self.settings.contactEditView : self.settings.contactView;
-    };
 
     self.getContactType = function (contact) {
         return self.settings.contactTypes[contact.type()];
     };
-    
-    self.getAddressView = function (address) {
-        return address.isEditing()
-            ? self.settings.addressEditView : self.settings.addressView;
-    };
 
     self.getMapLink = function () {
-        if (self.addresses() && self.addresses().length > 0) {
-            var addr = self.addresses()[0];
+        if (self.addressesManager.items() &&
+            self.addressesManager.items().length > 0) {
+            var addr = self.addressesManager.items()[0];
             return addr.getMapLink();
         }
 
@@ -132,7 +84,7 @@
                     if (resultHandler && $.isFunction(resultHandler)) {
                         resultHandler(entityData);
                     } else {
-                        self.settings.entityAfterSaveUrlHandler(entityData.Id);
+                        self.settings.entityAfterSaveAction(entityData.Id);
                     }
                 },
                 function () {
@@ -233,30 +185,4 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressTipValidationMessage } });
 
     address.errors = ko.validation.group(address);
-};
-
-EntityViewModelExtended.initContactViewModel = function (contact, entity) {
-    contact.isEditing = ko.observable(false);
-    contact.isEditing.subscribe(function (isEditing) {
-        VmItemsManager.processIsEditingChange(
-            contact,
-            isEditing,
-            entity.contactsManager
-        );
-    });
-    
-    EntityViewModelExtended.setupContactValidation(contact, entity.settings);
-};
-
-EntityViewModelExtended.initAddressViewModel = function (address, entity) {
-    address.isEditing = ko.observable(false);
-    address.isEditing.subscribe(function (isEditing) {
-        VmItemsManager.processIsEditingChange(
-            address,
-            isEditing,
-            entity.addressesManager
-        );
-    });
-
-    EntityViewModelExtended.setupAddressValidation(address, entity.settings);
 };

@@ -13,78 +13,48 @@
         self.autocompleteHosts.push(self.host());
     }
 
-    self.host.subscribe(function (host) { if (host) self.autocompleteHosts.push(host); });
+    self.host.subscribe(function(host) {
+         if (host) self.autocompleteHosts.push(host);
+    });
     
     EventViewModelExtended.setupValidation(self, settings);
     EventViewModelExtended.setupDialogs(self);
-
-    self.venues = ko.computed(function () {
-        return self.allVenues()
-            ? VmItemUtil.availableItems(self.allVenues()) : undefined;
-    });
-    
-    self.setEditingItem = function (item) {
-        if (self.venues()) {
-            self.venues().forEach(function (venue) {
-                venue.isEditing(item == venue);
-
-                if (venue.shows()) {
-                    venue.shows().forEach(function (show) {
-                        show.isEditing(item == show);
-                    });
-                }
-            });
-        }
-    };
-
-    self.venues().forEach(function (venue) {
-        EventViewModelExtended.initVenueViewModel(venue, self);
-    });
-
-    self.venues.subscribe(function (venues) {
-        if (venues) {
-            venues.forEach(function (venue) {
-                if (venue.isEditing === undefined) {
-                    EventViewModelExtended.initVenueViewModel(venue, self);
-                }
-            });
-        }
-    });
     
     self.venuesManager = new VmItemsManager(
         self.allVenues,
-        self.setEditingItem,
         function () {
             var venue = new EntityViewModel({
                 Id: 0,
-                Type: EntityType.Venue,
-                State: VmItemState.Added
+                Type: EntityType.Venue
             });
             return venue;
         },
-        function (venue) {
-            venue.loadData(self.selectedVenue().toJSON());
-            venue.eventMetadataId(self.id());
-            
-            // adding a show reference if there aren't
-            if ($.grep(venue.allShows(),
-                function (show) { return show.isReference(); }).length == 0) {
-                venue.allShows.push(new ShowViewModel({
-                    State: VmItemState.Hidden,
-                    IsReference: true,
-                    EventMetadataId: self.id(),
-                    VenueId: venue.id()
-                }));
-            }
+        {
+            setEditingItem: function (editingItem) {
+                if (self.venuesManager.items()) {
+                    self.venuesManager.items().forEach(function (venue) {
+                        venue.isEditing(editingItem == venue);
 
-            self.selectedVenue(null);
+                        if (venue.showsManager.items()) {
+                            venue.showsManager.items().forEach(function (show) {
+                                show.isEditing(editingItem == show);
+                            });
+                        }
+                    });
+                }
+            },
+            initItem: function (venue) {
+                EventViewModelExtended.initVenueViewModel(venue, self);
+            },
+            afterSave: function(venue) {
+                venue.loadData(self.selectedVenue().toJSON());
+                venue.eventMetadataId(self.id());
+
+                self.selectedVenue(null);
+            },
+            itemView: self.settings.eventVenueView,
+            itemEditView: self.settings.eventVenueEditView
         });
-
-    self.getShowView = function (show) {
-        return show.isEditing()
-            ? self.settings.showEditView
-            : self.settings.showView;
-    };
 
     self.createVenue = function () {
         $(self.settings.venueFormName).dialog("open");
@@ -106,12 +76,6 @@
                 }
             }
         );
-    };
-
-    self.getVenueView = function (venue) {
-        return venue.isEditing()
-            ? self.settings.eventVenueEditView
-            : self.settings.eventVenueView;
     };
 
     self.getHosts = function (searchTerm, sourceArray) {
@@ -291,36 +255,6 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
 };
 
 EventViewModelExtended.initVenueViewModel = function (venue, event) {
-    venue.isEditing = ko.observable(false);
-    venue.isEditing.subscribe(function (isEditing) {
-        VmItemsManager.processIsEditingChange(
-            venue,
-            isEditing,
-            event.venuesManager
-        );
-    });
-
-    venue.shows = ko.computed(function () {
-        return venue.allShows()
-            ? VmItemUtil.availableItems(venue.allShows()) : undefined;
-    });
-
-    if (venue.shows()) {
-        venue.shows().forEach(function (show) {
-            EventViewModelExtended.initShowViewModel(show, venue, event);
-        });
-    }
-
-    venue.shows.subscribe(function (shows) {
-        if (shows) {
-            shows.forEach(function (show) {
-                if (show.isEditing === undefined) {
-                    EventViewModelExtended.initShowViewModel(show, venue, event);
-                }
-            });
-        }
-    });
-    
     venue.isValidating = ko.computed(function () {
         return event.selectedVenue.isValidating();
     });
@@ -331,31 +265,26 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     
     venue.showsManager = new VmItemsManager(
         venue.allShows,
-        event.setEditingItem,
         function () {
             var show = new ShowViewModel({
                 Id: 0,
                 EventMetadataId: event.id(),
                 VenueId: venue.id(),
-                State: VmItemState.Added,
                 StartDate: event.startTime(), // TODO: To check this out
                 EndDate: event.endTime()
             });
             return show;
+        },
+        {
+            setEditingItem: function(item) {
+                 return event.venuesManager.setEditingItem(item);
+            },
+            initItem: function(show) {
+                EventViewModelExtended.setupShowValidation(show, event, event.settings);
+            },
+            itemView: event.settings.showView,
+            itemEditView: event.settings.showEditView
         });
-};
-
-EventViewModelExtended.initShowViewModel = function (show, venue, event) {
-    show.isEditing = ko.observable(false);
-    show.isEditing.subscribe(function (isEditing) {
-        VmItemsManager.processIsEditingChange(
-            show,
-            isEditing,
-            venue.showsManager
-        );
-    });
-    
-    EventViewModelExtended.setupShowValidation(show, event, event.settings);
 };
 
 EventViewModelExtended.setupDialogs = function (event) {

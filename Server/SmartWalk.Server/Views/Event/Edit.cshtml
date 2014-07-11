@@ -110,7 +110,7 @@
 			</div>
 		</div>                                                               
  
-        <div class="row add-venue" data-bind="visible: venues().length > 0">
+        <div class="row add-venue" data-bind="visible: venuesManager.items().length > 0">
             <a data-bind="click: function() { $root.venuesManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
        
@@ -122,10 +122,10 @@
 					<th class="td-align"></th>
 				</tr>
 			</thead>
-			<tbody data-bind="template: { name: 'EntityItemTemplate', foreach: venues() }"></tbody>
+			<tbody data-bind="template: { name: 'EntityItemTemplate', foreach: venuesManager.items() }"></tbody>
 		</table>
     
-        <div class="row add-venue" data-bind="visible: $.grep($root.venues(), function (venue) { return venue.isEditing() }).length == 0">
+        <div class="row add-venue" data-bind="visible: $.grep($root.venuesManager.items(), function (venue) { return venue.isEditing() }).length == 0">
             <a data-bind="click: function() { $root.venuesManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
 
@@ -152,8 +152,7 @@
     new EntityVm
         {
             Id = 0, 
-            EventMetadataId = Model.Id, 
-            State = VmItemState.Normal, 
+            EventMetadataId = Model.Id,
             Type = (int)EntityType.Host
         },
     new ViewDataDictionary {{"EntityFormId", hostFormId }})
@@ -163,8 +162,7 @@
     new EntityVm
         {
             Id = 0, 
-            EventMetadataId = Model.Id, 
-            State = VmItemState.Normal, 
+            EventMetadataId = Model.Id,
             Type = (int)EntityType.Venue
         },
     new ViewDataDictionary {{"EntityFormId", venueFormId }})

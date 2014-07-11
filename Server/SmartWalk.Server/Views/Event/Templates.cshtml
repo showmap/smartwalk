@@ -1,9 +1,9 @@
 ﻿<script type="text/html" id="EntityItemTemplate">
-    <tr class="venue" data-bind="template: {name: $root.getVenueView}"></tr>
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && shows() && shows().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
-    <!-- ko template: {name: $root.getShowView, foreach: shows() } -->    
+    <tr class="venue" data-bind="template: {name: $root.venuesManager.getItemView}"></tr>
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && showsManager.items() && showsManager.items().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <!-- ko template: {name: showsManager.getItemView, foreach: showsManager.items() } -->    
     <!-- /ko -->
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && shows() && $.grep(shows(), function (show) { return show.isEditing() }).length == 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="visible: id() != 0 && showsManager.items() && $.grep(showsManager.items(), function (show) { return show.isEditing() }).length == 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
@@ -103,7 +103,7 @@
 					<div class="col-sm-2">
 						<div class="form-group">
 							<label for="showStartTimeInput">@T("Start Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, timepickerOptions: { stepMinute: 5 }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, timepickerOptions: { stepMinute: 1 }" />
 						</div>
 									
 						<div class="form-group" data-bind="validationElement: startDate">
@@ -115,7 +115,7 @@
 					<div class="col-sm-2">
 						<div class="form-group">
 							<label for="showStartTimeInput">@T("End Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, timepickerOptions: { stepMinute: 5 }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, timepickerOptions: { stepMinute: 1 }" />
 						</div>
 									
 						<div class="form-group" data-bind="validationElement: endDate">

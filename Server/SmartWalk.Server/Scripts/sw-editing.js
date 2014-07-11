@@ -125,34 +125,97 @@ addValidationCoreToCustomBinding("timepicker");
 
 // ###############    E d i t i n g    U t i l s     ####################
 
-// static
-function VmItemUtil() {
-};
-
-VmItemUtil.deleteItem = function (item) {
-    item.state(VmItemState.Deleted);
-};
-
-VmItemUtil.availableItems = function (items) {
-    return items
-        ? $.grep(items, function (item) {
-            return item.state() != VmItemState.Deleted &&
-                item.state() != VmItemState.Hidden;
-        })
-        : undefined;
-};
-
-VmItemUtil.deletedItems = function (items) {
-    return items
-        ? $.grep(items, function (item) { return item.state() == VmItemState.Deleted; })
-        : undefined;
-};
-
-function VmItemsManager(allItems, setEditingItem, createItemHandler, afterSaveHandler) {
+function VmItemsManager(allItems, createItemHandler, settings) {
+    /// <signature>
+    ///   <summary>The manager for CRUD operations with a list items.</summary>
+    ///   <param name="allItems" type="Array">An array of all items to work with.
+    ///     It's expected that each item has toJSON() and loadData() methods. The optional validation method
+    ///     isValidating() and property errors() supported. 
+    ///   </param>
+    ///   <param name="createItemHandler" type="Function">A handler to create a new instance of an item.</param>
+    ///   <param name="settings" type="PlainObject">A set of key/value pairs that configure the manager.
+    ///   {
+    ///     initItem: function(item) A handler to externally init an item state.
+    ///     setEditingItem: function(item) A handler to override default logic of setting item's editing state.
+    ///     afterSave: function(item) A handler to run some logic after an item was saved.
+    ///     itemView: A string id of the item view template.
+    ///     itemEditView: A string id of the item edit template.
+    ///   }
+    ///   </param>
+    /// </signature>
+    
     var self = this;
 
-    self.allItems = allItems;
-    self.previousItemData = ko.observable(null);
+    // private
+
+    self._previousItemData = ko.observable(null);
+
+    self._processIsEditingChange = function (item, isEditing) {
+        if (isEditing) {
+            if (item.id() != 0) {
+                self._previousItemData(item.toJSON());
+            }
+        } else {
+            if (item.id() != 0) {
+                if (self._previousItemData() != null) {
+                    item.loadData(self._previousItemData());
+                }
+            } else {
+                allItems.remove(item);
+            }
+
+            self._previousItemData(null);
+        }
+    };
+    
+    self._initItem = function (item) {
+        item.isEditing = ko.observable(false);
+        item.isEditing.subscribe(function (isEditing) {
+            self._processIsEditingChange(item, isEditing);
+        });
+        
+        if (settings.initItem) {
+            settings.initItem(item);
+        }
+    };
+    
+    // public
+    
+    self.items = ko.computed(function() {
+        return allItems() // TODO: Use built-in KO's delete framework
+            ? $.grep(allItems(), function(item) {
+                return item.state() != VmItemState.Deleted;
+            })
+            : undefined;
+    });
+
+    if (self.items()) {
+        self.items().forEach(function(item) {
+            self._initItem(item);
+        });
+    }
+
+    self.items.subscribe(function (items) {
+        if (items) {
+            items.forEach(function (item) {
+                if (item.isEditing === undefined) {
+                    self._initItem(item);
+                }
+            });
+        }
+    });
+    
+    self.setEditingItem = settings.setEditingItem || function (editingItem) {
+        if (self.items()) {
+            self.items().forEach(function (item) {
+                item.isEditing(item == editingItem);
+            });
+        }
+    };
+    
+    self.getItemView = function (item) {
+        return item.isEditing() ? settings.itemEditView : settings.itemView;
+    };
 
     self.addItem = function () {
         var item = createItemHandler();
@@ -161,58 +224,40 @@ function VmItemsManager(allItems, setEditingItem, createItemHandler, afterSaveHa
     };
 
     self.editItem = function (item) {
-        setEditingItem(item);
+        self.setEditingItem(item);
     };
 
     self.deleteItem = function (item) {
-        VmItemUtil.deleteItem(item);
+        item.state(VmItemState.Deleted); // TODO: Use built-in KO's delete framework
     };
 
     self.cancelItem = function () {
-        setEditingItem(null);
+        self.setEditingItem(null);
     };
 
     self.saveItem = function (item) {
-        if (item.isValidating()) {
+        if (item.isValidating && item.isValidating()) {
             setTimeout(function () { self.saveItem(item); }, 50);
             return false;
         }
 
-        if (item.errors().length == 0) {
+        if (item.errors() && item.errors().length == 0) {
             if (item.id() == 0) {
                 item.id(-1);
             }
             
-            if (afterSaveHandler) {
-                afterSaveHandler(item);
+            if (settings.afterSave) {
+                settings.afterSave(item);
             }
 
-            self.previousItemData(null);
-            setEditingItem(null);
+            self._previousItemData(null);
+            self.setEditingItem(null);
         } else {
             item.errors.showAllMessages();
         }
 
         return true;
     };
-};
-
-VmItemsManager.processIsEditingChange = function (item, isEditing, manager) {
-    if (isEditing) {
-        if (item.id() != 0) {
-            manager.previousItemData(item.toJSON());
-        }
-    } else {
-        if (item.id() != 0) {
-            if (manager.previousItemData() != null) {
-                item.loadData(manager.previousItemData());
-            }
-        } else {
-            manager.allItems.remove(item);
-        }
-
-        manager.previousItemData(null);
-    }
 };
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
