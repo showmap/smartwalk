@@ -4,20 +4,18 @@
     EventViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
-    
-    self.autocompleteHosts = ko.observableArray();
-    self.autocompleteVenues = ko.observableArray();
-    self.selectedVenue = ko.observable();
-    
-    if (self.host()) {
-        self.autocompleteHosts.push(self.host());
-    }
 
-    self.host.subscribe(function(host) {
-         if (host) self.autocompleteHosts.push(host);
+    // TODO: to simplify after bug fix of jqAuto (hide "undefined" and support "valueProp")
+    self.hostData = ko.computed({
+        read: function () {
+            return self.host() ? self.host().toJSON().Name || null : null;
+        },
+        write: function (hostData) {
+            self.host(hostData && $.isPlainObject(hostData)
+                ? new EntityViewModel(hostData) : null);
+        }
     });
     
-    EventViewModelExtended.setupValidation(self, settings);
     EventViewModelExtended.setupDialogs(self);
     
     self.venuesManager = new VmItemsManager(
@@ -43,9 +41,10 @@
             initItem: function (venue) {
                 EventViewModelExtended.initVenueViewModel(venue, self);
             },
-            afterSave: function(venue) {
-                venue.loadData(self.selectedVenue().toJSON());
-                self.selectedVenue(null);
+            beforeSave: function (venue) {
+                if (!venue.errors) {
+                    EventViewModelExtended.setupVenueValidation(venue, self.settings);
+                }
             },
             itemView: self.settings.eventVenueView,
             itemEditView: self.settings.eventVenueEditView
@@ -54,8 +53,20 @@
     self.createVenue = function () {
         $(self.settings.venueFormName).dialog("open");
     };
+    
+    self.createHost = function () {
+        $(self.settings.hostFormName).dialog("open");
+    };
+    
+    self.getAutocompleteHosts = function (searchTerm, callback) {
+        ajaxJsonRequest(
+            { term: searchTerm },
+            self.settings.hostAutocompleteUrl,
+            callback
+        );
+    };
 
-    self.getVenues = function (searchTerm, sourceArray) {
+    self.getAutocompleteVenues = function (searchTerm, callback) {
         ajaxJsonRequest(
             {
                 term: searchTerm,
@@ -64,34 +75,15 @@
                 currentEvent: self.id() == 0 ? self.toJSON() : null
             },
             self.settings.venueAutocompleteUrl,
-            function (venues) {
-                if (venues && venues.length > 0) {
-                    sourceArray($.map(venues,
-                        function (venue) { return new EntityViewModel(venue); }));
-                }
-            }
+            callback
         );
-    };
-
-    self.getHosts = function (searchTerm, sourceArray) {
-        ajaxJsonRequest(
-            { term: searchTerm },
-            self.settings.hostAutocompleteUrl,
-            function (hosts) {
-                if (hosts && hosts.length > 0) {
-                    sourceArray($.map(
-                        hosts,
-                        function (host) { return new EntityViewModel(host); }));
-                }
-            }
-        );
-    };
-
-    self.createHost = function () {
-        $(self.settings.hostFormName).dialog("open");
     };
     
     self.saveEvent = function () {
+        if (!self.errors) {
+            EventViewModelExtended.setupValidation(self, settings);
+        }
+        
         if (self.isValidating()) {
             setTimeout(function () { self.saveEvent(); }, 50);
             return false;
@@ -100,7 +92,7 @@
         if (self.errors().length == 0) {
             ajaxJsonRequest(self.toJSON(), self.settings.eventSaveUrl,
                 function (eventData) {
-                    self.settings.eventAfterSaveUrlHandler(eventData.Id);
+                    self.settings.eventAfterSaveAction(eventData.Id);
                 },
                 function () {
                     // TODO: To show error message
@@ -160,17 +152,11 @@ EventViewModelExtended.setupValidation = function (event, settings) {
             }
         });
 
-    event.selectedVenue.extend({
-        required: {
-            message: settings.venueRequiredValidationMessage
-        }
-    });
-
     event.isValidating = ko.computed(function () {
         return event.startTime.isValidating() ||
             event.host.isValidating() ||
             event.picture.isValidating();
-    }, event);
+    });
 
     event.errors = ko.validation.group({
         startTime: event.startTime,
@@ -249,15 +235,18 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
     show.errors = ko.validation.group(show);
 };
 
+EventViewModelExtended.setupVenueValidation = function(venue, settings) {
+    venue.id
+        .extend({
+            required: {
+                message: settings.venueRequiredValidationMessage
+            }
+        });
+
+    venue.errors = ko.validation.group(venue);
+};
+
 EventViewModelExtended.initVenueViewModel = function (venue, event) {
-    venue.isValidating = ko.computed(function () {
-        return event.selectedVenue.isValidating();
-    });
-    
-    venue.errors = ko.validation.group({
-        selectedVenue: event.selectedVenue
-    });
-    
     venue.showsManager = new VmItemsManager(
         venue.shows,
         function () {
@@ -271,8 +260,10 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             setEditingItem: function(item) {
                  return event.venuesManager.setEditingItem(item);
             },
-            initItem: function(show) {
-                EventViewModelExtended.setupShowValidation(show, event, event.settings);
+            beforeSave: function (show) {
+                if (!show.errors) {
+                    EventViewModelExtended.setupShowValidation(show, event, event.settings);
+                }
             },
             itemView: event.settings.showView,
             itemEditView: event.settings.showEditView
@@ -289,6 +280,9 @@ EventViewModelExtended.setupDialogs = function (event) {
         close: function () {
             var entity = ko.dataFor(this);
             entity.loadData({});
+            if (entity.errors) {
+                entity.errors.showAllMessages(false);
+            }
         },
     };
 
@@ -331,9 +325,9 @@ EventViewModelExtended.setupDialogs = function (event) {
                     var dialog = this;
                     var venue = ko.dataFor(dialog);
                     venue.saveEntity(function (entityData) {
-                        var newVenue = new EntityViewModel(entityData);
-                        event.autocompleteVenues.push(newVenue);
-                        event.selectedVenue(newVenue);
+                        var editingVenue = $.grep(event.venuesManager.items(),
+                            function (item) { return item.isEditing(); })[0];
+                        editingVenue.loadData(entityData);
                         $(dialog).dialog("close");
                     });
                 }
@@ -342,11 +336,7 @@ EventViewModelExtended.setupDialogs = function (event) {
     $(event.settings.venueFormName).dialog($.extend(dialogOptions, venueOptions));
 };
 
-EventViewModelExtended.AutocompleteOptions = {
-    autoFocus: true
-};
-
-EventViewModelExtended.getAutoEntityItem = function (entity) {
+EventViewModelExtended.getAutocompleteItemText = function (entity) {
     var text = entity.name();
 
     var displayAddress = entity.addresses() && entity.addresses().length > 0

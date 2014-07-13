@@ -77,6 +77,8 @@ namespace SmartWalk.Server.Controllers
         }
 
         #region Addresses
+
+        // TODO: To validate address on event Save
         private IDictionary<string, string> ValidateAddress(AddressVm model)
         {
             var res = new Dictionary<string, string>();
@@ -99,24 +101,11 @@ namespace SmartWalk.Server.Controllers
             return res;
         }
 
-
-        [HttpPost]
-        public ActionResult ValidateAddress(string propName, AddressVm model)
-        {
-            var errors = ValidateAddress(model);
-
-            if (errors.ContainsKey(propName))
-            {
-                HttpContext.Response.StatusCode = 400;
-                return Json(new { Message = errors[propName] });
-            }
-
-            return Json(true);
-        }
-
         #endregion
 
         #region Contacts
+
+        // TODO: To validate contact on event Save
         private IDictionary<string, string> ValidateContact(ContactVm model)
         {
             var res = new Dictionary<string, string>();
@@ -137,20 +126,6 @@ namespace SmartWalk.Server.Controllers
             #endregion
 
             return res;
-        }
-
-        [HttpPost]
-        public ActionResult ValidateContact(string propName, ContactVm model)
-        {
-            var errors = ValidateContact(model);
-
-            if (errors.ContainsKey(propName))
-            {
-                HttpContext.Response.StatusCode = 400;
-                return Json(new { Message = errors[propName] });
-            }
-
-            return Json(true);
         }
 
         #endregion

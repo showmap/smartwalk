@@ -22,11 +22,7 @@
         : Url.Action("View", new { eventId = @Model.Id });
 }
 
-<div id="event-item" 
-    save-event-url="@Url.Action("SaveEvent", "Event")"
-    delete-event-url="@Url.Action("DeleteEvent", "Event")"
-    host-autocomplete-url="@Url.Action("AutoCompleteHost", "Host")"
-    venue-autocomplete-url="@Url.Action("AutoCompleteVenue", "Venue")">
+<div id="event-item">
         @Html.AntiForgeryTokenOrchard()
 
         <div class="row">
@@ -63,20 +59,19 @@
 		</div>	    
 
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-8" data-bind="validationElement: host">
                 <div class="form-group">
                     <label for="organizedByComboBox">@T("Organized By"):</label>
-                    <div class="input-group" data-bind="validationElement: host">
+                    <div class="input-group">
                         <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="
-                            jqAuto: host,
-                            jqOptions: EventViewModelExtended.AutocompleteOptions, 
-                            jqAutoSource: autocompleteHosts, 
-                            jqAutoValue: host, 
-                            jqAutoQuery: getHosts, 
-                            jqAutoSourceLabel: 'name', 
-                            jqAutoSourceInputValue: 'name', 
-                            jqAutoSourceValue: 'id', 
-                            jqAutoItemText: EventViewModelExtended.getAutoEntityItem" />
+                            jqAuto: {
+                                value: hostData,
+                                source: getAutocompleteHosts,
+                                inputProp: 'Name',
+                                template: 'AutocompleteEntityItemTemplate',
+
+                            },
+                            validationTag: host" />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
                         </span>
@@ -166,7 +161,6 @@
 
 <script type="text/javascript">
     $(function() {
-        var form = $("#event-item");
         var data = @Html.Raw(Json.Encode(Model));
             
         var settings = {
@@ -205,8 +199,8 @@
             hostFormName: "#@hostFormId",
             venueFormName: "#@venueFormId",
                 
-            eventSaveUrl: form.attr("save-event-url"),
-            eventAfterSaveUrlHandler: function(id) {
+            eventSaveUrl: '@Url.Action("SaveEvent", "Event")',
+            eventAfterSaveAction: function(id) {
                 window.location.href = '@Url.Action("View", new { eventId = ""})/' + id;
             },
     
@@ -216,8 +210,8 @@
             eventVenueView: "EventVenueItemTemplate",
             eventVenueEditView: "EventVenueItemTemplateEdit",
 
-            hostAutocompleteUrl: form.attr("host-autocomplete-url"),
-            venueAutocompleteUrl: form.attr("venue-autocomplete-url"),                               
+            hostAutocompleteUrl: '@Url.Action("AutoCompleteHost", "Host")',
+            venueAutocompleteUrl: '@Url.Action("AutoCompleteVenue", "Venue")',                               
         };
 
         var vm = new EventViewModelExtended(settings, data);

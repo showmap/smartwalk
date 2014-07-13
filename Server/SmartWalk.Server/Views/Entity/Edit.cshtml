@@ -18,11 +18,7 @@
         : T("Save <span class=\"hidden-xs\">" + entityTypeName + "</span>");
 }
 
-<div id="@formId"  
-     save-entity-url="@Url.Action("SaveEntity", entityController)"
-     validate-entity-url="@Url.Action("ValidateModel", entityController)"
-     validate-address-url="@Url.Action("ValidateAddress", "Event")"
-     validate-contact-url="@Url.Action("ValidateContact", "Event")">
+<div id="@formId">
         @Html.AntiForgeryTokenOrchard()
         <div class="row">
             <div class="col-xs-8">
@@ -54,7 +50,10 @@
 	        </div>
         </div>
         
-        <div class="map-container"><iframe data-bind="attr: { src: getMapLink() }, visible: addressesManager.items() && $.grep(addressesManager.items(), function (item) { return item.id() != 0; }).length > 0"></iframe></div>
+        <div class="map-container"><iframe data-bind="
+            attr: { src: getMapLink() }, 
+            visible: addressesManager.items() && 
+                $.grep(addressesManager.items(), function (item) { return item.id() && item.id() != 0; }).length > 0"></iframe></div>
 
         <div class="row" data-bind="visible: type() == @Convert.ToInt32(EntityType.Venue)">
 	        <div class="col-sm-8">
@@ -118,9 +117,6 @@
 
 <script>
     $(function() {
-        var formName = "#@formId";
-        var form = $(formName);
-
         var data = @Html.Raw(Json.Encode(Model));
 
         var settings = settings || [];
@@ -143,19 +139,15 @@
                 contactPhoneValidationMessage: '@T("Contact does not match phone pattern.")',
             },
 
-            entityFormName: formName,
-
-            validationUrl: form.attr("validate-entity-url"),
-            entitySaveUrl: form.attr("save-entity-url"),
+            validationUrl: '@Url.Action("ValidateModel", entityController)',
+            entitySaveUrl: '@Url.Action("SaveEntity", entityController)',
             entityAfterSaveAction: function(id) {
                 window.location.href = '@Url.Action("View", entityController, new { entityId = ""})/' + id;
             },
 
-            addressValidationUrl: form.attr("validate-address-url"),
             addressView: "ViewAddressTemplate",
             addressEditView: "EditAddressTemplate",
 
-            contactValidationUrl: form.attr("validate-contact-url"),
             contactView: "ViewContactTemplate",
             contactEditView: "EditContactTemplate",
             contactTypes: ['@T("E-mail")', '@T("Web")', '@T("Phone")'],

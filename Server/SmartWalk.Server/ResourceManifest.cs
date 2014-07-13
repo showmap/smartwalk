@@ -23,18 +23,18 @@ namespace SmartWalk.Server
                 .SetDependencies("ko");
 
             manifest.DefineScript("ko.autocomplete")
-                .SetVersion("1.2")
-                .SetVersionUrl("knockout-autocomplete.js")
+                .SetVersion("0.2.1")
+                .SetVersionUrl("knockout-jqAutocomplete.min.js", "knockout-jqAutocomplete.js")
                 .SetDependencies("ko", "jQueryUI");
 
             manifest.DefineScript("ko.datetime")
-                .SetVersion("1.3")
-                .SetVersionUrl("knockout-datetime.js")
-                .SetDependencies("ko", "jQueryUI", "jQueryUI");
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("sw-ko-datetime.js")
+                .SetDependencies("ko", "jQueryUI");
 
             manifest.DefineScript("ko.switcher")
-                .SetVersion("1.3")
-                .SetVersionUrl("knockout-switcher.js")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("sw-ko-switcher.js")
                 .SetDependencies("ko", "jQuery");
 
             // 3rd Party - jQuery Visible

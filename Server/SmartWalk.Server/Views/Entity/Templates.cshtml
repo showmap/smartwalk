@@ -42,7 +42,7 @@
 							
                 <div class="text-right">
                     <div class="form-group">
-                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.addressesManager.cancelItem() }">@T("Cancel")</button>
+                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.addressesManager.cancelItem($data) }">@T("Cancel")</button>
                         <button type="button" class="btn btn-success" data-bind="click: function () { $root.addressesManager.saveItem($data) }">@T("Save Address")</button>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
 							
                 <div class="text-right">
                     <div class="form-group">
-                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.contactsManager.cancelItem() }">@T("Cancel")</button>
+                        <button type="button" class="btn btn-default" data-bind="click: function () { $root.contactsManager.cancelItem($data) }">@T("Cancel")</button>
                         <button type="button" class="btn btn-success" data-bind="click: function () { $root.contactsManager.saveItem($data) }">@T("Save Contact")</button>
                     </div>
                 </div>

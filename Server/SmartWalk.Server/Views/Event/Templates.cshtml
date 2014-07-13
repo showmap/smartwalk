@@ -1,9 +1,33 @@
-﻿<script type="text/html" id="EntityItemTemplate">
+﻿<script type="text/html" id="AutocompleteEntityItemTemplate">
+    <a>
+        <span data-bind="text: Name"></span><br />
+        <i class="description" data-bind="
+                visible: Addresses && Addresses.length > 0,
+                text: Addresses && Addresses.length > 0 ? Addresses[0].Address : null"></i>
+    </a>
+</script>
+
+<script type="text/html" id="EntityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.venuesManager.getItemView}"></tr>
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && showsManager.items() && showsManager.items().length > 8"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="
+        visible: !isEditing() && 
+            showsManager.items() && 
+            showsManager.items().length > 8">
+        <td colspan="3">
+            <div class="add-venue-show"><a data-bind="click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
+        </td>
+    </tr>
     <!-- ko template: {name: showsManager.getItemView, foreach: showsManager.items() } -->    
     <!-- /ko -->
-    <tr class="add-venue-show" data-bind="visible: id() != 0 && showsManager.items() && $.grep(showsManager.items(), function (show) { return show.isEditing() }).length == 0"><td colspan="3"><div class="add-venue-show"><a data-bind="    click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div></td></tr>
+    <tr class="add-venue-show" data-bind="
+        visible: !isEditing() && 
+            showsManager.items() && 
+            $.grep(showsManager.items(), function (show) { 
+                return show.isEditing() }).length == 0">
+        <td colspan="3">
+            <div class="add-venue-show"><a data-bind="click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
+        </td>
+    </tr>
 </script>
 
 <script type="text/html" id="EventVenueItemTemplate">
@@ -30,20 +54,20 @@
     <td colspan="3" class="venue editing-container" data-bind="fadeInVisible: 'slow', scrollVisible: 'slow'">
         <div class="well">
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-8" data-bind="validationElement: $data.id">
                     <div class="form-group">
                         <label for="venueComboBox">@T("Venue"):</label>
-                        <div class="input-group" data-bind="validationElement: $root.selectedVenue">
+                        <div class="input-group">
                             <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="
-                                jqAuto: $root.selectedVenue, 
-                                jqOptions: EventViewModelExtended.AutocompleteOptions, 
-                                jqAutoSource: $root.autocompleteVenues, 
-                                jqAutoValue: $root.selectedVenue, 
-                                jqAutoQuery: $root.getVenues, 
-                                jqAutoSourceLabel: 'name', 
-                                jqAutoSourceInputValue: 'name', 
-                                jqAutoSourceValue: 'id', 
-                                jqAutoItemText: EventViewModelExtended.getAutoEntityItem" />
+                                jqAuto: {
+                                    value: ko.computed({ 
+                                        read: function() { return $data.name() || null; }, 
+                                        write: function (venueData) { $data.loadData(venueData); }}),
+                                    source: $root.getAutocompleteVenues,
+                                    inputProp: 'Name',
+                                    template: 'AutocompleteEntityItemTemplate'
+                                },
+                                validationTag: $data.id" />
                             <span class="input-group-btn">
                                 <button type="button" id="createVenueButton" class="btn btn-default pull-right" data-bind="click: $root.createVenue">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
                             </span>
@@ -57,7 +81,7 @@
                 <div class="col-sm-4 text-right">
 				    <div class="form-group">
 					    <label for="saveShowButton">&nbsp;</label><br/>
-					    <button type="button" class="btn btn-default" data-bind="click: function() { $root.venuesManager.cancelItem() }">@T("Cancel")</button>
+					    <button type="button" class="btn btn-default" data-bind="click: function() { $root.venuesManager.cancelItem($data) }">@T("Cancel")</button>
 					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function() { $root.venuesManager.saveItem($data) }">@T("Save Venue")</button>
 				    </div>
 			    </div>
@@ -143,7 +167,7 @@
 					<div class="col-sm-4 text-right">
 						<div class="form-group">
 							<label for="saveShowButton">&nbsp;</label><br/>
-							<button type="button" class="btn btn-default" data-bind="click: function() {$parent.showsManager.cancelItem(); }">@T("Cancel")</button>
+							<button type="button" class="btn btn-default" data-bind="click: function() {$parent.showsManager.cancelItem($data); }">@T("Cancel")</button>
 							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$parent.showsManager.saveItem($data); } ">@T("Save Show")</button>
 						</div>
 					</div>

@@ -125,13 +125,14 @@
       <Link>Scripts\_links\jquery-ui.js</Link>
     </None>
     <Content Include="Images\loading.gif" />
+    <Content Include="Scripts\knockout-jqAutocomplete.js" />
+    <Content Include="Scripts\knockout-jqAutocomplete.min.js" />
     <Content Include="Scripts\sw-antiforgery.js" />
     <Content Include="Scripts\jquery.visible.js" />
     <Content Include="Scripts\jquery.visible.min.js" />
     <Content Include="Scripts\knockout-3.1.0.debug.js" />
     <Content Include="Scripts\knockout-3.1.0.js" />
-    <Content Include="Scripts\knockout-autocomplete.js" />
-    <Content Include="Scripts\knockout-switcher.js" />
+    <Content Include="Scripts\sw-ko-switcher.js" />
     <Content Include="Scripts\knockout.validation.js" />
     <Content Include="Scripts\image-scale.js" />
     <Content Include="Scripts\image-scale.min.js" />
@@ -140,7 +141,7 @@
     <Content Include="Scripts\sw-editing-entity.js" />
     <Content Include="Scripts\sw-editing-event.js" />
     <Content Include="Scripts\text-collapse.js" />
-    <Content Include="Scripts\knockout-datetime.js" />
+    <Content Include="Scripts\sw-ko-datetime.js" />
     <Content Include="Styles\sw.css" />
     <Content Include="Styles\text-collapse.css" />
     <Content Include="Web.config" />

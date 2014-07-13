@@ -5,9 +5,7 @@
 
     self.settings = settings;
 
-    EntityViewModelExtended.setupValidation(self, settings);
-    
-    self.setEditingItem = function(item) {
+    self.setEditingItem = function (item) {
         if (self.addressesManager.items()) {
             self.addressesManager.items().forEach(function (address) {
                 address.isEditing(item == address);
@@ -29,8 +27,10 @@
         },
         {
             setEditingItem: self.setEditingItem,
-            initItem: function(contact) {
-                EntityViewModelExtended.setupContactValidation(contact, self.settings);
+            beforeSave: function (contact) {
+                if (!contact.errors) {
+                    EntityViewModelExtended.setupContactValidation(contact, self.settings);
+                }
             },
             itemView: self.settings.contactView,
             itemEditView: self.settings.contactEditView
@@ -44,8 +44,10 @@
         },
         {
             setEditingItem: self.setEditingItem,
-            initItem: function(address) {
-                EntityViewModelExtended.setupAddressValidation(address, self.settings);
+            beforeSave: function (address) {
+                if (!address.errors) {
+                    EntityViewModelExtended.setupAddressValidation(address, self.settings);
+                }
             },
             itemView: self.settings.addressView,
             itemEditView: self.settings.addressEditView
@@ -66,8 +68,12 @@
     };
 
     self.saveEntity = function (resultHandler) {
+        if (!self.errors) {
+            EntityViewModelExtended.setupValidation(self, settings);
+        }
+
         if (self.isValidating()) {
-            setTimeout(function () { self.saveEntity(); }, 50);
+            setTimeout(function () { self.saveEntity(resultHandler); }, 50);
             return false;
         }
 
@@ -117,25 +123,6 @@ EntityViewModelExtended.setupValidation = function (entity, settings) {
 };
 
 EntityViewModelExtended.setupContactValidation = function (contact, settings) {
-    contact.contact.extend({
-        asyncValidation: {
-            validationUrl: settings.contactValidationUrl,
-            propName: "Contact",
-            modelHandler: contact.toJSON
-        }
-    });
-    contact.title.extend({
-        asyncValidation: {
-            validationUrl: settings.contactValidationUrl,
-            propName: "Title",
-            modelHandler: contact.toJSON
-        }
-    });
-
-    contact.isValidating = ko.computed(function () {
-        return contact.contact.isValidating() || contact.title.isValidating();
-    });
-
     contact.type.extend({ dependencies: [contact.contact] });
 
     contact.contact
@@ -150,26 +137,6 @@ EntityViewModelExtended.setupContactValidation = function (contact, settings) {
 };
 
 EntityViewModelExtended.setupAddressValidation = function (address, settings) {
-    address.address.extend({
-        asyncValidation: {
-            validationUrl: settings.addressValidationUrl,
-            propName: "Address",
-            modelHandler: address.toJSON
-        }
-    });
-
-    address.tip.extend({
-        asyncValidation: {
-            validationUrl: settings.addressValidationUrl,
-            propName: "Tip",
-            modelHandler: address.toJSON
-        }
-    });
-
-    address.isValidating = ko.computed(function () {
-        return address.address.isValidating() || address.tip.isValidating();
-    });
-
     address.address
         .extend({ required: { params: true, message: settings.addressMessages.addressRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressLengthValidationMessage } });

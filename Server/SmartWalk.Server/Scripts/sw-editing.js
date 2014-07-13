@@ -6,7 +6,6 @@ ko.validation.rules["dependencies"] = {
         if (!dependencies) return true;
         ko.utils.arrayForEach(dependencies, function (dependency) {
             if (dependency.isValid) {
-                //ko.validation.validateObservable.call(dependency, dependency);
                 dependency.notifySubscribers();
             }
         });
@@ -107,6 +106,11 @@ ko.validation.init({
     messageOnModified: true
 });
 
+// defines a simple foo binding to attach validation errors to an element
+ko.bindingHandlers.validationTag = {
+    init: function () {}
+};
+
 function addValidationCoreToCustomBinding(binding) {
     if (ko.bindingHandlers[binding]) {
         var init = ko.bindingHandlers[binding].init;
@@ -119,6 +123,7 @@ function addValidationCoreToCustomBinding(binding) {
     }
 };
 
+addValidationCoreToCustomBinding("validationTag");
 addValidationCoreToCustomBinding("jqAuto");
 addValidationCoreToCustomBinding("datepicker");
 addValidationCoreToCustomBinding("timepicker");
@@ -137,6 +142,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     ///   {
     ///     initItem: function(item) A handler to externally init an item state.
     ///     setEditingItem: function(item) A handler to override default logic of setting item's editing state.
+    ///     beforeSave: function(item) A handler to run some logic before an item is saved.
     ///     afterSave: function(item) A handler to run some logic after an item was saved.
     ///     itemView: A string id of the item view template.
     ///     itemEditView: A string id of the item edit template.
@@ -213,7 +219,12 @@ function VmItemsManager(allItems, createItemHandler, settings) {
 
     self.addItem = function () {
         var item = createItemHandler();
+        
+        if (!self.items()) {
+            self.items([]);
+        }
         self.items.push(item);
+        
         self.editItem(item);
     };
 
@@ -222,20 +233,32 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     };
 
     self.deleteItem = function (item) {
+        if (item.isEditing()) {
+            cancelItem(item);
+        }
+
         self.items.destroy(item);
     };
 
-    self.cancelItem = function () {
+    self.cancelItem = function (item) {
         self.setEditingItem(null);
+        
+        if (item.errors) {
+            item.errors.showAllMessages(false);
+        }
     };
 
     self.saveItem = function (item) {
+        if (settings.beforeSave) {
+            settings.beforeSave(item);
+        }
+        
         if (item.isValidating && item.isValidating()) {
             setTimeout(function () { self.saveItem(item); }, 50);
             return false;
         }
 
-        if (item.errors() && item.errors().length == 0) {
+        if (!item.errors || item.errors().length == 0) {
             if (!item.id() || item.id() == 0) {
                 item.id(-1);
             }
