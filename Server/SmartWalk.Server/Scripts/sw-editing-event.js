@@ -70,9 +70,11 @@
         ajaxJsonRequest(
             {
                 term: searchTerm,
-                eventId: self.id(),
-                // TODO: Why passing whole event, maybe just venue ids
-                currentEvent: self.id() == 0 ? self.toJSON() : null
+                onlyMine: false,
+                excludeIds: self.venuesManager.items() 
+                    ? $.map(self.venuesManager.items(),
+                        function (venue) { return venue.id(); })
+                    : null
             },
             self.settings.venueAutocompleteUrl,
             callback
@@ -185,7 +187,7 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
-                    cmp: 'LESS_THAN',
+                    cmp: "LESS_THAN",
                     compareVal: show.endDate
                 },
                 message: settings.showMessages.startDateValidationMessage
@@ -195,7 +197,7 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
-                    cmp: 'REGION',
+                    cmp: "REGION",
                     compareVal: event.startTime,
                     compareValTo: event.endTime
                 },
@@ -208,7 +210,7 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
-                    cmp: 'GREATER_THAN',
+                    cmp: "GREATER_THAN",
                     compareVal: show.endDate
                 },
                 message: settings.showMessages.endDateValidationMessage
@@ -218,7 +220,7 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
-                    cmp: 'REGION',
+                    cmp: "REGION",
                     compareVal: event.startTime,
                     compareValTo: event.endTime
                 },
@@ -327,8 +329,10 @@ EventViewModelExtended.setupDialogs = function (event) {
                     venue.saveEntity(function (entityData) {
                         var editingVenue = $.grep(event.venuesManager.items(),
                             function (item) { return item.isEditing(); })[0];
-                        editingVenue.loadData(entityData);
-                        $(dialog).dialog("close");
+                        if (editingVenue) {
+                            editingVenue.loadData(entityData);
+                            $(dialog).dialog("close");
+                        }
                     });
                 }
             }

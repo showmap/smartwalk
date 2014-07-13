@@ -170,6 +170,9 @@ namespace SmartWalk.Server.Controllers
         #endregion
 
         #region Events
+
+        // TODO: To validate if host is owned by current user
+        // TODO: To validate if there are duplicated venues
         private IDictionary<string, string> ValidateEvent(EventMetadataVm model)
         {
             var res = new Dictionary<string, string>();

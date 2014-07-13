@@ -210,8 +210,8 @@
             eventVenueView: "EventVenueItemTemplate",
             eventVenueEditView: "EventVenueItemTemplateEdit",
 
-            hostAutocompleteUrl: '@Url.Action("AutoCompleteHost", "Host")',
-            venueAutocompleteUrl: '@Url.Action("AutoCompleteVenue", "Venue")',                               
+            hostAutocompleteUrl: '@Url.Action("AutoCompleteEntity", "Host")',
+            venueAutocompleteUrl: '@Url.Action("AutoCompleteEntity", "Venue")',                               
         };
 
         var vm = new EventViewModelExtended(settings, data);

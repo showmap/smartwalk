@@ -67,6 +67,14 @@
         return "";
     };
 
+    self.toTinyJSON = function() {
+        return {
+            Id: self.id(),
+            Type: self.type(),
+            Name: self.name()
+        };
+    };
+
     self.saveEntity = function (resultHandler) {
         if (!self.errors) {
             EntityViewModelExtended.setupValidation(self, settings);
@@ -107,7 +115,7 @@ EntityViewModelExtended.setupValidation = function (entity, settings) {
             asyncValidation: {
                 validationUrl: settings.validationUrl,
                 propName: "Name",
-                modelHandler: entity.toJSON
+                modelHandler: entity.toTinyJSON
             }
         });
 

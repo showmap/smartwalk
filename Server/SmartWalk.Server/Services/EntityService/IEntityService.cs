@@ -4,13 +4,23 @@ using Orchard;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Views;
 
 namespace SmartWalk.Server.Services.EntityService
 {
-    public interface IEntityService : IDependency {
-        IList<EntityVm> GetEntities(SmartWalkUserRecord user, EntityType type, int pageNumber, int pageSize, Func<EntityRecord, IComparable> orderBy, bool isDesc, string searchString);
+    public interface IEntityService : IDependency
+    {
+        IList<EntityVm> GetEntities(
+            SmartWalkUserRecord user,
+            EntityType type,
+            int pageNumber = 0,
+            int pageSize = ViewSettings.ItemsLoad,
+            Func<EntityRecord, IComparable> orderBy = null,
+            bool isDesc = false,
+            string searchString = null,
+            int[] excludeIds = null);
+
         IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord);
-        IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber, int pageSize, string searchString);
         bool IsNameExists(EntityVm item, EntityType type);
         AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId);
         EntityVm GetEntityVmById(int entityId, EntityType type);

@@ -136,6 +136,28 @@ namespace SmartWalk.Server.Controllers.Base
         }
 
         [HttpPost]
+        public ActionResult AutoCompleteEntity(string term, bool onlyMine = true, int[] excludeIds = null)
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+
+            return Json(
+                _entityService.GetEntities(
+                    onlyMine ? user.Record : null,
+                    EntityType,
+                    0,
+                    ViewSettings.ItemsLoad,
+                    e => e.Name,
+                    false,
+                    term,
+                    excludeIds));
+        }
+
+        [HttpPost]
         public ActionResult ValidateModel(string propName, EntityVm model)
         {
             var errors = ValidateModel(model);
