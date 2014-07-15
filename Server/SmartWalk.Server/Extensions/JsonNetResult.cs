@@ -7,7 +7,9 @@ namespace SmartWalk.Server.Extensions
 {
     public class JsonNetResult : JsonResult
     {
-        public JsonNetResult()
+        public static readonly JsonSerializerSettings Settings;
+
+        static JsonNetResult()
         {
             Settings = new JsonSerializerSettings
                 {
@@ -16,8 +18,6 @@ namespace SmartWalk.Server.Extensions
                     NullValueHandling = NullValueHandling.Ignore
                 };
         }
-
-        public JsonSerializerSettings Settings { get; private set; }
 
         public override void ExecuteResult(ControllerContext context)
         {

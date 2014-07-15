@@ -1,4 +1,5 @@
-﻿using SmartWalk.Shared;
+﻿using Newtonsoft.Json;
+using SmartWalk.Shared;
 
 namespace SmartWalk.Server.ViewModels
 {
@@ -10,6 +11,7 @@ namespace SmartWalk.Server.ViewModels
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
+        [JsonIgnore]
         [UsedImplicitly]
         public bool Destroy { get; set; }
     }

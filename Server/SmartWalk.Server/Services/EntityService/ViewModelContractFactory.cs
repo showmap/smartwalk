@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
@@ -24,6 +23,7 @@ namespace SmartWalk.Server.Services.EntityService
                             Picture = record.Picture,
                             Addresses = record.AddressRecords.Select(CreateViewModelContract).ToList(),
                         };
+
                 case LoadMode.Full:
                 default:
                     return new EntityVm
@@ -52,7 +52,7 @@ namespace SmartWalk.Server.Services.EntityService
                         .Where(s => s.EntityRecord.Id == record.Id && 
                             !s.IsDeleted && !s.IsReference)
                         .Select(CreateViewModelContract)
-                        .ToList();
+                        .ToArray();
 
             return res;
         }
@@ -67,23 +67,8 @@ namespace SmartWalk.Server.Services.EntityService
                     Id = record.Id,
                     Title = record.Title,
                     Description = record.Description,
-                    // TODO: Just pass timestamp, no?
-                    StartDate =
-                        record.StartTime.HasValue
-                            ? record.StartTime.Value.ToString("d", CultureInfo.InvariantCulture)
-                            : null,
-                    StartTime =
-                        record.StartTime.HasValue
-                            ? record.StartTime.Value.ToString("t", CultureInfo.InvariantCulture)
-                            : null,
-                    EndDate =
-                        record.EndTime.HasValue
-                            ? record.EndTime.Value.ToString("d", CultureInfo.InvariantCulture)
-                            : null,
-                    EndTime =
-                        record.EndTime.HasValue
-                            ? record.EndTime.Value.ToString("t", CultureInfo.InvariantCulture)
-                            : null,
+                    StartTime = record.StartTime,
+                    EndTime = record.EndTime,
                     Picture = record.Picture,
                     DetailsUrl = record.DetailsUrl
                 };

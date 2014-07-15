@@ -38,16 +38,16 @@
 		</div>
 
         <div class="row">
-			<div class="col-sm-4" data-bind="validationElement: startTime">
+			<div class="col-sm-4" data-bind="validationElement: startDate">
 				<div class="form-group">
 					<label for="startDateInput">@T("Start Date"):</label>
-					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: startTime, datepickerOptions: { }">
+					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: startDate">
 				</div>
 			</div>
-			<div class="col-sm-4" data-bind="validationElement: endTime">
+			<div class="col-sm-4" data-bind="validationElement: endDate">
 				<div class="form-group">
 					<label for="endDateInput">@T("End Date"):</label>
-					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: endTime, datepickerOptions: { }">
+					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: endDate">
 				</div>
 			</div>
 			<div class="col-sm-4">
@@ -161,7 +161,7 @@
 
 <script type="text/javascript">
     $(function() {
-        var data = @Html.Raw(Json.Encode(Model));
+        var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
             
         var settings = {
             startTimeRequiredValidationMessage: '@T("Start time is required!")',
@@ -184,10 +184,10 @@
                 detailsLengthValidationMessage: '@T("Details can not be longer than 255 characters!")',
                     
                 startDateValidationMessage: '@T("Show start date has to be between event start and end dates.!")',
-                startTimeValidationMessage: '@T("Show start time has bo be less than start time!")',
+                startTimeValidationMessage: '@T("Show start time has to be less than start time!")',
                     
                 endDateValidationMessage: '@T("Show end date has to be between event start and end dates.!")',
-                endTimeValidationMessage: '@T("Show end time has bo be bigger than start time!")',
+                endTimeValidationMessage: '@T("Show end time has to be bigger than start time!")',
             },
             
             dialogCancelText: '@T("Cancel")',

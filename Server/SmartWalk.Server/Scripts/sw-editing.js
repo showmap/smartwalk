@@ -1,4 +1,11 @@
-﻿
+﻿// #########    C o m m o n    E d i t i n g         ################
+
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(date.getDate() + days);
+    return result;
+}
+
 // #########    V a l i d a t i o n    R u l e s     ################
 
 ko.validation.rules["dependencies"] = {
@@ -12,7 +19,7 @@ ko.validation.rules["dependencies"] = {
 
         return true;
     },
-    message: 'error.depencies'
+    message: "error.depencies"
 };
 
 ko.validation.rules["contactValidation"] = {
@@ -44,23 +51,18 @@ ko.validation.rules["contactValidation"] = {
 
 ko.validation.rules["dateCompareValidation"] = {
     validator: function (val, otherVal) {
-        if (otherVal.allowEmpty && (!val || !otherVal.compareVal()))
-            return true;
+        if (otherVal.allowEmpty && (!val || !otherVal.compareVal())) return true;
 
-        var dateFormat = $.datepicker.regional[""].dateFormat;
-
-        var curDate = $.datepicker.parseDate(dateFormat, val);
-        var cmpDate = $.datepicker.parseDate(dateFormat, otherVal.compareVal());
+        var cmpDate = otherVal.compareVal();
 
         if (otherVal.cmp == "GREATER_THAN") {
-            return curDate >= cmpDate.setDate(cmpDate.getDate() - 1);
+            return val >= cmpDate;
         } else if (otherVal.cmp == "LESS_THAN") {
-            return curDate <= cmpDate.setDate(cmpDate.getDate() + 1);
+            return val <= cmpDate;
         } else if (otherVal.cmp == "REGION") {
-            if (!otherVal.compareValTo())
-                return true;
-            var cmpDateTo = $.datepicker.parseDate(dateFormat, otherVal.compareValTo());
-            return curDate <= cmpDateTo.setDate(cmpDateTo.getDate() + 1) && curDate >= cmpDate.setDate(cmpDate.getDate() - 1);
+            var cmpDateTo = otherVal.compareValTo();
+            if (!cmpDateTo) return true;
+            return val <= cmpDateTo && val >= cmpDate;
         }
 
         return false;
@@ -124,7 +126,6 @@ function addValidationCoreToCustomBinding(binding) {
 };
 
 addValidationCoreToCustomBinding("validationTag");
-addValidationCoreToCustomBinding("jqAuto");
 addValidationCoreToCustomBinding("datepicker");
 addValidationCoreToCustomBinding("timepicker");
 

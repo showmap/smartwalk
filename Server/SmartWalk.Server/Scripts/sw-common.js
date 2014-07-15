@@ -189,31 +189,43 @@ function EventViewModel(data) {
 
     self.id = ko.observable();
     self.title = ko.observable();
-    self.startTime = ko.observable();
-    self.endTime = ko.observable();
-    self.displayDate = ko.observable();
+    self.startDate = ko.observable();
+    self.endDate = ko.observable();
     self.isPublic = ko.observable();
     self.picture = ko.observable();
     self.combineType = ko.observable(data.combineType);
     self.description = ko.observable(data.description);
-    self.latitude = ko.observable(data.latitude);
-    self.longitude = ko.observable(data.longitude);
-
+    /*self.latitude = ko.observable(data.latitude);
+    self.longitude = ko.observable(data.longitude);*/
+    
     self.host = ko.observable();
     self.venues = ko.observableArray();
+    
+    self.displayName = ko.computed(function () {
+        return self.title() || (self.host() != null ? self.host().name() : null);
+    });
+
+    self.displayPicture = ko.computed(function () {
+        return self.picture() || (self.host() != null ? self.host().picture() : null);
+    });
+    
+    // TODO: To setup common date format
+    self.displayDate = ko.computed(function () {
+        return (self.startDate() ? self.startDate().toLocaleDateString() : "") +
+            (self.endDate() ? " - " + self.endDate().toLocaleDateString() : "");
+    });
 
     self.loadData = function (eventData) {
         self.id(eventData.Id);
         self.title(eventData.Title);
-        self.startTime(eventData.StartTime);
-        self.endTime(eventData.EndTime);
-        self.displayDate(eventData.DisplayDate);
+        self.startDate(eventData.StartDate ? new Date(eventData.StartDate) : undefined);
+        self.endDate(eventData.EndDate ? new Date(eventData.EndDate) : undefined);
         self.isPublic(eventData.IsPublic);
         self.picture(eventData.Picture);
         self.combineType(eventData.CombineType);
         self.description(eventData.Description);
-        self.latitude(eventData.Latitude);
-        self.longitude(eventData.Longitude);
+        /*self.latitude(eventData.Latitude);
+        self.longitude(eventData.Longitude);*/
 
         self.host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
         self.venues(
@@ -228,14 +240,13 @@ function EventViewModel(data) {
             Id: self.id(),
             CombineType: self.combineType(),
             Title: self.title(),
-            StartTime: self.startTime(),
-            EndTime: self.endTime(),
+            StartDate: self.startDate(),
+            EndDate: self.endDate(),
             IsPublic: self.isPublic(),
             Picture: self.picture(),
-
             Description: self.description(),
-            Latitude: self.latitude(),
-            Longitude: self.longitude(),
+            /*Latitude: self.latitude(),
+            Longitude: self.longitude(),*/
 
             Host: self.host() ? self.host().toJSON() : undefined,
             Venues: self.venues()
@@ -328,21 +339,23 @@ function ShowViewModel(data) {
     self.id = ko.observable();
     self.title = ko.observable();
     self.description = ko.observable();
-    self.startDate = ko.observable();
     self.startTime = ko.observable();
-    self.endDate = ko.observable();
     self.endTime = ko.observable();
     self.picture = ko.observable();
     self.detailsUrl = ko.observable();
+    
+    // TODO: To setup common time format
+    self.displayTime = ko.computed(function () {
+        return (self.startTime() ? self.startTime().toLocaleTimeString() : "") +
+            (self.endTime() ? " - " + self.endTime().toLocaleTimeString() : "");
+    });
 
     self.loadData = function (showData) {
         self.id(showData.Id);
         self.title(showData.Title);
         self.description(showData.Description);
-        self.startDate(showData.StartDate);
-        self.startTime(showData.StartTime);
-        self.endDate(showData.EndDate);
-        self.endTime(showData.EndTime);
+        self.startTime(showData.StartTime ? new Date(showData.StartTime) : undefined);
+        self.endTime(showData.EndTime ? new Date(showData.EndTime) : undefined);
         self.picture(showData.Picture);
         self.detailsUrl(showData.DetailsUrl);
     };
@@ -352,9 +365,7 @@ function ShowViewModel(data) {
             Id: self.id(),
             Title: self.title(),
             Description: self.description(),
-            StartDate: self.startDate(),
             StartTime: self.startTime(),
-            EndDate: self.endDate(),
             EndTime: self.endTime(),
             Picture: self.picture(),
             DetailsUrl: self.detailsUrl(),

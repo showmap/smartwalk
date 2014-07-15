@@ -177,9 +177,9 @@ namespace SmartWalk.Server.Controllers
         {
             var res = new Dictionary<string, string>();
 
-            #region StartTime
-            if (string.IsNullOrEmpty(model.StartTime))
-                res.Add("StartTime", T("StartTime can not be empty!").Text);            
+            #region StartDate
+            if (!model.StartDate.HasValue)
+                res.Add("StartDate", T("StartDate can not be empty!").Text);            
             #endregion
 
             #region Picture
@@ -192,7 +192,7 @@ namespace SmartWalk.Server.Controllers
             }
             #endregion
 
-            #region EndTime
+            #region EndDate
             if (model.Host == null)
                 res.Add("Host", T("Event organizer can not be empty!").Text);
             #endregion

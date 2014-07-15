@@ -103,7 +103,7 @@
 
     $(function() {
         var viewModel = new EntitiesViewModel(
-            @Html.Raw(Json.Encode(Model.Parameters)), 
+            @Html.Raw(JsonConvert.SerializeObject(Model.Parameters, JsonNetResult.Settings)), 
             $("#entity-items").attr("get-entities-url"));
 
         attachVerticalScroll(viewModel.getNextPage);

@@ -97,9 +97,9 @@
 <script type="text/html" id="eventItemTemplate">
     <tr>
         <td>
-            <a data-bind="attr: {href: '/event/' + id()}, text: title"></a>
+            <a data-bind="attr: {href: '/event/' + id()}, text: displayName()"></a>
         </td>
-        <td data-bind="text: startTime"></td>        
+        <td data-bind="text: displayDate()"></td>        
     </tr>       
 </script>
 

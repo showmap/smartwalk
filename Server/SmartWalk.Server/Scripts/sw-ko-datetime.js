@@ -1,80 +1,45 @@
-﻿var myDate = "Aug 04, 2012";
-ko.bindingHandlers.datepicker = {
+﻿ko.bindingHandlers.datepicker = {
     init: function (element, valueAccessor, allBindingsAccessor) {
-        //initialize datepicker with some optional options
-        var dateFormat = $.datepicker.regional[''].dateFormat;
-
-        element.setAttribute("type", "date");
+        var settings = allBindingsAccessor().settings || {};
+        $(element).data("datepickerVA", valueAccessor);
+        
         if (element.type == "date") {
-            ko.utils.registerEventHandler(element, "change", function () {
-                var observable = valueAccessor();
-                var calcDate = new Date(
-                    element.valueAsDate.getFullYear(),
-                    element.valueAsDate.getMonth(),
-                    element.valueAsDate.getDate(),
-                    12);
-                observable($.datepicker.formatDate(dateFormat, calcDate));
-            });
-        } else {
-            var options = allBindingsAccessor().datepickerOptions || {};
-
-            $(element).datepicker({
-                onSelect: function (value) {
-                    var observable = valueAccessor();
-                    observable(value);
-                }
-            });
-
-            if (options.minDate) {
-                var minDate = $.datepicker.parseDate(dateFormat, options.minDate);
-                $(element).datepicker("option", "minDate", minDate);
-            }
-
-            if (options.maxDate) {
-                var maxDate = $.datepicker.parseDate(dateFormat, options.maxDate);
-                $(element).datepicker("option", "maxDate", maxDate);
-            }
-
-            //handle the field changing
-            ko.utils.registerEventHandler(element, "change", function () {
-                var observable = valueAccessor();
-                var newDate = $(element).datepicker("getDate");
-                observable(newDate ? $.datepicker.formatDate(dateFormat, newDate) : null);
-            });
-
+            // HTML 5
+            ko.datetime.initHTML5DefaultDate(element, settings);
+            $(element).bind("change", ko.datetime.onHTML5ChangeDate);
+            
             //handle disposal (if KO removes by the template binding)
             ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-                $(element).datepicker("destroy");
+                ko.datetime.dispose(element, ko.datetime.onHTML5ChangeDate);
+            });
+        } else {
+            ko.datetime.initDefaultDate(element, settings);
+
+            //initialize datepicker with some optional options
+            $(element).datepicker(settings);
+            $(element).bind("change", ko.datetime.onChangeDate);
+
+            //handle disposal (if KO removes by the template binding)
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                ko.datetime.dispose(element, ko.datetime.onChangeDate);
             });
         }
     },
     //update the control when the view model changes
     update: function (element, valueAccessor) {
-        var dateFormat = $.datepicker.regional[""].dateFormat;
         var value = ko.utils.unwrapObservable(valueAccessor());
-        if (value) {
-            var valueDate = $.datepicker.parseDate(dateFormat, value);
-            
-            if (element.type == "date") {
-                // TODO: Why?
-                element.valueAsDate = new Date(Date.UTC(
-                    valueDate.getFullYear(),
-                    valueDate.getMonth(),
-                    valueDate.getDate(),
-                    12));
-            } else {
-                var current = $(element).datepicker("getDate");
-                
-                // TODO: To figure this out, looks like WTF
-                if (valueDate - current !== 0) {
-                    $(element).datepicker("setDate", valueDate);
-                }
-            }
+
+        if (element.type == "date") {
+            // HTML 5
+            $(element).unbind("change", ko.datetime.onHTML5ChangeDate);
+            element.valueAsDate = value;
+            $(element).bind("change", ko.datetime.onHTML5ChangeDate);
         } else {
-            if (element.type == "date") {
-                element.valueAsDate = null;
-            } else {
-                $(element).datepicker("setDate", null);
+            var current = $(element).datepicker("getDate");
+            if (current - value !== 0) {
+                $(element).unbind("change", ko.datetime.onChangeDate);
+                $(element).datepicker("setDate", value);
+                $(element).bind("change", ko.datetime.onChangeDate);
             }
         }
     }
@@ -82,28 +47,28 @@ ko.bindingHandlers.datepicker = {
 
 ko.bindingHandlers.timepicker = {
     init: function (element, valueAccessor, allBindingsAccessor) {
-        
-        if (element.type != "time") {
-            //initialize datepicker with some optional options
-            var options = allBindingsAccessor().timepickerOptions || {};
+        var settings = allBindingsAccessor().settings || {};
+        $(element).data("datepickerVA", valueAccessor);
 
-            $(element).timepicker({
-                stepMinute: options.stepMinute,
-                controlType: options.controlType,
-                onSelect: function(value) {
-                    var observable = valueAccessor();
-                    observable(value);
-                }
+        if (element.type == "time") {
+            // HTML 5
+            ko.datetime.initHTML5DefaultDate(element, settings);
+            $(element).bind("change", ko.datetime.onHTML5ChangeTime);
+            
+            //handle disposal (if KO removes by the template binding)
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                ko.datetime.dispose(element, ko.datetime.onHTML5ChangeTime);
             });
+        } else {
+            ko.datetime.initDefaultDate(element, settings);
+
+            //initialize datepicker with some optional options
+            $(element).timepicker(settings);
+            $(element).bind("change", ko.datetime.onChangeTime);
 
             //handle disposal (if KO removes by the template binding)
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-                $(element).datepicker("destroy");
-            });
-        } else {
-            ko.utils.registerEventHandler(element, "change", function () {
-                var observable = valueAccessor();
-                observable(element.value);
+                ko.datetime.dispose(element, ko.datetime.onChangeTime);
             });
         }
     },
@@ -112,17 +77,126 @@ ko.bindingHandlers.timepicker = {
         var value = ko.utils.unwrapObservable(valueAccessor());
 
         if (element.type == "time") {
-            element.value = value;
+            // HTML 5
+            $(element).unbind("change", ko.datetime.onHTML5ChangeTime);
+            element.valueAsDate = value;
+            $(element).bind("change", ko.datetime.onHTML5ChangeTime);
         } else {
-            if (value) {
-                var valueDate = new Date(myDate + " " + value);
-                var current = $(element).datepicker("getDate");
-                if (valueDate - current !== 0) {
-                    $(element).timepicker("setDate", valueDate);
-                }
-            } else {
-                $(element).timepicker("setDate", null);
+            var current = $(element).datepicker("getDate");
+            current = ko.datetime.restoreDate(current, value);
+            if (current - value !== 0) {
+                $(element).unbind("change", ko.datetime.onChangeTime);
+                $(element).datepicker("setDate", value);
+                $(element).bind("change", ko.datetime.onChangeTime);
             }
         }
     }
+};
+
+ko.datetime = {};
+
+ko.datetime.initHTML5DefaultDate = function (element, settings) {
+    if (settings.defaultDateAccessor &&
+        ko.isObservable(settings.defaultDateAccessor)) {
+        // getting default date from observable
+        $(element).data("defaultDate", settings.defaultDateAccessor());
+
+        // and subscribe to listen future changes
+        var ref = settings.defaultDateAccessor.subscribe(function (date) {
+            $(element).data("defaultDate", date);
+        });
+
+        // saving the reference for disponsing
+        $(element).data("datepickerDefDARef", ref);
+    }
+};
+
+ko.datetime.initDefaultDate = function (element, settings) {
+    if (settings.defaultDateAccessor &&
+        ko.isObservable(settings.defaultDateAccessor)) {
+        // getting default date from observable
+        settings.defaultDate = settings.defaultDateAccessor();
+        
+        // and subscribe to listen future changes
+        var ref = settings.defaultDateAccessor.subscribe(function (date) {
+            $(element).datepicker("option", "defaultDate", date);
+        });
+        
+        // saving the reference for disponsing
+        $(element).data("datepickerDefDARef", ref);
+    }
+};
+
+ko.datetime.dispose = function (element, onChangeHandler) {
+    $(element).unbind("change", onChangeHandler);
+    $(element).datepicker("destroy");
+    $(element).data("datepickerVA", null);
+    var subscribeRef = $(element).data("datepickerDefDARef");
+    if (subscribeRef) {
+        subscribeRef.dispose();
+    }
+};
+
+ko.datetime.onHTML5ChangeDate = function (args) {
+    var element = args.target;
+    var newDate = element.valueAsDate;
+    var observable = $(element).data("datepickerVA")();
+    newDate = ko.datetime.restoreTime(newDate,
+        observable() || $(element).data("defaultDate"));
+    observable(newDate);
+};
+
+ko.datetime.onHTML5ChangeTime = function (args) {
+    var element = args.target;
+    var newTime = element.valueAsDate;
+    var observable = $(element).data("datepickerVA")();
+    newTime = ko.datetime.restoreDate(newTime,
+        observable() || $(element).data("defaultDate"));
+    observable(newTime);
+};
+
+ko.datetime.onChangeDate = function (args) {
+    var element = args.target;
+    var newDate = $(element).datepicker("getDate");
+    var observable = $(element).data("datepickerVA")();
+    newDate = ko.datetime.restoreTime(newDate, observable());
+    observable(newDate);
+};
+
+ko.datetime.onChangeTime = function (args) {
+    var element = args.target;
+    var newTime = $(element).datepicker("getDate");
+    var observable = $(element).data("datepickerVA")();
+    newTime = ko.datetime.restoreDate(newTime, observable());
+    observable(newTime);
+};
+
+ko.datetime.restoreDate = function (newTime, existingDate) {
+    if (!newTime || !existingDate) return newTime;
+
+    if (newTime.toDateString() != existingDate.toDateString()) {
+        newTime = new Date(
+            existingDate.getFullYear(),
+            existingDate.getMonth(),
+            existingDate.getDate(),
+            newTime.getHours(),
+            newTime.getMinutes());
+    }
+
+    return newTime;
+};
+
+ko.datetime.restoreTime = function (newDate, existingDate) {
+    if (!newDate || !existingDate) return newDate;
+
+    if (newDate.toTimeString() != existingDate.toTimeString()) {
+        newDate = new Date(
+            newDate.getFullYear(),
+            newDate.getMonth(),
+            newDate.getDate(),
+            existingDate.getHours(),
+            existingDate.getMinutes());
+    }
+
+    return newDate;
 };

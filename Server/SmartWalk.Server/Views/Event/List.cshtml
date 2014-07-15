@@ -71,9 +71,7 @@
                     <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture">
                 </div>
 				                
-                <div class="info">
-                    <h4>@item.DisplayDate</h4>
-                </div>
+                <div class="info"><h4>@item.DisplayDate</h4></div>
             </a>
         }
            <!-- ko template: {name: "EventItemTemplate", foreach: items() } -->    
@@ -85,13 +83,14 @@
 <script type="text/html" id="EventItemTemplate">
     <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '/event/' + id()}">
         <div class="header">
-            <h3 data-bind="text: title"></h3>
+            <h3 data-bind="text: displayName()"></h3>
 			
-            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture}">
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: displayPicture()}">
         </div>
 				
         <div class="info">
-            <h4 data-bind="text: displayDate"></h4>
+            @* TODO: To use common with server formatting pattern *@
+            <h4 data-bind="text: displayDate()"></h4>
         </div>
     </a>   
 </script>
@@ -114,7 +113,7 @@
 
     $(function() {
         var viewModel = new EventsViewModel(
-            @Html.Raw(Json.Encode(parameters)), 
+            @Html.Raw(JsonConvert.SerializeObject(parameters, JsonNetResult.Settings)), 
             $("#event-items").attr("get-events-url"));
 
         attachVerticalScroll(viewModel.getNextPage);

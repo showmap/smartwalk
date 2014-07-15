@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.Data;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
-using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.EventService
 {
+    [UsedImplicitly]
     public class EventService : IEventService {
         private readonly IEntityService _entityService;
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
@@ -125,16 +126,18 @@ namespace SmartWalk.Server.Services.EventService
         }
 
 
-        public void RecalculateEventCoordinates(EventMetadataRecord eventRecord) {
-            var coords = eventRecord.ShowRecords
-                                    .Where(s => !s.IsDeleted)
-                                    .Select(s => s.EntityRecord)
-                                    .Where(v => !v.IsDeleted)
-                                    .SelectMany(v => v.AddressRecords)
-                                    .Select(address => new PointF((float) address.Latitude, (float) address.Longitude)).ToList();
+        private void RecalculateEventCoordinates(EventMetadataRecord eventRecord)
+        {
+            var coords = eventRecord
+                .ShowRecords
+                .Where(s => !s.IsDeleted)
+                .Select(s => s.EntityRecord)
+                .Where(v => !v.IsDeleted)
+                .SelectMany(v => v.AddressRecords)
+                .Select(address => new PointF((float)address.Latitude, (float)address.Longitude))
+                .ToList();
 
-            if (coords.Count == 0)
-                return;
+            if (coords.Count == 0) return;
 
             var eventCoord = MapUtil.GetMiddleCoordinate(coords.ToArray());
 
@@ -146,13 +149,10 @@ namespace SmartWalk.Server.Services.EventService
 
         public EventMetadataVm SaveOrAddEvent(SmartWalkUserRecord user, EventMetadataVm item) {
             var host = _entityRepository.Get(item.Host.Id);
-            var dtFrom = item.StartTime.ParseDateTime(_cultureInfo.Value);
 
-            if (host == null || dtFrom == null)
-                return null;            
+            if (host == null || item.StartDate == null) return null;            
 
             var metadata =_eventMetadataRepository.Get(item.Id);
-            var dtTo = item.EndTime.ParseDateTime(_cultureInfo.Value);
 
             if (metadata == null)
             {
@@ -162,8 +162,8 @@ namespace SmartWalk.Server.Services.EventService
                     SmartWalkUserRecord = user,
                     Title = item.Title,
                     Description = item.Description,
-                    StartTime = dtFrom.Value,
-                    EndTime = dtTo,
+                    StartTime = item.StartDate.Value,
+                    EndTime = item.EndDate,
                     CombineType = item.CombineType,
                     Picture = item.Picture,
                     IsPublic = item.IsPublic,
@@ -178,8 +178,8 @@ namespace SmartWalk.Server.Services.EventService
                 metadata.EntityRecord = host;
                 metadata.Title = item.Title;
                 metadata.Description = item.Description;
-                metadata.StartTime = dtFrom.Value;
-                metadata.EndTime = dtTo;
+                metadata.StartTime = item.StartDate.Value;
+                metadata.EndTime = item.EndDate;
                 metadata.CombineType = item.CombineType;
                 metadata.Picture = item.Picture;
                 metadata.IsPublic = item.IsPublic;

@@ -1,4 +1,7 @@
-﻿using SmartWalk.Server.Common.Utils;
+﻿using System.Linq;
+using System.Web.Mvc;
+using SmartWalk.Server.Common.Utils;
+using SmartWalk.Server.Extensions;
 using SmartWalk.Shared;
 using Orchard.UI.Resources;
 
@@ -7,6 +10,14 @@ namespace SmartWalk.Server
     [UsedImplicitly]
     public class ResourceManifest : IResourceManifestProvider
     {
+        public ResourceManifest()
+        {
+            // TODO: This is temporary location for this code. We need to move to Application_Start
+            /*ValueProviderFactories.Factories.Remove(
+                ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
+            ValueProviderFactories.Factories.Add(new JsonDotNetValueProviderFactory());*/
+        }
+
         public void BuildManifests(ResourceManifestBuilder builder)
         {
             var manifest = builder.Add();

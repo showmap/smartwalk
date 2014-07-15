@@ -9,7 +9,6 @@ using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
 using SmartWalk.Shared;
-using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.EntityService
 {
@@ -105,9 +104,6 @@ namespace SmartWalk.Server.Services.EntityService
             if (metadata == null || venue == null)
                 return null;
 
-            var dtFrom = item.StartDateTime.ParseDateTime(_cultureInfo.Value);
-            var dtTo = item.EndDateTime.ParseDateTime(_cultureInfo.Value);
-
             if (show == null)
             {
                 show = new ShowRecord
@@ -117,8 +113,8 @@ namespace SmartWalk.Server.Services.EntityService
                         IsReference = false,
                         Title = item.Title,
                         Description = item.Description,
-                        StartTime = dtFrom,
-                        EndTime = dtTo,
+                        StartTime = item.StartTime,
+                        EndTime = item.EndTime,
                         Picture = item.Picture,
                         DetailsUrl = item.DetailsUrl,
                         IsDeleted = false,
@@ -136,8 +132,8 @@ namespace SmartWalk.Server.Services.EntityService
                 show.EntityRecord = venue;
                 show.Title = item.Title;
                 show.Description = item.Description;
-                show.StartTime = dtFrom;
-                show.EndTime = dtTo;
+                show.StartTime = item.StartTime;
+                show.EndTime = item.EndTime;
                 show.Picture = item.Picture;
                 show.DetailsUrl = item.DetailsUrl;
                 show.DateModified = DateTime.Now;

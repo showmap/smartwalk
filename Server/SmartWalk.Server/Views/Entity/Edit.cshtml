@@ -117,7 +117,7 @@
 
 <script>
     $(function() {
-        var data = @Html.Raw(Json.Encode(Model));
+        var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
 
         var settings = settings || [];
         settings = $.extend(settings, {

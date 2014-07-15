@@ -96,14 +96,7 @@
             <tr class="venue-show">
                 <td>@show.Title<br/>@if (@show.Description != null)
                     {<span class="description">@show.Description</span>}</td>                        
-            @if (string.IsNullOrEmpty(show.EndTime))
-            {
-                <td class="td-valign">@show.StartTime</td>
-            }
-            else
-            {
-                <td class="td-valign">@show.StartTime&nbsp;-&nbsp;@show.EndTime</td>
-            }
+                <td class="td-valign">@Html.Raw(@show.DisplayTime.Replace(" ", "&nbsp;"))</td>
             </tr>   
                 }
         }                

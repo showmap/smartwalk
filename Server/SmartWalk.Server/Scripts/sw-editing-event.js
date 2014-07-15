@@ -112,25 +112,25 @@ inherits(EventViewModelExtended, EventViewModel);
 
 // Static Methods
 EventViewModelExtended.setupValidation = function (event, settings) {
-    event.startTime
+    event.startDate
         .extend({ required: { message: settings.startTimeRequiredValidationMessage } })
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: "LESS_THAN",
-                    compareVal: event.endTime
+                    compareVal: event.endDate
                 },
                 message: settings.startTimeCompareValidationMessage
             }
         });
 
-    event.endTime.extend({
+    event.endDate.extend({
         dateCompareValidation: {
             params: {
                 allowEmpty: true,
                 cmp: "GREATER_THAN",
-                compareVal: event.startTime
+                compareVal: event.startDate
             },
             message: settings.endTimeCompareValidationMessage
         },
@@ -155,14 +155,14 @@ EventViewModelExtended.setupValidation = function (event, settings) {
         });
 
     event.isValidating = ko.computed(function () {
-        return event.startTime.isValidating() ||
+        return event.startDate.isValidating() ||
             event.host.isValidating() ||
             event.picture.isValidating();
     });
 
     event.errors = ko.validation.group({
-        startTime: event.startTime,
-        endTime: event.endTime,
+        startDate: event.startDate,
+        endDate: event.endDate,
         host: event.host,
         picture: event.picture,
     });
@@ -181,16 +181,16 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
         .extend({ maxLength: { params: 255, message: settings.showMessages.detailsLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.detailsValidationMessage } });
 
-    // TODO: To setup validation for show Time too
-    show.startDate
+    // TODO: To use wider regions for show time -1 day for start and +1 for end times
+    show.startTime
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: "LESS_THAN",
-                    compareVal: show.endDate
+                    compareVal: show.endTime
                 },
-                message: settings.showMessages.startDateValidationMessage
+                message: settings.showMessages.startTimeValidationMessage
             }
         })
         .extend({
@@ -198,22 +198,22 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                 params: {
                     allowEmpty: true,
                     cmp: "REGION",
-                    compareVal: event.startTime,
-                    compareValTo: event.endTime
+                    compareVal: ko.computed(function () { return addDays(event.startDate(), -1); }),
+                    compareValTo: ko.computed(function () { return addDays(event.endDate(), 1); }),
                 },
-                message: settings.showMessages.startTimeValidationMessage
+                message: settings.showMessages.startDateValidationMessage
             }
         });
 
-    show.endDate
+    show.endTime
         .extend({
             dateCompareValidation: {
                 params: {
                     allowEmpty: true,
                     cmp: "GREATER_THAN",
-                    compareVal: show.endDate
+                    compareVal: show.startTime
                 },
-                message: settings.showMessages.endDateValidationMessage
+                message: settings.showMessages.endTimeValidationMessage
             }
         })
         .extend({
@@ -221,17 +221,17 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                 params: {
                     allowEmpty: true,
                     cmp: "REGION",
-                    compareVal: event.startTime,
-                    compareValTo: event.endTime
+                    compareVal: ko.computed(function () { return addDays(event.startDate(), -1); }),
+                    compareValTo: ko.computed(function () { return addDays(event.endDate(), 1); }),
                 },
-                message: settings.showMessages.endTimeValidationMessage
+                message: settings.showMessages.endDateValidationMessage
             }
         });
     
     show.isValidating = ko.computed(function () {
         return show.title.isValidating() || show.picture.isValidating() ||
-            show.detailsUrl.isValidating() || show.startDate.isValidating() ||
-            show.endDate.isValidating();
+            show.detailsUrl.isValidating() || show.startTime.isValidating() ||
+            show.endTime.isValidating();
     });
 
     show.errors = ko.validation.group(show);
@@ -252,10 +252,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.showsManager = new VmItemsManager(
         venue.shows,
         function () {
-            var show = new ShowViewModel({
-                StartDate: event.startTime(), // TODO: To check this out
-                EndDate: event.endTime()
-            });
+            var show = new ShowViewModel({});
             return show;
         },
         {
@@ -338,17 +335,4 @@ EventViewModelExtended.setupDialogs = function (event) {
             }
         ]};
     $(event.settings.venueFormName).dialog($.extend(dialogOptions, venueOptions));
-};
-
-EventViewModelExtended.getAutocompleteItemText = function (entity) {
-    var text = entity.name();
-
-    var displayAddress = entity.addresses() && entity.addresses().length > 0
-        ? entity.addresses()[0].address() : null;
-    
-    if (displayAddress != null) {
-        text += "<br /><i class='description'>" + displayAddress + "</i>";
-    }
-
-    return text;
 };

@@ -93,14 +93,12 @@
 <script type="text/html" id="ShowItemTemplate">
     <tr class="venue-show">
         <td data-bind="click: function() { $parent.showsManager.editItem($data) }">
-            <span data-bind="text: title"></span>
+            <span data-bind="text: title()"></span>
             <br/>
-            <span class="description" data-bind="text: description"></span>
+            <span class="description" data-bind="text: description()"></span>
         </td>
-        
-        <td class="td-valign" data-bind="
-            html: endTime() ? startTime() + '&nbsp;-&nbsp;' + endTime() : startTime(), 
-            click: function() { $parent.showsManager.editItem($data) }"></td>
+        @* TODO: Replacing with &nbsp; doesn't work. Fix it. *@
+        <td class="td-valign" data-bind="html: displayTime().replace(' ', '&nbsp;'), click: function() { $parent.showsManager.editItem($data) }"></td>
         <td class="td-align td-valign">
             <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $parent.showsManager.deleteItem($data); }">
                 <span class="glyphicon glyphicon-remove"></span>
@@ -126,27 +124,27 @@
 						</div>
 					</div>
 							
-					<div class="col-sm-2">
+					<div class="col-sm-2" data-bind="validationElement: startTime">
 						<div class="form-group">
 							<label for="showStartTimeInput">@T("Start Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, timepickerOptions: { stepMinute: 1 }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.startDate }" />
 						</div>
 									
-						<div class="form-group" data-bind="validationElement: startDate">
+						<div class="form-group">
 							<label for="showStartDateInput">@T("Start Date"):</label><br/>
-							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startDate, datepickerOptions: {}" />
+							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.startDate }" />
 						</div>
 					</div>
 							
-					<div class="col-sm-2">
-						<div class="form-group">
+					<div class="col-sm-2" data-bind="validationElement: endTime">
+						<div class="form-group" >
 							<label for="showStartTimeInput">@T("End Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, timepickerOptions: { stepMinute: 1 }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.startDate }" />
 						</div>
 									
-						<div class="form-group" data-bind="validationElement: endDate">
+						<div class="form-group">
 							<label for="showEndDateInput">@T("End Date"):</label><br/>
-							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endDate, datepickerOptions: {}" />
+							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.startDate }" />
 						</div>
 					</div>
 				</div>
