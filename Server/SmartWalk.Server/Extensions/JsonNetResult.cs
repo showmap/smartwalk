@@ -15,7 +15,8 @@ namespace SmartWalk.Server.Extensions
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Error,
                     Formatting = Formatting.Indented,
-                    NullValueHandling = NullValueHandling.Ignore
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DateTimeZoneHandling = DateTimeZoneHandling.Local
                 };
         }
 

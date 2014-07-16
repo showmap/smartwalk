@@ -83,8 +83,8 @@ namespace SmartWalk.Server.Services.EntityService
                         EntityRecord = _entityRepository.Get(venueId),
                         IsReference = true,
                         IsDeleted = false,
-                        DateCreated = DateTime.Now,
-                        DateModified = DateTime.Now
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow
                     };
                 _showRepository.Create(show);
                 _showRepository.Flush();
@@ -118,8 +118,8 @@ namespace SmartWalk.Server.Services.EntityService
                         Picture = item.Picture,
                         DetailsUrl = item.DetailsUrl,
                         IsDeleted = false,
-                        DateCreated = DateTime.Now,
-                        DateModified = DateTime.Now
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow
                     };
 
                 _showRepository.Create(show);
@@ -136,7 +136,7 @@ namespace SmartWalk.Server.Services.EntityService
                 show.EndTime = item.EndTime;
                 show.Picture = item.Picture;
                 show.DetailsUrl = item.DetailsUrl;
-                show.DateModified = DateTime.Now;
+                show.DateModified = DateTime.UtcNow;
 
                 _showRepository.Flush();
             }
@@ -287,8 +287,8 @@ namespace SmartWalk.Server.Services.EntityService
                         Picture = entityVm.Picture,
                         Description = entityVm.Description,
                         IsDeleted = false,
-                        DateCreated = DateTime.Now,
-                        DateModified = DateTime.Now
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow
                     };
 
                 _entityRepository.Create(entity);

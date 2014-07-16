@@ -45,6 +45,25 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
         });
 };
 
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(date.getDate() + days);
+    return result;
+}
+
+function convertToLocal(date) {
+    var result = date 
+        ? new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
+        : date;
+    return result;
+}
+
+function convertToUTC(date) {
+    var result = date
+        ? new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+        : date;
+    return result;
+}
 
 // #########    B i n d i n g    H a n d l e r s     ################
 
@@ -136,13 +155,14 @@ function ContactViewModel(data) {
     self.loadData(data);
 
     self.toJSON = function () {
-        return {
+        var json = {
             Id: self.id(),
             Type: self.type(),
             Title: self.title(),
             Contact: self.contact(),
             Destroy: self._destroy
         };
+        return json;
     };
 }
 
@@ -173,7 +193,7 @@ function AddressViewModel(data) {
     self.loadData(data);
 
     self.toJSON = function () {
-        return {
+        var json = {
             Id: self.id(),
             Address: self.address(),
             Tip: self.tip(),
@@ -181,6 +201,7 @@ function AddressViewModel(data) {
             Longitude: self.longitude(),
             Destroy: self._destroy
         };
+        return json;
     };
 }
 
@@ -236,12 +257,12 @@ function EventViewModel(data) {
     };
 
     self.toJSON = function () {
-        return {
+        var json = {
             Id: self.id(),
             CombineType: self.combineType(),
             Title: self.title(),
-            StartDate: self.startDate(),
-            EndDate: self.endDate(),
+            StartDate: self.startDate() ? self.startDate().toJSON() : undefined,
+            EndDate: self.endDate() ? self.endDate().toJSON() : undefined,
             IsPublic: self.isPublic(),
             Picture: self.picture(),
             Description: self.description(),
@@ -255,6 +276,7 @@ function EventViewModel(data) {
             
             Destroy: self._destroy
         };
+        return json;
     };
 
     self.loadData(data);
@@ -308,7 +330,7 @@ function EntityViewModel(data) {
     };
 
     self.toJSON = function () {
-        return {
+        var json = {
             Id: self.id(),
             Type: self.type(),
             Name: self.name(),
@@ -328,6 +350,7 @@ function EntityViewModel(data) {
             
             Destroy: self._destroy
         };
+        return json;
     };
 
     self.loadData(data);
@@ -361,16 +384,17 @@ function ShowViewModel(data) {
     };
 
     self.toJSON = function () {
-        return {
+        var json = {
             Id: self.id(),
             Title: self.title(),
             Description: self.description(),
-            StartTime: self.startTime(),
-            EndTime: self.endTime(),
+            StartTime: self.startTime() ? self.startTime().toJSON() : undefined,
+            EndTime: self.endTime() ? self.endTime().toJSON() : undefined,
             Picture: self.picture(),
             DetailsUrl: self.detailsUrl(),
             Destroy: self._destroy
         };
+        return json;
     };
 
     self.loadData(data);

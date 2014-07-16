@@ -168,8 +168,8 @@ namespace SmartWalk.Server.Services.EventService
                     Picture = item.Picture,
                     IsPublic = item.IsPublic,
                     IsDeleted = false,
-                    DateCreated = DateTime.Now,
-                    DateModified = DateTime.Now,
+                    DateCreated = DateTime.UtcNow,
+                    DateModified = DateTime.UtcNow,
                 };
 
                 _eventMetadataRepository.Create(metadata);
@@ -183,7 +183,7 @@ namespace SmartWalk.Server.Services.EventService
                 metadata.CombineType = item.CombineType;
                 metadata.Picture = item.Picture;
                 metadata.IsPublic = item.IsPublic;
-                metadata.DateModified = DateTime.Now;                
+                metadata.DateModified = DateTime.UtcNow;                
             }
 
             _eventMetadataRepository.Flush();

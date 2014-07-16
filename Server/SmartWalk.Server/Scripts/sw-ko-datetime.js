@@ -32,7 +32,7 @@
         if (element.type == "date") {
             // HTML 5
             $(element).unbind("change", ko.datetime.onHTML5ChangeDate);
-            element.valueAsDate = value;
+            element.valueAsDate = convertToUTC(value);
             $(element).bind("change", ko.datetime.onHTML5ChangeDate);
         } else {
             var current = $(element).datepicker("getDate");
@@ -79,7 +79,7 @@ ko.bindingHandlers.timepicker = {
         if (element.type == "time") {
             // HTML 5
             $(element).unbind("change", ko.datetime.onHTML5ChangeTime);
-            element.valueAsDate = value;
+            element.valueAsDate = convertToUTC(value);
             $(element).bind("change", ko.datetime.onHTML5ChangeTime);
         } else {
             var current = $(element).datepicker("getDate");
@@ -139,7 +139,7 @@ ko.datetime.dispose = function (element, onChangeHandler) {
 
 ko.datetime.onHTML5ChangeDate = function (args) {
     var element = args.target;
-    var newDate = element.valueAsDate;
+    var newDate = convertToLocal(element.valueAsDate);
     var observable = $(element).data("datepickerVA")();
     newDate = ko.datetime.restoreTime(newDate,
         observable() || $(element).data("defaultDate"));
@@ -148,7 +148,7 @@ ko.datetime.onHTML5ChangeDate = function (args) {
 
 ko.datetime.onHTML5ChangeTime = function (args) {
     var element = args.target;
-    var newTime = element.valueAsDate;
+    var newTime = convertToLocal(element.valueAsDate);
     var observable = $(element).data("datepickerVA")();
     newTime = ko.datetime.restoreDate(newTime,
         observable() || $(element).data("defaultDate"));

@@ -222,7 +222,7 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                     allowEmpty: true,
                     cmp: "REGION",
                     compareVal: ko.computed(function () { return addDays(event.startDate(), -1); }),
-                    compareValTo: ko.computed(function () { return addDays(event.endDate(), 1); }),
+                    compareValTo: ko.computed(function () { return addDays(event.endDate(), 2); }), // 2 days, to cover the whole last day + night of next one
                 },
                 message: settings.showMessages.endDateValidationMessage
             }

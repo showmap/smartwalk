@@ -1,12 +1,4 @@
-﻿// #########    C o m m o n    E d i t i n g         ################
-
-function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(date.getDate() + days);
-    return result;
-}
-
-// #########    V a l i d a t i o n    R u l e s     ################
+﻿// #########    V a l i d a t i o n    R u l e s     ################
 
 ko.validation.rules["dependencies"] = {
     validator: function (val, dependencies) {

@@ -113,21 +113,23 @@
 
         $("img.scale").imageScale();
         $("p.description").textCollapse();
-    });
-
-    // TODO: To buy a license and set "Add To Calendar" values
-    addthisevent.settings({
-        license: "aao8iuet5zp9iqw5sm9z",
-        mouse: false,
-        css: true,
-        outlook: { show: true, text: "Outlook Calendar" },
-        google: { show: true, text: "Google Calendar" },
-        yahoo: { show: true, text: "Yahoo Calendar" },
-        hotmail: { show: true, text: "Hotmail Calendar" },
-        ical: { show: true, text: "iCal Calendar" },
-        facebook: { show: true, text: "Facebook Event" },
-        dropdown: { order: "outlook,google,ical" },
-        callback: ""
+        
+        // TODO: To buy a license and set "Add To Calendar" values
+        if (addthisevent) {
+            addthisevent.settings({
+                license: "aao8iuet5zp9iqw5sm9z",
+                mouse: false,
+                css: true,
+                outlook: { show: true, text: "Outlook Calendar" },
+                google: { show: true, text: "Google Calendar" },
+                yahoo: { show: true, text: "Yahoo Calendar" },
+                hotmail: { show: true, text: "Hotmail Calendar" },
+                ical: { show: true, text: "iCal Calendar" },
+                facebook: { show: true, text: "Facebook Event" },
+                dropdown: { order: "outlook,google,ical" },
+                callback: ""
+            });
+        }
     });
 </script>
 }
