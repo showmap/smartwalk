@@ -198,8 +198,12 @@ namespace SmartWalk.Server.Services.EventService
                         continue;
                 }
 
-                foreach (var showVm in venueVm.Shows.Where(showVm => !showVm.Destroy)) {
-                    _entityService.SaveOrAddShow(showVm, metadata.Id, currentVenue.Id);
+                if (!venueVm.Shows.Any())
+                    _entityService.CheckShowVenue(metadata.Id, currentVenue.Id);
+                else {
+                    foreach (var showVm in venueVm.Shows.Where(showVm => !showVm.Destroy)) {
+                        _entityService.SaveOrAddShow(showVm, metadata.Id, currentVenue.Id);
+                    }
                 }
             }
 

@@ -39,7 +39,7 @@ namespace SmartWalk.Server.Services.EntityService
 
         #region Shows
 
-        private ShowVm CheckShowVenue(int eventId, int venueId)
+        public ShowVm CheckShowVenue(int eventId, int venueId)
         {
             var shows =
                 _showRepository.Table.Where(
@@ -48,6 +48,7 @@ namespace SmartWalk.Server.Services.EntityService
                     (!s.IsDeleted || s.IsReference)).ToList();
             if (shows.Any())
             {
+                #region If we have both is reference and not is reference shows, remove all is reference shows
                 if (shows.Count(s => !s.IsReference) > 0 && shows.Count(s => s.IsReference) > 0)
                 {
                     foreach (var showRecord in shows.Where(s => s.IsReference))
@@ -56,24 +57,21 @@ namespace SmartWalk.Server.Services.EntityService
                         _showRepository.Flush();
                     }
                 }
+                #endregion
 
-                var isReferenceShowCount = shows.Count(s => s.IsReference);
+                #region If is reference show count > 1  - clean the rest
+                var i = 0;
+                foreach (var showRecord in shows.Where(s => s.IsReference)) {
+                    if (i++ == 0)
+                        showRecord.IsDeleted = false;
+                    else 
+                        _showRepository.Delete(showRecord);
 
-                if (isReferenceShowCount > 0)
-                {
-                    for (var i = 0; i < isReferenceShowCount; i++)
-                    {
-                        if (i == 0)
-                            shows[i].IsDeleted = false;
-                        else
-                            _showRepository.Delete(shows[i]);
-
-                        _showRepository.Flush();
-                    }
-
-                    return ViewModelContractFactory
-                        .CreateViewModelContract(shows.FirstOrDefault(s => s.IsReference));
+                    _showRepository.Flush();
                 }
+                #endregion
+
+                return ViewModelContractFactory.CreateViewModelContract(shows.FirstOrDefault());
             }
             else
             {
@@ -91,8 +89,6 @@ namespace SmartWalk.Server.Services.EntityService
 
                 return ViewModelContractFactory.CreateViewModelContract(show);
             }
-
-            return null;
         }
 
         public ShowVm SaveOrAddShow(ShowVm item, int eventMetadataId, int venueId)
