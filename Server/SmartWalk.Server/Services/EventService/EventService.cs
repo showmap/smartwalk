@@ -63,10 +63,10 @@ namespace SmartWalk.Server.Services.EventService
             return query.Skip(pageSize * pageNumber).Take(pageSize).Select(e => CreateViewModelContract(e, LoadMode.Compact)).ToList();
         }
 
-        public EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id) {
-            var eventMetadata = user.EventMetadataRecords.FirstOrDefault(u => u.Id == id);
+        public EventMetadataVm GetEventVmById(int id) {
+            var eventMetadata = _eventMetadataRepository.Table.FirstOrDefault(u => u.Id == id);
 
-            var vm = CreateViewModelContract(user, eventMetadata);
+            var vm = CreateViewModelContract(eventMetadata);
 
             return vm;
         }
@@ -88,9 +88,9 @@ namespace SmartWalk.Server.Services.EventService
             return eventRecord.IsPublic ? AccessType.AllowView : AccessType.Deny;
         }
 
-        private EventMetadataVm CreateViewModelContract(SmartWalkUserRecord user, EventMetadataRecord record) {
+        private EventMetadataVm CreateViewModelContract(EventMetadataRecord record) {
             if (record != null)
-                return CreateViewModelContract(record);
+                return CreateViewModelContract(record, LoadMode.Full);
 
             var res = new EventMetadataVm {
                 Id = 0,
@@ -99,7 +99,7 @@ namespace SmartWalk.Server.Services.EventService
             return res;
         }
 
-        private EventMetadataVm CreateViewModelContract(EventMetadataRecord record, LoadMode mode = LoadMode.Full) {
+        private EventMetadataVm CreateViewModelContract(EventMetadataRecord record, LoadMode mode) {
             var res = ViewModelContractFactory.CreateViewModelContract(record, mode);
             res.Host = _entityService.GetEntityVm(record.EntityRecord, LoadMode.Compact);
 

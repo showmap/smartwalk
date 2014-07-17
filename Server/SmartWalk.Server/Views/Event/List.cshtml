@@ -26,7 +26,14 @@
             </div>
         @if (WorkContext.CurrentUser != null) {
             <div class="col-xs-4">
-                <form action="@Url.Action("CreateEvent", "Event")">
+                <!--
+                    //We use hard coded urls (not for all, but for 'tricky' ones), because of orchard bug. Actually, we have named routes, but since orchard ver > 1.7.2 named routes are not working
+                    //https://orchard.codeplex.com/workitem/20592
+                    //Our code for url supposed to be Url.RouteUrl("CreateEvent") 
+                    //As soon as this bug will be fixed, we'll replace hard coded urls. 
+                    //Otherwise a lot of redundand code will needed to bypass this.
+                -->
+                <form action="/events/create">
                     <button type="submit" class="btn btn-primary">@T("Create <span class=\"hidden-xs\"> Event</span>")</button>
                 </form>  
             </div>

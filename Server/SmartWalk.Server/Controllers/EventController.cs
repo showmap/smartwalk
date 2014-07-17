@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Security;
 using Orchard.Themes;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
@@ -56,13 +57,8 @@ namespace SmartWalk.Server.Controllers
                 });
         }
 
-        public ActionResult View(int eventId)
-        {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-                return new HttpUnauthorizedResult();
-
-            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-            var item = _eventService.GetUserEventVmById(user.Record, eventId);
+        public ActionResult View(int eventId) {
+            var item = _eventService.GetEventVmById(eventId);
 
             if (item.Id != eventId)
                 return new HttpNotFoundResult();
@@ -79,7 +75,7 @@ namespace SmartWalk.Server.Controllers
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            var item = _eventService.GetUserEventVmById(user.Record, eventId);
+            var item = _eventService.GetEventVmById(eventId);
 
             if (item.Id != eventId)
                 return new HttpNotFoundResult();

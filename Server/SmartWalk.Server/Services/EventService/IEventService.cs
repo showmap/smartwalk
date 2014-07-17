@@ -9,7 +9,7 @@ namespace SmartWalk.Server.Services.EventService
 {
     public interface IEventService : IDependency {
         IList<EventMetadataVm> GetEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc, string searchString);
-        EventMetadataVm GetUserEventVmById(SmartWalkUserRecord user, int id);
+        EventMetadataVm GetEventVmById(int id);
         AccessType GetEventAccess(SmartWalkUserRecord user, int eventId);
         void DeleteEvent(int eventId);
         EventMetadataVm SaveOrAddEvent(SmartWalkUserRecord user, EventMetadataVm item);
