@@ -127,6 +127,10 @@
     <Content Include="Images\loading.gif" />
     <Content Include="Scripts\knockout-jqAutocomplete.js" />
     <Content Include="Scripts\knockout-jqAutocomplete.min.js" />
+    <Content Include="Scripts\moment-with-langs.js" />
+    <Content Include="Scripts\moment-with-langs.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\sw-antiforgery.js" />
     <Content Include="Scripts\jquery.visible.js" />
     <Content Include="Scripts\jquery.visible.min.js" />

@@ -13,9 +13,9 @@ namespace SmartWalk.Server
         public ResourceManifest()
         {
             // TODO: This is temporary location for this code. We need to move to Application_Start
-            /*ValueProviderFactories.Factories.Remove(
+            ValueProviderFactories.Factories.Remove(
                 ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
-            ValueProviderFactories.Factories.Add(new JsonDotNetValueProviderFactory());*/
+            ValueProviderFactories.Factories.Add(new JsonDotNetValueProviderFactory());
         }
 
         public void BuildManifests(ResourceManifestBuilder builder)
@@ -38,22 +38,18 @@ namespace SmartWalk.Server
                 .SetVersionUrl("knockout-jqAutocomplete.min.js", "knockout-jqAutocomplete.js")
                 .SetDependencies("ko", "jQueryUI");
 
-            manifest.DefineScript("ko.datetime")
-                .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-ko-datetime.js")
-                .SetDependencies("ko", "jQueryUI");
-
-            manifest.DefineScript("ko.switcher")
-                .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-ko-switcher.js")
-                .SetDependencies("ko", "jQuery");
-
             // 3rd Party - jQuery Visible
 
             manifest.DefineScript("jquery.visible")
                 .SetVersion("1.2.0")
                 .SetVersionUrl("jquery.visible.min.js", "jquery.visible.js")
                 .SetDependencies("jQuery");
+
+            // 3rd Party - Moment
+
+            manifest.DefineScript("Moment")
+                .SetVersion("2.7.0")
+                .SetVersionUrl("moment.min.js", "moment.js");
 
             // SmartWalk
 
@@ -63,6 +59,16 @@ namespace SmartWalk.Server
                 .SetVersionUrl("sw.css")
                 .SetDependencies("SmartWalk.Theme");
 
+            manifest.DefineScript("ko.datetime")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("sw-ko-datetime.js")
+                .SetDependencies("ko", "jQueryUI", "Moment");
+
+            manifest.DefineScript("ko.switcher")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("sw-ko-switcher.js")
+                .SetDependencies("ko", "jQuery");
+
             manifest.DefineScript("SmartWalk.AntiForgery")
                 .SetVersion("1.1")
                 .SetVersionUrl("sw-antiforgery.js")
@@ -71,7 +77,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Common")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-common.js")
-                .SetDependencies("jQuery", "ko", "jquery.visible");
+                .SetDependencies("jQuery", "ko", "jquery.visible", "Moment");
 
             manifest.DefineScript("SmartWalk.Editing")
                 .SetVersion(VersionUtil.CurrentVersion)

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SmartWalk.Server.Extensions
 {
@@ -16,7 +17,8 @@ namespace SmartWalk.Server.Extensions
                     ReferenceLoopHandling = ReferenceLoopHandling.Error,
                     Formatting = Formatting.Indented,
                     NullValueHandling = NullValueHandling.Ignore,
-                    DateTimeZoneHandling = DateTimeZoneHandling.Local
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                    Converters = { new ExpandoObjectConverter() }
                 };
         }
 

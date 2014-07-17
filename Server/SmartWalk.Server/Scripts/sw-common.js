@@ -45,12 +45,6 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
         });
 };
 
-function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(date.getDate() + days);
-    return result;
-}
-
 function convertToLocal(date) {
     var result = date 
         ? new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
@@ -239,8 +233,10 @@ function EventViewModel(data) {
     self.loadData = function (eventData) {
         self.id(eventData.Id);
         self.title(eventData.Title);
-        self.startDate(eventData.StartDate ? new Date(eventData.StartDate) : undefined);
-        self.endDate(eventData.EndDate ? new Date(eventData.EndDate) : undefined);
+        self.startDate(eventData.StartDate
+            ? convertToLocal(moment(eventData.StartDate).toDate()) : undefined);
+        self.endDate(eventData.EndDate
+            ? convertToLocal(moment(eventData.EndDate).toDate()) : undefined);
         self.isPublic(eventData.IsPublic);
         self.picture(eventData.Picture);
         self.combineType(eventData.CombineType);
@@ -261,8 +257,10 @@ function EventViewModel(data) {
             Id: self.id(),
             CombineType: self.combineType(),
             Title: self.title(),
-            StartDate: self.startDate() ? self.startDate().toJSON() : undefined,
-            EndDate: self.endDate() ? self.endDate().toJSON() : undefined,
+            StartDate: self.startDate()
+                ? convertToUTC(self.startDate()).toJSON() : undefined,
+            EndDate: self.endDate()
+                ? convertToUTC(self.endDate()).toJSON() : undefined,
             IsPublic: self.isPublic(),
             Picture: self.picture(),
             Description: self.description(),
@@ -377,8 +375,10 @@ function ShowViewModel(data) {
         self.id(showData.Id);
         self.title(showData.Title);
         self.description(showData.Description);
-        self.startTime(showData.StartTime ? new Date(showData.StartTime) : undefined);
-        self.endTime(showData.EndTime ? new Date(showData.EndTime) : undefined);
+        self.startTime(showData.StartTime
+            ? convertToLocal(moment(showData.StartTime).toDate()) : undefined);
+        self.endTime(showData.EndTime
+            ? convertToLocal(moment(showData.EndTime).toDate()) : undefined);
         self.picture(showData.Picture);
         self.detailsUrl(showData.DetailsUrl);
     };
@@ -388,8 +388,10 @@ function ShowViewModel(data) {
             Id: self.id(),
             Title: self.title(),
             Description: self.description(),
-            StartTime: self.startTime() ? self.startTime().toJSON() : undefined,
-            EndTime: self.endTime() ? self.endTime().toJSON() : undefined,
+            StartTime: self.startTime()
+                ? convertToUTC(self.startTime()).toJSON() : undefined,
+            EndTime: self.endTime()
+                ? convertToUTC(self.endTime()).toJSON() : undefined,
             Picture: self.picture(),
             DetailsUrl: self.detailsUrl(),
             Destroy: self._destroy
