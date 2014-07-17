@@ -8,7 +8,14 @@ using SmartWalk.Server.ViewModels;
 namespace SmartWalk.Server.Services.EventService
 {
     public interface IEventService : IDependency {
-        IList<EventMetadataVm> GetEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc, string searchString);
+        IList<EventMetadataVm> GetEvents(
+            SmartWalkUserRecord user, 
+            int pageNumber, 
+            int pageSize,
+            Func<EventMetadataRecord, IComparable> orderBy,
+            bool isDesc = false,
+            string searchString = null);
+
         EventMetadataVm GetEventVmById(int id);
         AccessType GetEventAccess(SmartWalkUserRecord user, int eventId);
         void DeleteEvent(int eventId);

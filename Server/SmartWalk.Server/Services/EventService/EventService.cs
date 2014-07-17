@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Data;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Services.EventService
 {
@@ -18,22 +17,17 @@ namespace SmartWalk.Server.Services.EventService
         private readonly IEntityService _entityService;
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
-        private readonly IRepository<SmartWalkUserRecord> _userRepository;
         private readonly IRepository<ShowRecord> _showRepository;
 
-        private readonly Lazy<CultureInfo> _cultureInfo;
-
-        public EventService(ICultureService cultureService, IEntityService entityService, 
-            IRepository<EventMetadataRecord> eventMetadataRepository, IRepository<EntityRecord> entityRepository,
-            IRepository<SmartWalkUserRecord> userRepository, IRepository<ShowRecord> showRepository)
+        public EventService(IEntityService entityService, 
+            IRepository<EventMetadataRecord> eventMetadataRepository,
+            IRepository<EntityRecord> entityRepository,
+            IRepository<ShowRecord> showRepository)
         {
             _entityService = entityService;
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
             _showRepository = showRepository;
-            _userRepository = userRepository;
-
-            _cultureInfo = new Lazy<CultureInfo>(cultureService.GetCurrentCulture);
         }
 
         public IList<EventMetadataVm> GetEntityEvents(int entityId) {
@@ -50,8 +44,19 @@ namespace SmartWalk.Server.Services.EventService
             return data.Where(e => !e.IsDeleted).OrderByDescending(e => e.StartTime).Take(5).Select(e => CreateViewModelContract(e, LoadMode.Compact)).ToList();
         }
 
-        public IList<EventMetadataVm> GetEvents(SmartWalkUserRecord user, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc, string searchString) {
-            return GetEventsInner(user == null ? (IEnumerable<EventMetadataRecord>) _eventMetadataRepository.Table.Where(e => e.IsPublic) : user.EventMetadataRecords, pageNumber, pageSize, orderBy, isDesc, searchString);
+        public IList<EventMetadataVm> GetEvents(
+            SmartWalkUserRecord user,
+            int pageNumber,
+            int pageSize,
+            Func<EventMetadataRecord, IComparable> orderBy,
+            bool isDesc = false,
+            string searchString = null)
+        {
+            return GetEventsInner(
+                user == null
+                    ? (IEnumerable<EventMetadataRecord>)
+                      _eventMetadataRepository.Table.Where(e => e.IsPublic)
+                    : user.EventMetadataRecords, pageNumber, pageSize, orderBy, isDesc, searchString);
         }
 
         private IList<EventMetadataVm> GetEventsInner(IEnumerable<EventMetadataRecord> query, int pageNumber, int pageSize, Func<EventMetadataRecord, IComparable> orderBy, bool isDesc, string searchString)

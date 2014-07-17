@@ -10,8 +10,8 @@
 
     var entityTypeName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizer" : "Venue";
     var entityTypesName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizers" : "Venues";
-    var entitiesUrl = Url.Action("List", new RouteValueDictionary {{"Parameters.Display", DisplayType.All.ToString()}}); 
-    var myEntitiesUrl = Url.Action("List", new RouteValueDictionary {{"Parameters.Display", DisplayType.My.ToString()}});
+    var entitiesUrl = Url.Action("List", new RouteValueDictionary {{"display", DisplayType.All}}); 
+    var myEntitiesUrl = Url.Action("List", new RouteValueDictionary {{"display", DisplayType.My}});
 }
     <div id="entity-items">
         @Html.AntiForgeryTokenOrchard()
@@ -35,7 +35,7 @@
         </div>
         
     @if (WorkContext.CurrentUser != null) {
-        <div class="gap">
+        <div class="gap toolbar">
             <small>
                 @{
                      var allLinkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";

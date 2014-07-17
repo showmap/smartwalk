@@ -7,8 +7,8 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    var eventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"Parameters.Display", DisplayType.All.ToString()}}); 
-    var myEventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"Parameters.Display", DisplayType.My.ToString()}}); 
+    var eventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"display", DisplayType.All}}); 
+    var myEventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"display", DisplayType.My}}); 
     var baseUrl = Model.Parameters.Display == DisplayType.All ? eventsUrl : myEventsUrl;
     string linkClass;
 }
@@ -26,33 +26,30 @@
             </div>
         @if (WorkContext.CurrentUser != null) {
             <div class="col-xs-4">
-                <!--
-                    //We use hard coded urls (not for all, but for 'tricky' ones), because of orchard bug. Actually, we have named routes, but since orchard ver > 1.7.2 named routes are not working
-                    //https://orchard.codeplex.com/workitem/20592
-                    //Our code for url supposed to be Url.RouteUrl("CreateEvent") 
-                    //As soon as this bug will be fixed, we'll replace hard coded urls. 
-                    //Otherwise a lot of redundand code will needed to bypass this.
-                -->
-                <form action="/events/create">
+                <form action="@Url.Action("Create")">
                     <button type="submit" class="btn btn-primary">@T("Create <span class=\"hidden-xs\"> Event</span>")</button>
                 </form>  
             </div>
         }
         </div>
         
-        <div class="gap">
+        <div class="gap toolbar">
             <small>
             @if (WorkContext.CurrentUser != null) {
                 <span>
                     @{
-                        linkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
+                        linkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
+                        var sortParam =
+                            Model.Parameters.Sort == SortType.Title
+                                ? "?sort=" + Model.Parameters.Sort.ToString().ToLower()
+                                : string.Empty;
                     }
-                    <a class="@linkClass" href="@string.Format("{0}?sort={1}", eventsUrl, Model.Parameters.Sort.ToString().ToLower())">@T("All Events")</a>
+                    <a class="@linkClass" href="@string.Format("{0}{1}", eventsUrl, sortParam)">@T("All Events")</a>
                     &nbsp;|&nbsp;
                     @{
-                        linkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
+                        linkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
                     }
-                    <a class="@linkClass" href="@string.Format("{0}?sort={1}", myEventsUrl, Model.Parameters.Sort.ToString().ToLower())">@T("My Events")</a>
+                    <a class="@linkClass" href="@string.Format("{0}{1}", myEventsUrl, sortParam)">@T("My Events")</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 </span>
             }
@@ -60,7 +57,7 @@
                 @{
                     linkClass = Model.Parameters.Sort == SortType.Date ? "selected" : "default";
                 }    
-                <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseUrl, SortType.Date.ToString().ToLower())">@T("Date")</a>
+                <a class="@linkClass" href="@baseUrl">@T("Date")</a>
                 &nbsp;|&nbsp;
                 @{
                     linkClass = Model.Parameters.Sort == SortType.Title ? "selected" : "default";

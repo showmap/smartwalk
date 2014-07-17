@@ -41,7 +41,7 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Event"},
                             {"action", "List"},
-                            {"Parameters.Display", DisplayType.All.ToString()},
+                            {"display", DisplayType.All},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -57,8 +57,7 @@ namespace SmartWalk.Server {
                         new RouteValueDictionary {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Event"},
-                            {"action", "Edit"},
-                            {"eventId", "0"}
+                            {"action", "Create"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -75,7 +74,7 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Event"},
                             {"action", "List"},
-                            {"Parameters.Display", DisplayType.My.ToString()},
+                            {"display", DisplayType.My},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -123,7 +122,7 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Host"},
                             {"action", "List"},
-                            {"Parameters.Display", DisplayType.All.ToString()}
+                            {"display", DisplayType.All}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -155,7 +154,7 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Host"},
                             {"action", "List"},
-                            {"Parameters.Display", DisplayType.My.ToString()},
+                            {"display", DisplayType.My},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -203,7 +202,7 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Venue"},
                             {"action", "List"},
-                            {"Parameters.Display", DisplayType.All.ToString()}
+                            {"display", DisplayType.All}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -235,7 +234,7 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Venue"},
                             {"action", "List"},
-                            {"Parameters.Display", DisplayType.My.ToString()},
+                            {"display", DisplayType.My},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {

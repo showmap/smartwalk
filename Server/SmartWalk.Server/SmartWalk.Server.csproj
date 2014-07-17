@@ -155,6 +155,7 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Module.txt" />
+    <Content Include="Views\Event\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Shared\SmartWalk.Shared\Properties\AssemblySharedInfo.cs">

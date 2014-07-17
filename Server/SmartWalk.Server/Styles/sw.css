@@ -5,6 +5,10 @@
     overflow: hidden;
 }
 
+.toolbar .selected {
+    font-weight: bold;
+}
+
 .description {
     white-space: pre-line;
 }

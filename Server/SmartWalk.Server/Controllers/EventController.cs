@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
-using Orchard.Security;
 using Orchard.Themes;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
@@ -30,29 +29,24 @@ namespace SmartWalk.Server.Controllers
             _eventService = eventService;
         }
 
-        // TODO: Get rid of duplication of parameters.Sort and sort arg
-        public ActionResult List(ListViewParametersVm parameters, string sort)
+        public ActionResult List(
+            DisplayType display = DisplayType.All, 
+            SortType sort = SortType.Date)
         {
-            parameters.Sort =
-                String.IsNullOrEmpty(sort)
-                    ? SortType.Date
-                    : (SortType)Enum.Parse(typeof(SortType), sort.ToUpperFirstLetter());
-
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             var result = _eventService.GetEvents(
-                user == null || parameters.Display == DisplayType.All
+                user == null || display == DisplayType.All
                     ? null
                     : user.Record,
                 0,
                 ViewSettings.ItemsLoad,
-                GetSortFunc(parameters.Sort),
-                parameters.Sort == SortType.Date,
-                "");
+                GetSortFunc(sort),
+                sort == SortType.Date);
 
             return View(new ListViewVm
                 {
-                    Parameters = parameters,
+                    Parameters = new ListViewParametersVm { Display = display, Sort = sort },
                     Data = result
                 });
         }
@@ -86,6 +80,11 @@ namespace SmartWalk.Server.Controllers
                 return View(item);
 
             return new HttpUnauthorizedResult();
+        }
+
+        public ActionResult Create()
+        {
+            return Edit(0);
         }
 
         #region Addresses
