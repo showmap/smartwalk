@@ -57,19 +57,7 @@ namespace SmartWalk.Server.Services.EntityService
                         _showRepository.Flush();
                     }
                 }
-                #endregion
-
-                #region If is reference show count > 1  - clean the rest
-                var i = 0;
-                foreach (var showRecord in shows.Where(s => s.IsReference)) {
-                    if (i++ == 0)
-                        showRecord.IsDeleted = false;
-                    else 
-                        _showRepository.Delete(showRecord);
-
-                    _showRepository.Flush();
-                }
-                #endregion
+                #endregion               
 
                 return ViewModelContractFactory.CreateViewModelContract(shows.FirstOrDefault());
             }
