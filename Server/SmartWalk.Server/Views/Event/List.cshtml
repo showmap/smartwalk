@@ -121,7 +121,7 @@
         ko.applyBindings(viewModel, document.getElementById("event-items"));
 
         $("#btnSearch").click(function() {
-            $("a").remove(".default-rows"); // TODO: What's this for?
+            $("a").remove(".default-rows"); // TODO: What's this for? This is because default rows - are rows, loaded for the first time, from server. And this rows are not in search result, because they are not connected with ajax loading (search rows does)
             viewModel.search();
         });
         $("img.scale").imageScale();
