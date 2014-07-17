@@ -8,11 +8,12 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    var entities = (IList<EntityVm>)Model.Data;
     var entityTypeName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizer" : "Venue";
     var entityTypesName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizers" : "Venues";
+    var entitiesUrl = Url.Action("List", new RouteValueDictionary {{"Parameters.Display", DisplayType.All.ToString()}}); 
+    var myEntitiesUrl = Url.Action("List", new RouteValueDictionary {{"Parameters.Display", DisplayType.My.ToString()}});
 }
-    <div id="entity-items" get-entities-url="@Url.Action("GetEntities")">
+    <div id="entity-items">
         @Html.AntiForgeryTokenOrchard()
 
         <div class="row">
@@ -24,7 +25,7 @@
                     </span>
                 </div>
             </div>
-        @if (Model.Parameters.IsLoggedIn) {
+        @if (WorkContext.CurrentUser != null) {
             <div class="col-xs-4">
                 <form action="@Url.Action("Create")">
                     <button type="submit" class="btn btn-primary">@T("Create <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
@@ -33,24 +34,24 @@
         }
         </div>
         
-    @if (Model.Parameters.IsLoggedIn) {
+    @if (WorkContext.CurrentUser != null) {
         <div class="gap">
             <small>
                 @{
                      var allLinkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
                 }
-                <a class="@allLinkClass" href="@Url.Action("List")">@T("All " + entityTypesName)</a>
+                <a class="@allLinkClass" href="@entitiesUrl">@T("All " + entityTypesName)</a>
                 &nbsp;|&nbsp;
                 @{
                     var myLinkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
                 }
-                <a class="@myLinkClass" href="@Url.Action("List")/my">@T("My " + entityTypesName)</a>
+                <a class="@myLinkClass" href="@myEntitiesUrl">@T("My " + entityTypesName)</a>
             </small>
         </div>
     }
 
         <div class="floating-container small-gap">
-        @foreach (var entityVm in entities) {
+        @foreach (var entityVm in (IList<EntityVm>)Model.Data) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {entityId = entityVm.Id})">
                 <div class="header">
                     <h3>@entityVm.Name</h3>
@@ -104,16 +105,17 @@
     $(function() {
         var viewModel = new EntitiesViewModel(
             @Html.Raw(JsonConvert.SerializeObject(Model.Parameters, JsonNetResult.Settings)), 
-            $("#entity-items").attr("get-entities-url"));
+            '@Url.Action("GetEntities")');
 
         attachVerticalScroll(viewModel.getNextPage);
         
         ko.applyBindings(viewModel, document.getElementById("entity-items"));
         
         $("#btnSearch").click(function() {
-            $("a").remove(".default-rows");  // TODO: What's this for?
+            $("a").remove(".default-rows");
             viewModel.search();
         });
+        
         $("img.scale").imageScale();
     });
 </script>

@@ -1,64 +1,30 @@
-﻿using System;
-using SmartWalk.Server.Extensions;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SmartWalk.Shared;
 
 namespace SmartWalk.Server.ViewModels
 {
     public class ListViewParametersVm
     {
-        private DisplayType _display = DisplayType.My;
-
-        public ListViewParametersVm()
-        {
-            Sort = SortType.Date;
-            IsLoggedIn = false;
-        }
-
+        [UsedImplicitly]
+        [JsonConverter(typeof(StringEnumConverter))]
         public SortType Sort { get; set; }
 
-        public bool IsLoggedIn { get; set; }
-
-        public DisplayType Display
-        {
-            get { return IsLoggedIn ? _display : DisplayType.All; }
-            set { _display = value; }
-        }
-
-        public string Url
-        {
-            get
-            {
-                switch (Display)
-                {
-                    case DisplayType.All:
-                        return "";
-
-                    case DisplayType.My:
-                        return "/" + DisplayType.My.ToString().ToLower();
-                }
-
-                return "";
-            }
-        }
-
-        public void LoadParameters(bool isLoggedIn, string sort)
-        {
-            IsLoggedIn = isLoggedIn;
-            Sort =
-                String.IsNullOrEmpty(sort)
-                    ? SortType.Date
-                    : (SortType)Enum.Parse(typeof(SortType), sort.ToUpperFirstLetter());
-        }
+        [UsedImplicitly]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public DisplayType Display { get; set; }
     }
 
     public enum SortType
     {
-        Title,
-        Date
+        None = 0,
+        Title = 1,
+        Date = 2,
     }
 
     public enum DisplayType
     {
-        All,
-        My
+        All = 0,
+        My = 1
     }
 }

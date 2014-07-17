@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Linq;
-using System.Web;
+﻿using System.IO.Compression;
 using System.Web.Mvc;
 
 namespace SmartWalk.Server.Extensions
@@ -11,15 +7,12 @@ namespace SmartWalk.Server.Extensions
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            HttpRequestBase request = filterContext.HttpContext.Request;
-
-            string acceptEncoding = request.Headers["Accept-Encoding"];
-
+            var request = filterContext.HttpContext.Request;
+            var acceptEncoding = request.Headers["Accept-Encoding"];
             if (string.IsNullOrEmpty(acceptEncoding)) return;
 
             acceptEncoding = acceptEncoding.ToUpperInvariant();
-
-            HttpResponseBase response = filterContext.HttpContext.Response;
+            var response = filterContext.HttpContext.Response;
 
             if (acceptEncoding.Contains("GZIP"))
             {

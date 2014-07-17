@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server.ViewModels
+@model ListViewVm
 @{
     Style.Require("SmartWalk");
 
@@ -6,13 +7,12 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    var model = (ListViewVm)Model;
-    var parameters = model.Parameters;
-    var items = (IList<EventMetadataVm>)model.Data;
-    var linkClass = "";
-    var baseLink = string.Format("/events{0}", parameters.Url);
+    var eventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"Parameters.Display", DisplayType.All.ToString()}}); 
+    var myEventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"Parameters.Display", DisplayType.My.ToString()}}); 
+    var baseUrl = Model.Parameters.Display == DisplayType.All ? eventsUrl : myEventsUrl;
+    string linkClass;
 }
-    <div id="event-items" get-events-url="@Url.Action("GetEvents", "Event", new {area = "SmartWalk.Server"})">
+    <div id="event-items">
         @Html.AntiForgeryTokenOrchard()    
     
         <div class="row">
@@ -24,10 +24,10 @@
                     </span>
                 </div>
             </div>
-        @if (parameters.IsLoggedIn) {
+        @if (WorkContext.CurrentUser != null) {
             <div class="col-xs-4">
-                <form action="/events/create">
-                    <button type="submit" class="btn btn-primary">@T("Create") <span class="hidden-xs">@T("Event")</span></button>
+                <form action="@Url.Action("CreateEvent", "Event")">
+                    <button type="submit" class="btn btn-primary">@T("Create <span class=\"hidden-xs\"> Event</span>")</button>
                 </form>  
             </div>
         }
@@ -35,35 +35,35 @@
         
         <div class="gap">
             <small>
-            @if (parameters.IsLoggedIn) {
+            @if (WorkContext.CurrentUser != null) {
                 <span>
                     @{
-                        linkClass = parameters.Display == DisplayType.My ? "selected" : "default";
+                        linkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
                     }
-                    <a class="@linkClass" href="@string.Format("/events?sort={0}", parameters.Sort.ToString().ToLower())">@T("All Events")</a>
-                    &nbsp;| 
+                    <a class="@linkClass" href="@string.Format("{0}?sort={1}", eventsUrl, Model.Parameters.Sort.ToString().ToLower())">@T("All Events")</a>
+                    &nbsp;|&nbsp;
                     @{
-                        linkClass = parameters.Display == DisplayType.All ? "selected" : "default";
+                        linkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
                     }
-                    <a class="@linkClass" href="@string.Format("/events/my?sort={1}", baseLink, parameters.Sort.ToString().ToLower())">@T("My Events")</a>
+                    <a class="@linkClass" href="@string.Format("{0}?sort={1}", myEventsUrl, Model.Parameters.Sort.ToString().ToLower())">@T("My Events")</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 </span>
             }
                 @T("Sort By"):&nbsp;
                 @{
-                    linkClass = parameters.Sort == SortType.Date ? "selected" : "default";
+                    linkClass = Model.Parameters.Sort == SortType.Date ? "selected" : "default";
                 }    
-                <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseLink, SortType.Date.ToString().ToLower())">@T("Date")</a>
+                <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseUrl, SortType.Date.ToString().ToLower())">@T("Date")</a>
                 &nbsp;|&nbsp;
                 @{
-                    linkClass = parameters.Sort == SortType.Title ? "selected" : "default";
+                    linkClass = Model.Parameters.Sort == SortType.Title ? "selected" : "default";
                 }    
-                <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseLink, SortType.Title.ToString().ToLower())">@T("Title")</a>
+                <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseUrl, SortType.Title.ToString().ToLower())">@T("Title")</a>
             </small>
         </div>
 
        <div class="floating-container small-gap">
-        @foreach (var item in items) {
+        @foreach (var item in (IList<EventMetadataVm>)Model.Data) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {eventId = item.Id})">
                 <div class="header">
                     <h3>@item.DisplayName</h3>
@@ -81,7 +81,7 @@
     </div>
 
 <script type="text/html" id="EventItemTemplate">
-    <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '/event/' + id()}">
+    <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '@Url.Action("View", new { eventId = ""})/' + id()}">
         <div class="header">
             <h3 data-bind="text: displayName()"></h3>
 			
@@ -113,15 +113,15 @@
 
     $(function() {
         var viewModel = new EventsViewModel(
-            @Html.Raw(JsonConvert.SerializeObject(parameters, JsonNetResult.Settings)), 
-            $("#event-items").attr("get-events-url"));
+            @Html.Raw(JsonConvert.SerializeObject(Model.Parameters, JsonNetResult.Settings)), 
+            '@Url.Action("GetEvents", "Event")');
 
         attachVerticalScroll(viewModel.getNextPage);
 
         ko.applyBindings(viewModel, document.getElementById("event-items"));
 
         $("#btnSearch").click(function() {
-            $("a").remove(".default-rows"); // TODO: What's this for? This is because default rows - are rows, loaded for the first time, from server. And this rows are not in search result, because they are not connected with ajax loading (search rows does)
+            $("a").remove(".default-rows");
             viewModel.search();
         });
         $("img.scale").imageScale();

@@ -1,4 +1,6 @@
-﻿.stop-scrolling {
+﻿.scale {}
+
+.stop-scrolling {
     height: 100%;
     overflow: hidden;
 }

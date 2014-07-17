@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
@@ -6,6 +7,7 @@ using Orchard.Themes;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
+using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
@@ -27,18 +29,31 @@ namespace SmartWalk.Server.Controllers
             _eventService = eventService;
         }
 
+        // TODO: Get rid of duplication of parameters.Sort and sort arg
         public ActionResult List(ListViewParametersVm parameters, string sort)
         {
-            parameters.LoadParameters(_orchardServices.WorkContext.CurrentUser != null, sort);
+            parameters.Sort =
+                String.IsNullOrEmpty(sort)
+                    ? SortType.Date
+                    : (SortType)Enum.Parse(typeof(SortType), sort.ToUpperFirstLetter());
 
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-            switch (parameters.Sort) {
-                case SortType.Title:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.Title, false, "")});
-                case SortType.Date:
-                default:
-                    return View(new ListViewVm {Parameters = parameters, Data = _eventService.GetEvents(user == null ? null : user.Record, 0, ViewSettings.ItemsLoad, e => e.StartTime, true, "")});
-            }
+
+            var result = _eventService.GetEvents(
+                user == null || parameters.Display == DisplayType.All
+                    ? null
+                    : user.Record,
+                0,
+                ViewSettings.ItemsLoad,
+                GetSortFunc(parameters.Sort),
+                parameters.Sort == SortType.Date,
+                "");
+
+            return View(new ListViewVm
+                {
+                    Parameters = parameters,
+                    Data = result
+                });
         }
 
         public ActionResult View(int eventId)
@@ -55,6 +70,7 @@ namespace SmartWalk.Server.Controllers
             return View(new ViewParametersVm { IsReadOnly = _orchardServices.WorkContext.CurrentUser == null, Data = item });
         }
 
+        // TODO: Make sure the rest of controllers' method have CompressFilter
         [CompressFilter]
         public ActionResult Edit(int eventId)
         {
@@ -204,26 +220,18 @@ namespace SmartWalk.Server.Controllers
         [CompressFilter]
         public ActionResult GetEvents(int pageNumber, string query, ListViewParametersVm parameters)
         {
-            SmartWalkUserPart user = null;
+            var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
-            if (parameters.IsLoggedIn)
-            {
-                if (_orchardServices.WorkContext.CurrentUser == null)
-                {
-                    return new HttpUnauthorizedResult();
-                }
-
-                user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
-            }
-
-            switch (parameters.Sort)
-            {
-                case SortType.Title:
-                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.Title, false, query));
-                case SortType.Date:
-                default:
-                    return Json(_eventService.GetEvents(user == null ? null : user.Record, pageNumber, ViewSettings.ItemsLoad, e => e.StartTime, true, query));
-            }
+            var result = _eventService.GetEvents(
+                user == null || parameters.Display == DisplayType.All
+                    ? null
+                    : user.Record,
+                pageNumber,
+                ViewSettings.ItemsLoad,
+                GetSortFunc(parameters.Sort),
+                parameters.Sort == SortType.Date,
+                query);
+            return Json(result);
         }
 
         [HttpPost]
@@ -253,5 +261,14 @@ namespace SmartWalk.Server.Controllers
             return RedirectToAction("List");
         }
         #endregion
+
+        private Func<EventMetadataRecord, IComparable> GetSortFunc(SortType sortType)
+        {
+            var result =
+                sortType == SortType.Date
+                    ? new Func<EventMetadataRecord, IComparable>(emr => emr.StartTime)
+                    : (emr => emr.Title ?? emr.EntityRecord.Name);
+            return result;
+        }
     }
 }
