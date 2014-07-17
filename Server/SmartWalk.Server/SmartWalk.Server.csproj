@@ -357,6 +357,10 @@
       <Project>{f7e6aafc-f878-4914-9b6f-31ba6adaf387}</Project>
       <Name>SmartWalk.Server.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartWalk.Server.Theme\SmartWalk.Server.Theme.csproj">
+      <Project>{43787a98-8535-46ba-99b9-12fc621de40a}</Project>
+      <Name>SmartWalk.Server.Theme</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Host\Edit.cshtml" />
