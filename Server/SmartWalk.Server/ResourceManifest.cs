@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using SmartWalk.Server.Common.Utils;
-using SmartWalk.Server.Extensions;
+using SmartWalk.Server.Providers;
 using SmartWalk.Shared;
 using Orchard.UI.Resources;
 

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using Orchard.Data;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.CultureService;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
@@ -21,11 +20,11 @@ namespace SmartWalk.Server.Services.EntityService
         private readonly IRepository<ShowRecord> _showRepository;
         private readonly IRepository<EventMetadataRecord> _metadataRepository;
 
-        private readonly Lazy<CultureInfo> _cultureInfo;
-
-        public EntityService(ICultureService cultureService,
-            IRepository<ContactRecord> contactRepository, IRepository<EntityRecord> entityRepository,
-            IRepository<AddressRecord> addressRepository, IRepository<ShowRecord> showRepository,
+        public EntityService(
+            IRepository<ContactRecord> contactRepository, 
+            IRepository<EntityRecord> entityRepository,
+            IRepository<AddressRecord> addressRepository, 
+            IRepository<ShowRecord> showRepository,
             IRepository<EventMetadataRecord> metadataRepository)
         {
             _metadataRepository = metadataRepository;
@@ -33,8 +32,6 @@ namespace SmartWalk.Server.Services.EntityService
             _entityRepository = entityRepository;
             _contactRepository = contactRepository;
             _addressRepository = addressRepository;
-
-            _cultureInfo = new Lazy<CultureInfo>(cultureService.GetCurrentCulture);
         }
 
         #region Shows

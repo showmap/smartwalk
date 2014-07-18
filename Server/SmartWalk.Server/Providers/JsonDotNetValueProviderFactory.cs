@@ -6,8 +6,9 @@ using System.Globalization;
 using System.IO;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using SmartWalk.Server.Extensions;
 
-namespace SmartWalk.Server.Extensions
+namespace SmartWalk.Server.Providers
 {
     public sealed class JsonDotNetValueProviderFactory : ValueProviderFactory
     {

@@ -164,7 +164,8 @@
     <Compile Include="..\SmartWalk.Server.Common\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions\JsonDotNetValueProviderFactory.cs" />
+    <Compile Include="Providers\CultureSelector.cs" />
+    <Compile Include="Providers\JsonDotNetValueProviderFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
@@ -230,8 +231,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Routes.cs" />
-    <Compile Include="Services\CultureService\CultureService.cs" />
-    <Compile Include="Services\CultureService\ICultureService.cs" />
     <Compile Include="Services\EntityService\EntityService.cs" />
     <Compile Include="Services\EntityService\IEntityService.cs" />
     <Compile Include="Services\EntityService\ViewModelContractFactory.cs" />
