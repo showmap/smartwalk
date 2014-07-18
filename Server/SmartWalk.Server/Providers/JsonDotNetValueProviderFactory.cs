@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using SmartWalk.Server.Extensions;
@@ -12,6 +13,14 @@ namespace SmartWalk.Server.Providers
 {
     public sealed class JsonDotNetValueProviderFactory : ValueProviderFactory
     {
+        public static void RegisterFactory()
+        {
+            var defaultJsonFactory = ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault();
+            var index = ValueProviderFactories.Factories.IndexOf(defaultJsonFactory);
+            ValueProviderFactories.Factories.Remove(defaultJsonFactory);
+            ValueProviderFactories.Factories.Insert(index, new JsonDotNetValueProviderFactory());
+        }
+
         public override IValueProvider GetValueProvider(ControllerContext controllerContext)
         {
             if (controllerContext == null)
