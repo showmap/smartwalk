@@ -7,8 +7,8 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    var eventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"display", DisplayType.All}}); 
-    var myEventsUrl = Url.Action("List", "Event", new RouteValueDictionary {{"display", DisplayType.My}}); 
+    var eventsUrl = Url.Action("List", "Event", new {display = DisplayType.All}); 
+    var myEventsUrl = Url.Action("List", "Event", new {display = DisplayType.My}); 
     var baseUrl = Model.Parameters.Display == DisplayType.All ? eventsUrl : myEventsUrl;
     string linkClass;
 }

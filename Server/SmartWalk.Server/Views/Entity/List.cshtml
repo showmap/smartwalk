@@ -10,8 +10,8 @@
 
     var entityTypeName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizer" : "Venue";
     var entityTypesName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizers" : "Venues";
-    var entitiesUrl = Url.Action("List", new RouteValueDictionary {{"display", DisplayType.All}}); 
-    var myEntitiesUrl = Url.Action("List", new RouteValueDictionary {{"display", DisplayType.My}});
+    var entitiesUrl = Url.Action("List", new {display = DisplayType.All}); 
+    var myEntitiesUrl = Url.Action("List", new {display = DisplayType.My});
 }
     <div id="entity-items">
         @Html.AntiForgeryTokenOrchard()
