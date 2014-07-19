@@ -35,12 +35,12 @@ namespace SmartWalk.Server.Controllers.Base
             get { return EntityType == EntityType.Venue ? "Venue" : "Organizer"; }
         }
 
-        public ActionResult List(ListViewParametersVm parameters)
+        public ActionResult List(DisplayType display)
         {
             var user = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
 
             var result = _entityService.GetEntities(
-                user == null || parameters.Display == DisplayType.All
+                user == null || display == DisplayType.All
                     ? null
                     : user.Record,
                 EntityType,
@@ -50,7 +50,7 @@ namespace SmartWalk.Server.Controllers.Base
 
             return View(new ListViewVm
                 {
-                    Parameters = parameters,
+                    Parameters = new ListViewParametersVm { Display = display },
                     Data = result
                 });
         }

@@ -184,6 +184,7 @@
     <Compile Include="Services\SmartWalkUserService\ISmartWalkUserService.cs" />
     <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="ShellEvents.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
     <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">
