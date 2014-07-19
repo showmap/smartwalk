@@ -12,6 +12,9 @@ namespace SmartWalk.Server.Providers
     {
         private readonly IWorkContextAccessor _workContextAccessor;
 
+        private int _lastRequest;
+        private CultureSelectorResult _lastCulture;
+
         public CultureSelector(IWorkContextAccessor workContextAccessor)
         {
             _workContextAccessor = workContextAccessor;
@@ -25,23 +28,37 @@ namespace SmartWalk.Server.Providers
                 workContext.HttpContext.Request == null ||
                 workContext.HttpContext.Request.UserLanguages == null) return null;
 
-            var browserCultures =
-                workContext.HttpContext.Request.UserLanguages
-                           .Select(ul => ul.Split(';').FirstOrDefault())
-                           .Where(ul => !string.IsNullOrWhiteSpace(ul))
-                           .ToArray();
-            if (browserCultures.Length == 0) return null;
+            CultureSelectorResult result;
 
-            var cultureName =
-                browserCultures
-                    .Select(ParseCultureInfo)
-                    .Where(ci => ci != null)
-                    .Select(ci => ci.Name)
-                    .FirstOrDefault();
+            if (_lastRequest != GetLastRequestHash(workContext))
+            {
+                var browserCultures =
+                    workContext.HttpContext.Request.UserLanguages
+                               .Select(ul => ul.Split(';').FirstOrDefault())
+                               .Where(ul => !string.IsNullOrWhiteSpace(ul))
+                               .ToArray();
+                if (browserCultures.Length == 0) return null;
 
-            return cultureName != null 
-                ? new CultureSelectorResult { Priority = 10, CultureName = cultureName }
-                : null;
+                var cultureName =
+                    browserCultures
+                        .Select(ParseCultureInfo)
+                        .Where(ci => ci != null)
+                        .Select(ci => ci.Name)
+                        .FirstOrDefault();
+
+                result = cultureName != null
+                    ? new CultureSelectorResult { Priority = 10, CultureName = cultureName }
+                    : null;
+
+                _lastRequest = GetLastRequestHash(workContext);
+                _lastCulture = result;
+            }
+            else
+            {
+                result = _lastCulture;
+            }
+
+            return result;
         }
 
         private static CultureInfo ParseCultureInfo(string cultureName)
@@ -54,6 +71,11 @@ namespace SmartWalk.Server.Providers
             {
                 return null;
             }
+        }
+
+        private static int GetLastRequestHash(WorkContext workContext)
+        {
+            return workContext.HttpContext.Request.UserLanguages.GetHashCode();
         }
     }
 }

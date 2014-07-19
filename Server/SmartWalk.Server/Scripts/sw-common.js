@@ -224,10 +224,9 @@ function EventViewModel(data) {
         return self.picture() || (self.host() != null ? self.host().picture() : null);
     });
     
-    // TODO: To setup common date format
     self.displayDate = ko.computed(function () {
-        return (self.startDate() ? self.startDate().toLocaleDateString() : "") +
-            (self.endDate() ? " - " + self.endDate().toLocaleDateString() : "");
+        return (self.startDate() ? moment(self.startDate()).format("LL") : "") +
+            (self.endDate() ? " - " + moment(self.endDate()).format("LL") : "");
     });
 
     self.loadData = function (eventData) {
@@ -365,10 +364,9 @@ function ShowViewModel(data) {
     self.picture = ko.observable();
     self.detailsUrl = ko.observable();
     
-    // TODO: To setup common time format
     self.displayTime = ko.computed(function () {
-        return (self.startTime() ? self.startTime().toLocaleTimeString() : "") +
-            (self.endTime() ? " - " + self.endTime().toLocaleTimeString() : "");
+        return (self.startTime() ? moment(self.startTime()).format("LT") : "") +
+            (self.endTime() ? " - " + moment(self.endTime()).format("LT") : "");
     });
 
     self.loadData = function (showData) {

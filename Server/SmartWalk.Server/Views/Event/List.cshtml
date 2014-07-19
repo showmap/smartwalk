@@ -1,4 +1,5 @@
-﻿@using SmartWalk.Server.ViewModels
+﻿@using System.Globalization
+@using SmartWalk.Server.ViewModels
 @model ListViewVm
 @{
     Style.Require("SmartWalk");
@@ -7,6 +8,7 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
+    var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
     var eventsUrl = Url.Action("List", "Event", new {display = DisplayType.All}); 
     var myEventsUrl = Url.Action("List", "Event", new {display = DisplayType.My}); 
     var baseUrl = Model.Parameters.Display == DisplayType.All ? eventsUrl : myEventsUrl;
@@ -75,7 +77,7 @@
                     <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture">
                 </div>
 				                
-                <div class="info"><h4>@item.DisplayDate</h4></div>
+                <div class="info"><h4>@item.DisplayDate(culture)</h4></div>
             </a>
         }
            <!-- ko template: {name: "EventItemTemplate", foreach: items() } -->    
@@ -101,6 +103,8 @@
 
 @using (Script.Foot())
 {
+    @Display(New.MomentLocalization())
+
 <script type="text/javascript">
     EventsViewModel = function(data, url) {
         var self = this;

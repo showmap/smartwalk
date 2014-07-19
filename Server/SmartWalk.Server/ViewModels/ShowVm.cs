@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Newtonsoft.Json;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Shared;
@@ -15,19 +16,14 @@ namespace SmartWalk.Server.ViewModels
         public string Picture { get; set; }
         public string DetailsUrl { get; set; }
 
-        // TODO: To use the common client-server date format
-        [JsonIgnore]
-        public string DisplayTime
-        {
-            get
-            {
-                return StartTime.ToString("t") +
-                       (EndTime.HasValue ? " - " + EndTime.ToString("t") : string.Empty);
-            }
-        }
-
         [JsonIgnore]
         [UsedImplicitly]
         public bool Destroy { get; set; }
+
+        public string DisplayTime(CultureInfo culture)
+        {
+            return StartTime.ToString("t", culture) +
+                   (EndTime.HasValue ? " - " + EndTime.ToString("t", culture) : string.Empty);
+        }
     }
 }

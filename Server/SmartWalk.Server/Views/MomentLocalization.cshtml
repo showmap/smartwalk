@@ -1,0 +1,75 @@
+﻿@using System.Text.RegularExpressions
+@using Orchard.Localization.Services
+@{
+    // prevent the shape from being rendered twice in a page
+    if (WorkContext.GetState<object>("MomentLocalization") != null) {
+        return;
+    }
+
+    WorkContext.SetState("MomentLocalization", new object());
+
+    var format = WorkContext.Resolve<IDateTimeFormatProvider>();
+    var monthNames = FormatJsList(format.MonthNames.ToArray());
+    var monthNamesShort = FormatJsList(format.MonthNamesShort.ToArray());
+    var dayNames = FormatJsList(format.DayNames.ToArray());
+    var dayNamesShort = FormatJsList(format.DayNamesShort.ToArray());
+    var dayNamesMin = FormatJsList(format.DayNamesMin.ToArray());
+
+    var shortTime = AdaptNetToMoment(format.ShortTimeFormat);
+    var shortDate = AdaptNetToMoment(format.ShortDateFormat);
+    var longDate = AdaptNetToMoment(format.LongDateFormat);
+    var shortDateTime = AdaptNetToMoment(format.ShortDateTimeFormat);
+    var longDateTime = AdaptNetToMoment(format.LongDateTimeFormat);
+}
+
+@functions {
+    private static string FormatJsList(string[] strings)
+    {
+        return String.Join(
+            ", ", 
+            strings
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Select(s => 
+                    String.Format("\"{0}\"", s.Trim())));
+    }
+
+    private static string AdaptNetToMoment(string format)
+    {
+        var result = format
+            .Replace("tt", "A")
+            .Replace("d", "D")
+            .Replace("DDDD", "dddd")
+            .Replace("DDD", "ddd")
+            .Replace("y", "Y");
+
+        result = Regex.Replace(result, "'([^']*)'", "[$1]"); // replace .Net literals with moment's ones
+
+        return HttpUtility.JavaScriptStringEncode(result);
+    }
+}
+
+<script type="text/javascript">
+    (function (factory) {
+        factory(moment);
+    }(function (moment) {
+        return moment.lang("current", {
+            months : [@Html.Raw(monthNames)],
+            monthsShort : [@Html.Raw(monthNamesShort)],
+            weekdays : [@Html.Raw(dayNames)],
+            weekdaysShort : [@Html.Raw(dayNamesShort)],
+            weekdaysMin : [@Html.Raw(dayNamesMin)],
+            longDateFormat : {
+                LT : "@shortTime",
+                L : "@shortDate",
+                LL : "@longDate",
+                LLL : "@shortDateTime",
+                LLLL : "@longDateTime"
+            },
+            week : {
+                dow : @format.FirstDay
+            }
+        });
+    }));
+
+    moment.lang("current");
+</script>
