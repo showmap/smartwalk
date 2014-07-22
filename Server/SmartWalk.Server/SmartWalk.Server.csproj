@@ -157,6 +157,7 @@
     <Content Include="Module.txt" />
     <Content Include="Views\Event\Create.cshtml" />
     <Content Include="Views\MomentLocalization.cshtml" />
+    <None Include="Views\ServerErrors.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Shared\SmartWalk.Shared\Properties\AssemblySharedInfo.cs">
@@ -187,6 +188,7 @@
     <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="ShellEvents.cs" />
+    <Compile Include="ViewModels\ErrorResultVm.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
     <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">

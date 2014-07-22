@@ -34,6 +34,10 @@ textarea {
     display: inline-block;
 }
 
+.ui-dialog .close {
+    font-size: 21px;
+}
+
 .td-align {
 	text-align: center;
 }
@@ -419,4 +423,9 @@ td.editing-container {
 
 .venue.editing-container .well {
     margin-top: 25px;
+}
+
+.row.alert {
+    margin-left: 0;
+    margin-right: 0;
 }

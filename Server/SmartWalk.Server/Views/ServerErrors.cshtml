@@ -1,0 +1,17 @@
+﻿
+        <div id="serverValidationMessage" class="row alert alert-warning" role="alert" style="display: none;" 
+                data-bind="fadeScrollVisible: serverErrorsManager.validationErrors() && serverErrorsManager.validationErrors().length > 0">
+            <button type="button" class="close" data-bind="click: function () { serverErrorsManager.validationErrors(undefined); }"><span aria-hidden="true">&times;</span><span class="sr-only">@T("Close")</span></button>
+            <!-- ko template: {name: "validationErrorTemplate", foreach: serverErrorsManager.validationErrors } -->    
+            <!-- /ko -->
+        </div>
+
+        <div id="serverErrorMessage" class="row alert alert-danger" role="alert" style="display: none;" 
+                data-bind="fadeScrollVisible: serverErrorsManager.genericError">
+            <button type="button" class="close" data-bind="click: function () { serverErrorsManager.genericError(undefined); }"><span aria-hidden="true">&times;</span><span class="sr-only">@T("Close")</span></button>
+            <span data-bind="text: serverErrorsManager.genericError"></span>
+        </div>
+
+        <script type="text/html" id="validationErrorTemplate">
+            <strong data-bind="text: Property"></strong>: <span data-bind="text: Error"></span><br/>
+        </script>

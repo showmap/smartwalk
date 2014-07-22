@@ -62,23 +62,61 @@ function convertToUTC(date) {
 // #########    B i n d i n g    H a n d l e r s     ################
 
 
-ko.bindingHandlers.fadeInVisible = {
+ko.bindingHandlers.fadeIn = {
     init: function (element, valueAccessor) {
         var duration = ko.utils.unwrapObservable(valueAccessor());
         $(element).hide().fadeIn(duration);
     }
 };
 
-ko.bindingHandlers.scrollVisible = {
+ko.bindingHandlers.fadeVisible = {
     init: function (element, valueAccessor) {
-        if (!$(element).parents(".ui-dialog").length && // don't scroll if content in dialog
-            !$(element).visible(false, false, "vertical")) {
-            var duration = ko.utils.unwrapObservable(valueAccessor());
-            
-            $("html, body").animate({
-                scrollTop: $(element).offset().top - 80 // minus small top margin
-            }, duration);
+        var value = valueAccessor();
+        $(element).toggle(ko.unwrap(value) || false);
+    },
+    update: function (element, valueAccessor) {
+        var value = valueAccessor();
+        ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+    }
+};
+
+ko.bindingHandlers.fadeScrollVisible = {
+    init: function (element, valueAccessor) {
+        var value = valueAccessor();
+        $(element).toggle(ko.unwrap(value) || false);
+    },
+    update: function (element, valueAccessor) {
+        var value = valueAccessor();
+        if (ko.unwrap(value)) {
+            $(element).fadeIn();
+            ko.bindingHandlers.scroll.scrollTop(element, "slow");
+        } else {
+            $(element).fadeOut();
         }
+    }
+};
+
+ko.bindingHandlers.scroll = {
+    init: function (element, valueAccessor) {
+        var duration = ko.utils.unwrapObservable(valueAccessor());
+        ko.bindingHandlers.scroll.scrollTop(element, duration);
+    }
+};
+
+ko.bindingHandlers.scroll.scrollTop = function (element, duration) {
+    var topMargin = 80;
+
+    var parentDialog = $(element).closest(".ui-dialog-content");
+    if (parentDialog.length > 0) {
+        parentDialog.animate({
+            scrollTop: $(element).offset().top - $(parentDialog).offset().top +
+                $(parentDialog).scrollTop() - topMargin
+        }, duration);
+    }
+    else if (!$(element).visible(false, false, "vertical")) {
+        $("html, body").animate({
+            scrollTop: $(element).offset().top - topMargin
+        }, duration);
     }
 };
 

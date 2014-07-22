@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Web.Mvc;
 using Orchard;
 using SmartWalk.Server.Extensions;
@@ -7,6 +8,7 @@ using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Controllers.Base
 {
@@ -136,14 +138,15 @@ namespace SmartWalk.Server.Controllers.Base
 
         [HttpPost]
         [CompressFilter]
-        public ActionResult ValidateModel(string propName, EntityVm model)
+        public ActionResult Validate(string propName, EntityVm model)
         {
-            var errors = ValidateModel(model);
+            if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
-            if (errors.ContainsKey(propName))
+            var errors = ValidateEntity(model);
+            if (errors.ContainsPropertyError(propName))
             {
-                HttpContext.Response.StatusCode = 400;
-                return Json(new { Message = errors[propName] });
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new ErrorResultVm(errors));
             }
 
             return Json(true);
@@ -151,90 +154,140 @@ namespace SmartWalk.Server.Controllers.Base
 
         [HttpPost]
         [CompressFilter]
-        public ActionResult SaveEntity(EntityVm host)
+        public ActionResult SaveEntity(EntityVm entityVm)
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
-            try
+            var errors = ValidateEntity(entityVm);
+            if (errors.Count > 0)
             {
-                var errors = ValidateModel(host);
-                return Json(errors.Count > 0 ? null : _entityService.SaveOrAddEntity(CurrentSmartWalkUser.Record, host));
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new ErrorResultVm(errors));
             }
-            catch
-            {
-                return Json(false);
-            }
+
+            return Json(_entityService.SaveOrAddEntity(CurrentSmartWalkUser.Record, entityVm));
         }
 
-        private IDictionary<string, string> ValidateModel(EntityVm model)
+        private IList<ValidationError> ValidateEntity(EntityVm model)
         {
-            var result = new Dictionary<string, string>();
+            var result = new List<ValidationError>();
 
+            var nameProperty = model.GetPropertyName(p => p.Name);
             if (string.IsNullOrEmpty(model.Name))
             {
-                result.Add("Name", T(EntityTypeName + " name can not be empty!").Text);
+                result.Add(new ValidationError(nameProperty, T(EntityTypeName + " name can not be empty.").Text));
             }
             else if (model.Name.Length > 255)
             {
-                result.Add("Name", T(EntityTypeName + " name can not be larger than 255 characters!").Text);
+                result.Add(new ValidationError(
+                               nameProperty,
+                               T(EntityTypeName + " name can not be longer than 255 characters.").Text));
             }
             else if (_entityService.IsNameExists(model, EntityType))
             {
-                result.Add("Name", T(EntityTypeName + " name must be unique!").Text);
+                result.Add(new ValidationError(nameProperty, T(EntityTypeName + " name must be unique.").Text));
             }
 
+            var pictureProperty = model.GetPropertyName(p => p.Picture);
             if (!string.IsNullOrEmpty(model.Picture))
             {
                 if (model.Picture.Length > 255)
                 {
-                    result.Add("Picture", T("Picture url can not be larger than 255 characters!").Text);
+                    result.Add(new ValidationError(
+                                   pictureProperty,
+                                   T("Picture url can not be longer than 255 characters.").Text));
                 }
                 else if (!model.Picture.IsUrlValid())
                 {
-                    result.Add("Picture", T("Picture url is in bad format!").Text);
+                    result.Add(new ValidationError(pictureProperty, T("Picture URL has bad format.").Text));
+                }
+            }
+
+            var addressesProperty = model.GetPropertyName(p => p.Addresses);
+            if (model.Addresses != null && model.Addresses.Count > 0)
+            {
+                for (var i = 0; i < model.Addresses.Count; i++)
+                {
+                    var addressVm = model.Addresses[i];
+                    result.AddRange(ValidateAddress(addressVm, string.Format("{0}({1}).", addressesProperty, i)));
+                }
+            }
+
+            var contactsProperty = model.GetPropertyName(p => p.Contacts);
+            if (model.Contacts != null && model.Contacts.Count > 0)
+            {
+                for (var i = 0; i < model.Contacts.Count; i++)
+                {
+                    var contactVm = model.Contacts[i];
+                    result.AddRange(ValidateContact(contactVm, string.Format("{0}({1}).", contactsProperty, i)));
                 }
             }
 
             return result;
         }
 
-        // TODO: To validate address on event Save
-        private IDictionary<string, string> ValidateAddress(AddressVm model)
+        private IEnumerable<ValidationError> ValidateAddress(AddressVm model, string prefix = "")
         {
-            var res = new Dictionary<string, string>();
+            var result = new List<ValidationError>();
 
+            var addressProperty = model.GetPropertyName(p => p.Address);
             if (string.IsNullOrEmpty(model.Address))
-                res.Add("Address", T("Address can not be empty!").Text);
+            {
+                result.Add(new ValidationError(
+                               prefix + addressProperty,
+                               T("Address can not be empty.").Text));
+            }
             else if (model.Address.Length > 255)
-                res.Add("Address", T("Address can not be larger than 255 characters!").Text);
+            {
+                result.Add(new ValidationError(
+                               prefix + addressProperty,
+                               T("Address can not be longer than 255 characters.").Text));
+            }
 
+            var tipProperty = model.GetPropertyName(p => p.Tip);
             if (!string.IsNullOrEmpty(model.Tip))
             {
                 if (model.Tip.Length > 255)
-                    res.Add("Tip", T("Address tip can not be larger than 255 characters!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   prefix + tipProperty,
+                                   T("Address tip can not be longer than 255 characters.").Text));
+                }
             }
 
-            return res;
+            return result;
         }
 
-        // TODO: To validate contact on event Save
-        private IDictionary<string, string> ValidateContact(ContactVm model)
+        private IEnumerable<ValidationError> ValidateContact(ContactVm model, string prefix = "")
         {
-            var res = new Dictionary<string, string>();
+            var result = new List<ValidationError>();
 
+            var contactProperty = model.GetPropertyName(p => p.Contact);
             if (string.IsNullOrEmpty(model.Contact))
-                res.Add("Contact", T("Contact can not be empty!").Text);
+            {
+                result.Add(new ValidationError(
+                               prefix + contactProperty,
+                               T("Contact can not be empty.").Text));
+            }
             else if (model.Contact.Length > 255)
-                res.Add("Contact", T("Contact can not be larger than 255 characters!").Text);
+            {
+                result.Add(new ValidationError(
+                               prefix + contactProperty,
+                               T("Contact can not be longer than 255 characters.").Text));
+            }
 
+            var titleProperty = model.GetPropertyName(p => p.Title);
             if (!string.IsNullOrEmpty(model.Title))
             {
                 if (model.Title.Length > 255)
-                    res.Add("Title", T("Contact title can not be larger than 255 characters!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   prefix + titleProperty,
+                                   T("Contact title can not be longer than 255 characters.").Text));
+                }
             }
 
-
-            return res;
+            return result;
         }
     }
 }

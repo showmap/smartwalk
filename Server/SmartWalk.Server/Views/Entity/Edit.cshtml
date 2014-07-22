@@ -18,8 +18,10 @@
         : T("Save <span class=\"hidden-xs\">" + entityTypeName + "</span>");
 }
 
-<div id="@formId">
+    <div id="@formId">
         @Html.AntiForgeryTokenOrchard()
+        @Html.Partial("../ServerErrors")
+
         <div class="row">
             <div class="col-xs-8">
                 <div class="form-group" data-bind="validationElement: name">
@@ -113,7 +115,7 @@
 
 @using (Script.Foot())
 {
-    @Html.Partial("../Entity/Templates") // TODO: To put into a separate js file
+    @Html.Partial("../Entity/Templates")
 
 <script>
     $(function() {
@@ -139,7 +141,7 @@
                 contactPhoneValidationMessage: '@T("Contact does not match phone pattern.")',
             },
 
-            validationUrl: '@Url.Action("ValidateModel", entityController)',
+            validationUrl: '@Url.Action("Validate", entityController)',
             entitySaveUrl: '@Url.Action("SaveEntity", entityController)',
             entityAfterSaveAction: function(id) {
                 window.location.href = '@Url.Action("View", entityController, new { entityId = ""})/' + id;

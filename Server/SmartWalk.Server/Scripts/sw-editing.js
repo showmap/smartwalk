@@ -80,11 +80,22 @@ ko.validation.rules["asyncValidation"] = {
             ajaxJsonRequest(
                 { propName: otherVal.propName, model: model },
                 otherVal.validationUrl,
-                function (response, statusText, xhr) {
+                function () {
                     callback(true);
                 },
-                function (response, statusText, xhr) {
-                    callback({ isValid: false, message: $.parseJSON(response.responseText).Message });
+                function (response) {
+                    if (response.responseJSON &&
+                        response.responseJSON.ValidationErrors &&
+                        response.responseJSON.ValidationErrors.length > 0) {
+                        var message = $.map(response.responseJSON.ValidationErrors,
+                            function(ve) {
+                                return ve.Error;
+                            }).join(" ");
+
+                        callback({ isValid: false, message: message });
+                    }
+
+                    callback({ isValid: false });
                 }
             );
         }
@@ -230,7 +241,11 @@ function VmItemsManager(allItems, createItemHandler, settings) {
             cancelItem(item);
         }
 
-        self.items.destroy(item);
+        if (item.id() && item.id() > 0) {
+            self.items.destroy(item);
+        } else {
+            self.items.remove(item);
+        }
     };
 
     self.cancelItem = function (item) {
@@ -269,6 +284,24 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         return true;
     };
 };
+
+function ServerErrorsManager() {
+    var self = this;
+    
+    self.validationErrors = ko.observableArray();
+    self.genericError = ko.observable();
+
+    self.handleError = function (errorResult) {
+        self.validationErrors(
+            errorResult.responseJSON ?
+                errorResult.responseJSON.ValidationErrors
+                : undefined);
+
+        if (!errorResult.responseJSON) {
+            self.genericError(errorResult.statusText);
+        }
+    };
+}
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
 

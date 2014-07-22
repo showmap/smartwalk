@@ -5,6 +5,8 @@
 
     self.settings = settings;
 
+    self.serverErrorsManager = new ServerErrorsManager();
+
     self.setEditingItem = function (item) {
         if (self.addressesManager.items()) {
             self.addressesManager.items().forEach(function (address) {
@@ -94,8 +96,8 @@
                         self.settings.entityAfterSaveAction(entityData.Id);
                     }
                 },
-                function () {
-                    // TODO: To show error message
+                function (errorResult) {
+                    self.serverErrorsManager.handleError(errorResult);
                 }
             );
         } else {
