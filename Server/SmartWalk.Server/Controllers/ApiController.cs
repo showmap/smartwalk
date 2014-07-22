@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using SmartWalk.Server.Controllers.Base;
+using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Services.QueryService;
 using SmartWalk.Shared.DataContracts.Api;
 
@@ -14,6 +15,7 @@ namespace SmartWalk.Server.Controllers
             _queryService = queryService;
         }
 
+        [CompressFilter]
         public ActionResult Query(Request request)
         {
             var response = _queryService.ExecuteRequestQuery(request);

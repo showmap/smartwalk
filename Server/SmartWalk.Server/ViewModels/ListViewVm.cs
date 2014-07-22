@@ -1,8 +1,10 @@
-﻿namespace SmartWalk.Server.ViewModels
+﻿using System.Collections.Generic;
+
+namespace SmartWalk.Server.ViewModels
 {
-    public class ListViewVm
+    public class ListViewVm<T>
     {
         public ListViewParametersVm Parameters { get; set; }
-        public object Data { get; set; }
+        public IList<T> Data { get; set; }
     }
 }

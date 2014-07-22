@@ -165,6 +165,7 @@
     <Compile Include="..\SmartWalk.Server.Common\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Controllers\Base\OrchardBaseController.cs" />
     <Compile Include="Providers\CultureSelector.cs" />
     <Compile Include="Providers\JsonDotNetValueProviderFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -254,7 +255,6 @@
     <Compile Include="ViewModels\ListViewParametersVm.cs" />
     <Compile Include="ViewModels\ListViewVm.cs" />
     <Compile Include="ViewModels\ShowVm.cs" />
-    <Compile Include="ViewModels\ViewParametersVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Tools\ImportXmlData.cshtml" />

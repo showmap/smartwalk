@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @using SmartWalk.Server.ViewModels
-@model ListViewVm
+@model ListViewVm<EventMetadataVm>
 @{
     Style.Require("SmartWalk");
 
@@ -69,7 +69,7 @@
         </div>
 
        <div class="floating-container small-gap">
-        @foreach (var item in (IList<EventMetadataVm>)Model.Data) {
+        @foreach (var item in Model.Data) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {eventId = item.Id})">
                 <div class="header">
                     <h3>@item.DisplayName</h3>

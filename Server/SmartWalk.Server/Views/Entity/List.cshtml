@@ -1,6 +1,6 @@
 ﻿@using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
-@model ListViewVm
+@model ListViewVm<EntityVm>
 @{
     Style.Require("SmartWalk");
 
@@ -51,7 +51,7 @@
     }
 
         <div class="floating-container small-gap">
-        @foreach (var entityVm in (IList<EntityVm>)Model.Data) {
+        @foreach (var entityVm in Model.Data) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {entityId = entityVm.Id})">
                 <div class="header">
                     <h3>@entityVm.Name</h3>

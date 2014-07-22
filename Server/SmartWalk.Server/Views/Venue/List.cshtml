@@ -1,4 +1,4 @@
 ﻿@using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
-@model ListViewVm
+@model ListViewVm<EntityVm>
 @Html.Partial("../Entity/List", Model, new ViewDataDictionary {{"EntityType", EntityType.Venue }})

@@ -1,7 +1,7 @@
 ﻿@using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
-@model ViewParametersVm
+@model EntityVm
 @{
     Style.Require("SmartWalk");
     Style.Require("TextCollapse");
@@ -11,8 +11,7 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    var entityVm = (EntityVm)Model.Data;
-    var entityTypeName = entityVm.Type == (int)EntityType.Host ? "Organizer" : "Venue";
+    var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";
 }
 
 <div id="view-entity-form" get-entity-events="@Url.Action("GetEvents")">
@@ -21,42 +20,42 @@
     <div class="bg-image-container page-header-image">
         <div class="header">
             <h2>
-            @if (!Model.IsReadOnly)
+            @if (WorkContext.CurrentUser != null)
             {
                 <button type="button" id="btn-edit-entity" class="btn">@T("Edit " + entityTypeName)</button>
             }
-                @entityVm.Name
+                @Model.Name
             </h2>
-            @if (!string.IsNullOrEmpty(entityVm.Picture))
+            @if (!string.IsNullOrEmpty(Model.Picture))
             {
-                <img class="scale" data-scale="best-fill" data-align="center" src="@entityVm.Picture" />
+                <img class="scale" data-scale="best-fill" data-align="center" src="@Model.Picture" />
             }
         </div>
 			
-@if (entityVm.Addresses.Any()) {
+@if (Model.Addresses.Any()) {
         <div class="info addresses-container">
-            @foreach (var address in entityVm.Addresses) {
+            @foreach (var address in Model.Addresses) {
                 <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address>@if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">&nbsp;@address.Tip</i>}</h4></div>                        
             }
         </div>	
 }
     </div>
 
-@if (entityVm.Addresses.Any()) {
-    var addressFirst = entityVm.Addresses.First();
+@if (Model.Addresses.Any()) {
+    var addressFirst = Model.Addresses.First();
     var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
     query = Regex.Replace(query, @"\s+", "+");
     <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>
 }
         
     <div class="row gap">
-        <div class="col-md-7"><p class="description">@entityVm.Description</p></div>
+        <div class="col-md-7"><p class="description">@Model.Description</p></div>
         <div class="col-md-5 contact-container">
-    @if (entityVm.Contacts.Any()) {
+    @if (Model.Contacts.Any()) {
             <div class="well">
                 <h4 class="text-center">@T("Contacts and Links")</h4>
                 <dl class="dl-horizontal">
-        @foreach (var contact in entityVm.Contacts)
+        @foreach (var contact in Model.Contacts)
         {
             var title = contact.Title ?? contact.Contact;                             
                              
@@ -114,7 +113,7 @@
         self.loadData = function() {
             var urlUpdate = $("#view-entity-form").attr("get-entity-events");
 
-            ajaxJsonRequest({ entityId: @entityVm.Id }, urlUpdate, 
+            ajaxJsonRequest({ entityId: @Model.Id }, urlUpdate, 
                 function(events) {
                     if (events) {
                         self.eventItems($.map(events, 

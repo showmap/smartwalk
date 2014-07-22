@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
-@model ViewParametersVm
+@model EventMetadataVm
 @{
     Style.Require("SmartWalk");
     Style.Require("TextCollapse");
@@ -12,28 +12,28 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
 
     var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
-    var eventMetadata = (EventMetadataVm)Model.Data;
 }
     @Html.AntiForgeryTokenOrchard()
 
     <div class="bg-image-container page-header-image">
         <div class="header">
             <h2>
-            @if (!Model.IsReadOnly){
+            @if (WorkContext.CurrentUser != null)
+            {
                 <button type="button" class="btn" id="btn-edit-event">@T("Edit Event")</button>
             }    
-                @eventMetadata.DisplayName
+                @Model.DisplayName
             </h2>
-            @if (!string.IsNullOrEmpty(eventMetadata.DisplayPicture))
+            @if (!string.IsNullOrEmpty(Model.DisplayPicture))
             {
-                <img class="scale" data-scale="best-fill" data-align="center" src="@eventMetadata.DisplayPicture" />
+                <img class="scale" data-scale="best-fill" data-align="center" src="@Model.DisplayPicture" />
             }
         </div>
 			
         <div class="info">
             <div class="pull-left">
-                <div><h3>@eventMetadata.DisplayDate(culture)</h3></div>
-                <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new { entityId = eventMetadata.Host.Id })">@eventMetadata.Host.Name</a></h4></div>
+                <div><h3>@Model.DisplayDate(culture)</h3></div>
+                <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new { entityId = Model.Host.Id })">@Model.Host.Name</a></h4></div>
             </div>
 				
             <!-- TODO: To initialize "Add To Calendar" values -->
@@ -56,19 +56,19 @@
         </div>	
     </div>
         
-@if (eventMetadata.Venues.Any() && eventMetadata.Venues.First().Addresses.Any())
+@if (Model.Venues.Any() && Model.Venues.First().Addresses.Any())
 {
-    var venue = eventMetadata.Venues.First();
+    var venue = Model.Venues.First();
     var addressFirst = venue.Addresses.First();
     var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
     query = Regex.Replace(query, @"\s+", "+");
     <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>                       
 }
 
-@if (!@eventMetadata.Description.IsEmpty())
+@if (!@Model.Description.IsEmpty())
 {
     <div class="row gap">
-        <div class="col-md-8"><p class="description">@eventMetadata.Description</p></div>
+        <div class="col-md-8"><p class="description">@Model.Description</p></div>
     </div>
 }  
     <table class="table table-content">
@@ -76,7 +76,7 @@
             <tr><th><h4>@T("Venues and Shows")</h4></th><th>@T("Time")</th></tr>
         </thead>
         <tbody>
-        @foreach (var venue in eventMetadata.Venues)
+        @foreach (var venue in Model.Venues)
         {
             <tr class="venue">
                 <td colspan="2" class="venue">
