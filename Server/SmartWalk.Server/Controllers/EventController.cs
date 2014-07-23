@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.Themes;
@@ -10,6 +11,7 @@ using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -97,12 +99,19 @@ namespace SmartWalk.Server.Controllers
 
         [HttpPost]
         [CompressFilter]
-        public ActionResult SaveEvent(EventMetadataVm item)
+        public ActionResult SaveEvent(EventMetadataVm eventVm)
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
-            var errors = ValidateEvent(item);
-            return Json(errors.Count > 0 ? null : _eventService.SaveOrAddEvent(CurrentSmartWalkUser.Record, item));
+            var errors = ValidateEvent(eventVm);
+            if (errors.Count > 0)
+            {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new ErrorResultVm(errors));
+            }
+
+            var result = _eventService.SaveOrAddEvent(CurrentSmartWalkUser.Record, eventVm);
+            return Json(result);
         }
 
         [CompressFilter]
@@ -126,54 +135,140 @@ namespace SmartWalk.Server.Controllers
 
         // TODO: To validate if host is owned by current user
         // TODO: To validate if there are duplicated venues
-        private IDictionary<string, string> ValidateEvent(EventMetadataVm model)
+        private IList<ValidationError> ValidateEvent(EventMetadataVm model)
         {
-            var res = new Dictionary<string, string>();
+            var result = new List<ValidationError>();
 
+            var startDateProperty = model.GetPropertyName(p => p.StartDate);
             if (!model.StartDate.HasValue)
-                res.Add("StartDate", T("StartDate can not be empty!").Text);
+            {
+                result.Add(new ValidationError(
+                               startDateProperty,
+                               T("Start date can not be empty.").Text));
+            }
 
+            if (model.StartDate.HasValue && model.EndDate.HasValue &&
+                model.StartDate.Value > model.EndDate.Value)
+            {
+                result.Add(new ValidationError(
+                               startDateProperty,
+                               T("Start date has to be less than or equal to the end date.").Text));
+            }
+
+            var pictureProperty = model.GetPropertyName(p => p.Picture);
             if (!string.IsNullOrEmpty(model.Picture))
             {
                 if (model.Picture.Length > 255)
-                    res.Add("Picture", T("Picture url can not be larger than 255 characters!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   pictureProperty,
+                                   T("Picture URL can not be longer than 255 characters.").Text));
+                }
                 else if (!model.Picture.IsUrlValid())
-                    res.Add("Picture", T("Picture url is in bad format!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   pictureProperty,
+                                   T("Picture URL has bad format.").Text));
+                }
             }
 
             if (model.Host == null)
-                res.Add("Host", T("Event organizer can not be empty!").Text);
+            {
+                result.Add(new ValidationError(
+                               model.GetPropertyName(p => p.Host),
+                               T("Event organizer can not be empty.").Text));
+            }
 
-            return res;
+            var venuesProperty = model.GetPropertyName(p => p.Venues);
+            var showsProperty = Reflection<EntityVm>.GetProperty(p => p.Shows).Name;
+            if (model.Venues != null && model.Venues.Count > 0)
+            {
+                for (var i = 0; i < model.Venues.Count; i++)
+                {
+                    var venueVm = model.Venues[i];
+                    if (venueVm.Shows != null && venueVm.Shows.Count > 0)
+                    {
+                        for (var j = 0; j < venueVm.Shows.Count; j++)
+                        {
+                            var showVm = venueVm.Shows[j];
+                            result.AddRange(ValidateShow(
+                                showVm,
+                                string.Format(
+                                    "{0}[{1}].{2}[{3}].", 
+                                    venuesProperty, 
+                                    i + 1,
+                                    showsProperty,
+                                    j + 1)));
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
-        // TODO: To validate show on event Save
-        private IDictionary<string, string> ValidateShow(ShowVm model)
+        private IEnumerable<ValidationError> ValidateShow(ShowVm model, string prefix = "")
         {
-            var res = new Dictionary<string, string>();
+            var result = new List<ValidationError>();
 
+            var titleProperty = model.GetPropertyName(p => p.Title);
             if (string.IsNullOrEmpty(model.Title))
-                res.Add("Title", T("Title can not be empty!").Text);
+            {
+                result.Add(new ValidationError(
+                               prefix + titleProperty,
+                               T("Title can not be empty!").Text));
+            }
             else if (model.Title.Length > 255)
-                res.Add("Title", T("Title can not be larger than 255 characters!").Text);
+            {
+                result.Add(new ValidationError(
+                               prefix + titleProperty,
+                               T("Title can not be larger than 255 characters!").Text));
+            }
 
+            var pictureProperty = model.GetPropertyName(p => p.Picture);
             if (!string.IsNullOrEmpty(model.Picture))
             {
                 if (model.Picture.Length > 255)
-                    res.Add("Picture", T("Picture url can not be larger than 255 characters!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   prefix + pictureProperty,
+                                   T("Picture url can not be larger than 255 characters!").Text));
+                }
                 else if (!model.Picture.IsUrlValid())
-                    res.Add("Picture", T("Picture url is in bad format!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   prefix + pictureProperty,
+                                   T("Picture url is in bad format!").Text));
+                }
             }
 
+            var detailsUrlProperty = model.GetPropertyName(p => p.DetailsUrl);
             if (!string.IsNullOrEmpty(model.DetailsUrl))
             {
                 if (model.DetailsUrl.Length > 255)
-                    res.Add("DetailsUrl", T("Details url can not be larger than 255 characters!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   prefix + detailsUrlProperty,
+                                   T("Details url can not be larger than 255 characters!").Text));
+                }
                 else if (!model.DetailsUrl.IsUrlValid())
-                    res.Add("DetailsUrl", T("Details url is in bad format!").Text);
+                {
+                    result.Add(new ValidationError(
+                                   prefix + detailsUrlProperty,
+                                   T("Details url is in bad format!").Text));
+                }
             }
 
-            return res;
+            var startTimeProperty = model.GetPropertyName(p => p.StartTime);
+            if (model.StartTime.HasValue && model.EndTime.HasValue &&
+                model.StartTime.Value > model.EndTime.Value)
+            {
+                result.Add(new ValidationError(
+                               prefix + startTimeProperty,
+                               T("Show start time has to be less than or equal to the end time.").Text));
+            }
+
+            return result;
         }
     }
 }

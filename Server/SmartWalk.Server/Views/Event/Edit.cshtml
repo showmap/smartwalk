@@ -24,6 +24,7 @@
 
 <div id="event-item">
         @Html.AntiForgeryTokenOrchard()
+        @Html.Partial("../ServerErrors")
 
         <div class="row">
 			<div class="col-xs-8" data-bind="validationElement: title">
@@ -164,30 +165,30 @@
         var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
             
         var settings = {
-            startTimeRequiredValidationMessage: '@T("Start time is required!")',
-            endTimeCompareValidationMessage: '@T("End time has to be greater or equal than start time!")',
-            startTimeCompareValidationMessage: '@T("Start time has to be less or equal than end time!")',
-            hostRequiredValidationMessage: '@T("Organizer is required!")',
-            venueRequiredValidationMessage: '@T("Venue is required!")',
+            startTimeRequiredValidationMessage: '@T("Start time is required.")',
+            endTimeCompareValidationMessage: '@T("End time has to be greater or equal than start time.")',
+            startTimeCompareValidationMessage: '@T("Start time has to be less or equal than end time.")',
+            hostRequiredValidationMessage: '@T("Organizer is required.")',
+            venueRequiredValidationMessage: '@T("Venue is required.")',
 
             pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
             picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
                   
             showMessages: {
-                titleRequiredValidationMessage: '@T("Show title is required!")',
-                titleLengthValidationMessage: '@T("Show title can not be longer than 255 characters!")',
+                titleRequiredValidationMessage: '@T("Show title is required.")',
+                titleLengthValidationMessage: '@T("Show title can not be longer than 255 characters.")',
                     
-                pictureValidationMessage: '@T("Picture does not match url pattern.!")',
-                pictureLengthValidationMessage: '@T("Picture can not be longer than 255 characters!")',
+                pictureValidationMessage: '@T("Picture does not match url pattern.")',
+                pictureLengthValidationMessage: '@T("Picture can not be longer than 255 characters.")',
                     
-                detailsValidationMessage: '@T("Details does not match url pattern.!")',
-                detailsLengthValidationMessage: '@T("Details can not be longer than 255 characters!")',
+                detailsValidationMessage: '@T("Details does not match url pattern.")',
+                detailsLengthValidationMessage: '@T("Details can not be longer than 255 characters.")',
                     
-                startDateValidationMessage: '@T("Show start date has to be between event start and end dates.!")',
-                startTimeValidationMessage: '@T("Show start time has to be less than start time!")',
+                startDateValidationMessage: '@T("Show start date has to be between event start and end dates.")',
+                startTimeValidationMessage: '@T("Show start time has to be less than end time.")',
                     
-                endDateValidationMessage: '@T("Show end date has to be between event start and end dates.!")',
-                endTimeValidationMessage: '@T("Show end time has to be bigger than start time!")',
+                endDateValidationMessage: '@T("Show end date has to be between event start and end dates.")',
+                endTimeValidationMessage: '@T("Show end time has to be bigger than start time.")',
             },
             
             dialogCancelText: '@T("Cancel")',

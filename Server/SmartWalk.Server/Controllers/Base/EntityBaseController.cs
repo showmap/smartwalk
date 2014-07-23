@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Web.Mvc;
 using Orchard;
@@ -165,7 +166,8 @@ namespace SmartWalk.Server.Controllers.Base
                 return Json(new ErrorResultVm(errors));
             }
 
-            return Json(_entityService.SaveOrAddEntity(CurrentSmartWalkUser.Record, entityVm));
+            var result = _entityService.SaveOrAddEntity(CurrentSmartWalkUser.Record, entityVm);
+            return Json(result);
         }
 
         private IList<ValidationError> ValidateEntity(EntityVm model)
@@ -209,7 +211,7 @@ namespace SmartWalk.Server.Controllers.Base
                 for (var i = 0; i < model.Addresses.Count; i++)
                 {
                     var addressVm = model.Addresses[i];
-                    result.AddRange(ValidateAddress(addressVm, string.Format("{0}({1}).", addressesProperty, i)));
+                    result.AddRange(ValidateAddress(addressVm, string.Format("{0}[{1}].", addressesProperty, i + 1)));
                 }
             }
 
@@ -219,7 +221,7 @@ namespace SmartWalk.Server.Controllers.Base
                 for (var i = 0; i < model.Contacts.Count; i++)
                 {
                     var contactVm = model.Contacts[i];
-                    result.AddRange(ValidateContact(contactVm, string.Format("{0}({1}).", contactsProperty, i)));
+                    result.AddRange(ValidateContact(contactVm, string.Format("{0}[{1}].", contactsProperty, i + 1)));
                 }
             }
 

@@ -4,6 +4,7 @@
     EventViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
+    self.serverErrorsManager = new ServerErrorsManager();
 
     // TODO: to simplify after bug fix of jqAuto (hide "undefined" and support "valueProp")
     self.hostData = ko.computed({
@@ -96,8 +97,8 @@
                 function (eventData) {
                     self.settings.eventAfterSaveAction(eventData.Id);
                 },
-                function () {
-                    // TODO: To show error message
+                function (errorResult) {
+                    self.serverErrorsManager.handleError(errorResult);
                 }
             );
         } else {
@@ -181,7 +182,6 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
         .extend({ maxLength: { params: 255, message: settings.showMessages.detailsLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.detailsValidationMessage } });
 
-    // TODO: To use wider regions for show time -1 day for start and +1 for end times
     show.startTime
         .extend({
             dateCompareValidation: {
@@ -283,6 +283,7 @@ EventViewModelExtended.setupDialogs = function (event) {
         close: function () {
             var entity = ko.dataFor(this);
             entity.loadData({});
+            entity.serverErrorsManager.reset();
             if (entity.errors) {
                 entity.errors.showAllMessages(false);
             }

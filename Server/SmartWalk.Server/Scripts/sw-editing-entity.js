@@ -4,7 +4,6 @@
     EntityViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
-
     self.serverErrorsManager = new ServerErrorsManager();
 
     self.setEditingItem = function (item) {
@@ -113,6 +112,9 @@ inherits(EntityViewModelExtended, EntityViewModel);
 // Static Methods
 EntityViewModelExtended.setupValidation = function (entity, settings) {
     entity.name
+        .extend({ required: {
+            message: settings.nameRequiredValidationMessage
+        } })
         .extend({
             asyncValidation: {
                 validationUrl: settings.validationUrl,

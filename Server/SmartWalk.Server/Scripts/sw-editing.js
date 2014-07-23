@@ -301,6 +301,11 @@ function ServerErrorsManager() {
             self.genericError(errorResult.statusText);
         }
     };
+
+    self.reset = function() {
+        self.validationErrors(undefined);
+        self.genericError(undefined);
+    };
 }
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############

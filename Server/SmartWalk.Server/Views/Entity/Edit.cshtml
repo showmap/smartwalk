@@ -123,6 +123,7 @@
 
         var settings = settings || [];
         settings = $.extend(settings, {
+            nameRequiredValidationMessage: '@T("Name can not be empty.")',
             pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
             picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
 
@@ -134,9 +135,9 @@
 
             contactMessages: {
                 contactLengthValidationMessage: '@T("Contact can not be longer than 255 characters.")',
-                contactRequiredValidationMessage: '@T("Contact can not be empty!")',
+                contactRequiredValidationMessage: '@T("Contact can not be empty.")',
                 contactTitleValidationMessage: '@T("Contact title can not be longer than 255 characters.")',
-                contactWebValidationMessage: '@T("Contact does not match url pattern.")',
+                contactWebValidationMessage: '@T("Contact does not match URL pattern.")',
                 contactEmailValidationMessage: '@T("Contact does not match email pattern.")',
                 contactPhoneValidationMessage: '@T("Contact does not match phone pattern.")',
             },
