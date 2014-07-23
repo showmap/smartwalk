@@ -1,5 +1,11 @@
 ﻿.scale {}
 
+.loading {
+    display: none;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
 .stop-scrolling {
     height: 100%;
     overflow: hidden;
@@ -7,6 +13,10 @@
 
 .toolbar .selected {
     font-weight: bold;
+}
+
+a.disabled {
+    color: #999;
 }
 
 .description {
@@ -36,6 +46,11 @@ textarea {
 
 .ui-dialog .close {
     font-size: 21px;
+}
+
+#edit-host-form-dialog,
+#edit-venue-form-dialog {
+    display: none;
 }
 
 .td-align {

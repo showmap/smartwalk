@@ -14,8 +14,8 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Editing.Event").AtFoot();
 
-    const string hostFormId = "edit-host-form";
-    const string venueFormId = "edit-venue-form";
+    const string hostFormId = "edit-host-form-dialog";
+    const string venueFormId = "edit-venue-form-dialog";
 
     var cancelAction = Model.Id == 0 
         ? Url.Action("List") 
@@ -30,31 +30,32 @@
 			<div class="col-xs-8" data-bind="validationElement: title">
 			    <div class="form-group">
 			        <label class="titleLabel" for="eventTitleTextInput">@T("Event Title"):</label>
-			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: title" />
+			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: title, enable: isEnabled" />
 			    </div>
 			</div>
-			<div class="col-xs-4 text-right">
-				<button type="button" class="btn btn-success" data-bind="click: saveEvent">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
-			</div>
+            <div class="col-xs-4 text-right">
+                <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
+                <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
+            </div>
 		</div>
 
         <div class="row">
 			<div class="col-sm-4" data-bind="validationElement: startDate">
 				<div class="form-group">
 					<label for="startDateInput">@T("Start Date"):</label>
-					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: startDate">
+					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: startDate, enable: isEnabled">
 				</div>
 			</div>
 			<div class="col-sm-4" data-bind="validationElement: endDate">
 				<div class="form-group">
 					<label for="endDateInput">@T("End Date"):</label>
-					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: endDate">
+					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: endDate, enable: isEnabled">
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="form-group">
 					<label for="visibilityButtonsGroup">@T("Visibility"):</label><br/>
-					<div class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: isPublic, switcherOptions: { values: [{'val':true, 'disp':'@T("Public")'}, {'val':false, 'disp':'@T("Private")'}]}"></div>
+					<div class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: isPublic, switcherOptions: { values: [{'val':true, 'disp':'@T("Public")'}, {'val':false, 'disp':'@T("Private")'}], enable: isEnabled}"></div>
 				</div>
 			</div>
 		</div>	    
@@ -71,9 +72,10 @@
                                 inputProp: 'Name',
                                 template: 'AutocompleteEntityItemTemplate'
                             },
-                            validationTag: host" />
+                            validationTag: host,
+                            enable: isEnabled" />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
+                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost, enable: isEnabled">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
                         </span>
                     </div>
                 </div>
@@ -81,7 +83,7 @@
             @*<div class="col-sm-4">
 				<div class="form-group">
 					<label for="combinetypeButtonsGroup">@T("Combine type"):</label><br/>
-					<div class="btn-group" id="combinetypeButtonsGroup" data-bind="switcher: Combinetype, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}]}"></div>
+					<div class="btn-group" id="combinetypeButtonsGroup" data-bind="switcher: Combinetype, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}], enable: isEnabled}"></div>
 				</div>
 			</div>            
             *@
@@ -91,7 +93,7 @@
 			<div class="col-sm-8" data-bind="validationElement: picture">
 				<div class="form-group">
 					<label for="pictureTextInput">@T("Picture"):</label>
-					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: picture"/>
+					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: picture, enable: isEnabled"/>
 				</div>
 			</div>
 		</div>
@@ -100,13 +102,13 @@
 			<div class="col-sm-8">
 				<div class="form-group">
 					<label for="descriptionTextArea">@T("Description"):</label>
-					<textarea class="form-control" id="descriptionTextArea" data-bind="value: description"></textarea>
+					<textarea class="form-control" id="descriptionTextArea" data-bind="value: description, enable: isEnabled"></textarea>
 				</div>
 			</div>
 		</div>                                                               
  
         <div class="row add-venue" data-bind="visible: venuesManager.items().length > 0">
-            <a data-bind="click: function() { $root.venuesManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+            <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
        
         <table class="table table-hover edit">
@@ -120,8 +122,8 @@
 			<tbody data-bind="template: { name: 'EntityItemTemplate', foreach: venuesManager.items() }"></tbody>
 		</table>
     
-        <div class="row add-venue" data-bind="visible: $.grep($root.venuesManager.items(), function (venue) { return venue.isEditing() }).length == 0">
-            <a data-bind="click: function() { $root.venuesManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+        <div class="row add-venue" data-bind="visible: $.grep(venuesManager.items(), function (venue) { return venue.isEditing() }).length == 0">
+            <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
 
         <div class="row double-gap">
@@ -129,15 +131,14 @@
                 @if (Model.Id != 0) {
                     using(Html.BeginForm("DeleteEvent", "Event", FormMethod.Get)) {
                         <input type="hidden" name="eventId" value="@Model.Id" />
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you shure you wish to delete this event?")')" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
+                        <button type="submit" class="btn btn-danger" data-bind="enable: isEnabled" onclick="return confirm('@T("Are you shure you wish to delete this event?")')" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
                     }
                 }                
             </div>
             <div class="col-xs-8 text-right">
-                <form method="get" action="@cancelAction">
-                    <button type="submit" class="btn btn-default">@T("Cancel")</button>
-                    <button type="button" class="btn btn-success" data-bind="click: saveEvent">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
-                </form>		        
+                <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
+                <button type="submit" class="btn btn-default" data-bind="click: cancelEvent">@T("Cancel")</button>
+                <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>        
             </div>
         </div>
     </div>
@@ -201,6 +202,9 @@
             venueFormName: "#@venueFormId",
                 
             eventSaveUrl: '@Url.Action("SaveEvent", "Event")',
+            eventAfterCancelAction: function() {
+                window.location.href = "@cancelAction";
+            },
             eventAfterSaveAction: function(id) {
                 window.location.href = '@Url.Action("View", new { eventId = ""})/' + id;
             },

@@ -23,7 +23,7 @@ function attachVerticalScroll(callback) {
     });
 };
 
-function ajaxJsonRequest(ajData, url, onSuccess, onError) {
+function ajaxJsonRequest(ajData, url, onSuccess, onError, busyObject) {
     var self = this;
 
     var config = {
@@ -36,13 +36,20 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError) {
         contentType: "application/json; charset=utf-8",
     };
 
-    $.ajax(config)
-        .done(function (response, statusText, xhr) {
+    if (busyObject && busyObject.isBusy) busyObject.isBusy(true);
+
+    var request = $.ajax(config)
+        .done(function(response, statusText, xhr) {
             if (onSuccess) onSuccess.call(self, response, statusText, xhr);
         })
-        .fail(function (response, statusText, xhr) {
+        .fail(function(response, statusText, xhr) {
             if (onError) onError.call(self, response, statusText, xhr);
+        })
+        .always(function() {
+            if (busyObject && busyObject.isBusy) busyObject.isBusy(false);
         });
+    
+    return request;
 };
 
 function convertToLocal(date) {

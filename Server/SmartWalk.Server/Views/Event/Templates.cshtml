@@ -14,7 +14,7 @@
             showsManager.items() && 
             showsManager.items().length > 8">
         <td colspan="3">
-            <div class="add-venue-show"><a data-bind="click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
+            <div class="add-venue-show"><a data-bind="click: function () { if ($root.isEnabled()) $data.showsManager.addItem(); }, css: {disabled: !$root.isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
         </td>
     </tr>
     <!-- ko template: {name: showsManager.getItemView, foreach: showsManager.items() } -->    
@@ -25,7 +25,7 @@
             $.grep(showsManager.items(), function (show) { 
                 return show.isEditing() }).length == 0">
         <td colspan="3">
-            <div class="add-venue-show"><a data-bind="click: function() { $data.showsManager.addItem() }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
+            <div class="add-venue-show"><a data-bind="click: function () { if ($root.isEnabled()) $data.showsManager.addItem(); }, css: {disabled: !$root.isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
         </td>
     </tr>
 </script>
@@ -33,18 +33,18 @@
 <script type="text/html" id="EventVenueItemTemplate">
     <td colspan="2">
         <div>
-            <a class="bg-image" data-bind="attr: {href: '/venue/' + id()}">
+            <a class="bg-image" target="_blank" data-bind="attr: {href: '/venue/' + id()}">
                 <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }"/>
                 <span class="abbr" data-bind="text: abbreviation()"></span>
             </a>
-            <a data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>
+            <a target="_blank" data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>
             <br />
             <address data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></address>
             <i class="tip description" data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].tip() : ''"></i>
         </div>
     </td>
     <td class="td-align td-valign">
-        <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.venuesManager.deleteItem($data); }">
+        <button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.venuesManager.deleteItem($data); }">
             <span class="glyphicon glyphicon-remove"></span>
         </button>
     </td>
@@ -98,9 +98,9 @@
             <span class="description" data-bind="text: description()"></span>
         </td>
         @* TODO: Replacing with &nbsp; doesn't work. Fix it. *@
-        <td class="td-valign" data-bind="html: displayTime().replace(' ', '&nbsp;'), click: function() { $parent.showsManager.editItem($data) }"></td>
+        <td class="td-valign" data-bind="html: displayTime().replace(' ', '&nbsp;'), click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data); }"></td>
         <td class="td-align td-valign">
-            <button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to remove show?")    ')) $parent.showsManager.deleteItem($data); }">
+            <button type="button" class="remove close" data-bind="enable: $root.isEnabled, click: function() { if(confirm('@T("Are you sure you want to remove show?")')) $parent.showsManager.deleteItem($data); }">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </td>

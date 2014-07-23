@@ -5,6 +5,16 @@
 
     self.settings = settings;
     self.serverErrorsManager = new ServerErrorsManager();
+    
+    self.isBusy = ko.observable(false);
+    self.isEnabled = ko.computed(function () { return !self.isBusy(); });
+    
+    self.isBusy.subscribe(function (isBusy) {
+        if (!isBusy && self._saveRequest) {
+            self._saveRequest.abort();
+            self._saveRequest = undefined;
+        }
+    });
 
     // TODO: to simplify after bug fix of jqAuto (hide "undefined" and support "valueProp")
     self.hostData = ko.computed({
@@ -93,19 +103,28 @@
         }
 
         if (self.errors().length == 0) {
-            ajaxJsonRequest(self.toJSON(), self.settings.eventSaveUrl,
+            self._saveRequest = ajaxJsonRequest(self.toJSON(), self.settings.eventSaveUrl,
                 function (eventData) {
                     self.settings.eventAfterSaveAction(eventData.Id);
                 },
                 function (errorResult) {
                     self.serverErrorsManager.handleError(errorResult);
-                }
+                },
+                self
             );
         } else {
             self.errors.showAllMessages();
         }
 
         return true;
+    };
+
+    self.cancelEvent = function () {
+        if (self.isBusy()) {
+            self.isBusy(false);
+        } else {
+            self.settings.eventAfterCancelAction();
+        }
     };
 };
 
