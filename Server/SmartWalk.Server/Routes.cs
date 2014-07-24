@@ -273,6 +273,24 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"}
                         },
                         new MvcRouteHandler())
+                },
+                // A walkaround for previous xml data of version 1.0
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "data/{*path}",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Redirect"},
+                            {"action", "Index"},
+                            {"host", "http://smartwalkstorage.blob.core.windows.net/xmldata/"},
+                            {"path", "{path}"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }
