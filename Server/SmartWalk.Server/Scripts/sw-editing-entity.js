@@ -4,7 +4,7 @@
     EntityViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
-    self.serverErrorsManager = new ServerErrorsManager();
+    self.data = new EntityViewModel(data);
 
     self.setEditingItem = function (item) {
         if (self.addressesManager.items()) {
@@ -21,7 +21,7 @@
     };
 
     self.contactsManager = new VmItemsManager(
-        self.contacts,
+        self.data.contacts,
         function() {
             var contact = new ContactViewModel({ Type: ContactType.Url });
             return contact;
@@ -38,7 +38,7 @@
         });
     
     self.addressesManager = new VmItemsManager(
-        self.addresses,
+        self.data.addresses,
         function () {
             var address = new AddressViewModel({});
             return address;
@@ -68,26 +68,28 @@
         return "";
     };
 
-    self.toTinyJSON = function() {
+    self.data.toTinyJSON = function () {
         return {
-            Id: self.id(),
-            Type: self.type(),
-            Name: self.name()
+            Id: self.data.id(),
+            Type: self.data.type(),
+            Name: self.data.name()
         };
     };
 
     self.saveEntity = function (resultHandler) {
-        if (!self.errors) {
-            EntityViewModelExtended.setupValidation(self, settings);
+        if (!self.data.errors) {
+            EntityViewModelExtended.setupValidation(self.data, settings);
         }
 
-        if (self.isValidating()) {
+        if (self.data.isValidating()) {
             setTimeout(function () { self.saveEntity(resultHandler); }, 50);
             return false;
         }
 
-        if (self.errors().length == 0) {
-            ajaxJsonRequest(self.toJSON(), self.settings.entitySaveUrl,
+        if (self.data.errors().length == 0) {
+            self.currentRequest = ajaxJsonRequest(
+                self.data.toJSON(),
+                self.settings.entitySaveUrl,
                 function (entityData) {
                     if (resultHandler && $.isFunction(resultHandler)) {
                         resultHandler(entityData);
@@ -96,18 +98,27 @@
                     }
                 },
                 function (errorResult) {
-                    self.serverErrorsManager.handleError(errorResult);
-                }
+                    self.handleServerError(errorResult);
+                },
+                self
             );
         } else {
-            self.errors.showAllMessages();
+            self.data.errors.showAllMessages();
         }
 
         return true;
     };
+    
+    self.cancelEntity = function () {
+        if (self.isBusy()) {
+            self.isBusy(false);
+        } else {
+            self.settings.entityAfterCancelAction();
+        }
+    };
 };
 
-inherits(EntityViewModelExtended, EntityViewModel);
+inherits(EntityViewModelExtended, EditingViewModelBase);
 
 // Static Methods
 EntityViewModelExtended.setupValidation = function (entity, settings) {

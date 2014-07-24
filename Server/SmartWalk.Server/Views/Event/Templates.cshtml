@@ -1,4 +1,4 @@
-﻿<script type="text/html" id="AutocompleteEntityItemTemplate">
+﻿<script type="text/html" id="autocompleteEntityItemTemplate">
     <a>
         <span data-bind="text: Name"></span><br />
         <i class="description" data-bind="
@@ -7,7 +7,11 @@
     </a>
 </script>
 
-<script type="text/html" id="EntityItemTemplate">
+<script type="text/html" id="loadingImgTemplate">
+    <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: $root.isBusy" />
+</script>
+
+<script type="text/html" id="entityItemTemplate">
     <tr class="venue" data-bind="template: {name: $root.venuesManager.getItemView}"></tr>
     <tr class="add-venue-show" data-bind="
         visible: !isEditing() && 
@@ -30,7 +34,7 @@
     </tr>
 </script>
 
-<script type="text/html" id="EventVenueItemTemplate">
+<script type="text/html" id="eventVenueItemTemplate">
     <td colspan="2">
         <div>
             <a class="bg-image" target="_blank" data-bind="attr: {href: '/venue/' + id()}">
@@ -50,7 +54,7 @@
     </td>
 </script>
 
-<script type="text/html" id="EventVenueItemTemplateEdit">
+<script type="text/html" id="eventVenueItemTemplateEdit">
     <td colspan="3" class="venue editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
         <div class="well">
             <div class="row">
@@ -65,7 +69,7 @@
                                         write: function (venueData) { $data.loadData(venueData); }}),
                                     source: $root.getAutocompleteVenues,
                                     inputProp: 'Name',
-                                    template: 'AutocompleteEntityItemTemplate'
+                                    template: 'autocompleteEntityItemTemplate'
                                 },
                                 validationTag: $data.id" />
                             <span class="input-group-btn">
@@ -90,12 +94,12 @@
     </td>
 </script>
 
-<script type="text/html" id="ShowItemTemplate">
+<script type="text/html" id="showItemTemplate">
     <tr class="venue-show">
-        <td data-bind="click: function() { $parent.showsManager.editItem($data) }">
-            <span data-bind="text: title()"></span>
+        <td data-bind="click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data) }">
+            <span data-bind="text: title"></span>
             <br/>
-            <span class="description" data-bind="text: description()"></span>
+            <span class="description" data-bind="text: description"></span>
         </td>
         @* TODO: Replacing with &nbsp; doesn't work. Fix it. *@
         <td class="td-valign" data-bind="html: displayTime().replace(' ', '&nbsp;'), click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data); }"></td>
@@ -107,7 +111,7 @@
     </tr>    
 </script>
 
-<script type="text/html" id="ShowItemTemplateEdit">
+<script type="text/html" id="showItemTemplateEdit">
     <tr>
 		<td colspan="3" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
 			<div class="well">							
@@ -127,24 +131,24 @@
 					<div class="col-sm-2" data-bind="validationElement: startTime">
 						<div class="form-group">
 							<label for="showStartTimeInput">@T("Start Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.startDate }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.data.startDate }" />
 						</div>
 									
 						<div class="form-group">
 							<label for="showStartDateInput">@T("Start Date"):</label><br/>
-							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.startDate }" />
+							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.data.startDate }" />
 						</div>
 					</div>
 							
 					<div class="col-sm-2" data-bind="validationElement: endTime">
 						<div class="form-group" >
 							<label for="showStartTimeInput">@T("End Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.startDate }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.data.startDate }" />
 						</div>
 									
 						<div class="form-group">
 							<label for="showEndDateInput">@T("End Date"):</label><br/>
-							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.startDate }" />
+							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.data.startDate }" />
 						</div>
 					</div>
 				</div>

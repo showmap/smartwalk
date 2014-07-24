@@ -12,6 +12,7 @@ using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
 using SmartWalk.Shared.Utils;
+using System.Linq;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -181,26 +182,26 @@ namespace SmartWalk.Server.Controllers
 
             var venuesProperty = model.GetPropertyName(p => p.Venues);
             var showsProperty = Reflection<EntityVm>.GetProperty(p => p.Shows).Name;
-            if (model.Venues != null && model.Venues.Count > 0)
+            var venues = model.Venues != null 
+                ? model.Venues.Where(v => !v.Destroy).ToArray() 
+                : new EntityVm[] {};
+            for (var i = 0; i < venues.Length; i++)
             {
-                for (var i = 0; i < model.Venues.Count; i++)
+                var venueVm = venues[i];
+                var shows = venueVm.Shows != null
+                    ? venueVm.Shows.Where(v => !v.Destroy).ToArray()
+                    : new ShowVm[] { };
+                for (var j = 0; j < shows.Length; j++)
                 {
-                    var venueVm = model.Venues[i];
-                    if (venueVm.Shows != null && venueVm.Shows.Count > 0)
-                    {
-                        for (var j = 0; j < venueVm.Shows.Count; j++)
-                        {
-                            var showVm = venueVm.Shows[j];
-                            result.AddRange(ValidateShow(
-                                showVm,
-                                string.Format(
-                                    "{0}[{1}].{2}[{3}].", 
-                                    venuesProperty, 
-                                    i + 1,
-                                    showsProperty,
-                                    j + 1)));
-                        }
-                    }
+                    var showVm = shows[j];
+                    result.AddRange(ValidateShow(
+                        showVm,
+                        string.Format(
+                            "{0}[{1}].{2}[{3}].", 
+                            venuesProperty, 
+                            i + 1,
+                            showsProperty,
+                            j + 1)));
                 }
             }
 

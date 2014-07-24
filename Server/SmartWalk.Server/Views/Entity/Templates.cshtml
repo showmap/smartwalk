@@ -1,11 +1,11 @@
-﻿<script type="text/html" id="ViewAddressTemplate">
+﻿<script type="text/html" id="viewAddressTemplate">
     <tr>
-		<td data-bind="text: address, click: function () { $root.addressesManager.editItem($data) } "></td>
-		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.addressesManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+		<td data-bind="text: address, click: function () { if ($root.isEnabled()) $root.addressesManager.editItem($data) } "></td>
+		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.addressesManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 
-<script type="text/html" id="EditAddressTemplate">
+<script type="text/html" id="editAddressTemplate">
     <tr>
         <td colspan="2" class="editing-container" data-bind="fadeIn: 'fast', scroll: 'slow'">
             <div class="well">
@@ -51,17 +51,17 @@
     </tr>
 </script>
 
-<script type="text/html" id="ViewContactTemplate">
+<script type="text/html" id="viewContactTemplate">
     <tr>
-        <td data-bind="text: $root.getContactType($data), click: function () { $root.contactsManager.editItem($data) }"></td>
+        <td data-bind="text: $root.getContactType($data), click: function () { if ($root.isEnabled()) $root.contactsManager.editItem($data) }"></td>
         <td data-bind="
             text: (title() ? title() : '') + (contact() ? ' [' + contact() + ']' : ''), 
-            click: function () { $root.contactsManager.editItem($data) }"></td>
-		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.contactsManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+            click: function () { if ($root.isEnabled()) $root.contactsManager.editItem($data) }"></td>
+		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.contactsManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 
-<script type="text/html" id="EditContactTemplate">
+<script type="text/html" id="editContactTemplate">
     <tr>
         <td colspan="3" class="editing-container"  data-bind="fadeIn: 'fast', scroll: 'slow'">
             <div class="well">

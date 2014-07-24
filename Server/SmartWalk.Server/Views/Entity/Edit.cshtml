@@ -24,21 +24,24 @@
 
         <div class="row">
             <div class="col-xs-8">
-                <div class="form-group" data-bind="validationElement: name">
+                <div class="form-group" data-bind="validationElement: data.name">
                     <label class="titleLabel" for="entityNameTextInput">@T(entityTypeName + " Name"):</label>
-                    <input id="entityNameTextInput" class="form-control" type="text" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: name" />
+                    <input id="entityNameTextInput" class="form-control" type="text" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: data.name, enable: isEnabled" />
                 </div>
             </div>
             <div class="col-xs-4 text-right">
-                <button type="button" class="btn btn-success action-buttons" data-bind="click: saveEntity">@actionCaption</button>
+                <div class="action-buttons">
+                    <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
+                    <button type="button" class="btn btn-success" data-bind="click: saveEntity, enable: isEnabled">@actionCaption</button>                    
+                </div>
             </div>
         </div>
         
         <div class="row">
 	        <div class="col-sm-8">
-		        <div class="form-group" data-bind="validationElement: picture">
+		        <div class="form-group" data-bind="validationElement: data.picture">
 			        <label for="pictureTextInput">@T("Picture"):</label>
-			        <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: picture" />
+			        <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: data.picture, enable: isEnabled" />
 		        </div>
 	        </div>
         </div>
@@ -47,7 +50,7 @@
 	        <div class="col-sm-8">
 		        <div class="form-group">
 			        <label for="descriptionTextArea">@T("Description"):</label>
-			        <textarea class="form-control" id="descriptionTextArea" data-bind="value: description"></textarea>
+			        <textarea class="form-control" id="descriptionTextArea" data-bind="value: data.description, enable: isEnabled"></textarea>
 		        </div>
 	        </div>
         </div>
@@ -57,7 +60,7 @@
             visible: addressesManager.items() && 
                 $.grep(addressesManager.items(), function (item) { return item.id() && item.id() != 0; }).length > 0"></iframe></div>
 
-        <div class="row" data-bind="visible: type() == @Convert.ToInt32(EntityType.Venue)">
+        <div class="row" data-bind="visible: data.type() == @Convert.ToInt32(EntityType.Venue)">
 	        <div class="col-sm-8">
 		        <table class="table table-hover addresses-table" data-bind="visible: addressesManager.items() && addressesManager.items().length > 0">
 			        <thead>
@@ -70,7 +73,7 @@
 		        </table>
 				
                 <div class="add-item-container">
-                    <a data-bind="click: function() { addressesManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
+                    <a data-bind="click: function() { if (isEnabled()) addressesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
                 </div>
 	        </div>
         </div>
@@ -89,7 +92,7 @@
                 </table>
                 
                 <div class="add-item-container">
-                    <a data-bind="click: function() { contactsManager.addItem(); }"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Contact")</a>
+                    <a data-bind="click: function() { if (isEnabled()) contactsManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Contact")</a>
                 </div>
             </div>
         </div>
@@ -99,16 +102,15 @@
         @if (Model.Id != 0) {
             using(Html.BeginForm("Delete", null, FormMethod.Get)) {
                 <input type="hidden" name="entityId" value="@Model.Id" />
-                <button type="submit" class="btn btn-danger" onclick="return confirm('@T("Are you sure you want to delete this " + entityTypeName.ToLower() + "?")')">@T("Delete <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
+                <button type="submit" class="btn btn-danger" data-bind="enable: isEnabled" onclick="return confirm('@T("Are you sure you want to delete this " + entityTypeName.ToLower() + "?")')">@T("Delete <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
             } 
         }
             </div>
             
             <div class="col-xs-8 text-right">
-                <form method="get" action="@cancelAction">                
-                    <button type="submit" class="btn btn-default">@T("Cancel")</button>
-                    <button type="button" class="btn btn-success" data-bind="click: saveEntity">@actionCaption</button>
-                </form>
+                <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />         
+                <button type="button" class="btn btn-default" data-bind="click: cancelEntity">@T("Cancel")</button>
+                <button type="button" class="btn btn-success" data-bind="click: saveEntity, enable: isEnabled">@actionCaption</button>
             </div>
         </div>   
     </div> 
@@ -144,15 +146,18 @@
 
             validationUrl: '@Url.Action("Validate", entityController)',
             entitySaveUrl: '@Url.Action("SaveEntity", entityController)',
+            entityAfterCancelAction: function() {
+                window.location.href = "@cancelAction";
+            },
             entityAfterSaveAction: function(id) {
                 window.location.href = '@Url.Action("View", entityController, new { entityId = ""})/' + id;
             },
 
-            addressView: "ViewAddressTemplate",
-            addressEditView: "EditAddressTemplate",
+            addressView: "viewAddressTemplate",
+            addressEditView: "editAddressTemplate",
 
-            contactView: "ViewContactTemplate",
-            contactEditView: "EditContactTemplate",
+            contactView: "viewContactTemplate",
+            contactEditView: "editContactTemplate",
             contactTypes: ['@T("E-mail")', '@T("Web")', '@T("Phone")'],
         });
 

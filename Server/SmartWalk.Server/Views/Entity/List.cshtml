@@ -65,7 +65,7 @@
                 </div> -->
             </a>
         }
-            <!-- ko template: {name: "EntityItemTemplate", foreach: items() } -->    
+            <!-- ko template: {name: "entityItemTemplate", foreach: items() } -->    
             <!-- /ko -->
             <div class="clearfix"></div>
         </div>                   
@@ -73,7 +73,7 @@
 
 @using (Script.Foot())
 {
-<script type="text/html" id="EntityItemTemplate">
+<script type="text/html" id="entityItemTemplate">
     <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '@Url.Action("View", new { entityId = ""})/' + id()}">
         <div class="header">
             <h3 data-bind="text: name"></h3>

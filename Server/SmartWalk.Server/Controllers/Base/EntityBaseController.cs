@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Orchard;
@@ -206,23 +206,27 @@ namespace SmartWalk.Server.Controllers.Base
             }
 
             var addressesProperty = model.GetPropertyName(p => p.Addresses);
-            if (model.Addresses != null && model.Addresses.Count > 0)
+            var addresses = model.Addresses != null
+                ? model.Addresses.Where(v => !v.Destroy).ToArray()
+                : new AddressVm[] { };
+            for (var i = 0; i < addresses.Length; i++)
             {
-                for (var i = 0; i < model.Addresses.Count; i++)
-                {
-                    var addressVm = model.Addresses[i];
-                    result.AddRange(ValidateAddress(addressVm, string.Format("{0}[{1}].", addressesProperty, i + 1)));
-                }
+                var addressVm = addresses[i];
+                result.AddRange(ValidateAddress(
+                    addressVm, 
+                    string.Format("{0}[{1}].", addressesProperty, i + 1)));
             }
 
             var contactsProperty = model.GetPropertyName(p => p.Contacts);
-            if (model.Contacts != null && model.Contacts.Count > 0)
+            var contacts = model.Contacts != null
+                ? model.Contacts.Where(v => !v.Destroy).ToArray()
+                : new ContactVm[] { };
+            for (var i = 0; i < contacts.Length; i++)
             {
-                for (var i = 0; i < model.Contacts.Count; i++)
-                {
-                    var contactVm = model.Contacts[i];
-                    result.AddRange(ValidateContact(contactVm, string.Format("{0}[{1}].", contactsProperty, i + 1)));
-                }
+                var contactVm = contacts[i];
+                result.AddRange(ValidateContact(
+                    contactVm, 
+                    string.Format("{0}[{1}].", contactsProperty, i + 1)));
             }
 
             return result;

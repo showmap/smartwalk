@@ -4,25 +4,15 @@
     EventViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
-    self.serverErrorsManager = new ServerErrorsManager();
-    
-    self.isBusy = ko.observable(false);
-    self.isEnabled = ko.computed(function () { return !self.isBusy(); });
-    
-    self.isBusy.subscribe(function (isBusy) {
-        if (!isBusy && self._saveRequest) {
-            self._saveRequest.abort();
-            self._saveRequest = undefined;
-        }
-    });
+    self.data = new EventViewModel(data);
 
     // TODO: to simplify after bug fix of jqAuto (hide "undefined" and support "valueProp")
     self.hostData = ko.computed({
         read: function () {
-            return self.host() ? self.host().toJSON().Name || null : null;
+            return self.data.host() ? self.data.host().toJSON().Name || null : null;
         },
         write: function (hostData) {
-            self.host(hostData && $.isPlainObject(hostData)
+            self.data.host(hostData && $.isPlainObject(hostData)
                 ? new EntityViewModel(hostData) : null);
         }
     });
@@ -30,7 +20,7 @@
     EventViewModelExtended.setupDialogs(self);
     
     self.venuesManager = new VmItemsManager(
-        self.venues,
+        self.data.venues,
         function () {
             var venue = new EntityViewModel({ Type: EntityType.Venue });
             return venue;
@@ -93,27 +83,29 @@
     };
     
     self.saveEvent = function () {
-        if (!self.errors) {
-            EventViewModelExtended.setupValidation(self, settings);
+        if (!self.data.errors) {
+            EventViewModelExtended.setupValidation(self.data, settings);
         }
         
-        if (self.isValidating()) {
+        if (self.data.isValidating()) {
             setTimeout(function () { self.saveEvent(); }, 50);
             return false;
         }
 
-        if (self.errors().length == 0) {
-            self._saveRequest = ajaxJsonRequest(self.toJSON(), self.settings.eventSaveUrl,
+        if (self.data.errors().length == 0) {
+            self.currentRequest = ajaxJsonRequest(
+                self.data.toJSON(),
+                self.settings.eventSaveUrl,
                 function (eventData) {
                     self.settings.eventAfterSaveAction(eventData.Id);
                 },
                 function (errorResult) {
-                    self.serverErrorsManager.handleError(errorResult);
+                    self.handleServerError(errorResult);
                 },
                 self
             );
         } else {
-            self.errors.showAllMessages();
+            self.data.errors.showAllMessages();
         }
 
         return true;
@@ -128,7 +120,7 @@
     };
 };
 
-inherits(EventViewModelExtended, EventViewModel);
+inherits(EventViewModelExtended, EditingViewModelBase);
 
 // Static Methods
 EventViewModelExtended.setupValidation = function (event, settings) {
@@ -284,7 +276,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             },
             beforeSave: function (show) {
                 if (!show.errors) {
-                    EventViewModelExtended.setupShowValidation(show, event, event.settings);
+                    EventViewModelExtended.setupShowValidation(show, event.data, event.settings);
                 }
             },
             itemView: event.settings.showView,
@@ -301,12 +293,22 @@ EventViewModelExtended.setupDialogs = function (event) {
         maxHeight: 600,
         close: function () {
             var entity = ko.dataFor(this);
-            entity.loadData({});
-            entity.serverErrorsManager.reset();
-            if (entity.errors) {
-                entity.errors.showAllMessages(false);
+            entity.isBusy(false);
+            entity.data.loadData({});
+            entity.resetServerErrors();
+            if (entity.data.errors) {
+                entity.data.errors.showAllMessages(false);
             }
         },
+    };
+
+    var cancelClickHandler = function () {
+        var entity = ko.dataFor(this);
+        if (entity.isBusy()) {
+            entity.isBusy(false);
+        } else {
+            $(this).dialog("close");
+        }
     };
 
     var hostOptions = {
@@ -315,23 +317,27 @@ EventViewModelExtended.setupDialogs = function (event) {
             {
                 "class": "btn btn-default",
                 text: event.settings.dialogCancelText,
-                click: function () { $(this).dialog("close"); }
+                click: cancelClickHandler
             },
             {
                 "class": "btn btn-success",
+                "data-bind": "enable: isEnabled",
                 text: event.settings.dialogAddHostText,
                 click: function () {
                     var dialog = this;
                     var host = ko.dataFor(dialog);
                     host.saveEntity(function (entityData) {
                         var newHost = new EntityViewModel(entityData);
-                        event.host(newHost);
+                        event.data.host(newHost);
                         $(dialog).dialog("close");
                     });
                 }
             }
         ]};
     $(event.settings.hostFormName).dialog($.extend(dialogOptions, hostOptions));
+    EventViewModelExtended.setupDialogBottomBar(
+        $(event.settings.hostFormName),
+        event.settings.loadingTemplate);
     
     var venueOptions = {
         title: event.settings.dialogCreateVenueText,
@@ -339,10 +345,11 @@ EventViewModelExtended.setupDialogs = function (event) {
             {
                 "class": "btn btn-default",
                 text: event.settings.dialogCancelText,
-                click: function () { $(this).dialog("close"); }
+                click: cancelClickHandler
             },
             {
                 "class": "btn btn-success",
+                "data-bind": "enable: isEnabled",
                 text: event.settings.dialogAddVenueText,
                 click: function () {
                     var dialog = this;
@@ -359,4 +366,17 @@ EventViewModelExtended.setupDialogs = function (event) {
             }
         ]};
     $(event.settings.venueFormName).dialog($.extend(dialogOptions, venueOptions));
+    EventViewModelExtended.setupDialogBottomBar(
+        $(event.settings.venueFormName),
+        event.settings.loadingTemplate);
+};
+
+EventViewModelExtended.setupDialogBottomBar = function (form, loadingTemplate) {
+    var buttonSet = form.dialog("instance").uiButtonSet;
+    $("<span>")
+        .attr("data-bind", "template: { name: '" + loadingTemplate + "'}")
+        .prependTo(buttonSet);
+
+    var model = ko.dataFor(form[0]);
+    ko.applyBindings(model, buttonSet[0]);
 };
