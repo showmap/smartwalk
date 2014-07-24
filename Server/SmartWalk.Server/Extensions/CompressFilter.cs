@@ -3,6 +3,7 @@ using System.Web.Mvc;
 
 namespace SmartWalk.Server.Extensions
 {
+    // TODO: To figure out white Filter has CanWrite false if user isn't authenticated
     public class CompressFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -13,6 +14,7 @@ namespace SmartWalk.Server.Extensions
 
             acceptEncoding = acceptEncoding.ToUpperInvariant();
             var response = filterContext.HttpContext.Response;
+            if (!response.Filter.CanWrite) return;
 
             if (acceptEncoding.Contains("GZIP"))
             {
