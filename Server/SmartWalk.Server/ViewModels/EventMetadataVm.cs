@@ -23,8 +23,10 @@ namespace SmartWalk.Server.ViewModels
         public string Picture { get; set; }
 
         // We don't need these on client so far
-        /*public double Latitude { get; set; }
-        public double Longitude { get; set; }*/
+        [JsonIgnore]
+        public double Latitude { get; set; }
+        [JsonIgnore]
+        public double Longitude { get; set; }
 
         public EntityVm Host { get; set; }
         public IList<EntityVm> Venues { get; set; }

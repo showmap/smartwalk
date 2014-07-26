@@ -106,8 +106,7 @@ namespace SmartWalk.Server
             // 3rd Party - Add This Event
 
             manifest.DefineScript("AddThisEvent")
-                .SetCdn("http://js.addthisevent.com/atemay.js")
-                .SetDependencies("jQuery");
+                .SetCdn("http://js.addthisevent.com/atemay.js");
         }
     }
 }

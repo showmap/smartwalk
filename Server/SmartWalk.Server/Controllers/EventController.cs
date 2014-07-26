@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.Themes;
@@ -12,7 +13,6 @@ using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
 using SmartWalk.Shared.Utils;
-using System.Linq;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -53,7 +53,6 @@ namespace SmartWalk.Server.Controllers
         [CompressFilter]
         public ActionResult View(int eventId) {
             var eventVm = _eventService.GetEventVmById(eventId);
-
             if (eventVm.Id != eventId) return new HttpNotFoundResult();
 
             return View(eventVm);
@@ -71,13 +70,10 @@ namespace SmartWalk.Server.Controllers
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
             var eventVm = _eventService.GetEventVmById(eventId);
-
             if (eventVm.Id != eventId) return new HttpNotFoundResult();
 
             var access = _eventService.GetEventAccess(CurrentSmartWalkUser.Record, eventId);
-
-            if (access == AccessType.AllowEdit)
-                return View(eventVm);
+            if (access == AccessType.AllowEdit) return View(eventVm);
 
             return new HttpUnauthorizedResult();
         }

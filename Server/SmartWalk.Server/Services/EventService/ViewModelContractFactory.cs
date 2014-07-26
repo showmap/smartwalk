@@ -29,8 +29,8 @@ namespace SmartWalk.Server.Services.EventService
                             CombineType = record.CombineType,
                             StartDate = record.StartTime,
                             EndDate = record.EndTime,
-                            /*Latitude = record.Latitude,
-                            Longitude = record.Longitude,*/
+                            Latitude = record.Latitude,
+                            Longitude = record.Longitude,
                             IsPublic = record.IsPublic,
                             Description = record.Description,
                             Picture = record.Picture

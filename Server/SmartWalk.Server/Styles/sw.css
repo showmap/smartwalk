@@ -346,6 +346,10 @@ textarea {
 	text-decoration: underline;
 }
 
+.addthisevent {
+    visibility:hidden;
+}
+
 .page-header-image .add-event-widget {
 	margin-top: 10px;
 }

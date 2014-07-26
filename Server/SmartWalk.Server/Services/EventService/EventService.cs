@@ -106,7 +106,7 @@ namespace SmartWalk.Server.Services.EventService
 
         private EventMetadataVm CreateViewModelContract(EventMetadataRecord record, LoadMode mode) {
             var res = ViewModelContractFactory.CreateViewModelContract(record, mode);
-            res.Host = _entityService.GetEntityVm(record.EntityRecord, LoadMode.Compact);
+            res.Host = _entityService.GetEntityVm(record.EntityRecord, mode);
 
             if (mode == LoadMode.Full) {
                 res.Venues = _entityService.GetEventEntities(record);
@@ -129,7 +129,6 @@ namespace SmartWalk.Server.Services.EventService
             metadata.IsDeleted = true;
             _eventMetadataRepository.Flush();
         }
-
 
         private void RecalculateEventCoordinates(EventMetadataRecord eventRecord)
         {

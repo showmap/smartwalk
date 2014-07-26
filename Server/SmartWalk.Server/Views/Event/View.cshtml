@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
 @model EventMetadataVm
@@ -35,22 +36,23 @@
                 <div><h3>@Model.DisplayDate(culture)</h3></div>
                 <div><h4>@T("Organized By")&nbsp;<a href="@Url.Action("View", "Host", new { entityId = Model.Host.Id })">@Model.Host.Name</a></h4></div>
             </div>
-				
-            <!-- TODO: To initialize "Add To Calendar" values -->
+		    
             <div class="pull-right add-event-widget">
-                <a href="http://example.com/link-to-your-event" title="Add to Calendar" class="addthisevent">
+                <a href="@Request.RawUrl" title="Add to Calendar" class="addthisevent" data-track="_gaq.push(['_trackEvent','AddThisEvent','click','ate-calendar'])">
                     Add to Calendar
-                    <span class="_start">10-05-2014 11:38:46</span>
-                    <span class="_end">11-05-2014 11:38:46</span>
-                    <span class="_zonecode">6</span>
-                    <span class="_summary">Summary of the event</span>
-                    <span class="_description">Description of the event</span>
-                    <span class="_location">Location of the event</span>
-                    <span class="_organizer">Organizer</span>
-                    <span class="_organizer_email">Organizer e-mail</span>
-                    <span class="_facebook_event">http://www.facebook.com/events/160427380695693</span>
+@* ReSharper disable UnknownCssClass *@
+                    <span class="_start">@Model.StartDate.ToString("G", CultureInfo.InvariantCulture)</span>
+                    <span class="_end">@Model.EndDate.ToString("G", CultureInfo.InvariantCulture)</span>
+                    @*<span class="_zonecode">6</span>*@
+                    <span class="_summary">@Model.DisplayName</span>
+                    <span class="_description">@Model.Description</span>
+                    <span class="_location">@Model.Latitude,@Model.Longitude</span>
+                    <span class="_organizer">@Model.Host.Name</span>
+                    <span class="_organizer_email">@Model.Host.Contacts.Where(c => c.Type == (int)ContactType.Email).Select(c => c.Contact).FirstOrDefault()</span>
+                    @* <span class="_facebook_event"></span> *@
                     <span class="_all_day_event">true</span>
-                    <span class="_date_format">DD/MM/YYYY</span>
+                    <span class="_date_format">@CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern.ToUpperInvariant()</span>
+@* ReSharper restore UnknownCssClass *@
                 </a>
             </div>
         </div>	
@@ -119,7 +121,7 @@
         // TODO: To buy a license and set "Add To Calendar" values
         if (addthisevent) {
             addthisevent.settings({
-                license: "aao8iuet5zp9iqw5sm9z",
+                license: "a253yx1lkz7hvkq8kmun",
                 mouse: false,
                 css: true,
                 outlook: { show: true, text: "Outlook Calendar" },
@@ -128,8 +130,7 @@
                 hotmail: { show: true, text: "Hotmail Calendar" },
                 ical: { show: true, text: "iCal Calendar" },
                 facebook: { show: true, text: "Facebook Event" },
-                dropdown: { order: "outlook,google,ical" },
-                callback: ""
+                dropdown: { order: "facebook,outlook,google,ical,yahoo,hotmail" }
             });
         }
     });
