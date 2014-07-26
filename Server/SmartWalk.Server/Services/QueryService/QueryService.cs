@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Resources;
+using SmartWalk.Shared;
 using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Shared.Utils;
 
@@ -15,7 +15,7 @@ namespace SmartWalk.Server.Services.QueryService
     [UsedImplicitly]
     public class QueryService : IQueryService
     {
-        private const int DefaultEventsLimit = 50;
+        private const int DefaultEventsLimit = 30;
         private const int DefaultEntitiesLimit = 200;
         private const int DefaultShowsLimit = 1000;
 

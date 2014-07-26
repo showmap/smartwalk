@@ -68,11 +68,11 @@ namespace SmartWalk.Server.Services.QueryService
 		                        MAX({4}) AS {4}, MAX({3}) AS {3}
 	                        FROM 
 		                        {0}{1}
+                            {7}
 	                        GROUP BY
 		                        {5}) {2}Groupped
                         INNER JOIN
 	                        {0}{1} {2} ON {2}Groupped.{3} = {2}.{3}
-                        {7}
                         {8}",
                         QueryContext.Instance.DbPrefix,
                         QueryContext.Instance.EventMetadataTable,
@@ -81,10 +81,7 @@ namespace SmartWalk.Server.Services.QueryService
                         QueryContext.Instance.EventMetadataStartTime,
                         QueryContext.Instance.EventMetadataEntityRecordId,
                         limit,
-                        GetWhereString(
-                            QueryContext.Instance.EventMetadataTableAlias,
-                            select,
-                            results),
+                        GetWhereString(string.Empty, select, results),
                         GetSortByString<EventMetadataRecord>(
                             QueryContext.Instance.EventMetadataTableAlias, 
                             select,
@@ -222,7 +219,7 @@ namespace SmartWalk.Server.Services.QueryService
             }
 
             return result != string.Empty
-                ? " ORDER BY " + result
+                ? "ORDER BY " + result
                 : string.Empty;
         }
 
@@ -323,8 +320,8 @@ namespace SmartWalk.Server.Services.QueryService
                             result +=
                                 (result != string.Empty ? " AND " : string.Empty) +
                                 string.Format(
-                                    "({0}.{1}{2}:v{3})",
-                                    alias,
+                                    "({0}{1}{2}:v{3})",
+                                    string.IsNullOrWhiteSpace(alias) ? string.Empty : alias + ".",
                                     where.Field,
                                     where.Operator,
                                     i);
@@ -344,7 +341,7 @@ namespace SmartWalk.Server.Services.QueryService
             }
 
             return result != string.Empty
-                ? " WHERE " + result
+                ? "WHERE " + result
                 : string.Empty;
         }
 

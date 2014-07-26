@@ -12,7 +12,7 @@ namespace SmartWalk.Labs.Api
     public class MainClass
     {
 #if LOCAL
-        private const string SmartWalkUrl = "http://smartwalk.com:8091/api";
+        private const string SmartWalkUrl = "http://localhost/api";
 #else
         private const string SmartWalkUrl = "http://smartwalk.azurewebsites.net/api";
 #endif
