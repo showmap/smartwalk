@@ -40,7 +40,9 @@ namespace SmartWalk.Server.Services.EntityService
             }
         }
 
-        public static EntityVm CreateViewModelContract(EntityRecord record, EventMetadataRecord metadata)
+        public static EntityVm CreateViewModelContract(
+            EntityRecord record, 
+            EventMetadataRecord metadata)
         {
             if (record == null)
                 return null;

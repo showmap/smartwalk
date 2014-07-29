@@ -21,7 +21,7 @@
             <h2>
             @if (WorkContext.CurrentUser != null)
             {
-                <button type="button" class="btn" id="btn-edit-event">@T("Edit Event")</button>
+                <a class="btn" href='@Url.Action("Edit")'>@T("Edit Event")</a>
             }    
                 @Model.DisplayName
             </h2>
@@ -72,6 +72,29 @@
     <div class="row gap">
         <div class="col-md-8"><p class="description">@Model.Description</p></div>
     </div>
+}
+@if (@Model.StartDate.HasValue &&
+    @Model.EndDate.HasValue && 
+    @Model.StartDate.Value.Date != @Model.EndDate.Value.Date)
+{
+    var currentDay = 1;
+    int day;
+    if (ViewContext.RouteData.Values["day"] != null &&
+        int.TryParse((string)ViewContext.RouteData.Values["day"], out day))
+    {
+        currentDay = day;
+    }
+
+    <div class="row gap">
+        <div class="col-md-12">
+            <ul class="event-days-picker">
+                @for (var i = 1; i <= (@Model.EndDate.Value.Date - @Model.StartDate.Value.Date).Days; i++)
+                {
+                    <li><a class="img-circle@(currentDay == i ? " selected" : "")" href="@Url.Action("View", new { eventId = Model.Id, day = i })"><div class="day">@Model.StartDate.Value.AddDays(i).ToString("ddd", culture)</div><div class="date">@Model.StartDate.Value.AddDays(i).Day</div></a></li>
+                }
+            </ul>
+        </div>
+    </div>
 }  
     <table class="table table-content">
         <thead>
@@ -111,10 +134,6 @@
 {
 <script type="text/javascript">
     $(function () {
-        $("#btn-edit-event").click(function() {
-            window.location.href = "@Url.Action("View")" + "/edit";
-        });
-
         $("img.scale").imageScale();
         $("p.description").textCollapse();
         

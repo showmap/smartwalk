@@ -36,16 +36,21 @@ namespace SmartWalk.Server.Services.EntityService
 
         #region Shows
 
-        public ShowVm CheckShowVenue(int eventId, int venueId)
+        public void CheckShowVenue(int eventId, int venueId)
         {
             var shows =
-                _showRepository.Table.Where(
-                    s =>
-                    s.EventMetadataRecord.Id == eventId && s.EntityRecord.Id == venueId &&
-                    (!s.IsDeleted || s.IsReference)).ToList();
+                _showRepository
+                    .Table
+                    .Where(
+                        s =>
+                        s.EventMetadataRecord.Id == eventId &&
+                        s.EntityRecord.Id == venueId &&
+                        (!s.IsDeleted || s.IsReference))
+                    .ToList();
+
             if (shows.Any())
             {
-                #region If we have both is reference and not is reference shows, remove all is reference shows
+                // If we have both is reference and not is reference shows, remove all is reference shows
                 if (shows.Count(s => !s.IsReference) > 0 && shows.Count(s => s.IsReference) > 0)
                 {
                     foreach (var showRecord in shows.Where(s => s.IsReference))
@@ -54,9 +59,6 @@ namespace SmartWalk.Server.Services.EntityService
                         _showRepository.Flush();
                     }
                 }
-                #endregion               
-
-                return ViewModelContractFactory.CreateViewModelContract(shows.FirstOrDefault());
             }
             else
             {
@@ -71,19 +73,16 @@ namespace SmartWalk.Server.Services.EntityService
                     };
                 _showRepository.Create(show);
                 _showRepository.Flush();
-
-                return ViewModelContractFactory.CreateViewModelContract(show);
             }
         }
 
-        public ShowVm SaveOrAddShow(ShowVm item, int eventMetadataId, int venueId)
+        public void SaveOrAddShow(ShowVm item, int eventMetadataId, int venueId)
         {
             var show = _showRepository.Get(item.Id);
             var metadata = _metadataRepository.Get(eventMetadataId);
             var venue = _entityRepository.Get(venueId);
 
-            if (metadata == null || venue == null)
-                return null;
+            if (metadata == null || venue == null) return;
 
             if (show == null)
             {
@@ -121,8 +120,6 @@ namespace SmartWalk.Server.Services.EntityService
 
                 _showRepository.Flush();
             }
-
-            return ViewModelContractFactory.CreateViewModelContract(show);
         }
 
         #endregion
@@ -133,7 +130,6 @@ namespace SmartWalk.Server.Services.EntityService
         {
             return _entityRepository.Table.Any(e => e.Type == (int)type && e.Id != item.Id && e.Name == item.Name);
         }
-
 
         public AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId)
         {
@@ -208,8 +204,12 @@ namespace SmartWalk.Server.Services.EntityService
                      .ToList();
         }
 
-        public IList<EntityVm> GetAccesibleUserVenues(SmartWalkUserRecord user, int eventId, int pageNumber,
-            int pageSize, string searchString)
+        public IList<EntityVm> GetAccesibleUserVenues(
+            SmartWalkUserRecord user, 
+            int eventId, 
+            int pageNumber,
+            int pageSize, 
+            string searchString)
         {
             var metadata = user.EventMetadataRecords.FirstOrDefault(e => e.Id == eventId);
 
@@ -244,7 +244,8 @@ namespace SmartWalk.Server.Services.EntityService
             return ViewModelContractFactory.CreateViewModelContract(entity, mode);
         }
 
-        public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata)
+        // TODO: To support event day
+        public IList<EntityVm> GetEventEntities(EventMetadataRecord metadata, int? day = null)
         {
             return
                 metadata.ShowRecords.Where(s => !s.IsDeleted)

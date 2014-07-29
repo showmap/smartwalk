@@ -90,7 +90,25 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Event"},
                             {"action", "View"},
-                            {"eventId", "{eventId}"}
+                            {"eventId", "{eventId}"},
+                            {"day", null}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "event/{eventId}/day/{day}",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Event"},
+                            {"action", "View"},
+                            {"eventId", "{eventId}"},
+                            {"day", "{day}"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {

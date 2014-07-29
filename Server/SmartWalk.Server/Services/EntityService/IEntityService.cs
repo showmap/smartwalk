@@ -20,7 +20,7 @@ namespace SmartWalk.Server.Services.EntityService
             string searchString = null,
             int[] excludeIds = null);
 
-        IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord);
+        IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord, int? day = null);
         bool IsNameExists(EntityVm item, EntityType type);
         AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId);
         EntityVm GetEntityVmById(int entityId, EntityType type);
@@ -28,7 +28,7 @@ namespace SmartWalk.Server.Services.EntityService
         EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm);
         void DeleteEntity(int hostId);
 
-        ShowVm SaveOrAddShow(ShowVm item, int eventMetadataId, int venueId);
-        ShowVm CheckShowVenue(int eventId, int venueId);
+        void SaveOrAddShow(ShowVm item, int eventMetadataId, int venueId);
+        void CheckShowVenue(int eventId, int venueId);
     }
 }

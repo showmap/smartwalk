@@ -51,9 +51,10 @@ namespace SmartWalk.Server.Controllers
         }
 
         [CompressFilter]
-        public ActionResult View(int eventId) {
-            var eventVm = _eventService.GetEventVmById(eventId);
-            if (eventVm.Id != eventId) return new HttpNotFoundResult();
+        public ActionResult View(int eventId, int? day = null)
+        {
+            var eventVm = _eventService.GetEventById(eventId, day);
+            if (eventVm == null) return new HttpNotFoundResult();
 
             return View(eventVm);
         }
@@ -69,13 +70,13 @@ namespace SmartWalk.Server.Controllers
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
-            var eventVm = _eventService.GetEventVmById(eventId);
-            if (eventVm.Id != eventId) return new HttpNotFoundResult();
-
             var access = _eventService.GetEventAccess(CurrentSmartWalkUser.Record, eventId);
-            if (access == AccessType.AllowEdit) return View(eventVm);
+            if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
-            return new HttpUnauthorizedResult();
+            var eventVm = _eventService.GetEventById(eventId);
+            if (eventVm == null) return new HttpNotFoundResult();
+
+            return View(eventVm);
         }
 
         [HttpPost]

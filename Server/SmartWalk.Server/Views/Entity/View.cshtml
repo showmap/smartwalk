@@ -22,7 +22,7 @@
             <h2>
             @if (WorkContext.CurrentUser != null)
             {
-                <button type="button" id="btn-edit-entity" class="btn">@T("Edit " + entityTypeName)</button>
+                <a class="btn" href='@Url.Action("Edit")'>@T("Edit " + entityTypeName)</a>
             }
                 @Model.Name
             </h2>
@@ -126,10 +126,6 @@
     } 
 
     $(function() {
-        $("#btn-edit-entity").click(function() {
-            window.location.href = "@Url.Action("Edit")";
-        });
-
         ko.applyBindings(new EventsViewModel(), document.getElementById("view-entity-form"));
 
         $("img.scale").imageScale();

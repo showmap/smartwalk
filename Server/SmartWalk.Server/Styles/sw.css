@@ -293,9 +293,14 @@ textarea {
 	margin-bottom: 150px;
 }
 
-.bg-image-container .header h2 button {
+.bg-image-container .header h2 .btn {
     float: right;
     margin-left: 15px;
+    color: #fff !important;
+}
+
+.bg-image-container .header h2 .btn:hover {
+    color: #ccc !important;
 }
 
 .bg-image-container .header h3 {
@@ -447,4 +452,51 @@ td.editing-container {
 .row.alert {
     margin-left: 0;
     margin-right: 0;
+}
+
+.event-days-picker {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.event-days-picker {
+    float: right;
+    clear: right;
+}
+
+.event-days-picker li {
+    display: inline-block;
+    float: left;
+    padding: 4px; 
+}
+
+.event-days-picker li a {
+    display: inline-block;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #000;
+    background-color: #efefef;
+}
+
+.event-days-picker li a:hover,
+.event-days-picker li a:focus {
+    background-color: #a3c6e4;
+    text-decoration: none;
+}
+
+.event-days-picker li a .day {
+    margin-top: 10px;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.event-days-picker li a .date {
+    font-size: 26px;
+    line-height: 22px;
+}
+
+.event-days-picker li a.selected {
+    background-color: #ffd800;
 }
