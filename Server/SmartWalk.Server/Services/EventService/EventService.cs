@@ -154,7 +154,7 @@ namespace SmartWalk.Server.Services.EventService
                 }
                 else
                 {
-                    foreach (var showVm in venue.Shows.Where(showVm => !showVm.Destroy))
+                    foreach (var showVm in venue.Shows)
                     {
                         SaveShow(showVm, eventMeta.Id, currentVenue.Id);
                     }
@@ -321,8 +321,11 @@ namespace SmartWalk.Server.Services.EventService
 
             if (eventMeta == null || venue == null) return;
 
-            if (show == null)
-            {
+            if (show == null) {
+
+                if (item.Destroy)
+                    return;
+
                 show = new ShowRecord
                     {
                         EventMetadataRecord = eventMeta,
@@ -344,8 +347,10 @@ namespace SmartWalk.Server.Services.EventService
 
                 CheckShowVenue(eventMeta.Id, venue.Id);
             }
-            else
-            {
+            else {
+                if (item.Destroy)
+                    show.IsDeleted = true;
+
                 show.EntityRecord = venue;
                 show.Title = item.Title;
                 show.Description = item.Description;
