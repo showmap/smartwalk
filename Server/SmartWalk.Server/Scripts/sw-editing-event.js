@@ -210,9 +210,9 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                     allowEmpty: true,
                     cmp: "REGION",
                     compareVal: ko.computed(
-                        function () { return moment(event.startDate()).subtract("days", 1).toDate(); }),
+                        function () { return event.startDate() ? moment(event.startDate()).subtract("days", 1).toDate() : undefined; }),
                     compareValTo: ko.computed(
-                        function () { return moment(event.endDate()).add("days", 1).toDate(); }),
+                        function () { return event.endDate() ? moment(event.endDate()).add("days", 1).toDate() : undefined; }),
                 },
                 message: settings.showMessages.startDateValidationMessage
             }
@@ -235,9 +235,9 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                     allowEmpty: true,
                     cmp: "REGION",
                     compareVal: ko.computed(
-                        function () { return moment(event.startDate()).subtract("days", 1).toDate(); }),
+                        function () { return event.startDate() ? moment(event.startDate()).subtract("days", 1).toDate() : undefined; }),
                     compareValTo: ko.computed(
-                        function () { return moment(event.endDate()).add("days", 2).toDate(); }), // 2 days, to cover the whole last day + night of next one
+                        function () { return event.endDate() ? moment(event.endDate()).add("days", 2).toDate() : undefined; }), // 2 days, to cover the whole last day + night of next one
                 },
                 message: settings.showMessages.endDateValidationMessage
             }

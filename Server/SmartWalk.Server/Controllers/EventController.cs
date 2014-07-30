@@ -8,8 +8,8 @@ using Orchard.Themes;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
+using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
 using SmartWalk.Shared.Utils;
@@ -30,22 +30,14 @@ namespace SmartWalk.Server.Controllers
         }
 
         [CompressFilter]
-        public ActionResult List(
-            DisplayType display = DisplayType.All, 
-            SortType sort = SortType.Date)
+        public ActionResult List(DisplayType display = DisplayType.All, SortType sort = SortType.Date)
         {
-            var result = _eventService.GetEvents(
-                CurrentSmartWalkUser == null || display == DisplayType.All
-                    ? null
-                    : CurrentSmartWalkUser.Record,
-                0,
-                ViewSettings.ItemsLoad,
-                GetSortFunc(sort),
-                sort == SortType.Date);
+            var parameters = new ListViewParametersVm { Display = display, Sort = sort };
+            var result = GetEventVms(parameters);
 
             return View(new ListViewVm<EventMetadataVm>
                 {
-                    Parameters = new ListViewParametersVm { Display = display, Sort = sort },
+                    Parameters = parameters,
                     Data = result
                 });
         }
@@ -53,16 +45,19 @@ namespace SmartWalk.Server.Controllers
         [CompressFilter]
         public ActionResult View(int eventId, int? day = null)
         {
-            var eventVm = _eventService.GetEventById(eventId, day);
-            if (eventVm == null) return new HttpNotFoundResult();
+            var eventDay = day != null ? Math.Max(day.Value - 1, 0) : 0;
+            var result = _eventService.GetEventById(eventId, eventDay);
+            if (result == null) return new HttpNotFoundResult();
 
-            return View(eventVm);
+            return View(result);
         }
 
         [CompressFilter]
         public ActionResult Create()
         {
-            return Edit(0);
+            if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
+
+            return View(new EventMetadataVm());
         }
 
         [CompressFilter]
@@ -70,28 +65,30 @@ namespace SmartWalk.Server.Controllers
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
+            var result = _eventService.GetEventById(eventId);
+            if (result == null) return new HttpNotFoundResult();
+
             var access = _eventService.GetEventAccess(CurrentSmartWalkUser.Record, eventId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
-            var eventVm = _eventService.GetEventById(eventId);
-            if (eventVm == null) return new HttpNotFoundResult();
+            return View(result);
+        }
 
-            return View(eventVm);
+        [CompressFilter]
+        public ActionResult DeleteEvent(int eventId)
+        {
+            if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
+
+            _eventService.DeleteEvent(eventId);
+
+            return RedirectToAction("List");
         }
 
         [HttpPost]
         [CompressFilter]
         public ActionResult GetEvents(int pageNumber, string query, ListViewParametersVm parameters)
         {
-            var result = _eventService.GetEvents(
-                CurrentSmartWalkUser == null || parameters.Display == DisplayType.All
-                    ? null
-                    : CurrentSmartWalkUser.Record,
-                pageNumber,
-                ViewSettings.ItemsLoad,
-                GetSortFunc(parameters.Sort),
-                parameters.Sort == SortType.Date,
-                query);
+            var result = GetEventVms(parameters, pageNumber, query);
             return Json(result);
         }
 
@@ -108,18 +105,25 @@ namespace SmartWalk.Server.Controllers
                 return Json(new ErrorResultVm(errors));
             }
 
-            var result = _eventService.SaveOrAddEvent(CurrentSmartWalkUser.Record, eventVm);
+            var result = _eventService.SaveEvent(CurrentSmartWalkUser.Record, eventVm);
             return Json(result);
         }
 
-        [CompressFilter]
-        public ActionResult DeleteEvent(int eventId)
+        private IList<EventMetadataVm> GetEventVms(
+            ListViewParametersVm parameters, 
+            int pageNumber = 0, 
+            string query = null)
         {
-            if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
-
-            _eventService.DeleteEvent(eventId);
-
-            return RedirectToAction("List");
+            var result = _eventService.GetEvents(
+                CurrentSmartWalkUser == null || parameters.Display == DisplayType.All
+                    ? null
+                    : CurrentSmartWalkUser.Record,
+                pageNumber,
+                ViewSettings.ItemsLoad,
+                GetSortFunc(parameters.Sort),
+                parameters.Sort == SortType.Date,
+                query);
+            return result;
         }
 
         private static Func<EventMetadataRecord, IComparable> GetSortFunc(SortType sortType)
@@ -193,6 +197,7 @@ namespace SmartWalk.Server.Controllers
                     var showVm = shows[j];
                     result.AddRange(ValidateShow(
                         showVm,
+                        model,
                         string.Format(
                             "{0}[{1}].{2}[{3}].", 
                             venuesProperty, 
@@ -205,7 +210,7 @@ namespace SmartWalk.Server.Controllers
             return result;
         }
 
-        private IEnumerable<ValidationError> ValidateShow(ShowVm model, string prefix = "")
+        private IEnumerable<ValidationError> ValidateShow(ShowVm model, EventMetadataVm eventVm, string prefix = "")
         {
             var result = new List<ValidationError>();
 
@@ -264,6 +269,24 @@ namespace SmartWalk.Server.Controllers
                 result.Add(new ValidationError(
                                prefix + startTimeProperty,
                                T("Show start time has to be less than or equal to the end time.").Text));
+            }
+
+            if (model.StartTime.HasValue && eventVm.StartDate.HasValue &&
+                (model.StartTime.Value < eventVm.StartDate.Value.AddDays(-1) ||
+                (eventVm.EndDate.HasValue && model.StartTime.Value > eventVm.EndDate.Value.AddDays(1))))
+            {
+                result.Add(new ValidationError(
+                               prefix + startTimeProperty,
+                               T("Show start time has to be between event start and end dates.").Text));
+            }
+
+            if (model.EndTime.HasValue && eventVm.StartDate.HasValue &&
+                (model.EndTime.Value < eventVm.StartDate.Value.AddDays(-1) ||
+                (eventVm.EndDate.HasValue && model.EndTime.Value > eventVm.EndDate.Value.AddDays(2))))
+            {
+                result.Add(new ValidationError(
+                               prefix + startTimeProperty,
+                               T("Show end time has to be between event start and end dates.").Text));
             }
 
             return result;

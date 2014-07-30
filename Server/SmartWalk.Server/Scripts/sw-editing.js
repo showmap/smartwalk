@@ -16,8 +16,7 @@ ko.validation.rules["dependencies"] = {
 
 ko.validation.rules["contactValidation"] = {
     validator: function (val, otherVal) {
-        if (otherVal.allowEmpty && !val)
-            return true;
+        if (otherVal.allowEmpty && !val) return true;
 
         switch (otherVal.contactType()) {
             case 0:
@@ -43,9 +42,8 @@ ko.validation.rules["contactValidation"] = {
 
 ko.validation.rules["dateCompareValidation"] = {
     validator: function (val, otherVal) {
-        if (otherVal.allowEmpty && (!val || !otherVal.compareVal())) return true;
-
         var cmpDate = otherVal.compareVal();
+        if (otherVal.allowEmpty && (!val || !cmpDate)) return true;
 
         if (otherVal.cmp == "GREATER_THAN") {
             return val >= cmpDate;
@@ -63,8 +61,7 @@ ko.validation.rules["dateCompareValidation"] = {
 
 ko.validation.rules["urlValidation"] = {
     validator: function (val, otherVal) {
-        if (otherVal.allowEmpty && !val)
-            return true;
+        if (otherVal.allowEmpty && !val) return true;
         var regex = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|(www\\.)?){1}([0-9A-Za-z-\\.@:%_\‌​+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
         return regex.test(val);
     }

@@ -7,6 +7,7 @@ using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Services.EventService;
+using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
 using SmartWalk.Shared.Utils;
@@ -57,16 +58,18 @@ namespace SmartWalk.Server.Controllers.Base
         [CompressFilter]
         public ActionResult View(int entityId)
         {
-            var entityVm = _entityService.GetEntityVmById(entityId, EntityType);
-            if (entityVm.Id != entityId) return new HttpNotFoundResult();
+            var result = _entityService.GetEntityById(entityId);
+            if (result == null) return new HttpNotFoundResult();
 
-            return View(entityVm);
+            return View(result);
         }
 
         [CompressFilter]
         public ActionResult Create()
         {
-            return Edit(0);
+            if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
+
+            return View(new EntityVm { Type = (int)EntityType});
         }
 
         [CompressFilter]
@@ -74,13 +77,13 @@ namespace SmartWalk.Server.Controllers.Base
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
-            var entityVm = _entityService.GetEntityVmById(entityId, EntityType);
-            if (entityVm.Id != entityId) return new HttpNotFoundResult();
+            var result = _entityService.GetEntityById(entityId);
+            if (result == null) return new HttpNotFoundResult();
 
             var access = _entityService.GetEntityAccess(CurrentSmartWalkUser.Record, entityId);
-            if (access == AccessType.AllowEdit) return View(entityVm);
+            if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
-            return new HttpUnauthorizedResult();
+            return View(result);
         }
 
         [CompressFilter]
@@ -97,7 +100,7 @@ namespace SmartWalk.Server.Controllers.Base
         [CompressFilter]
         public ActionResult GetEvents(int entityId)
         {
-            var result = _eventService.GetEntityEvents(entityId);
+            var result = _eventService.GetEventsByEntity(entityId);
             return Json(result);
         }
 
@@ -166,7 +169,7 @@ namespace SmartWalk.Server.Controllers.Base
                 return Json(new ErrorResultVm(errors));
             }
 
-            var result = _entityService.SaveOrAddEntity(CurrentSmartWalkUser.Record, entityVm);
+            var result = _entityService.SaveEntity(CurrentSmartWalkUser.Record, entityVm);
             return Json(result);
         }
 
@@ -185,7 +188,7 @@ namespace SmartWalk.Server.Controllers.Base
                                nameProperty,
                                T(EntityTypeName + " name can not be longer than 255 characters.").Text));
             }
-            else if (_entityService.IsNameExists(model, EntityType))
+            else if (!_entityService.IsNameUnique(model))
             {
                 result.Add(new ValidationError(nameProperty, T(EntityTypeName + " name must be unique.").Text));
             }

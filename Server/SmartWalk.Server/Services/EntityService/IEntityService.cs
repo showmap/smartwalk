@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Orchard;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.EventService;
+using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
 
@@ -20,15 +20,11 @@ namespace SmartWalk.Server.Services.EntityService
             string searchString = null,
             int[] excludeIds = null);
 
-        IList<EntityVm> GetEventEntities(EventMetadataRecord eventRecord, int? day = null);
-        bool IsNameExists(EntityVm item, EntityType type);
+        bool IsNameUnique(EntityVm item);
         AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId);
-        EntityVm GetEntityVmById(int entityId, EntityType type);
-        EntityVm GetEntityVm(EntityRecord entity, LoadMode mode = LoadMode.Full);
-        EntityVm SaveOrAddEntity(SmartWalkUserRecord user, EntityVm entityVm);
-        void DeleteEntity(int hostId);
+        EntityVm GetEntityById(int entityId);
 
-        void SaveOrAddShow(ShowVm item, int eventMetadataId, int venueId);
-        void CheckShowVenue(int eventId, int venueId);
+        EntityVm SaveEntity(SmartWalkUserRecord user, EntityVm entityVm);
+        void DeleteEntity(int hostId);
     }
 }

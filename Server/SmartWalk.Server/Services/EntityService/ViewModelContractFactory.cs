@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.EventService;
+using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared.Utils;
 
@@ -25,7 +25,6 @@ namespace SmartWalk.Server.Services.EntityService
                         };
 
                 case LoadMode.Full:
-                default:
                     return new EntityVm
                         {
                             Id = record.Id,
@@ -37,43 +36,10 @@ namespace SmartWalk.Server.Services.EntityService
                             Contacts = record.ContactRecords.Select(CreateViewModelContract).ToList(),
                             Addresses = record.AddressRecords.Select(CreateViewModelContract).ToList(),
                         };
+
+                default:
+                    return null;
             }
-        }
-
-        public static EntityVm CreateViewModelContract(
-            EntityRecord record, 
-            EventMetadataRecord metadata)
-        {
-            if (record == null)
-                return null;
-
-            var res = CreateViewModelContract(record, LoadMode.Full);
-
-            res.Shows =
-                metadata.ShowRecords
-                        .Where(s => s.EntityRecord.Id == record.Id && 
-                            !s.IsDeleted && !s.IsReference)
-                        .Select(CreateViewModelContract)
-                        .ToArray();
-
-            return res;
-        }
-
-        public static ShowVm CreateViewModelContract(ShowRecord record)
-        {
-            if (record == null)
-                return null;
-
-            return new ShowVm
-                {
-                    Id = record.Id,
-                    Title = record.Title,
-                    Description = record.Description,
-                    StartTime = record.StartTime,
-                    EndTime = record.EndTime,
-                    Picture = record.Picture,
-                    DetailsUrl = record.DetailsUrl
-                };
         }
 
         private static AddressVm CreateViewModelContract(AddressRecord record)

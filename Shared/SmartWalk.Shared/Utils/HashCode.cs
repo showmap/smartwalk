@@ -6,7 +6,7 @@ namespace SmartWalk.Shared.Utils
     public static class HashCode
     {
         public const int Initial = 17;
-        public const int Multiplier = 23;
+        private const int Multiplier = 23;
 
         public static int CombineHashCode<T>(this int hashCode, T arg)
         {
@@ -25,7 +25,7 @@ namespace SmartWalk.Shared.Utils
                         ? Initial 
                         : (arg is IEnumerable
                             ? ((IEnumerable)arg).Cast<object>().Aggregate(
-                                HashCode.Initial, 
+                                Initial, 
                                 (i1, i2) => i1.GetHashCode().CombineHashCode(i2))
                             : arg.GetHashCode()));
             }

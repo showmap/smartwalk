@@ -189,6 +189,8 @@
     <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="ShellEvents.cs" />
+    <Compile Include="Utils\AccessType.cs" />
+    <Compile Include="Utils\LoadMode.cs" />
     <Compile Include="ViewModels\ErrorResultVm.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
     <Compile Include="Views\ViewSettings.cs" />

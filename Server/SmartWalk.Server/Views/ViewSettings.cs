@@ -5,6 +5,6 @@
         /// <summary>
         /// Gets the default count of items to load per scrolling page.
         /// </summary>
-        public const int ItemsLoad = 17;
+        public const int ItemsLoad = 17; // TODO: To move constant to web.config
     }
 }

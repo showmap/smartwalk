@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="UtilTests\DateTimeTest.cs" />
     <Compile Include="UtilTests\FooClass.cs" />
     <Compile Include="UtilTests\MapUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

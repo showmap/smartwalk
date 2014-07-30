@@ -1,4 +1,6 @@
-﻿using SmartWalk.Server.Records;
+﻿using System;
+using SmartWalk.Server.Records;
+using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EventService
@@ -7,7 +9,7 @@ namespace SmartWalk.Server.Services.EventService
     {
         public static EventMetadataVm CreateViewModelContract(EventMetadataRecord record, LoadMode mode)
         {
-            if (record == null) return null;
+            if (record == null) throw new ArgumentNullException("record");
 
             switch (mode)
             {
@@ -39,6 +41,22 @@ namespace SmartWalk.Server.Services.EventService
                 default:
                     return null;
             }
+        }
+
+        public static ShowVm CreateViewModelContract(ShowRecord record)
+        {
+            if (record == null) throw new ArgumentNullException("record");
+
+            return new ShowVm
+                {
+                    Id = record.Id,
+                    Title = record.Title,
+                    Description = record.Description,
+                    StartTime = record.StartTime,
+                    EndTime = record.EndTime,
+                    Picture = record.Picture,
+                    DetailsUrl = record.DetailsUrl
+                };
         }
     }
 }

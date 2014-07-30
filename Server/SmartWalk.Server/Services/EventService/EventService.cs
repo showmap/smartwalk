@@ -9,13 +9,14 @@ using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.EventService
 {
     [UsedImplicitly]
     public class EventService : IEventService
     {
-        private readonly IEntityService _entityService;
+        private readonly IEntityService _entityService; // TODO: We should get rid of this reference
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
         private readonly IRepository<ShowRecord> _showRepository;
@@ -31,29 +32,6 @@ namespace SmartWalk.Server.Services.EventService
             _showRepository = showRepository;
         }
 
-        public IList<EventMetadataVm> GetEntityEvents(int entityId)
-        {
-            var entity = _entityRepository.Get(entityId);
-
-            if (entity == null)
-                return new List<EventMetadataVm>();
-
-            IEnumerable<EventMetadataRecord> data = entity.EventMetadataRecords;
-
-            if ((EntityType)entity.Type == EntityType.Venue)
-            {
-                data = _eventMetadataRepository.Table
-                    .Where(md => md.ShowRecords.Any(s => s.EntityRecord.Id == entityId));
-            }
-
-            return
-                data.Where(e => !e.IsDeleted)
-                    .OrderByDescending(e => e.StartTime)
-                    .Take(5)
-                    .Select(e => CreateViewModelContract(e, null, LoadMode.Compact))
-                    .ToList();
-        }
-
         public IList<EventMetadataVm> GetEvents(
             SmartWalkUserRecord user,
             int pageNumber,
@@ -62,23 +40,158 @@ namespace SmartWalk.Server.Services.EventService
             bool isDesc = false,
             string searchString = null)
         {
-            return GetEventsInner(
+            var query =
                 user == null
-                    ? (IEnumerable<EventMetadataRecord>)
-                        _eventMetadataRepository.Table.Where(e => e.IsPublic)
-                    : user.EventMetadataRecords, pageNumber, pageSize, orderBy, isDesc, searchString);
+                    ? (IEnumerable<EventMetadataRecord>)_eventMetadataRepository
+                        .Table
+                        .Where(e => e.IsPublic)
+                    : user.EventMetadataRecords;
+
+            var result = GetEvents(query, pageNumber, pageSize, orderBy, isDesc, searchString);
+            return result;
         }
 
-        private IList<EventMetadataVm> GetEventsInner(
+        public IList<EventMetadataVm> GetEventsByEntity(int entityId)
+        {
+            var entity = _entityRepository.Get(entityId);
+            if (entity == null) return new List<EventMetadataVm>();
+
+            IEnumerable<EventMetadataRecord> query;
+
+            if ((EntityType)entity.Type == EntityType.Venue)
+            {
+                query = _eventMetadataRepository
+                    .Table
+                    .Where(md => md.ShowRecords.Any(s => s.EntityRecord.Id == entityId));
+            }
+            else
+            {
+                query = entity.EventMetadataRecords;
+            }
+
+            var result = GetEvents(query, 0, 5, e => e.StartTime, true);
+            return result;
+        }
+
+        public EventMetadataVm GetEventById(int id, int? day)
+        {
+            if (day != null && day < 0) throw new ArgumentOutOfRangeException("day");
+
+            var eventMeta = _eventMetadataRepository.Get(id);
+            if (eventMeta == null) return null;
+
+            var result = CreateViewModelContract(eventMeta, day);
+            return result;
+        }
+
+        public AccessType GetEventAccess(SmartWalkUserRecord user, int eventId)
+        {
+            if (user == null) return AccessType.Deny;
+
+            var eventMeta = _eventMetadataRepository.Get(eventId);
+            if (eventMeta == null || eventMeta.IsDeleted) return AccessType.Deny;
+            if (eventMeta.SmartWalkUserRecord.Id == user.Id) return AccessType.AllowEdit;
+
+            return eventMeta.IsPublic ? AccessType.AllowView : AccessType.Deny;
+        }
+
+        public EventMetadataVm SaveEvent(SmartWalkUserRecord user, EventMetadataVm eventVm)
+        {
+            var host = _entityRepository.Get(eventVm.Host.Id);
+            if (host == null || eventVm.StartDate == null) return null;
+
+            var eventMeta = _eventMetadataRepository.Get(eventVm.Id);
+            if (eventMeta == null)
+            {
+                eventMeta = new EventMetadataRecord
+                    {
+                        EntityRecord = host,
+                        SmartWalkUserRecord = user,
+                        Title = eventVm.Title,
+                        Description = eventVm.Description,
+                        StartTime = eventVm.StartDate.Value,
+                        EndTime = eventVm.EndDate,
+                        CombineType = eventVm.CombineType,
+                        Picture = eventVm.Picture,
+                        IsPublic = eventVm.IsPublic,
+                        IsDeleted = false,
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow,
+                    };
+
+                _eventMetadataRepository.Create(eventMeta);
+            }
+            else
+            {
+                eventMeta.EntityRecord = host;
+                eventMeta.Title = eventVm.Title;
+                eventMeta.Description = eventVm.Description;
+                eventMeta.StartTime = eventVm.StartDate.Value;
+                eventMeta.EndTime = eventVm.EndDate;
+                eventMeta.CombineType = eventVm.CombineType;
+                eventMeta.Picture = eventVm.Picture;
+                eventMeta.IsPublic = eventVm.IsPublic;
+                eventMeta.DateModified = DateTime.UtcNow;
+            }
+
+            _eventMetadataRepository.Flush();
+
+            foreach (var venue in eventVm.Venues.Where(venueVm => !venueVm.Destroy))
+            {
+                var currentVenue = venue;
+
+                if (venue.Id < 0)
+                {
+                    // TODO: We are not supposed to save entities on event save
+                    // this is probably a mistake.
+                    currentVenue = _entityService.SaveEntity(user, venue);
+                    if (currentVenue == null) continue;
+                }
+
+                if (!venue.Shows.Any())
+                {
+                    CheckShowVenue(eventMeta.Id, currentVenue.Id);
+                }
+                else
+                {
+                    foreach (var showVm in venue.Shows.Where(showVm => !showVm.Destroy))
+                    {
+                        SaveShow(showVm, eventMeta.Id, currentVenue.Id);
+                    }
+                }
+            }
+
+            RecalculateEventCoordinates(eventMeta);
+
+            return CreateViewModelContract(eventMeta, null);
+        }
+
+        public void DeleteEvent(int eventId)
+        {
+            var eventMeta = _eventMetadataRepository.Get(eventId);
+            if (eventMeta == null) return;
+
+            foreach (var show in eventMeta.ShowRecords)
+            {
+                show.IsDeleted = true;
+                _showRepository.Flush();
+            }
+
+            eventMeta.IsDeleted = true;
+            _eventMetadataRepository.Flush();
+        }
+
+        private static IList<EventMetadataVm> GetEvents(
             IEnumerable<EventMetadataRecord> query, 
             int pageNumber,
-            int pageSize, Func<EventMetadataRecord, IComparable> orderBy, 
-            bool isDesc, 
-            string searchString)
+            int pageSize,
+            Func<EventMetadataRecord, IComparable> orderBy,
+            bool isDesc = false,
+            string searchString = null)
         {
             query = query.Where(e => !e.IsDeleted);
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
                 query =
                     query.Where(
@@ -90,161 +203,181 @@ namespace SmartWalk.Server.Services.EventService
 
             query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
-            return
-                query.Skip(pageSize*pageNumber)
+            var result =
+                query.Skip(pageSize * pageNumber)
                      .Take(pageSize)
                      .Select(e => CreateViewModelContract(e, null, LoadMode.Compact))
                      .ToList();
+            return result;
         }
 
-        public EventMetadataVm GetEventById(int id, int? day = null)
-        {
-            var eventMetadata = _eventMetadataRepository.Table.FirstOrDefault(u => u.Id == id);
-            if (eventMetadata == null) return null;
-
-            var vm = CreateViewModelContract(eventMetadata, day);
-            return vm;
-        }
-
-        public AccessType GetEventAccess(SmartWalkUserRecord user, int eventId)
-        {
-            if (user == null) return AccessType.Deny;
-            if (eventId == 0) return AccessType.AllowEdit;
-
-            var eventRecord = _eventMetadataRepository.Get(eventId);
-            if (eventRecord == null || eventRecord.IsDeleted) return AccessType.Deny;
-            if (eventRecord.SmartWalkUserRecord.Id == user.Id) return AccessType.AllowEdit;
-
-            return eventRecord.IsPublic ? AccessType.AllowView : AccessType.Deny;
-        }
-
-        private EventMetadataVm CreateViewModelContract(
-            EventMetadataRecord record, 
-            int? day = null,
+        private static EventMetadataVm CreateViewModelContract(
+            EventMetadataRecord eventMeta,
+            int? day,
             LoadMode mode = LoadMode.Full)
         {
-            if (record == null) throw new ArgumentNullException("record");
+            if (eventMeta == null) throw new ArgumentNullException("eventMeta");
 
-            var res = ViewModelContractFactory.CreateViewModelContract(record, mode);
-            res.Host = _entityService.GetEntityVm(record.EntityRecord, mode);
+            var result = ViewModelContractFactory.CreateViewModelContract(eventMeta, mode);
+            result.Host =
+                EntityService
+                    .ViewModelContractFactory
+                    .CreateViewModelContract(eventMeta.EntityRecord, mode);
 
             if (mode == LoadMode.Full)
             {
-                res.Venues = _entityService.GetEventEntities(record, day);
+                result.Venues = GetEventVenues(eventMeta, day);
             }
 
-            return res;
+            return result;
         }
 
-        public void DeleteEvent(int eventId)
+        private static IList<EntityVm> GetEventVenues(EventMetadataRecord eventMeta, int? day)
         {
-            var metadata = _eventMetadataRepository.Get(eventId);
-            if (metadata == null) return;
+            var isMultiDay =
+                eventMeta.EndTime.HasValue &&
+                eventMeta.StartTime.Date < eventMeta.EndTime.Value.Date;
+            var range = new Tuple<DateTime, DateTime?>(eventMeta.StartTime, eventMeta.EndTime);
+            var currentDay =
+                day == null
+                    ? null
+                    : (isMultiDay
+                           ? (DateTime?)eventMeta.StartTime.AddDays(day.Value)
+                           : null);
 
-            foreach (var show in metadata.ShowRecords)
+            var allShows =
+                eventMeta.ShowRecords
+                        .Where(s =>
+                               !s.IsDeleted &&
+                               (s.IsReference || s.StartTime.IsTimeThisDay(currentDay, range)))
+                        .ToArray();
+
+            var result = allShows
+                .Select(s => s.EntityRecord)
+                .Distinct()
+                .Select(e =>
+                    {
+                        var venueVm = EntityService
+                            .ViewModelContractFactory
+                            .CreateViewModelContract(e, LoadMode.Full);
+
+                        venueVm.Shows = allShows
+                            .Where(s => s.EntityRecord.Id == e.Id && !s.IsReference)
+                            .Select(ViewModelContractFactory.CreateViewModelContract)
+                            .ToArray();
+
+                        return venueVm;
+                    })
+                .ToArray();
+            return result;
+        }
+
+        private void CheckShowVenue(int eventId, int venueId)
+        {
+            var shows =
+                _showRepository
+                    .Table
+                    .Where(
+                        s =>
+                        s.EventMetadataRecord.Id == eventId &&
+                        s.EntityRecord.Id == venueId &&
+                        (!s.IsDeleted || s.IsReference))
+                    .ToList();
+
+            if (shows.Any())
             {
-                show.IsDeleted = true;
+                // If we have both is reference and not is reference shows, remove all is reference shows
+                if (shows.Count(s => !s.IsReference) > 0 && shows.Count(s => s.IsReference) > 0)
+                {
+                    foreach (var showRecord in shows.Where(s => s.IsReference))
+                    {
+                        _showRepository.Delete(showRecord);
+                        _showRepository.Flush();
+                    }
+                }
+            }
+            else
+            {
+                var show = new ShowRecord
+                    {
+                        EventMetadataRecord = _eventMetadataRepository.Get(eventId),
+                        EntityRecord = _entityRepository.Get(venueId),
+                        IsReference = true,
+                        IsDeleted = false,
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow
+                    };
+
+                _showRepository.Create(show);
                 _showRepository.Flush();
             }
-
-            metadata.IsDeleted = true;
-            _eventMetadataRepository.Flush();
         }
 
-        private void RecalculateEventCoordinates(EventMetadataRecord eventRecord)
+        private void SaveShow(ShowVm item, int eventId, int venueId)
         {
-            var coords = eventRecord
+            var show = _showRepository.Get(item.Id);
+            var eventMeta = _eventMetadataRepository.Get(eventId);
+            var venue = _entityRepository.Get(venueId);
+
+            if (eventMeta == null || venue == null) return;
+
+            if (show == null)
+            {
+                show = new ShowRecord
+                    {
+                        EventMetadataRecord = eventMeta,
+                        EntityRecord = venue,
+                        IsReference = false,
+                        Title = item.Title,
+                        Description = item.Description,
+                        StartTime = item.StartTime,
+                        EndTime = item.EndTime,
+                        Picture = item.Picture,
+                        DetailsUrl = item.DetailsUrl,
+                        IsDeleted = false,
+                        DateCreated = DateTime.UtcNow,
+                        DateModified = DateTime.UtcNow
+                    };
+
+                _showRepository.Create(show);
+                _showRepository.Flush();
+
+                CheckShowVenue(eventMeta.Id, venue.Id);
+            }
+            else
+            {
+                show.EntityRecord = venue;
+                show.Title = item.Title;
+                show.Description = item.Description;
+                show.StartTime = item.StartTime;
+                show.EndTime = item.EndTime;
+                show.Picture = item.Picture;
+                show.DetailsUrl = item.DetailsUrl;
+                show.DateModified = DateTime.UtcNow;
+
+                _showRepository.Flush();
+            }
+        }
+
+        private void RecalculateEventCoordinates(EventMetadataRecord eventMeta)
+        {
+            var coords = eventMeta
                 .ShowRecords
                 .Where(s => !s.IsDeleted)
                 .Select(s => s.EntityRecord)
                 .Where(v => !v.IsDeleted)
                 .SelectMany(v => v.AddressRecords)
                 .Select(address => new PointF((float)address.Latitude, (float)address.Longitude))
-                .ToList();
+                .ToArray();
 
-            if (coords.Count == 0) return;
+            if (coords.Length == 0) return;
 
-            var eventCoord = MapUtil.GetMiddleCoordinate(coords.ToArray());
+            var eventCoord = MapUtil.GetMiddleCoordinate(coords);
 
-            eventRecord.Latitude = eventCoord.X;
-            eventRecord.Longitude = eventCoord.Y;
+            eventMeta.Latitude = eventCoord.X;
+            eventMeta.Longitude = eventCoord.Y;
 
             _eventMetadataRepository.Flush();
         }
-
-        public EventMetadataVm SaveOrAddEvent(SmartWalkUserRecord user, EventMetadataVm item)
-        {
-            var host = _entityRepository.Get(item.Host.Id);
-            if (host == null || item.StartDate == null) return null;
-
-            var metadata = _eventMetadataRepository.Get(item.Id);
-            if (metadata == null)
-            {
-                metadata = new EventMetadataRecord
-                    {
-                        EntityRecord = host,
-                        SmartWalkUserRecord = user,
-                        Title = item.Title,
-                        Description = item.Description,
-                        StartTime = item.StartDate.Value,
-                        EndTime = item.EndDate,
-                        CombineType = item.CombineType,
-                        Picture = item.Picture,
-                        IsPublic = item.IsPublic,
-                        IsDeleted = false,
-                        DateCreated = DateTime.UtcNow,
-                        DateModified = DateTime.UtcNow,
-                    };
-
-                _eventMetadataRepository.Create(metadata);
-            }
-            else
-            {
-                metadata.EntityRecord = host;
-                metadata.Title = item.Title;
-                metadata.Description = item.Description;
-                metadata.StartTime = item.StartDate.Value;
-                metadata.EndTime = item.EndDate;
-                metadata.CombineType = item.CombineType;
-                metadata.Picture = item.Picture;
-                metadata.IsPublic = item.IsPublic;
-                metadata.DateModified = DateTime.UtcNow;
-            }
-
-            _eventMetadataRepository.Flush();
-
-            foreach (var venueVm in item.Venues.Where(venueVm => !venueVm.Destroy))
-            {
-                var currentVenue = venueVm;
-
-                if (venueVm.Id < 0)
-                {
-                    currentVenue = _entityService.SaveOrAddEntity(user, venueVm);
-                    if (currentVenue == null) continue;
-                }
-
-                if (!venueVm.Shows.Any())
-                {
-                    _entityService.CheckShowVenue(metadata.Id, currentVenue.Id);
-                }
-                else
-                {
-                    foreach (var showVm in venueVm.Shows.Where(showVm => !showVm.Destroy))
-                    {
-                        _entityService.SaveOrAddShow(showVm, metadata.Id, currentVenue.Id);
-                    }
-                }
-            }
-
-            RecalculateEventCoordinates(metadata);
-
-            return CreateViewModelContract(metadata);
-        }
-    }
-
-    public enum LoadMode
-    {
-        Full,
-        Compact
     }
 }
