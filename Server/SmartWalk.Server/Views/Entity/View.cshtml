@@ -41,13 +41,8 @@
 }
     </div>
 
-@if (Model.Addresses.Any()) {
-    var addressFirst = Model.Addresses.First();
-    var query = Regex.Replace(addressFirst.Address.Replace("&", " "), @",\s+", ",");
-    query = Regex.Replace(query, @"\s+", "+");
-    <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?q=@query&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo"></iframe></div>
-}
-        
+@Html.Partial("../AddressMap", Model)
+
     <div class="row gap">
         <div class="col-md-7"><p class="description">@Model.Description</p></div>
         <div class="col-md-5 contact-container">

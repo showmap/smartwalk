@@ -157,6 +157,7 @@
     <Content Include="Module.txt" />
     <Content Include="Views\Event\Create.cshtml" />
     <Content Include="Views\MomentLocalization.cshtml" />
+    <Content Include="Views\AddressMap.cshtml" />
     <None Include="Views\ServerErrors.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +193,7 @@
     <Compile Include="Utils\AccessType.cs" />
     <Compile Include="Utils\LoadMode.cs" />
     <Compile Include="ViewModels\ErrorResultVm.cs" />
+    <Compile Include="ViewModels\IAddressesMapObject.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
     <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">

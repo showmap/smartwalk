@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using SmartWalk.Server.Extensions;
+using System.Linq;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class EventMetadataVm
+    public class EventMetadataVm : IAddressesMapObject
     {
         public EventMetadataVm()
         {
@@ -30,6 +31,11 @@ namespace SmartWalk.Server.ViewModels
 
         public EntityVm Host { get; set; }
         public IList<EntityVm> Venues { get; set; }
+
+        [JsonIgnore]
+        public IList<AddressVm> Addresses {
+            get { return Venues == null ? null : Venues.SelectMany(v => v.Addresses).ToList(); }
+        }
 
         [JsonIgnore]
         public string DisplayName

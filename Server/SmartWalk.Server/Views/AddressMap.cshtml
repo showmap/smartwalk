@@ -1,0 +1,52 @@
+﻿@using System.Globalization
+@using SmartWalk.Server.ViewModels
+
+@model IAddressesMapObject
+@{
+    Script.Require("GoogleMapsApi").AtFoot();
+    var nfi = new NumberFormatInfo {NumberDecimalSeparator = "."};
+}
+
+@if (Model.Addresses.Any()) {
+    <div id="map_canvas" class="map-container" style="height: 160px"></div>
+}
+
+
+@using (Script.Foot()) {
+<script type="text/javascript">    
+    $(function () {        
+@if (Model.Addresses.Any()) {
+    <text>
+        function addMarker(latlng, myTitle) {
+            markers.push(new google.maps.Marker({
+                position: latlng, 
+                map: map,
+                title: myTitle,
+                icon: "http://maps.google.com/mapfiles/marker" + String.fromCharCode(markers.length + 65) + ".png"
+            }));    
+        }                
+          
+        
+        var map;
+        var markers = [];
+
+        var myOptions = {
+            zoom: 15,
+            center: new google.maps.LatLng(@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+
+@foreach (var address in Model.Addresses) {
+    <text>
+        addMarker(new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), '@address.Address');
+    </text>        
+}
+
+    
+    </text>
+}
+    });
+        
+</script>
+}

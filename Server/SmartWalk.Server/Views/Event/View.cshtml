@@ -13,9 +13,7 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("GoogleMapsApi").AtFoot();
 
-    var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
-    var nfi = new NumberFormatInfo {NumberDecimalSeparator = "."};
-    var addresses = Model.Venues.SelectMany(v => v.Addresses);
+    var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);    
 }
     @Html.AntiForgeryTokenOrchard()
 
@@ -61,7 +59,7 @@
         </div>	
     </div>
         
-<div id="map_canvas" class="map-container" style="height: 160px"></div>
+@Html.Partial("../AddressMap", Model)
 
 @if (!@Model.Description.IsEmpty())
 {
@@ -130,40 +128,7 @@
 {
 
 <script type="text/javascript">
-    $(function () {
-        
-@if (addresses.Any()) {
-    <text>
-        function addMarker(latlng, myTitle) {
-            markers.push(new google.maps.Marker({
-                position: latlng, 
-                map: map,
-                title: myTitle,
-                icon: "http://maps.google.com/mapfiles/marker" + String.fromCharCode(markers.length + 65) + ".png"
-            }));    
-        }                
-          
-        
-        var map;
-        var markers = [];
-
-        var myOptions = {
-            zoom: 15,
-            center: new google.maps.LatLng(@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-@foreach (var address in addresses) {
-    <text>
-        addMarker(new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), '@address.Address');
-    </text>        
-}
-
-    
-    </text>
-}
-
+    $(function () {        
         $("img.scale").imageScale();
         $("p.description").textCollapse();
         
