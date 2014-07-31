@@ -13,7 +13,7 @@ namespace SmartWalk.Server.ViewModels
             Contacts = new List<ContactVm>();
             Addresses = new List<AddressVm>();
             Shows = new List<ShowVm>();
-            _latitude = 0;
+            _latitude = _longitude = 0;
         }
 
         public int Id { get; set; }
