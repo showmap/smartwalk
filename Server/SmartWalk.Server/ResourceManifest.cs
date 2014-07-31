@@ -107,6 +107,11 @@ namespace SmartWalk.Server
 
             manifest.DefineScript("AddThisEvent")
                 .SetCdn("http://js.addthisevent.com/atemay.js");
+
+            // 3rd Party - Gogle Maos API
+
+            manifest.DefineScript("GoogleMapsApi")
+                .SetCdn("http://maps.google.com/maps/api/js?sensor=false");
         }
     }
 }
