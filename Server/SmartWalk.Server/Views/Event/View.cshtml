@@ -1,7 +1,8 @@
 ﻿@using System.Globalization
 @using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
-@using System.Text.RegularExpressions
+@using SmartWalk.Server.Utils
+@using SmartWalk.Shared.Utils
 @model EventMetadataVm
 @{
     Style.Require("SmartWalk");
@@ -11,7 +12,6 @@
     Script.Require("ImageScale").AtFoot();
     Script.Require("TextCollapse").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
-    Script.Require("GoogleMapsApi").AtFoot();
 
     var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);    
 }
@@ -50,7 +50,7 @@
                     <span class="_location">@Model.Latitude,@Model.Longitude</span>
                     <span class="_organizer">@Model.Host.Name</span>
                     <span class="_organizer_email">@Model.Host.Contacts.Where(c => c.Type == (int)ContactType.Email).Select(c => c.Contact).FirstOrDefault()</span>
-                    @* <span class="_facebook_event"></span> *@
+                    @*<span class="_facebook_event"></span>*@
                     <span class="_all_day_event">true</span>
                     <span class="_date_format">@CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern.ToUpperInvariant()</span>
 @* ReSharper restore UnknownCssClass *@
@@ -67,25 +67,21 @@
         <div class="col-md-8"><p class="description">@Model.Description</p></div>
     </div>
 }
-@if (@Model.StartDate.HasValue &&
-    @Model.EndDate.HasValue && 
-    @Model.StartDate.Value.Date != @Model.EndDate.Value.Date)
+@if (Model.IsMultiDay())
 {
-    var currentDay = 1;
-    int day;
-    if (ViewContext.RouteData.Values["day"] != null &&
-        int.TryParse((string)ViewContext.RouteData.Values["day"], out day))
-    {
-        currentDay = day;
-    }
+    var currentDay = (int)ViewData["day"];
+    var daysCount = DateTimeExtensions.DaysCount(Model.StartDate, Model.EndDate);
 
     <div class="row gap">
         <div class="col-md-12">
             <ul class="event-days-picker">
-                @for (var i = 1; i <= (@Model.EndDate.Value.Date - @Model.StartDate.Value.Date).Days; i++)
+@* ReSharper disable PossibleInvalidOperationException *@
+                @for (var i = 1; i <= daysCount; i++)
                 {
-                    <li><a class="img-circle@(currentDay == i ? " selected" : "")" href="@Url.Action("View", new { eventId = Model.Id, day = i })"><div class="day">@Model.StartDate.Value.AddDays(i).ToString("ddd", culture)</div><div class="date">@Model.StartDate.Value.AddDays(i).Day</div></a></li>
+                    var day = @Model.StartDate.Value.AddDays(i - 1);
+                    <li><a class="img-circle@(currentDay == i ? " selected" : "")" href="@Url.Action("View", new { eventId = Model.Id, day = i })"><div class="day">@day.ToString("ddd", culture)</div><div class="date">@day.Day</div></a></li>
                 }
+@* ReSharper restore PossibleInvalidOperationException *@
             </ul>
         </div>
     </div>
@@ -124,6 +120,7 @@
         </tbody>
     </table>
 
+@* ReSharper disable UseOfImplicitGlobalInFunctionScope *@
 @using (Script.Foot())
 {
 
@@ -132,7 +129,6 @@
         $("img.scale").imageScale();
         $("p.description").textCollapse();
         
-        // TODO: To buy a license and set "Add To Calendar" values
         if (addthisevent) {
             addthisevent.settings({
                 license: "a253yx1lkz7hvkq8kmun",
@@ -150,3 +146,4 @@
     });
 </script>
 }
+@* ReSharper restore UseOfImplicitGlobalInFunctionScope *@

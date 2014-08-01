@@ -49,7 +49,9 @@ namespace SmartWalk.Server.Controllers
             var result = _eventService.GetEventById(eventId, eventDay);
             if (result == null) return new HttpNotFoundResult();
 
-            return View(result);
+            var view = View(result);
+            view.ViewData.Add("day", eventDay + 1);
+            return view;
         }
 
         [CompressFilter]

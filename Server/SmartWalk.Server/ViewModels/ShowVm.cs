@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using Newtonsoft.Json;
-using SmartWalk.Server.Extensions;
 using SmartWalk.Shared;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {

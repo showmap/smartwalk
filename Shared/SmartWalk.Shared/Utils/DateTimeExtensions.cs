@@ -1,9 +1,33 @@
 ﻿using System;
+using System.Globalization;
 
 namespace SmartWalk.Shared.Utils
 {
     public static class DateTimeExtensions
     {
+        public static string ToString(this DateTime? date, string format, CultureInfo culture)
+        {
+            return date.HasValue ? date.Value.ToString(format, culture) : string.Empty;
+        }
+
+        public static bool IsMultiDay(DateTime? startDate, DateTime? endDate)
+        {
+            var result = DaysCount(startDate, endDate) > 1;
+            return result;
+        }
+
+        public static int DaysCount(DateTime? startDate, DateTime? endDate)
+        {
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var span = endDate.Value - startDate.Value;
+                var result = span.Days + 1;
+                return result;
+            }
+
+            return 0;
+        }
+
         public static bool IsTimeThisDay(
             this DateTime time,
             DateTime? day,

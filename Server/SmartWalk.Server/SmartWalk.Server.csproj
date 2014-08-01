@@ -188,10 +188,10 @@
     <Compile Include="Services\QueryService\RequestSelectExtensions.cs" />
     <Compile Include="Services\SmartWalkUserService\ISmartWalkUserService.cs" />
     <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="ShellEvents.cs" />
     <Compile Include="Utils\AccessType.cs" />
     <Compile Include="Utils\LoadMode.cs" />
+    <Compile Include="Utils\ModelExtensions.cs" />
     <Compile Include="ViewModels\ErrorResultVm.cs" />
     <Compile Include="ViewModels\IAddressesMapObject.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />

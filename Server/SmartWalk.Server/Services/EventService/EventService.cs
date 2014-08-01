@@ -234,14 +234,11 @@ namespace SmartWalk.Server.Services.EventService
 
         private static IList<EntityVm> GetEventVenues(EventMetadataRecord eventMeta, int? day)
         {
-            var isMultiDay =
-                eventMeta.EndTime.HasValue &&
-                eventMeta.StartTime.Date < eventMeta.EndTime.Value.Date;
             var range = new Tuple<DateTime, DateTime?>(eventMeta.StartTime, eventMeta.EndTime);
             var currentDay =
                 day == null
                     ? null
-                    : (isMultiDay
+                    : (eventMeta.IsMultiDay()
                            ? (DateTime?)eventMeta.StartTime.AddDays(day.Value)
                            : null);
 

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
-using SmartWalk.Server.Extensions;
 using System.Linq;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {
