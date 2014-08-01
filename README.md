@@ -19,11 +19,11 @@ In order to turn on Orchard source code browsing and debugging the compiled in D
 
 **[IMPORTANT]** To avoid conflict with resolving NuGet references in SmartWalk.Server project while using within Orchard solution, a custom [NuGet.config](https://github.com/ievgen/smartwalk/blob/master/Server/Misc/NuGet.config) file should be placed into Orchard solution root folder. It will redirect NuGet to SmartWalk solution packages folder:
 
-  <config>
-    <add key="repositorypath" value="C:\Git\smartwalk\packages" />
-  </config> 
+	<config>
+		<add key="repositorypath" value="C:\Git\smartwalk\packages" />
+	</config> 
   
-**[IMPORTANT]**  To keep ReSharper settings synchronized between Orchard and SmartWalk.Server solutions all the original R#er settings files should be removed in Orchard root folder (*.ReSharper and *.DotSettings), our custom file should be put as default instead (https://github.com/ievgen/smartwalk/blob/master/Server/Misc/Orchard.sln.DotSettings). It will redirect ReSharper to SmartWalk solution settings:
+**[IMPORTANT]**  To keep ReSharper settings synchronized between Orchard and SmartWalk.Server solutions all the original R#er settings files should be removed in Orchard root folder (*.ReSharper and *.DotSettings), our custom file should be put as default instead [Orchard.sln.DotSettings](https://github.com/ievgen/smartwalk/blob/master/Server/Misc/Orchard.sln.DotSettings). It will redirect ReSharper to SmartWalk solution settings:
 
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=8054DDCCDFCFDA4AB36ED948952DCD4B/AbsolutePath/@EntryValue">
 		C:\Git\smartwalk\SmartWalk.Server.sln.DotSettings
