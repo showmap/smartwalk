@@ -294,7 +294,7 @@ EventViewModelExtended.setupDialogs = function (event) {
         close: function () {
             var entity = ko.dataFor(this);
             entity.isBusy(false);
-            entity.data.loadData({});
+            entity.data.loadData({ Type: entity.data.type() });
             entity.resetServerErrors();
             if (entity.data.errors) {
                 entity.data.errors.showAllMessages(false);

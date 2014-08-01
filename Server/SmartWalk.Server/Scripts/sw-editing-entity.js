@@ -58,7 +58,8 @@
         return self.settings.contactTypes[contact.type()];
     };
 
-    self.getMapLink = function () {
+    // TODO: To refactor this
+    self.getMapLink = ko.computed(function () {
         if (self.addressesManager.items() &&
             self.addressesManager.items().length > 0) {
             var addr = self.addressesManager.items()[0];
@@ -66,7 +67,7 @@
         }
 
         return "";
-    };
+    });
 
     self.data.toTinyJSON = function () {
         return {
