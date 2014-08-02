@@ -243,10 +243,10 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\EntityService\EntityService.cs" />
     <Compile Include="Services\EntityService\IEntityService.cs" />
-    <Compile Include="Services\EntityService\ViewModelContractFactory.cs" />
+    <Compile Include="Services\EntityService\ViewModelFactory.cs" />
     <Compile Include="Services\EventService\EventService.cs" />
     <Compile Include="Services\EventService\IEventService.cs" />
-    <Compile Include="Services\EventService\ViewModelContractFactory.cs" />
+    <Compile Include="Services\EventService\ViewModelFactory.cs" />
     <Compile Include="Services\ImportService\IImportService.cs" />
     <Compile Include="Services\ImportService\ImportService.cs" />
     <Compile Include="Services\QueryService\DataContractsFactory.cs" />

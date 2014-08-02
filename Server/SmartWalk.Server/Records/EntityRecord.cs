@@ -29,12 +29,14 @@ namespace SmartWalk.Server.Records
             set { _entityMappingRecords = value; }
         }
 
+        [CascadeAllDeleteOrphan]
         public virtual IList<AddressRecord> AddressRecords
         {
             get { return _addressRecords; }
             set { _addressRecords = value; }
         }
 
+        [CascadeAllDeleteOrphan]
         public virtual IList<ContactRecord> ContactRecords
         {
             get { return _contactRecords; }

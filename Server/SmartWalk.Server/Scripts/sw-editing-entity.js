@@ -58,15 +58,21 @@
         return self.settings.contactTypes[contact.type()];
     };
 
-    // TODO: To refactor this
+    // TODO: To migrate to new map engine
     self.getMapLink = ko.computed(function () {
-        if (self.addressesManager.items() &&
-            self.addressesManager.items().length > 0) {
-            var addr = self.addressesManager.items()[0];
-            return addr.getMapLink();
+        if (self.addressesManager.items()) {
+            var visibleAddresses = $.grep(
+                self.addressesManager.items(),
+                function (ad) { return ad.address() && !ad._destroy; });
+
+            if (visibleAddresses.length > 0) {
+                return visibleAddresses[0].getMapLink();
+            }
+            
+            return null;
         }
 
-        return "";
+        return null;
     });
 
     self.data.toTinyJSON = function () {

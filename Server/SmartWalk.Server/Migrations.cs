@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using JetBrains.Annotations;
 using Orchard;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
@@ -12,6 +11,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Settings.Models;
 using Orchard.Users.Models;
 using System.Linq;
+using SmartWalk.Shared;
 
 namespace SmartWalk.Server
 {
@@ -44,7 +44,6 @@ namespace SmartWalk.Server
         [UsedImplicitly]
         public int Create()
         {
-
             SchemaBuilder.CreateTable("SmartWalkUserRecord", table => table
                .ContentPartRecord()
                .Column("FirstName", DbType.String, c => c.NotNull().WithLength(50))
@@ -52,7 +51,6 @@ namespace SmartWalk.Server
                .Column<DateTime>("CreatedAt", c => c.NotNull())
                .Column<DateTime>("LastLoginAt", c => c.NotNull())
                );
-
 
             //SchemaBuilder.DropTable("ShowMappingRecord");
             //SchemaBuilder.DropTable("EventMappingRecord");
@@ -696,13 +694,18 @@ namespace SmartWalk.Server
             return 5;
         }
 
-        //[UsedImplicitly]
-        //public int UpdateFrom5() {
-        //    SchemaBuilder.AlterTable("SmartWalkUserRecord", table => table
-        //       .AddColumn("TimeZone", DbType.String, c => c.WithLength(255))
-        //       );
+        [UsedImplicitly]
+        public int UpdateFrom5()
+        {
+            SchemaBuilder.AlterTable(
+                "ContactRecord",
+                table => table.AddColumn("IsDeleted", DbType.Boolean, c => c.NotNull().WithDefault(false)));
 
-        //    return 6;
-        //}
+            SchemaBuilder.AlterTable(
+                "AddressRecord",
+                table => table.AddColumn("IsDeleted", DbType.Boolean, c => c.NotNull().WithDefault(false)));
+
+            return 6;
+        }
     }
 }

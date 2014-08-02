@@ -218,11 +218,11 @@ namespace SmartWalk.Server.Services.EventService
         {
             if (eventMeta == null) throw new ArgumentNullException("eventMeta");
 
-            var result = ViewModelContractFactory.CreateViewModelContract(eventMeta, mode);
+            var result = ViewModelFactory.CreateViewModel(eventMeta, mode);
             result.Host =
                 EntityService
-                    .ViewModelContractFactory
-                    .CreateViewModelContract(eventMeta.EntityRecord, mode);
+                    .ViewModelFactory
+                    .CreateViewModel(eventMeta.EntityRecord, mode);
 
             if (mode == LoadMode.Full)
             {
@@ -255,12 +255,12 @@ namespace SmartWalk.Server.Services.EventService
                 .Select(e =>
                     {
                         var venueVm = EntityService
-                            .ViewModelContractFactory
-                            .CreateViewModelContract(e, LoadMode.Full);
+                            .ViewModelFactory
+                            .CreateViewModel(e, LoadMode.Full);
 
                         venueVm.Shows = allShows
                             .Where(s => s.EntityRecord.Id == e.Id && !s.IsReference)
-                            .Select(ViewModelContractFactory.CreateViewModelContract)
+                            .Select(ViewModelFactory.CreateViewModel)
                             .ToArray();
 
                         return venueVm;

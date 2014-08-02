@@ -5,9 +5,9 @@ using SmartWalk.Server.ViewModels;
 
 namespace SmartWalk.Server.Services.EventService
 {
-    public static class ViewModelContractFactory
+    public static class ViewModelFactory
     {
-        public static EventMetadataVm CreateViewModelContract(EventMetadataRecord record, LoadMode mode)
+        public static EventMetadataVm CreateViewModel(EventMetadataRecord record, LoadMode mode)
         {
             if (record == null) throw new ArgumentNullException("record");
 
@@ -43,7 +43,7 @@ namespace SmartWalk.Server.Services.EventService
             }
         }
 
-        public static ShowVm CreateViewModelContract(ShowRecord record)
+        public static ShowVm CreateViewModel(ShowRecord record)
         {
             if (record == null) throw new ArgumentNullException("record");
 

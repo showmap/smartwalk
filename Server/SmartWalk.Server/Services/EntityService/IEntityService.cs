@@ -20,7 +20,7 @@ namespace SmartWalk.Server.Services.EntityService
             string searchString = null,
             int[] excludeIds = null);
 
-        bool IsNameUnique(EntityVm item);
+        bool IsNameUnique(EntityVm entityVm);
         AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId);
         EntityVm GetEntityById(int entityId);
 

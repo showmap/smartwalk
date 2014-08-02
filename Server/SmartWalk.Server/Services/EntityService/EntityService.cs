@@ -14,28 +14,21 @@ namespace SmartWalk.Server.Services.EntityService
     [UsedImplicitly]
     public class EntityService : IEntityService
     {
-        private readonly IRepository<ContactRecord> _contactRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
-        private readonly IRepository<AddressRecord> _addressRepository;
 
-        public EntityService(
-            IRepository<EntityRecord> entityRepository,
-            IRepository<ContactRecord> contactRepository, 
-            IRepository<AddressRecord> addressRepository)
+        public EntityService(IRepository<EntityRecord> entityRepository)
         {
             _entityRepository = entityRepository;
-            _contactRepository = contactRepository;
-            _addressRepository = addressRepository;
         }
 
-        public bool IsNameUnique(EntityVm item)
+        public bool IsNameUnique(EntityVm entityVm)
         {
             return !_entityRepository
                 .Table
                 .Any(e => 
-                    e.Type == item.Type && 
-                    e.Id != item.Id && 
-                    e.Name == item.Name);
+                    e.Type == entityVm.Type && 
+                    e.Id != entityVm.Id && 
+                    e.Name == entityVm.Name);
         }
 
         public AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId)
@@ -69,73 +62,68 @@ namespace SmartWalk.Server.Services.EntityService
             return result;
         }
 
-        public EntityVm GetEntityById(int hostId)
+        public EntityVm GetEntityById(int entityId)
         {
-            var entity = _entityRepository.Get(hostId);
+            var entity = _entityRepository.Get(entityId);
             if (entity == null) return null;
 
-            var result = ViewModelContractFactory
-                .CreateViewModelContract(entity, LoadMode.Full);
+            var result = ViewModelFactory.CreateViewModel(entity, LoadMode.Full);
             return result;
         }
 
         public EntityVm SaveEntity(SmartWalkUserRecord user, EntityVm entityVm)
         {
-            var entity = _entityRepository.Get(entityVm.Id);
-            if (entity == null)
-            {
-                entity = new EntityRecord
-                    {
-                        Name = entityVm.Name,
-                        Type = entityVm.Type,
-                        SmartWalkUserRecord = user,
-                        Picture = entityVm.Picture,
-                        Description = entityVm.Description,
-                        IsDeleted = false,
-                        DateCreated = DateTime.UtcNow,
-                        DateModified = DateTime.UtcNow
-                    };
+            if (user == null) throw new ArgumentNullException("user");
+            if (entityVm == null) throw new ArgumentNullException("entityVm");
 
-                _entityRepository.Create(entity);
+            var entity = _entityRepository.Get(entityVm.Id) ?? new EntityRecord
+                {
+                    SmartWalkUserRecord = user,
+                    DateCreated = DateTime.UtcNow
+                };
+
+            ViewModelFactory.UpdateByViewModel(entity, entityVm);
+
+            foreach (var contactVm in entityVm.Contacts)
+            {
+                // ReSharper disable AccessToForEachVariableInClosure
+                var contact = entity.ContactRecords.FirstOrDefault(cr => cr.Id == contactVm.Id);
+                // ReSharper restore AccessToForEachVariableInClosure
+                if (contact == null)
+                {
+                    contact = new ContactRecord { EntityRecord = entity };
+                    entity.ContactRecords.Add(contact);
+                }
+
+                ViewModelFactory.UpdateByViewModel(contact, contactVm);
+            }
+
+            foreach (var addressVm in entityVm.Addresses)
+            {
+                // ReSharper disable AccessToForEachVariableInClosure
+                var address = entity.AddressRecords.FirstOrDefault(ar => ar.Id == addressVm.Id);
+                // ReSharper restore AccessToForEachVariableInClosure
+                if (address == null)
+                {
+                    address = new AddressRecord { EntityRecord = entity };
+                    entity.AddressRecords.Add(address);
+                }
+
+                ViewModelFactory.UpdateByViewModel(address, addressVm);
+            }
+
+            if (entity.Id > 0)
+            {
+                _entityRepository.Update(entity);
             }
             else
             {
-                entity.Name = entityVm.Name;
-                entity.Picture = entityVm.Picture;
-                entity.Description = entityVm.Description;
-                entity.DateModified = DateTime.Now;
+                _entityRepository.Create(entity);
             }
 
             _entityRepository.Flush();
 
-            foreach (var contact in entityVm.Contacts)
-            {
-                if (contact.Destroy)
-                {
-                    DeleteContact(contact.Id);
-                }
-                else
-                {
-                    // TODO: Do we add a contact no matter if it's just updated?
-                    entity.ContactRecords.Add(SaveContact(contact, entity.Id));
-                }
-            }
-
-            foreach (var address in entityVm.Addresses)
-            {
-                if (address.Destroy)
-                {
-                    DeleteAddress(address.Id);
-                }
-                else
-                {
-                    // TODO: Do we add a address no matter if it's just updated?
-                    entity.AddressRecords.Add(SaveAddress(address, entity.Id));
-                }
-            }
-
-            var result = ViewModelContractFactory
-                .CreateViewModelContract(entity, LoadMode.Full);
+            var result = ViewModelFactory.CreateViewModel(entity, LoadMode.Full);
             return result;
         }
 
@@ -164,7 +152,9 @@ namespace SmartWalk.Server.Services.EntityService
             {
                 query = query.Where(
                     e => e.Name.ToLower(CultureInfo.InvariantCulture).Contains(
+                        // ReSharper disable PossibleNullReferenceException
                         searchString.ToLower(CultureInfo.InvariantCulture)));
+                        // ReSharper restore PossibleNullReferenceException
             }
 
             if (excludeIds != null)
@@ -180,85 +170,8 @@ namespace SmartWalk.Server.Services.EntityService
             return
                 query.Skip(pageSize * pageNumber)
                      .Take(pageSize)
-                     .Select(e => ViewModelContractFactory.CreateViewModelContract(e, LoadMode.Compact))
-                     .ToList();
-        }
-
-        private AddressRecord SaveAddress(AddressVm addressVm, int entityId)
-        {
-            var address = _addressRepository.Get(addressVm.Id);
-            if (address == null)
-            {
-                var entity = _entityRepository.Get(entityId);
-
-                address = new AddressRecord
-                    {
-                        EntityRecord = entity,
-                        Address = addressVm.Address,
-                        Tip = addressVm.Tip,
-                        Latitude = addressVm.Latitude,
-                        Longitude = addressVm.Longitude
-                    };
-                _addressRepository.Create(address);
-            }
-            else
-            {
-                address.Address = addressVm.Address;
-                address.Tip = addressVm.Tip;
-                address.Latitude = addressVm.Latitude;
-                address.Longitude = addressVm.Longitude;
-            }
-
-            _addressRepository.Flush();
-
-            return address;
-        }
-
-        private void DeleteAddress(int addressId)
-        {
-            var address = _addressRepository.Get(addressId);
-            if (address == null) return;
-
-            _addressRepository.Delete(address);
-            _addressRepository.Flush();
-        }
-
-        private ContactRecord SaveContact(ContactVm contactVm, int entityId)
-        {
-            var contact = _contactRepository.Get(contactVm.Id);
-            if (contact == null)
-            {
-                var entity = _entityRepository.Get(entityId);
-
-                contact = new ContactRecord
-                    {
-                        EntityRecord = entity,
-                        Type = contactVm.Type,
-                        Title = contactVm.Title,
-                        Contact = contactVm.Contact
-                    };
-
-                _contactRepository.Create(contact);
-            }
-            else
-            {
-                contact.Title = contactVm.Title;
-                contact.Contact = contactVm.Contact;
-                contact.Type = contactVm.Type;
-            }
-
-            _contactRepository.Flush();
-
-            return contact;
-        }
-
-        private void DeleteContact(int contactId)
-        {
-            var contact = _contactRepository.Get(contactId);
-            if (contact == null) return;
-
-            _contactRepository.Delete(contact);
-            _contactRepository.Flush();
+                     .Select(e => ViewModelFactory.CreateViewModel(e, LoadMode.Compact))
+                     .ToArray();
         }
     }
 }
