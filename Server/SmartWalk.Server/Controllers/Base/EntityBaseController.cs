@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -242,29 +243,49 @@ namespace SmartWalk.Server.Controllers.Base
         {
             var result = new List<ValidationError>();
 
-            var addressProperty = model.GetPropertyName(p => p.Address);
-            if (string.IsNullOrEmpty(model.Address))
+            
+            if (!string.IsNullOrEmpty(model.Address) && model.Address.Length > 255)
             {
-                result.Add(new ValidationError(
-                               prefix + addressProperty,
-                               T("Address can not be empty.").Text));
-            }
-            else if (model.Address.Length > 255)
-            {
+                var addressProperty = model.GetPropertyName(p => p.Address);
                 result.Add(new ValidationError(
                                prefix + addressProperty,
                                T("Address can not be longer than 255 characters.").Text));
             }
 
-            var tipProperty = model.GetPropertyName(p => p.Tip);
-            if (!string.IsNullOrEmpty(model.Tip))
+            var latitudeProperty = model.GetPropertyName(p => p.Latitude);
+            if (Math.Abs(model.Latitude - 0) < 0.00001)
             {
-                if (model.Tip.Length > 255)
-                {
-                    result.Add(new ValidationError(
-                                   prefix + tipProperty,
-                                   T("Address tip can not be longer than 255 characters.").Text));
-                }
+                result.Add(new ValidationError(
+                               prefix + latitudeProperty,
+                               T("Latitude can not be empty.").Text));
+            }
+            else if (model.Latitude < -85 || model.Latitude > 85)
+            {
+                result.Add(new ValidationError(
+                               prefix + latitudeProperty,
+                               T("Latitude is out of range.").Text));
+            }
+
+            var longitudeProperty = model.GetPropertyName(p => p.Longitude);
+            if (Math.Abs(model.Longitude - 0) < 0.00001)
+            {
+                result.Add(new ValidationError(
+                               prefix + longitudeProperty,
+                               T("Longitude can not be empty").Text));
+            }
+            else if (model.Longitude < -180 || model.Longitude > 180)
+            {
+                result.Add(new ValidationError(
+                               prefix + latitudeProperty,
+                               T("Longitude is out of range.").Text));
+            }
+
+            if (!string.IsNullOrEmpty(model.Tip) && model.Tip.Length > 255)
+            {
+                var tipProperty = model.GetPropertyName(p => p.Tip);
+                result.Add(new ValidationError(
+                                prefix + tipProperty,
+                                T("Address tip can not be longer than 255 characters.").Text));
             }
 
             return result;

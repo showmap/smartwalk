@@ -168,8 +168,20 @@ EntityViewModelExtended.setupContactValidation = function (contact, settings) {
 
 EntityViewModelExtended.setupAddressValidation = function (address, settings) {
     address.address
-        .extend({ required: { params: true, message: settings.addressMessages.addressRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressLengthValidationMessage } });
+    
+    address.latitude
+        .extend({ number: true })
+        .extend({ notEqual: "0" })
+        .extend({ min: -85 })
+        .extend({ max: 85 })
+        .extend({ required: { params: true, message: settings.addressMessages.addressLatitudeValidationMessage } });
+    address.longitude
+        .extend({ number: true })
+        .extend({ notEqual: "0" })
+        .extend({ min: -180 })
+        .extend({ max: 180 })
+        .extend({ required: { params: true, message: settings.addressMessages.addressLongitudeValidationMessage } });
 
     address.tip
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressTipValidationMessage } });

@@ -100,11 +100,11 @@
                         <span class="abbr">@venue.Abbreviation</span>
                     </a>
                     <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.Name</h4></a>
-                @if (venue.Addresses.Any())
+                @if (venue.Addresses.Any(ad => ad.Address != null))
                 {
+                    var address = venue.Addresses.First(ad => ad.Address != null);
                     <br />
-                    <address>@venue.Addresses.First().Address</address>
-                    <i class="tip description">@venue.Addresses.First().Tip</i>
+                    <address>@address.Address</address><i class="tip description">@address.Tip</i>
                 }                            
                 </td>
             </tr>

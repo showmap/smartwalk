@@ -32,10 +32,10 @@
             }
         </div>
 			
-@if (Model.Addresses.Any()) {
+@if (Model.Addresses.Any(ad => ad.Address != null)) {
         <div class="info addresses-container">
-            @foreach (var address in Model.Addresses) {
-                <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address>@if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">&nbsp;@address.Tip</i>}</h4></div>                        
+            @foreach (var address in Model.Addresses.Where(ad => ad.Address != null)) {
+                <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address> @if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">&nbsp;@address.Tip</i>}</h4></div>                        
             }
         </div>	
 }
