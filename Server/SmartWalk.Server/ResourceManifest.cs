@@ -99,7 +99,7 @@ namespace SmartWalk.Server
             // 3rd Party - Image Scale
 
             manifest.DefineScript("ImageScale")
-                .SetVersion("1.3.1")
+                .SetVersion("1.3.2")
                 .SetVersionUrl("image-scale.min.js", "image-scale.js")
                 .SetDependencies("jQuery");
 
