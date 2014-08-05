@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using Orchard.Data;
 using SmartWalk.Server.Records;
-using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared;
@@ -16,20 +15,15 @@ namespace SmartWalk.Server.Services.EventService
     [UsedImplicitly]
     public class EventService : IEventService
     {
-        private readonly IEntityService _entityService; // TODO: We should get rid of this reference
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
-        private readonly IRepository<ShowRecord> _showRepository;
 
-        public EventService(IEntityService entityService,
+        public EventService(
             IRepository<EventMetadataRecord> eventMetadataRepository,
-            IRepository<EntityRecord> entityRepository,
-            IRepository<ShowRecord> showRepository)
+            IRepository<EntityRecord> entityRepository)
         {
-            _entityService = entityService;
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
-            _showRepository = showRepository;
         }
 
         public IList<EventMetadataVm> GetEvents(
@@ -97,73 +91,71 @@ namespace SmartWalk.Server.Services.EventService
 
         public EventMetadataVm SaveEvent(SmartWalkUserRecord user, EventMetadataVm eventVm)
         {
+            if (user == null) throw new ArgumentNullException("user");
+            if (eventVm == null) throw new ArgumentNullException("eventVm");
+            if (eventVm.StartDate == null) throw new ArgumentNullException("eventVm.StartDate");
+
             var host = _entityRepository.Get(eventVm.Host.Id);
-            if (host == null || eventVm.StartDate == null) return null;
+            if (host == null) throw new ArgumentOutOfRangeException("eventVm.Host");
+            if (host.SmartWalkUserRecord.Id != user.Id) 
+                throw new ArgumentOutOfRangeException("eventVm.Host", "Can't add host created by other user to the event.");
 
-            var eventMeta = _eventMetadataRepository.Get(eventVm.Id);
-            if (eventMeta == null)
+            var eventMeta = _eventMetadataRepository.Get(eventVm.Id) ?? new EventMetadataRecord
+                {
+                    SmartWalkUserRecord = user,
+                    DateCreated = DateTime.UtcNow
+                };
+
+            ViewModelFactory.UpdateByViewModel(eventMeta, eventVm, host);
+
+            foreach (var venueVm in eventVm.Venues)
             {
-                eventMeta = new EventMetadataRecord
-                    {
-                        EntityRecord = host,
-                        SmartWalkUserRecord = user,
-                        Title = eventVm.Title,
-                        Description = eventVm.Description,
-                        StartTime = eventVm.StartDate.Value,
-                        EndTime = eventVm.EndDate,
-                        CombineType = eventVm.CombineType,
-                        Picture = eventVm.Picture,
-                        IsPublic = eventVm.IsPublic,
-                        IsDeleted = false,
-                        DateCreated = DateTime.UtcNow,
-                        DateModified = DateTime.UtcNow,
-                    };
+                var venue = _entityRepository.Get(venueVm.Id);
 
-                _eventMetadataRepository.Create(eventMeta);
+                foreach (var showVm in venueVm.Shows)
+                {
+                    // ReSharper disable AccessToForEachVariableInClosure
+                    var show = eventMeta.ShowRecords.FirstOrDefault(s => s.Id == showVm.Id);
+                    // ReSharper restore AccessToForEachVariableInClosure
+                    if (show == null)
+                    {
+                        show = new ShowRecord
+                            {
+                                EventMetadataRecord = eventMeta,
+                                EntityRecord = venue,
+                                DateCreated = DateTime.UtcNow
+                            };
+                        eventMeta.ShowRecords.Add(show);
+                    }
+
+                    // if parent venue is deleted, all shows are deleted too
+                    if (venueVm.Destroy)
+                    {
+                        showVm.Destroy = true;
+                    }
+
+                    ViewModelFactory.UpdateByViewModel(show, showVm);
+                }
+
+                UpdateReferenceShow(eventMeta, venue, 
+                    !venueVm.Destroy && venueVm.Shows.Count(s => !s.Destroy) == 0);
+            }
+
+            RecalcEventCoordinates(eventMeta);
+
+            if (eventMeta.Id > 0)
+            {
+                _eventMetadataRepository.Update(eventMeta);
             }
             else
             {
-                eventMeta.EntityRecord = host;
-                eventMeta.Title = eventVm.Title;
-                eventMeta.Description = eventVm.Description;
-                eventMeta.StartTime = eventVm.StartDate.Value;
-                eventMeta.EndTime = eventVm.EndDate;
-                eventMeta.CombineType = eventVm.CombineType;
-                eventMeta.Picture = eventVm.Picture;
-                eventMeta.IsPublic = eventVm.IsPublic;
-                eventMeta.DateModified = DateTime.UtcNow;
+                _eventMetadataRepository.Create(eventMeta);
             }
 
             _eventMetadataRepository.Flush();
 
-            foreach (var venue in eventVm.Venues.Where(venueVm => !venueVm.Destroy))
-            {
-                var currentVenue = venue;
-
-                if (venue.Id < 0)
-                {
-                    // TODO: We are not supposed to save entities on event save
-                    // this is probably a mistake.
-                    currentVenue = _entityService.SaveEntity(user, venue);
-                    if (currentVenue == null) continue;
-                }
-
-                if (!venue.Shows.Any())
-                {
-                    CheckShowVenue(eventMeta.Id, currentVenue.Id);
-                }
-                else
-                {
-                    foreach (var showVm in venue.Shows)
-                    {
-                        SaveShow(showVm, eventMeta.Id, currentVenue.Id);
-                    }
-                }
-            }
-
-            RecalculateEventCoordinates(eventMeta);
-
-            return CreateViewModelContract(eventMeta, null);
+            var result = CreateViewModelContract(eventMeta, null);
+            return result;
         }
 
         public void DeleteEvent(int eventId)
@@ -171,18 +163,21 @@ namespace SmartWalk.Server.Services.EventService
             var eventMeta = _eventMetadataRepository.Get(eventId);
             if (eventMeta == null) return;
 
-            foreach (var show in eventMeta.ShowRecords)
+            foreach (var show in eventMeta.ShowRecords.Where(s => !s.IsDeleted).ToArray())
             {
                 show.IsDeleted = true;
-                _showRepository.Flush();
+                show.DateModified = DateTime.UtcNow;
             }
 
             eventMeta.IsDeleted = true;
+            eventMeta.DateModified = DateTime.UtcNow;
+
+            _eventMetadataRepository.Update(eventMeta);
             _eventMetadataRepository.Flush();
         }
 
         private static IList<EventMetadataVm> GetEvents(
-            IEnumerable<EventMetadataRecord> query, 
+            IEnumerable<EventMetadataRecord> query,
             int pageNumber,
             int pageSize,
             Func<EventMetadataRecord, IComparable> orderBy,
@@ -198,7 +193,9 @@ namespace SmartWalk.Server.Services.EventService
                         e =>
                         !string.IsNullOrEmpty(e.Title) &&
                         e.Title.ToLower(CultureInfo.InvariantCulture)
+                        // ReSharper disable PossibleNullReferenceException
                          .Contains(searchString.ToLower(CultureInfo.InvariantCulture)));
+                        // ReSharper restore PossibleNullReferenceException
             }
 
             query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
@@ -207,7 +204,7 @@ namespace SmartWalk.Server.Services.EventService
                 query.Skip(pageSize * pageNumber)
                      .Take(pageSize)
                      .Select(e => CreateViewModelContract(e, null, LoadMode.Compact))
-                     .ToList();
+                     .ToArray();
             return result;
         }
 
@@ -269,117 +266,74 @@ namespace SmartWalk.Server.Services.EventService
             return result;
         }
 
-        private void CheckShowVenue(int eventId, int venueId)
+        private static void UpdateReferenceShow(
+            EventMetadataRecord eventMeta,
+            EntityRecord venue,
+            bool addReference)
         {
-            var shows =
-                _showRepository
-                    .Table
-                    .Where(
-                        s =>
-                        s.EventMetadataRecord.Id == eventId &&
-                        s.EntityRecord.Id == venueId &&
-                        (!s.IsDeleted || s.IsReference))
-                    .ToList();
+            var refShow = eventMeta
+                .ShowRecords
+                .FirstOrDefault(
+                    s =>
+                    s.EntityRecord.Id == venue.Id &&
+                    s.IsReference);
 
-            if (shows.Any())
+            if (addReference)
             {
-                // If we have both is reference and not is reference shows, remove all is reference shows
-                if (shows.Count(s => !s.IsReference) > 0 && shows.Count(s => s.IsReference) > 0)
+                // creating a new ref show if venue is empty and there was no ref before
+                if (refShow == null)
                 {
-                    foreach (var showRecord in shows.Where(s => s.IsReference))
-                    {
-                        _showRepository.Delete(showRecord);
-                        _showRepository.Flush();
-                    }
+                    refShow = new ShowRecord
+                        {
+                            EventMetadataRecord = eventMeta,
+                            EntityRecord = venue,
+                            DateCreated = DateTime.UtcNow,
+                            IsReference = true
+                        };
+                    eventMeta.ShowRecords.Add(refShow);
+                }
+                // restoring existing ref show
+                else
+                {
+                    refShow.IsDeleted = false;
                 }
             }
             else
             {
-                var show = new ShowRecord
-                    {
-                        EventMetadataRecord = _eventMetadataRepository.Get(eventId),
-                        EntityRecord = _entityRepository.Get(venueId),
-                        IsReference = true,
-                        IsDeleted = false,
-                        DateCreated = DateTime.UtcNow,
-                        DateModified = DateTime.UtcNow
-                    };
+                // if ref show exists mark it as deleted
+                if (refShow != null)
+                {
+                    refShow.IsDeleted = true;
+                }
+            }
 
-                _showRepository.Create(show);
-                _showRepository.Flush();
+            if (refShow != null)
+            {
+                refShow.DateModified = DateTime.UtcNow;
             }
         }
 
-        private void SaveShow(ShowVm item, int eventId, int venueId)
-        {
-            var show = _showRepository.Get(item.Id);
-            var eventMeta = _eventMetadataRepository.Get(eventId);
-            var venue = _entityRepository.Get(venueId);
-
-            if (eventMeta == null || venue == null) return;
-
-            if (show == null) {
-
-                if (item.Destroy)
-                    return;
-
-                show = new ShowRecord
-                    {
-                        EventMetadataRecord = eventMeta,
-                        EntityRecord = venue,
-                        IsReference = false,
-                        Title = item.Title,
-                        Description = item.Description,
-                        StartTime = item.StartTime,
-                        EndTime = item.EndTime,
-                        Picture = item.Picture,
-                        DetailsUrl = item.DetailsUrl,
-                        IsDeleted = false,
-                        DateCreated = DateTime.UtcNow,
-                        DateModified = DateTime.UtcNow
-                    };
-
-                _showRepository.Create(show);
-                _showRepository.Flush();
-
-                CheckShowVenue(eventMeta.Id, venue.Id);
-            }
-            else {
-                if (item.Destroy)
-                    show.IsDeleted = true;
-
-                show.EntityRecord = venue;
-                show.Title = item.Title;
-                show.Description = item.Description;
-                show.StartTime = item.StartTime;
-                show.EndTime = item.EndTime;
-                show.Picture = item.Picture;
-                show.DetailsUrl = item.DetailsUrl;
-                show.DateModified = DateTime.UtcNow;
-
-                _showRepository.Flush();
-            }
-        }
-
-        private void RecalculateEventCoordinates(EventMetadataRecord eventMeta)
+        private static void RecalcEventCoordinates(EventMetadataRecord eventMeta)
         {
             var coords = eventMeta
                 .ShowRecords
                 .Where(s => !s.IsDeleted)
                 .Select(s => s.EntityRecord)
-                .Where(v => !v.IsDeleted)
                 .SelectMany(v => v.AddressRecords)
                 .Select(address => new PointF((float)address.Latitude, (float)address.Longitude))
                 .ToArray();
 
-            if (coords.Length == 0) return;
-
-            var eventCoord = MapUtil.GetMiddleCoordinate(coords);
-
-            eventMeta.Latitude = eventCoord.X;
-            eventMeta.Longitude = eventCoord.Y;
-
-            _eventMetadataRepository.Flush();
+            if (coords.Length != 0)
+            {
+                var eventCoord = MapUtil.GetMiddleCoordinate(coords);
+                eventMeta.Latitude = eventCoord.X;
+                eventMeta.Longitude = eventCoord.Y;
+            }
+            else
+            {
+                eventMeta.Latitude = 0;
+                eventMeta.Longitude = 0;
+            }
         }
     }
 }

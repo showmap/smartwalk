@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.Data.Conventions;
+using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Records
 {
+    // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
     public class EventMetadataRecord
+    // ReSharper restore ClassWithVirtualMembersNeverInherited.Global
     {
         private IList<EventMappingRecord> _eventMappingRecords;
         private IList<ShowRecord> _showRecords;
 
-        public virtual int Id { get; set; }        
-        public virtual EntityRecord EntityRecord { get; set; } 
+        [UsedImplicitly]
+        public virtual int Id { get; set; }
+        public virtual EntityRecord EntityRecord { get; set; }
         public virtual SmartWalkUserRecord SmartWalkUserRecord { get; set; }
         public virtual string Title { get; set; }
+
         [StringLengthMax]
         public virtual string Description { get; set; }
+
         public virtual DateTime StartTime { get; set; }
         public virtual DateTime? EndTime { get; set; }
         public virtual string Picture { get; set; }
@@ -23,7 +29,11 @@ namespace SmartWalk.Server.Records
         public virtual int CombineType { get; set; }
         public virtual bool IsPublic { get; set; }
         public virtual bool IsDeleted { get; set; }
+
+        [UsedImplicitly]
         public virtual DateTime DateCreated { get; set; }
+
+        [UsedImplicitly]
         public virtual DateTime DateModified { get; set; }
 
         public virtual IList<EventMappingRecord> EventMappingRecords
@@ -32,9 +42,11 @@ namespace SmartWalk.Server.Records
             set { _eventMappingRecords = value; }
         }
 
+        [CascadeAllDeleteOrphan]
         public virtual IList<ShowRecord> ShowRecords
         {
             get { return _showRecords; }
+            [UsedImplicitly]
             set { _showRecords = value; }
         }
 
@@ -45,9 +57,12 @@ namespace SmartWalk.Server.Records
         }
     }
 
-    public enum CombineType {
+    public enum CombineType
+    {
         None = 0,
+        [UsedImplicitly]
         ByVenue = 1,
+        [UsedImplicitly]
         ByHost = 2
     }
 }

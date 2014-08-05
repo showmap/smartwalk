@@ -91,6 +91,9 @@ namespace SmartWalk.Server.Controllers.Base
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
+            var access = _entityService.GetEntityAccess(CurrentSmartWalkUser.Record, entityId);
+            if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
+
             _entityService.DeleteEntity(entityId);
 
             return RedirectToAction("List");

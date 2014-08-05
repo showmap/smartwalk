@@ -132,7 +132,20 @@ namespace SmartWalk.Server.Services.EntityService
             var entity = _entityRepository.Get(entityId);
             if (entity == null) return;
 
+            foreach (var contact in entity.ContactRecords.Where(c => !c.IsDeleted).ToArray())
+            {
+                contact.IsDeleted = true;
+            }
+
+            foreach (var address in entity.AddressRecords.Where(a => !a.IsDeleted).ToArray())
+            {
+                address.IsDeleted = true;
+            }
+
             entity.IsDeleted = true;
+            entity.DateModified = DateTime.UtcNow;
+
+            _entityRepository.Update(entity);
             _entityRepository.Flush();
         }
 

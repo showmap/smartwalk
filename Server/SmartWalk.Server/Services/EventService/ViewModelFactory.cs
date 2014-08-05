@@ -11,36 +11,26 @@ namespace SmartWalk.Server.Services.EventService
         {
             if (record == null) throw new ArgumentNullException("record");
 
-            switch (mode)
+            var result = new EventMetadataVm { Id = record.Id };
+
+            if (mode == LoadMode.Compact || mode == LoadMode.Full)
             {
-                case LoadMode.Compact:
-                    return new EventMetadataVm
-                        {
-                            Id = record.Id,
-                            Title = record.Title,
-                            StartDate = record.StartTime,
-                            EndDate = record.EndTime,
-                            Picture = record.Picture
-                        };
-
-                case LoadMode.Full:
-                    return new EventMetadataVm
-                        {
-                            Id = record.Id,
-                            Title = record.Title,
-                            CombineType = record.CombineType,
-                            StartDate = record.StartTime,
-                            EndDate = record.EndTime,
-                            Latitude = record.Latitude,
-                            Longitude = record.Longitude,
-                            IsPublic = record.IsPublic,
-                            Description = record.Description,
-                            Picture = record.Picture
-                        };
-
-                default:
-                    return null;
+                result.Title = record.Title;
+                result.StartDate = record.StartTime;
+                result.EndDate = record.EndTime;
+                result.Picture = record.Picture;
             }
+
+            if (mode == LoadMode.Full)
+            {
+                result.CombineType = record.CombineType;
+                result.Latitude = record.Latitude;
+                result.Longitude = record.Longitude;
+                result.IsPublic = record.IsPublic;
+                result.Description = record.Description;
+            }
+
+            return result;
         }
 
         public static ShowVm CreateViewModel(ShowRecord record)
@@ -57,6 +47,36 @@ namespace SmartWalk.Server.Services.EventService
                     Picture = record.Picture,
                     DetailsUrl = record.DetailsUrl
                 };
+        }
+
+        public static void UpdateByViewModel(EventMetadataRecord record, EventMetadataVm eventVm, EntityRecord host)
+        {
+            if (!eventVm.StartDate.HasValue) throw new ArgumentNullException("eventVm.StartDate");
+
+            record.DateModified = DateTime.UtcNow;
+
+            record.EntityRecord = host;
+            record.Title = eventVm.Title;
+            record.Picture = eventVm.Picture;
+            record.Description = eventVm.Description;
+            record.StartTime = eventVm.StartDate.Value;
+            record.EndTime = eventVm.EndDate;
+            record.CombineType = eventVm.CombineType;
+            record.IsPublic = eventVm.IsPublic;
+        }
+
+        public static void UpdateByViewModel(ShowRecord record, ShowVm showVm)
+        {
+            record.DateModified = DateTime.UtcNow;
+
+            record.Title = showVm.Title;
+            record.Description = showVm.Description;
+            record.StartTime = showVm.StartTime;
+            record.EndTime = showVm.EndTime;
+            record.Picture = showVm.Picture;
+            record.DetailsUrl = showVm.DetailsUrl;
+
+            record.IsDeleted = showVm.Destroy;
         }
     }
 }

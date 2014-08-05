@@ -81,6 +81,9 @@ namespace SmartWalk.Server.Controllers
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
+            var access = _eventService.GetEventAccess(CurrentSmartWalkUser.Record, eventId);
+            if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
+
             _eventService.DeleteEvent(eventId);
 
             return RedirectToAction("List");
