@@ -40,6 +40,16 @@ namespace SmartWalk.Server
                 .SetVersion("2.7.0")
                 .SetVersionUrl("moment.min.js", "moment.js");
 
+            // 3rd Party - Leaflet
+
+            manifest.DefineScript("Leaflet")
+                .SetVersion("0.7.3")
+                .SetVersionUrl("leaflet.js", "leaflet.src.js");
+
+            manifest.DefineStyle("Leaflet")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("leaflet.css");
+
             // SmartWalk
 
             // TODO: To setup *.min.css

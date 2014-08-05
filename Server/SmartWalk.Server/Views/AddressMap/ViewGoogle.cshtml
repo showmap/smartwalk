@@ -3,6 +3,9 @@
 
 @model AddressMapVm
 @{
+    Script.Require("Leaflet").AtFoot();
+    Style.Require("Leaflet").AtFoot();
+
     Script.Require("GoogleMapsApi").AtFoot();
     var nfi = new NumberFormatInfo {NumberDecimalSeparator = "."};
 }
@@ -31,7 +34,7 @@
         var markers = [];
 
         var myOptions = {
-            zoom: 15,
+            zoom: 14,
             center: new google.maps.LatLng(@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }

@@ -1,0 +1,14 @@
+﻿@using System.Globalization
+@using SmartWalk.Server.ViewModels
+
+@model AddressMapVm
+
+@switch (Model.MapType)
+{
+    case MapType.Leaflet:
+        @Html.Partial("../AddressMap/ViewLeaflet", Model)
+        break;
+    case MapType.Google:
+        @Html.Partial("../AddressMap/ViewGoogle", Model)
+        break;
+}

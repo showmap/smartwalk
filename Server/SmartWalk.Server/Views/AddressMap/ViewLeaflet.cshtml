@@ -1,0 +1,42 @@
+﻿@using System.Globalization
+@using SmartWalk.Server.ViewModels
+
+@model AddressMapVm
+@{
+    Script.Require("Leaflet").AtFoot();
+    Style.Require("Leaflet").AtFoot();
+
+    var nfi = new NumberFormatInfo {NumberDecimalSeparator = "."};
+}
+
+@if (Model.Addresses.Any()) {
+    <div id="map" style="height: 180px"></div>
+}
+
+
+@using (Script.Foot()) {
+<script type="text/javascript">    
+$(function () {        
+        @if (Model.Addresses.Any()) {
+            <text>
+                
+        L.Icon.Default.imagePath = '@Href("../../Images/leaflet")';
+        var map = L.map('map').setView([@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)], 14);
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+@foreach (var address in Model.Addresses) {
+    <text>
+        L.marker([@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)]).addTo(map)
+            .bindPopup('@address.Address');
+    </text>
+}       
+    
+            
+            </text>
+}
+    });
+        
+</script>
+}
