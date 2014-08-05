@@ -59,7 +59,7 @@
         </div>	
     </div>
         
-@Html.Partial("../AddressMap", Model)
+@Html.Partial("../AddressMap", Model.ToAddressMapVm())
 
 @if (!@Model.Description.IsEmpty())
 {

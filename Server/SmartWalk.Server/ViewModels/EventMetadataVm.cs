@@ -7,7 +7,7 @@ using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class EventMetadataVm : IAddressesMapObject
+    public class EventMetadataVm
     {
         public EventMetadataVm()
         {

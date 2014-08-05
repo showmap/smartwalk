@@ -8,12 +8,11 @@ using SmartWalk.Server.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class EntityVm : IAddressesMapObject {
+    public class EntityVm {
         public EntityVm() {
             Contacts = new List<ContactVm>();
             Addresses = new List<AddressVm>();
             Shows = new List<ShowVm>();
-            _latitude = _longitude = 0;
         }
 
         public int Id { get; set; }
@@ -27,39 +26,8 @@ namespace SmartWalk.Server.ViewModels
         public IList<AddressVm> Addresses { get; set; }
         public IList<ShowVm> Shows { get; set; }
 
-        private double _latitude;
-
-        [JsonIgnore]
-        public double Latitude {
-            get {
-                if (Math.Abs(_latitude - 0) < 1)
-                    CalcCenter();
-
-                return _latitude;
-            }
-        }
-
-        private double _longitude;
-
-        [JsonIgnore]
-        public double Longitude {
-            get {
-                if (Math.Abs(_longitude - 0) < 1)
-                    CalcCenter();
-                return _longitude;
-            }
-        }
-
         [JsonIgnore]
         [UsedImplicitly]
-        public bool Destroy { get; set; }
-
-        private void CalcCenter() {
-            var points = Addresses.Select(address => new PointF((float) address.Latitude, (float) address.Longitude)).ToArray();
-            var center = MapUtil.GetMiddleCoordinate(points);
-
-            _latitude = center.X;
-            _longitude = center.Y;
-        }
+        public bool Destroy { get; set; }        
     }
 }

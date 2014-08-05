@@ -41,7 +41,7 @@
 }
     </div>
 
-@Html.Partial("../AddressMap", Model)
+@Html.Partial("../AddressMap", Model.ToAddressMapVm())
 
     <div class="row gap">
         <div class="col-md-7"><p class="description">@Model.Description</p></div>
