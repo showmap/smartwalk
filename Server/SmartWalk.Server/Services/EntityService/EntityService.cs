@@ -112,11 +112,7 @@ namespace SmartWalk.Server.Services.EntityService
                 ViewModelFactory.UpdateByViewModel(address, addressVm);
             }
 
-            if (entity.Id > 0)
-            {
-                _entityRepository.Update(entity);
-            }
-            else
+            if (entity.Id == 0)
             {
                 _entityRepository.Create(entity);
             }
@@ -145,7 +141,6 @@ namespace SmartWalk.Server.Services.EntityService
             entity.IsDeleted = true;
             entity.DateModified = DateTime.UtcNow;
 
-            _entityRepository.Update(entity);
             _entityRepository.Flush();
         }
 

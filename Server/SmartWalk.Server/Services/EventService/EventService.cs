@@ -143,11 +143,7 @@ namespace SmartWalk.Server.Services.EventService
 
             RecalcEventCoordinates(eventMeta);
 
-            if (eventMeta.Id > 0)
-            {
-                _eventMetadataRepository.Update(eventMeta);
-            }
-            else
+            if (eventMeta.Id == 0)
             {
                 _eventMetadataRepository.Create(eventMeta);
             }
@@ -172,7 +168,6 @@ namespace SmartWalk.Server.Services.EventService
             eventMeta.IsDeleted = true;
             eventMeta.DateModified = DateTime.UtcNow;
 
-            _eventMetadataRepository.Update(eventMeta);
             _eventMetadataRepository.Flush();
         }
 
