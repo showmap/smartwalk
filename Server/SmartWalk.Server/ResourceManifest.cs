@@ -44,7 +44,7 @@ namespace SmartWalk.Server
 
             manifest.DefineScript("Leaflet")
                 .SetVersion("0.7.3")
-                .SetVersionUrl("leaflet.js", "leaflet.src.js");
+                .SetVersionUrl("leaflet.js", "leaflet-src.js");
 
             manifest.DefineStyle("Leaflet")
                 .SetVersion(VersionUtil.CurrentVersion)
