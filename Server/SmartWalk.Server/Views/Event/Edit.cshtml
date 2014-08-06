@@ -18,9 +18,7 @@
     const string hostFormId = "edit-host-form-dialog";
     const string venueFormId = "edit-venue-form-dialog";
 
-    var cancelAction = Model.Id == 0 
-        ? Url.Action("List") 
-        : Url.Action("View", new { eventId = @Model.Id });
+    var currentDay = (int?)ViewData["day"];
 }
 
 <div id="event-item">
@@ -204,16 +202,21 @@
             dialogCreateHostText: '@T("Create Organizer")',
             dialogAddVenueText: '@T("Add Venue")',
             dialogAddHostText: '@T("Add Organizer")',
+            
+            currentDay: @(currentDay ?? (int?)0),
 
             hostFormName: "#@hostFormId",
             venueFormName: "#@venueFormId",
                 
             eventSaveUrl: '@Url.Action("SaveEvent", "Event")',
-            eventAfterCancelAction: function() {
-                window.location.href = "@cancelAction";
+            eventAfterCancelAction: function(event) {
+                window.location.href = @Html.Raw(Model.Id == 0 
+                    ? "'" + Url.Action("List") + "'"
+                    : "'" +Url.Action("View") + "'" + " + (event.currentDay() ? '/day/' + event.currentDay() : '')");
             },
-            eventAfterSaveAction: function(id) {
-                window.location.href = '@Url.Action("View", new { eventId = ""})/' + id;
+            eventAfterSaveAction: function(id, event) {
+                window.location.href = '@Url.Action("View", new { eventId = ""})/' + id +
+                    (event.currentDay() ? '/day/' + event.currentDay() : '');
             },
     
             showView: "showItemTemplate",

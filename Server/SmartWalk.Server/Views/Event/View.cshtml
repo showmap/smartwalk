@@ -13,7 +13,9 @@
     Script.Require("TextCollapse").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
 
-    var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);    
+    var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
+    var currentDay = (int?)ViewData["day"];
+    var editAction = Url.Action("Edit", Model.IsMultiDay() ? new { day = currentDay } : null);
 }
     @Html.AntiForgeryTokenOrchard()
 
@@ -22,7 +24,7 @@
             <h2>
             @if (WorkContext.CurrentUser != null)
             {
-                <a class="btn" href='@Url.Action("Edit")'>@T("Edit Event")</a>
+                <a class="btn" href="@editAction">@T("Edit Event")</a>
             }    
                 @Model.DisplayName
             </h2>
@@ -68,8 +70,7 @@
     </div>
 }
 @if (Model.IsMultiDay())
-{
-    var currentDay = (int)ViewData["day"];
+{   
     var daysCount = DateTimeExtensions.DaysCount(Model.StartDate, Model.EndDate);
 
     <div class="row gap">
@@ -79,7 +80,7 @@
                 @for (var i = 1; i <= daysCount; i++)
                 {
                     var day = @Model.StartDate.Value.AddDays(i - 1);
-                    <li><a class="img-circle@(currentDay == i ? " selected" : "")" href="@Url.Action("View", new { eventId = Model.Id, day = i })"><div class="day">@day.ToString("ddd", culture)</div><div class="date">@day.Day</div></a></li>
+                    <li><a class="img-circle@((currentDay ?? (int?)1) == i ? " selected" : "")" href="@Url.Action("View", new { day = i })"><div class="day">@day.ToString("ddd", culture)</div><div class="date">@day.Day</div></a></li>
                 }
 @* ReSharper restore PossibleInvalidOperationException *@
             </ul>

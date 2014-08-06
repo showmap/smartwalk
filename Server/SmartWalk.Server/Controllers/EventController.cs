@@ -50,7 +50,7 @@ namespace SmartWalk.Server.Controllers
             if (result == null) return new HttpNotFoundResult();
 
             var view = View(result);
-            view.ViewData.Add("day", eventDay + 1);
+            view.ViewData.Add("day", day);
             return view;
         }
 
@@ -63,7 +63,7 @@ namespace SmartWalk.Server.Controllers
         }
 
         [CompressFilter]
-        public ActionResult Edit(int eventId)
+        public ActionResult Edit(int eventId, int? day = null)
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
@@ -73,7 +73,9 @@ namespace SmartWalk.Server.Controllers
             var access = _eventService.GetEventAccess(CurrentSmartWalkUser.Record, eventId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
-            return View(result);
+            var view = View(result);
+            view.ViewData.Add("day", day);
+            return view;
         }
 
         [CompressFilter]

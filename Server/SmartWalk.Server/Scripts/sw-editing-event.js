@@ -98,7 +98,7 @@
                 self.data.toJSON(),
                 self.settings.eventSaveUrl,
                 function (eventData) {
-                    self.settings.eventAfterSaveAction(eventData.Id);
+                    self.settings.eventAfterSaveAction(eventData.Id, self);
                 },
                 function (errorResult) {
                     self.handleServerError(errorResult);
@@ -116,7 +116,7 @@
         if (self.isBusy()) {
             self.isBusy(false);
         } else {
-            self.settings.eventAfterCancelAction();
+            self.settings.eventAfterCancelAction(self);
         }
     };
 };
@@ -326,6 +326,10 @@ EventViewModelExtended.setupMultiday = function (event) {
     self.daysCount.subscribe(function () {
         self.currentDay(self.isMultiday() ? 1 : undefined);
     });
+    
+    if (self.settings.currentDay) {
+        self.currentDay(self.settings.currentDay);
+    }
 };
 
 EventViewModelExtended.IsTimeThisDay = function(time, event) {

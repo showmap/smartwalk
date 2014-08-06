@@ -124,7 +124,25 @@ namespace SmartWalk.Server {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Event"},
                             {"action", "Edit"},
-                            {"entityId", "{eventId}"}
+                            {"entityId", "{eventId}"},
+                            {"day", null}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 2,
+                    Route = new Route(
+                        "event/{eventId}/day/{day}/edit",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Event"},
+                            {"action", "Edit"},
+                            {"entityId", "{eventId}"},
+                            {"day", "{day}"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
