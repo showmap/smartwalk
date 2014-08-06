@@ -7,14 +7,14 @@
     self.data = new EntityViewModel(data);
 
     self.setEditingItem = function (item) {
-        if (self.addressesManager.items()) {
-            self.addressesManager.items().forEach(function (address) {
+        if (self.data.addresses()) {
+            self.data.addresses().forEach(function (address) {
                 address.isEditing(item == address);
             });
         }
 
-        if (self.contactsManager.items()) {
-            self.contactsManager.items().forEach(function (contact) {
+        if (self.data.contacts()) {
+            self.data.contacts().forEach(function (contact) {
                 contact.isEditing(item == contact);
             });
         }
@@ -60,9 +60,9 @@
 
     // TODO: To migrate to new map engine
     self.getMapLink = ko.computed(function () {
-        if (self.addressesManager.items()) {
+        if (self.data.addresses()) {
             var visibleAddresses = $.grep(
-                self.addressesManager.items(),
+                self.data.addresses(),
                 function (ad) { return ad.address() && !ad._destroy; });
 
             if (visibleAddresses.length > 0) {

@@ -47,7 +47,7 @@ namespace SmartWalk.Server
                 .SetVersionUrl("leaflet.js", "leaflet-src.js");
 
             manifest.DefineStyle("Leaflet")
-                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersion("0.7.3")
                 .SetVersionUrl("leaflet.css");
 
             // SmartWalk

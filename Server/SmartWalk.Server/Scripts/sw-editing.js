@@ -147,6 +147,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     ///     afterSave: function(item) A handler to run some logic after an item was saved.
     ///     itemView: A string id of the item view template.
     ///     itemEditView: A string id of the item edit template.
+    ///     filterItem: function(item) A handler to filter items array.
     ///   }
     ///   </param>
     /// </signature>
@@ -168,7 +169,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
                     item.loadData(self._previousItemData());
                 }
             } else {
-                self.items.remove(item);
+                self._allItems.remove(item);
             }
 
             self._previousItemData(null);
@@ -185,18 +186,16 @@ function VmItemsManager(allItems, createItemHandler, settings) {
             settings.initItem(item);
         }
     };
-    
-    // public
-    
-    self.items = allItems;
 
-    if (self.items()) {
-        self.items().forEach(function(item) {
+    self._allItems = allItems;
+    
+    if (self._allItems()) {
+        self._allItems().forEach(function (item) {
             self._initItem(item);
         });
     }
-
-    self.items.subscribe(function (items) {
+    
+    self._allItems.subscribe(function (items) {
         if (items) {
             items.forEach(function (item) {
                 if (item.isEditing === undefined) {
@@ -206,9 +205,17 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
     });
     
+    // public
+    
+    self.items = settings.filterItem
+        ? ko.computed(function() {
+            return self._allItems() ? $.grep(self._allItems(), settings.filterItem) : undefined;
+        })
+        : allItems;
+    
     self.setEditingItem = settings.setEditingItem || function (editingItem) {
-        if (self.items()) {
-            self.items().forEach(function (item) {
+        if (self._allItems()) {
+            self._allItems().forEach(function (item) {
                 item.isEditing(item == editingItem);
             });
         }
@@ -221,10 +228,10 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     self.addItem = function () {
         var item = createItemHandler();
         
-        if (!self.items()) {
-            self.items([]);
+        if (!self._allItems()) {
+            self._allItems([]);
         }
-        self.items.push(item);
+        self._allItems.push(item);
         
         self.editItem(item);
     };
@@ -239,9 +246,9 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
 
         if (item.id() && item.id() > 0) {
-            self.items.destroy(item);
+            self._allItems.destroy(item);
         } else {
-            self.items.remove(item);
+            self._allItems.remove(item);
         }
     };
 

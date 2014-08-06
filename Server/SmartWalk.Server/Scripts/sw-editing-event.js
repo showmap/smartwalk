@@ -16,7 +16,8 @@
                 ? new EntityViewModel(hostData) : null);
         }
     });
-    
+
+    EventViewModelExtended.setupMultiday(self);
     EventViewModelExtended.setupDialogs(self);
     
     self.venuesManager = new VmItemsManager(
@@ -27,12 +28,12 @@
         },
         {
             setEditingItem: function (editingItem) {
-                if (self.venuesManager.items()) {
-                    self.venuesManager.items().forEach(function (venue) {
+                if (self.data.venues()) {
+                    self.data.venues().forEach(function (venue) {
                         venue.isEditing(editingItem == venue);
 
-                        if (venue.showsManager.items()) {
-                            venue.showsManager.items().forEach(function (show) {
+                        if (venue.shows()) {
+                            venue.shows().forEach(function (show) {
                                 show.isEditing(editingItem == show);
                             });
                         }
@@ -72,8 +73,8 @@
             {
                 term: searchTerm,
                 onlyMine: false,
-                excludeIds: self.venuesManager.items() 
-                    ? $.map(self.venuesManager.items(),
+                excludeIds: self.data.venues() 
+                    ? $.map(self.data.venues(),
                         function (venue) { return venue.id(); })
                     : null
             },
@@ -271,8 +272,11 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             return show;
         },
         {
-            setEditingItem: function(item) {
+            setEditingItem: function (item) {
                  return event.venuesManager.setEditingItem(item);
+            },
+            filterItem: function (show) {
+                return show.isEditing() || EventViewModelExtended.IsTimeThisDay(show.startTime(), event);
             },
             beforeSave: function (show) {
                 if (!show.errors) {
@@ -282,6 +286,65 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             itemView: event.settings.showView,
             itemEditView: event.settings.showEditView
         });
+};
+
+EventViewModelExtended.setupMultiday = function (event) {
+    var self = event;
+    
+    self.daysCount = ko.computed(function () {
+        if (!self.data.startDate() || !self.data.endDate()) return 0;
+
+        return moment(self.data.endDate()).diff(moment(self.data.startDate()), "days");
+    });
+
+    self.isMultiday = ko.computed(function () {
+        return self.daysCount() > 0;
+    });
+
+    self.days = ko.computed(function () {
+        var result = self.isMultiday()
+            ? Array.apply(0, Array(self.daysCount() + 1))
+                .map(function (x, i) {
+                    return {
+                        day: i + 1,
+                        momentDate: moment(self.data.startDate()).add("days", i)
+                    };
+                })
+            : null;
+        return result;
+    });
+
+    self.currentDate = ko.observable(self.data.startDate());
+
+    self.currentDay = ko.observable(self.isMultiday() ? 1 : undefined);
+    self.currentDay.subscribe(function (day) {
+        self.currentDate(self.data.startDate() && day
+            ? moment(self.data.startDate()).add("days", day - 1).toDate()
+            : undefined);
+    });
+
+    self.daysCount.subscribe(function () {
+        self.currentDay(self.isMultiday() ? 1 : undefined);
+    });
+};
+
+EventViewModelExtended.IsTimeThisDay = function(time, event) {
+    if (!time || !event.currentDate()) return true; // if time is not set we asume it goes to all days
+
+    var t = moment(time);
+    var tDay = moment(time).startOf("day");
+    var day = moment(event.currentDate());
+    var nextDay = moment(event.currentDate()).add("days", 1);
+    var firstDay = event.data.startDate() ? moment(event.data.startDate()) : undefined;
+    var lastDay = event.data.endDate() ? moment(event.data.endDate()) : undefined;
+
+    var result =
+        (firstDay && (tDay.isBefore(firstDay) || tDay.isSame(firstDay)) && day.isSame(firstDay)) || // times ahead of first day
+        (tDay.isSame(day) && t.hours() >= 6) ||
+        (tDay.isSame(nextDay) && t.hours() < 6) || // late night times go to next day
+        (lastDay && (tDay.isAfter(lastDay) || tDay.isSame(lastDay)) && day.isSame(lastDay)); // times behind of last day
+
+    return result;
 };
 
 EventViewModelExtended.setupDialogs = function (event) {
@@ -355,7 +418,7 @@ EventViewModelExtended.setupDialogs = function (event) {
                     var dialog = this;
                     var venue = ko.dataFor(dialog);
                     venue.saveEntity(function (entityData) {
-                        var editingVenue = $.grep(event.venuesManager.items(),
+                        var editingVenue = $.grep(event.data.venues(),
                             function (item) { return item.isEditing(); })[0];
                         if (editingVenue) {
                             editingVenue.loadData(entityData);

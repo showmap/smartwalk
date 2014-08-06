@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using Orchard.Data;
-using Orchard.Localization;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
@@ -18,7 +17,6 @@ namespace SmartWalk.Server.Services.EventService
     {
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
-        public Localizer T { get; set; }
 
         public EventService(
             IRepository<EventMetadataRecord> eventMetadataRepository,
@@ -26,8 +24,6 @@ namespace SmartWalk.Server.Services.EventService
         {
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
-
-            T = NullLocalizer.Instance;
         }
 
         public IList<EventMetadataVm> GetEvents(
@@ -102,7 +98,7 @@ namespace SmartWalk.Server.Services.EventService
             var host = _entityRepository.Get(eventVm.Host.Id);
             if (host == null) throw new ArgumentOutOfRangeException("eventVm.Host");
             if (host.SmartWalkUserRecord.Id != user.Id) 
-                throw new ArgumentOutOfRangeException("eventVm.Host", T("Can't add host created by other user to the event.").ToString());
+                throw new ArgumentOutOfRangeException("eventVm.Host", "Can't add host created by other user to the event.");
 
             var eventMeta = _eventMetadataRepository.Get(eventVm.Id) ?? new EventMetadataRecord
                 {

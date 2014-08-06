@@ -106,7 +106,13 @@
 					<textarea class="form-control" id="descriptionTextArea" data-bind="value: data.description, enable: isEnabled"></textarea>
 				</div>
 			</div>
-		</div>                                                               
+		</div>
+    
+        <div class="row gap" data-bind="visible: isMultiday">
+            <div class="col-md-12">
+                <ul class="event-days-picker" data-bind="template: { name: 'multiDayItemTemplate', foreach: days }"></ul>
+            </div>
+        </div>                                              
  
         <div class="row add-venue" data-bind="visible: venuesManager.items().length > 0">
             <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>

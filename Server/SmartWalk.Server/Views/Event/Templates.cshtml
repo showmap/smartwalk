@@ -7,6 +7,10 @@
     </a>
 </script>
 
+<script type="text/html" id="multiDayItemTemplate">
+    <li><a class="img-circle" href="#" data-bind="css: { selected: day == $root.currentDay()}, click: function () {$root.currentDay($data.day);}"><div class="day" data-bind="    text: momentDate.format('ddd')"></div><div class="date" data-bind="    text: momentDate.date()"></div></a></li>
+</script>
+
 <script type="text/html" id="loadingImgTemplate">
     <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: $root.isBusy" />
 </script>
@@ -131,24 +135,24 @@
 					<div class="col-sm-2" data-bind="validationElement: startTime">
 						<div class="form-group">
 							<label for="showStartTimeInput">@T("Start Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.data.startDate }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.currentDate }" />
 						</div>
 									
 						<div class="form-group">
 							<label for="showStartDateInput">@T("Start Date"):</label><br/>
-							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.data.startDate }" />
+							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.currentDate }" />
 						</div>
 					</div>
 							
 					<div class="col-sm-2" data-bind="validationElement: endTime">
 						<div class="form-group" >
 							<label for="showStartTimeInput">@T("End Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.data.startDate }" />
+							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.currentDate }" />
 						</div>
 									
 						<div class="form-group">
 							<label for="showEndDateInput">@T("End Date"):</label><br/>
-							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.data.startDate }" />
+							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.currentDate }" />
 						</div>
 					</div>
 				</div>
