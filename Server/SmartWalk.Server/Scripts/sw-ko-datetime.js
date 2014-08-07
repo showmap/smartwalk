@@ -25,22 +25,22 @@ ko.bindingHandlers.timepicker = {
         var settings = allBindingsAccessor().settings || {};
         $(element).data(datetimeBase.prototype.accessorName, valueAccessor);
 
-        var datetimeObject = (element.type == "time") ? ko.HTML5datetime : ko.datetime;
+        var datetimeClass = (element.type == "date") ? HTML5datetime : datetime;
 
-        datetimeObject.initTime(element, settings);
-        $(element).bind("change", datetimeObject.onChangeTime);
+        datetimeClass.prototype.initTime(element, settings);
+        $(element).bind("change", datetimeClass.prototype.onChangeTime);
 
         //handle disposal (if KO removes by the template binding)
         ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            datetimeObject.dispose(element, datetimeObject.onChangeTime);
+            datetimeClass.prototype.dispose(element, datetimeClass.prototype.onChangeTime);
         });        
     },
     //update the control when the view model changes
     update: function(element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
-        var datetimeObject = (element.type == "time") ? ko.HTML5datetime : ko.datetime;
-        
-        datetimeObject.updateTime(element, value);
+        var datetimeClass = (element.type == "date") ? HTML5datetime : datetime;
+
+        datetimeClass.prototype.updateTime(element, value);
     }
 };
 
