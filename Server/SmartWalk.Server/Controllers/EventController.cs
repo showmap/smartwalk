@@ -70,7 +70,7 @@ namespace SmartWalk.Server.Controllers
             var result = _eventService.GetEventById(eventId);
             if (result == null) return new HttpNotFoundResult();
 
-            var access = _eventService.GetEventAccess(CurrentSmartWalkUser.Record, eventId);
+            var access = _eventService.GetEventAccess(eventId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             var view = View(result);
@@ -83,7 +83,7 @@ namespace SmartWalk.Server.Controllers
         {
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
-            var access = _eventService.GetEventAccess(CurrentSmartWalkUser.Record, eventId);
+            var access = _eventService.GetEventAccess(eventId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             _eventService.DeleteEvent(eventId);
@@ -112,7 +112,7 @@ namespace SmartWalk.Server.Controllers
                 return Json(new ErrorResultVm(errors));
             }
 
-            var result = _eventService.SaveEvent(CurrentSmartWalkUser.Record, eventVm);
+            var result = _eventService.SaveEvent(eventVm);
             return Json(result);
         }
 
@@ -122,9 +122,7 @@ namespace SmartWalk.Server.Controllers
             string query = null)
         {
             var result = _eventService.GetEvents(
-                CurrentSmartWalkUser == null || parameters.Display == DisplayType.All
-                    ? null
-                    : CurrentSmartWalkUser.Record,
+                parameters.Display,
                 pageNumber,
                 ViewSettings.ItemsLoad,
                 GetSortFunc(parameters.Sort),
@@ -142,7 +140,6 @@ namespace SmartWalk.Server.Controllers
             return result;
         }
 
-        // TODO: To validate if host is owned by current user
         // TODO: To validate if there are duplicated venues
         private IList<ValidationError> ValidateEvent(EventMetadataVm model)
         {

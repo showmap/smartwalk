@@ -11,7 +11,7 @@ namespace SmartWalk.Server.Services.EntityService
     public interface IEntityService : IDependency
     {
         IList<EntityVm> GetEntities(
-            SmartWalkUserRecord user,
+            DisplayType display,
             EntityType type,
             int pageNumber = 0,
             int pageSize = ViewSettings.ItemsLoad,
@@ -21,10 +21,10 @@ namespace SmartWalk.Server.Services.EntityService
             int[] excludeIds = null);
 
         bool IsNameUnique(EntityVm entityVm);
-        AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId);
+        AccessType GetEntityAccess(int entityId);
         EntityVm GetEntityById(int entityId);
 
-        EntityVm SaveEntity(SmartWalkUserRecord user, EntityVm entityVm);
+        EntityVm SaveEntity(EntityVm entityVm);
         void DeleteEntity(int hostId);
     }
 }

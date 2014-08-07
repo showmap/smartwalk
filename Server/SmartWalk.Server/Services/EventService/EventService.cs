@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Security;
+using Orchard;
 using Orchard.Data;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.Base;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared;
@@ -13,33 +16,38 @@ using SmartWalk.Shared.Utils;
 namespace SmartWalk.Server.Services.EventService
 {
     [UsedImplicitly]
-    public class EventService : IEventService
+    public class EventService : OrchardBaseService, IEventService
     {
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
 
         public EventService(
+            IOrchardServices orchardServices,
             IRepository<EventMetadataRecord> eventMetadataRepository,
             IRepository<EntityRecord> entityRepository)
+            : base(orchardServices)
         {
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
         }
 
         public IList<EventMetadataVm> GetEvents(
-            SmartWalkUserRecord user,
+            DisplayType display,
             int pageNumber,
             int pageSize,
             Func<EventMetadataRecord, IComparable> orderBy,
             bool isDesc = false,
             string searchString = null)
         {
+            if (display == DisplayType.My && CurrentUser == null)
+                throw new SecurityException("Can't show my events without user.");
+
             var query =
-                user == null
+                display == DisplayType.All
                     ? (IEnumerable<EventMetadataRecord>)_eventMetadataRepository
                         .Table
                         .Where(e => e.IsPublic)
-                    : user.EventMetadataRecords;
+                    : CurrentUser.EventMetadataRecords;
 
             var result = GetEvents(query, pageNumber, pageSize, orderBy, isDesc, searchString);
             return result;
@@ -48,7 +56,7 @@ namespace SmartWalk.Server.Services.EventService
         public IList<EventMetadataVm> GetEventsByEntity(int entityId)
         {
             var entity = _entityRepository.Get(entityId);
-            if (entity == null) return new List<EventMetadataVm>();
+            if (entity == null) return null;
 
             IEnumerable<EventMetadataRecord> query;
 
@@ -67,44 +75,51 @@ namespace SmartWalk.Server.Services.EventService
             return result;
         }
 
-        public EventMetadataVm GetEventById(int id, int? day)
+        public EventMetadataVm GetEventById(int id, int? day = null)
         {
             if (day != null && day < 0) throw new ArgumentOutOfRangeException("day");
 
             var eventMeta = _eventMetadataRepository.Get(id);
-            if (eventMeta == null) return null;
+            if (eventMeta == null || eventMeta.IsDeleted) return null;
+
+            if (!eventMeta.IsPublic && 
+                (CurrentUser == null || eventMeta.SmartWalkUserRecord.Id != CurrentUser.Id)) return null;
 
             var result = CreateViewModelContract(eventMeta, day);
             return result;
         }
 
-        public AccessType GetEventAccess(SmartWalkUserRecord user, int eventId)
+        public AccessType GetEventAccess(int eventId)
         {
-            if (user == null) return AccessType.Deny;
-
             var eventMeta = _eventMetadataRepository.Get(eventId);
             if (eventMeta == null || eventMeta.IsDeleted) return AccessType.Deny;
-            if (eventMeta.SmartWalkUserRecord.Id == user.Id) return AccessType.AllowEdit;
+
+            if (CurrentUser != null && eventMeta.SmartWalkUserRecord.Id == CurrentUser.Id) 
+                return AccessType.AllowEdit;
 
             return eventMeta.IsPublic ? AccessType.AllowView : AccessType.Deny;
         }
 
-        public EventMetadataVm SaveEvent(SmartWalkUserRecord user, EventMetadataVm eventVm)
+        public EventMetadataVm SaveEvent(EventMetadataVm eventVm)
         {
-            if (user == null) throw new ArgumentNullException("user");
+            if (CurrentUser == null) throw new SecurityException("Can't edit event without user.");
             if (eventVm == null) throw new ArgumentNullException("eventVm");
             if (eventVm.StartDate == null) throw new ArgumentNullException("eventVm.StartDate");
 
             var host = _entityRepository.Get(eventVm.Host.Id);
             if (host == null) throw new ArgumentOutOfRangeException("eventVm.Host");
-            if (host.SmartWalkUserRecord.Id != user.Id) 
+            if (host.SmartWalkUserRecord.Id != CurrentUser.Id) 
                 throw new ArgumentOutOfRangeException("eventVm.Host", "Can't add host created by other user to the event.");
 
             var eventMeta = _eventMetadataRepository.Get(eventVm.Id) ?? new EventMetadataRecord
                 {
-                    SmartWalkUserRecord = user,
+                    SmartWalkUserRecord = CurrentUser,
                     DateCreated = DateTime.UtcNow
                 };
+
+            if (CurrentUser != null && eventMeta.Id > 0 &&
+                eventMeta.SmartWalkUserRecord.Id != CurrentUser.Id)
+                throw new SecurityException("Can't edit event created by other user.");
 
             ViewModelFactory.UpdateByViewModel(eventMeta, eventVm, host);
 
@@ -156,8 +171,13 @@ namespace SmartWalk.Server.Services.EventService
 
         public void DeleteEvent(int eventId)
         {
+            if (CurrentUser == null) throw new SecurityException("Can't delete event without user.");
+
             var eventMeta = _eventMetadataRepository.Get(eventId);
-            if (eventMeta == null) return;
+            if (eventMeta == null || eventMeta.IsDeleted) return;
+
+            if (CurrentUser != null && eventMeta.SmartWalkUserRecord.Id != CurrentUser.Id)
+                throw new SecurityException("Can't delete event created by other user.");
 
             foreach (var show in eventMeta.ShowRecords.Where(s => !s.IsDeleted).ToArray())
             {
@@ -213,8 +233,7 @@ namespace SmartWalk.Server.Services.EventService
             var result = ViewModelFactory.CreateViewModel(eventMeta, mode);
             result.Host =
                 EntityService
-                    .ViewModelFactory
-                    .CreateViewModel(eventMeta.EntityRecord, mode);
+                    .ViewModelFactory.CreateViewModel(eventMeta.EntityRecord, mode);
 
             if (mode == LoadMode.Full)
             {

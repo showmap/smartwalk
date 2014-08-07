@@ -40,14 +40,7 @@ namespace SmartWalk.Server.Controllers.Base
         [CompressFilter]
         public ActionResult List(DisplayType display)
         {
-            var result = _entityService.GetEntities(
-                CurrentSmartWalkUser == null || display == DisplayType.All
-                    ? null
-                    : CurrentSmartWalkUser.Record,
-                EntityType,
-                0,
-                ViewSettings.ItemsLoad,
-                e => e.Name);
+            var result = _entityService.GetEntities(display, EntityType, 0, ViewSettings.ItemsLoad, e => e.Name);
 
             return View(new ListViewVm<EntityVm>
                 {
@@ -76,12 +69,10 @@ namespace SmartWalk.Server.Controllers.Base
         [CompressFilter]
         public ActionResult Edit(int entityId)
         {
-            if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
-
             var result = _entityService.GetEntityById(entityId);
             if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
 
-            var access = _entityService.GetEntityAccess(CurrentSmartWalkUser.Record, entityId);
+            var access = _entityService.GetEntityAccess(entityId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             return View(result);
@@ -90,9 +81,7 @@ namespace SmartWalk.Server.Controllers.Base
         [CompressFilter]
         public ActionResult Delete(int entityId)
         {
-            if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
-
-            var access = _entityService.GetEntityAccess(CurrentSmartWalkUser.Record, entityId);
+            var access = _entityService.GetEntityAccess(entityId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             _entityService.DeleteEntity(entityId);
@@ -113,9 +102,7 @@ namespace SmartWalk.Server.Controllers.Base
         public ActionResult GetEntities(int pageNumber, string query, ListViewParametersVm parameters)
         {
             var result = _entityService.GetEntities(
-                CurrentSmartWalkUser == null || parameters.Display == DisplayType.All
-                    ? null
-                    : CurrentSmartWalkUser.Record,
+                parameters.Display,
                 EntityType,
                 pageNumber,
                 ViewSettings.ItemsLoad,
@@ -134,7 +121,7 @@ namespace SmartWalk.Server.Controllers.Base
 
             return Json(
                 _entityService.GetEntities(
-                    onlyMine ? CurrentSmartWalkUser.Record : null,
+                    onlyMine ? DisplayType.My : DisplayType.All,
                     EntityType,
                     0,
                     ViewSettings.ItemsLoad,
@@ -173,7 +160,7 @@ namespace SmartWalk.Server.Controllers.Base
                 return Json(new ErrorResultVm(errors));
             }
 
-            var result = _entityService.SaveEntity(CurrentSmartWalkUser.Record, entityVm);
+            var result = _entityService.SaveEntity(entityVm);
             return Json(result);
         }
 

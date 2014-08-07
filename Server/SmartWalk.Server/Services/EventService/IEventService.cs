@@ -10,7 +10,7 @@ namespace SmartWalk.Server.Services.EventService
     public interface IEventService : IDependency
     {
         IList<EventMetadataVm> GetEvents(
-            SmartWalkUserRecord user,
+            DisplayType display,
             int pageNumber,
             int pageSize,
             Func<EventMetadataRecord, IComparable> orderBy,
@@ -26,9 +26,9 @@ namespace SmartWalk.Server.Services.EventService
         /// <param name="day">The day to filter shows by. If Null all shows are returned. 
         /// The day values start from 0 (day 1) and up.</param>
         EventMetadataVm GetEventById(int id, int? day = null);
-        AccessType GetEventAccess(SmartWalkUserRecord user, int eventId);
+        AccessType GetEventAccess(int eventId);
 
-        EventMetadataVm SaveEvent(SmartWalkUserRecord user, EventMetadataVm eventVm);
+        EventMetadataVm SaveEvent(EventMetadataVm eventVm);
         void DeleteEvent(int eventId);
     }
 }

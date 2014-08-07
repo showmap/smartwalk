@@ -65,7 +65,7 @@ namespace SmartWalk.Server.Controllers
                 // Attempt to register the user
                 // No need to report this to IUserEventHandler because _membershipService does that for us
                 var userParams = new CreateUserParams(userName, password, email, null, null, false);
-                var userData = new SmartWalkUserVm {FirstName = userName, LastName = userName, CreatedAt = DateTime.UtcNow, LastLoiginAt = DateTime.UtcNow, TimeZone = timeZone};
+                var userData = new SmartWalkUserVm {FirstName = userName, LastName = userName, CreatedAt = DateTime.UtcNow, LastLoiginAt = DateTime.UtcNow};
                 var user = _swUserService.CreateUser(new SmartWalkUserParams(userParams, userData));
 
                 _orchardServices.ContentManager.Create(user);
@@ -116,13 +116,8 @@ namespace SmartWalk.Server.Controllers
             if (_orchardServices.WorkContext.CurrentUser == null)
                 return new HttpUnauthorizedResult();
 
-            var user = _orchardServices.WorkContext.CurrentUser;
-            _swUserService.UpdateSmartWalkUser(profile, user);
-
             return RedirectToAction("EditProfile");
         }
-
-
 
         #region Helper Functions
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {

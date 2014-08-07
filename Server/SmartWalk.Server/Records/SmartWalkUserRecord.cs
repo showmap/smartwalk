@@ -13,7 +13,6 @@ namespace SmartWalk.Server.Records
         public virtual string LastName { get; set; }
         public virtual DateTime CreatedAt { get; set; }
         public virtual DateTime LastLoginAt { get; set; }
-        //public virtual string TimeZone { get; set; }
 
         public virtual IList<EntityRecord> Entities
         {

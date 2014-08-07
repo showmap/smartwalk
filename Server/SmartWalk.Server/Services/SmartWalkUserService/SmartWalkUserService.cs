@@ -95,7 +95,6 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
                 smartWalkUser.LastName = userData.LastName;
                 smartWalkUser.CreatedAt = userData.CreatedAt;
                 smartWalkUser.LastLoginAt = userData.LastLoiginAt;
-                smartWalkUser.TimeZone = userData.TimeZone;
             }
 
             _orchardServices.ContentManager.Create(user);
@@ -156,8 +155,7 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
                 FirstName = swUserPart.FirstName,
                 LastName = swUserPart.LastName,
                 CreatedAt = swUserPart.CreatedAt,
-                LastLoiginAt = swUserPart.LastLoginAt,
-                TimeZone = swUserPart.TimeZone
+                LastLoiginAt = swUserPart.LastLoginAt
             };
         }
 
@@ -165,10 +163,8 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
         public void UpdateSmartWalkUser(SmartWalkUserVm profile, IUser user) {
             var swUserPart = user.As<SmartWalkUserPart>();
 
-            if (swUserPart == null)
-                return;
+            if (swUserPart == null) return;
 
-            swUserPart.TimeZone = profile.TimeZone;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
-using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Utils;
 using SmartWalk.Shared;
 
 namespace SmartWalk.Server {

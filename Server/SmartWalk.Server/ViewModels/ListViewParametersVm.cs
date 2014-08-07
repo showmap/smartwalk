@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using SmartWalk.Shared;
+using SmartWalk.Server.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {
@@ -11,19 +11,5 @@ namespace SmartWalk.Server.ViewModels
 
         [JsonConverter(typeof(StringEnumConverter))]
         public DisplayType Display { get; set; }
-    }
-
-    public enum SortType
-    {
-        [UsedImplicitly]
-        None = 0,
-        Title = 1,
-        Date = 2,
-    }
-
-    public enum DisplayType
-    {
-        All = 0,
-        My = 1
     }
 }

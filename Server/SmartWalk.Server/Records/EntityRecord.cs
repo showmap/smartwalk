@@ -66,6 +66,7 @@ namespace SmartWalk.Server.Records
         public virtual IList<ShowRecord> ShowRecords
         {
             get { return _showRecords; }
+            [UsedImplicitly] 
             set { _showRecords = value; }
         }
 

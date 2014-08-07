@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security;
+using Orchard;
 using Orchard.Data;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.Base;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
@@ -12,11 +15,14 @@ using SmartWalk.Shared;
 namespace SmartWalk.Server.Services.EntityService
 {
     [UsedImplicitly]
-    public class EntityService : IEntityService
+    public class EntityService : OrchardBaseService, IEntityService
     {
         private readonly IRepository<EntityRecord> _entityRepository;
 
-        public EntityService(IRepository<EntityRecord> entityRepository)
+        public EntityService(
+            IOrchardServices orchardServices,
+            IRepository<EntityRecord> entityRepository)
+            : base(orchardServices)
         {
             _entityRepository = entityRepository;
         }
@@ -28,23 +34,22 @@ namespace SmartWalk.Server.Services.EntityService
                 .Any(e => 
                     e.Type == entityVm.Type && 
                     e.Id != entityVm.Id && 
-                    e.Name == entityVm.Name);
+                    e.Name == entityVm.Name &&
+                    !e.IsDeleted);
         }
 
-        public AccessType GetEntityAccess(SmartWalkUserRecord user, int entityId)
+        public AccessType GetEntityAccess(int entityId)
         {
-            if (user == null) return AccessType.Deny;
-
             var entity = _entityRepository.Get(entityId);
             if (entity == null || entity.IsDeleted) return AccessType.Deny;
 
-            return entity.SmartWalkUserRecord.Id == user.Id 
+            return CurrentUser != null && entity.SmartWalkUserRecord.Id == CurrentUser.Id 
                 ? AccessType.AllowEdit 
                 : AccessType.AllowView;
         }
 
         public IList<EntityVm> GetEntities(
-            SmartWalkUserRecord user,
+            DisplayType display,
             EntityType type,
             int pageNumber = 0,
             int pageSize = ViewSettings.ItemsLoad,
@@ -53,9 +58,12 @@ namespace SmartWalk.Server.Services.EntityService
             string searchString = null,
             int[] excludeIds = null)
         {
-            var query = user == null 
+            if (display == DisplayType.My && CurrentUser == null) 
+                throw new SecurityException("Can't show my entities without user.");
+
+            var query = display == DisplayType.All 
                 ? (IEnumerable<EntityRecord>)_entityRepository.Table 
-                : user.Entities;
+                : CurrentUser.Entities;
 
             var result = GetEntities(query, type, pageNumber, pageSize, 
                 orderBy, isDesc, searchString, excludeIds);
@@ -65,22 +73,26 @@ namespace SmartWalk.Server.Services.EntityService
         public EntityVm GetEntityById(int entityId)
         {
             var entity = _entityRepository.Get(entityId);
-            if (entity == null) return null;
+            if (entity == null || entity.IsDeleted) return null;
 
             var result = ViewModelFactory.CreateViewModel(entity, LoadMode.Full);
             return result;
         }
 
-        public EntityVm SaveEntity(SmartWalkUserRecord user, EntityVm entityVm)
+        public EntityVm SaveEntity(EntityVm entityVm)
         {
-            if (user == null) throw new ArgumentNullException("user");
+            if (CurrentUser == null) throw new SecurityException("Can't edit entity without user.");
             if (entityVm == null) throw new ArgumentNullException("entityVm");
 
             var entity = _entityRepository.Get(entityVm.Id) ?? new EntityRecord
                 {
-                    SmartWalkUserRecord = user,
+                    SmartWalkUserRecord = CurrentUser,
                     DateCreated = DateTime.UtcNow
                 };
+
+            if (CurrentUser != null && entity.Id > 0 && 
+                entity.SmartWalkUserRecord.Id != CurrentUser.Id) 
+                throw new SecurityException("Can't edit entity created by other user.");
 
             ViewModelFactory.UpdateByViewModel(entity, entityVm);
 
@@ -125,8 +137,16 @@ namespace SmartWalk.Server.Services.EntityService
 
         public void DeleteEntity(int entityId)
         {
+            if (CurrentUser == null) throw new SecurityException("Can't delete entity without user.");
+
             var entity = _entityRepository.Get(entityId);
-            if (entity == null) return;
+            if (entity == null || entity.IsDeleted) return;
+
+            if (CurrentUser != null && entity.SmartWalkUserRecord.Id != CurrentUser.Id)
+                throw new SecurityException("Can't delete entity created by other user.");
+
+            if (!entity.IsDeletable()) 
+                throw new InvalidOperationException("Can't delete entity that has references from events.");
 
             foreach (var contact in entity.ContactRecords.Where(c => !c.IsDeleted).ToArray())
             {

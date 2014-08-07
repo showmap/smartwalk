@@ -30,12 +30,6 @@ namespace SmartWalk.Server.Models
             set { Record.CreatedAt = value; }
         }
 
-        public string TimeZone
-        {
-            get { return TimeZoneInfo.Local.Id ; }
-            set { var x = value; }
-        }
-
         public UserPart User
         {
             get { return this.As<UserPart>(); }

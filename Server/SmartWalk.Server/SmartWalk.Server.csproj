@@ -196,13 +196,16 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Models\SmartWalkUserParams.cs" />
+    <Compile Include="Services\Base\OrchardBaseService.cs" />
     <Compile Include="Services\QueryService\RequestSelectExtensions.cs" />
     <Compile Include="Services\SmartWalkUserService\ISmartWalkUserService.cs" />
     <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
     <Compile Include="ShellEvents.cs" />
     <Compile Include="Utils\AccessType.cs" />
+    <Compile Include="Utils\DisplayType.cs" />
     <Compile Include="Utils\LoadMode.cs" />
     <Compile Include="Utils\ModelExtensions.cs" />
+    <Compile Include="Utils\SortType.cs" />
     <Compile Include="ViewModels\AddressMapVm.cs" />
     <Compile Include="ViewModels\ErrorResultVm.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
