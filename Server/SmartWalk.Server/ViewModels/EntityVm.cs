@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using SmartWalk.Shared;
-using System.Linq;
-using System.Drawing;
-using SmartWalk.Server.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {

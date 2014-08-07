@@ -60,7 +60,7 @@ namespace SmartWalk.Server.Controllers.Base
         public ActionResult View(int entityId)
         {
             var result = _entityService.GetEntityById(entityId);
-            if (result == null) return new HttpNotFoundResult();
+            if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
 
             return View(result);
         }
@@ -79,7 +79,7 @@ namespace SmartWalk.Server.Controllers.Base
             if (CurrentSmartWalkUser == null) return new HttpUnauthorizedResult();
 
             var result = _entityService.GetEntityById(entityId);
-            if (result == null) return new HttpNotFoundResult();
+            if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
 
             var access = _entityService.GetEntityAccess(CurrentSmartWalkUser.Record, entityId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
