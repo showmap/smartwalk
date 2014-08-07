@@ -45,6 +45,9 @@
         },
         {
             setEditingItem: self.setEditingItem,
+            initItem: function (address) {
+                EntityViewModelExtended.initAddressViewModel(address);
+            },
             beforeSave: function (address) {
                 if (!address.errors) {
                     EntityViewModelExtended.setupAddressValidation(address, self.settings);
@@ -187,4 +190,16 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressTipValidationMessage } });
 
     address.errors = ko.validation.group(address);
+};
+
+EntityViewModelExtended.initAddressViewModel = function (address) {
+    address.mapPoint = ko.computed({
+        read: function() {
+            return [address.latitude(), address.longitude()];
+        },
+        write: function(newValue) {
+            address.latitude(newValue[0]);
+            address.longitude(newValue[1]);
+        }
+    });
 };

@@ -214,16 +214,6 @@ function AddressViewModel(data) {
     self.latitude = ko.observable();
     self.longitude = ko.observable();
 
-    self.mapPoint = ko.computed({
-        read: function () {
-            return [self.latitude(), self.longitude()];
-        },
-        write: function (newValue) {
-            self.latitude(newValue[0]);
-            self.longitude(newValue[1]);
-        }
-    }, this);
-
     self.getMapLink = function () {
         if (!self.address()) return "";
         var res = self.address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
