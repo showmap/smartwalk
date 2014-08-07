@@ -61,7 +61,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("ko.datetime")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-ko-datetime.js")
-                .SetDependencies("ko", "jQueryUI", "Moment", "SmartWalk.Common");
+                .SetDependencies("ko", "jQueryUI", "Moment");
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion(VersionUtil.CurrentVersion)
