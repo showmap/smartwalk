@@ -25,7 +25,7 @@ ko.bindingHandlers.timepicker = {
         var settings = allBindingsAccessor().settings || {};
         $(element).data(datetimeBase.prototype.accessorName, valueAccessor);
 
-        var datetimeClass = (element.type == "date") ? HTML5datetime : datetime;
+        var datetimeClass = (element.type == "time") ? HTML5datetime : datetime;
 
         datetimeClass.prototype.initTime(element, settings);
         $(element).bind("change", datetimeClass.prototype.onChangeTime);
@@ -120,7 +120,7 @@ HTML5datetime.prototype.onChangeDate = function (args) {
     var element = args.target;
     var newDate = convertToLocal(element.valueAsDate);
     var observable = $(element).data(datetimeBase.prototype.accessorName)();
-    newDate = ko.HTML5datetime.restoreTime(newDate,
+    newDate = HTML5datetime.prototype.restoreTime(newDate,
         observable() || $(element).data("defaultDate"));
     observable(newDate);
 };
