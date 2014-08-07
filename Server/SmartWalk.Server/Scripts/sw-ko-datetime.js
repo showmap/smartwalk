@@ -1,58 +1,58 @@
 ﻿ko.bindingHandlers.datepicker = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         var settings = allBindingsAccessor().settings || {};
-        $(element).data(datetimeBase.prototype.ACCESSOR_NAME, valueAccessor);
+        $(element).data(ko.datetimeUtil.ACCESSOR_NAME, valueAccessor);
 
-        var datetimeClass = (element.type == "date") ? HTML5datetime : datetime;
+        var datetimeClass = (element.type == "date") ? ko.HTML5datetime : ko.datetime;
 
-        datetimeClass.prototype.initDefaultDate(element, settings);
-        datetimeClass.prototype.initDate(element, settings);
-        $(element).bind("change", datetimeClass.prototype.onChangeDate);
+        datetimeClass.initDefaultDate(element, settings);
+        datetimeClass.initDate(element, settings);
+        $(element).bind("change", datetimeClass.onChangeDate);
         
         //handle disposal (if KO removes by the template binding)
         ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            datetimeClass.prototype.dispose(element, datetimeClass.prototype.onChangeDate);
+            ko.datetimeUtil.dispose(element, datetimeClass.onChangeDate);
         });        
     },
     //update the control when the view model changes
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
-        var datetimeClass = (element.type == "date") ? HTML5datetime : datetime;
+        var datetimeClass = (element.type == "date") ? ko.HTML5datetime : ko.datetime;
         
-        datetimeClass.prototype.updateDate(element, value);        
+        datetimeClass.updateDate(element, value);        
     }
 };
 
 ko.bindingHandlers.timepicker = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         var settings = allBindingsAccessor().settings || {};
-        $(element).data(datetimeBase.prototype.ACCESSOR_NAME, valueAccessor);
+        $(element).data(ko.datetimeUtil.ACCESSOR_NAME, valueAccessor);
 
-        var datetimeClass = (element.type == "time") ? HTML5datetime : datetime;
+        var datetimeClass = (element.type == "time") ? ko.HTML5datetime : ko.datetime;
 
-        datetimeClass.prototype.initDefaultDate(element, settings);
-        datetimeClass.prototype.initTime(element, settings);
-        $(element).bind("change", datetimeClass.prototype.onChangeTime);
+        datetimeClass.initDefaultDate(element, settings);
+        datetimeClass.initTime(element, settings);
+        $(element).bind("change", datetimeClass.onChangeTime);
 
         //handle disposal (if KO removes by the template binding)
         ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            datetimeClass.prototype.dispose(element, datetimeClass.prototype.onChangeTime);
+            ko.datetimeUtil.dispose(element, datetimeClass.onChangeTime);
         });        
     },
     //update the control when the view model changes
     update: function(element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
-        var datetimeClass = (element.type == "date") ? HTML5datetime : datetime;
+        var datetimeClass = (element.type == "time") ? ko.HTML5datetime : ko.datetime;
 
-        datetimeClass.prototype.updateTime(element, value);
+        datetimeClass.updateTime(element, value);
     }
 };
 
-datetimeBase = function() { };
-datetimeBase.prototype.ACCESSOR_NAME = "datepickerVA";
-datetimeBase.prototype.DESTROY_REF = "datepickerDefDARef";
+ko.datetimeUtil = {};
+ko.datetimeUtil.ACCESSOR_NAME = "datepickerVA";
+ko.datetimeUtil.DESTROY_REF = "datepickerDefDARef";
 
-datetimeBase.prototype.initDefaultDate = function (element, settings, setDefaultCallback) {
+ko.datetimeUtil.initDefaultDate = function (element, settings, setDefaultCallback) {
     if (settings.defaultDateAccessor &&
         ko.isObservable(settings.defaultDateAccessor)) {
         // getting default date from observable
@@ -64,21 +64,21 @@ datetimeBase.prototype.initDefaultDate = function (element, settings, setDefault
         });
 
         // saving the reference for disponsing
-        $(element).data(datetimeBase.prototype.DESTROY_REF, ref);
+        $(element).data(ko.datetimeUtil.DESTROY_REF, ref);
     }
 };
 
-datetimeBase.prototype.dispose = function (element, onChangeHandler) {
+ko.datetimeUtil.dispose = function (element, onChangeHandler) {
     $(element).unbind("change", onChangeHandler);
     $(element).datepicker("destroy");
-    $(element).data(datetimeBase.prototype.ACCESSOR_NAME, null);
-    var subscribeRef = $(element).data(datetimeBase.prototype.DESTROY_REF);
+    $(element).data(ko.datetimeUtil.ACCESSOR_NAME, null);
+    var subscribeRef = $(element).data(ko.datetimeUtil.DESTROY_REF);
     if (subscribeRef) {
         subscribeRef.dispose();
     }
 };
     
-datetimeBase.prototype.restoreDate = function (newTime, existingDate) {
+ko.datetimeUtil.restoreDate = function (newTime, existingDate) {
     if (!newTime || !existingDate) return newTime;
 
     if (newTime.toDateString() != existingDate.toDateString()) {
@@ -93,7 +93,7 @@ datetimeBase.prototype.restoreDate = function (newTime, existingDate) {
     return newTime;
 };
 
-datetimeBase.prototype.restoreTime = function (newDate, existingDate) {
+ko.datetimeUtil.restoreTime = function (newDate, existingDate) {
     if (!newDate || !existingDate) return newDate;
 
     if (newDate.toTimeString() != existingDate.toTimeString()) {
@@ -108,54 +108,52 @@ datetimeBase.prototype.restoreTime = function (newDate, existingDate) {
     return newDate;
 };
 
-HTML5datetime = function () { };
-inherits(HTML5datetime, datetimeBase);
+ko.HTML5datetime = { };
 
-HTML5datetime.prototype.initDefaultDate = function (element, settings) {
-    datetimeBase.prototype.initDefaultDate(element, settings,
+ko.HTML5datetime.initDefaultDate = function (element, settings) {
+    ko.datetimeUtil.initDefaultDate(element, settings,
         function(date) {
             $(element).data("defaultDate", date);
         });
 };
 
-HTML5datetime.prototype.initDate = function () {};
-HTML5datetime.prototype.initTime = function () {};
+ko.HTML5datetime.initDate = function () { };
+ko.HTML5datetime.initTime = function () { };
 
-HTML5datetime.prototype.onChangeDate = function (args) {
+ko.HTML5datetime.onChangeDate = function (args) {
     var element = args.target;
     var newDate = convertToLocal(element.valueAsDate);
-    var observable = $(element).data(datetimeBase.prototype.ACCESSOR_NAME)();
-    newDate = HTML5datetime.prototype.restoreTime(newDate,
+    var observable = $(element).data(ko.datetimeUtil.ACCESSOR_NAME)();
+    newDate = ko.datetimeUtil.restoreTime(newDate,
         observable() || $(element).data("defaultDate"));
     observable(newDate);
 };
 
-HTML5datetime.prototype.onChangeTime = function (args) {
+ko.HTML5datetime.onChangeTime = function (args) {
     var element = args.target;
     var newTime = convertToLocal(element.valueAsDate);
-    var observable = $(element).data(datetimeBase.prototype.ACCESSOR_NAME)();
-    newTime = HTML5datetime.prototype.restoreDate(newTime,
+    var observable = $(element).data(ko.datetimeUtil.ACCESSOR_NAME)();
+    newTime = ko.datetimeUtil.restoreDate(newTime,
         observable() || $(element).data("defaultDate"));
     observable(newTime);
 };
 
-HTML5datetime.prototype.updateDate = function (element, value) {
-    $(element).unbind("change", HTML5datetime.prototype.onChangeDate);
+ko.HTML5datetime.updateDate = function (element, value) {
+    $(element).unbind("change", ko.HTML5datetime.onChangeDate);
     element.valueAsDate = convertToUTC(value);
-    $(element).bind("change", HTML5datetime.prototype.onChangeDate);
+    $(element).bind("change", ko.HTML5datetime.onChangeDate);
 };
 
-HTML5datetime.prototype.updateTime = function (element, value) {
-    $(element).unbind("change", HTML5datetime.prototype.onChangeTime);
+ko.HTML5datetime.updateTime = function (element, value) {
+    $(element).unbind("change", ko.HTML5datetime.onChangeTime);
     element.valueAsDate = convertToUTC(value);
-    $(element).bind("change", HTML5datetime.prototype.onChangeTime);
+    $(element).bind("change", ko.HTML5datetime.onChangeTime);
 };
 
-datetime = function() {};
-inherits(datetime, datetimeBase);
+ko.datetime = {};
 
-datetime.prototype.initDefaultDate = function (element, settings) {
-    datetimeBase.prototype.initDefaultDate(element, settings,
+ko.datetime.initDefaultDate = function (element, settings) {
+    ko.datetimeUtil.initDefaultDate(element, settings,
         function (date) {
             if ($(element).hasClass("hasDatepicker")) {
                 $(element).datepicker("option", "defaultDate", date);
@@ -165,45 +163,45 @@ datetime.prototype.initDefaultDate = function (element, settings) {
         });
 };
 
-datetime.prototype.initDate = function (element, settings) {
+ko.datetime.initDate = function (element, settings) {
     $(element).datepicker(settings);
 };
 
-datetime.prototype.initTime = function (element, settings) {
+ko.datetime.initTime = function (element, settings) {
     $(element).timepicker(settings);
 };
 
-datetime.prototype.onChangeDate = function (args) {
+ko.datetime.onChangeDate = function (args) {
     var element = args.target;
     var newDate = $(element).datepicker("getDate");
-    var observable = $(element).data(datetimeBase.prototype.ACCESSOR_NAME)();
-    newDate = datetime.prototype.restoreTime(newDate, observable());
+    var observable = $(element).data(ko.datetimeUtil.ACCESSOR_NAME)();
+    newDate = ko.datetimeUtil.restoreTime(newDate, observable());
     observable(newDate);
 };
 
-datetime.prototype.onChangeTime = function (args) {
+ko.datetime.onChangeTime = function (args) {
     var element = args.target;
     var newTime = $(element).datepicker("getDate");
-    var observable = $(element).data(datetimeBase.prototype.ACCESSOR_NAME)();
-    newTime = datetime.prototype.restoreDate(newTime, observable());
+    var observable = $(element).data(ko.datetimeUtil.ACCESSOR_NAME)();
+    newTime = ko.datetimeUtil.restoreDate(newTime, observable());
     observable(newTime);
 };
 
-datetime.prototype.updateDate = function (element, value) {
+ko.datetime.updateDate = function (element, value) {
     var current = $(element).datepicker("getDate");
     if (current - value !== 0) {
-        $(element).unbind("change", datetime.prototype.onChangeDate);
+        $(element).unbind("change", ko.datetime.onChangeDate);
         $(element).datepicker("setDate", value);
-        $(element).bind("change", datetime.prototype.onChangeDate);
+        $(element).bind("change", ko.datetime.onChangeDate);
     }
 };
 
-datetime.prototype.updateTime = function (element, value) {
+ko.datetime.updateTime = function (element, value) {
     var current = $(element).datepicker("getDate");
-    current = datetime.prototype.restoreDate(current, value);
+    current = ko.datetimeUtil.restoreDate(current, value);
     if (current - value !== 0) {
-        $(element).unbind("change", datetime.prototype.onChangeTime);
+        $(element).unbind("change", ko.datetime.onChangeTime);
         $(element).datepicker("setDate", value);
-        $(element).bind("change", datetime.prototype.onChangeTime);
+        $(element).bind("change", ko.datetime.onChangeTime);
     }
 };
