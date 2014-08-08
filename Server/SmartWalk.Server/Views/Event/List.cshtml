@@ -74,9 +74,9 @@
         @foreach (var item in Model.Data) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {eventId = item.Id})">
                 <div class="header">
-                    <h3>@item.DisplayName</h3>
+                    <h3>@item.DisplayName()</h3>
 			
-                    <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture">
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture()">
                 </div>
 				                
                 <div class="info"><h4>@item.DisplayDate(culture)</h4></div>
@@ -91,13 +91,13 @@
 <script type="text/html" id="eventItemTemplate">
     <a class="thumbnail floating bg-image-container" data-bind="attr: {href: '@Url.Action("View", new { eventId = ""})/' + id()}">
         <div class="header">
-            <h3 data-bind="text: displayName()"></h3>
+            <h3 data-bind="text: sw.ext.displayName($data)"></h3>
 			
-            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: displayPicture()}">
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: sw.ext.displayPicture($data)}">
         </div>
 				
         <div class="info">
-            <h4 data-bind="text: displayDate()"></h4>
+            <h4 data-bind="text: sw.ext.displayDate($data)"></h4>
         </div>
     </a>   
 </script>

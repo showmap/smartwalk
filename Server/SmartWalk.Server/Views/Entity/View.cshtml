@@ -93,9 +93,9 @@
 <script type="text/html" id="eventItemTemplate">
     <tr>
         <td>
-            <a data-bind="attr: {href: '/event/' + id()}, text: displayName()"></a>
+            <a data-bind="attr: {href: '/event/' + id()}, text: sw.ext.displayName($data)"></a>
         </td>
-        <td data-bind="text: displayDate()"></td>        
+        <td data-bind="text: sw.ext.displayDate($data)"></td>        
     </tr>       
 </script>
 

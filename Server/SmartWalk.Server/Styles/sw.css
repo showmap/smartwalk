@@ -1,4 +1,7 @@
-﻿.scale {}
+﻿/* ReSharper disable DeclarationIsEmpty */
+.scale {}
+.default-rows {}
+/* ReSharper restore DeclarationIsEmpty */
 
 .loading {
     display: none;
@@ -176,8 +179,13 @@ textarea {
     display: inline;
 }
 
+.table tr.venue-show td.show-text {
+    width: 100%;
+}
+
 .remove.close {
     font-size: 16px;
+    margin-left: 8px;
     margin-right: 8px;
     filter: alpha(opacity=50);
     opacity: .5;

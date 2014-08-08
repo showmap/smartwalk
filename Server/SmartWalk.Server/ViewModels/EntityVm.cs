@@ -4,8 +4,10 @@ using SmartWalk.Shared;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class EntityVm {
-        public EntityVm() {
+    public class EntityVm
+    {
+        public EntityVm()
+        {
             Contacts = new List<ContactVm>();
             Addresses = new List<AddressVm>();
             Shows = new List<ShowVm>();

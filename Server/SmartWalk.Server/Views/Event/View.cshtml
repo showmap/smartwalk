@@ -26,11 +26,11 @@
             {
                 <a class="btn" href="@editAction">@T("Edit Event")</a>
             }    
-                @Model.DisplayName
+                @Model.DisplayName()
             </h2>
-            @if (!string.IsNullOrEmpty(Model.DisplayPicture))
+            @if (!string.IsNullOrEmpty(Model.DisplayPicture()))
             {
-                <img class="scale" data-scale="best-fill" data-align="center" src="@Model.DisplayPicture" />
+                <img class="scale" data-scale="best-fill" data-align="center" src="@Model.DisplayPicture()" />
             }
         </div>
 			
@@ -47,7 +47,7 @@
                     <span class="_start">@Model.StartDate.ToString("G", CultureInfo.InvariantCulture)</span>
                     <span class="_end">@Model.EndDate.ToString("G", CultureInfo.InvariantCulture)</span>
                     @*<span class="_zonecode">6</span>*@
-                    <span class="_summary">@Model.DisplayName</span>
+                    <span class="_summary">@Model.DisplayName()</span>
                     <span class="_description">@Model.Description</span>
                     <span class="_location">@Model.Latitude,@Model.Longitude</span>
                     <span class="_organizer">@Model.Host.Name</span>
@@ -112,9 +112,9 @@
                 foreach (var show in venue.Shows)
                 {
             <tr class="venue-show">
-                <td>@show.Title<br/>@if (@show.Description != null)
+                <td class="show-text">@show.Title<br/>@if (@show.Description != null)
                     {<span class="description">@show.Description</span>}</td>                        
-                <td class="td-valign">@Html.Raw(@show.DisplayTime(culture).Replace(" ", "&nbsp;"))</td>
+                <td class="td-valign">@Html.Raw(@show.DisplayTime(culture, T).Replace(" ", "&nbsp;"))</td>
             </tr>   
                 }
         }                
@@ -124,7 +124,6 @@
 @* ReSharper disable UseOfImplicitGlobalInFunctionScope *@
 @using (Script.Foot())
 {
-
 <script type="text/javascript">
     $(function () {        
         $("img.scale").imageScale();

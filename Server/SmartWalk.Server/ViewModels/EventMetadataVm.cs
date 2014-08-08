@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Newtonsoft.Json;
-using System.Linq;
-using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {
@@ -31,28 +28,5 @@ namespace SmartWalk.Server.ViewModels
 
         public EntityVm Host { get; set; }
         public IList<EntityVm> Venues { get; set; }
-
-        [JsonIgnore]
-        public IList<AddressVm> Addresses {
-            get { return Venues == null ? null : Venues.SelectMany(v => v.Addresses).ToList(); }
-        }
-
-        [JsonIgnore]
-        public string DisplayName
-        {
-            get { return Title ?? (Host != null ? Host.Name : null); }
-        }
-
-        [JsonIgnore]
-        public string DisplayPicture
-        {
-            get { return Picture ?? (Host != null ? Host.Picture : null); }
-        }
-
-        public string DisplayDate(CultureInfo culture)
-        {
-            return StartDate.ToString("D", culture) +
-                    (EndDate.HasValue ? " - " + EndDate.ToString("D", culture) : string.Empty);
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿
+﻿sw = {};
+
 // #####################   C o m m o n    ##########################
 
 
@@ -260,19 +261,6 @@ function EventViewModel(data) {
     
     self.host = ko.observable();
     self.venues = ko.observableArray();
-    
-    self.displayName = ko.computed(function () {
-        return self.title() || (self.host() != null ? self.host().name() : null);
-    });
-
-    self.displayPicture = ko.computed(function () {
-        return self.picture() || (self.host() != null ? self.host().picture() : null);
-    });
-    
-    self.displayDate = ko.computed(function () {
-        return (self.startDate() ? moment(self.startDate()).format("LL") : "") +
-            (self.endDate() ? " - " + moment(self.endDate()).format("LL") : "");
-    });
 
     self.loadData = function (eventData) {
         self.id(eventData.Id);
@@ -408,11 +396,6 @@ function ShowViewModel(data) {
     self.endTime = ko.observable();
     self.picture = ko.observable();
     self.detailsUrl = ko.observable();
-    
-    self.displayTime = ko.computed(function () {
-        return (self.startTime() ? moment(self.startTime()).format("LT") : "") +
-            (self.endTime() ? " - " + moment(self.endTime()).format("LT") : "");
-    });
 
     self.loadData = function (showData) {
         self.id(showData.Id);
@@ -444,3 +427,31 @@ function ShowViewModel(data) {
 
     self.loadData(data);
 }
+
+// #########    V i e w    M o d e l s    E x t e n s i o n s     ##############
+
+sw.ext = {};
+
+sw.ext.displayName = function (event) {
+    return event.title() || (event.host() != null ? event.host().name() : null);
+};
+
+sw.ext.displayPicture = function (event) {
+    return event.picture() || (event.host() != null ? event.host().picture() : null);
+};
+
+sw.ext.displayDate = function (event) {
+    return (event.startDate() ? moment(event.startDate()).format("LL") : "") +
+        (event.endDate() ? " - " + moment(event.endDate()).format("LL") : "");
+};
+
+sw.ext.displayTime = function (show, allDayStr) {
+    var result = (show.startTime() ? moment(show.startTime()).format("LT") : "") +
+        (show.endTime() ? " - " + moment(show.endTime()).format("LT") : "");
+
+    if (result == "") {
+        result = allDayStr;
+    }
+
+    return result;
+};

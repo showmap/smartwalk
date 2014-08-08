@@ -100,13 +100,12 @@
 
 <script type="text/html" id="showItemTemplate">
     <tr class="venue-show">
-        <td data-bind="click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data) }">
+        <td class="show-text" data-bind="click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data) }">
             <span data-bind="text: title"></span>
             <br/>
             <span class="description" data-bind="text: description"></span>
         </td>
-        @* TODO: Replacing with &nbsp; doesn't work. Fix it. *@
-        <td class="td-valign" data-bind="html: displayTime().replace(' ', '&nbsp;'), click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data); }"></td>
+        <td class="td-valign" data-bind="html: sw.ext.displayTime($data, $root.settings.showMessages.allDayMessage).replace(/ /g, '&nbsp;'), click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data); }"></td>
         <td class="td-align td-valign">
             <button type="button" class="remove close" data-bind="enable: $root.isEnabled, click: function() { if(confirm('@T("Are you sure you want to remove show?")')) $parent.showsManager.deleteItem($data); }">
                 <span class="glyphicon glyphicon-remove"></span>

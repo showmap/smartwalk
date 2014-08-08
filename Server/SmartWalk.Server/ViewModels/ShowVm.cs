@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using Newtonsoft.Json;
 using SmartWalk.Shared;
-using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {
@@ -19,11 +17,5 @@ namespace SmartWalk.Server.ViewModels
         [JsonIgnore]
         [UsedImplicitly]
         public bool Destroy { get; set; }
-
-        public string DisplayTime(CultureInfo culture)
-        {
-            return StartTime.ToString("t", culture) +
-                   (EndTime.HasValue ? " - " + EndTime.ToString("t", culture) : string.Empty);
-        }
     }
 }

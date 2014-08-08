@@ -53,7 +53,8 @@ ko.datetimeUtil.ACCESSOR_NAME = "datepickerVA";
 ko.datetimeUtil.DESTROY_REF = "datepickerDefDARef";
 
 ko.datetimeUtil.getClassByType = function (element) {
-    return (element.type == "time") ? ko.HTML5datetime : ko.datetime;
+    return (element.type == "time" || element.type == "date")
+        ? ko.HTML5datetime : ko.datetime;
 };
 
 ko.datetimeUtil.initDefaultDate = function (element, settings, setDefaultCallback) {
