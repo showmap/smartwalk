@@ -31,9 +31,9 @@ ko.mapUtil.getClassByType = function (type)
 };
 
 ko.mapUtil.dispose = function (element, disposeHandler) {
-    $(element).data(ko.mapUtil.MAP_OBJECT, null);
     if (disposeHandler)
         disposeHandler();
+    $(element).data(ko.mapUtil.MAP_OBJECT, null);
     $(element).data(ko.mapUtil.ACCESSOR_NAME, null);
 };
 
