@@ -67,7 +67,7 @@
                 </div> -->
             </a>
         }
-            <!-- ko template: {name: "entityItemTemplate", foreach: items() } -->    
+            <!-- ko template: {name: "entityItemTemplate", foreach: items(), afterRender: sw.scaleImages } -->    
             <!-- /ko -->
             <div class="clearfix"></div>
         </div>                   
@@ -98,7 +98,6 @@
 
         self.addItem = function(entity) {
             self.items.push(new EntityViewModel(entity));
-            $("img.scale").imageScale(); // TODO: Move to KO's onTemplateLoaded
         };
     };
 

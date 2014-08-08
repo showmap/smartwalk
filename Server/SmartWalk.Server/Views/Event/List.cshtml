@@ -82,7 +82,7 @@
                 <div class="info"><h4>@item.DisplayDate(culture)</h4></div>
             </a>
         }
-           <!-- ko template: {name: "eventItemTemplate", foreach: items() } -->    
+           <!-- ko template: {name: "eventItemTemplate", foreach: items(), afterRender: sw.scaleImages } -->    
            <!-- /ko -->
            <div class="clearfix"></div>
        </div>           
@@ -114,7 +114,6 @@
 
         self.addItem = function(event) {
             self.items.push(new EventViewModel(event));
-            $("img.scale").imageScale(); // TODO: Move to KO's onTemplateLoaded
         };  
     };
 
@@ -133,6 +132,7 @@
             $("a").remove(".default-rows");
             viewModel.search();
         });
+
         $("img.scale").imageScale();
     });    
 </script>

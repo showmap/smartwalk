@@ -16,7 +16,7 @@
 </script>
 
 <script type="text/html" id="entityItemTemplate">
-    <tr class="venue" data-bind="template: {name: $root.venuesManager.getItemView}"></tr>
+    <tr class="venue" data-bind="template: {name: $root.venuesManager.getItemView, afterRender: sw.scaleImages}"></tr>
     <tr class="add-venue-show" data-bind="
         visible: !isEditing() && 
             showsManager.items() && 
@@ -42,7 +42,7 @@
     <td colspan="2">
         <div>
             <a class="bg-image" target="_blank" data-bind="attr: {href: '/venue/' + id()}">
-                <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }"/>
+                <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }" alt="" />
                 <span class="abbr" data-bind="text: abbreviation()"></span>
             </a>
             <a target="_blank" data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>

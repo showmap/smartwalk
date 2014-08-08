@@ -67,6 +67,10 @@ sw.convertToUTC = function(date) {
     return result;
 };
 
+sw.scaleImages = function(elements) {
+    $(elements).find("img.scale").imageScale();
+};
+
 // #########    B i n d i n g    H a n d l e r s     ################
 
 
