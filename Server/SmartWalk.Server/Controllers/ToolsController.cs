@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard;
+using Orchard.Logging;
 using Orchard.Themes;
 using SmartWalk.Server.Services.ImportService;
 
@@ -14,10 +15,15 @@ namespace SmartWalk.Server.Controllers
         private readonly IImportService _importService;
         private readonly IOrchardServices _orchardServices;
 
+        public ILogger Logger { get; set; }
+
+
         public ToolsController(IImportService importService, IOrchardServices orchardServices) {
             _importService = importService;
 
             _orchardServices = orchardServices;
+
+            Logger = NullLogger.Instance;
         }
 
         public ActionResult ImportXmlData()
@@ -39,6 +45,7 @@ namespace SmartWalk.Server.Controllers
             }
             catch (Exception ex)
             {
+                Logger.Log(LogLevel.Error, ex, "Error occured while importing XML data");
                 return new ContentResult { Content = GetContent(log, ex.Message) };
             }
 
