@@ -263,6 +263,7 @@ namespace SmartWalk.Server.Services.EventService
             var result = allShows
                 .Select(s => s.EntityRecord)
                 .Distinct()
+                .OrderBy(e => e.Name)
                 .Select(e =>
                     {
                         var venueVm = EntityService
@@ -271,6 +272,7 @@ namespace SmartWalk.Server.Services.EventService
 
                         venueVm.Shows = allShows
                             .Where(s => s.EntityRecord.Id == e.Id && !s.IsReference)
+                            .OrderBy(s => s.StartTime)
                             .Select(ViewModelFactory.CreateViewModel)
                             .ToArray();
 
