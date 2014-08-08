@@ -3,8 +3,8 @@
 // #####################   C o m m o n    ##########################
 
 
-function inherits(child, parent) {
-    var f = function () { };
+sw.inherits = function(child, parent) {
+    var f = function() {};
     f.prototype = parent.prototype;
     child.prototype = new f();
     child.prototype.constructor = child;
@@ -13,8 +13,8 @@ function inherits(child, parent) {
     child.superClass_ = parent.prototype;
 };
 
-function attachVerticalScroll(callback) {
-    $(window).scroll(function (evt) {
+sw.attachVerticalScroll = function(callback) {
+    $(window).scroll(function(evt) {
         evt.preventDefault();
 
         if ($(window).scrollTop() >=
@@ -24,7 +24,7 @@ function attachVerticalScroll(callback) {
     });
 };
 
-function ajaxJsonRequest(ajData, url, onSuccess, onError, busyObject) {
+sw.ajaxJsonRequest = function(ajData, url, onSuccess, onError, busyObject) {
     var self = this;
 
     var config = {
@@ -53,19 +53,19 @@ function ajaxJsonRequest(ajData, url, onSuccess, onError, busyObject) {
     return request;
 };
 
-function convertToLocal(date) {
-    var result = date 
+sw.convertToLocal = function(date) {
+    var result = date
         ? new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
         : date;
     return result;
-}
+};
 
-function convertToUTC(date) {
+sw.convertToUTC = function(date) {
     var result = date
         ? new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
         : date;
     return result;
-}
+};
 
 // #########    B i n d i n g    H a n d l e r s     ################
 
@@ -143,7 +143,7 @@ ListViewModel = function (parameters, url) {
 
     self.getData = function (pageNumber) {
         if (self.currentPage() != pageNumber) {
-            ajaxJsonRequest(
+            sw.ajaxJsonRequest(
                 {
                     pageNumber: pageNumber,
                     query: self.query(),
@@ -266,9 +266,9 @@ function EventViewModel(data) {
         self.id(eventData.Id);
         self.title(eventData.Title);
         self.startDate(eventData.StartDate
-            ? convertToLocal(moment(eventData.StartDate).toDate()) : undefined);
+            ? sw.convertToLocal(moment(eventData.StartDate).toDate()) : undefined);
         self.endDate(eventData.EndDate
-            ? convertToLocal(moment(eventData.EndDate).toDate()) : undefined);
+            ? sw.convertToLocal(moment(eventData.EndDate).toDate()) : undefined);
         self.isPublic(eventData.IsPublic);
         self.picture(eventData.Picture);
         self.combineType(eventData.CombineType);
@@ -290,9 +290,9 @@ function EventViewModel(data) {
             CombineType: self.combineType(),
             Title: self.title(),
             StartDate: self.startDate()
-                ? convertToUTC(self.startDate()).toJSON() : undefined,
+                ? sw.convertToUTC(self.startDate()).toJSON() : undefined,
             EndDate: self.endDate()
-                ? convertToUTC(self.endDate()).toJSON() : undefined,
+                ? sw.convertToUTC(self.endDate()).toJSON() : undefined,
             IsPublic: self.isPublic(),
             Picture: self.picture(),
             Description: self.description(),
@@ -402,9 +402,9 @@ function ShowViewModel(data) {
         self.title(showData.Title);
         self.description(showData.Description);
         self.startTime(showData.StartTime
-            ? convertToLocal(moment(showData.StartTime).toDate()) : undefined);
+            ? sw.convertToLocal(moment(showData.StartTime).toDate()) : undefined);
         self.endTime(showData.EndTime
-            ? convertToLocal(moment(showData.EndTime).toDate()) : undefined);
+            ? sw.convertToLocal(moment(showData.EndTime).toDate()) : undefined);
         self.picture(showData.Picture);
         self.detailsUrl(showData.DetailsUrl);
     };
@@ -415,9 +415,9 @@ function ShowViewModel(data) {
             Title: self.title(),
             Description: self.description(),
             StartTime: self.startTime()
-                ? convertToUTC(self.startTime()).toJSON() : undefined,
+                ? sw.convertToUTC(self.startTime()).toJSON() : undefined,
             EndTime: self.endTime()
-                ? convertToUTC(self.endTime()).toJSON() : undefined,
+                ? sw.convertToUTC(self.endTime()).toJSON() : undefined,
             Picture: self.picture(),
             DetailsUrl: self.detailsUrl(),
             Destroy: self._destroy

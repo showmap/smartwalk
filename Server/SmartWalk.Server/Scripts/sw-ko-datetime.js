@@ -130,7 +130,7 @@ ko.HTML5datetime.initTime = function () { };
 
 ko.HTML5datetime.onChangeDate = function (args) {
     var element = args.target;
-    var newDate = convertToLocal(element.valueAsDate);
+    var newDate = sw.convertToLocal(element.valueAsDate);
     var observable = $(element).data(ko.datetimeUtil.ACCESSOR_NAME)();
     newDate = ko.datetimeUtil.restoreTime(newDate,
         observable() || $(element).data("defaultDate"));
@@ -139,7 +139,7 @@ ko.HTML5datetime.onChangeDate = function (args) {
 
 ko.HTML5datetime.onChangeTime = function (args) {
     var element = args.target;
-    var newTime = convertToLocal(element.valueAsDate);
+    var newTime = sw.convertToLocal(element.valueAsDate);
     var observable = $(element).data(ko.datetimeUtil.ACCESSOR_NAME)();
     newTime = ko.datetimeUtil.restoreDate(newTime,
         observable() || $(element).data("defaultDate"));
@@ -148,13 +148,13 @@ ko.HTML5datetime.onChangeTime = function (args) {
 
 ko.HTML5datetime.updateDate = function (element, value) {
     $(element).unbind("change", ko.HTML5datetime.onChangeDate);
-    element.valueAsDate = convertToUTC(value);
+    element.valueAsDate = sw.convertToUTC(value);
     $(element).bind("change", ko.HTML5datetime.onChangeDate);
 };
 
 ko.HTML5datetime.updateTime = function (element, value) {
     $(element).unbind("change", ko.HTML5datetime.onChangeTime);
-    element.valueAsDate = convertToUTC(value);
+    element.valueAsDate = sw.convertToUTC(value);
     $(element).bind("change", ko.HTML5datetime.onChangeTime);
 };
 

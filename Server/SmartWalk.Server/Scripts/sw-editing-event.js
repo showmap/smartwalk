@@ -61,7 +61,7 @@
     };
     
     self.getAutocompleteHosts = function (searchTerm, callback) {
-        ajaxJsonRequest(
+        sw.ajaxJsonRequest(
             { term: searchTerm },
             self.settings.hostAutocompleteUrl,
             callback
@@ -69,7 +69,7 @@
     };
 
     self.getAutocompleteVenues = function (searchTerm, callback) {
-        ajaxJsonRequest(
+        sw.ajaxJsonRequest(
             {
                 term: searchTerm,
                 onlyMine: false,
@@ -94,7 +94,7 @@
         }
 
         if (self.data.errors().length == 0) {
-            self.currentRequest = ajaxJsonRequest(
+            self.currentRequest = sw.ajaxJsonRequest(
                 self.data.toJSON(),
                 self.settings.eventSaveUrl,
                 function (eventData) {
@@ -121,7 +121,7 @@
     };
 };
 
-inherits(EventViewModelExtended, EditingViewModelBase);
+sw.inherits(EventViewModelExtended, EditingViewModelBase);
 
 // Static Methods
 EventViewModelExtended.setupValidation = function (event, settings) {

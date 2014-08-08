@@ -97,7 +97,7 @@
         }
 
         if (self.data.errors().length == 0) {
-            self.currentRequest = ajaxJsonRequest(
+            self.currentRequest = sw.ajaxJsonRequest(
                 self.data.toJSON(),
                 self.settings.entitySaveUrl,
                 function (entityData) {
@@ -128,7 +128,7 @@
     };
 };
 
-inherits(EntityViewModelExtended, EditingViewModelBase);
+sw.inherits(EntityViewModelExtended, EditingViewModelBase);
 
 // Static Methods
 EntityViewModelExtended.setupValidation = function (entity, settings) {

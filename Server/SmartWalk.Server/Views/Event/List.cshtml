@@ -118,14 +118,14 @@
         };  
     };
 
-    inherits(EventsViewModel, ListViewModel);
+    sw.inherits(EventsViewModel, ListViewModel);
 
     $(function() {
         var viewModel = new EventsViewModel(
             @Html.Raw(JsonConvert.SerializeObject(Model.Parameters, JsonNetResult.Settings)), 
             '@Url.Action("GetEvents", "Event")');
 
-        attachVerticalScroll(viewModel.getNextPage);
+        sw.attachVerticalScroll(viewModel.getNextPage);
 
         ko.applyBindings(viewModel, document.getElementById("event-items"));
 

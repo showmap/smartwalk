@@ -74,7 +74,7 @@ ko.validation.rules["asyncValidation"] = {
         if (model) {
             model[otherVal.propName] = val;
 
-            ajaxJsonRequest(
+            sw.ajaxJsonRequest(
                 { propName: otherVal.propName, model: model },
                 otherVal.validationUrl,
                 function () {

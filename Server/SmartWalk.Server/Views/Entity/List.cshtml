@@ -102,14 +102,14 @@
         };
     };
 
-    inherits(EntitiesViewModel, ListViewModel);
+    sw.inherits(EntitiesViewModel, ListViewModel);
 
     $(function() {
         var viewModel = new EntitiesViewModel(
             @Html.Raw(JsonConvert.SerializeObject(Model.Parameters, JsonNetResult.Settings)), 
             '@Url.Action("GetEntities")');
 
-        attachVerticalScroll(viewModel.getNextPage);
+        sw.attachVerticalScroll(viewModel.getNextPage);
         
         ko.applyBindings(viewModel, document.getElementById("entity-items"));
         

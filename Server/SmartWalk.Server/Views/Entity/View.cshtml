@@ -108,7 +108,7 @@
         self.loadData = function() {
             var urlUpdate = $("#view-entity-form").attr("get-entity-events");
 
-            ajaxJsonRequest({ entityId: @Model.Id }, urlUpdate, 
+            sw.ajaxJsonRequest({ entityId: @Model.Id }, urlUpdate, 
                 function(events) {
                     if (events) {
                         self.eventItems($.map(events, 
