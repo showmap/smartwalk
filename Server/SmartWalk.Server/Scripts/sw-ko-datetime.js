@@ -3,7 +3,7 @@
         var settings = allBindingsAccessor().settings || {};
         $(element).data(ko.datetimeUtil.ACCESSOR_NAME, valueAccessor);
 
-        var datetimeClass = (element.type == "date") ? ko.HTML5datetime : ko.datetime;
+        var datetimeClass = ko.datetimeUtil.getClassByType(element.type);
 
         datetimeClass.initDefaultDate(element, settings);
         datetimeClass.initDate(element, settings);
@@ -11,13 +11,13 @@
         
         //handle disposal (if KO removes by the template binding)
         ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            ko.datetimeUtil.dispose(element, datetimeClass.onChangeDate);
+            datetimeClass.dispose(element, datetimeClass.onChangeDate);
         });        
     },
     //update the control when the view model changes
     update: function (element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
-        var datetimeClass = (element.type == "date") ? ko.HTML5datetime : ko.datetime;
+        var datetimeClass = ko.datetimeUtil.getClassByType(element.type);
         
         datetimeClass.updateDate(element, value);        
     }
@@ -28,7 +28,7 @@ ko.bindingHandlers.timepicker = {
         var settings = allBindingsAccessor().settings || {};
         $(element).data(ko.datetimeUtil.ACCESSOR_NAME, valueAccessor);
 
-        var datetimeClass = (element.type == "time") ? ko.HTML5datetime : ko.datetime;
+        var datetimeClass = ko.datetimeUtil.getClassByType(element.type);
 
         datetimeClass.initDefaultDate(element, settings);
         datetimeClass.initTime(element, settings);
@@ -36,13 +36,13 @@ ko.bindingHandlers.timepicker = {
 
         //handle disposal (if KO removes by the template binding)
         ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            ko.datetimeUtil.dispose(element, datetimeClass.onChangeTime);
+            datetimeClass.dispose(element, datetimeClass.onChangeTime);
         });        
     },
     //update the control when the view model changes
     update: function(element, valueAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
-        var datetimeClass = (element.type == "time") ? ko.HTML5datetime : ko.datetime;
+        var datetimeClass = ko.datetimeUtil.getClassByType(element.type);
 
         datetimeClass.updateTime(element, value);
     }
@@ -51,6 +51,10 @@ ko.bindingHandlers.timepicker = {
 ko.datetimeUtil = {};
 ko.datetimeUtil.ACCESSOR_NAME = "datepickerVA";
 ko.datetimeUtil.DESTROY_REF = "datepickerDefDARef";
+
+ko.datetimeUtil.getClassByType = function (type) {
+    return (element.type == "time") ? ko.HTML5datetime : ko.datetime;
+};
 
 ko.datetimeUtil.initDefaultDate = function (element, settings, setDefaultCallback) {
     if (settings.defaultDateAccessor &&
@@ -68,9 +72,10 @@ ko.datetimeUtil.initDefaultDate = function (element, settings, setDefaultCallbac
     }
 };
 
-ko.datetimeUtil.dispose = function (element, onChangeHandler) {
+ko.datetimeUtil.dispose = function (element, onChangeHandler, disposeHandler) {
     $(element).unbind("change", onChangeHandler);
-    $(element).datepicker("destroy");
+    if(disposeHandler)
+        disposeHandler();
     $(element).data(ko.datetimeUtil.ACCESSOR_NAME, null);
     var subscribeRef = $(element).data(ko.datetimeUtil.DESTROY_REF);
     if (subscribeRef) {
@@ -150,6 +155,10 @@ ko.HTML5datetime.updateTime = function (element, value) {
     $(element).bind("change", ko.HTML5datetime.onChangeTime);
 };
 
+ko.HTML5datetime.dispose = function (element, onChangeHandler) {
+    ko.datetimeUtil.dispose(element, onChangeHandler);
+};
+
 ko.datetime = {};
 
 ko.datetime.initDefaultDate = function (element, settings) {
@@ -196,7 +205,7 @@ ko.datetime.updateDate = function (element, value) {
     }
 };
 
-ko.datetime.updateTime = function (element, value) {
+ko.updateTime = function (element, value) {
     var current = $(element).datepicker("getDate");
     current = ko.datetimeUtil.restoreDate(current, value);
     if (current - value !== 0) {
@@ -204,4 +213,12 @@ ko.datetime.updateTime = function (element, value) {
         $(element).datepicker("setDate", value);
         $(element).bind("change", ko.datetime.onChangeTime);
     }
+};
+
+ko.HTML5datetime.dispose = function (element, onChangeHandler) {
+    ko.datetimeUtil.dispose(element, onChangeHandler,
+        function () {
+            $(element).datepicker("destroy");
+        }
+    );
 };

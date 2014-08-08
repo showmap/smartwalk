@@ -63,6 +63,11 @@ namespace SmartWalk.Server
                 .SetVersionUrl("sw-ko-datetime.js")
                 .SetDependencies("ko", "jQueryUI", "Moment");
 
+            manifest.DefineScript("ko.mappicker")
+                .SetVersion(VersionUtil.CurrentVersion)
+                .SetVersionUrl("sw-ko-mappicker.js")
+                .SetDependencies("ko", "jQueryUI", "Leaflet");
+
             manifest.DefineScript("ko.switcher")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-ko-switcher.js")
@@ -83,7 +88,7 @@ namespace SmartWalk.Server
                 .SetVersionUrl("sw-editing.js")
                 .SetDependencies("SmartWalk.Common", "jQueryUI", "ko.validation",
                     // TODO: Maybe to fully relocate validation init into 3rd party components files
-                    "ko.autocomplete", "ko.datetime", "ko.switcher");
+                    "ko.autocomplete", "ko.datetime", "ko.switcher", "ko.mappicker");
 
             manifest.DefineScript("SmartWalk.Editing.Entity")
                 .SetVersion(VersionUtil.CurrentVersion)

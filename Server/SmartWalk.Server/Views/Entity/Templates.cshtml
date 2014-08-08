@@ -1,4 +1,8 @@
-﻿<script type="text/html" id="viewAddressTemplate">
+﻿@{
+    var imagePath = Href("../../Images/leaflet");
+}
+
+<script type="text/html" id="viewAddressTemplate">
     <tr>
 		<td data-bind="text: address() || ('(' + latitude() + ',' + longitude() + ')'), click: function () { if ($root.isEnabled()) $root.addressesManager.editItem($data) } "></td>
 		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.addressesManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
@@ -27,15 +31,16 @@
                         </div>
                         
                         <div class="form-group" data-bind="validationElement: tip">
-						    <label for="tipTextInput">@T("Tip"):</label>
-						    <input type="text" class="form-control" id="tipTextInput" data-bind="value: tip" />
-					    </div>
+                            <label for="tipTextInput">@T("Tip"):</label>
+                            <input type="text" class="form-control" id="tipTextInput" data-bind="value: tip" />
+                        </div>
                     </div>				                    
-                    	
                     <div class="col-sm-6">
+
                         <div class="form-group">
                             <label for="addressTextInput">&nbsp;</label>
-                            <iframe width="100%" height="240" frameborder="0" data-bind="attr: { src: getMapLink() }"></iframe>
+                            <div width="100%" height="240" frameborder="0" style="z-index: 2;" data-bind="mapPicker: mapPoint, settings: { imagePath: '@imagePath', zoomLevel: 14 }"></div>
+                            <!--<iframe width="100%" height="240" frameborder="0" data-bind="attr: { src: getMapLink() }"></iframe>-->
                         </div>
                     </div>
                 </div>
