@@ -125,6 +125,14 @@ sw.inherits(EventViewModelExtended, ViewModelBase);
 
 // Static Methods
 EventViewModelExtended.setupValidation = function (event, settings) {
+    event.title
+        .extend({
+            maxLength: {
+                params: 255,
+                message: settings.titleLengthValidationMessage
+            }
+        });
+
     event.startDate
         .extend({ required: { message: settings.startTimeRequiredValidationMessage } })
         .extend({
@@ -148,11 +156,7 @@ EventViewModelExtended.setupValidation = function (event, settings) {
             message: settings.endTimeCompareValidationMessage
         },
     });
-
-    event.host.extend({
-        required: { message: settings.hostRequiredValidationMessage },
-    });
-
+    
     event.picture
         .extend({
             maxLength: {
@@ -167,18 +171,28 @@ EventViewModelExtended.setupValidation = function (event, settings) {
             }
         });
 
-    event.isValidating = ko.computed(function () {
-        return event.startDate.isValidating() ||
-            event.host.isValidating() ||
-            event.picture.isValidating();
+    event.description
+        .extend({
+            maxLength: {
+                params: 3000,
+                message: settings.descriptionLengthValidationMessage
+            }
+        });
+
+    event.host.extend({
+        required: { message: settings.hostRequiredValidationMessage },
     });
 
-    event.errors = ko.validation.group({
-        startDate: event.startDate,
-        endDate: event.endDate,
-        host: event.host,
-        picture: event.picture,
+    event.isValidating = ko.computed(function () {
+        return event.title.isValidating() ||
+            event.startDate.isValidating() ||
+            event.endDate.isValidating() ||
+            event.picture.isValidating() ||
+            event.description.isValidating() ||
+            event.host.isValidating();
     });
+
+    event.errors = ko.validation.group(event);
 };
 
 EventViewModelExtended.setupShowValidation = function (show, event, settings) {

@@ -116,9 +116,17 @@ sw.inherits(EntityViewModelExtended, ViewModelBase);
 // Static Methods
 EntityViewModelExtended.setupValidation = function (entity, settings) {
     entity.name
-        .extend({ required: {
-            message: settings.nameRequiredValidationMessage
-        } })
+        .extend({
+            required: {
+                message: settings.nameRequiredValidationMessage
+            }
+        })
+        .extend({
+            maxLength: {
+                params: 255,
+                message: settings.nameLengthValidationMessage
+            }
+        })
         .extend({
             asyncValidation: {
                 validationUrl: settings.validationUrl,
@@ -130,9 +138,19 @@ EntityViewModelExtended.setupValidation = function (entity, settings) {
     entity.picture
         .extend({ maxLength: { params: 255, message: settings.pictureLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.picturePatternValidationMessage } });
+    
+    entity.description
+        .extend({
+            maxLength: {
+                params: 3000,
+                message: settings.descriptionLengthValidationMessage
+            }
+        });
 
     entity.isValidating = ko.computed(function () {
-        return entity.name.isValidating() || entity.picture.isValidating();
+        return entity.name.isValidating() ||
+            entity.picture.isValidating() ||
+            entity.description.isValidating();
     });
 
     entity.errors = ko.validation.group(entity);

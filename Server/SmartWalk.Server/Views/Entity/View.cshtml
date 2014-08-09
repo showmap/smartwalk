@@ -2,6 +2,7 @@
 @using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
+@using SmartWalk.Shared.Utils
 @model EntityVm
 @{
     Style.Require("SmartWalk");
@@ -45,7 +46,7 @@
 @Html.Partial("../AddressMap/View", Model.ToAddressMapVm())
 
     <div class="row gap">
-        <div class="col-md-7"><p class="description">@Model.Description</p></div>
+        <div class="col-md-7"><p class="description">@Html.Raw(Model.Description.ActivateLinks())</p></div>
         <div class="col-md-5 contact-container">
     @if (Model.Contacts.Any()) {
             <div class="well">

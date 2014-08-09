@@ -45,17 +45,17 @@ namespace SmartWalk.Server.Services.EntityService
             record.DateModified = DateTime.UtcNow;
 
             record.Type = entityVm.Type;
-            record.Name = entityVm.Name;
-            record.Picture = entityVm.Picture;
-            record.Description = entityVm.Description;
+            record.Name = entityVm.Name.StripTags();
+            record.Picture = entityVm.Picture.StripTags();
+            record.Description = entityVm.Description.StripTags();
         }
 
         public static void UpdateByViewModel(AddressRecord record, AddressVm addressVm)
         {
-            record.Address = addressVm.Address;
+            record.Address = addressVm.Address.StripTags();
             record.Latitude = addressVm.Latitude;
             record.Longitude = addressVm.Longitude;
-            record.Tip = addressVm.Tip;
+            record.Tip = addressVm.Tip.StripTags();
 
             record.IsDeleted = addressVm.Destroy;
         }
@@ -63,8 +63,8 @@ namespace SmartWalk.Server.Services.EntityService
         public static void UpdateByViewModel(ContactRecord record, ContactVm contactVm)
         {
             record.Type = contactVm.Type;
-            record.Title = contactVm.Title;
-            record.Contact = contactVm.Contact;
+            record.Title = contactVm.Title.StripTags();
+            record.Contact = contactVm.Contact.StripTags();
 
             record.IsDeleted = contactVm.Destroy;
         }

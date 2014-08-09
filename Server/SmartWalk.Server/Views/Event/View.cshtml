@@ -66,7 +66,7 @@
 @if (!@Model.Description.IsEmpty())
 {
     <div class="row gap">
-        <div class="col-md-8"><p class="description">@Model.Description</p></div>
+        <div class="col-md-8"><p class="description">@Html.Raw(Model.Description.ActivateLinks())</p></div>
     </div>
 }
 @if (Model.IsMultiDay())
@@ -113,7 +113,7 @@
                 {
             <tr class="venue-show">
                 <td class="show-text">@show.Title<br/>@if (@show.Description != null)
-                    {<span class="description">@show.Description</span>}</td>                        
+                    {<span class="description">@Html.Raw(show.Description.ActivateLinks())</span>}</td>                        
                 <td class="td-valign">@Html.Raw(@show.DisplayTime(culture, T).Replace(" ", "&nbsp;"))</td>
             </tr>   
                 }

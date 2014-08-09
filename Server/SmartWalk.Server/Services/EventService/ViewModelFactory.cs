@@ -2,6 +2,7 @@
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.EventService
 {
@@ -56,9 +57,9 @@ namespace SmartWalk.Server.Services.EventService
             record.DateModified = DateTime.UtcNow;
 
             record.EntityRecord = host;
-            record.Title = eventVm.Title;
-            record.Picture = eventVm.Picture;
-            record.Description = eventVm.Description;
+            record.Title = eventVm.Title.StripTags();
+            record.Picture = eventVm.Picture.StripTags();
+            record.Description = eventVm.Description.StripTags();
             record.StartTime = eventVm.StartDate.Value;
             record.EndTime = eventVm.EndDate;
             record.CombineType = eventVm.CombineType;
@@ -69,12 +70,12 @@ namespace SmartWalk.Server.Services.EventService
         {
             record.DateModified = DateTime.UtcNow;
 
-            record.Title = showVm.Title;
-            record.Description = showVm.Description;
+            record.Title = showVm.Title.StripTags();
+            record.Description = showVm.Description.StripTags();
             record.StartTime = showVm.StartTime;
             record.EndTime = showVm.EndTime;
-            record.Picture = showVm.Picture;
-            record.DetailsUrl = showVm.DetailsUrl;
+            record.Picture = showVm.Picture.StripTags();
+            record.DetailsUrl = showVm.DetailsUrl.StripTags();
 
             record.IsDeleted = showVm.Destroy;
         }

@@ -50,7 +50,7 @@
         
         <div class="row">
 	        <div class="col-sm-8">
-		        <div class="form-group">
+		        <div class="form-group" data-bind="validationElement: data.description">
 			        <label for="descriptionTextArea">@T("Description"):</label>
 			        <textarea class="form-control" id="descriptionTextArea" data-bind="value: data.description, enable: isEnabled"></textarea>
 		        </div>
@@ -126,8 +126,10 @@
         var settings = settings || [];
         settings = $.extend(settings, {
             nameRequiredValidationMessage: '@T("Name can not be empty.")',
+            nameLengthValidationMessage: '@T("Name can not be longer than 255 characters.")',
             pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
             picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
+            descriptionLengthValidationMessage: '@T("Description can not be longer than 3000 characters.")',
 
             addressMessages: {
                 addressLengthValidationMessage: '@T("Address can not be longer than 255 characters.")',

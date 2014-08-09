@@ -145,6 +145,17 @@ namespace SmartWalk.Server.Controllers
         {
             var result = new List<ValidationError>();
 
+            var titleProperty = model.GetPropertyName(p => p.Title);
+            if (!string.IsNullOrEmpty(model.Title))
+            {
+                if (model.Title.Length > 255)
+                {
+                    result.Add(new ValidationError(
+                                   titleProperty,
+                                   T("Title can not be longer than 255 characters.").Text));
+                }
+            }
+
             var startDateProperty = model.GetPropertyName(p => p.StartDate);
             if (!model.StartDate.HasValue)
             {
@@ -175,6 +186,17 @@ namespace SmartWalk.Server.Controllers
                     result.Add(new ValidationError(
                                    pictureProperty,
                                    T("Picture URL has bad format.").Text));
+                }
+            }
+
+            var descriptionProperty = model.GetPropertyName(p => p.Description);
+            if (!string.IsNullOrEmpty(model.Description))
+            {
+                if (model.Description.Length > 3000)
+                {
+                    result.Add(new ValidationError(
+                                   descriptionProperty,
+                                   T("Description can not be longer than 3000 characters.").Text));
                 }
             }
 

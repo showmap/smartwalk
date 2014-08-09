@@ -199,6 +199,17 @@ namespace SmartWalk.Server.Controllers.Base
                 }
             }
 
+            var descriptionProperty = model.GetPropertyName(p => p.Description);
+            if (!string.IsNullOrEmpty(model.Description))
+            {
+                if (model.Description.Length > 3000)
+                {
+                    result.Add(new ValidationError(
+                                   descriptionProperty,
+                                   T("Description can not be longer than 3000 characters.").Text));
+                }
+            }
+
             var addressesProperty = model.GetPropertyName(p => p.Addresses);
             var addresses = model.Addresses != null
                 ? model.Addresses.Where(v => !v.Destroy).ToArray()

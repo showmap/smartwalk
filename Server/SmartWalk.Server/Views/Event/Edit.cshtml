@@ -98,7 +98,7 @@
 		</div>
 		
 		<div class="row">
-			<div class="col-sm-8">
+			<div class="col-sm-8" data-bind="validationElement: data.description">
 				<div class="form-group">
 					<label for="descriptionTextArea">@T("Description"):</label>
 					<textarea class="form-control" id="descriptionTextArea" data-bind="value: data.description, enable: isEnabled"></textarea>
@@ -171,9 +171,11 @@
         var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
             
         var settings = {
+            titleLengthValidationMessage: '@T("Title can not be longer than 255 characters.")',
             startTimeRequiredValidationMessage: '@T("Start time is required.")',
             endTimeCompareValidationMessage: '@T("End time has to be greater or equal than start time.")',
             startTimeCompareValidationMessage: '@T("Start time has to be less or equal than end time.")',
+            descriptionLengthValidationMessage: '@T("Description can not be longer than 3000 characters.")',
             hostRequiredValidationMessage: '@T("Organizer is required.")',
             venueRequiredValidationMessage: '@T("Venue is required.")',
 
