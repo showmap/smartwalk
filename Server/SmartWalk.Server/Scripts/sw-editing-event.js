@@ -121,7 +121,7 @@
     };
 };
 
-sw.inherits(EventViewModelExtended, EditingViewModelBase);
+sw.inherits(EventViewModelExtended, ViewModelBase);
 
 // Static Methods
 EventViewModelExtended.setupValidation = function (event, settings) {

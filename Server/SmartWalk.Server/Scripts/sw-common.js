@@ -135,18 +135,63 @@ ko.bindingHandlers.scroll.scrollTop = function (element, duration) {
 
 // ###############    V i e w    M o d e l s     ####################
 
+ViewModelBase = function () {
+    var self = this;
+
+    self.currentRequest = null;
+
+    self.isBusy = ko.observable(false);
+    self.isEnabled = ko.computed(function () { return !self.isBusy(); });
+
+    self.isBusy.subscribe(function (isBusy) {
+        if (!isBusy && self.currentRequest) {
+            self.currentRequest.abort();
+            self.currentRequest = undefined;
+        }
+    });
+
+    self.serverValidErrors = ko.observableArray();
+    self.serverError = ko.observable();
+
+    self.handleServerError = function (errorResult) {
+        self.serverValidErrors(
+            errorResult.responseJSON ?
+                errorResult.responseJSON.ValidationErrors
+                : undefined);
+
+        if (!errorResult.responseJSON) {
+            if (errorResult.statusText) {
+                if (errorResult.statusText.toLowerCase() != "abort") {
+                    self.serverError(errorResult.statusText);
+                }
+            } else {
+                self.serverError("There was an error. Please try again.");
+            }
+        }
+    };
+
+    self.resetServerErrors = function () {
+        self.serverValidErrors(undefined);
+        self.serverError(undefined);
+    };
+};
 
 ListViewModel = function (parameters, url) {
     var self = this;
-
+    
+    ListViewModel.superClass_.constructor.call(self);
+    
+    self._currentPage = 0;
+    self._finished = false;
+   
     self.query = ko.observable();
     self.items = ko.observableArray();
-    self.currentPage = ko.observable(0);
 
     self.addItem = function () { }; // abstract ;-)
 
     self.getData = function (pageNumber) {
-        if (self.currentPage() != pageNumber) {
+        if (!self._finished && !self.isBusy() &&
+            self._currentPage != pageNumber) {
             sw.ajaxJsonRequest(
                 {
                     pageNumber: pageNumber,
@@ -156,24 +201,32 @@ ListViewModel = function (parameters, url) {
                 url,
                 function (items) {
                     if (items && items.length > 0) {
-                        self.currentPage(self.currentPage() + 1);
-                        items.forEach(function (item) { self.addItem(item); });
+                        self._currentPage = self._currentPage + 1;
+                        items.forEach(function(item) { self.addItem(item); });
+                    } else {
+                        self._finished = true;
                     }
-                }
+                },
+                function (errorResult) {
+                    self.handleServerError(errorResult);
+                },
+                self
             );
         }
     };
 
     self.getNextPage = function () {
-        return self.getData(self.currentPage() + 1);
+        return self.getData(self._currentPage + 1);
     };
 
     self.search = function () {
         self.items.removeAll();
-        self.currentPage(-1);
+        self._currentPage = -1;
         self.getNextPage();
     };
 };
+
+sw.inherits(ListViewModel, ViewModelBase);
 
 ContactType = {
     Email: 0,
@@ -218,13 +271,6 @@ function AddressViewModel(data) {
     self.tip = ko.observable();
     self.latitude = ko.observable();
     self.longitude = ko.observable();
-
-    self.getMapLink = function () {
-        if (!self.address()) return "";
-        var res = self.address().replace(/&/g, "").replace(/,\s+/g, ",").replace(/\s+/g, "+");
-        return "https://www.google.com/maps/embed/v1/place?q=" + res +
-            "&key=AIzaSyAOwfPuE85Mkr-xoNghkIB7enlmL0llMgo";
-    };
 
     self.loadData = function (addressData) {
         self.id(addressData.Id);

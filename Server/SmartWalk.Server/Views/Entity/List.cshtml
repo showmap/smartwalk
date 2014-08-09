@@ -60,17 +60,27 @@
 			
                     <img class="scale" data-scale="best-fill" data-align="center" src="@entityVm.Picture">
                 </div>
-				
-                <!-- TODO: to render address
+
+                @if (entityVm.HasAddresses())
+                {
                 <div class="info">
-                    <h4></h4>
-                </div> -->
+                    @{ var address = entityVm.FirstAddress(); }
+                    <h5><address>@address.Address</address></h5>
+                </div>
+                }
             </a>
         }
             <!-- ko template: {name: "entityItemTemplate", foreach: items(), afterRender: sw.scaleImages } -->    
             <!-- /ko -->
+
             <div class="clearfix"></div>
-        </div>                   
+        </div>
+
+@Html.Partial("../ServerErrors")
+
+        <div class="gap text-center">
+            <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
+        </div>
     </div>
 
 @using (Script.Foot())
@@ -80,13 +90,12 @@
         <div class="header">
             <h3 data-bind="text: name"></h3>
 			
-            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture}">
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture}" alt="">
         </div>
 				
-        <!-- TODO: to render address
         <div class="info">
-            <h4></h4>
-        </div>-->
+            <h5><address data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></address></h5>
+        </div>
     </a>
 </script>
 

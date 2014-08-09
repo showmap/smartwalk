@@ -61,23 +61,6 @@
         return self.settings.contactTypes[contact.type()];
     };
 
-    // TODO: To migrate to new map engine
-    self.getMapLink = ko.computed(function () {
-        if (self.data.addresses()) {
-            var visibleAddresses = $.grep(
-                self.data.addresses(),
-                function (ad) { return ad.address() && !ad._destroy; });
-
-            if (visibleAddresses.length > 0) {
-                return visibleAddresses[0].getMapLink();
-            }
-            
-            return null;
-        }
-
-        return null;
-    });
-
     self.data.toTinyJSON = function () {
         return {
             Id: self.data.id(),
@@ -128,7 +111,7 @@
     };
 };
 
-sw.inherits(EntityViewModelExtended, EditingViewModelBase);
+sw.inherits(EntityViewModelExtended, ViewModelBase);
 
 // Static Methods
 EntityViewModelExtended.setupValidation = function (entity, settings) {

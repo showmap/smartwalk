@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server.Records
+@using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
 @model EntityVm
@@ -32,7 +33,7 @@
             }
         </div>
 			
-@if (Model.Addresses.Any(ad => ad.Address != null)) {
+@if (Model.HasAddresses()) {
         <div class="info addresses-container">
             @foreach (var address in Model.Addresses.Where(ad => ad.Address != null)) {
                 <div><h4><address>@Regex.Replace(address.Address, @"\s+", " ")</address> @if (!string.IsNullOrEmpty(address.Tip)) {<i class="description">&nbsp;@address.Tip</i>}</h4></div>                        

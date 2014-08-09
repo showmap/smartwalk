@@ -289,46 +289,6 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     };
 };
 
-EditingViewModelBase = function () {
-    var self = this;
-
-    self.currentRequest = null;
-
-    self.isBusy = ko.observable(false);
-    self.isEnabled = ko.computed(function () { return !self.isBusy(); });
-
-    self.isBusy.subscribe(function (isBusy) {
-        if (!isBusy && self.currentRequest) {
-            self.currentRequest.abort();
-            self.currentRequest = undefined;
-        }
-    });
-    
-    self.serverValidErrors = ko.observableArray();
-    self.serverError = ko.observable();
-
-    self.handleServerError = function (errorResult) {
-        self.serverValidErrors(
-            errorResult.responseJSON ?
-                errorResult.responseJSON.ValidationErrors
-                : undefined);
-
-        if (!errorResult.responseJSON) {
-            if (errorResult.statusText) {
-                if (errorResult.statusText.toLowerCase() != "abort") {
-                    self.serverError(errorResult.statusText);
-                }
-            } else {
-                self.serverError("There was an error. Please try again.");
-            }
-        }
-    };
-
-    self.resetServerErrors = function () {
-        self.serverValidErrors(undefined);
-        self.serverError(undefined);
-    };
-};
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
 

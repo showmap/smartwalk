@@ -60,5 +60,15 @@ namespace SmartWalk.Server.Utils
 
             return result;
         }
+
+        public static bool HasAddresses(this EntityVm entity)
+        {
+            return entity.Addresses.Any(ad => ad.Address != null);
+        }
+
+        public static AddressVm FirstAddress(this EntityVm entity)
+        {
+            return entity.Addresses.FirstOrDefault(ad => ad.Address != null);
+        }
     }
 }
