@@ -196,10 +196,9 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
 EntityViewModelExtended.initAddressViewModel = function (address) {
     address.mapPoint = ko.computed({
         read: function () {
-            if (address.latitude() && address.longitude())
-                return L.latLng(address.latitude(), address.longitude());
-
-            return L.latLng(12321, 79846);
+            return address.latitude() && address.longitude() 
+                ? { lat: address.latitude(), lng: address.longitude() } 
+                : undefined;
         },
         write: function(newValue) {
             address.latitude(newValue.lat);

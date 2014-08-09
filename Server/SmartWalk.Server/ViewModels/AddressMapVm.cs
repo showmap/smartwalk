@@ -64,7 +64,7 @@ namespace SmartWalk.Server.ViewModels
         #endregion
 
 
-        #region EventMNetadataVm
+        #region EventMetadataVm
 
         public static AddressMapVm ToAddressMapVm(this EventMetadataVm metadata)
         {

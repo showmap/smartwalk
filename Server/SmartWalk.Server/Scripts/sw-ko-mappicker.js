@@ -31,8 +31,7 @@ ko.mapUtil.getClassByType = function (type)
 };
 
 ko.mapUtil.dispose = function (element, disposeHandler) {
-    if (disposeHandler)
-        disposeHandler();
+    if (disposeHandler) disposeHandler();
     $(element).data(ko.mapUtil.MAP_OBJECT, null);
     $(element).data(ko.mapUtil.ACCESSOR_NAME, null);
 };
@@ -41,11 +40,12 @@ ko.leafLetMap = {};
 
 ko.leafLetMap.init = function (element, settings) {
     L.Icon.Default.imagePath = settings.imagePath;
+    
     var center = $(element).data(ko.mapUtil.ACCESSOR_NAME)()();
     var map = L.map(element).setView(center, settings.zoomLevel);
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+    L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", { detectRetina: true }).addTo(map);
     
-    map.on('click', function (e) {
+    map.on("click", function (e) {
         $(element).data(ko.mapUtil.ACCESSOR_NAME)()(e.latlng);
     });
 

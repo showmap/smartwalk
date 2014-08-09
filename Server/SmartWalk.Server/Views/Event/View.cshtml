@@ -61,7 +61,7 @@
         </div>	
     </div>
         
-@Html.Partial("../AddressMap/View", Model.ToAddressMapVm())
+@Html.Partial("../AddressMap/View", Model.ToAddressMapVm(MapType.Google))
 
 @if (!@Model.Description.IsEmpty())
 {

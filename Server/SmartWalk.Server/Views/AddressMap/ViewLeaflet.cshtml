@@ -1,12 +1,13 @@
 ﻿@using System.Globalization
 @using SmartWalk.Server.ViewModels
-
 @model AddressMapVm
 @{
     Style.Require("Leaflet");
     Script.Require("Leaflet").AtFoot();
 
     var nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
+
+    @* TODO: To count the rectangle bounds of all addresses, to fit pins into the map view *@
 
     if (Model.Addresses.Any())
     {
@@ -19,7 +20,7 @@
         L.Icon.Default.imagePath = '@Href("../../Images/leaflet")';
         
         var map = L.map('map').setView([@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)], 14);
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { detectRetina: true }).addTo(map);
 
         @foreach (var address in Model.Addresses)
         {

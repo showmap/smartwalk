@@ -43,7 +43,7 @@
 }
     </div>
 
-@Html.Partial("../AddressMap/View", Model.ToAddressMapVm())
+@Html.Partial("../AddressMap/View", Model.ToAddressMapVm(MapType.Google))
 
     <div class="row gap">
         <div class="col-md-7"><p class="description">@Html.Raw(Model.Description.ActivateLinks())</p></div>
