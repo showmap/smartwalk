@@ -398,9 +398,6 @@
     <Content Include="Views\Event\Templates.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\OpenAuthRegister.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Account\EditProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>

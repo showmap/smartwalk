@@ -77,7 +77,7 @@ namespace SmartWalk.Server.Controllers
                             siteUrl = HttpContext.Request.ToRootUrlString();
                         }
 
-                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce}), siteUrl));
+                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce}), siteUrl));
 
                         _userEventHandler.SentChallengeEmail(user);
                         return RedirectToAction("ChallengeEmailSent");

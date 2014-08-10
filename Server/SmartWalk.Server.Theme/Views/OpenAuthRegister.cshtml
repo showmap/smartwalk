@@ -1,0 +1,90 @@
+﻿@{
+    var userName = Request.QueryString["UserName"];
+    var externalLoginData = Request.QueryString["ExternalLoginData"];
+}
+
+<div class="row double-gap bottom-gap">
+    <div class="col-md-6 col-md-offset-3">
+        
+    @if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(externalLoginData)) {
+        <div class="panel panel-success bottom-gap">
+            <div class="panel-heading">
+                <h3 class="panel-title">@T("External service association")</h3>
+            </div>
+            <div class="panel-body">
+                @T("This user account will be linked to <b>{0}</b> when you login.", userName)
+            </div>
+        </div>
+    }
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">@T("Create a new SmartWalk account")</h3>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginFormAntiForgeryPost(
+                    Url.Action("Register", "Account", new { area = "SmartWalk.Server", UserName = userName, ExternalLoginData = externalLoginData }), 
+                    FormMethod.Post, 
+                    new { @class = "form-horizontal", role = "form" }))
+                {
+                    <div class="form-group">
+                        @* ReSharper disable Html.IdNotResolved *@
+                        <label for="username" class="col-sm-3 control-label">@T("Username")</label>
+                        @* ReSharper restore Html.IdNotResolved *@
+                        <div class="col-sm-9">
+                            @Html.TextBox("username", string.Empty, new { @class = "form-control", autofocus = "autofocus", placeholder = T("Username") })
+                            <span class="help-block">@Html.ValidationMessage("username", new { @class = "text-danger"})</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @* ReSharper disable Html.IdNotResolved *@
+                        <label for="email" class="col-sm-3 control-label">@T("Email")</label>
+                        @* ReSharper restore Html.IdNotResolved *@
+                        <div class="col-sm-9">
+                            @Html.TextBox("email", string.Empty, new { @class = "form-control", placeholder = T("Email") })
+                            <span class="help-block">@Html.ValidationMessage("email", new { @class = "text-danger"})</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @* ReSharper disable Html.IdNotResolved *@
+                        <label for="password" class="col-sm-3 control-label">@T("Password")</label>
+                        @* ReSharper restore Html.IdNotResolved *@
+                        <div class="col-sm-9">
+                            @Html.Password("password", string.Empty, new { @class = "form-control", placeholder = T("Password") })
+                            <span class="help-block">@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"])</span>
+                            <span class="help-block">@Html.ValidationMessage("password", new { @class = "text-danger"})</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @* ReSharper disable Html.IdNotResolved *@
+                        <label for="confirmpassword" class="col-sm-3 control-label">@T("Confirm")</label>
+                        @* ReSharper restore Html.IdNotResolved *@
+                        <div class="col-sm-9">
+                            @Html.Password("confirmpassword", string.Empty, new { @class = "form-control", placeholder = T("Confirm password") })
+                            <span class="help-block">@Html.ValidationMessage("confirmPassword", new { @class = "text-danger"})</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" class="btn btn-primary">@T("Create")</button>
+                            <button type="reset" class="btn btn-default">@T("Reset")</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            Already have account? @Html.ActionLink(T("Sign in").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) }, new { rel = "nofollow" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                @Html.ValidationSummary(T("Account creation was unsuccessful. Please correct the errors and try again.").ToString()) 
+            </div>
+        }
+    </div>
+</div>

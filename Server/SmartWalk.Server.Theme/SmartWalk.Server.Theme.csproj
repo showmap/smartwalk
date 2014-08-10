@@ -48,6 +48,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NGM.OpenAuthentication, Version=0.4.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\NGM.OpenAuthentication.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Core.dll</HintPath>
       <Private>True</Private>
@@ -73,6 +77,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.1.2\lib\net45\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.1.2\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -187,6 +195,8 @@
     <Content Include="Views\TimeEntryLocalization.cshtml" />
     <Content Include="Views\TimePickerLocalization.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
+    <Content Include="Views\OpenAuthLogOn.cshtml" />
+    <Content Include="Views\OpenAuthRegister.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\bootstrap-theme.css.map" />
@@ -225,12 +235,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\BadgeOfHonor.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\LogOn.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Orchard.Users\Account\ChangePassword.cshtml" />

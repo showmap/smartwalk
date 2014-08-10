@@ -1,0 +1,112 @@
+﻿@using NGM.OpenAuthentication.Extensions
+@using NGM.OpenAuthentication.Models
+@using Orchard.ContentManagement
+@{
+    var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
+    var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
+
+    var clientsData = (List<OrchardAuthenticationClientData>) Model.ClientsData;
+    
+    var userName = Request.QueryString["UserName"];
+    var externalLoginData = Request.QueryString["ExternalLoginData"];
+    var returnUrl = Request.QueryString["ReturnUrl"];
+}
+
+<div class="row double-gap bottom-gap">
+    <div class="col-md-6 col-md-offset-3">
+
+    @if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(externalLoginData)) {
+        <div class="panel panel-success bottom-gap">
+            <div class="panel-heading">
+                <h3 class="panel-title">@T("External service association")</h3>
+            </div>
+            <div class="panel-body">
+                @T("This user account will be linked to <b>{0}</b> when you login.", userName)
+            </div>
+        </div>
+    }
+
+    @if (clientsData.Any())
+    {
+        <div class="panel panel-default bottom-gap">
+            <div class="panel-heading">
+                <h3 class="panel-title">@T("Sign in with an external service")</h3>
+            </div>
+            <div class="panel-body">
+            @using (Html.BeginFormAntiForgeryPost(
+                Url.OpenAuthLogOn(returnUrl),
+                FormMethod.Post,
+                new { @class = "form", role = "form" }))
+            {
+                <ul class="list-inline">
+                @foreach (var clientData in clientsData)
+                {
+                    <li>            
+                        <button class="btn btn-default" type="submit" name="providerName" value="@clientData.ProviderName" title="@T("Sign in using your {0} account", clientData.DisplayName)">@clientData.DisplayName</button>
+                    </li>
+                }
+                </ul>
+            }
+            </div>
+        </div>
+    }
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">@T("Sign in with a SmartWalk account")</h3>
+            </div>
+            <div class="panel-body">
+            @using (Html.BeginFormAntiForgeryPost(
+                Url.LogOn(returnUrl, userName, externalLoginData), 
+                FormMethod.Post, 
+                new { @class = "form-horizontal", role = "form" })) {
+                <div class="form-group">
+                    @* ReSharper disable Html.IdNotResolved *@
+                    <label for="usernameEmail" class="col-sm-3 control-label">@T("Username")</label>
+                    @* ReSharper restore Html.IdNotResolved *@
+                    <div class="col-sm-9">
+                        @Html.TextBox("userNameOrEmail", string.Empty, new { id = "usernameEmail", @class = "form-control", autofocus = "autofocus", placeholder = T("Email") })
+                        <span class="help-block">@Html.ValidationMessage("userNameOrEmail", new { @class = "text-danger"})</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @* ReSharper disable Html.IdNotResolved *@
+                    <label for="password" class="col-sm-3 control-label">@T("Password")</label>
+                    @* ReSharper restore Html.IdNotResolved *@
+                    <div class="col-sm-9">
+                        @Html.Password("password", string.Empty, new { id = "password", @class = "form-control", placeholder = T("Password") })
+                        <span class="help-block">@Html.ValidationMessage("password", new { @class = "text-danger"})</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBox("rememberMe", new { id = "rememberMe" }) @T("Remember Me")
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button class="btn btn-primary" type="submit">@T("Sign In")</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        @if (userCanRegister) { <a href="@Url.Register(userName, externalLoginData)">@T("Create")</a> @T(" if you don't have an account.") }
+                        @if (enableLostPassword) { <text> </text> @Html.ActionLink(T("Lost your Password?").Text, "RequestLostPassword") }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-warning" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            @Html.ValidationSummary(T("Login was unsuccessful. Please correct the errors and try again.").ToString())
+        </div>
+    }
+    </div>
+</div>
