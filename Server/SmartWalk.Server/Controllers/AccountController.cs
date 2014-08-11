@@ -45,53 +45,85 @@ namespace SmartWalk.Server.Controllers
             _userEventHandler = userEventHandler;
         }
 
-        private int MinPasswordLength {
+        private int MinPasswordLength
+        {
             get { return _membershipService.GetSettings().MinRequiredPasswordLength; }
         }
 
         [HttpPost]
         [AlwaysAccessible]
         [ValidateInput(false)]
-        public ActionResult Register(string userName, string email, string password, string confirmPassword, string timeZone, string returnUrl = null) {
+        public ActionResult Register(string userName, string email, string password, string confirmPassword,
+            string returnUrl = null)
+        {
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-            if (!registrationSettings.UsersCanRegister) {
+            if (!registrationSettings.UsersCanRegister)
+            {
                 return HttpNotFound();
             }
 
             ViewData["PasswordLength"] = MinPasswordLength;
 
-            if (ValidateRegistration(userName, email, password, confirmPassword)) {
+            if (ValidateRegistration(userName, email, password, confirmPassword))
+            {
                 // Attempt to register the user
                 // No need to report this to IUserEventHandler because _membershipService does that for us
                 var userParams = new CreateUserParams(userName, password, email, null, null, false);
-                var userData = new SmartWalkUserVm {FirstName = userName, LastName = userName, CreatedAt = DateTime.UtcNow, LastLoiginAt = DateTime.UtcNow};
+                var userData = new SmartWalkUserVm
+                    {
+                        FirstName = userName,
+                        LastName = userName,
+                        CreatedAt = DateTime.UtcNow,
+                        LastLoiginAt = DateTime.UtcNow
+                    };
                 var user = _swUserService.CreateUser(new SmartWalkUserParams(userParams, userData));
 
                 _orchardServices.ContentManager.Create(user);
 
-                if (user != null) {                    
-                    if (user.As<UserPart>().EmailStatus == UserStatus.Pending) {
+                if (user != null)
+                {
+                    if (user.As<UserPart>().EmailStatus == UserStatus.Pending)
+                    {
                         var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
-                        if (String.IsNullOrWhiteSpace(siteUrl)) {
+                        if (String.IsNullOrWhiteSpace(siteUrl))
+                        {
                             siteUrl = HttpContext.Request.ToRootUrlString();
                         }
 
-                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce}), siteUrl));
+                        _userService.SendChallengeEmail(
+                            user.As<UserPart>(),
+                            nonce =>
+                            Url.MakeAbsolute(
+                                Url.Action(
+                                    "ChallengeEmail",
+                                    "Account",
+                                    new { Area = "Orchard.Users", nonce }),
+                                    siteUrl));
 
                         _userEventHandler.SentChallengeEmail(user);
-                        return RedirectToAction("ChallengeEmailSent");
+                        return RedirectToAction(
+                            "ChallengeEmailSent",
+                            "Account",
+                            new { Area = "Orchard.Users" });
                     }
 
-                    if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending) {
-                        return RedirectToAction("RegistrationPending");
+                    if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending)
+                    {
+                        return RedirectToAction(
+                            "RegistrationPending",
+                            "Account",
+                            new { Area = "Orchard.Users" });
                     }
 
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
+
                     return this.RedirectLocal(returnUrl);
                 }
 
-                ModelState.AddModelError("_FORM", T(ErrorCodeToString( /*createStatus*/MembershipCreateStatus.ProviderError)));
+                ModelState.AddModelError(
+                    "_FORM",
+                    T(ErrorCodeToString( /*createStatus*/MembershipCreateStatus.ProviderError)));
             }
 
             // If we got this far, something failed, redisplay form
@@ -100,9 +132,9 @@ namespace SmartWalk.Server.Controllers
         }
 
         [AlwaysAccessible]
-        public ActionResult EditProfile() {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-                return new HttpUnauthorizedResult();
+        public ActionResult EditProfile()
+        {
+            if (_orchardServices.WorkContext.CurrentUser == null) return new HttpUnauthorizedResult();
 
             var user = _orchardServices.WorkContext.CurrentUser;
 
@@ -113,60 +145,74 @@ namespace SmartWalk.Server.Controllers
         [AlwaysAccessible]
         public ActionResult EditProfile(SmartWalkUserVm profile)
         {
-            if (_orchardServices.WorkContext.CurrentUser == null)
-                return new HttpUnauthorizedResult();
+            if (_orchardServices.WorkContext.CurrentUser == null) return new HttpUnauthorizedResult();
 
             return RedirectToAction("EditProfile");
         }
 
-        #region Helper Functions
-        private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
-            bool validate = true;
+        private bool ValidateRegistration(string userName, string email, string password, string confirmPassword)
+        {
+            var validate = true;
 
-            if (String.IsNullOrEmpty(userName)) {
+            if (String.IsNullOrEmpty(userName))
+            {
                 ModelState.AddModelError("username", T("You must specify a username."));
                 validate = false;
             }
-            else {
-                if (userName.Length >= 255) {
+            else
+            {
+                if (userName.Length >= 255)
+                {
                     ModelState.AddModelError("username", T("The username you provided is too long."));
                     validate = false;
                 }
             }
 
-            if (String.IsNullOrEmpty(email)) {
+            if (String.IsNullOrEmpty(email))
+            {
                 ModelState.AddModelError("email", T("You must specify an email address."));
                 validate = false;
             }
-            else if (email.Length >= 255) {
+            else if (email.Length >= 255)
+            {
                 ModelState.AddModelError("email", T("The email address you provided is too long."));
                 validate = false;
             }
-            else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+            else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase))
+            {
                 // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
                 ModelState.AddModelError("email", T("You must specify a valid email address."));
                 validate = false;
             }
 
-            if (!validate)
-                return false;
+            if (!validate) return false;
 
-            if (!_userService.VerifyUserUnicity(userName, email)) {
+            if (!_userService.VerifyUserUnicity(userName, email))
+            {
                 ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
             }
-            if (password == null || password.Length < MinPasswordLength) {
-                ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));
+
+            if (password == null || password.Length < MinPasswordLength)
+            {
+                ModelState.AddModelError(
+                    "password",
+                    T("You must specify a password of {0} or more characters.", MinPasswordLength));
             }
-            if (!String.Equals(password, confirmPassword, StringComparison.Ordinal)) {
+
+            if (!String.Equals(password, confirmPassword, StringComparison.Ordinal))
+            {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
+
             return ModelState.IsValid;
         }
 
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus) {
+        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
+        {
             // See http://msdn.microsoft.com/en-us/library/system.web.security.membershipcreatestatus.aspx for
             // a full list of status codes.
-            switch (createStatus) {
+            switch (createStatus)
+            {
                 case MembershipCreateStatus.DuplicateUserName:
                     return "Username already exists. Please enter a different user name.";
 
@@ -201,6 +247,5 @@ namespace SmartWalk.Server.Controllers
                         "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
             }
         }
-        #endregion
     }
 }

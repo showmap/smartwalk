@@ -194,7 +194,6 @@
     <Compile Include="Extensions\CompressFilter.cs" />
     <Compile Include="Extensions\SmartWalkConstants.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Models\SmartWalkUserParams.cs" />
     <Compile Include="Services\Base\OrchardBaseService.cs" />
     <Compile Include="Services\QueryService\RequestSelectExtensions.cs" />
@@ -396,9 +395,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Event\Templates.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Account\EditProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Entity\Edit.cshtml" />

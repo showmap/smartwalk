@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Orchard.ContentManagement.Handlers;
+﻿using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using SmartWalk.Server.Records;
+using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Handlers
 {
+    [UsedImplicitly]
     public class SmartWalkUserHandler : ContentHandler
     {
         public SmartWalkUserHandler(IRepository<SmartWalkUserRecord> repository)
