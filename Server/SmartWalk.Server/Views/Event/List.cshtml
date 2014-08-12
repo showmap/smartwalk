@@ -113,6 +113,12 @@
     @Display(New.MomentLocalization())
 
 <script type="text/javascript">
+    function fitThumbs() {
+        sw.fitThumbs(".floating-container", ".floating .header", 300);
+    }
+
+    fitThumbs();
+
     EventsViewModel = function(data, url) {
         var self = this;
 
@@ -140,6 +146,10 @@
         });
 
         $("img.scale").imageScale();
+        
+        $(window).resize(function() {
+            fitThumbs();
+        });
     });    
 </script>
 }

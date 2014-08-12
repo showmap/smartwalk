@@ -58,7 +58,7 @@
                 <div class="header">
                     <h3>@entityVm.Name</h3>
 			
-                    <img class="scale" data-scale="best-fill" data-align="center" src="@entityVm.Picture">
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@entityVm.Picture" alt="">
                 </div>
 
                 @if (entityVm.HasAddresses())
@@ -100,6 +100,12 @@
 </script>
 
 <script type="text/javascript">
+    function fitThumbs() {
+        sw.fitThumbs(".floating-container", ".floating .header", 300);
+    }
+
+    fitThumbs();
+
     EntitiesViewModel = function(data, url) {
         var self = this;
 
@@ -127,6 +133,10 @@
         });
         
         $("img.scale").imageScale();
+        
+        $(window).resize(function() {
+            fitThumbs();
+        });
     });
 </script>
 }
