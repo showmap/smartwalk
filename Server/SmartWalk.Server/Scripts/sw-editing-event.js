@@ -290,7 +290,8 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
                  return event.venuesManager.setEditingItem(item);
             },
             filterItem: function (show) {
-                return show.isEditing() || EventViewModelExtended.IsTimeThisDay(show.startTime(), event);
+                return show.isEditing() ||
+                    EventViewModelExtended.IsTimeThisDay(show.startTime(), event, 0);
             },
             beforeSave: function (show) {
                 if (!show.errors) {
@@ -346,8 +347,12 @@ EventViewModelExtended.setupMultiday = function (event) {
     }
 };
 
-EventViewModelExtended.IsTimeThisDay = function(time, event) {
+EventViewModelExtended.IsTimeThisDay = function(time, event, nightEdgeHour) {
     if (!time || !event.currentDate()) return true; // if time is not set we asume it goes to all days
+    
+    if (nightEdgeHour != 0 && !nightEdgeHour) {
+        nightEdgeHour = 6;
+    }
 
     var t = moment(time);
     var tDay = moment(time).startOf("day");
@@ -358,8 +363,8 @@ EventViewModelExtended.IsTimeThisDay = function(time, event) {
 
     var result =
         (firstDay && (tDay.isBefore(firstDay) || tDay.isSame(firstDay)) && day.isSame(firstDay)) || // times ahead of first day
-        (tDay.isSame(day) && t.hours() >= 6) ||
-        (tDay.isSame(nextDay) && t.hours() < 6) || // late night times go to next day
+        (tDay.isSame(day) && t.hours() >= nightEdgeHour) ||
+        (tDay.isSame(nextDay) && t.hours() < nightEdgeHour) || // late night times go to next day
         (lastDay && (tDay.isAfter(lastDay) || tDay.isSame(lastDay)) && day.isSame(lastDay)); // times behind of last day
 
     return result;
