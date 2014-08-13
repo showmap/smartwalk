@@ -98,8 +98,11 @@ sw.setCSSRule = function (selector, property, value) {
 
 sw.fitThumbs = function(container, thumbSel, defaultWidth) {
     var containerWidth = $(container).width();
-    var itemsCount = Math.max(Math.round(containerWidth / defaultWidth), 1);
-    sw.setCSSRule(thumbSel, "width", (containerWidth / itemsCount) + "px");
+    if ($(container).data("sw.previousWidth") != containerWidth) {
+        $(container).data("sw.previousWidth", containerWidth);
+        var itemsCount = Math.max(Math.round(containerWidth / defaultWidth), 1);
+        sw.setCSSRule(thumbSel, "width", (containerWidth / itemsCount) + "px");
+    }
 };
 
 // #########    B i n d i n g    H a n d l e r s     ################
