@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="img\bg%402x.png" />
+    <Content Include="img\bg2x.png" />
     <Content Include="img\bg.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

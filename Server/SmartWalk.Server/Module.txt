@@ -1,10 +1,10 @@
 ﻿Name: SmartWalk.Server
 AntiForgery: enabled
-Author: The Orchard Team
-Website: http://orchardproject.net
-Version: 1.0
-OrchardVersion: 1.0
-Description: Description for the module
+Author: SmartWalk
+Website: http://smartwalk.me
+Version: 1.5
+OrchardVersion: 1.8
+Description: SW server impementation.
 Features:
     SmartWalk.Server:
-        Description: Description for feature SmartWalk.Server.
+        Description: Enables SW server and client functionality.

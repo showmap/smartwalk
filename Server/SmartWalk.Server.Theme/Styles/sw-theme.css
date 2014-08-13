@@ -11,7 +11,7 @@ only screen and (                min-resolution: 192dpi),
 only screen and (                min-resolution: 2dppx)
 {
     body {
-        background: url("../img/bg@2x.png") repeat;
+        background: url("../img/bg2x.png") repeat;
     }
 }
 
