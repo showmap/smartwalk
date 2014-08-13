@@ -34,12 +34,9 @@ namespace SmartWalk.Server.Controllers
         {
             var parameters = new ListViewParametersVm { Display = display, Sort = sort };
             var result = GetEventVms(parameters);
-
-            return View(new ListViewVm<EventMetadataVm>
-                {
-                    Parameters = parameters,
-                    Data = result
-                });
+            var view = View(result);
+            view.ViewData.Add("sw.listParameters", parameters);
+            return view;
         }
 
         [CompressFilter]

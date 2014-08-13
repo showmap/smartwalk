@@ -40,13 +40,18 @@ namespace SmartWalk.Server.Controllers.Base
         [CompressFilter]
         public ActionResult List(DisplayType display)
         {
-            var result = _entityService.GetEntities(display, EntityType, 0, ViewSettings.ItemsLoad, e => e.Name);
+            var result = _entityService.GetEntities(
+                display, 
+                EntityType, 
+                0, 
+                ViewSettings.ItemsLoad, 
+                e => e.Name);
 
-            return View(new ListViewVm<EntityVm>
-                {
-                    Parameters = new ListViewParametersVm { Display = display },
-                    Data = result
-                });
+            var view = View(result);
+            view.ViewData.Add(
+                "sw.listParameters", 
+                new ListViewParametersVm { Display = display });
+            return view;
         }
 
         [CompressFilter]

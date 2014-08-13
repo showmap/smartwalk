@@ -2,7 +2,7 @@
 @using SmartWalk.Server.Records
 @using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
-@model ListViewVm<EntityVm>
+@model IList<EntityVm>
 @{
     Style.Require("SmartWalk");
 
@@ -10,12 +10,13 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    var entityTypeName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizer" : "Venue";
-    var entityTypesName = (EntityType)ViewData["EntityType"] == EntityType.Host ? "Organizers" : "Venues";
+    var parameters = (ListViewParametersVm)ViewData["sw.listParameters"];
+    var entityTypeName = (EntityType)ViewData["sw.entityType"] == EntityType.Host ? "Organizer" : "Venue";
+    var entityTypesName = (EntityType)ViewData["sw.entityType"] == EntityType.Host ? "Organizers" : "Venues";
     var entitiesUrl = Url.Action("List", new {display = DisplayType.All}); 
     var myEntitiesUrl = Url.Action("List", new {display = DisplayType.My});
 
-    Layout.Title =  Model.Parameters.Display == DisplayType.My 
+    Layout.Title =  parameters.Display == DisplayType.My 
         ? T("My {0}", T(entityTypesName)) 
         : T(entityTypesName);
 }
@@ -24,17 +25,12 @@
 
         <div class="row">
             <div class="col-xs-8">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: query">
-                    <span class="input-group-btn">
-                        <button id="btnSearch" class="btn btn-default" type="button">@T("Search")</button>
-                    </span>
-                </div>
+                <input id="searchInput" type="text" class="form-control" placeholder="@T("Search " + entityTypesName.ToLower() + "...")" data-bind="value: query, valueUpdate: 'afterkeydown'">
             </div>
         @if (WorkContext.CurrentUser != null) {
             <div class="col-xs-4">
                 <form action="@Url.Action("Create")">
-                    <button type="submit" class="btn btn-primary">@T("Create <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
+                    <button type="submit" class="btn btn-primary">@T("Create {0}{1}{2}", "<span class=\"hidden-xs\">", entityTypeName, "</span>")</button>
                 </form>                
             </div>
         }
@@ -44,12 +40,12 @@
         <div class="gap toolbar">
             <small>
                 @{
-                     var allLinkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
+                     var allLinkClass = parameters.Display == DisplayType.All ? "selected" : "default";
                 }
                 <a class="@allLinkClass" href="@entitiesUrl">@T("All " + entityTypesName)</a>
                 &nbsp;|&nbsp;
                 @{
-                    var myLinkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
+                    var myLinkClass = parameters.Display == DisplayType.My ? "selected" : "default";
                 }
                 <a class="@myLinkClass" href="@myEntitiesUrl">@T("My " + entityTypesName)</a>
             </small>
@@ -57,7 +53,7 @@
     }
 
         <div class="floating-container small-gap">
-        @foreach (var entityVm in Model.Data) {
+        @foreach (var entityVm in Model) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {entityId = entityVm.Id})">
                 <div class="header">
                     <h3>@entityVm.Name</h3>
@@ -78,6 +74,27 @@
             <!-- /ko -->
 
             <div class="clearfix"></div>
+        </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="empty-content-placeholder">
+            @if (parameters.Display == DisplayType.My)
+            {
+                <p class="text-muted">@T("You do not have any created {0} yet. Please start with creating a new one.", @entityTypesName.ToLower())</p>
+                <form action="@Url.Action("Create")">
+                    <button type="submit" class="btn btn-primary">@T("Create {0}", entityTypeName)</button>
+                </form>
+            }
+            else
+            {
+                <p class="text-muted">@T("There are no {0} available at the moment.", @entityTypesName.ToLower())</p>
+            } 
+        </div>
+    }
+
+        <div class="empty-content-placeholder" data-bind="fadeInVisible: searchedQuery() && (!items() || items().length == 0)">
+            <p data-bind="html: '@T("Your search - <b>{{0}}</b> - did not match any {0}.", @entityTypesName.ToLower())'.format(searchedQuery())"></p>
         </div>
 
 @Html.Partial("../ServerErrors")
@@ -124,16 +141,15 @@
 
     $(function() {
         var viewModel = new EntitiesViewModel(
-            @Html.Raw(JsonConvert.SerializeObject(Model.Parameters, JsonNetResult.Settings)), 
+            @Html.Raw(JsonConvert.SerializeObject(parameters, JsonNetResult.Settings)), 
             '@Url.Action("GetEntities")');
 
         sw.attachVerticalScroll(viewModel.getNextPage);
         
         ko.applyBindings(viewModel, document.getElementById("entity-items"));
         
-        $("#btnSearch").click(function() {
+        $("#searchInput").keypress(function() {
             $("a").remove(".default-rows");
-            viewModel.search();
         });
         
         $("img.scale").imageScale();

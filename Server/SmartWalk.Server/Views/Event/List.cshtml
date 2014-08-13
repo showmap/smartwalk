@@ -2,7 +2,7 @@
 @using SmartWalk.Server.Extensions
 @using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
-@model ListViewVm<EventMetadataVm>
+@model IList<EventMetadataVm>
 @{
     Style.Require("SmartWalk");
 
@@ -10,32 +10,28 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    Layout.Title =  Model.Parameters.Display == DisplayType.My 
-        ? T("My {0}", T("Events")) 
-        : T("Events");
-
+    var parameters = (ListViewParametersVm)ViewData["sw.listParameters"];
     var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
     var eventsUrl = Url.Action("List", "Event", new {display = DisplayType.All}); 
     var myEventsUrl = Url.Action("List", "Event", new {display = DisplayType.My}); 
-    var baseUrl = Model.Parameters.Display == DisplayType.All ? eventsUrl : myEventsUrl;
+    var baseUrl = parameters.Display == DisplayType.All ? eventsUrl : myEventsUrl;
     string linkClass;
+
+    Layout.Title = parameters.Display == DisplayType.My 
+        ? T("My {0}", T("Events")) 
+        : T("Events");
 }
     <div id="event-items">
         @Html.AntiForgeryTokenOrchard()    
     
         <div class="row">
             <div class="col-xs-8">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="@T("type event name...")" data-bind="value: query">
-                    <span class="input-group-btn">
-                        <button id="btnSearch" class="btn btn-default" type="button">@T("Search")</button>
-                    </span>
-                </div>
+                <input id="searchInput" type="text" class="form-control" placeholder="@T("Search events...")" data-bind="value: query, valueUpdate: 'afterkeydown'">
             </div>
         @if (WorkContext.CurrentUser != null) {
             <div class="col-xs-4">
                 <form action="@Url.Action("Create")">
-                    <button type="submit" class="btn btn-primary">@T("Create <span class=\"hidden-xs\"> Event</span>")</button>
+                    <button type="submit" class="btn btn-primary">@T("Create {0}Event{1}", "<span class=\"hidden-xs\"> ", "</span>")</button>
                 </form>  
             </div>
         }
@@ -46,16 +42,16 @@
             @if (WorkContext.CurrentUser != null) {
                 <span>
                     @{
-                        linkClass = Model.Parameters.Display == DisplayType.All ? "selected" : "default";
+                        linkClass = parameters.Display == DisplayType.All ? "selected" : "default";
                         var sortParam =
-                            Model.Parameters.Sort == SortType.Title
-                                ? "?sort=" + Model.Parameters.Sort.ToString().ToLower()
+                            parameters.Sort == SortType.Title
+                                ? "?sort=" + parameters.Sort.ToString().ToLower()
                                 : string.Empty;
                     }
                     <a class="@linkClass" href="@string.Format("{0}{1}", eventsUrl, sortParam)">@T("All Events")</a>
                     &nbsp;|&nbsp;
                     @{
-                        linkClass = Model.Parameters.Display == DisplayType.My ? "selected" : "default";
+                        linkClass = parameters.Display == DisplayType.My ? "selected" : "default";
                     }
                     <a class="@linkClass" href="@string.Format("{0}{1}", myEventsUrl, sortParam)">@T("My Events")</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -63,32 +59,53 @@
             }
                 @T("Sort By"):&nbsp;
                 @{
-                    linkClass = Model.Parameters.Sort == SortType.Date ? "selected" : "default";
+                    linkClass = parameters.Sort == SortType.Date ? "selected" : "default";
                 }    
                 <a class="@linkClass" href="@baseUrl">@T("Date")</a>
                 &nbsp;|&nbsp;
                 @{
-                    linkClass = Model.Parameters.Sort == SortType.Title ? "selected" : "default";
+                    linkClass = parameters.Sort == SortType.Title ? "selected" : "default";
                 }    
                 <a class="@linkClass" href="@string.Format("{0}?sort={1}", baseUrl, SortType.Title.ToString().ToLower())">@T("Title")</a>
             </small>
         </div>
 
         <div class="floating-container small-gap">
-            @foreach (var item in Model.Data) {
+            @foreach (var item in Model) {
                 <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {eventId = item.Id})">
                     <div class="header">
                         <h3>@item.DisplayName()</h3>
 			
                         <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture()" alt="">
                     </div>
-				                
+  
                     <div class="info"><h4>@item.DisplayDate(culture)</h4></div>
                 </a>
             }
             <!-- ko template: {name: "eventItemTemplate", foreach: items(), afterRender: sw.scaleImages } -->    
             <!-- /ko -->
             <div class="clearfix"></div>
+        </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="empty-content-placeholder">
+            @if (parameters.Display == DisplayType.My)
+            {
+                <p class="text-muted">@T("You do not have any created events yet. Please start with creating a new one.")</p>
+                <form action="@Url.Action("Create")">
+                    <button type="submit" class="btn btn-primary">@T("Create Event")</button>
+                </form>
+            }
+            else
+            {
+                <p class="text-muted">@T("There are no events available at the moment.")</p>
+            } 
+        </div>
+    }
+
+        <div class="empty-content-placeholder" data-bind="fadeInVisible: searchedQuery() && (!items() || items().length == 0)">
+            <p data-bind="html: '@T("Your search - <b>{0}</b> - did not match any events.")'.format(searchedQuery())"></p>
         </div>
 
 @Html.Partial("../ServerErrors")
@@ -103,7 +120,7 @@
         <div class="header">
             <h3 data-bind="text: sw.ext.displayName($data)"></h3>
 			
-            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: sw.ext.displayPicture($data)}">
+            <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: sw.ext.displayPicture($data)}" alt="">
         </div>
 				
         <div class="info">
@@ -137,16 +154,15 @@
 
     $(function() {
         var viewModel = new EventsViewModel(
-            @Html.Raw(JsonConvert.SerializeObject(Model.Parameters, JsonNetResult.Settings)), 
+            @Html.Raw(JsonConvert.SerializeObject(parameters, JsonNetResult.Settings)), 
             '@Url.Action("GetEvents", "Event")');
 
         sw.attachVerticalScroll(viewModel.getNextPage);
 
         ko.applyBindings(viewModel, document.getElementById("event-items"));
 
-        $("#btnSearch").click(function() {
+        $("#searchInput").keypress(function() {
             $("a").remove(".default-rows");
-            viewModel.search();
         });
 
         $("img.scale").imageScale();

@@ -1,7 +1,20 @@
-﻿sw = {};
+﻿// #####################   C o m m o n    ##########################
 
-// #####################   C o m m o n    ##########################
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+              ? args[number]
+              : match
+            ;
+        });
+    };
+}
 
+// SmartWalk Commons
+
+sw = {};
 
 sw.inherits = function(child, parent) {
     var f = function() {};
@@ -107,7 +120,7 @@ sw.fitThumbs = function(container, thumbSel, defaultWidth) {
 
 // #########    B i n d i n g    H a n d l e r s     ################
 
-
+// Just a fade effect on creation of binded element
 ko.bindingHandlers.fadeIn = {
     init: function (element, valueAccessor) {
         var duration = ko.utils.unwrapObservable(valueAccessor());
@@ -115,6 +128,7 @@ ko.bindingHandlers.fadeIn = {
     }
 };
 
+// Fade In / Out effect on visibility change
 ko.bindingHandlers.fadeVisible = {
     init: function (element, valueAccessor) {
         var value = valueAccessor();
@@ -123,6 +137,18 @@ ko.bindingHandlers.fadeVisible = {
     update: function (element, valueAccessor) {
         var value = valueAccessor();
         ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+    }
+};
+
+// Just Fade In on visible, and no effect on hiding
+ko.bindingHandlers.fadeInVisible = {
+    init: function (element, valueAccessor) {
+        var value = valueAccessor();
+        $(element).toggle(ko.unwrap(value) || false);
+    },
+    update: function (element, valueAccessor) {
+        var value = valueAccessor();
+        ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut(0);
     }
 };
 
@@ -174,7 +200,7 @@ ViewModelBase = function () {
 
     self.currentRequest = null;
 
-    self.isBusy = ko.observable(false);
+    self.isBusy = ko.observable(false).extend({ throttle: 1 });
     self.isEnabled = ko.computed(function () { return !self.isBusy(); });
 
     self.isBusy.subscribe(function (isBusy) {
@@ -218,7 +244,7 @@ ListViewModel = function (parameters, url) {
     self._currentPage = 0;
     self._finished = false;
    
-    self.query = ko.observable();
+    self.query = ko.observable().extend({ throttle: 300 });
     self.items = ko.observableArray();
 
     self.addItem = function () { }; // abstract ;-)
@@ -252,12 +278,24 @@ ListViewModel = function (parameters, url) {
     self.getNextPage = function () {
         return self.getData(self._currentPage + 1);
     };
+    
+    // Searching
+    
+    self.searchedQuery = ko.observable(null);
 
-    self.search = function () {
+    self.isBusy.subscribe(function (isBusy) {
+        if (!isBusy && self.query()) {
+            self.searchedQuery(self.query());
+        }
+    });
+
+    self.query.subscribe(function () {
+        self.searchedQuery(null);
         self.items.removeAll();
+        self._finished = false;
         self._currentPage = -1;
         self.getNextPage();
-    };
+    });
 };
 
 sw.inherits(ListViewModel, ViewModelBase);
