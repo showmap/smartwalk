@@ -11,12 +11,12 @@
     Script.Require("Bootstrap").AtFoot();
 
     string title = Convert.ToString(Model.Title);
-    string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
+    Html.AppendTitleParts(Convert.ToString(WorkContext.CurrentSite.SiteName));
 
 }<!DOCTYPE html>
 <html lang="@WorkContext.CurrentCulture">
 <head>
-    <title>@Html.Title(title, siteName)</title>
+    <title>@Html.Title(title)</title>
     @Display(Model.Head)
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

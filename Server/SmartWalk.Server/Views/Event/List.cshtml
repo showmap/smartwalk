@@ -10,6 +10,10 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
+    Layout.Title =  Model.Parameters.Display == DisplayType.My 
+        ? T("My {0}", T("Events")) 
+        : T("Events");
+
     var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
     var eventsUrl = Url.Action("List", "Event", new {display = DisplayType.All}); 
     var myEventsUrl = Url.Action("List", "Event", new {display = DisplayType.My}); 

@@ -13,6 +13,8 @@
     Script.Require("TextCollapse").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
 
+    Html.AppendTitleParts(Model.DisplayName(), Convert.ToString(T("Event")));
+
     var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
     var currentDay = (int?)ViewData["day"];
     var editAction = Url.Action("Edit", Model.IsMultiDay() ? new { day = currentDay } : null);

@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server.Extensions
+@using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Records
 @model EventMetadataVm
@@ -14,6 +15,12 @@
     Script.Require("ko.autocomplete").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Editing.Event").AtFoot();
+
+    Html.AppendTitleParts(
+        Model.Id > 0 
+            ? Convert.ToString(T("Edit: {0}", Model.DisplayName()))
+            : Convert.ToString(T("Create")), 
+        Convert.ToString(T("Event")));
 
     const string hostFormId = "edit-host-form-dialog";
     const string venueFormId = "edit-venue-form-dialog";

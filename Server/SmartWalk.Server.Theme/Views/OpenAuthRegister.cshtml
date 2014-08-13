@@ -1,4 +1,6 @@
 ﻿@{
+    Layout.Title = T("Register");
+
     var userName = Request.QueryString["UserName"];
     var externalLoginData = Request.QueryString["ExternalLoginData"];
 }
@@ -12,14 +14,14 @@
                 <h3 class="panel-title">@T("External service association")</h3>
             </div>
             <div class="panel-body">
-                @T("This user account will be linked to <b>{0}</b> when you login.", userName)
+                @T("This user account will be linked to <b>{0}</b> when you sign in.", userName)
             </div>
         </div>
     }
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">@T("Create a new SmartWalk account")</h3>
+                <h3 class="panel-title">@T("Register a new SmartWalk account")</h3>
             </div>
             <div class="panel-body">
                 @using (Html.BeginFormAntiForgeryPost(
@@ -66,7 +68,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
-                            <button type="submit" class="btn btn-primary">@T("Create")</button>
+                            <button type="submit" class="btn btn-primary">@T("Register")</button>
                             <button type="reset" class="btn btn-default">@T("Reset")</button>
                         </div>
                     </div>

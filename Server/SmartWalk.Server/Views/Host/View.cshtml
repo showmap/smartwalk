@@ -1,3 +1,4 @@
 ﻿@using SmartWalk.Server.ViewModels
 @model EntityVm
+@{ Html.AppendTitleParts(Model.Name, Convert.ToString(T("Organizer"))); }
 @Html.Partial("../Entity/View", Model)

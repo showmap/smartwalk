@@ -1,3 +1,8 @@
 ﻿@using SmartWalk.Server.ViewModels
 @model EntityVm
+@{
+    Html.AppendTitleParts(
+        Convert.ToString(T("Edit: {0}", Model.Name)), 
+        Convert.ToString(T("Venue")));
+}
 @Html.Partial("../Entity/Edit", Model)

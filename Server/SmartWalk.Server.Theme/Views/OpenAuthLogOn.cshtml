@@ -2,6 +2,8 @@
 @using NGM.OpenAuthentication.Models
 @using Orchard.ContentManagement
 @{
+    Layout.Title = T("Sign In");
+
     var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
     var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
 
@@ -93,7 +95,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
-                        @if (userCanRegister) { <a href="@Url.Register(userName, externalLoginData)">@T("Create")</a> @T(" if you don't have an account.") }
+                        @if (userCanRegister) { <a href="@Url.Register(userName, externalLoginData)">@T("Register")</a> @T(" if you don't have an account.") }
                         @if (enableLostPassword) { <text> </text> @Html.ActionLink(T("Lost your Password?").Text, "RequestLostPassword") }
                     </div>
                 </div>
