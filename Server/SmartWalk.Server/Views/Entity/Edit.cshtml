@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server.Extensions
+@using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Records
 @model EntityVm
@@ -13,7 +14,7 @@
     var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";
     var entityController = Model.Type == (int)EntityType.Host ? "Host" : "Venue";
     var cancelAction = Model.Id == 0 
-        ? Url.Action("List", entityController) 
+        ? Url.Action("List", entityController, new {display = DisplayType.My}) 
         : Url.Action("View", entityController, new { entityId = @Model.Id });
     var actionCaption = Model.Id == 0 
         ? T("Add <span class=\"hidden-xs\">" + entityTypeName + "</span>") 
