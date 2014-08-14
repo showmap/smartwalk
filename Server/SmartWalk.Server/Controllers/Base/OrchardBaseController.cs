@@ -13,9 +13,15 @@ namespace SmartWalk.Server.Controllers.Base
             _orchardServices = orchardServices;
         }
 
+        // TODO: We don't need this after Eventcontroller refactoring
         protected SmartWalkUserPart CurrentSmartWalkUser
         {
             get { return _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>(); }
+        }
+
+        protected IOrchardServices Services
+        {
+            get { return _orchardServices; }
         }
     }
 }

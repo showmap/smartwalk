@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.Data.Conventions;
+using SmartWalk.Server.Utils;
 using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Records
 {
     // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
-    public class EntityRecord
+    public class EntityRecord : IAccessRecord
     // ReSharper restore ClassWithVirtualMembersNeverInherited.Global
     {
         private IList<EntityMappingRecord> _entityMappingRecords;

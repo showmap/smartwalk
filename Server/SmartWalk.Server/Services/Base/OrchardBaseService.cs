@@ -22,5 +22,10 @@ namespace SmartWalk.Server.Services.Base
                 return userPart != null ? userPart.Record : null;
             }
         }
+
+        protected IOrchardServices Services
+        {
+            get { return _orchardServices; }
+        }
     }
 }

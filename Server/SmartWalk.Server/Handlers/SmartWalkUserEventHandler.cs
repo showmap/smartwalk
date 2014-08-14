@@ -6,8 +6,8 @@ using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security;
 using Orchard.Users.Events;
-using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
+using SmartWalk.Server.Utils;
 using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Handlers
@@ -54,14 +54,25 @@ namespace SmartWalk.Server.Handlers
 
         public void Created(UserContext context)
         {
-            var role = _roleService.GetRoleByName(SmartWalkConstants.SmartWalkUserRole);
-            if (role != null)
+            var viewerRole = _roleService.GetRoleByName(SmartWalkRoles.SmartWalkViewer);
+            if (viewerRole != null)
             {
                 _userRolesRepository.Create(
                     new UserRolesPartRecord
                         {
                             UserId = context.User.As<IUser>().Id,
-                            Role = role
+                            Role = viewerRole
+                        });
+            }
+
+            var editorRole = _roleService.GetRoleByName(SmartWalkRoles.SmartWalkEditor);
+            if (editorRole != null)
+            {
+                _userRolesRepository.Create(
+                    new UserRolesPartRecord
+                        {
+                            UserId = context.User.As<IUser>().Id,
+                            Role = editorRole
                         });
             }
         }

@@ -192,7 +192,9 @@
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\CompressFilter.cs" />
-    <Compile Include="Extensions\SmartWalkConstants.cs" />
+    <Compile Include="Services\EntityService\EntityValidator.cs" />
+    <Compile Include="Utils\SecurityUtils.cs" />
+    <Compile Include="Utils\SmartWalkRoles.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\SmartWalkUserParams.cs" />
     <Compile Include="Services\Base\OrchardBaseService.cs" />
@@ -200,7 +202,6 @@
     <Compile Include="Services\SmartWalkUserService\ISmartWalkUserService.cs" />
     <Compile Include="Services\SmartWalkUserService\SmartWalkUserService.cs" />
     <Compile Include="ShellEvents.cs" />
-    <Compile Include="Utils\AccessType.cs" />
     <Compile Include="Utils\DisplayType.cs" />
     <Compile Include="Utils\LoadMode.cs" />
     <Compile Include="Utils\ModelExtensions.cs" />

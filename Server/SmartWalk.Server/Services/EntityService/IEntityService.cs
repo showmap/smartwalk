@@ -10,6 +10,11 @@ namespace SmartWalk.Server.Services.EntityService
 {
     public interface IEntityService : IDependency
     {
+        bool IsNameUnique(EntityVm entityVm);
+
+        AccessType GetEntitiesAccess();
+        AccessType GetEntityAccess(int entityId);
+
         IList<EntityVm> GetEntities(
             DisplayType display,
             EntityType type,
@@ -19,11 +24,7 @@ namespace SmartWalk.Server.Services.EntityService
             bool isDesc = false,
             string searchString = null,
             int[] excludeIds = null);
-
-        bool IsNameUnique(EntityVm entityVm);
-        AccessType GetEntityAccess(int entityId);
         EntityVm GetEntityById(int entityId);
-
         EntityVm SaveEntity(EntityVm entityVm);
         void DeleteEntity(int hostId);
     }
