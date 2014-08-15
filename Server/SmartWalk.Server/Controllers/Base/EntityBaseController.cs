@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Web.Mvc;
 using Orchard;
+using Orchard.Security;
+using Orchard.Themes;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EntityService;
@@ -11,29 +13,28 @@ using SmartWalk.Server.Views;
 
 namespace SmartWalk.Server.Controllers.Base
 {
-    public abstract class EntityBaseController : OrchardBaseController
+    [HandleError, Themed]
+    public abstract class EntityBaseController : BaseController
     {
         private readonly IEntityService _entityService;
         private readonly IEventService _eventService;
         private readonly EntityValidator _validator;
+        private readonly IAuthorizer _authorizer;
 
         protected EntityBaseController(
-            IOrchardServices orchardServices,
             IEntityService entityService,
-            IEventService eventService)
-            : base(orchardServices)
+            IEventService eventService,
+            IOrchardServices orchardServices)
         {
             _entityService = entityService;
             _eventService = eventService;
-            _validator = new EntityValidator(_entityService, EntityTypeName, T);
+            _authorizer = orchardServices.Authorizer;
+            // ReSharper disable DoNotCallOverridableMethodsInConstructor
+            _validator = new EntityValidator(_entityService, EntityType, T);
+            // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         protected abstract EntityType EntityType { get; }
-
-        private string EntityTypeName
-        {
-            get { return EntityType == EntityType.Venue ? "Venue" : "Organizer"; }
-        }
 
         [CompressFilter]
         public ActionResult List(DisplayType display)
@@ -95,7 +96,7 @@ namespace SmartWalk.Server.Controllers.Base
 
             _entityService.DeleteEntity(entityId);
 
-            return RedirectToAction("List");
+            return RedirectToAction("List", new { display = DisplayType.My });
         }
 
         // TODO: To catch exceptions and return ErrorResultVm (with code) for all HttpPost methods
@@ -128,15 +129,14 @@ namespace SmartWalk.Server.Controllers.Base
         [CompressFilter]
         public ActionResult AutoCompleteEntity(string term, bool onlyMine = true, int[] excludeIds = null)
         {
+            var display =
+                _authorizer.Authorize(Permissions.UseAllContent)
+                    ? DisplayType.All
+                    : (onlyMine ? DisplayType.My : DisplayType.All);
+
             var result = _entityService.GetEntities(
-                onlyMine ? DisplayType.My : DisplayType.All,
-                EntityType,
-                0,
-                ViewSettings.ItemsLoad,
-                e => e.Name,
-                false,
-                term,
-                excludeIds);
+                display, EntityType, 0, ViewSettings.ItemsLoad, 
+                e => e.Name, false, term, excludeIds);
 
             return Json(result);
         }

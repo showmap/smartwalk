@@ -178,7 +178,6 @@
     <Compile Include="..\SmartWalk.Server.Common\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Controllers\Base\OrchardBaseController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />
     <Compile Include="Providers\CultureSelector.cs" />
     <Compile Include="Providers\JsonDotNetValueProviderFactory.cs" />
@@ -193,6 +192,7 @@
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\CompressFilter.cs" />
     <Compile Include="Services\EntityService\EntityValidator.cs" />
+    <Compile Include="Services\EventService\EventValidator.cs" />
     <Compile Include="Utils\SecurityUtils.cs" />
     <Compile Include="Utils\SmartWalkRoles.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

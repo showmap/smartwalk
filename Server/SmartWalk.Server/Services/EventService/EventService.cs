@@ -31,6 +31,21 @@ namespace SmartWalk.Server.Services.EventService
             _entityRepository = entityRepository;
         }
 
+        public AccessType GetEventsAccess()
+        {
+            var result = SecurityUtils.GetAccess(Services.Authorizer);
+            return result;
+        }
+
+        public AccessType GetEventAccess(int eventId)
+        {
+            var eventMeta = _eventMetadataRepository.Get(eventId);
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            var result = !eventMeta.IsPublic && access != AccessType.AllowEdit
+                ? AccessType.Deny : access;
+            return result;
+        }
+
         public IList<EventMetadataVm> GetEvents(
             DisplayType display,
             int pageNumber,
@@ -39,6 +54,10 @@ namespace SmartWalk.Server.Services.EventService
             bool isDesc = false,
             string searchString = null)
         {
+            var access = GetEventsAccess();
+            if (access == AccessType.Deny)
+                throw new SecurityException("Can't get events.");
+
             if (display == DisplayType.My && CurrentUser == null)
                 throw new SecurityException("Can't show my events without user.");
 
@@ -55,8 +74,12 @@ namespace SmartWalk.Server.Services.EventService
 
         public IList<EventMetadataVm> GetEventsByEntity(int entityId)
         {
+            var access = GetEventsAccess();
+            if (access == AccessType.Deny)
+                throw new SecurityException("Can't get events.");
+
             var entity = _entityRepository.Get(entityId);
-            if (entity == null) return null;
+            if (entity == null || entity.IsDeleted) return null;
 
             IEnumerable<EventMetadataRecord> query;
 
@@ -75,6 +98,12 @@ namespace SmartWalk.Server.Services.EventService
             return result;
         }
 
+        /// <summary>
+        /// Gets an event by id and filters shows by day.
+        /// </summary>
+        /// <param name="id">The id of the event.</param>
+        /// <param name="day">The day to filter shows by. If Null all shows are returned. 
+        /// The day values start from 0 (day 1) and up.</param>
         public EventMetadataVm GetEventById(int id, int? day = null)
         {
             if (day != null && day < 0) throw new ArgumentOutOfRangeException("day");
@@ -82,33 +111,23 @@ namespace SmartWalk.Server.Services.EventService
             var eventMeta = _eventMetadataRepository.Get(id);
             if (eventMeta == null || eventMeta.IsDeleted) return null;
 
-            if (!eventMeta.IsPublic && 
-                (CurrentUser == null || eventMeta.SmartWalkUserRecord.Id != CurrentUser.Id)) return null;
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            if (access == AccessType.Deny)
+                throw new SecurityException("Can't get event.");
 
             var result = CreateViewModelContract(eventMeta, day);
             return result;
         }
 
-        public AccessType GetEventAccess(int eventId)
-        {
-            var eventMeta = _eventMetadataRepository.Get(eventId);
-            if (eventMeta == null || eventMeta.IsDeleted) return AccessType.Deny;
-
-            if (CurrentUser != null && eventMeta.SmartWalkUserRecord.Id == CurrentUser.Id) 
-                return AccessType.AllowEdit;
-
-            return eventMeta.IsPublic ? AccessType.AllowView : AccessType.Deny;
-        }
-
         public EventMetadataVm SaveEvent(EventMetadataVm eventVm)
         {
-            if (CurrentUser == null) throw new SecurityException("Can't edit event without user.");
             if (eventVm == null) throw new ArgumentNullException("eventVm");
             if (eventVm.StartDate == null) throw new ArgumentNullException("eventVm.StartDate");
 
             var host = _entityRepository.Get(eventVm.Host.Id);
             if (host == null) throw new ArgumentOutOfRangeException("eventVm.Host");
-            if (host.SmartWalkUserRecord.Id != CurrentUser.Id) 
+            if (!Services.Authorizer.Authorize(Permissions.UseAllContent) 
+                    && host.SmartWalkUserRecord.Id != CurrentUser.Id) 
                 throw new ArgumentOutOfRangeException("eventVm.Host", "Can't add host created by other user to the event.");
 
             var eventMeta = _eventMetadataRepository.Get(eventVm.Id) ?? new EventMetadataRecord
@@ -117,9 +136,12 @@ namespace SmartWalk.Server.Services.EventService
                     DateCreated = DateTime.UtcNow
                 };
 
-            if (CurrentUser != null && eventMeta.Id > 0 &&
-                eventMeta.SmartWalkUserRecord.Id != CurrentUser.Id)
-                throw new SecurityException("Can't edit event created by other user.");
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            if (access != AccessType.AllowEdit)
+                throw new SecurityException("Can't edit event.");
+
+            if (eventMeta.IsDeleted)
+                throw new InvalidOperationException("Can't edit deleted event.");
 
             ViewModelFactory.UpdateByViewModel(eventMeta, eventVm, host);
 
@@ -171,13 +193,12 @@ namespace SmartWalk.Server.Services.EventService
 
         public void DeleteEvent(int eventId)
         {
-            if (CurrentUser == null) throw new SecurityException("Can't delete event without user.");
-
             var eventMeta = _eventMetadataRepository.Get(eventId);
             if (eventMeta == null || eventMeta.IsDeleted) return;
 
-            if (CurrentUser != null && eventMeta.SmartWalkUserRecord.Id != CurrentUser.Id)
-                throw new SecurityException("Can't delete event created by other user.");
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            if (access != AccessType.AllowEdit)
+                throw new SecurityException("Can't delete event.");
 
             foreach (var show in eventMeta.ShowRecords.Where(s => !s.IsDeleted).ToArray())
             {

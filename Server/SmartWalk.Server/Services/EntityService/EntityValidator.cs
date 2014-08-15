@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security;
 using Orchard.Localization;
 using SmartWalk.Server.Extensions;
+using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared.Utils;
@@ -12,21 +13,26 @@ namespace SmartWalk.Server.Services.EntityService
 {
     public class EntityValidator
     {
-        private readonly string _entityTypeName;
         private readonly IEntityService _entityService;
+        private readonly EntityType _entityType;
         private readonly Localizer _localizer;
 
         public EntityValidator(
-            IEntityService entityService, 
-            string entityTypeName,
+            IEntityService entityService,
+            EntityType entityType,
             Localizer localizer)
         {
-            _entityTypeName = entityTypeName;
+            _entityType = entityType;
             _entityService = entityService;
             _localizer = localizer;
         }
 
         private Localizer T { get { return _localizer; } }
+
+        private string EntityTypeName
+        {
+            get { return _entityType == EntityType.Venue ? "Venue" : "Organizer"; }
+        }
 
         public IList<ValidationError> ValidateEntity(EntityVm model)
         {
@@ -39,17 +45,17 @@ namespace SmartWalk.Server.Services.EntityService
             var nameProperty = model.GetPropertyName(p => p.Name);
             if (string.IsNullOrEmpty(model.Name))
             {
-                result.Add(new ValidationError(nameProperty, T(_entityTypeName + " name can not be empty.").Text));
+                result.Add(new ValidationError(nameProperty, T(EntityTypeName + " name can not be empty.").Text));
             }
             else if (model.Name.Length > 255)
             {
                 result.Add(new ValidationError(
                                nameProperty,
-                               T(_entityTypeName + " name can not be longer than 255 characters.").Text));
+                               T(EntityTypeName + " name can not be longer than 255 characters.").Text));
             }
             else if (!_entityService.IsNameUnique(model))
             {
-                result.Add(new ValidationError(nameProperty, T(_entityTypeName + " name must be unique.").Text));
+                result.Add(new ValidationError(nameProperty, T(EntityTypeName + " name must be unique.").Text));
             }
 
             var pictureProperty = model.GetPropertyName(p => p.Picture);

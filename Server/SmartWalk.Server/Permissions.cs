@@ -27,6 +27,12 @@ namespace SmartWalk.Server
                 Name = "EditOwnContent"
             };
 
+        public static readonly Permission UseAllContent = new Permission
+            {
+                Description = "Use all SmartWalk content",
+                Name = "UseAllContent"
+            };
+
         public static readonly Permission EditAllContent = new Permission
             {
                 Description = "Edit all SmartWalk content",
@@ -37,7 +43,7 @@ namespace SmartWalk.Server
 
         public IEnumerable<Permission> GetPermissions()
         {
-            return new[] { AccessFrontEnd, ViewAllContent, EditOwnContent, EditAllContent };
+            return new[] { AccessFrontEnd, ViewAllContent, EditOwnContent, UseAllContent, EditAllContent };
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
@@ -47,12 +53,17 @@ namespace SmartWalk.Server
                     new PermissionStereotype
                         {
                             Name = "Administrator",
-                            Permissions = new[] { EditAllContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
+                            Permissions = new[] { EditAllContent, UseAllContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
                         },
                     new PermissionStereotype
                         {
-                            Name = SmartWalkRoles.SmartWalkAdministrator,
-                            Permissions = new[] { EditAllContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
+                            Name = SmartWalkRoles.SmartWalkModerator,
+                            Permissions = new[] { EditAllContent, UseAllContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
+                        },
+                    new PermissionStereotype
+                        {
+                            Name = SmartWalkRoles.SmartWalkProvisionEditor,
+                            Permissions = new[] { EditOwnContent, UseAllContent, ViewAllContent, AccessFrontEnd }
                         },
                     new PermissionStereotype
                         {

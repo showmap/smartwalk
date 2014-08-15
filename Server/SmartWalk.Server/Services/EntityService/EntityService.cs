@@ -61,14 +61,15 @@ namespace SmartWalk.Server.Services.EntityService
             string searchString = null,
             int[] excludeIds = null)
         {
-            var access = SecurityUtils.GetAccess(Services.Authorizer);
+            var access = GetEntitiesAccess();
             if (access == AccessType.Deny)
                 throw new SecurityException("Can't get entites.");
 
             if (display == DisplayType.My && CurrentUser == null) 
                 throw new SecurityException("Can't show my entities without user.");
 
-            var query = display == DisplayType.All 
+            // admin users treat all enetities as theirs
+            var query = display == DisplayType.All
                 ? (IEnumerable<EntityRecord>)_entityRepository.Table 
                 : CurrentUser.Entities;
 
@@ -103,6 +104,9 @@ namespace SmartWalk.Server.Services.EntityService
             var access = entity.GetAccess(Services.Authorizer, CurrentUser);
             if (access != AccessType.AllowEdit) 
                 throw new SecurityException("Can't edit entity.");
+
+            if (entity.IsDeleted)
+                throw new InvalidOperationException("Can't edit deleted entity.");
 
             ViewModelFactory.UpdateByViewModel(entity, entityVm);
 
