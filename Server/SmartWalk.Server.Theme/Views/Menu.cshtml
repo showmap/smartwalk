@@ -1,5 +1,14 @@
 ﻿@{
-    Model.Classes.Add("nav navbar-nav");
+    // TODO: Temporary solution for Header and Footer menus
+    // The universal code should analyse menu and figure what's the context it's coming from
+
+    if (Model.Classes.Contains("menu-main-menu")) {
+        Model.Classes.Add("nav navbar-nav");
+    }
+
+    if (Model.Classes.Contains("menu-bottom-menu")) {
+        Model.Classes.Add("list-inline");
+    }
 
     var tag = Tag(Model, "ul");
 
