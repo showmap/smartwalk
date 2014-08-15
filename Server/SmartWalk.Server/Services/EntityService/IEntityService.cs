@@ -11,6 +11,7 @@ namespace SmartWalk.Server.Services.EntityService
     public interface IEntityService : IDependency
     {
         bool IsNameUnique(EntityVm entityVm);
+        bool IsDeletable(int entityId);
 
         AccessType GetEntitiesAccess();
         AccessType GetEntityAccess(int entityId);

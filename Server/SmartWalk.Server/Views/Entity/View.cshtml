@@ -13,6 +13,7 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
+    var allowedActions = (AllowedActions)ViewData[ViewDataParams.AllowedActions];
     var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";
 }
 
@@ -22,7 +23,7 @@
     <div class="bg-image-container page-header-image">
         <div class="header">
             <h2>
-            @if (WorkContext.CurrentUser != null)
+            @if (allowedActions.CanEdit)
             {
                 <a class="btn" href='@Url.Action("Edit")'>@T("Edit " + entityTypeName)</a>
             }

@@ -42,13 +42,18 @@ namespace SmartWalk.Server.Controllers.Base
             var access = _entityService.GetEntitiesAccess();
             if (access == AccessType.Deny) return new HttpUnauthorizedResult();
 
-            var result = _entityService.GetEntities(display, EntityType, 0, 
+            var result = _entityService.GetEntities(
+                display, EntityType, 0,
                 ViewSettings.ItemsLoad, e => e.Name);
 
             var view = View(result);
-            view.ViewData.Add(
-                "sw.listParameters", 
-                new ListViewParametersVm { Display = display });
+            view.ViewData[ViewDataParams.ListParams] =
+                new ListViewParametersVm { Display = display };
+            view.ViewData[ViewDataParams.AllowedActions] =
+                new AllowedActions
+                    {
+                        CanCreate = access == AccessType.AllowEdit
+                    };
             return view;
         }
 
@@ -61,7 +66,13 @@ namespace SmartWalk.Server.Controllers.Base
             var result = _entityService.GetEntityById(entityId);
             if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
 
-            return View(result);
+            var view = View(result);
+            view.ViewData[ViewDataParams.AllowedActions] =
+                new AllowedActions
+                    {
+                        CanEdit = access == AccessType.AllowEdit
+                    };
+            return view;
         }
 
         [CompressFilter]
@@ -82,7 +93,15 @@ namespace SmartWalk.Server.Controllers.Base
             var result = _entityService.GetEntityById(entityId);
             if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
 
-            return View(result);
+            var view = View(result);
+            view.ViewData[ViewDataParams.AllowedActions] =
+                new AllowedActions
+                    {
+                        CanDelete =
+                            access == AccessType.AllowEdit
+                            && _entityService.IsDeletable(entityId)
+                    };
+            return view;
         }
 
         [CompressFilter]

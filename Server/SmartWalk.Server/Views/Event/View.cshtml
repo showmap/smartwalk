@@ -15,8 +15,9 @@
 
     Html.AppendTitleParts(Model.DisplayName(), Convert.ToString(T("Event")));
 
+    var allowedActions = (AllowedActions)ViewData[ViewDataParams.AllowedActions];
     var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
-    var currentDay = (int?)ViewData["day"];
+    var currentDay = (int?)ViewData[ViewDataParams.Day];
     var editAction = Url.Action("Edit", Model.IsMultiDay() ? new { day = currentDay } : null);
 }
     @Html.AntiForgeryTokenOrchard()
@@ -24,7 +25,7 @@
     <div class="bg-image-container page-header-image">
         <div class="header">
             <h2>
-            @if (WorkContext.CurrentUser != null)
+            @if (allowedActions.CanEdit)
             {
                 <a class="btn" href="@editAction">@T("Edit Event")</a>
             }    

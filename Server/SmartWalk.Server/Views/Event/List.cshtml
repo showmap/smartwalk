@@ -10,7 +10,8 @@
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Common").AtFoot();
 
-    var parameters = (ListViewParametersVm)ViewData["sw.listParameters"];
+    var allowedActions = (AllowedActions)ViewData[ViewDataParams.AllowedActions];
+    var parameters = (ListViewParametersVm)ViewData[ViewDataParams.ListParams];
     var culture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
     var eventsUrl = Url.Action("List", "Event", new {display = DisplayType.All}); 
     var myEventsUrl = Url.Action("List", "Event", new {display = DisplayType.My}); 
@@ -28,7 +29,7 @@
             <div class="col-xs-8">
                 <input id="searchInput" type="text" class="form-control" placeholder="@T("Search events...")" data-bind="value: query, valueUpdate: 'afterkeydown'">
             </div>
-        @if (WorkContext.CurrentUser != null) {
+        @if (allowedActions.CanCreate) {
             <div class="col-xs-4">
                 <form action="@Url.Action("Create")">
                     <button type="submit" class="btn btn-primary">@T("Create {0}Event{1}", "<span class=\"hidden-xs\"> ", "</span>")</button>
@@ -90,7 +91,7 @@
     @if (Model == null || Model.Count == 0)
     {
         <div class="empty-content-placeholder">
-            @if (parameters.Display == DisplayType.My)
+            @if (parameters.Display == DisplayType.My && allowedActions.CanCreate)
             {
                 <p class="text-muted">@T("You do not have any created events yet. Please start with creating a new one.")</p>
                 <form action="@Url.Action("Create")">

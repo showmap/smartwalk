@@ -38,6 +38,13 @@ namespace SmartWalk.Server.Services.EntityService
                     !e.IsDeleted);
         }
 
+        public bool IsDeletable(int entityId)
+        {
+            var entity = _entityRepository.Get(entityId);
+            var result = IsDeletable(entity);
+            return result;
+        }
+
         public AccessType GetEntitiesAccess()
         {
             var result = SecurityUtils.GetAccess(Services.Authorizer);
@@ -158,7 +165,7 @@ namespace SmartWalk.Server.Services.EntityService
             if (access != AccessType.AllowEdit)
                 throw new SecurityException("Can't delete entity.");
 
-            if (!entity.IsDeletable()) 
+            if (!IsDeletable(entity)) 
                 throw new InvalidOperationException("Can't delete entity that has references from events.");
 
             foreach (var contact in entity.ContactRecords.Where(c => !c.IsDeleted).ToArray())
@@ -213,6 +220,16 @@ namespace SmartWalk.Server.Services.EntityService
                      .Take(pageSize)
                      .Select(e => ViewModelFactory.CreateViewModel(e, LoadMode.Compact))
                      .ToArray();
+        }
+
+        private static bool IsDeletable(EntityRecord entity)
+        {
+            if (entity == null || entity.IsDeleted) return false;
+
+            var result =
+                entity.EventMetadataRecords.All(em => em.IsDeleted)
+                && entity.ShowRecords.All(s => s.IsDeleted);
+            return result;
         }
     }
 }

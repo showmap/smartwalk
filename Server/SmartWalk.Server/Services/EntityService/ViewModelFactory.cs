@@ -28,7 +28,6 @@ namespace SmartWalk.Server.Services.EntityService
 
             if (mode == LoadMode.Full)
             {
-                result.IsDeletable = record.IsDeletable();
                 result.Type = record.Type;
                 result.Description = record.Description;
                 result.Contacts = record.ContactRecords

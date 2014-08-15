@@ -20,14 +20,6 @@ namespace SmartWalk.Server.Utils
             return DateTimeExtensions.IsMultiDay(eventMetadata.StartTime, eventMetadata.EndTime);
         }
 
-        // TODO: To move this to a editing metadata
-        public static bool IsDeletable(this EntityRecord entity)
-        {
-            var result = entity.EventMetadataRecords.All(em => em.IsDeleted) &&
-                         entity.ShowRecords.All(s => s.IsDeleted);
-            return result;
-        }
-
         public static string DisplayDate(this EventMetadataVm eventMeta, CultureInfo culture)
         {
             return eventMeta.StartDate.ToString("D", culture) +

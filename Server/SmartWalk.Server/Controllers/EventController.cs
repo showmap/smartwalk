@@ -27,7 +27,7 @@ namespace SmartWalk.Server.Controllers
 
         [CompressFilter]
         public ActionResult List(
-            DisplayType display = DisplayType.All, 
+            DisplayType display = DisplayType.All,
             SortType sort = SortType.Date)
         {
             var access = _eventService.GetEventsAccess();
@@ -37,7 +37,12 @@ namespace SmartWalk.Server.Controllers
             var result = GetEventVms(parameters);
 
             var view = View(result);
-            view.ViewData.Add("sw.listParameters", parameters);
+            view.ViewData[ViewDataParams.ListParams] = parameters;
+            view.ViewData[ViewDataParams.AllowedActions] =
+                new AllowedActions
+                    {
+                        CanCreate = access == AccessType.AllowEdit
+                    };
             return view;
         }
 
@@ -52,7 +57,12 @@ namespace SmartWalk.Server.Controllers
             if (result == null) return new HttpNotFoundResult();
 
             var view = View(result);
-            view.ViewData.Add("day", day);
+            view.ViewData[ViewDataParams.Day] = day;
+            view.ViewData[ViewDataParams.AllowedActions] =
+                new AllowedActions
+                    {
+                        CanEdit = access == AccessType.AllowEdit
+                    };
             return view;
         }
 
@@ -75,7 +85,12 @@ namespace SmartWalk.Server.Controllers
             if (result == null) return new HttpNotFoundResult();
 
             var view = View(result);
-            view.ViewData.Add("day", day);
+            view.ViewData[ViewDataParams.Day] = day;
+            view.ViewData[ViewDataParams.AllowedActions] =
+                new AllowedActions
+                    {
+                        CanDelete = access == AccessType.AllowEdit
+                    };
             return view;
         }
 

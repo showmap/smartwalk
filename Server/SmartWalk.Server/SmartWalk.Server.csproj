@@ -206,7 +206,9 @@
     <Compile Include="Utils\LoadMode.cs" />
     <Compile Include="Utils\ModelExtensions.cs" />
     <Compile Include="Utils\SortType.cs" />
+    <Compile Include="Utils\ViewDataParams.cs" />
     <Compile Include="ViewModels\AddressMapVm.cs" />
+    <Compile Include="Utils\AllowedActions.cs" />
     <Compile Include="ViewModels\ErrorResultVm.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
     <Compile Include="Views\ViewSettings.cs" />

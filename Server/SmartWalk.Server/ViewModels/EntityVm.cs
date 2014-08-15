@@ -27,8 +27,5 @@ namespace SmartWalk.Server.ViewModels
         [JsonIgnore]
         [UsedImplicitly]
         public bool Destroy { get; set; }
-
-        [JsonIgnore]
-        public bool IsDeletable { get; set; }
     }
 }

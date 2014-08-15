@@ -25,7 +25,7 @@
     const string hostFormId = "edit-host-form-dialog";
     const string venueFormId = "edit-venue-form-dialog";
 
-    var currentDay = (int?)ViewData["day"];
+    var currentDay = (int?)ViewData[ViewDataParams.Day];
 }
 
 <div id="event-item">
@@ -158,12 +158,12 @@
 @Html.Partial(
     "../Entity/Edit", 
     new EntityVm { Type = (int)EntityType.Host },
-    new ViewDataDictionary {{"EntityFormId", hostFormId }})
+    new ViewDataDictionary {{ViewDataParams.EntityFormId, hostFormId }})
 
 @Html.Partial(
     "../Entity/Edit", 
     new EntityVm { Type = (int)EntityType.Venue },
-    new ViewDataDictionary {{"EntityFormId", venueFormId }})
+    new ViewDataDictionary {{ViewDataParams.EntityFormId, venueFormId }})
 
 @using (Script.Foot())
 {
