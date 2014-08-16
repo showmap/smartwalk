@@ -48,6 +48,8 @@ ko.bindingHandlers.timepicker = {
     }
 };
 
+// ###############    D a t e t i m e   U t i l     ####################
+
 ko.datetimeUtil = {};
 ko.datetimeUtil.ACCESSOR_NAME = "datepickerVA";
 ko.datetimeUtil.DESTROY_REF = "datepickerDefDARef";
@@ -116,6 +118,8 @@ ko.datetimeUtil.restoreTime = function (newDate, existingDate) {
     return newDate;
 };
 
+// ###############    H T M L 5   d a t e t i m e   ####################
+
 ko.HTML5datetime = { };
 
 ko.HTML5datetime.initDefaultDate = function (element, settings) {
@@ -161,6 +165,8 @@ ko.HTML5datetime.updateTime = function (element, value) {
 ko.HTML5datetime.dispose = function (element, onChangeHandler) {
     ko.datetimeUtil.dispose(element, onChangeHandler);
 };
+
+// ###############    d a t e t i m e   ####################
 
 ko.datetime = {};
 

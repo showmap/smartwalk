@@ -21,6 +21,8 @@
     }
 };
 
+// ###############    M a p   U t i l   ####################
+
 ko.mapUtil = {};
 ko.mapUtil.ACCESSOR_NAME = "coordinatesVA";
 ko.mapUtil.MAP_OBJECT = "mapPickerObject";
@@ -35,6 +37,8 @@ ko.mapUtil.dispose = function (element, disposeHandler) {
     $(element).data(ko.mapUtil.MAP_OBJECT, null);
     $(element).data(ko.mapUtil.ACCESSOR_NAME, null);
 };
+
+// ###############    L e a f L e t   M a p s   ####################
 
 ko.leafLetMap = {};
 
@@ -62,4 +66,47 @@ ko.leafLetMap.dispose = function (element) {
 
 ko.leafLetMap.setData = function (element, value) {
     $(element).data(ko.mapUtil.MAP_OBJECT).setView(value);
+};
+
+// ###############    G o o g l e   M a p s   ####################
+
+ko.googleMap = {};
+
+ko.addMarker = function(latlng, title) {
+    new google.maps.Marker({
+        position: latlng,
+        map: map,
+        title: title,
+        icon: "http://maps.google.com/mapfiles/marker.png" // TODO: to use our markers with two chars Abbreviation
+    });
+};
+
+ko.googleMap.init = function (element, settings) {
+    var center = $(element).data(ko.mapUtil.ACCESSOR_NAME)()();
+    
+    var map = new google.maps.Map(
+            element,
+            {
+                zoom: 14,
+                center: center,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+    google.maps.event.addListener(map, 'click', function(e) {
+        $(element).data(ko.mapUtil.ACCESSOR_NAME)()({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+    });
+    
+    $(element).data(ko.mapUtil.MAP_OBJECT, map);
+};
+
+ko.googleMap.dispose = function (element) {
+    ko.mapUtil.dispose(element,
+        function () {
+            delete ($(element).data(ko.mapUtil.MAP_OBJECT));
+        }
+    );
+};
+
+ko.googleMap.setData = function (element, value) {
+    $(element).data(ko.mapUtil.MAP_OBJECT).setCenter(value);
 };
