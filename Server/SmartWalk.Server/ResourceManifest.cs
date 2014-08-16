@@ -42,18 +42,20 @@ namespace SmartWalk.Server
 
             // 3rd Party - Leaflet
 
-            manifest.DefineScript("Leaflet")
+            /*manifest.DefineScript("Leaflet")
                 .SetVersion("0.7.3")
                 .SetVersionUrl("leaflet.js", "leaflet-src.js");
 
             manifest.DefineStyle("Leaflet")
                 .SetVersion("0.7.3")
-                .SetVersionUrl("leaflet.css");
+                .SetVersionUrl("leaflet.css");*/
 
             // 3rd Party - Gogle Maps API
-
+            
             manifest.DefineScript("GoogleMapsApi")
-                .SetCdn("http://maps.google.com/maps/api/js?sensor=false");
+                .SetCdn(
+                    "http://maps.google.com/maps/api/js?key=AIzaSyCanvS2udvOBlQT4lj6HsM9eKfJgQ31BaY",
+                    "http://maps.google.com/maps/api/js");
 
             // SmartWalk
 
@@ -71,7 +73,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("ko.mappicker")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-ko-mappicker.js")
-                .SetDependencies("ko", "jQueryUI", "Leaflet", "GoogleMapsApi");
+                .SetDependencies("ko", "jQueryUI", "GoogleMapsApi"); // "Leaflet", 
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion(VersionUtil.CurrentVersion)

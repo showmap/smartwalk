@@ -18,16 +18,19 @@
                 position: latlng,
                 map: map,
                 title: title,
-                icon: "http://maps.google.com/mapfiles/marker.png" // TODO: to use our markers with two chars Abbreviation
+                //icon: "http://maps.google.com/mapfiles/marker.png" // TODO: to use our markers with two chars Abbreviation
             });
         }
 
         var map = new google.maps.Map(
             document.getElementById("googleMap"),
             {
+                backgroundColor: "#B4D1FF",
                 zoom: 14,
                 center: new google.maps.LatLng(@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)),
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                streetViewControl: false
             });
 
         @foreach (var address in Model.Addresses)

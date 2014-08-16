@@ -1,4 +1,4 @@
-﻿ko.bindingHandlers.mapPicker = {
+﻿ko.bindingHandlers.mappicker = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         var settings = allBindingsAccessor().settings || {};
         $(element).data(ko.mapUtil.ACCESSOR_NAME, valueAccessor);
@@ -87,10 +87,18 @@ ko.googleMap.init = function (element, settings) {
     var map = new google.maps.Map(
             element,
             {
-                zoom: 14,
+                backgroundColor: "#B4D1FF",
+                zoom: settings.zoomLevel,
                 center: center,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                streetViewControl: false
             });
+    
+    new google.maps.Marker({
+        position: center,
+        map: map,
+        title: "Current address"
+    });
 
     google.maps.event.addListener(map, 'click', function(e) {
         $(element).data(ko.mapUtil.ACCESSOR_NAME)()({ lat: e.latLng.lat(), lng: e.latLng.lng() });

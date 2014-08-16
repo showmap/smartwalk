@@ -17,7 +17,7 @@
     var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";
 }
 
-<div id="view-entity-form" get-entity-events="@Url.Action("GetEvents")">
+<div id="view-entity-form">
     @Html.AntiForgeryTokenOrchard()
 
     <div class="bg-image-container page-header-image">
@@ -109,9 +109,9 @@
         self.eventItems = ko.observableArray();
 
         self.loadData = function() {
-            var urlUpdate = $("#view-entity-form").attr("get-entity-events");
-
-            sw.ajaxJsonRequest({ entityId: @Model.Id }, urlUpdate, 
+            sw.ajaxJsonRequest(
+                { entityId: @Model.Id }, 
+                "@Url.Action("GetEvents")", 
                 function(events) {
                     if (events) {
                         self.eventItems($.map(events, 

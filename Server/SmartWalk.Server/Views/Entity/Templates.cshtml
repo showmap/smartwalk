@@ -1,5 +1,6 @@
 ﻿@{
-    var imagePath = Href("../../Images/leaflet");
+    // var imagePath = Href("../../Images/leaflet");
+    // TODO: If use Leaflet again, paste this into mappicker settings:  imagePath: '@imagePath', 
 }
 
 <script type="text/html" id="viewAddressTemplate">
@@ -38,7 +39,8 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="addressTextInput">&nbsp;</label>
-                            <div width="300" height="240" data-bind="mapPicker: mapPoint, settings: { imagePath: '@imagePath', zoomLevel: 14, type: 'google' }"></div>
+                            <div class="map-picker-container" data-bind="mappicker: mapPoint, settings: { zoomLevel: 16, type: 'google' }"></div>
+                            <span class="text-muted map-picker-tip">@T("Click on map to update Address coordinate")</span>
                         </div>
                     </div>
                 </div>
