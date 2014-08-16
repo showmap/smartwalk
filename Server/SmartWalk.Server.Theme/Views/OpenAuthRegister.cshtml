@@ -74,7 +74,12 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
-                            Already have account? @Html.ActionLink(T("Sign in").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) }, new { rel = "nofollow" })
+                            @T("By pressing the Register button you agree to these {0}Terms and Conditions{1}.", "<a href='/terms-and-conditions'>", "</a>")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            @T("Already have account?") @Html.ActionLink(T("Sign in").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) }, new { rel = "nofollow" })
                         </div>
                     </div>
                 }
