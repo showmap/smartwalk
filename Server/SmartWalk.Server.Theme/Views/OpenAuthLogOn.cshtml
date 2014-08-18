@@ -40,11 +40,11 @@
                 FormMethod.Post,
                 new { @class = "form", role = "form" }))
             {
-                <ul class="list-inline">
+                <ul class="list-inline open-auth-providers">
                 @foreach (var clientData in clientsData)
                 {
                     <li>            
-                        <button class="btn btn-default" type="submit" name="providerName" value="@clientData.ProviderName" title="@T("Sign in using your {0} account", clientData.DisplayName)">@clientData.DisplayName</button>
+                        <button class="btn btn-default @clientData.ProviderName.ToLower()" type="submit" name="providerName" value="@clientData.ProviderName" title="@T("Sign in using your {0} account", clientData.DisplayName)">@clientData.DisplayName</button>
                     </li>
                 }
                 </ul>

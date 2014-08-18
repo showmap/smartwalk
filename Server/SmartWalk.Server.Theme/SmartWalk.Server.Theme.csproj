@@ -110,6 +110,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="img\bg2x.png" />
     <Content Include="img\bg.png" />
+    <Content Include="img\fb-login.png" />
     <Content Include="img\icons\apple-touch-icon-114x114.png" />
     <Content Include="img\icons\apple-touch-icon-120x120.png" />
     <Content Include="img\icons\apple-touch-icon-144x144.png" />

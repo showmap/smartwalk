@@ -96,6 +96,7 @@ only screen and (                min-resolution: 2dppx)
      opacity: .7; 
      filter:Alpha(Opacity=70);
 }
+
 .ui-widget-shadow {
      margin: -8px 0 0 -8px; 
      padding: 8px; 
@@ -106,4 +107,17 @@ only screen and (                min-resolution: 2dppx)
      -khtml-border-radius: 8px; 
      -webkit-border-radius: 8px; 
      border-radius: 8px;
+}
+
+.open-auth-providers .facebook {
+    color: transparent;
+    text-indent: -9999px;
+    text-transform: capitalize;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    border: none;
+    width: 202px;
+    height: 46px;
+    background: url("../img/fb-login.png") no-repeat;
 }
