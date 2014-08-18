@@ -76,6 +76,8 @@
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Widgets.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -102,11 +104,34 @@
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="img\bg2x.png" />
     <Content Include="img\bg.png" />
+    <Content Include="img\icons\apple-touch-icon-114x114.png" />
+    <Content Include="img\icons\apple-touch-icon-120x120.png" />
+    <Content Include="img\icons\apple-touch-icon-144x144.png" />
+    <Content Include="img\icons\apple-touch-icon-152x152.png" />
+    <Content Include="img\icons\apple-touch-icon-57x57.png" />
+    <Content Include="img\icons\apple-touch-icon-60x60.png" />
+    <Content Include="img\icons\apple-touch-icon-72x72.png" />
+    <Content Include="img\icons\apple-touch-icon-76x76.png" />
+    <Content Include="img\icons\apple-touch-icon-precomposed.png" />
+    <Content Include="img\icons\apple-touch-icon.png" />
+    <Content Include="img\icons\browserconfig.xml" />
+    <Content Include="img\icons\favicon-160x160.png" />
+    <Content Include="img\icons\favicon-16x16.png" />
+    <Content Include="img\icons\favicon-196x196.png" />
+    <Content Include="img\icons\favicon-32x32.png" />
+    <Content Include="img\icons\favicon-96x96.png" />
+    <Content Include="img\icons\favicon.ico" />
+    <Content Include="img\icons\mstile-144x144.png" />
+    <Content Include="img\icons\mstile-150x150.png" />
+    <Content Include="img\icons\mstile-310x150.png" />
+    <Content Include="img\icons\mstile-310x310.png" />
+    <Content Include="img\icons\mstile-70x70.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.js" />
@@ -207,6 +232,7 @@
     <Content Include="Views\OpenAuthLogOn.cshtml" />
     <Content Include="Views\OpenAuthRegister.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
+    <Content Include="Views\Icons.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\bootstrap-theme.css.map" />

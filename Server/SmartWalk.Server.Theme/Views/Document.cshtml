@@ -1,7 +1,6 @@
 @using Orchard.Mvc.Html;
-@using Orchard.UI.Resources;
 @{
-    RegisterLink(new LinkEntry { Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico") });
+    Html.Partial("Icons");
 
     Style.Require("Bootstrap");
     Style.Require("Bootstrap.Theme");

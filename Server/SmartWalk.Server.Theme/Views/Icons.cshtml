@@ -1,0 +1,36 @@
+﻿@using Orchard.UI.Resources
+@{
+    RegisterLink(new LinkEntry { Type = "image/x-icon", Rel = "shortcut icon", Href = Href("../img/icons/favicon.ico") });
+
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-57x57.png") }
+                     .AddAttribute("sizes", "57x57"));
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-114x114.png") }
+                     .AddAttribute("sizes", "114x114"));
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-72x72.png") }
+                     .AddAttribute("sizes", "72x72"));
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-144x144.png") }
+                     .AddAttribute("sizes", "144x144"));
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-60x60.png") }
+                     .AddAttribute("sizes", "60x60"));
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-120x120.png") }
+                     .AddAttribute("sizes", "120x120"));
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-76x76.png") }
+                     .AddAttribute("sizes", "76x76"));
+    RegisterLink(new LinkEntry { Rel = "apple-touch-icon", Href = Href("../img/icons/apple-touch-icon-152x152.png") }
+                     .AddAttribute("sizes", "152x152"));
+
+    RegisterLink(new LinkEntry { Type = "image/png", Rel = "icon", Href = Href("../img/icons/favicon-196x196.png") }
+                     .AddAttribute("sizes", "196x196"));
+    RegisterLink(new LinkEntry { Type = "image/png", Rel = "icon", Href = Href("../img/icons/favicon-160x160.png") }
+                     .AddAttribute("sizes", "160x160"));
+    RegisterLink(new LinkEntry { Type = "image/png", Rel = "icon", Href = Href("../img/icons/favicon-96x96.png") }
+                     .AddAttribute("sizes", "96x96"));
+    RegisterLink(new LinkEntry { Type = "image/png", Rel = "icon", Href = Href("../img/icons/favicon-16x16.png") }
+                     .AddAttribute("sizes", "16x16"));
+    RegisterLink(new LinkEntry { Type = "image/png", Rel = "icon", Href = Href("../img/icons/favicon-32x32.png") }
+                     .AddAttribute("sizes", "32x32"));
+
+    AppendMeta("msapplication-TileColor", "#ffc40d", string.Empty);
+    AppendMeta("msapplication-TileImage", Href("../img/icons/mstile-144x144.png"), string.Empty);
+    AppendMeta("msapplication-config", Href("../img/icons/browserconfig.xml"), string.Empty);
+}
