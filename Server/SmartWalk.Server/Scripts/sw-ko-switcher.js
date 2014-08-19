@@ -5,19 +5,22 @@
         if (options && options.values) {
             for (var i = 0; i < options.values.length; i++) {
                 var opt = options.values[i];
-                var btn = (i == 0) ? $("<button type='button' class='btn btn-primary active'>" + opt.disp + "</button>") : $("<button type='button' class='btn btn-default'>" + opt.disp + "</button>");
-                btn.data('val', opt.val);
+                var btn = $("<button></button>")
+                    .prop("disabled", opt.enable === false)
+                    .addClass("btn " + ((i == 0) ? "btn-primary active" : "btn-default"))
+                    .data("val", opt.val)
+                    .text(opt.disp);
+                
                 $(element).append(btn);
 
                 btn.click(function () {
-                    //alert('btn val = ' + $(this).data('val') + '; val = ' + value());
-                    if (value() != $(this).data('val')) {
+                    if (value() != $(this).data("val")) {
                         $(element).find(" > button").each(function () {
                             $(this).toggleClass("btn-primary active");
                             $(this).toggleClass("btn-default");
                         });
 
-                        value($(this).data('val'));
+                        value($(this).data("val"));
                     }
                 });
             }
@@ -27,16 +30,15 @@
         var value = valueAccessor();
 
         $(element).find(" > button").each(function () {
-            if ($(this).data('val') == value() && $(this).hasClass("btn-default")) {
+            if ($(this).data("val") == value() && $(this).hasClass("btn-default")) {
                 $(this).toggleClass("btn-primary active");
                 $(this).toggleClass("btn-default");
             }
 
-            if ($(this).data('val') != value() && $(this).hasClass("btn-primary active")) {
+            if ($(this).data("val") != value() && $(this).hasClass("btn-primary active")) {
                 $(this).toggleClass("btn-primary active");
                 $(this).toggleClass("btn-default");
             }
-
         });
     }
 };

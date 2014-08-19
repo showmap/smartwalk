@@ -1,8 +1,9 @@
 ﻿<ul class="nav navbar-nav pull-right" style="margin-top: 0">
     @if (WorkContext.CurrentUser != null) {
         <li class="dropdown">
-            <a href="#" id="userDropdown" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i>&nbsp;@Html.ItemDisplayText(WorkContext.CurrentUser) <b class="caret"></b></a>
+            <a href="#" id="userDropdown" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span>&nbsp;@Html.ItemDisplayText(WorkContext.CurrentUser) <b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="userDropdown">
+                <li>@Html.ActionLink(T("Profile").ToString(), "EditProfile", new { Controller = "Account", Area = "SmartWalk.Server" })</li>
                 <li>@Html.ActionLink(T("Change Password").ToString(), "ChangePassword", new { Controller = "Account", Area = "Orchard.Users" })</li>
                 <li>@Html.ActionLink(T("Sign Out").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl }, new { rel = "nofollow" })</li>
                 @if (AuthorizedFor(Orchard.Security.StandardPermissions.AccessAdminPanel)) {

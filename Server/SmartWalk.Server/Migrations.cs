@@ -707,5 +707,32 @@ namespace SmartWalk.Server
 
             return 6;
         }
+
+        [UsedImplicitly]
+        public int UpdateFrom6()
+        {
+            SchemaBuilder.AlterTable(
+                "EventMetadataRecord",
+                table => table.AddColumn("Status", DbType.Byte, c => c.NotNull().WithDefault(0)));
+
+            SchemaBuilder.ExecuteSql(
+                @"UPDATE emr SET emr.Status = emr.IsPublic FROM SmartWalk_Server_EventMetadataRecord as emr");
+
+            SchemaBuilder.AlterTable(
+                "EventMetadataRecord",
+                table => table.DropColumn("IsPublic"));
+
+            return 7;
+        }
+
+        [UsedImplicitly]
+        public int UpdateFrom7()
+        {
+            SchemaBuilder.AlterTable(
+                "SmartWalkUserRecord",
+                table => table.AddColumn("IsVerificationRequested", DbType.Boolean, c => c.NotNull().WithDefault(false)));
+
+            return 8;
+        }
     }
 }

@@ -1,0 +1,162 @@
+﻿@using SmartWalk.Server
+@using SmartWalk.Server.Extensions
+@using SmartWalk.Server.ViewModels
+@model SmartWalkUserVm
+@{
+    Script.Require("SmartWalk.AntiForgery").AtFoot();
+    Script.Require("SmartWalk.Common").AtFoot();
+
+    Layout.Title = T("User Profile");
+    
+    var isVerified = Authorizer.Authorize(Permissions.CreatePublicContent);
+}
+<div class="row double-gap bottom-gap">
+    <div id="editProfile" class="col-md-6 col-md-offset-3">
+        @Html.Partial("../ServerErrors")
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Layout.Title</h3>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginFormAntiForgeryPost(
+                    Url.Action("EditProfile", "Account"), 
+                    FormMethod.Post, 
+                    new { @class = "form-horizontal" })) {
+                        <div class="form-group">
+                            @* ReSharper disable Html.IdNotResolved *@
+                            <label for="username" class="col-sm-3 control-label">@T("Username")</label>
+                            @* ReSharper restore Html.IdNotResolved *@
+                            <div class="col-sm-9">
+                                @Html.TextBox("username", WorkContext.CurrentUser.UserName, new { @class = "form-control", placeholder = T("Username"), disabled = true })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* ReSharper disable Html.IdNotResolved *@
+                            <label for="firstName" class="col-sm-3 control-label">@T("First name")</label>
+                            @* ReSharper restore Html.IdNotResolved *@
+                            <div class="col-sm-9">
+                                @Html.TextBox("firstName", Model.FirstName, new { @class = "form-control", placeholder = T("First name") })
+                                @{
+                                    var firstNameMessage = Html.ValidationMessage("firstName", new { @class = "text-danger" });
+                                    if (firstNameMessage != null)
+                                    {
+                                        <span class="help-block">@firstNameMessage</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* ReSharper disable Html.IdNotResolved *@
+                            <label for="lastName" class="col-sm-3 control-label">@T("Last name")</label>
+                            @* ReSharper restore Html.IdNotResolved *@
+                            <div class="col-sm-9">
+                                @Html.TextBox("lastName", Model.LastName, new { @class = "form-control", placeholder = T("Last name") })
+                                @{
+                                    var lastNameMessage = Html.ValidationMessage("lastName", new { @class = "text-danger" });
+                                    if (lastNameMessage != null)
+                                    {
+                                        <span class="help-block">@lastNameMessage</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* ReSharper disable Html.IdNotResolved *@
+                            <label class="col-sm-3 control-label">@T("Status")</label>
+                            @* ReSharper restore Html.IdNotResolved *@
+                            <div class="col-sm-9">
+                                <!-- ko template: {name: getVerifiationTemplate } -->    
+                                <!-- /ko -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button type="submit" class="btn btn-primary">@T("Update")</button>
+                            </div>
+                        </div>
+                    }
+            </div>
+        </div>
+        
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                @Html.ValidationSummary(T("Updating profile was unsuccessful. Please correct the errors and try again.").ToString()) 
+            </div>
+        }
+    </div>
+</div>
+
+@using (Script.Foot())
+{
+    
+<script type="text/html" id="verifiedTemplate">
+    <label class="control-label">
+        <span class="glyphicon glyphicon-ok text-success"></span>&nbsp;&nbsp;<span class="text-success">@T("Verified")</span>
+    </label>
+    <div class="text-muted">@T("You can create public events")</div>
+</script>
+    
+<script type="text/html" id="verifyingTemplate">
+    <label class="control-label">
+        <span class="glyphicon glyphicon-time text-warning"></span>&nbsp;&nbsp;<span class="text-warning">@T("Verification in progress")</span>
+    </label>
+    <div class="text-muted">@T("Please wait until your events are reviewed and verification is confirmed")</div>
+</script>
+    
+<script type="text/html" id="notVerifiedTemplate">
+    <label class="control-label">
+        <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;@T("Not verified")&nbsp;&nbsp;
+    </label>
+    <button class="btn btn-default" data-bind="click: requestVerification, enable: isEnabled">@T("Request verification")</button>&nbsp;&nbsp;
+    <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
+    <div class="text-muted">@T("You can not create public events, until verification is confirmed")</div>
+</script>
+
+<script type="text/javascript">
+    EditProfileViewModel = function (data, verificationUrl) {
+        var self = this;
+
+        EditProfileViewModel.superClass_.constructor.call(self);
+
+        self.isVerified = ko.observable(data.IsVerified);
+        self.isVerificationRequested = ko.observable(data.IsVerificationRequested);
+
+        self.getVerifiationTemplate = ko.computed(function() {
+            if (self.isVerified()) {
+                return "verifiedTemplate";
+            }
+            else if (self.isVerificationRequested()) {
+                return "verifyingTemplate";
+            } else {
+                return "notVerifiedTemplate";
+            }
+        });
+
+        self.requestVerification = function() {
+            sw.ajaxJsonRequest({},
+                verificationUrl,
+                function (result) {
+                    self.isVerificationRequested(result);
+                },
+                function (errorResult) {
+                    self.handleServerError(errorResult);
+                },
+                self
+            );
+        };
+    };
+
+    sw.inherits(EditProfileViewModel, ViewModelBase);
+
+    $(function () {
+        var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
+        data.IsVerified = @isVerified.ToString().ToLower();
+        
+        var vm = new EditProfileViewModel(data, '@Url.Action("RequestVerification")');
+        ko.applyBindings(vm, document.getElementById("editProfile"));
+    });
+</script>
+}

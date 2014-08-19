@@ -12,8 +12,8 @@ namespace SmartWalk.Server.ViewModels
         }
 
         public int Id { get; set; }
-        public int CombineType { get; set; }
-        public bool IsPublic { get; set; }
+        public byte CombineType { get; set; }
+        public byte Status { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }

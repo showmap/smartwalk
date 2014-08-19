@@ -10,8 +10,10 @@ namespace SmartWalk.Server.Records
         public virtual EventMetadataRecord EventMetadataRecord { get; set; }
         public virtual bool IsReference { get; set; }
         public virtual string Title { get; set; }
+
         [StringLengthMax]
         public virtual string Description { get; set; }
+
         public virtual DateTime? StartTime { get; set; }
         public virtual DateTime? EndTime { get; set; }
         public virtual string Picture { get; set; }

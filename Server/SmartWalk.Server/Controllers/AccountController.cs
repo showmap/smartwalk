@@ -12,6 +12,7 @@ using Orchard.Utility.Extensions;
 using Orchard.Mvc.Extensions;
 using System.Text.RegularExpressions;
 using SmartWalk.Server.Controllers.Base;
+using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Services.SmartWalkUserService;
 using SmartWalk.Server.ViewModels;
@@ -19,7 +20,7 @@ using Orchard.Themes;
 
 namespace SmartWalk.Server.Controllers
 {
-    [Themed]
+    [HandleError, Themed]
     public class AccountController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
@@ -53,6 +54,7 @@ namespace SmartWalk.Server.Controllers
         [HttpPost]
         [AlwaysAccessible]
         [ValidateInput(false)]
+        [CompressFilter]
         public ActionResult Register(string userName, string email, string password, string confirmPassword,
             string returnUrl = null)
         {
@@ -70,13 +72,7 @@ namespace SmartWalk.Server.Controllers
                 // Attempt to register the user
                 // No need to report this to IUserEventHandler because _membershipService does that for us
                 var userParams = new CreateUserParams(userName, password, email, null, null, false);
-                var userData = new SmartWalkUserVm
-                    {
-                        FirstName = userName,
-                        LastName = userName,
-                        CreatedAt = DateTime.UtcNow,
-                        LastLoiginAt = DateTime.UtcNow
-                    };
+                var userData = new SmartWalkUserVm();
                 var user = _swUserService.CreateUser(new SmartWalkUserParams(userParams, userData));
 
                 _orchardServices.ContentManager.Create(user);
@@ -131,23 +127,46 @@ namespace SmartWalk.Server.Controllers
             return new ShapeResult(this, shape);
         }
 
+        [Authorize]
         [AlwaysAccessible]
+        [CompressFilter]
         public ActionResult EditProfile()
         {
             if (_orchardServices.WorkContext.CurrentUser == null) return new HttpUnauthorizedResult();
 
             var user = _orchardServices.WorkContext.CurrentUser;
-
             return View(_swUserService.GetUserViewModel(user));
         }
 
         [HttpPost]
-        [AlwaysAccessible]
+        [CompressFilter]
         public ActionResult EditProfile(SmartWalkUserVm profile)
         {
-            if (_orchardServices.WorkContext.CurrentUser == null) return new HttpUnauthorizedResult();
+            var user = _orchardServices.WorkContext.CurrentUser;
+            if (user == null) return new HttpUnauthorizedResult();
+            
+            _swUserService.UpdateSmartWalkUser(profile, user);
 
             return RedirectToAction("EditProfile");
+        }
+
+        [HttpPost]
+        [CompressFilter]
+        public ActionResult RequestVerification()
+        {
+            var user = _orchardServices.WorkContext.CurrentUser;
+            if (user == null) return new HttpUnauthorizedResult();
+
+            if (false)
+            {
+                return Json(new ErrorResultVm());
+            }
+
+            var profile = _swUserService.GetUserViewModel(user);
+            profile.IsVerificationRequested = true;
+            _swUserService.UpdateSmartWalkUser(profile, user);
+
+            return Json(true);
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword)

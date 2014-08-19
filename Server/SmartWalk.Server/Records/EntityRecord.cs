@@ -6,9 +6,7 @@ using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Records
 {
-    // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
     public class EntityRecord : IAccessRecord
-    // ReSharper restore ClassWithVirtualMembersNeverInherited.Global
     {
         private IList<EntityMappingRecord> _entityMappingRecords;
         private IList<AddressRecord> _addressRecords;
@@ -19,7 +17,7 @@ namespace SmartWalk.Server.Records
         [UsedImplicitly]
         public virtual int Id { get; set; }
         public virtual SmartWalkUserRecord SmartWalkUserRecord { get; set; }
-        public virtual int Type { get; set; }
+        public virtual byte Type { get; set; }
         public virtual string Name { get; set; }
 
         [StringLengthMax]

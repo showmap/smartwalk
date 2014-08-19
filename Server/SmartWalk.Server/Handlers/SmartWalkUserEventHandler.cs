@@ -40,16 +40,14 @@ namespace SmartWalk.Server.Handlers
             if (swUser == null) return;
 
             if (swUser.CreatedAt == DateTime.MinValue)
+            {
                 swUser.CreatedAt = DateTime.UtcNow;
+            }
 
             if (swUser.LastLoginAt == DateTime.MinValue)
+            {
                 swUser.LastLoginAt = DateTime.UtcNow;
-
-            if (string.IsNullOrEmpty(swUser.FirstName))
-                swUser.FirstName = context.User.UserName;
-
-            if (string.IsNullOrEmpty(swUser.LastName))
-                swUser.LastName = context.User.UserName;
+            }
         }
 
         public void Created(UserContext context)

@@ -2,9 +2,7 @@
 
 namespace SmartWalk.Server.Records
 {
-    // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
     public class AddressRecord
-    // ReSharper restore ClassWithVirtualMembersNeverInherited.Global
     {
         [UsedImplicitly]
         public virtual int Id { get; set; }

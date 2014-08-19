@@ -27,6 +27,12 @@ namespace SmartWalk.Server
                 Name = "EditOwnContent"
             };
 
+        public static readonly Permission CreatePublicContent = new Permission
+        {
+            Description = "Create public SmartWalk content",
+            Name = "CreatePublicContent"
+        };
+
         public static readonly Permission UseAllContent = new Permission
             {
                 Description = "Use all SmartWalk content",
@@ -43,7 +49,7 @@ namespace SmartWalk.Server
 
         public IEnumerable<Permission> GetPermissions()
         {
-            return new[] { AccessFrontEnd, ViewAllContent, EditOwnContent, UseAllContent, EditAllContent };
+            return new[] { AccessFrontEnd, ViewAllContent, EditOwnContent, UseAllContent, CreatePublicContent, EditAllContent };
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
@@ -53,17 +59,22 @@ namespace SmartWalk.Server
                     new PermissionStereotype
                         {
                             Name = "Administrator",
-                            Permissions = new[] { EditAllContent, UseAllContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
+                            Permissions = new[] { EditAllContent, UseAllContent, CreatePublicContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
                         },
                     new PermissionStereotype
                         {
                             Name = SmartWalkRoles.SmartWalkModerator,
-                            Permissions = new[] { EditAllContent, UseAllContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
+                            Permissions = new[] { EditAllContent, UseAllContent, CreatePublicContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
                         },
                     new PermissionStereotype
                         {
                             Name = SmartWalkRoles.SmartWalkProvisionEditor,
-                            Permissions = new[] { EditOwnContent, UseAllContent, ViewAllContent, AccessFrontEnd }
+                            Permissions = new[] { CreatePublicContent, EditOwnContent, UseAllContent, ViewAllContent, AccessFrontEnd }
+                        },
+                    new PermissionStereotype
+                        {
+                            Name = SmartWalkRoles.SmartWalkVerifiedEditor,
+                            Permissions = new[] { CreatePublicContent, EditOwnContent, ViewAllContent, AccessFrontEnd }
                         },
                     new PermissionStereotype
                         {

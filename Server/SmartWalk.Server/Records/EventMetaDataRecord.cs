@@ -6,9 +6,7 @@ using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Records
 {
-    // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
     public class EventMetadataRecord : IAccessRecord
-    // ReSharper restore ClassWithVirtualMembersNeverInherited.Global
     {
         private IList<EventMappingRecord> _eventMappingRecords;
         private IList<ShowRecord> _showRecords;
@@ -27,8 +25,8 @@ namespace SmartWalk.Server.Records
         public virtual string Picture { get; set; }
         public virtual double Latitude { get; set; }
         public virtual double Longitude { get; set; }
-        public virtual int CombineType { get; set; }
-        public virtual bool IsPublic { get; set; }
+        public virtual byte CombineType { get; set; }
+        public virtual byte Status { get; set; }
         public virtual bool IsDeleted { get; set; }
 
         [UsedImplicitly]
@@ -65,5 +63,12 @@ namespace SmartWalk.Server.Records
         ByVenue = 1,
         [UsedImplicitly]
         ByHost = 2
+    }
+
+    public enum EventStatus
+    {
+        Private = 0,
+        Public = 1,
+        Unlisted = 2
     }
 }

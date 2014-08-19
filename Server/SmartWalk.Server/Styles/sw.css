@@ -44,6 +44,14 @@ a.tooltip-container {
     vertical-align: middle;
 }
 
+.tooltip-container.to-button .glyphicon {
+    margin-top: -2px;
+}
+
+.tooltip-container.to-label .glyphicon {
+    margin-top: -5px;
+}
+
 textarea {
     resize: vertical;
 }

@@ -23,7 +23,7 @@
     self.contactsManager = new VmItemsManager(
         self.data.contacts,
         function() {
-            var contact = new ContactViewModel({ Type: ContactType.Url });
+            var contact = new ContactViewModel({ Type: sw.vm.ContactType.Url });
             return contact;
         },
         {

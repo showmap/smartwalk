@@ -27,7 +27,7 @@ namespace SmartWalk.Server.Services.EventService
                 result.CombineType = record.CombineType;
                 result.Latitude = record.Latitude;
                 result.Longitude = record.Longitude;
-                result.IsPublic = record.IsPublic;
+                result.Status = record.Status;
                 result.Description = record.Description;
             }
 
@@ -63,7 +63,7 @@ namespace SmartWalk.Server.Services.EventService
             record.StartTime = eventVm.StartDate.Value;
             record.EndTime = eventVm.EndDate;
             record.CombineType = eventVm.CombineType;
-            record.IsPublic = eventVm.IsPublic;
+            record.Status = eventVm.Status;
         }
 
         public static void UpdateByViewModel(ShowRecord record, ShowVm showVm)

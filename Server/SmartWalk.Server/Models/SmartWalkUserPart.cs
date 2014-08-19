@@ -19,6 +19,12 @@ namespace SmartWalk.Server.Models
             set { Record.LastName = value; }
         }
 
+        public bool IsVerificationRequested
+        {
+            get { return Record.IsVerificationRequested; }
+            set { Record.IsVerificationRequested = value; }
+        }
+
         public DateTime LastLoginAt {
             get { return Record.LastLoginAt; }
             set { Record.LastLoginAt = value; }

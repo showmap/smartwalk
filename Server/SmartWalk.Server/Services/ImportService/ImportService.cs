@@ -223,7 +223,7 @@ namespace SmartWalk.Server.Services.ImportService
                 result = new EntityRecord
                     {
                         Name = xmlEntity.Name.TrimIt(),
-                        Type = (int)type,
+                        Type = (byte)type,
                         SmartWalkUserRecord = user,
                         DateCreated = DateTime.UtcNow,
                         DateModified = DateTime.UtcNow
@@ -290,7 +290,7 @@ namespace SmartWalk.Server.Services.ImportService
                 var contact = new ContactRecord
                     {
                         EntityRecord = entity,
-                        Type = (int)type,
+                        Type = (byte)type,
                         Title = title.TrimIt(),
                         Contact = value.TrimIt()
                     };
@@ -353,7 +353,7 @@ namespace SmartWalk.Server.Services.ImportService
                         SmartWalkUserRecord = user,
                         DateCreated = DateTime.UtcNow,
                         DateModified = DateTime.UtcNow,
-                        IsPublic = true
+                        Status = (byte)EventStatus.Public
                     };
                 
                 _eventMetadataRepository.Create(result);

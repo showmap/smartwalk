@@ -23,7 +23,7 @@
     self.venuesManager = new VmItemsManager(
         self.data.venues,
         function () {
-            var venue = new EntityViewModel({ Type: EntityType.Venue });
+            var venue = new EntityViewModel({ Type: sw.vm.EntityType.Venue });
             return venue;
         },
         {

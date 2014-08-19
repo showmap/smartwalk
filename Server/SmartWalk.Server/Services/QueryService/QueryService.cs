@@ -108,7 +108,7 @@ namespace SmartWalk.Server.Services.QueryService
             {
                 var queryable = QueryFactory.CreateGenericQuery(_eventMetadataRepository.Table, select, results);
                 var records = queryable
-                    .Where(r => !r.IsDeleted && r.IsPublic)
+                    .Where(r => !r.IsDeleted && r.Status == (byte)EventStatus.Public)
                     .SortBy(select)
                     .Take(DefaultEventsLimit)
                     .ToArray();

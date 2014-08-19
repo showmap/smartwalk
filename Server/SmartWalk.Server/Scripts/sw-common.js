@@ -195,6 +195,8 @@ ko.bindingHandlers.scroll.scrollTop = function (element, duration) {
 
 // ###############    V i e w    M o d e l s     ####################
 
+sw.vm = {};
+
 ViewModelBase = function () {
     var self = this;
 
@@ -300,7 +302,7 @@ ListViewModel = function (parameters, url) {
 
 sw.inherits(ListViewModel, ViewModelBase);
 
-ContactType = {
+sw.vm.ContactType = {
     Email: 0,
     Url: 1,
     Phone: 2
@@ -374,7 +376,7 @@ function EventViewModel(data) {
     self.title = ko.observable();
     self.startDate = ko.observable();
     self.endDate = ko.observable();
-    self.isPublic = ko.observable();
+    self.status = ko.observable();
     self.picture = ko.observable();
     self.combineType = ko.observable(data.combineType);
     self.description = ko.observable(data.description);
@@ -391,7 +393,7 @@ function EventViewModel(data) {
             ? sw.convertToLocal(moment(eventData.StartDate).toDate()) : undefined);
         self.endDate(eventData.EndDate
             ? sw.convertToLocal(moment(eventData.EndDate).toDate()) : undefined);
-        self.isPublic(eventData.IsPublic);
+        self.status(eventData.Status);
         self.picture(eventData.Picture);
         self.combineType(eventData.CombineType);
         self.description(eventData.Description);
@@ -415,7 +417,7 @@ function EventViewModel(data) {
                 ? sw.convertToUTC(self.startDate()).toJSON() : undefined,
             EndDate: self.endDate()
                 ? sw.convertToUTC(self.endDate()).toJSON() : undefined,
-            IsPublic: self.isPublic(),
+            Status: self.status(),
             Picture: self.picture(),
             Description: self.description(),
             /*Latitude: self.latitude(),
@@ -434,7 +436,14 @@ function EventViewModel(data) {
     self.loadData(data);
 };
 
-EntityType =
+sw.vm.EventStatus =
+{
+    Private: 0,
+    Public: 1,
+    Unlisted: 2
+};
+
+sw.vm.EntityType =
 {
     Host: 0,
     Venue: 1

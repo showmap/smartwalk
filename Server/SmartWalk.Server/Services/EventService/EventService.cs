@@ -41,8 +41,11 @@ namespace SmartWalk.Server.Services.EventService
         {
             var eventMeta = _eventMetadataRepository.Get(eventId);
             var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
-            var result = !eventMeta.IsPublic && access != AccessType.AllowEdit
-                ? AccessType.Deny : access;
+            var result =
+                eventMeta.Status == (byte)EventStatus.Private
+                && access != AccessType.AllowEdit
+                    ? AccessType.Deny
+                    : access;
             return result;
         }
 
@@ -65,7 +68,7 @@ namespace SmartWalk.Server.Services.EventService
                 display == DisplayType.All
                     ? (IEnumerable<EventMetadataRecord>)_eventMetadataRepository
                         .Table
-                        .Where(e => e.IsPublic)
+                        .Where(e => e.Status == (byte)EventStatus.Public)
                     : CurrentUser.EventMetadataRecords;
 
             var result = GetEvents(query, pageNumber, pageSize, orderBy, isDesc, searchString);

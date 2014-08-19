@@ -21,7 +21,7 @@ namespace SmartWalk.Server.Services.QueryService
                         },
                     new RequestSelectWhere
                         {
-                            Field = QueryContext.Instance.EventMetadataIsPublic,
+                            Field = QueryContext.Instance.EventMetadataStatus,
                             Operator = RequestSelectWhereOperators.EqualsTo,
                             Value = true
                         }

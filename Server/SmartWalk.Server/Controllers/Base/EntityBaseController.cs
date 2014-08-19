@@ -81,7 +81,7 @@ namespace SmartWalk.Server.Controllers.Base
             var access = _entityService.GetEntitiesAccess();
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
-            return View(new EntityVm { Type = (int)EntityType});
+            return View(new EntityVm { Type = (byte)EntityType});
         }
 
         [CompressFilter]

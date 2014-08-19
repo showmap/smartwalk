@@ -1,5 +1,8 @@
-﻿namespace SmartWalk.Server.Records
+﻿using SmartWalk.Shared;
+
+namespace SmartWalk.Server.Records
 {
+    [UsedImplicitly]
     public class StorageRecord
     {
         public virtual int Id { get; set; }
