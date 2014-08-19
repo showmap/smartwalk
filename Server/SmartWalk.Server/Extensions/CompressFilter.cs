@@ -27,5 +27,13 @@ namespace SmartWalk.Server.Extensions
                 response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
             }
         }
+
+        public override void OnResultExecuted(ResultExecutedContext filterContext)
+        {
+            if (filterContext.Exception != null)
+            {
+                filterContext.HttpContext.Response.Filter = null;
+            }
+        }
     }
 }
