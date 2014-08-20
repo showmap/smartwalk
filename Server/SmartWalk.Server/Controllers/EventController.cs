@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using Orchard.Themes;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
-using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
@@ -120,6 +119,14 @@ namespace SmartWalk.Server.Controllers
 
         [HttpPost]
         [CompressFilter]
+        public ActionResult GetEventsByEntity(int entityId)
+        {
+            var result = _eventService.GetEventsByEntity(entityId);
+            return Json(result);
+        }
+
+        [HttpPost]
+        [CompressFilter]
         public ActionResult SaveEvent(EventMetadataVm eventVm)
         {
             var errors = _validator.ValidateEvent(eventVm);
@@ -141,19 +148,10 @@ namespace SmartWalk.Server.Controllers
             var result = _eventService.GetEvents(
                 parameters.Display,
                 pageNumber,
-                ViewSettings.ItemsLoad,
-                GetSortFunc(parameters.Sort),
+                ViewSettings.ItemsPerScrollPage,
+                parameters.Sort,
                 parameters.Sort == SortType.Date,
                 query);
-            return result;
-        }
-
-        private static Func<EventMetadataRecord, IComparable> GetSortFunc(SortType sortType)
-        {
-            var result =
-                sortType == SortType.Date
-                    ? new Func<EventMetadataRecord, IComparable>(emr => emr.StartTime)
-                    : (emr => emr.Title ?? emr.EntityRecord.Name);
             return result;
         }
     }

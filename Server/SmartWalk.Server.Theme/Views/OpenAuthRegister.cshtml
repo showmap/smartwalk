@@ -1,4 +1,5 @@
-﻿@{
+﻿@using SmartWalk.Server.Theme.Utils
+@{
     Layout.Title = T("Register");
 
     var userName = Request.QueryString["UserName"];
@@ -35,7 +36,7 @@
                         @* ReSharper restore Html.IdNotResolved *@
                         <div class="col-sm-9">
                             @Html.TextBox("username", string.Empty, new { @class = "form-control", autofocus = "autofocus", placeholder = T("Username") })
-                            <span class="help-block">@Html.ValidationMessage("username", new { @class = "text-danger"})</span>
+                            @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("username", new { @class = "text-danger" }), new { @class = "help-block" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -44,7 +45,7 @@
                         @* ReSharper restore Html.IdNotResolved *@
                         <div class="col-sm-9">
                             @Html.TextBox("email", string.Empty, new { @class = "form-control", placeholder = T("Email") })
-                            <span class="help-block">@Html.ValidationMessage("email", new { @class = "text-danger"})</span>
+                            @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("email", new { @class = "text-danger" }), new { @class = "help-block" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -54,7 +55,7 @@
                         <div class="col-sm-9">
                             @Html.Password("password", string.Empty, new { @class = "form-control", placeholder = T("Password") })
                             <span class="help-block">@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"])</span>
-                            <span class="help-block">@Html.ValidationMessage("password", new { @class = "text-danger"})</span>
+                            @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("password", new { @class = "text-danger" }), new { @class = "help-block" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -63,7 +64,7 @@
                         @* ReSharper restore Html.IdNotResolved *@
                         <div class="col-sm-9">
                             @Html.Password("confirmpassword", string.Empty, new { @class = "form-control", placeholder = T("Confirm password") })
-                            <span class="help-block">@Html.ValidationMessage("confirmPassword", new { @class = "text-danger"})</span>
+                            @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("confirmPassword", new { @class = "text-danger" }), new { @class = "help-block" })
                         </div>
                     </div>
                     <div class="form-group">

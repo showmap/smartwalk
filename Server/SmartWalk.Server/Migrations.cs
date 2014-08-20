@@ -734,5 +734,23 @@ namespace SmartWalk.Server
 
             return 8;
         }
+
+        [UsedImplicitly]
+        public int UpdateFrom8()
+        {
+            SchemaBuilder.AlterTable(
+                "SmartWalkUserRecord",
+                table => table.AlterColumn(
+                    "FirstName",
+                    c => c.WithType(DbType.String).WithLength(50).WithDefault(null)));
+
+            SchemaBuilder.AlterTable(
+                "SmartWalkUserRecord",
+                table => table.AlterColumn(
+                    "LastName",
+                    c => c.WithType(DbType.String).WithLength(50).WithDefault(null)));
+
+            return 9;
+        }
     }
 }

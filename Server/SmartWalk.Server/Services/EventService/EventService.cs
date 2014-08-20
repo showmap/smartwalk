@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Security;
 using Orchard;
@@ -10,6 +9,7 @@ using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.Base;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
+using SmartWalk.Server.Views;
 using SmartWalk.Shared;
 using SmartWalk.Shared.Utils;
 
@@ -40,7 +40,7 @@ namespace SmartWalk.Server.Services.EventService
         public AccessType GetEventAccess(int eventId)
         {
             var eventMeta = _eventMetadataRepository.Get(eventId);
-            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUserRecord);
             var result =
                 eventMeta.Status == (byte)EventStatus.Private
                 && access != AccessType.AllowEdit
@@ -50,28 +50,26 @@ namespace SmartWalk.Server.Services.EventService
         }
 
         public IList<EventMetadataVm> GetEvents(
-            DisplayType display,
-            int pageNumber,
-            int pageSize,
-            Func<EventMetadataRecord, IComparable> orderBy,
-            bool isDesc = false,
+            DisplayType display, int pageNumber, int pageSize,
+            SortType sort, bool isDesc = false,
             string searchString = null)
         {
             var access = GetEventsAccess();
             if (access == AccessType.Deny)
                 throw new SecurityException("Can't get events.");
 
-            if (display == DisplayType.My && CurrentUser == null)
+            if (display == DisplayType.My && CurrentUserRecord == null)
                 throw new SecurityException("Can't show my events without user.");
 
             var query =
                 display == DisplayType.All
-                    ? (IEnumerable<EventMetadataRecord>)_eventMetadataRepository
+                    ? _eventMetadataRepository
                         .Table
                         .Where(e => e.Status == (byte)EventStatus.Public)
-                    : CurrentUser.EventMetadataRecords;
+                    : CurrentUserRecord.EventMetadataRecords.AsQueryable();
 
-            var result = GetEvents(query, pageNumber, pageSize, orderBy, isDesc, searchString);
+            var result = GetEvents(query, pageNumber, pageSize, 
+                sort, isDesc, searchString);
             return result;
         }
 
@@ -84,7 +82,7 @@ namespace SmartWalk.Server.Services.EventService
             var entity = _entityRepository.Get(entityId);
             if (entity == null || entity.IsDeleted) return null;
 
-            IEnumerable<EventMetadataRecord> query;
+            IQueryable<EventMetadataRecord> query;
 
             if ((EntityType)entity.Type == EntityType.Venue)
             {
@@ -94,10 +92,10 @@ namespace SmartWalk.Server.Services.EventService
             }
             else
             {
-                query = entity.EventMetadataRecords;
+                query = entity.EventMetadataRecords.AsQueryable();
             }
 
-            var result = GetEvents(query, 0, 5, e => e.StartTime, true);
+            var result = GetEvents(query, 0, ViewSettings.RelatedItems, SortType.Date, true);
             return result;
         }
 
@@ -114,7 +112,7 @@ namespace SmartWalk.Server.Services.EventService
             var eventMeta = _eventMetadataRepository.Get(id);
             if (eventMeta == null || eventMeta.IsDeleted) return null;
 
-            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUserRecord);
             if (access == AccessType.Deny)
                 throw new SecurityException("Can't get event.");
 
@@ -130,21 +128,25 @@ namespace SmartWalk.Server.Services.EventService
             var host = _entityRepository.Get(eventVm.Host.Id);
             if (host == null) throw new ArgumentOutOfRangeException("eventVm.Host");
             if (!Services.Authorizer.Authorize(Permissions.UseAllContent) 
-                    && host.SmartWalkUserRecord.Id != CurrentUser.Id) 
+                    && host.SmartWalkUserRecord.Id != CurrentUserRecord.Id) 
                 throw new ArgumentOutOfRangeException("eventVm.Host", "Can't add host created by other user to the event.");
 
             var eventMeta = _eventMetadataRepository.Get(eventVm.Id) ?? new EventMetadataRecord
                 {
-                    SmartWalkUserRecord = CurrentUser,
+                    SmartWalkUserRecord = CurrentUserRecord,
                     DateCreated = DateTime.UtcNow
                 };
 
-            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUserRecord);
             if (access != AccessType.AllowEdit)
                 throw new SecurityException("Can't edit event.");
 
             if (eventMeta.IsDeleted)
                 throw new InvalidOperationException("Can't edit deleted event.");
+
+            if (eventMeta.Status == (byte)EventStatus.Public
+                && !Services.Authorizer.Authorize(Permissions.CreatePublicContent))
+                throw new SecurityException("Current user can not make public events.");
 
             ViewModelFactory.UpdateByViewModel(eventMeta, eventVm, host);
 
@@ -199,7 +201,7 @@ namespace SmartWalk.Server.Services.EventService
             var eventMeta = _eventMetadataRepository.Get(eventId);
             if (eventMeta == null || eventMeta.IsDeleted) return;
 
-            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUser);
+            var access = eventMeta.GetAccess(Services.Authorizer, CurrentUserRecord);
             if (access != AccessType.AllowEdit)
                 throw new SecurityException("Can't delete event.");
 
@@ -216,28 +218,29 @@ namespace SmartWalk.Server.Services.EventService
         }
 
         private static IList<EventMetadataVm> GetEvents(
-            IEnumerable<EventMetadataRecord> query,
-            int pageNumber,
-            int pageSize,
-            Func<EventMetadataRecord, IComparable> orderBy,
-            bool isDesc = false,
+            IQueryable<EventMetadataRecord> query, int pageNumber, int pageSize,
+            SortType sort, bool isDesc = false,
             string searchString = null)
         {
             query = query.Where(e => !e.IsDeleted);
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                query =
-                    query.Where(
-                        e =>
-                        !string.IsNullOrEmpty(e.Title) &&
-                        e.Title.ToLower(CultureInfo.InvariantCulture)
-                        // ReSharper disable PossibleNullReferenceException
-                         .Contains(searchString.ToLower(CultureInfo.InvariantCulture)));
-                        // ReSharper restore PossibleNullReferenceException
+                query = query
+                    .Where(e => (e.Title != null
+                                 && e.Title.ToUpperInvariant().Contains(searchString.ToUpperInvariant()))
+                                ||
+                                (e.Title == null
+                                 && e.EntityRecord.Name.ToUpperInvariant().Contains(searchString.ToUpperInvariant())));
             }
 
-            query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+            query = isDesc
+                ? (sort == SortType.Date 
+                    ? query.OrderByDescending(e => e.StartTime)
+                    : query.OrderByDescending(e => e.Title ?? e.EntityRecord.Name))
+                : (sort == SortType.Date
+                    ? query.OrderBy(e => e.StartTime)
+                    : query.OrderBy(e => e.Title ?? e.EntityRecord.Name));
 
             var result =
                 query.Skip(pageSize * pageNumber)

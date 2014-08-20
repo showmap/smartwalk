@@ -14,12 +14,21 @@ namespace SmartWalk.Server.Services.Base
             _orchardServices = orchardServices;
         }
 
-        protected SmartWalkUserRecord CurrentUser
+        protected SmartWalkUserRecord CurrentUserRecord
         {
             get
             {
                 var userPart = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
                 return userPart != null ? userPart.Record : null;
+            }
+        }
+
+        protected SmartWalkUserPart CurrentUserPart
+        {
+            get
+            {
+                var userPart = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+                return userPart;
             }
         }
 

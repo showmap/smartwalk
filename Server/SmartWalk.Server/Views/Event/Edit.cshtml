@@ -116,7 +116,7 @@
 			        <label for="visibilityButtonsGroup">@T("Visibility"):</label>
 			        <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Public - visible to all website and mobile app users, Unlisted - visible to users by the URL link only, Private - visible only to the editor.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a><br/>
 			        <fieldset class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: data.status, switcherOptions: { values: [{val: 1, disp: '@T("Public")    ', @(canCreatePublic ? "" : "enable: false")}, {val: 2, disp: '@T("Unlisted")    '}, {val: 0, disp: '@T("Private")    '}]}, enable: isEnabled"></fieldset>
-                    @if (!canCreatePublic) { <div class="text-muted">@T("Currently your account is not verified to create public events. Please request a verification.")</div> }
+                    @if (!canCreatePublic) { <div class="text-muted">@T("Currently your account is not verified to create public events. Please {0}request a verification{1}.", "<a href='" + Url.Action("EditProfile", "Account") +  "' target='_blank'>", "</a>")</div> }
 			    </div>
 			</div>
 		</div>

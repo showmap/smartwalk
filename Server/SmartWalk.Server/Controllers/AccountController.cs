@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using System.Web.Security;
 using Orchard;
@@ -14,6 +17,7 @@ using System.Text.RegularExpressions;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Models;
+using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.SmartWalkUserService;
 using SmartWalk.Server.ViewModels;
 using Orchard.Themes;
@@ -134,18 +138,17 @@ namespace SmartWalk.Server.Controllers
         {
             if (_orchardServices.WorkContext.CurrentUser == null) return new HttpUnauthorizedResult();
 
-            var user = _orchardServices.WorkContext.CurrentUser;
-            return View(_swUserService.GetUserViewModel(user));
+            var userVm = _swUserService.GetCurrentUser();
+            return View(userVm);
         }
 
         [HttpPost]
         [CompressFilter]
-        public ActionResult EditProfile(SmartWalkUserVm profile)
+        public ActionResult EditProfile(SmartWalkUserVm userVm)
         {
-            var user = _orchardServices.WorkContext.CurrentUser;
-            if (user == null) return new HttpUnauthorizedResult();
+            if (_orchardServices.WorkContext.CurrentUser == null) return new HttpUnauthorizedResult();
             
-            _swUserService.UpdateSmartWalkUser(profile, user);
+            _swUserService.UpdateCurrentUser(userVm);
 
             return RedirectToAction("EditProfile");
         }
@@ -154,17 +157,17 @@ namespace SmartWalk.Server.Controllers
         [CompressFilter]
         public ActionResult RequestVerification()
         {
-            var user = _orchardServices.WorkContext.CurrentUser;
-            if (user == null) return new HttpUnauthorizedResult();
+            if (_orchardServices.WorkContext.CurrentUser == null) return new HttpUnauthorizedResult();
 
-            if (false)
+            var userPart = _orchardServices.WorkContext.CurrentUser.As<SmartWalkUserPart>();
+            var errors = ValidateVerification(userPart.Record);
+            if (errors.Count > 0)
             {
-                return Json(new ErrorResultVm());
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new ErrorResultVm(errors));
             }
 
-            var profile = _swUserService.GetUserViewModel(user);
-            profile.IsVerificationRequested = true;
-            _swUserService.UpdateSmartWalkUser(profile, user);
+            _swUserService.RequestVerification();
 
             return Json(true);
         }
@@ -226,6 +229,7 @@ namespace SmartWalk.Server.Controllers
             return ModelState.IsValid;
         }
 
+        // TODO: To localize text strings
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
             // See http://msdn.microsoft.com/en-us/library/system.web.security.membershipcreatestatus.aspx for
@@ -265,6 +269,20 @@ namespace SmartWalk.Server.Controllers
                     return
                         "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
             }
+        }
+
+        private List<ValidationError> ValidateVerification(SmartWalkUserRecord userRecord)
+        {
+            var result = new List<ValidationError>();
+
+            if (!userRecord.EventMetadataRecords.Any())
+            {
+                result.Add(new ValidationError(
+                    T("Events").ToString(),
+                    T("You have to create at least one event before starting verification.").ToString()));
+            }
+
+            return result;
         }
     }
 }

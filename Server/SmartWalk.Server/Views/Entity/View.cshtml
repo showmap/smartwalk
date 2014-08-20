@@ -111,7 +111,7 @@
         self.loadData = function() {
             sw.ajaxJsonRequest(
                 { entityId: @Model.Id }, 
-                "@Url.Action("GetEvents")", 
+                "@Url.Action("GetEventsByEntity", "Event")", 
                 function(events) {
                     if (events) {
                         self.eventItems($.map(events, 

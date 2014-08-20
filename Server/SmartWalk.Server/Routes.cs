@@ -310,6 +310,99 @@ namespace SmartWalk.Server {
                         },
                         new MvcRouteHandler())
                 },
+
+                // U S E R S   A C C O U N T
+
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "users/account/sign-in",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"},
+                            {"controller", "Account"},
+                            {"action", "LogOn"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "users/account/sign-off",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"},
+                            {"controller", "Account"},
+                            {"action", "LogOff"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "users/account/register",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"},
+                            {"controller", "Account"},
+                            {"action", "Register"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "users/account/request-lost-password",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"},
+                            {"controller", "Account"},
+                            {"action", "RequestLostPassword"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "users/account/change-password",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"},
+                            {"controller", "Account"},
+                            {"action", "ChangePassword"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Users"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 1,
+                    Route = new Route(
+                        "users/account/edit-profile",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Account"},
+                            {"action", "EditProfile"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
                 // A walkaround for previous xml data of version 1.0
                 new RouteDescriptor {
                     Priority = 1,

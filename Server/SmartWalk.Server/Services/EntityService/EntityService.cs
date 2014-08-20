@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security;
 using Orchard;
@@ -9,8 +8,8 @@ using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.Base;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
-using SmartWalk.Server.Views;
 using SmartWalk.Shared;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.EntityService
 {
@@ -54,34 +53,42 @@ namespace SmartWalk.Server.Services.EntityService
         public AccessType GetEntityAccess(int entityId)
         {
             var entity = _entityRepository.Get(entityId);
-            var result = entity.GetAccess(Services.Authorizer, CurrentUser);
+            var result = entity.GetAccess(Services.Authorizer, CurrentUserRecord);
             return result;
         }
 
-        public IList<EntityVm> GetEntities(
-            DisplayType display,
-            EntityType type,
-            int pageNumber = 0,
-            int pageSize = ViewSettings.ItemsLoad,
-            Func<EntityRecord, IComparable> orderBy = null,
-            bool isDesc = false,
-            string searchString = null,
-            int[] excludeIds = null)
+        public IList<EntityVm> GetEntities(DisplayType display, EntityType type,
+            int pageNumber, int pageSize, bool isDesc, 
+            string searchString, int[] excludeIds)
         {
             var access = GetEntitiesAccess();
             if (access == AccessType.Deny)
                 throw new SecurityException("Can't get entites.");
 
-            if (display == DisplayType.My && CurrentUser == null) 
+            if (display.Has(DisplayType.My) && CurrentUserRecord == null) 
                 throw new SecurityException("Can't show my entities without user.");
 
-            // admin users treat all enetities as theirs
-            var query = display == DisplayType.All
-                ? (IEnumerable<EntityRecord>)_entityRepository.Table 
-                : CurrentUser.Entities;
+            IQueryable<EntityRecord> query;
+
+            if (display.Has(DisplayType.All) && display.Has(DisplayType.My))
+            {
+                query = _entityRepository.Table.WherePublicAndMine(type, CurrentUserRecord.Id);
+            }
+            else if (display.Has(DisplayType.My))
+            {
+                query = CurrentUserRecord.Entities.AsQueryable();
+            }
+            else if (display.Has(DisplayType.All))
+            {
+                query = _entityRepository.Table.WherePublic(type);
+            }
+            else
+            {
+                return null;
+            }
 
             var result = GetEntities(query, type, pageNumber, pageSize, 
-                orderBy, isDesc, searchString, excludeIds);
+                isDesc, searchString, excludeIds);
             return result;
         }
 
@@ -90,7 +97,7 @@ namespace SmartWalk.Server.Services.EntityService
             var entity = _entityRepository.Get(entityId);
             if (entity == null || entity.IsDeleted) return null;
 
-            var access = entity.GetAccess(Services.Authorizer, CurrentUser);
+            var access = entity.GetAccess(Services.Authorizer, CurrentUserRecord);
             if (access == AccessType.Deny)
                 throw new SecurityException("Can't get entity.");
 
@@ -104,11 +111,11 @@ namespace SmartWalk.Server.Services.EntityService
 
             var entity = _entityRepository.Get(entityVm.Id) ?? new EntityRecord
                 {
-                    SmartWalkUserRecord = CurrentUser,
+                    SmartWalkUserRecord = CurrentUserRecord,
                     DateCreated = DateTime.UtcNow
                 };
 
-            var access = entity.GetAccess(Services.Authorizer, CurrentUser);
+            var access = entity.GetAccess(Services.Authorizer, CurrentUserRecord);
             if (access != AccessType.AllowEdit) 
                 throw new SecurityException("Can't edit entity.");
 
@@ -161,7 +168,7 @@ namespace SmartWalk.Server.Services.EntityService
             var entity = _entityRepository.Get(entityId);
             if (entity == null || entity.IsDeleted) return;
 
-            var access = entity.GetAccess(Services.Authorizer, CurrentUser);
+            var access = entity.GetAccess(Services.Authorizer, CurrentUserRecord);
             if (access != AccessType.AllowEdit)
                 throw new SecurityException("Can't delete entity.");
 
@@ -185,24 +192,21 @@ namespace SmartWalk.Server.Services.EntityService
         }
 
         private static IList<EntityVm> GetEntities(
-            IEnumerable<EntityRecord> query,
+            IQueryable<EntityRecord> query,
             EntityType type,
             int pageNumber,
             int pageSize,
-            Func<EntityRecord, IComparable> orderBy,
             bool isDesc = false,
             string searchString = null,
             int[] excludeIds = null)
         {
-            query = query.Where(e => e.Type == (int)type && !e.IsDeleted);
+            query = query.Where(e => e.Type == (byte)type && !e.IsDeleted);
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(
-                    e => e.Name.ToLower(CultureInfo.InvariantCulture).Contains(
-                        // ReSharper disable PossibleNullReferenceException
-                        searchString.ToLower(CultureInfo.InvariantCulture)));
-                        // ReSharper restore PossibleNullReferenceException
+                query = query
+                    .Where(e => e.Name != null
+                                && e.Name.ToUpperInvariant().Contains(searchString.ToUpperInvariant()));
             }
 
             if (excludeIds != null)
@@ -210,10 +214,10 @@ namespace SmartWalk.Server.Services.EntityService
                 query = query.Where(e => !excludeIds.Contains(e.Id));
             }
 
-            if (orderBy != null)
-            {
-                query = isDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
-            }
+            query =
+                isDesc
+                    ? query.OrderByDescending(e => e.Name)
+                    : query.OrderBy(e => e.Name);
 
             return
                 query.Skip(pageSize * pageNumber)
@@ -230,6 +234,68 @@ namespace SmartWalk.Server.Services.EntityService
                 entity.EventMetadataRecords.All(em => em.IsDeleted)
                 && entity.ShowRecords.All(s => s.IsDeleted);
             return result;
+        }
+    }
+
+    // TODO: The intentional copy-paste should be eliminated, if there is a solution
+    // The Where expression should be passed in the way that it's one SQL query
+    // if intermediate functions are used the nHibernate create dozen of queries
+    public static class EntityServiceExtensions
+    {
+        /// <summary>
+        /// Returns the subset of entities that have been used in any of public events.
+        /// </summary>
+        public static IQueryable<EntityRecord> WherePublic(
+            this IQueryable<EntityRecord> table, EntityType entityType)
+        {
+            if (entityType == EntityType.Host)
+            {
+                return table.Where(
+                    ent => ent.EventMetadataRecords
+                              .Any(emr => !emr.IsDeleted
+                                          && emr.Status == (byte)EventStatus.Public));
+            }
+
+            if (entityType == EntityType.Venue)
+            {
+                return table.Where(
+                    ent => ent.ShowRecords
+                              .Any(sh => !sh.IsDeleted
+                                         && !sh.EventMetadataRecord.IsDeleted
+                                         && sh.EventMetadataRecord.Status == (byte)EventStatus.Public));
+            }
+
+            return table;
+        }
+
+        /// <summary>
+        /// Returns the subset of entities that have been used in any of public events and current user's ones.
+        /// </summary>
+        public static IQueryable<EntityRecord> WherePublicAndMine(
+            this IQueryable<EntityRecord> table, EntityType entityType, int currentUserId)
+        {
+            if (entityType == EntityType.Host)
+            {
+                return table
+                    .Where(ent =>
+                           ent.SmartWalkUserRecord.Id == currentUserId
+                           || ent.EventMetadataRecords
+                                 .Any(emr => !emr.IsDeleted
+                                             && emr.Status == (byte)EventStatus.Public));
+            }
+
+            if (entityType == EntityType.Venue)
+            {
+                return table
+                    .Where(ent =>
+                           ent.SmartWalkUserRecord.Id == currentUserId
+                           || ent.ShowRecords
+                                 .Any(sh => !sh.IsDeleted
+                                            && !sh.EventMetadataRecord.IsDeleted
+                                            && sh.EventMetadataRecord.Status == (byte)EventStatus.Public));
+            }
+
+            return table;
         }
     }
 }

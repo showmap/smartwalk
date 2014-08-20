@@ -1,4 +1,5 @@
-﻿using Orchard;
+﻿using System.Security;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -10,17 +11,18 @@ using Orchard.Users.Events;
 using Orchard.Users.Models;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Services.Base;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartWalk.Server.Services.SmartWalkUserService
 {
     [UsedImplicitly]
-    public class SmartWalkUserService : ISmartWalkUserService
+    public class SmartWalkUserService : OrchardBaseService, ISmartWalkUserService
     {
-        private readonly IOrchardServices _orchardServices;
         private readonly IMembershipService _membershipService;
         private readonly IMessageService _messageService;
         private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
@@ -35,8 +37,8 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
             IRepository<SmartWalkUserRecord> swUserRecordRepository)
+            : base(orchardServices)
         {
-            _orchardServices = orchardServices;
             _membershipService = membershipService;
             _messageService = messageService;
             _userEventHandlers = userEventHandlers;
@@ -56,8 +58,8 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
 
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
 
-            var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-            var user = _orchardServices.ContentManager.New<UserPart>("User");
+            var registrationSettings = Services.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
+            var user = Services.ContentManager.New<UserPart>("User");
 
             user.UserName = createUserParams.Username;
             user.Email = createUserParams.Email;
@@ -110,7 +112,7 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
                 smartWalkUser.CreatedAt = DateTime.UtcNow;
             }
 
-            _orchardServices.ContentManager.Create(user);
+            Services.ContentManager.Create(user);
 
             foreach (var userEventHandler in _userEventHandlers)
             {
@@ -161,29 +163,56 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
             return user;
         }
 
-        public SmartWalkUserVm GetUserViewModel(IUser user)
+        public SmartWalkUserVm GetCurrentUser()
         {
-            var swUserPart = user.As<SmartWalkUserPart>();
-            if (swUserPart == null) return new SmartWalkUserVm();
+            if (CurrentUserPart == null) 
+                throw new SecurityException("Current user is not available");
 
             return new SmartWalkUserVm
                 {
-                    FirstName = swUserPart.FirstName,
-                    LastName = swUserPart.LastName,
-                    IsVerificationRequested = swUserPart.IsVerificationRequested
+                    FirstName = CurrentUserPart.FirstName,
+                    LastName = CurrentUserPart.LastName,
+                    IsVerificationRequested = CurrentUserPart.IsVerificationRequested
                 };
         }
 
-        public void UpdateSmartWalkUser(SmartWalkUserVm profile, IUser user)
+        public void UpdateCurrentUser(SmartWalkUserVm userVm)
         {
-            var swUserPart = user.As<SmartWalkUserPart>();
-            if (swUserPart == null) return;
+            if (CurrentUserPart == null)
+                throw new SecurityException("Current user is not available");
 
-            swUserPart.FirstName = profile.FirstName;
-            swUserPart.LastName = profile.LastName;
-            swUserPart.IsVerificationRequested = profile.IsVerificationRequested;
-            
-            _orchardServices.ContentManager.Publish(swUserPart.ContentItem);
+            CurrentUserPart.FirstName = userVm.FirstName;
+            CurrentUserPart.LastName = userVm.LastName;
+
+            Services.ContentManager.Publish(CurrentUserPart.ContentItem);
+        }
+
+        public void RequestVerification()
+        {
+            if (CurrentUserPart == null)
+                throw new SecurityException("Current user is not available");
+
+            if (CurrentUserPart.IsVerificationRequested)
+                throw new InvalidOperationException("Verification has been already started for current user.");
+
+            var eventIds = CurrentUserRecord.EventMetadataRecords
+                .Where(emr => !emr.IsDeleted)
+                .Select(emr => emr.Id)
+                .ToArray();
+            var parameters = new Dictionary<string, object>
+                {
+                    { "Subject", T("Verification Requested").Text },
+                    { "Body", 
+                        T("User {0} has requested verification. The event ids he created are: {1}.", 
+                            CurrentUserPart.User.UserName, 
+                            string.Join(", ", eventIds)).Text },
+                    { "Recipients", new[] { "info@smartwalk.me" } }
+                };
+
+            _messageService.Send("Email", parameters);
+
+            CurrentUserPart.IsVerificationRequested = true;
+            Services.ContentManager.Publish(CurrentUserPart.ContentItem);
         }
     }
 }

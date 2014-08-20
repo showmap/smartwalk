@@ -6,10 +6,10 @@ using Orchard.Themes;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EntityService;
-using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Controllers.Base
 {
@@ -17,17 +17,14 @@ namespace SmartWalk.Server.Controllers.Base
     public abstract class EntityBaseController : BaseController
     {
         private readonly IEntityService _entityService;
-        private readonly IEventService _eventService;
         private readonly EntityValidator _validator;
         private readonly IAuthorizer _authorizer;
 
         protected EntityBaseController(
             IEntityService entityService,
-            IEventService eventService,
             IOrchardServices orchardServices)
         {
             _entityService = entityService;
-            _eventService = eventService;
             _authorizer = orchardServices.Authorizer;
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
             _validator = new EntityValidator(_entityService, EntityType, T);
@@ -43,8 +40,8 @@ namespace SmartWalk.Server.Controllers.Base
             if (access == AccessType.Deny) return new HttpUnauthorizedResult();
 
             var result = _entityService.GetEntities(
-                display, EntityType, 0,
-                ViewSettings.ItemsLoad, e => e.Name);
+                display, EntityType, 0, 
+                ViewSettings.ItemsPerScrollPage);
 
             var view = View(result);
             view.ViewData[ViewDataParams.ListParams] =
@@ -122,24 +119,12 @@ namespace SmartWalk.Server.Controllers.Base
 
         [HttpPost]
         [CompressFilter]
-        public ActionResult GetEvents(int entityId)
-        {
-            var result = _eventService.GetEventsByEntity(entityId);
-            return Json(result);
-        }
-
-        [HttpPost]
-        [CompressFilter]
         public ActionResult GetEntities(int pageNumber, string query, ListViewParametersVm parameters)
         {
             var result = _entityService.GetEntities(
-                parameters.Display,
-                EntityType,
-                pageNumber,
-                ViewSettings.ItemsLoad,
-                e => e.Name,
-                false,
-                query);
+                parameters.Display, EntityType, pageNumber,
+                ViewSettings.ItemsPerScrollPage,
+                false, query);
 
             return Json(result);
         }
@@ -150,12 +135,12 @@ namespace SmartWalk.Server.Controllers.Base
         {
             var display =
                 _authorizer.Authorize(Permissions.UseAllContent)
-                    ? DisplayType.All
+                    ? DisplayType.None.Include(DisplayType.All).Include(DisplayType.My)
                     : (onlyMine ? DisplayType.My : DisplayType.All);
 
             var result = _entityService.GetEntities(
-                display, EntityType, 0, ViewSettings.ItemsLoad, 
-                e => e.Name, false, term, excludeIds);
+                display, EntityType, 0, ViewSettings.AutocompleteItems, 
+                false, term, excludeIds);
 
             return Json(result);
         }

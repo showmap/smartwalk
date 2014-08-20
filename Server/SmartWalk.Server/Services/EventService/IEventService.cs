@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard;
-using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 
@@ -13,11 +11,8 @@ namespace SmartWalk.Server.Services.EventService
         AccessType GetEventAccess(int eventId);
 
         IList<EventMetadataVm> GetEvents(
-            DisplayType display,
-            int pageNumber,
-            int pageSize,
-            Func<EventMetadataRecord, IComparable> orderBy,
-            bool isDesc = false,
+            DisplayType display, int pageNumber, int pageSize,
+            SortType sort, bool isDesc = false,
             string searchString = null);
         IList<EventMetadataVm> GetEventsByEntity(int entityId);
         EventMetadataVm GetEventById(int id, int? day = null);

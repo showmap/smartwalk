@@ -1,4 +1,5 @@
 ﻿@using SmartWalk.Server
+@using SmartWalk.Server.Common.Utils
 @using SmartWalk.Server.Extensions
 @using SmartWalk.Server.ViewModels
 @model SmartWalkUserVm
@@ -29,6 +30,7 @@
                             @* ReSharper restore Html.IdNotResolved *@
                             <div class="col-sm-9">
                                 @Html.TextBox("username", WorkContext.CurrentUser.UserName, new { @class = "form-control", placeholder = T("Username"), disabled = true })
+                                @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("username", new { @class = "text-danger" }), new { @class = "help-block" })
                             </div>
                         </div>
                         <div class="form-group">
@@ -37,13 +39,7 @@
                             @* ReSharper restore Html.IdNotResolved *@
                             <div class="col-sm-9">
                                 @Html.TextBox("firstName", Model.FirstName, new { @class = "form-control", placeholder = T("First name") })
-                                @{
-                                    var firstNameMessage = Html.ValidationMessage("firstName", new { @class = "text-danger" });
-                                    if (firstNameMessage != null)
-                                    {
-                                        <span class="help-block">@firstNameMessage</span>
-                                    }
-                                }
+                                @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("firstName", new { @class = "text-danger" }), new { @class = "help-block" })
                             </div>
                         </div>
                         <div class="form-group">
@@ -52,13 +48,7 @@
                             @* ReSharper restore Html.IdNotResolved *@
                             <div class="col-sm-9">
                                 @Html.TextBox("lastName", Model.LastName, new { @class = "form-control", placeholder = T("Last name") })
-                                @{
-                                    var lastNameMessage = Html.ValidationMessage("lastName", new { @class = "text-danger" });
-                                    if (lastNameMessage != null)
-                                    {
-                                        <span class="help-block">@lastNameMessage</span>
-                                    }
-                                }
+                                @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("lastName", new { @class = "text-danger" }), new { @class = "help-block" })
                             </div>
                         </div>
                         <div class="form-group">
@@ -73,6 +63,7 @@
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <button type="submit" class="btn btn-primary">@T("Update")</button>
+                                <button type="reset" class="btn btn-default">@T("Reset")</button>
                             </div>
                         </div>
                     }

@@ -1,6 +1,7 @@
 ﻿@using NGM.OpenAuthentication.Extensions
 @using NGM.OpenAuthentication.Models
 @using Orchard.ContentManagement
+@using SmartWalk.Server.Theme.Utils
 @{
     Layout.Title = T("Sign In");
 
@@ -67,7 +68,7 @@
                     @* ReSharper restore Html.IdNotResolved *@
                     <div class="col-sm-9">
                         @Html.TextBox("userNameOrEmail", string.Empty, new { id = "usernameEmail", @class = "form-control", autofocus = "autofocus", placeholder = T("Email") })
-                        <span class="help-block">@Html.ValidationMessage("userNameOrEmail", new { @class = "text-danger"})</span>
+                        @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("userNameOrEmail", new { @class = "text-danger" }), new { @class = "help-block" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -76,7 +77,7 @@
                     @* ReSharper restore Html.IdNotResolved *@
                     <div class="col-sm-9">
                         @Html.Password("password", string.Empty, new { id = "password", @class = "form-control", placeholder = T("Password") })
-                        <span class="help-block">@Html.ValidationMessage("password", new { @class = "text-danger"})</span>
+                        @HtmlUtil.HelpBlockForValidation(Html.ValidationMessage("password", new { @class = "text-danger" }), new { @class = "help-block" })
                     </div>
                 </div>
                 <div class="form-group">

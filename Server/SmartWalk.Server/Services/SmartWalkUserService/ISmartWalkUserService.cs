@@ -8,7 +8,9 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
     public interface ISmartWalkUserService : IDependency
     {
         IUser CreateUser(SmartWalkUserParams createUserParams);
-        SmartWalkUserVm GetUserViewModel(IUser user);
-        void UpdateSmartWalkUser(SmartWalkUserVm profile, IUser user);
+
+        SmartWalkUserVm GetCurrentUser();
+        void UpdateCurrentUser(SmartWalkUserVm userVm);
+        void RequestVerification();
     }
 }

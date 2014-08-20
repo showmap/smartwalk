@@ -81,6 +81,7 @@
       <DependentUpon>Localization.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\DateTimeExtensions.cs" />
+    <Compile Include="Utils\EnumExtensions.cs" />
     <Compile Include="Utils\Reflection.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Utils\ReflectionExtensions.cs" />
