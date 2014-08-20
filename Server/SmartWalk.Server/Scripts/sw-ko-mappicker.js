@@ -72,15 +72,6 @@ ko.leafLetMap.setData = function (element, value) {
 
 ko.googleMap = {};
 
-ko.addMarker = function(latlng, title) {
-    new google.maps.Marker({
-        position: latlng,
-        map: map,
-        title: title,
-        icon: "http://maps.google.com/mapfiles/marker.png" // TODO: to use our markers with two chars Abbreviation
-    });
-};
-
 ko.googleMap.init = function (element, settings) {
     var center = $(element).data(ko.mapUtil.ACCESSOR_NAME)()();
     
@@ -89,19 +80,20 @@ ko.googleMap.init = function (element, settings) {
             {
                 backgroundColor: "#B4D1FF",
                 zoom: settings.zoomLevel,
-                center: center,
+                center: ko.googleMap.toGoogleLatLng(center),
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 streetViewControl: false
             });
     
-    new google.maps.Marker({
-        position: center,
+    var marker = new google.maps.Marker({
+        position: ko.googleMap.toGoogleLatLng(center),
         map: map,
         title: "Current address"
     });
 
     google.maps.event.addListener(map, 'click', function(e) {
-        $(element).data(ko.mapUtil.ACCESSOR_NAME)()({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+        $(element).data(ko.mapUtil.ACCESSOR_NAME)()(ko.googleMap.toSWLatLng(e.latLng));
+        marker.setPosition(e.latLng);
     });
     
     $(element).data(ko.mapUtil.MAP_OBJECT, map);
@@ -116,5 +108,15 @@ ko.googleMap.dispose = function (element) {
 };
 
 ko.googleMap.setData = function (element, value) {
-    $(element).data(ko.mapUtil.MAP_OBJECT).setCenter(value);
+    $(element).data(ko.mapUtil.MAP_OBJECT).setCenter(ko.googleMap.toGoogleLatLng(value));
+};
+
+ko.googleMap.toSWLatLng = function (value) {
+    return { lat: value.lat(), lng: value.lng() };
+};
+
+ko.googleMap.toGoogleLatLng = function (value) {
+    return value 
+        ? new google.maps.LatLng(value.lat, value.lng) 
+        : new google.maps.LatLng(0, 0);
 };

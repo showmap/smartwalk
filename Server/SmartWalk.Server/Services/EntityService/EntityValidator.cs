@@ -131,7 +131,7 @@ namespace SmartWalk.Server.Services.EntityService
                                prefix + latitudeProperty,
                                T("Latitude can not be empty.").Text));
             }
-            else if (model.Latitude < -85 || model.Latitude > 85)
+            else if (model.Latitude < -90 || model.Latitude > 90)
             {
                 result.Add(new ValidationError(
                                prefix + latitudeProperty,

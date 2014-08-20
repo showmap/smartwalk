@@ -177,8 +177,8 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
     address.latitude
         .extend({ number: true })
         .extend({ notEqual: "0" })
-        .extend({ min: -85 })
-        .extend({ max: 85 })
+        .extend({ min: -90 })
+        .extend({ max: 90 })
         .extend({ required: { params: true, message: settings.addressMessages.addressLatitudeValidationMessage } });
     address.longitude
         .extend({ number: true })
