@@ -1126,8 +1126,9 @@ namespace SmartWalk.Client.Core.ViewModels
                 var startDate = orgEvent.StartTime.Value;
                 var endDate = orgEvent.EndTime.Value;
 
-                var span = endDate - startDate;
-                DaysCount = span.Days + 1;
+                DaysCount = DateTimeExtensions.DaysCount(
+                    orgEvent.StartTime, 
+                    orgEvent.EndTime);
 
                 if (startDate <= DateTime.Now.Date &&
                     DateTime.Now.Date <= endDate)
@@ -1154,7 +1155,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     v => 
                         new Venue(v.Info)
                         { 
-                            Shows = GetShowsByDay(v.Shows, day, firstDay)
+                            Shows = GetShowsByDay(v.Shows, day, orgEvent.GetOrgEventRange())
                         })
                     // taking venues without any shows or the ones that has shows for current day
                     .Where(v => v.Shows == null || v.Shows.Length > 0)
@@ -1169,14 +1170,17 @@ namespace SmartWalk.Client.Core.ViewModels
             return orgEventByDay;
         }
 
-        private Show[] GetShowsByDay(Show[] shows, DateTime day, DateTime firstDay)
+        private static Show[] GetShowsByDay(
+            Show[] shows, 
+            DateTime day, 
+            Tuple<DateTime, DateTime?> range)
         {
             if (shows == null) return null;
 
             var result = 
                 shows
                     .Where(
-                        s => s.IsShowThisDay(day, firstDay)) 
+                        s => s.StartTime.IsTimeThisDay(day, range))
                     .ToArray();
 
             return result;

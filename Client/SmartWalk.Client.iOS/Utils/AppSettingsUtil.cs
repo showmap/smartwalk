@@ -28,9 +28,12 @@ namespace SmartWalk.Client.iOS.Utils
             {
                 try
                 {
-                    if (Directory.Exists(settings.CachesPath))
+                    foreach (var cache in settings.Caches)
                     {
-                        Directory.Delete(settings.CachesPath, true);
+                        if (Directory.Exists(cache.CacheFolderPath))
+                        {
+                            Directory.Delete(cache.CacheFolderPath, true);
+                        }
                     }
 
                     NSUserDefaults.StandardUserDefaults.SetBool(false, SettingKeys.ResetCache);

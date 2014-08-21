@@ -64,7 +64,6 @@ namespace SmartWalk.Shared.Utils
             var type = value.GetType();
 
             //determine the values
-            object result = value;
             var parsed = new _Value(check, type);
             if (parsed.Signed is long)
             {

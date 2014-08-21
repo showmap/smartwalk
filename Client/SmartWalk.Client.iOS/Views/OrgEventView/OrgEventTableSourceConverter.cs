@@ -25,7 +25,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     var result = 
                         venues.Select(
                             v => new Venue(v.Info) {
-                                Shows = v.Shows.GroupByDayShow()
+                                Shows = v.Shows.GroupByDayShow(
+                                    viewModel.OrgEvent.GetOrgEventRange())
                             }).ToArray();
                     return result;
                 }
@@ -34,7 +35,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                       venues.Length > 0)
                 {
                     var fooVenue = venues[0]; // expecting foo venue that holds all shows
-                    var result = fooVenue.Shows.GroupByDayVenue();
+                    var result = fooVenue.Shows.GroupByDayVenue(
+                        viewModel.OrgEvent.GetOrgEventRange());
                     return result;
                 }
             }

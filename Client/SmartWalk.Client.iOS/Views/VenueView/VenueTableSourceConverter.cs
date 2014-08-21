@@ -30,7 +30,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 if (venue.Shows != null &&
                     venue.Shows.Length > 0)
                 {
-                    var groupes = venue.Shows.GroupByDay();
+                    var groupes = venue.Shows.GroupByDay(
+                        viewModel.OrgEvent.GetOrgEventRange());
 
                     result.Add(new GroupContainer(
                         groupes != null 

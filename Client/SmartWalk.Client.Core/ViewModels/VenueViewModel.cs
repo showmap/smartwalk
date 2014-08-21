@@ -25,6 +25,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private Show _expandedShow;
         private Venue _venue;
         private Venue[] _orgEventVenues;
+        private OrgEvent _orgEvent;
 
         public VenueViewModel(
             IEnvironmentService environmentService,
@@ -67,6 +68,22 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return null;
+            }
+        }
+
+        public OrgEvent OrgEvent
+        {
+            get
+            {
+                return _orgEvent;
+            }
+            private set
+            {
+                if (!Equals(_orgEvent, value))
+                {
+                    _orgEvent = value;
+                    RaisePropertyChanged(() => OrgEvent);
+                }
             }
         }
 
@@ -256,13 +273,21 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 IsLoading = true;
 
+                var orgEvent = default(OrgEvent);
                 var venues = default(Venue[]);
 
                 try 
                 {
-                    venues = await _apiService.GetOrgEventVenues(
+                    var eventTask = _apiService.GetOrgEventInfo(
+                        _parameters.EventId, source);
+                    var venuesTask = _apiService.GetOrgEventVenues(
                         _parameters.EventId,
                         source);
+
+                    await Task.WhenAll(eventTask, venuesTask);
+
+                    orgEvent = eventTask.Result;
+                    venues = venuesTask.Result;
                 }
                 catch (Exception ex)
                 {
@@ -271,6 +296,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
                 IsLoading = false;
                     
+                OrgEvent = orgEvent;
                 OrgEventVenues = venues;
                 RaiseRefreshCompleted(OrgEventVenues != null);
             }

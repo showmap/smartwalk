@@ -4,6 +4,7 @@ using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using System.Collections.Generic;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.Utils
 {
@@ -174,21 +175,6 @@ namespace SmartWalk.Client.Core.Utils
             return result;
         }
 
-        public static bool IsShowThisDay(this Show show, DateTime day, DateTime firstDay)
-        {
-            if (!show.StartTime.HasValue) return false;
-
-            var showTime = show.StartTime.Value;
-            var nextDay = day.AddDays(1);
-
-            var result = 
-                (showTime.Date == day && day == firstDay) ||
-                (showTime.Date == day && showTime.Hour >= 6) ||
-                (showTime.Date == nextDay && showTime.Hour < 6); // late night shows go to next day
-
-            return result;
-        }
-
         public static Venue GetVenueByShow(this Venue[] venues, Show show)
         {
             if (venues != null && show != null)
@@ -202,7 +188,17 @@ namespace SmartWalk.Client.Core.Utils
             return null;
         }
 
-        public static Dictionary<DateTime, Show[]> GroupByDay(this Show[] shows)
+        public static Tuple<DateTime, DateTime?> GetOrgEventRange(this OrgEvent orgEvent)
+        {
+            var result = orgEvent != null && orgEvent.StartTime.HasValue
+                ? new Tuple<DateTime, DateTime?>(orgEvent.StartTime.Value, orgEvent.EndTime)
+                : null;
+            return result;
+        }
+
+        public static Dictionary<DateTime, Show[]> GroupByDay(
+            this Show[] shows,
+            Tuple<DateTime, DateTime?> range)
         {
             if (shows == null || 
                 shows.Length == 0 || 
@@ -220,7 +216,7 @@ namespace SmartWalk.Client.Core.Utils
             foreach (var show in orderedShows)
             {
                 if (show.StartTime.HasValue &&
-                    !show.IsShowThisDay(day, firstDay))
+                    !show.StartTime.IsTimeThisDay(day, range))
                 {
                     day = show.StartTime.Value.Date;
                     result[day] = new List<Show>();
@@ -232,9 +228,9 @@ namespace SmartWalk.Client.Core.Utils
             return result.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray());
         }
 
-        public static Show[] GroupByDayShow(this Show[] shows)
+        public static Show[] GroupByDayShow(this Show[] shows, Tuple<DateTime, DateTime?> range)
         {
-            var groupes = GroupByDay(shows);
+            var groupes = GroupByDay(shows, range);
             if (groupes == null) return shows;
 
             var venue = shows[0].Venue;
@@ -249,9 +245,9 @@ namespace SmartWalk.Client.Core.Utils
             return result.ToArray();
         }
 
-        public static Venue[] GroupByDayVenue(this Show[] shows)
+        public static Venue[] GroupByDayVenue(this Show[] shows, Tuple<DateTime, DateTime?> range)
         {
-            var groupes = GroupByDay(shows);
+            var groupes = GroupByDay(shows, range);
             if (groupes == null) return null;
 
             var result = new List<Venue>();
