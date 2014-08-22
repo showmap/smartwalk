@@ -1,14 +1,11 @@
-SW-160 Fix the model to avoid double updates
-SW-160 Cache version is loaded before server 
-SW-160 Time Expiration for SW data cache 
-SW-160 Refactoring. More code moved to the Core.
-SW-160 New version of MvvmCross was integrated.
-SW-160 Clean the whole Caches folder on reset
-SW-160 Description text is now supported for Show
-SW-160 Scroll Top supported in view w/o status bar
-SW-160 Last location is remembered in settings
-SW-160 Hack for hiding navbar if search is active
-SW-160 Fix the bug with navbar btns on pop back
-SW-160 Hide ListSettings on mode change.
-SW-160 The bug with header for expanded show fixe
-SW-138 Grouping by day was added
+Stable Release Build for Version 1.5. It's going to App Store soon!
+
+SW-231 Hide cell border if the last in day group
+
+SW-231 To update iOS app design before release.
+Toolbar buttons became circles. Icons a bit updated. 
+Change map type button moved to action menu. Map view got it too.
+Share for Map view was supported. Switch to smartwalk.me API URL.
+
+SW-231 3rd party updated. Refactoring.
+The clear cache feature was fixed. The shows distribution per day was integrated with common code.
