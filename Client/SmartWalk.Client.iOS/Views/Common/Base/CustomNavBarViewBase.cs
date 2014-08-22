@@ -85,7 +85,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             if (IsBackButtonVisible)
             {
-                _backButton = ButtonBarUtil.Create(ThemeIcons.NavBarBack, ThemeIcons.NavBarBackLandscape, true);
+                _backButton = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape, true);
                 _backButton.TouchUpInside += OnNavigationBackClick;
                 var backBarButton = new UIBarButtonItem(_backButton);
 

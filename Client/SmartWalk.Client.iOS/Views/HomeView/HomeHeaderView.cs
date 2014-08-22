@@ -15,7 +15,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         public static readonly UINib Nib = UINib.FromName("HomeHeaderView", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("HomeHeaderView");
 
-        public const float DefaultHeight = 50;
+        public const float DefaultHeight = 44;
 
         public HomeHeaderView(IntPtr handle) : base(handle)
         {
@@ -63,7 +63,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         private void InitializeStyle()
         {
-            BackgroundColor = UIColor.Clear;
+            BackgroundColor = UIColor.White;
 
             TitleLabel.Font = Theme.HomeHeaderFont;
             TitleLabel.TextColor = Theme.CellText;

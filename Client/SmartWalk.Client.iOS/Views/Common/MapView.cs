@@ -37,13 +37,17 @@ namespace SmartWalk.Client.iOS.Views.Common
                 actionSheet.AddButton(Localization.NavigateInMaps);
             }
 
+            if (ViewModel.SwitchMapTypeCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(ViewModel.CurrentMapType.GetMapTypeButtonLabel());
+            }
+
             if (ViewModel.CopyAddressCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.CopyAddress);
             }
 
-            // TODO: Use command for Share
-            if (true)
+            if (ViewModel.ShareCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.ShareButton);
             }
@@ -68,8 +72,19 @@ namespace SmartWalk.Client.iOS.Views.Common
                     break;
 
                 case Localization.ShareButton:
-                    // TODO: Share Address Text
+                    if (ViewModel.ShareCommand.CanExecute(null))
+                    {
+                        ViewModel.ShareCommand.Execute(null);
+                    }
                     break;
+            }
+
+            if (buttonTitle == ViewModel.CurrentMapType.GetMapTypeButtonLabel())
+            {
+                if (ViewModel.SwitchMapTypeCommand.CanExecute(null))
+                {
+                    ViewModel.SwitchMapTypeCommand.Execute(null);
+                }
             }
         }
 
@@ -80,6 +95,11 @@ namespace SmartWalk.Client.iOS.Views.Common
             if (propertyName == ViewModel.GetPropertyName(p => p.Annotation))
             {
                 UpdateViewTitle();
+                SelectAnnotation();
+            }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentMapType))
+            {
+                MapViewControl.MapType = ViewModel.CurrentMapType.ToMKMapType();
                 SelectAnnotation();
             }
         }

@@ -9,18 +9,24 @@ using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
+using Cirrious.CrossCore.Core;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
-    public class MapViewModel : ActiveViewModel
+    public class MapViewModel : ActiveViewModel, IShareableViewModel
     {
         private readonly IEnvironmentService _environmentService;
         private readonly IAnalyticsService _analyticsService;
 
         private Parameters _parameters;
         private MapAnnotation _annotation;
+        private MapType _currentMapType = MapType.Standard;
         private MvxCommand _showDirectionsCommand;
         private MvxCommand  _copyAddressCommand;
+        private MvxCommand _switchMapTypeCommand;
+        private MvxCommand _shareCommand;
 
         public MapViewModel(
             IEnvironmentService environmentService,
@@ -29,6 +35,8 @@ namespace SmartWalk.Client.Core.ViewModels
             _environmentService = environmentService;
             _analyticsService = analyticsService;
         }
+
+        public event EventHandler<MvxValueEventArgs<string>> Share;
 
         public MapAnnotation Annotation
         {
@@ -46,6 +54,22 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public MapType CurrentMapType
+        {
+            get
+            {
+                return _currentMapType;
+            }
+            private set
+            {
+                if (_currentMapType != value)
+                {
+                    _currentMapType = value;
+                    RaisePropertyChanged(() => CurrentMapType);
+                }
+            }
+        }
+
         public ICommand CopyAddressCommand
         {
             get
@@ -59,9 +83,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCopyAddress);
 
-                            var address = Annotation.Addresses
-                                .Select(a => a.AddressText)
-                                .FirstOrDefault();
+                            var address = GetAddressText();
                             _environmentService.Copy(address);
                         },
                         () => 
@@ -70,6 +92,34 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _copyAddressCommand;
+            }
+        }
+
+        public ICommand ShareCommand
+        {
+            get
+            {
+                if (_shareCommand == null)
+                {
+                    _shareCommand = new MvxCommand(() =>
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShare);
+
+                            var address = GetAddressText();
+                            if (address != null && Share != null)
+                            {
+                                Share(this, new MvxValueEventArgs<string>(address));
+                            }
+                        },
+                        () => 
+                            Annotation != null &&
+                            Annotation.Addresses != null);
+                }
+
+                return _shareCommand;
             }
         }
 
@@ -99,6 +149,32 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public ICommand SwitchMapTypeCommand
+        {
+            get
+            {
+                if (_switchMapTypeCommand == null)
+                {
+                    _switchMapTypeCommand = new MvxCommand(
+                        () =>
+                        {
+                            CurrentMapType = CurrentMapType.GetNextMapType();
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                CurrentMapType == MapType.Standard 
+                                ? Analytics.ActionLabelSwitchMapToStandard
+                                : (CurrentMapType == MapType.Satellite
+                                    ? Analytics.ActionLabelSwitchMapToSatellite
+                                    : Analytics.ActionLabelSwitchMapToHybrid));
+                        });
+                }
+
+                return _switchMapTypeCommand;
+            }
+        }
+
         protected override ParametersBase InitParameters
         {
             get { return _parameters; }
@@ -124,6 +200,17 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             public string Title { get; set; }
             public Addresses Addresses { get; set; }
+        }
+
+        private string GetAddressText()
+        {
+            var address = 
+                Annotation != null && Annotation.Addresses != null
+                ? Annotation.Addresses
+                    .Select(a => a.AddressText)
+                    .FirstOrDefault()
+                : null;
+            return address;
         }
     }
 
