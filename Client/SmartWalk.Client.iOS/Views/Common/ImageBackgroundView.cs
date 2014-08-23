@@ -275,7 +275,8 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             if (GradientPlaceholder != null &&
                 GradientPlaceholder.Layer != null &&
-                _bottomGradient != null)
+                _bottomGradient != null &&
+                Array.IndexOf(GradientPlaceholder.Layer.Sublayers, _bottomGradient) < 0)
             {
                 GradientPlaceholder.Layer.InsertSublayer(_bottomGradient, 0);
             }

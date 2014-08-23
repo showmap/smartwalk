@@ -21,6 +21,7 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -355,6 +356,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 UpdateViewState(true);
             }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentMapType))
+            {
+                VenuesMapView.MapType = ViewModel.CurrentMapType.ToMKMapType();
+                ReloadMap();
+            }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
                 ReloadMap();
@@ -478,6 +484,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 actionSheet.AddButton(Localization.ShowOrganizerInfo);
             }
 
+            if (ViewModel.SwitchMapTypeCommand.CanExecute(null))
+            {
+                actionSheet.AddButton(ViewModel.CurrentMapType.GetMapTypeButtonLabel());
+            }
+
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
                 actionSheet.AddButton(Localization.CopyLink);
@@ -528,6 +539,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
                     break;
             }
+
+            if (buttonTitle == ViewModel.CurrentMapType.GetMapTypeButtonLabel())
+            {
+                if (ViewModel.SwitchMapTypeCommand.CanExecute(null))
+                {
+                    ViewModel.SwitchMapTypeCommand.Execute(null);
+                }
+            }
         }
 
         protected override void OnInitializeCustomNavBarItems(List<UIBarButtonItem> navBarItems)
@@ -549,7 +568,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeStyle()
         {
             MapFullscreenButton.IsSemiTransparent = true;
-            MapTypeButton.Font = Theme.MapTypeFont;
 
             _customDayButton.Font = Theme.NavBarFont;
             _customDayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
@@ -641,29 +659,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 ViewModel.SwitchMapFullscreenCommand.Execute(null);
             }
-        }
-
-        partial void OnMapTypeTouchUpInside(NSObject sender)
-        {
-            switch (VenuesMapView.MapType)
-            {
-                case MKMapType.Standard:
-                    VenuesMapView.MapType = MKMapType.Satellite;
-                    break;
-
-                case MKMapType.Satellite:
-                    VenuesMapView.MapType = MKMapType.Hybrid;
-                    break;
-
-                case MKMapType.Hybrid:
-                    VenuesMapView.MapType = MKMapType.Standard;
-                    break;
-            }
-
-            MapTypeButton.SetTitle(
-                string.Format(" {0} ", VenuesMapView.MapType), 
-                UIControlState.Normal);
-            ReloadMap();
         }
 
         private void InitializeTableHeader()

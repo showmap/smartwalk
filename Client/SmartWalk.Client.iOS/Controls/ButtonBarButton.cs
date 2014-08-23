@@ -4,6 +4,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using MonoTouch.CoreAnimation;
 
 namespace SmartWalk.Client.iOS.Controls
 {
@@ -129,6 +130,8 @@ namespace SmartWalk.Client.iOS.Controls
                     IconImageView.Image = LandscapeIcon ?? VerticalIcon;
                 }
             }
+
+            UpdateMask();
         }
 
         private void Initialize(
@@ -145,6 +148,18 @@ namespace SmartWalk.Client.iOS.Controls
             IsSemiTransparent = isSemiTransparent;
 
             SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
+        }
+
+        private void UpdateMask()
+        {
+            var path = UIBezierPath.FromOval(Bounds);
+
+            var mask = new CAShapeLayer {
+                Frame = Bounds,
+                Path = path.CGPath
+            };
+
+            Layer.Mask = mask;
         }
     }
 }

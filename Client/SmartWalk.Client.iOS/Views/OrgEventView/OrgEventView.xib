@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -15,7 +15,6 @@
                 <outlet property="MapHeightConstraint" destination="UAL-EJ-R9g" id="o4c-qj-9PU"/>
                 <outlet property="MapPanel" destination="eV0-UF-nAt" id="Uca-e0-Ifa"/>
                 <outlet property="MapToTableConstraint" destination="xQg-6g-bhd" id="VLH-Nn-UgK"/>
-                <outlet property="MapTypeButton" destination="y9G-oB-pND" id="ekB-cw-7JP"/>
                 <outlet property="ProgressViewContainer" destination="45" id="57"/>
                 <outlet property="ProgressViewTopConstraint" destination="53" id="jLH-7i-74i"/>
                 <outlet property="TableHeightConstraint" destination="FGU-MD-xHT" id="aPL-u6-D5k"/>
@@ -54,22 +53,6 @@
                                         <action selector="OnMapFullscreenTouchUpInside:" destination="-1" eventType="touchUpInside" id="lEs-Lf-ddT"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y9G-oB-pND" userLabel="MapType">
-                                    <rect key="frame" x="129" y="173" width="63" height="20"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" red="0.56479193239795911" green="0.56479193239795911" blue="0.56479193239795911" alpha="0.5" colorSpace="calibratedRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="20" id="dFo-jC-Cb7"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                    <state key="normal" title=" Standard ">
-                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="OnMapTypeTouchUpInside:" destination="-1" eventType="touchUpInside" id="M99-Xi-dcJ"/>
-                                    </connections>
-                                </button>
                                 <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="gqO-ij-gFx" userLabel="BottomSeparator" customClass="Line">
                                     <rect key="frame" x="0.0" y="199" width="320" height="1"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -85,9 +68,7 @@
                                 <constraint firstItem="14" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="16"/>
                                 <constraint firstItem="14" firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="17"/>
                                 <constraint firstItem="14" firstAttribute="bottom" secondItem="4" secondAttribute="bottom" id="18"/>
-                                <constraint firstAttribute="bottom" secondItem="y9G-oB-pND" secondAttribute="bottom" constant="7" id="0hO-rQ-4zd"/>
                                 <constraint firstItem="gqO-ij-gFx" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="62t-7Z-Fon"/>
-                                <constraint firstAttribute="centerX" secondItem="y9G-oB-pND" secondAttribute="centerX" id="RAF-Wp-BcK"/>
                                 <constraint firstAttribute="bottom" secondItem="gqO-ij-gFx" secondAttribute="bottom" id="eik-5x-tL6"/>
                                 <constraint firstItem="gqO-ij-gFx" firstAttribute="top" secondItem="wMm-c6-vk5" secondAttribute="bottom" constant="7" id="iiy-0Q-NBt"/>
                                 <constraint firstAttribute="trailing" secondItem="gqO-ij-gFx" secondAttribute="trailing" id="tJB-th-cjf"/>

@@ -153,7 +153,7 @@ namespace SmartWalk.Client.Core.Utils
         {
             var result = orgEvent != null 
                 ? string.Format(
-                    "{0:d MMMM yyyy}{1}{2:d MMMM yyyy}", 
+                    "{0:D}{1}{2:D}", 
                     orgEvent.StartTime, 
                     orgEvent.EndTime != null ? " - " : string.Empty, 
                     orgEvent.EndTime)

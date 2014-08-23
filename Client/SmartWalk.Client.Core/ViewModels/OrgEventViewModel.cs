@@ -30,6 +30,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private OrgEvent _allDaysOrgEvent;
         private OrgEventViewMode _mode = OrgEventViewMode.Combo;
+        private MapType _currentMapType = MapType.Standard;
         private OrgEvent _orgEvent;
         private int? _currentDay;
         private int _daysCount;
@@ -61,6 +62,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<bool?> _showHideListOptionsCommand;
         private MvxCommand<SortBy> _sortByCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
+        private MvxCommand _switchMapTypeCommand;
         private MvxCommand _createEventCommand;
         private MvxCommand _saveEventCommand;
         private MvxCommand _cancelEventCommand;
@@ -140,6 +142,22 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _mode = value;
                     RaisePropertyChanged(() => Mode);
+                }
+            }
+        }
+
+        public MapType CurrentMapType
+        {
+            get
+            {
+                return _currentMapType;
+            }
+            private set
+            {
+                if (_currentMapType != value)
+                {
+                    _currentMapType = value;
+                    RaisePropertyChanged(() => CurrentMapType);
                 }
             }
         }
@@ -554,6 +572,35 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _switchMapFullscreenCommand;
+            }
+        }
+
+        public ICommand SwitchMapTypeCommand
+        {
+            get
+            {
+                if (_switchMapTypeCommand == null)
+                {
+                    _switchMapTypeCommand = new MvxCommand(
+                        () =>
+                        {
+                            CurrentMapType = CurrentMapType.GetNextMapType();
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                CurrentMapType == MapType.Standard 
+                                ? Analytics.ActionLabelSwitchMapToStandard
+                                : (CurrentMapType == MapType.Satellite
+                                    ? Analytics.ActionLabelSwitchMapToSatellite
+                                    : Analytics.ActionLabelSwitchMapToHybrid));
+                        },
+                        () => 
+                            Mode == OrgEventViewMode.Combo ||
+                            Mode == OrgEventViewMode.Map);
+                }
+
+                return _switchMapTypeCommand;
             }
         }
 

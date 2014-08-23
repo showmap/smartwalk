@@ -39,8 +39,8 @@
                     </constraints>
                     <items>
                         <barButtonItem style="plain" systemItem="fixedSpace" id="36"/>
-                        <barButtonItem title="&lt;" width="40" style="plain" id="11"/>
-                        <barButtonItem title=">" width="40" style="plain" id="16"/>
+                        <barButtonItem title="&lt;" width="44" style="plain" id="11"/>
+                        <barButtonItem title=">" width="44" style="plain" id="16"/>
                         <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="26"/>
                         <barButtonItem title="R" style="plain" id="19"/>
                         <barButtonItem enabled="NO" style="plain" id="31"/>

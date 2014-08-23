@@ -45,8 +45,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellHighlight = UIColor.FromRGB(255, 216, 0);
         public static readonly UIColor CellSemiHighlight = UIColor.FromRGB(255, 255, 250);
         public static readonly UIColor CellSeparator = UIColor.FromRGB(220, 220, 220);
-        public static readonly UIColor CellDarkSeparator = UIColor.FromRGB(51, 51, 51);
-        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(150, 150, 150, 250);
+        public static readonly UIColor CellDarkSeparator = UIColor.FromRGB(180, 180, 180);
+        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(200, 200, 200, 250);
         public static readonly UIColor ToolBarButtonHighlightedBackground = 
             UIColor.FromRGBA(255, 255, 255, 230);
 
@@ -55,12 +55,16 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellTextHighlight = UIColor.White;
         public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
 
-        public static readonly UIFont MapTypeFont = UIFont.FromName(HelveticaMedium, 10);
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
         public static readonly UIFont SegmentsTextFont = UIFont.FromName(HelveticaMedium, 15);
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont ContactTextFont = UIFont.FromName(HelveticaRegular, 16);
+
+        public static readonly UIFont SimpleImageTitleTextFont = UIFont.FromName(HelveticaBold, 19);
+        public static readonly UIFont SimpleImageSubtitleTextFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIColor SimpleImageTitleText = UIColor.White;
+        public static readonly UIColor SimpleImageSubtitleText = UIColor.FromRGB(255, 216, 0);
 
         public static readonly UIFont ImageTitleTextFont = UIFont.FromName(HelveticaRegular, 19);
         public static readonly UIFont ImageSubtitleTextFont = UIFont.FromName(HelveticaLight, 15);

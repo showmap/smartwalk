@@ -5,6 +5,8 @@ using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.Resources;
 
 namespace SmartWalk.Client.iOS.Utils.Map
 {
@@ -71,6 +73,29 @@ namespace SmartWalk.Client.iOS.Utils.Map
                     DirectionsMode = MKDirectionsMode.Walking
                 });
             }
+        }
+
+        public static MKMapType ToMKMapType(this MapType mapType)
+        {
+            switch (mapType)
+            {
+                case MapType.Standard:
+                    return MKMapType.Standard;
+
+                case MapType.Satellite:
+                    return MKMapType.Satellite;
+
+                case MapType.Hybrid:
+                    return MKMapType.Hybrid;
+            }
+
+            return MKMapType.Standard;
+        }
+
+        public static string GetMapTypeButtonLabel(this MapType mapType)
+        {
+            var result = string.Format(Localization.ChangeMapTo, mapType.GetNextMapType());
+            return result;
         }
     }
 }
