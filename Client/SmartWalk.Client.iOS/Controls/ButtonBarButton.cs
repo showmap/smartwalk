@@ -152,7 +152,7 @@ namespace SmartWalk.Client.iOS.Controls
 
         private void UpdateMask()
         {
-            var path = UIBezierPath.FromRoundedRect(Bounds, Bounds.Width / 2);
+            var path = UIBezierPath.FromOval(Bounds);
 
             var mask = new CAShapeLayer {
                 Frame = Bounds,
