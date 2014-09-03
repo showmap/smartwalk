@@ -152,7 +152,7 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
                             {
                                 { "Subject", T("New account").Text },
                                 { "Body", _shapeDisplay.Display(template) },
-                                { "Recipients", new[] { recipient.Email } }
+                                { "Recipients", recipient.Email }
                             };
 
                         _messageService.Send("Email", parameters);
@@ -206,7 +206,7 @@ namespace SmartWalk.Server.Services.SmartWalkUserService
                         T("User {0} has requested verification. The event ids he created are: {1}.", 
                             CurrentUserPart.User.UserName, 
                             string.Join(", ", eventIds)).Text },
-                    { "Recipients", new[] { "info@smartwalk.me" } }
+                    { "Recipients", "info@smartwalk.me" }
                 };
 
             _messageService.Send("Email", parameters);
