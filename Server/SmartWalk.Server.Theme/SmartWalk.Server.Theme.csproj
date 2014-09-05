@@ -213,6 +213,9 @@
     <Content Include="Styles\jquery-ui.theme.css" />
     <Content Include="Styles\jquery-ui.theme.min.css" />
     <Content Include="Styles\sw-theme.css" />
+    <Content Include="Styles\sw-theme.min.css">
+      <DependentUpon>sw-theme.css</DependentUpon>
+    </Content>
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">

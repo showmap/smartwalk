@@ -1,5 +1,5 @@
 // knockout-jqAutocomplete 0.2.1 | (c) 2013 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
-; (function (factory) {
+;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
         define(["knockout", "jquery", "jquery.ui"], factory);
@@ -7,13 +7,13 @@
         // No module loader - put directly in global namespace
         factory(window.ko, jQuery);
     }
-})(function (ko, $) {
-    var JqAuto = function () {
+})(function(ko, $) {
+    var JqAuto = function() {
         var self = this,
             unwrap = ko.utils.unwrapObservable; //support older KO versions that did not have ko.unwrap
 
         //binding's init function
-        this.init = function (element, valueAccessor, allBindings, data, context) {
+        this.init = function(element, valueAccessor, allBindings, data, context) {
             var options = unwrap(valueAccessor()),
                 config = {},
                 filter = typeof options.filter === "function" ? options.filter : self.defaultFilter;
@@ -25,9 +25,9 @@
 
             //get source from a function (can be remote call)
             if (typeof options.source === "function" && !ko.isObservable(options.source)) {
-                config.source = function (request, response) {
+                config.source = function(request, response) {
                     //provide a wrapper to the normal response callback
-                    var callback = function (data) {
+                    var callback = function(data) {
                         self.processOptions(valueAccessor, null, data, request, response);
                     };
 
@@ -41,7 +41,7 @@
             }
 
             //handle updating the actual value
-            config.select = function (event, ui) {
+            config.select = function(event, ui) {
                 if (ui.item && ui.item.actual) {
                     options.value(ui.item.actual);
 
@@ -52,7 +52,7 @@
             };
 
             //user made a change without selecting a value from the list
-            config.change = function (event, ui) {
+            config.change = function(event, ui) {
                 if (!ui.item || !ui.item.actual) {
                     options.value(event.target && event.target.value);
 
@@ -71,7 +71,7 @@
             }
 
             //destroy the widget if KO removes the element
-            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
                 if (widget && typeof widget.destroy === "function") {
                     widget.destroy();
                     widget = null;
@@ -80,22 +80,21 @@
         };
 
         //the binding's update function. keep value in sync with model
-        this.update = function (element, valueAccessor) {
+        this.update = function(element, valueAccessor) {
             var options = unwrap(valueAccessor()),
-                value = unwrap(options && options.value),
-                props = self.getPropertyNames(valueAccessor);
+                value = unwrap(options && options.value);
 
-            element.value = value && props.input ? value[props.input] : value;
+            element.value = value;
         };
 
         //if dealing with local data, the default filtering function
-        this.defaultFilter = function (item, term) {
+        this.defaultFilter = function(item, term) {
             term = term && term.toLowerCase();
             return (item || item === 0) && ko.toJSON(item).toLowerCase().indexOf(term) > -1;
         };
 
         //filter/map options to be in a format that autocomplete requires
-        this.processOptions = function (valueAccessor, filter, data, request, response) {
+        this.processOptions = function(valueAccessor, filter, data, request, response) {
             var item, index, length,
                 items = unwrap(data) || [],
                 results = [],
@@ -120,7 +119,7 @@
         };
 
         //if specified, use a template to render an item
-        this.renderItem = function (templateName, context, ul, item) {
+        this.renderItem = function(templateName, context, ul, item) {
             var $li = $("<li></li>").appendTo(ul),
                 itemContext = context.createChildContext(item.data);
 
@@ -134,7 +133,7 @@
         };
 
         //retrieve the property names to use for the label, input, and value
-        this.getPropertyNames = function (valueAccessor) {
+        this.getPropertyNames = function(valueAccessor) {
             var options = ko.toJS(valueAccessor());
 
             return {

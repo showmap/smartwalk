@@ -95,10 +95,9 @@ namespace SmartWalk.Server.Theme
 
             // SmartWalk
 
-            // TODO: To setup *.min.css
             manifest.DefineStyle("SmartWalk.Theme")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-theme.css")
+                .SetVersionUrl("sw-theme.min.css", "sw-theme.css")
                 .SetDependencies("Bootstrap.Theme");
         }
     }

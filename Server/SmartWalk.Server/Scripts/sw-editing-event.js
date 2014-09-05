@@ -15,6 +15,13 @@
                 ? new EntityViewModel(hostData) : null);
         }
     });
+    
+    self.hostName = ko.computed({
+        read: function () {
+            return self.data.host() ? self.data.host().name() : null;
+        },
+        write: function() {}
+    });
 
     EventViewModelExtended.setupMultiday(self);
     EventViewModelExtended.setupDialogs(self);

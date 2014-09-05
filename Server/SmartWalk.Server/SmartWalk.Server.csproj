@@ -147,19 +147,43 @@
     <Content Include="Images\loading.gif" />
     <Content Include="Scripts\knockout-3.1.0.debug.js" />
     <Content Include="Scripts\knockout-3.1.0.js" />
+    <Content Include="Scripts\knockout-jqAutocomplete.min.js" />
     <Content Include="Scripts\knockout.validation.js" />
+    <Content Include="Scripts\knockout.validation.min.js">
+      <DependentUpon>knockout.validation.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\moment-with-langs.js" />
     <Content Include="Scripts\moment-with-langs.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\sw-antiforgery.min.js">
+      <DependentUpon>sw-antiforgery.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-common.min.js">
+      <DependentUpon>sw-common.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-editing-entity.min.js">
+      <DependentUpon>sw-editing-entity.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-editing-event.min.js">
+      <DependentUpon>sw-editing-event.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-editing.min.js">
+      <DependentUpon>sw-editing.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-ko-datetime.min.js">
+      <DependentUpon>sw-ko-datetime.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\sw-ko-mappicker.js" />
     <Content Include="Scripts\knockout-jqAutocomplete.js" />
-    <Content Include="Scripts\knockout-jqAutocomplete.min.js" />
     <Content Include="Scripts\leaflet-src.js" />
     <Content Include="Scripts\leaflet.js" />
     <Content Include="Scripts\sw-antiforgery.js" />
     <Content Include="Scripts\jquery.visible.js" />
     <Content Include="Scripts\jquery.visible.min.js" />
+    <Content Include="Scripts\sw-ko-mappicker.min.js">
+      <DependentUpon>sw-ko-mappicker.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\sw-ko-switcher.js" />
     <Content Include="Scripts\image-scale.js" />
     <Content Include="Scripts\image-scale.min.js" />
@@ -167,10 +191,19 @@
     <Content Include="Scripts\sw-common.js" />
     <Content Include="Scripts\sw-editing-entity.js" />
     <Content Include="Scripts\sw-editing-event.js" />
+    <Content Include="Scripts\sw-ko-switcher.min.js">
+      <DependentUpon>sw-ko-switcher.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\text-collapse.js" />
     <Content Include="Scripts\sw-ko-datetime.js" />
+    <Content Include="Scripts\text-collapse.min.js">
+      <DependentUpon>text-collapse.js</DependentUpon>
+    </Content>
     <Content Include="Styles\leaflet.css" />
     <Content Include="Styles\sw.css" />
+    <Content Include="Styles\sw.min.css">
+      <DependentUpon>sw.css</DependentUpon>
+    </Content>
     <Content Include="Styles\text-collapse.css" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -182,6 +215,36 @@
     <Content Include="Views\AddressMap\ViewLeaflet.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Account\EditProfile.cshtml" />
+    <Content Include="Scripts\sw-editing-entity.min.js.map">
+      <DependentUpon>sw-editing-entity.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-editing-event.min.js.map">
+      <DependentUpon>sw-editing-event.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-editing.min.js.map">
+      <DependentUpon>sw-editing.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-ko-datetime.min.js.map">
+      <DependentUpon>sw-ko-datetime.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-ko-mappicker.min.js.map">
+      <DependentUpon>sw-ko-mappicker.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-ko-switcher.min.js.map">
+      <DependentUpon>sw-ko-switcher.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\text-collapse.min.js.map">
+      <DependentUpon>text-collapse.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-common.min.js.map">
+      <DependentUpon>sw-common.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-antiforgery.min.js.map">
+      <DependentUpon>sw-antiforgery.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\knockout.validation.min.js.map">
+      <DependentUpon>knockout.validation.js</DependentUpon>
+    </Content>
     <None Include="Views\ServerErrors.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">

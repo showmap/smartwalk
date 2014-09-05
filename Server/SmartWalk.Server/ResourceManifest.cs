@@ -59,52 +59,51 @@ namespace SmartWalk.Server
 
             // SmartWalk
 
-            // TODO: To setup *.min.css
             manifest.DefineStyle("SmartWalk")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw.css")
+                .SetVersionUrl("sw.min.css", "sw.css")
                 .SetDependencies("SmartWalk.Theme");
 
             manifest.DefineScript("ko.datetime")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-ko-datetime.js")
+                .SetVersionUrl("sw-ko-datetime.min.js", "sw-ko-datetime.js")
                 .SetDependencies("ko", "jQueryUI", "Moment");
 
             manifest.DefineScript("ko.mappicker")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-ko-mappicker.js")
+                .SetVersionUrl("sw-ko-mappicker.min.js", "sw-ko-mappicker.js")
                 .SetDependencies("ko", "jQueryUI", "GoogleMapsApi"); // "Leaflet", 
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-ko-switcher.js")
+                .SetVersionUrl("sw-ko-switcher.min.js", "sw-ko-switcher.js")
                 .SetDependencies("ko", "jQuery");
 
             manifest.DefineScript("SmartWalk.AntiForgery")
                 .SetVersion("1.1")
-                .SetVersionUrl("sw-antiforgery.js")
+                .SetVersionUrl("sw-antiforgery.min.js", "sw-antiforgery.js")
                 .SetDependencies("jQuery");
 
             manifest.DefineScript("SmartWalk.Common")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-common.js")
+                .SetVersionUrl("sw-common.min.js", "sw-common.js")
                 .SetDependencies("jQuery", "ko", "jquery.visible", "Moment");
 
             manifest.DefineScript("SmartWalk.Editing")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-editing.js")
+                .SetVersionUrl("sw-editing.min.js", "sw-editing.js")
                 .SetDependencies("SmartWalk.Common", "jQueryUI", "ko.validation",
                     // TODO: Maybe to fully relocate validation init into 3rd party components files
                     "ko.autocomplete", "ko.datetime", "ko.switcher", "ko.mappicker");
 
             manifest.DefineScript("SmartWalk.Editing.Entity")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-editing-entity.js")
+                .SetVersionUrl("sw-editing-entity.min.js", "sw-editing-entity.js")
                 .SetDependencies("SmartWalk.Editing");
 
             manifest.DefineScript("SmartWalk.Editing.Event")
                 .SetVersion(VersionUtil.CurrentVersion)
-                .SetVersionUrl("sw-editing-event.js")
+                .SetVersionUrl("sw-editing-event.min.js", "sw-editing-event.js")
                 .SetDependencies("SmartWalk.Editing");
 
             // 3rd Party - Text Collapse

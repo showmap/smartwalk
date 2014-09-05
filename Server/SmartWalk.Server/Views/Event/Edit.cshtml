@@ -72,7 +72,8 @@
                     <div class="input-group">
                         <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="
                             jqAuto: {
-                                value: hostData,
+                                value: hostName,
+                                dataValue: hostData,
                                 source: getAutocompleteHosts,
                                 inputProp: 'Name',
                                 template: 'autocompleteEntityItemTemplate'
