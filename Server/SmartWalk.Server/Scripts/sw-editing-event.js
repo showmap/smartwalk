@@ -6,10 +6,9 @@
     self.settings = settings;
     self.data = new EventViewModel(data);
 
-    // TODO: to simplify after bug fix of jqAuto (hide "undefined" and support "valueProp")
     self.hostData = ko.computed({
         read: function () {
-            return self.data.host() ? self.data.host().toJSON().Name || null : null;
+            return self.data.host() ? self.data.host().toJSON() : null;
         },
         write: function (hostData) {
             self.data.host(hostData && $.isPlainObject(hostData)
