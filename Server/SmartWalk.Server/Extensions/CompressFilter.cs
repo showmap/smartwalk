@@ -14,7 +14,7 @@ namespace SmartWalk.Server.Extensions
 
             acceptEncoding = acceptEncoding.ToUpperInvariant();
             var response = filterContext.HttpContext.Response;
-            if (!response.Filter.CanWrite) return;
+            if (response.Filter == null || !response.Filter.CanWrite) return;
 
             if (acceptEncoding.Contains("GZIP"))
             {
