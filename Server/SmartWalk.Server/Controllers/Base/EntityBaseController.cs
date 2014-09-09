@@ -72,6 +72,7 @@ namespace SmartWalk.Server.Controllers.Base
             return view;
         }
 
+        [Authorize]
         [CompressFilter]
         public ActionResult Create()
         {
@@ -81,6 +82,7 @@ namespace SmartWalk.Server.Controllers.Base
             return View(new EntityVm { Type = (byte)EntityType});
         }
 
+        [Authorize]
         [CompressFilter]
         public ActionResult Edit(int entityId)
         {
@@ -101,6 +103,7 @@ namespace SmartWalk.Server.Controllers.Base
             return view;
         }
 
+        [Authorize]
         [CompressFilter]
         public ActionResult Delete(int entityId)
         {

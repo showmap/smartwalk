@@ -65,6 +65,7 @@ namespace SmartWalk.Server.Controllers
             return view;
         }
 
+        [Authorize]
         [CompressFilter]
         public ActionResult Create()
         {
@@ -74,6 +75,7 @@ namespace SmartWalk.Server.Controllers
             return View(new EventMetadataVm());
         }
 
+        [Authorize]
         [CompressFilter]
         public ActionResult Edit(int eventId, int? day = null)
         {
@@ -93,8 +95,9 @@ namespace SmartWalk.Server.Controllers
             return view;
         }
 
+        [Authorize]
         [CompressFilter]
-        public ActionResult DeleteEvent(int eventId)
+        public ActionResult Delete(int eventId)
         {
             var access = _eventService.GetEventAccess(eventId);
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();

@@ -150,7 +150,7 @@
         <div class="row double-gap">
             <div class="col-xs-4">
                 @if (Model.Id != 0) {
-                    using(Html.BeginForm("DeleteEvent", "Event", FormMethod.Get)) {
+                    using(Html.BeginForm("Delete", "Event", FormMethod.Get)) {
                         <input type="hidden" name="eventId" value="@Model.Id" />
                         <button type="submit" class="btn btn-danger" data-bind="enable: isEnabled" onclick="return confirm('@T("Are you shure you wish to delete this event?")')" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
                     }
