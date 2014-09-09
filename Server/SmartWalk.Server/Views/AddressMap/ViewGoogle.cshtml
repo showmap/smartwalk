@@ -7,18 +7,22 @@
 
     if (Model.Addresses.Any())
     {
-    <div id="googleMap" class="map-container" style="height: 180px"></div>
+    <div id="map-container" class="map-container shield"><div id="googleMap" style="height: 180px"></div></div>
 
         using (Script.Foot())
         {
 <script type="text/javascript">
     $(function() {
+        $("#map-container").on("click touchend", function() {
+            $(this).removeClass("shield");
+            $(this).off("click touchend");
+        });
+
         function addMarker(latlng, title) {
-            new google.maps.Marker({
+            return new google.maps.Marker({
                 position: latlng,
                 map: map,
-                title: title,
-                //icon: "http://maps.google.com/mapfiles/marker.png" // TODO: to use our markers with two chars Abbreviation
+                title: title
             });
         }
 
