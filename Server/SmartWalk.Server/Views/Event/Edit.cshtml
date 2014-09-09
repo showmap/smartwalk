@@ -32,9 +32,7 @@
 
 <div id="event-item">
         @Html.AntiForgeryTokenOrchard()
-        <div class="row">
-            @Html.Partial("../ServerErrors")
-        </div>
+        @Html.Partial("../ServerErrors")
 
         <div class="row">
 			<div class="col-xs-8" data-bind="validationElement: data.title">

@@ -336,12 +336,14 @@ EventViewModelExtended.setupMultiday = function (event) {
     });
 
     self.currentDate = ko.observable(self.data.startDate());
-
     self.currentDay = ko.observable(self.isMultiday() ? 1 : undefined);
+    
     self.currentDay.subscribe(function (day) {
-        self.currentDate(self.data.startDate() && day
-            ? moment(self.data.startDate()).add("days", day - 1).toDate()
-            : undefined);
+        EventViewModelExtended.setCurrentDate(self, self.data.startDate(), day);
+    });
+    
+    self.data.startDate.subscribe(function (date) {
+        EventViewModelExtended.setCurrentDate(self, date, self.currentDay());
     });
 
     self.daysCount.subscribe(function () {
@@ -350,6 +352,18 @@ EventViewModelExtended.setupMultiday = function (event) {
     
     if (self.settings.currentDay) {
         self.currentDay(self.settings.currentDay);
+    }
+};
+
+EventViewModelExtended.setCurrentDate = function(event, startDate, day) {
+    var self = event;
+
+    if (startDate && day) {
+        self.currentDate(moment(startDate).add("days", day - 1).toDate());
+    } else if (startDate) {
+        self.currentDate(startDate);
+    } else {
+        self.currentDate(undefined);
     }
 };
 

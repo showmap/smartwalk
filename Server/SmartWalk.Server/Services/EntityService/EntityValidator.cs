@@ -88,6 +88,15 @@ namespace SmartWalk.Server.Services.EntityService
             var addresses = model.Addresses != null
                 ? model.Addresses.Where(v => !v.Destroy).ToArray()
                 : new AddressVm[] { };
+
+            if (model.Type == (int)EntityType.Venue &&
+                addresses.Length == 0)
+            {
+                result.Add(new ValidationError(
+                               addressesProperty,
+                               T("At least one address has to be added to the venue.").Text));
+            }
+
             for (var i = 0; i < addresses.Length; i++)
             {
                 var addressVm = addresses[i];

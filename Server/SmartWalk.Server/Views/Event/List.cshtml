@@ -109,7 +109,9 @@
             <p data-bind="html: '@T("Your search - <b>{0}</b> - did not match any events.")'.format(searchedQuery())"></p>
         </div>
 
+        <div class="gap">
 @Html.Partial("../ServerErrors")
+        </div>
 
         <div class="gap text-center">
             <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
