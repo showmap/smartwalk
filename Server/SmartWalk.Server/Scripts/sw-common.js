@@ -14,7 +14,7 @@ if (!String.prototype.format) {
 
 // SmartWalk Commons
 
-sw = {};
+if (typeof sw === "undefined") sw = {};
 
 sw.inherits = function(child, parent) {
     var f = function() {};
@@ -84,39 +84,6 @@ sw.scaleImages = function(elements) {
     $(elements).find("img.scale").imageScale();
 };
 
-sw.setCSSRule = function (selector, property, value) {
-    for (var i = 0; i < document.styleSheets.length; i++) {
-        var ss = document.styleSheets[i];
-        var rules = (ss.cssRules || ss.rules);
-        var sel = selector.toLowerCase();
-
-        for (var j = 0, len = rules.length; j < len; j++) {
-            if (rules[j].selectorText && (rules[j].selectorText.toLowerCase() == sel)) {
-                if (value != null) {
-                    rules[j].style[property] = value;
-                    return;
-                } else {
-                    if (ss.deleteRule) {
-                        ss.deleteRule(j);
-                    } else if (ss.removeRule) {
-                        ss.removeRule(j);
-                    } else {
-                        rules[j].style.cssText = "";
-                    }
-                }
-            }
-        }
-    }
-};
-
-sw.fitThumbs = function(container, thumbSel, defaultWidth) {
-    var containerWidth = $(container).width();
-    if ($(container).data("sw.previousWidth") != containerWidth) {
-        $(container).data("sw.previousWidth", containerWidth);
-        var itemsCount = Math.max(Math.round(containerWidth / defaultWidth), 1);
-        sw.setCSSRule(thumbSel, "width", (containerWidth / itemsCount) + "px");
-    }
-};
 
 // #########    B i n d i n g    H a n d l e r s     ################
 

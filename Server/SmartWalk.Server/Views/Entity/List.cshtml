@@ -1,4 +1,6 @@
-﻿@using SmartWalk.Server.Extensions
+﻿@using Orchard.UI.Resources
+@using SmartWalk.Server.Common.Utils
+@using SmartWalk.Server.Extensions
 @using SmartWalk.Server.Records
 @using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
@@ -53,7 +55,24 @@
         </div>
     }
 
-        <div class="floating-container small-gap">
+        <div id="entity-items-thumbs" class="floating-container small-gap">
+     @{
+        var res = ResourceManager.FindResource(new RequireSettings { Name = "SmartWalk.List.Initial", Type = "script" });
+        if (res != null)
+        {
+            <script type="text/javascript">
+                @HtmlUtil.Resource(res, WorkContext);
+                
+                var thumbsContext = { defaultWidth: 300 };
+
+                function fitThumbs() {
+                    sw.fitThumbs("entity-items-thumbs", ".floating .header", thumbsContext);
+                }
+
+                fitThumbs();
+            </script>
+        }
+    }           
         @foreach (var entityVm in Model) {
             <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {entityId = entityVm.Id})">
                 <div class="header">
@@ -124,12 +143,6 @@
 </script>
 
 <script type="text/javascript">
-    function fitThumbs() {
-        sw.fitThumbs(".floating-container", ".floating .header", 300);
-    }
-
-    fitThumbs();
-
     EntitiesViewModel = function(data, url) {
         var self = this;
 
@@ -158,7 +171,9 @@
         $("img.scale").imageScale();
         
         $(window).resize(function() {
-            fitThumbs();
+            if (typeof fitThumbs !== "undefined") {
+                fitThumbs();
+            }
         });
     });
 </script>

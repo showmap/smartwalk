@@ -1,4 +1,6 @@
 ﻿@using System.Globalization
+@using Orchard.UI.Resources
+@using SmartWalk.Server.Common.Utils
 @using SmartWalk.Server.Extensions
 @using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
@@ -71,18 +73,35 @@
             </small>
         </div>
 
-        <div class="floating-container small-gap">
-            @foreach (var item in Model) {
-                <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {eventId = item.Id})">
-                    <div class="header">
-                        <h3>@item.DisplayName()</h3>
+        <div id="event-items-thumbs" class="floating-container small-gap">
+    @{
+        var res = ResourceManager.FindResource(new RequireSettings { Name = "SmartWalk.List.Initial", Type = "script" });
+        if (res != null)
+        {
+            <script type="text/javascript">
+                @HtmlUtil.Resource(res, WorkContext);
+                
+                var thumbsContext = { defaultWidth: 300 };
+
+                function fitThumbs() {
+                    sw.fitThumbs("event-items-thumbs", ".floating .header", thumbsContext);
+                }
+
+                fitThumbs();
+            </script>
+        }
+    }
+        @foreach (var item in Model) {
+            <a class="thumbnail floating bg-image-container default-rows" href="@Url.Action("View", new {eventId = item.Id})">
+                <div class="header">
+                    <h3>@item.DisplayName()</h3>
 			
-                        <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture()" alt="">
-                    </div>
+                    <img class="scale" data-scale="best-fill" data-align="center" src="@item.DisplayPicture()" alt="">
+                </div>
   
-                    <div class="info"><h4>@item.DisplayDate(culture)</h4></div>
-                </a>
-            }
+                <div class="info"><h4>@item.DisplayDate(culture)</h4></div>
+            </a>
+        }
             <!-- ko template: {name: "eventItemTemplate", foreach: items(), afterRender: sw.scaleImages } -->    
             <!-- /ko -->
             <div class="clearfix"></div>
@@ -137,12 +156,6 @@
     @Display(New.MomentLocalization())
 
 <script type="text/javascript">
-    function fitThumbs() {
-        sw.fitThumbs(".floating-container", ".floating .header", 300);
-    }
-
-    fitThumbs();
-
     EventsViewModel = function(data, url) {
         var self = this;
 
@@ -171,7 +184,9 @@
         $("img.scale").imageScale();
         
         $(window).resize(function() {
-            fitThumbs();
+            if (typeof fitThumbs !== "undefined") {
+                fitThumbs();
+            }
         });
     });    
 </script>

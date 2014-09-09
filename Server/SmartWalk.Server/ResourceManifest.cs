@@ -84,6 +84,10 @@ namespace SmartWalk.Server
                 .SetVersionUrl("sw-antiforgery.min.js", "sw-antiforgery.js")
                 .SetDependencies("jQuery");
 
+            // This resource is included directly into content to run before page render
+            manifest.DefineScript("SmartWalk.List.Initial")
+                .SetUrl("sw-list-initial.min.js", "sw-list-initial.js");
+
             manifest.DefineScript("SmartWalk.Common")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-common.min.js", "sw-common.js")

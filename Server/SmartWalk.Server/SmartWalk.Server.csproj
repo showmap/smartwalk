@@ -194,6 +194,10 @@
     <Content Include="Scripts\sw-ko-switcher.min.js">
       <DependentUpon>sw-ko-switcher.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\sw-list-initial.js" />
+    <Content Include="Scripts\sw-list-initial.min.js">
+      <DependentUpon>sw-list-initial.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\text-collapse.js" />
     <Content Include="Scripts\sw-ko-datetime.js" />
     <Content Include="Scripts\text-collapse.min.js">
@@ -244,6 +248,9 @@
     </Content>
     <Content Include="Scripts\knockout.validation.min.js.map">
       <DependentUpon>knockout.validation.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sw-list-initial.min.js.map">
+      <DependentUpon>sw-list-initial.js</DependentUpon>
     </Content>
     <None Include="Views\ServerErrors.cshtml" />
     <Content Include="Web.config" />
