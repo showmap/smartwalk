@@ -103,7 +103,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Editing.Entity")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-editing-entity.min.js", "sw-editing-entity.js")
-                .SetDependencies("SmartWalk.Editing");
+                .SetDependencies("SmartWalk.Editing", "GoogleMapsApi");
 
             manifest.DefineScript("SmartWalk.Editing.Event")
                 .SetVersion(VersionUtil.CurrentVersion)

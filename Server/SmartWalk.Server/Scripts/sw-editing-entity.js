@@ -68,6 +68,18 @@
             Name: self.data.name()
         };
     };
+    
+    self.geocoder = new google.maps.Geocoder();
+    self.getAutocompleteAddresses = function (searchAddr, callback) {
+        self.geocoder.geocode({ "address": searchAddr }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                callback(results);
+            } else {
+                callback(null);
+                // TODO: Notify about error somehow
+            }
+        });
+    };
 
     self.saveEntity = function (resultHandler) {
         if (!self.data.errors) {
@@ -196,13 +208,26 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
 EntityViewModelExtended.initAddressViewModel = function (address) {
     address.mapPoint = ko.computed({
         read: function () {
-            return address.latitude() && address.longitude() 
-                ? { lat: address.latitude(), lng: address.longitude() } 
+            return address.latitude() && address.longitude()
+                ? { lat: address.latitude(), lng: address.longitude() }
                 : undefined;
         },
-        write: function(newValue) {
-            address.latitude(newValue.lat);
-            address.longitude(newValue.lng);
+        write: function (point) {
+            address.latitude(point ? point.lat : undefined);
+            address.longitude(point ? point.lng : undefined);
+        }
+    });
+    
+    address.addressData = ko.computed({
+        read: function () {
+            return { "formatted_address": address.address() || null };
+        },
+        write: function (data) {
+            if (data && data.geometry && data.geometry.location) {
+                address.mapPoint(ko.googleMap.toSWLatLng(data.geometry.location));
+            } else {
+                address.mapPoint(undefined);
+            }
         }
     });
 };

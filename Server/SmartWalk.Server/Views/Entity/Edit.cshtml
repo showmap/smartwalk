@@ -57,25 +57,27 @@
 		        </div>
 	        </div>
         </div>
-
-        <div class="row" data-bind="visible: data.type() == @Convert.ToInt32(EntityType.Venue)">
-	        <div class="col-sm-8">
-		        <table class="table table-hover addresses-table" data-bind="visible: addressesManager.items() && addressesManager.items().length > 0">
-			        <thead>
-				        <tr>
-					        <th><h4>@T("Addresses")</h4></th>
-					        <th class="td-align"></th>
-				        </tr>
-			        </thead>
-			        <tbody data-bind="template: { name: addressesManager.getItemView, foreach: addressesManager.items() }"></tbody>
-		        </table>
+        
+    @if (Model.Type == (int)EntityType.Venue)
+    {
+        <div class="row">
+            <div class="col-sm-8">
+                <table class="table table-hover addresses-table" data-bind="visible: addressesManager.items() && addressesManager.items().length > 0">
+                    <thead>
+                        <tr>
+                            <th><h4>@T("Addresses")</h4></th>
+                            <th class="td-align"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="template: { name: addressesManager.getItemView, foreach: addressesManager.items() }"></tbody>
+                </table>
 				
                 <div class="add-item-container">
                     <a data-bind="click: function() { if (isEnabled()) addressesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Address")</a>
                 </div>
-	        </div>
+            </div>
         </div>
-        
+    }  
         <div class="row gap">
             <div class="col-sm-8">
                 <table class="table table-hover" data-bind="visible: contactsManager.items() && contactsManager.items().length > 0">

@@ -26,6 +26,7 @@
 ko.mapUtil = {};
 ko.mapUtil.ACCESSOR_NAME = "coordinatesVA";
 ko.mapUtil.MAP_OBJECT = "mapPickerObject";
+ko.mapUtil.MAP_MARKER = "mapPickerMarker";
 
 ko.mapUtil.getClassByType = function (type)
 {
@@ -36,6 +37,7 @@ ko.mapUtil.dispose = function (element, disposeHandler) {
     if (disposeHandler) disposeHandler();
     $(element).data(ko.mapUtil.MAP_OBJECT, null);
     $(element).data(ko.mapUtil.ACCESSOR_NAME, null);
+    $(element).data(ko.mapUtil.MAP_MARKER, null);
 };
 
 // ###############    L e a f L e t   M a p s   ####################
@@ -91,7 +93,9 @@ ko.googleMap.init = function (element, settings) {
         title: "Current address"
     });
 
-    google.maps.event.addListener(map, 'click', function(e) {
+    $(element).data(ko.mapUtil.MAP_MARKER, marker);
+
+    google.maps.event.addListener(map, "click", function(e) {
         $(element).data(ko.mapUtil.ACCESSOR_NAME)()(ko.googleMap.toSWLatLng(e.latLng));
         marker.setPosition(e.latLng);
     });
@@ -108,7 +112,9 @@ ko.googleMap.dispose = function (element) {
 };
 
 ko.googleMap.setData = function (element, value) {
-    $(element).data(ko.mapUtil.MAP_OBJECT).setCenter(ko.googleMap.toGoogleLatLng(value));
+    var latLng = ko.googleMap.toGoogleLatLng(value);
+    $(element).data(ko.mapUtil.MAP_OBJECT).setCenter(latLng);
+    $(element).data(ko.mapUtil.MAP_MARKER).setPosition(latLng);
 };
 
 ko.googleMap.toSWLatLng = function (value) {
