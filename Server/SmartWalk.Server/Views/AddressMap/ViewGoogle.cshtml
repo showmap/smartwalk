@@ -13,9 +13,9 @@
         {
 <script type="text/javascript">
     $(function() {
-        $("#map-container").on("click touchend", function() {
+        $("#map-container").on("click", function() {
             $(this).removeClass("shield");
-            $(this).off("click touchend");
+            $(this).off("click");
         });
 
         function addMarker(latlng, title) {
