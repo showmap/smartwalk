@@ -18,13 +18,11 @@
             $(this).off("click");
         });
 
-        function addMarker(latlng, title) {
-            return new google.maps.Marker({
-                position: latlng,
-                map: map,
-                title: title
-            });
-        }
+        var addresses = [];
+    @foreach (var address in Model.Addresses)
+    {
+<text>        addresses.push({latLng: new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), title: "@address.Address"});</text>
+    }
 
         var map = new google.maps.Map(
             document.getElementById("googleMap"),
@@ -36,11 +34,23 @@
                 mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
                 streetViewControl: false
             });
-
-        @foreach (var address in Model.Addresses)
-        {
-<text>        addMarker(new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), "@address.Address");</text>
+        
+        function addMarker(latlng, map, title) {
+            return new google.maps.Marker({
+                position: latlng,
+                map: map,
+                title: title
+            });
         }
+
+        var bounds = new google.maps.LatLngBounds();
+        
+        for (var i = 0; i < addresses.length; i++) {
+            bounds.extend(addresses[i].latLng);
+            addMarker(addresses[i].latLng, map, addresses[i].title);
+        }
+        
+        map.fitBounds(bounds);
     });
 </script>
         }
