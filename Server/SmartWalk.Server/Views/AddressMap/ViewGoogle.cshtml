@@ -49,8 +49,10 @@
             bounds.extend(addresses[i].latLng);
             addMarker(addresses[i].latLng, map, addresses[i].title);
         }
-        
-        map.fitBounds(bounds);
+
+        if (addresses.length > 1) {
+            map.fitBounds(bounds);
+        }
     });
 </script>
         }
