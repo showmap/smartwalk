@@ -68,9 +68,8 @@
                         <div class="input-group">
                             <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Select Venue...")" data-bind="
                                 jqAuto: {
-                                    value: ko.computed({ 
-                                        read: function() { return $data.name() || null; }, 
-                                        write: function (venueData) { $data.loadData(venueData); }}),
+                                    value: autocompleteName,
+                                    dataValue: autocompleteData,
                                     source: $root.getAutocompleteVenues,
                                     inputProp: 'Name',
                                     template: 'autocompleteEntityItemTemplate'

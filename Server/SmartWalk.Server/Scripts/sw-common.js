@@ -431,27 +431,27 @@ function EntityViewModel(data) {
     self.shows = ko.observableArray();
 
     self.loadData = function (entityData) {
-        self.id(entityData.Id);
-        self.type(entityData.Type);
-        self.name(entityData.Name);
-        self.abbreviation(entityData.Abbreviation);
-        self.picture(entityData.Picture);
-        self.description(entityData.Description);
+        self.id(entityData ? entityData.Id : undefined);
+        self.type(entityData ? entityData.Type : undefined);
+        self.name(entityData ? entityData.Name : undefined);
+        self.abbreviation(entityData ? entityData.Abbreviation : undefined);
+        self.picture(entityData ? entityData.Picture : undefined);
+        self.description(entityData ? entityData.Description : undefined);
 
         self.contacts(
-            entityData.Contacts
+            entityData && entityData.Contacts
                 ? $.map(entityData.Contacts,
                     function (contact) { return new ContactViewModel(contact); })
                 : undefined);
 
         self.addresses(
-            entityData.Addresses
+            entityData && entityData.Addresses
                 ? $.map(entityData.Addresses,
                     function (address) { return new AddressViewModel(address); })
                 : undefined);
 
         self.shows(
-            entityData.Shows
+            entityData && entityData.Shows
                 ? $.map(entityData.Shows,
                     function (show) { return new ShowViewModel(show); })
                 : undefined);

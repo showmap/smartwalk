@@ -5,23 +5,27 @@
 
     self.settings = settings;
     self.data = new EventViewModel(data);
-
-    self.hostData = ko.computed({
+    
+    self.autocompleteHostName = ko.pureComputed({
         read: function () {
+            return self.data.host() ? self.data.host().name() : null;
+        },
+        write: function () { }
+    });
+    
+    self.autocompleteHostData = ko.pureComputed({
+        read: function() {
             return self.data.host() ? self.data.host().toJSON() : null;
         },
-        write: function (hostData) {
+        write: function(hostData) {
             self.data.host(hostData && $.isPlainObject(hostData)
                 ? new EntityViewModel(hostData) : null);
         }
     });
     
-    self.hostName = ko.computed({
-        read: function () {
-            return self.data.host() ? self.data.host().name() : null;
-        },
-        write: function() {}
-    });
+    // to make sure bindings are re-evaluated on empty values
+    self.data.host.extend({ notify: "always" });
+    self.autocompleteHostName.extend({ notify: "always" });
 
     EventViewModelExtended.setupMultiday(self);
     EventViewModelExtended.setupDialogs(self);
@@ -285,6 +289,19 @@ EventViewModelExtended.setupVenueValidation = function(venue, settings) {
 };
 
 EventViewModelExtended.initVenueViewModel = function (venue, event) {
+    venue.autocompleteName = ko.pureComputed({
+        read: function () { return venue.name() || null; },
+        write: function() {}
+    });
+
+    venue.autocompleteData = ko.computed({
+        read: function () { return null; },
+        write: function(venueData) { venue.loadData(venueData); }
+    });
+
+    venue.autocompleteName.extend({ notify: "always" });
+    venue.name.extend({ notify: "always" });
+    
     venue.showsManager = new VmItemsManager(
         venue.shows,
         function () {
