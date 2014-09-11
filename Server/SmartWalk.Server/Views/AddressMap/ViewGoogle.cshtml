@@ -13,9 +13,8 @@
         {
 <script type="text/javascript">
     $(function() {
-        $("#map-container").on("click", function() {
+        $("#map-container").one("click", function() {
             $(this).removeClass("shield");
-            $(this).off("click");
         });
 
         var addresses = [];

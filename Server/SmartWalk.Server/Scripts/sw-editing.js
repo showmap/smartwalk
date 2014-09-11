@@ -292,6 +292,8 @@ function VmItemsManager(allItems, createItemHandler, settings) {
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
 
+sw.widgets = {};
+
 // restyle with bootstrap
 $.widget("ui.autocomplete", $.ui.autocomplete,
     {
@@ -365,12 +367,19 @@ $.widget("ui.dialog", $.ui.dialog,
             open: function () {
                 $("body")
                     .addClass("stop-scrolling")
-                    .bind("touchmove", function(e) { e.preventDefault(); }); // TODO: to allow scroll inside dialog
+                    .on("touchmove", sw.widgets.utils.onBodyTouchMove);
             },
             beforeClose: function () {
                 $("body")
                     .removeClass("stop-scrolling")
-                    .unbind("touchmove");
+                    .off("touchmove", sw.widgets.utils.onBodyTouchMove);
             }
         }
     });
+
+sw.widgets.utils = {};
+sw.widgets.utils.onBodyTouchMove = function(e) {
+    if ($(e.target).parents(".ui-dialog").length == 0) {
+        e.preventDefault();
+    }
+};
