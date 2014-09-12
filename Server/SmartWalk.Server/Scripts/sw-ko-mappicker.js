@@ -75,6 +75,8 @@ ko.leafLetMap.setData = function (element, value) {
 ko.googleMap = {};
 
 ko.googleMap.init = function (element, settings) {
+    if (typeof google === "undefined" || typeof google.maps === "undefined") return;
+
     var center = $(element).data(ko.mapUtil.ACCESSOR_NAME)()();
     
     var map = new google.maps.Map(
@@ -112,6 +114,8 @@ ko.googleMap.dispose = function (element) {
 };
 
 ko.googleMap.setData = function (element, value) {
+    if (typeof google === "undefined" || typeof google.maps === "undefined") return;
+    
     var latLng = ko.googleMap.toGoogleLatLng(value);
     $(element).data(ko.mapUtil.MAP_OBJECT).setCenter(latLng);
     $(element).data(ko.mapUtil.MAP_MARKER).setPosition(latLng);

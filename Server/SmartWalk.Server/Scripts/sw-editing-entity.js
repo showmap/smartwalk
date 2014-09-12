@@ -68,18 +68,6 @@
             Name: self.data.name()
         };
     };
-    
-    self.geocoder = new google.maps.Geocoder();
-    self.getAutocompleteAddresses = function (searchAddr, callback) {
-        self.geocoder.geocode({ "address": searchAddr }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                callback(results);
-            } else {
-                callback(null);
-                // TODO: Notify about error somehow
-            }
-        });
-    };
 
     self.saveEntity = function (resultHandler) {
         if (!self.data.errors) {
@@ -121,6 +109,8 @@
             self.settings.entityAfterCancelAction();
         }
     };
+
+    EntityViewModelExtended.setupAutocompleteAddress(self);
 };
 
 sw.inherits(EntityViewModelExtended, ViewModelBase);
@@ -203,6 +193,24 @@ EntityViewModelExtended.setupAddressValidation = function (address, settings) {
         .extend({ maxLength: { params: 255, message: settings.addressMessages.addressTipValidationMessage } });
 
     address.errors = ko.validation.group(address);
+};
+
+EntityViewModelExtended.setupAutocompleteAddress = function (model) {
+    if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
+        model.geocoder = new google.maps.Geocoder();
+        model.getAutocompleteAddresses = function(searchAddr, callback) {
+            model.geocoder.geocode({ "address": searchAddr }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    callback(results);
+                } else {
+                    callback(null);
+                    // TODO: Notify about error somehow
+                }
+            });
+        };
+    } else {
+        model.getAutocompleteAddresses = function () { return null; };
+    }
 };
 
 EntityViewModelExtended.initAddressViewModel = function (address) {

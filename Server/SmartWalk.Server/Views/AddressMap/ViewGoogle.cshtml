@@ -17,40 +17,42 @@
             $(this).removeClass("shield");
         });
 
-        var addresses = [];
-    @foreach (var address in Model.Addresses)
+        if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
+            var addresses = [];
+            @foreach (var address in Model.Addresses)
     {
-<text>        addresses.push({latLng: new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), title: "@address.Address"});</text>
+<text>            addresses.push({latLng: new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), title: "@address.Address"});</text>
     }
 
-        var map = new google.maps.Map(
-            document.getElementById("googleMap"),
-            {
-                backgroundColor: "#B4D1FF",
-                zoom: 14,
-                center: new google.maps.LatLng(@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
-                streetViewControl: false
-            });
-        
-        function addMarker(latlng, map, title) {
-            return new google.maps.Marker({
-                position: latlng,
-                map: map,
-                title: title
-            });
-        }
+            var map = new google.maps.Map(
+                document.getElementById("googleMap"),
+                {
+                    backgroundColor: "#B4D1FF",
+                    zoom: 14,
+                    center: new google.maps.LatLng(@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                    streetViewControl: false
+                });
 
-        var bounds = new google.maps.LatLngBounds();
-        
-        for (var i = 0; i < addresses.length; i++) {
-            bounds.extend(addresses[i].latLng);
-            addMarker(addresses[i].latLng, map, addresses[i].title);
-        }
+            function addMarker(latlng, map, title) {
+                return new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    title: title
+                });
+            }
 
-        if (addresses.length > 1) {
-            map.fitBounds(bounds);
+            var bounds = new google.maps.LatLngBounds();
+
+            for (var i = 0; i < addresses.length; i++) {
+                bounds.extend(addresses[i].latLng);
+                addMarker(addresses[i].latLng, map, addresses[i].title);
+            }
+
+            if (addresses.length > 1) {
+                map.fitBounds(bounds);
+            }
         }
     });
 </script>
