@@ -365,11 +365,11 @@ $.widget("ui.dialog", $.ui.dialog,
                 dialog.removeClass("ui-widget-content ui-corner-all");
             },
             open: function () {
-                $("html, body")
+                $("body")
                     .addClass("stop-scrolling");
             },
             beforeClose: function () {
-                $("html, body")
+                $("body")
                     .removeClass("stop-scrolling");
             }
         }

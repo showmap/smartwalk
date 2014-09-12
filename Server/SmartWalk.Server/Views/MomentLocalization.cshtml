@@ -52,7 +52,7 @@
     (function (factory) {
         factory(moment);
     }(function (moment) {
-        return moment.lang("current", {
+        return moment.locale("current", {
             months : [@Html.Raw(monthNames)],
             monthsShort : [@Html.Raw(monthNamesShort)],
             weekdays : [@Html.Raw(dayNames)],
@@ -71,5 +71,5 @@
         });
     }));
 
-    moment.lang("current");
+    moment.locale("current");
 </script>

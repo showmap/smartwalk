@@ -192,9 +192,9 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                     allowEmpty: true,
                     cmp: "REGION",
                     compareVal: ko.computed(
-                        function () { return event.startDate() ? moment(event.startDate()).subtract("days", 1).toDate() : undefined; }),
+                        function () { return event.startDate() ? moment(event.startDate()).subtract(1, "days").toDate() : undefined; }),
                     compareValTo: ko.computed(
-                        function () { return event.endDate() ? moment(event.endDate()).add("days", 1).toDate() : undefined; }),
+                        function () { return event.endDate() ? moment(event.endDate()).add(1, "days").toDate() : undefined; }),
                 },
                 message: settings.showMessages.startDateValidationMessage
             }
@@ -217,9 +217,9 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                     allowEmpty: true,
                     cmp: "REGION",
                     compareVal: ko.computed(
-                        function () { return event.startDate() ? moment(event.startDate()).subtract("days", 1).toDate() : undefined; }),
+                        function () { return event.startDate() ? moment(event.startDate()).subtract(1, "days").toDate() : undefined; }),
                     compareValTo: ko.computed(
-                        function () { return event.endDate() ? moment(event.endDate()).add("days", 2).toDate() : undefined; }), // 2 days, to cover the whole last day + night of next one
+                        function () { return event.endDate() ? moment(event.endDate()).add(2, "days").toDate() : undefined; }), // 2 days, to cover the whole last day + night of next one
                 },
                 message: settings.showMessages.endDateValidationMessage
             }
@@ -319,9 +319,9 @@ EventViewModelExtended.setupAutocomplete = function (event) {
         sw.ajaxJsonRequest(
             {
                 term: searchTerm,
-                onlyMine: false,
                 excludeIds: self.data.venues()
-                    ? $.map(self.data.venues(),
+                    ? $.map(
+                        $.grep(self.data.venues(), function (venue) { return venue.id() > 0 && !venue._destroy; }),
                         function (venue) { return venue.id(); })
                     : null
             },
@@ -350,7 +350,7 @@ EventViewModelExtended.setupMultiday = function (event) {
                 .map(function (x, i) {
                     return {
                         day: i + 1,
-                        momentDate: moment(self.data.startDate()).add("days", i)
+                        momentDate: moment(self.data.startDate()).add(i, "days")
                     };
                 })
             : null;
@@ -381,7 +381,7 @@ EventViewModelExtended.setCurrentDate = function(event, startDate, day) {
     var self = event;
 
     if (startDate && day) {
-        self.currentDate(moment(startDate).add("days", day - 1).toDate());
+        self.currentDate(moment(startDate).add(day - 1, "days").toDate());
     } else if (startDate) {
         self.currentDate(startDate);
     } else {
@@ -399,7 +399,7 @@ EventViewModelExtended.IsTimeThisDay = function(time, event, nightEdgeHour) {
     var t = moment(time);
     var tDay = moment(time).startOf("day");
     var day = moment(event.currentDate());
-    var nextDay = moment(event.currentDate()).add("days", 1);
+    var nextDay = moment(event.currentDate()).add(1, "days");
     var firstDay = event.data.startDate() ? moment(event.data.startDate()) : undefined;
     var lastDay = event.data.endDate() ? moment(event.data.endDate()) : undefined;
 
