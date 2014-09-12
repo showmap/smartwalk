@@ -93,6 +93,13 @@ namespace SmartWalk.Server.Services.EventService
             for (var i = 0; i < venues.Length; i++)
             {
                 var venueVm = venues[i];
+                if (venueVm.Id <= 0)
+                {
+                    result.Add(new ValidationError(
+                                   string.Format("{0}[{1}]", venuesProperty, i + 1),
+                                   T("The venue should be selected.").Text));
+                }
+
                 var shows = venueVm.Shows != null
                     ? venueVm.Shows.Where(v => !v.Destroy).ToArray()
                     : new ShowVm[] { };
