@@ -365,21 +365,12 @@ $.widget("ui.dialog", $.ui.dialog,
                 dialog.removeClass("ui-widget-content ui-corner-all");
             },
             open: function () {
-                $("body")
-                    .addClass("stop-scrolling")
-                    .on("touchmove", sw.widgets.utils.onBodyTouchMove);
+                $("html, body")
+                    .addClass("stop-scrolling");
             },
             beforeClose: function () {
-                $("body")
-                    .removeClass("stop-scrolling")
-                    .off("touchmove", sw.widgets.utils.onBodyTouchMove);
+                $("html, body")
+                    .removeClass("stop-scrolling");
             }
         }
     });
-
-sw.widgets.utils = {};
-sw.widgets.utils.onBodyTouchMove = function(e) {
-    if ($(e.target).parents(".ui-dialog").length == 0) {
-        e.preventDefault();
-    }
-};

@@ -27,15 +27,15 @@ namespace SmartWalk.Server.Theme
                     true);
 
             // HACK Using fake "9." prefix due to Orchard's isuse https://orchard.codeplex.com/workitem/20798
-            const string jQueryUIVersion = "9.1.11.0";
+            const string jQueryUIVersion = "9.1.11.1";
 
             manifest.DefineScript("jQueryUI")
                 .SetVersion(jQueryUIVersion)
                 .SetVersionUrl("jquery-ui.min.js", "jquery-ui.js")
                 .SetDependencies("jQuery")
                 .SetCdn(
-                    "//code.jquery.com/ui/1.11.0/jquery-ui.min.js",
-                    "//code.jquery.com/ui/1.11.0/jquery-ui.js", 
+                    "//code.jquery.com/ui/1.11.1/jquery-ui.min.js",
+                    "//code.jquery.com/ui/1.11.1/jquery-ui.js", 
                     true);
 
             manifest

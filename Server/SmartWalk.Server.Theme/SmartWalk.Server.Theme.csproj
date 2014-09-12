@@ -189,7 +189,6 @@
     <Content Include="Styles\bootstrap-theme.min.css" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
-    <Content Include="Styles\images\animated-overlay.gif" />
     <Content Include="Styles\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Styles\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="Styles\images\ui-bg_flat_10_000000_40x100.png" />
