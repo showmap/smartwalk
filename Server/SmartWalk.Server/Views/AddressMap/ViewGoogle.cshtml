@@ -24,16 +24,19 @@
 <text>            addresses.push({latLng: new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), title: "@address.Address"});</text>
     }
 
-            var map = new google.maps.Map(
-                document.getElementById("googleMap"),
-                {
-                    backgroundColor: "#B4D1FF",
-                    zoom: 14,
-                    center: new google.maps.LatLng(@Model.Latitude.ToString(nfi), @Model.Longitude.ToString(nfi)),
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
-                    streetViewControl: false
-                });
+            var settings = {
+                backgroundColor: "#B4D1FF",
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                streetViewControl: false
+            };
+
+            if (addresses.length == 1) {
+                settings.zoom = 14;
+                settings.center = addresses[0].latLng;
+            }
+
+            var map = new google.maps.Map(document.getElementById("googleMap"), settings);
 
             function addMarker(latlng, map, title) {
                 return new google.maps.Marker({
