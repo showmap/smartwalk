@@ -81,7 +81,7 @@
 
         if (self.data.errors().length == 0) {
             self.currentRequest = sw.ajaxJsonRequest(
-                self.data.toJSON(),
+                self.data.toJSON.apply(self.data),
                 self.settings.entitySaveUrl,
                 function (entityData) {
                     if (resultHandler && $.isFunction(resultHandler)) {

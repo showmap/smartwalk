@@ -161,12 +161,12 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     self._processIsEditingChange = function (item, isEditing) {
         if (isEditing) {
             if (item.id() && item.id() != 0) {
-                self._previousItemData(item.toJSON());
+                self._previousItemData(item.toJSON.apply(item));
             }
         } else {
             if (item.id() && item.id() != 0) {
                 if (self._previousItemData() != null) {
-                    item.loadData(self._previousItemData());
+                    item.loadData.apply(item, [self._previousItemData()]);
                 }
             } else {
                 self._allItems.remove(item);

@@ -62,7 +62,7 @@
 
         if (self.data.errors().length == 0) {
             self.currentRequest = sw.ajaxJsonRequest(
-                self.data.toJSON(),
+                self.data.toJSON.apply(self.data),
                 self.settings.eventSaveUrl,
                 function (eventData) {
                     self.settings.eventAfterSaveAction(eventData.Id, self);
@@ -253,7 +253,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
 
     venue.autocompleteData = ko.computed({
         read: function () { return null; },
-        write: function(venueData) { venue.loadData(venueData || {}); }
+        write: function (venueData) { venue.loadData.apply(venue, [venueData || {}]); }
     });
 
     venue.autocompleteName.extend({ notify: "always" });
@@ -295,7 +295,7 @@ EventViewModelExtended.setupAutocomplete = function (event) {
 
     self.autocompleteHostData = ko.pureComputed({
         read: function () {
-            return self.data.host() ? self.data.host().toJSON() : null;
+            return self.data.host() ? self.data.host().toJSON.apply(self.data.host()) : null;
         },
         write: function (hostData) {
             self.data.host(hostData && $.isPlainObject(hostData)
@@ -422,7 +422,7 @@ EventViewModelExtended.setupDialogs = function (event) {
         close: function () {
             var entity = ko.dataFor(this);
             entity.isBusy(false);
-            entity.data.loadData({ Type: entity.data.type() });
+            entity.data.loadData.apply(entity.data, [{ Type: entity.data.type() }]);
             entity.resetServerErrors();
             if (entity.data.errors) {
                 entity.data.errors.showAllMessages(false);
@@ -486,7 +486,7 @@ EventViewModelExtended.setupDialogs = function (event) {
                         var editingVenue = $.grep(event.data.venues(),
                             function (item) { return item.isEditing(); })[0];
                         if (editingVenue) {
-                            editingVenue.loadData(entityData);
+                            editingVenue.loadData.apply(editingVenue, [entityData]);
                             $(dialog).dialog("close");
                         }
                     });

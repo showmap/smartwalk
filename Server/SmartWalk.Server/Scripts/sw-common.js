@@ -283,26 +283,26 @@ function ContactViewModel(data) {
     self.title = ko.observable();
     self.contact = ko.observable();
 
-    self.loadData = function (contactData) {
-        self.id(contactData.Id);
-        self.type(contactData.Type);
-        self.title(contactData.Title);
-        self.contact(contactData.Contact);
-    };
-
     self.loadData(data);
-
-    self.toJSON = function () {
-        var json = {
-            Id: self.id(),
-            Type: self.type(),
-            Title: self.title(),
-            Contact: self.contact(),
-            Destroy: self._destroy
-        };
-        return json;
-    };
 }
+
+ContactViewModel.prototype.loadData = function (contactData) {
+    this.id(contactData.Id);
+    this.type(contactData.Type);
+    this.title(contactData.Title);
+    this.contact(contactData.Contact);
+};
+
+ContactViewModel.prototype.toJSON = function () {
+    var json = {
+        Id: this.id(),
+        Type: this.type(),
+        Title: this.title(),
+        Contact: this.contact(),
+        Destroy: this._destroy
+    };
+    return json;
+};
 
 function AddressViewModel(data) {
     var self = this;
@@ -313,28 +313,28 @@ function AddressViewModel(data) {
     self.latitude = ko.observable();
     self.longitude = ko.observable();
 
-    self.loadData = function (addressData) {
-        self.id(addressData.Id);
-        self.address(addressData.Address);
-        self.tip(addressData.Tip);
-        self.latitude(addressData.Latitude);
-        self.longitude(addressData.Longitude);
-    };
-
     self.loadData(data);
-
-    self.toJSON = function () {
-        var json = {
-            Id: self.id(),
-            Address: self.address(),
-            Tip: self.tip(),
-            Latitude: self.latitude(),
-            Longitude: self.longitude(),
-            Destroy: self._destroy
-        };
-        return json;
-    };
 }
+
+AddressViewModel.prototype.loadData = function (addressData) {
+    this.id(addressData.Id);
+    this.address(addressData.Address);
+    this.tip(addressData.Tip);
+    this.latitude(addressData.Latitude);
+    this.longitude(addressData.Longitude);
+};
+
+AddressViewModel.prototype.toJSON = function () {
+    var json = {
+        Id: this.id(),
+        Address: this.address(),
+        Tip: this.tip(),
+        Latitude: this.latitude(),
+        Longitude: this.longitude(),
+        Destroy: this._destroy
+    };
+    return json;
+};
 
 function EventViewModel(data) {
     var self = this;
@@ -352,55 +352,55 @@ function EventViewModel(data) {
     
     self.host = ko.observable();
     self.venues = ko.observableArray();
-
-    self.loadData = function (eventData) {
-        self.id(eventData.Id);
-        self.title(eventData.Title);
-        self.startDate(eventData.StartDate
-            ? sw.convertToLocal(moment(eventData.StartDate).toDate()) : undefined);
-        self.endDate(eventData.EndDate
-            ? sw.convertToLocal(moment(eventData.EndDate).toDate()) : undefined);
-        self.status(eventData.Status);
-        self.picture(eventData.Picture);
-        self.combineType(eventData.CombineType);
-        self.description(eventData.Description);
-        /*self.latitude(eventData.Latitude);
-        self.longitude(eventData.Longitude);*/
-
-        self.host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
-        self.venues(
-            eventData.Venues
-                ? $.map(eventData.Venues,
-                    function (venue) { return new EntityViewModel(venue); })
-                : undefined);
-    };
-
-    self.toJSON = function () {
-        var json = {
-            Id: self.id(),
-            CombineType: self.combineType(),
-            Title: self.title(),
-            StartDate: self.startDate()
-                ? sw.convertToUTC(self.startDate()).toJSON() : undefined,
-            EndDate: self.endDate()
-                ? sw.convertToUTC(self.endDate()).toJSON() : undefined,
-            Status: self.status(),
-            Picture: self.picture(),
-            Description: self.description(),
-            /*Latitude: self.latitude(),
-            Longitude: self.longitude(),*/
-
-            Host: self.host() ? self.host().toJSON() : undefined,
-            Venues: self.venues()
-                ? $.map(self.venues(), function (venue) { return venue.toJSON(); })
-                : undefined,
-            
-            Destroy: self._destroy
-        };
-        return json;
-    };
-
+    
     self.loadData(data);
+};
+
+EventViewModel.prototype.loadData = function (eventData) {
+    this.id(eventData.Id);
+    this.title(eventData.Title);
+    this.startDate(eventData.StartDate
+        ? sw.convertToLocal(moment(eventData.StartDate).toDate()) : undefined);
+    this.endDate(eventData.EndDate
+        ? sw.convertToLocal(moment(eventData.EndDate).toDate()) : undefined);
+    this.status(eventData.Status);
+    this.picture(eventData.Picture);
+    this.combineType(eventData.CombineType);
+    this.description(eventData.Description);
+    /*this.latitude(eventData.Latitude);
+    this.longitude(eventData.Longitude);*/
+
+    this.host(eventData.Host ? new EntityViewModel(eventData.Host) : undefined);
+    this.venues(
+        eventData.Venues
+            ? $.map(eventData.Venues,
+                function (venue) { return new EntityViewModel(venue); })
+            : undefined);
+};
+
+EventViewModel.prototype.toJSON = function () {
+    var json = {
+        Id: this.id(),
+        CombineType: this.combineType(),
+        Title: this.title(),
+        StartDate: this.startDate()
+            ? sw.convertToUTC(this.startDate()).toJSON() : undefined,
+        EndDate: this.endDate()
+            ? sw.convertToUTC(this.endDate()).toJSON() : undefined,
+        Status: this.status(),
+        Picture: this.picture(),
+        Description: this.description(),
+        /*Latitude: this.latitude(),
+        Longitude: this.longitude(),*/
+
+        Host: this.host() ? this.host().toJSON.apply(this.host()) : undefined,
+        Venues: this.venues()
+            ? $.map(this.venues(), function (venue) { return venue.toJSON.apply(venue); })
+            : undefined,
+
+        Destroy: this._destroy
+    };
+    return json;
 };
 
 sw.vm.EventStatus =
@@ -430,58 +430,58 @@ function EntityViewModel(data) {
     self.addresses = ko.observableArray();
     self.shows = ko.observableArray();
 
-    self.loadData = function (entityData) {
-        self.id(entityData.Id);
-        self.type(entityData.Type);
-        self.name(entityData.Name);
-        self.abbreviation(entityData.Abbreviation);
-        self.picture(entityData.Picture);
-        self.description(entityData.Description);
-
-        self.contacts(
-            entityData.Contacts
-                ? $.map(entityData.Contacts,
-                    function (contact) { return new ContactViewModel(contact); })
-                : undefined);
-
-        self.addresses(
-            entityData.Addresses
-                ? $.map(entityData.Addresses,
-                    function (address) { return new AddressViewModel(address); })
-                : undefined);
-
-        self.shows(
-            entityData.Shows
-                ? $.map(entityData.Shows,
-                    function (show) { return new ShowViewModel(show); })
-                : undefined);
-    };
-
-    self.toJSON = function () {
-        var json = {
-            Id: self.id(),
-            Type: self.type(),
-            Name: self.name(),
-            Abbreviation: self.abbreviation(),
-            Picture: self.picture(),
-            Description: self.description(),
-
-            Contacts: self.contacts()
-                ? $.map(self.contacts(), function (contact) { return contact.toJSON(); })
-                : undefined,
-            Addresses: self.addresses()
-                ? $.map(self.addresses(), function (address) { return address.toJSON(); })
-                : undefined,
-            Shows: self.shows()
-                ? $.map(self.shows(), function (show) { return show.toJSON(); })
-                : undefined,
-            
-            Destroy: self._destroy
-        };
-        return json;
-    };
-
     self.loadData(data);
+};
+
+EntityViewModel.prototype.loadData = function (entityData) {
+    this.id(entityData.Id);
+    this.type(entityData.Type);
+    this.name(entityData.Name);
+    this.abbreviation(entityData.Abbreviation);
+    this.picture(entityData.Picture);
+    this.description(entityData.Description);
+
+    this.contacts(
+        entityData.Contacts
+            ? $.map(entityData.Contacts,
+                function (contact) { return new ContactViewModel(contact); })
+            : undefined);
+
+    this.addresses(
+        entityData.Addresses
+            ? $.map(entityData.Addresses,
+                function (address) { return new AddressViewModel(address); })
+            : undefined);
+
+    this.shows(
+        entityData.Shows
+            ? $.map(entityData.Shows,
+                function (show) { return new ShowViewModel(show); })
+            : undefined);
+};
+
+EntityViewModel.prototype.toJSON = function () {
+    var json = {
+        Id: this.id(),
+        Type: this.type(),
+        Name: this.name(),
+        Abbreviation: this.abbreviation(),
+        Picture: this.picture(),
+        Description: this.description(),
+
+        Contacts: this.contacts()
+            ? $.map(this.contacts(), function (contact) { return contact.toJSON.apply(contact); })
+            : undefined,
+        Addresses: this.addresses()
+            ? $.map(this.addresses(), function (address) { return address.toJSON.apply(address); })
+            : undefined,
+        Shows: this.shows()
+            ? $.map(this.shows(), function (show) { return show.toJSON.apply(show); })
+            : undefined,
+
+        Destroy: this._destroy
+    };
+    return json;
 };
 
 function ShowViewModel(data) {
@@ -495,36 +495,36 @@ function ShowViewModel(data) {
     self.picture = ko.observable();
     self.detailsUrl = ko.observable();
 
-    self.loadData = function (showData) {
-        self.id(showData.Id);
-        self.title(showData.Title);
-        self.description(showData.Description);
-        self.startTime(showData.StartTime
-            ? sw.convertToLocal(moment(showData.StartTime).toDate()) : undefined);
-        self.endTime(showData.EndTime
-            ? sw.convertToLocal(moment(showData.EndTime).toDate()) : undefined);
-        self.picture(showData.Picture);
-        self.detailsUrl(showData.DetailsUrl);
-    };
-
-    self.toJSON = function () {
-        var json = {
-            Id: self.id(),
-            Title: self.title(),
-            Description: self.description(),
-            StartTime: self.startTime()
-                ? sw.convertToUTC(self.startTime()).toJSON() : undefined,
-            EndTime: self.endTime()
-                ? sw.convertToUTC(self.endTime()).toJSON() : undefined,
-            Picture: self.picture(),
-            DetailsUrl: self.detailsUrl(),
-            Destroy: self._destroy
-        };
-        return json;
-    };
-
     self.loadData(data);
 }
+
+ShowViewModel.prototype.loadData = function (showData) {
+    this.id(showData.Id);
+    this.title(showData.Title);
+    this.description(showData.Description);
+    this.startTime(showData.StartTime
+        ? sw.convertToLocal(moment(showData.StartTime).toDate()) : undefined);
+    this.endTime(showData.EndTime
+        ? sw.convertToLocal(moment(showData.EndTime).toDate()) : undefined);
+    this.picture(showData.Picture);
+    this.detailsUrl(showData.DetailsUrl);
+};
+
+ShowViewModel.prototype.toJSON = function () {
+    var json = {
+        Id: this.id(),
+        Title: this.title(),
+        Description: this.description(),
+        StartTime: this.startTime()
+            ? sw.convertToUTC(this.startTime()).toJSON() : undefined,
+        EndTime: this.endTime()
+            ? sw.convertToUTC(this.endTime()).toJSON() : undefined,
+        Picture: this.picture(),
+        DetailsUrl: this.detailsUrl(),
+        Destroy: this._destroy
+    };
+    return json;
+};
 
 // #########    V i e w    M o d e l s    E x t e n s i o n s     ##############
 
