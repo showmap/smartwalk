@@ -1,7 +1,5 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using Orchard;
-using Orchard.Security;
 using Orchard.Themes;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
@@ -9,7 +7,6 @@ using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
-using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Controllers.Base
 {
@@ -18,14 +15,10 @@ namespace SmartWalk.Server.Controllers.Base
     {
         private readonly IEntityService _entityService;
         private readonly EntityValidator _validator;
-        private readonly IAuthorizer _authorizer;
 
-        protected EntityBaseController(
-            IEntityService entityService,
-            IOrchardServices orchardServices)
+        protected EntityBaseController(IEntityService entityService)
         {
             _entityService = entityService;
-            _authorizer = orchardServices.Authorizer;
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
             _validator = new EntityValidator(_entityService, EntityType, T);
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
@@ -128,22 +121,6 @@ namespace SmartWalk.Server.Controllers.Base
                 parameters.Display, EntityType, pageNumber,
                 ViewSettings.ItemsPerScrollPage,
                 false, query);
-
-            return Json(result);
-        }
-
-        [HttpPost]
-        [CompressFilter]
-        public ActionResult AutoCompleteEntity(string term, bool onlyMine = true, int[] excludeIds = null)
-        {
-            var display =
-                _authorizer.Authorize(Permissions.UseAllContent)
-                    ? DisplayType.None.Include(DisplayType.All).Include(DisplayType.My)
-                    : (onlyMine ? DisplayType.My : DisplayType.All);
-
-            var result = _entityService.GetEntities(
-                display, EntityType, 0, ViewSettings.AutocompleteItems, 
-                false, term, excludeIds);
 
             return Json(result);
         }

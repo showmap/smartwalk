@@ -247,8 +247,8 @@
             
             loadingTemplate: "loadingImgTemplate",
 
-            hostAutocompleteUrl: '@Url.Action("AutoCompleteEntity", "Host")',
-            venueAutocompleteUrl: '@Url.Action("AutoCompleteEntity", "Venue")',                               
+            hostAutocompleteUrl: '@Url.Action("AutoCompleteHost", "Host")',
+            venueAutocompleteUrl: '@Url.Action("AutoCompleteVenue", "Venue")',                               
         };
 
         var vm = new EventViewModelExtended(settings, data);
