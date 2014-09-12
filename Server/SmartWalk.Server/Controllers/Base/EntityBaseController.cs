@@ -156,7 +156,7 @@ namespace SmartWalk.Server.Controllers.Base
             if (errors.ContainsPropertyError(propName))
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return Json(new ErrorResultVm(errors));
+                return Json(new ErrorResultVm(errors.PropertyErrors(propName)));
             }
 
             return Json(true);

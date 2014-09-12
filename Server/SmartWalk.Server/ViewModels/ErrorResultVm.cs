@@ -44,7 +44,14 @@ namespace SmartWalk.Server.ViewModels
     {
         public static bool ContainsPropertyError(this IEnumerable<ValidationError> errors, string property)
         {
-            var result = errors.Any(er => er.Property.Contains(property));
+            var result = PropertyErrors(errors, property).Any();
+            return result;
+        }
+
+        public static IList<ValidationError> PropertyErrors(
+            this IEnumerable<ValidationError> errors, string property)
+        {
+            var result = errors.Where(er => er.Property.Contains(property)).ToArray();
             return result;
         }
     }
