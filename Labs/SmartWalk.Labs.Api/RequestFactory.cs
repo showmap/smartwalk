@@ -14,6 +14,8 @@ namespace SmartWalk.Labs.Api
                         {
                             new RequestSelect
                                 {
+                                    Offset = 1,
+                                    Fetch = 3,
                                     Fields = new[] {"host", "title", "picture", "startTime", "latitude", "longitude"},
                                     From = RequestSelectFromTables.GroupedEventMetadata.ToLowerInvariant(),
                                     As = "em",
@@ -28,6 +30,11 @@ namespace SmartWalk.Labs.Api
                                                 {
                                                     Field = "Longitude",
                                                     OfDistance = longitude
+                                                },
+                                            new RequestSelectSortBy
+                                                {
+                                                    Field = "startTime",
+                                                    IsDescending = true
                                                 }
                                         }
                                 },

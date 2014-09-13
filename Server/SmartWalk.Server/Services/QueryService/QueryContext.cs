@@ -26,7 +26,6 @@ namespace SmartWalk.Server.Services.QueryService
 
             // TODO: To resolve EventMetadataRecord table name dynamicaly
             EventMetadataTable = "SmartWalk_Server_EventMetadataRecord";
-            EventMetadataTableAlias = "EMR";
 
             InitializeProperties();
         }
@@ -43,7 +42,6 @@ namespace SmartWalk.Server.Services.QueryService
                 Reflection<EventMetadataRecord>.GetProperty(p => p.Status).Name;
             EventMetadataEntityRecord =
                 Reflection<EventMetadataRecord>.GetProperty(p => p.EntityRecord).Name;
-            EventMetadataEntityRecordId = EventMetadataEntityRecord + "_Id";
             EventMetadataTitle =
                 Reflection<EventMetadataRecord>.GetProperty(p => p.Title).Name;
             EventMetadataDescription =
@@ -68,7 +66,6 @@ namespace SmartWalk.Server.Services.QueryService
                     EventMetadataId,
                     EventMetadataHost,
                     EventMetadataEntityRecord,
-                    EventMetadataEntityRecordId,
                     EventMetadataIsDeleted,
                     EventMetadataStatus,
                     EventMetadataTitle,

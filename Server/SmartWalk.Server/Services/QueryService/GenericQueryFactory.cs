@@ -5,7 +5,6 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NHibernate;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Resources;
 using SmartWalk.Shared.DataContracts;
@@ -14,12 +13,12 @@ using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.QueryService
 {
-    public static class QueryFactory
+    public static class GenericQueryFactory
     {
         /// <summary>
         /// Generates an expression for a generic query accross table's records with a where filter condition.
         /// </summary>
-        public static IQueryable<TRecord> CreateGenericQuery<TRecord>(
+        public static IQueryable<TRecord> CreateQuery<TRecord>(
             IQueryable<TRecord> table,
             RequestSelect select,
             IDictionary<string, object[]> results)
@@ -48,70 +47,9 @@ namespace SmartWalk.Server.Services.QueryService
         }
 
         /// <summary>
-        /// Generates an SQL query for a query accross grouped by Host 
-        /// EventMetadata table's records with a where condition and order by clause.
-        /// </summary>
-        public static ISQLQuery CreateGroupedEventsQuery(
-            ISession session,
-            int limit,
-            RequestSelect select,
-            IDictionary<string, object[]> results)
-        {
-            double[] latLong;
-
-            var result =
-                session.CreateSQLQuery(
-                    string.Format(
-                        @"SELECT TOP({6}) {2}.*
-                        FROM
-	                        (SELECT 
-		                        MAX({4}) AS {4}, MAX({3}) AS {3}
-	                        FROM 
-		                        {0}{1}
-                            {7}
-	                        GROUP BY
-		                        {5}) {2}Groupped
-                        INNER JOIN
-	                        {0}{1} {2} ON {2}Groupped.{3} = {2}.{3}
-                        {8}",
-                        QueryContext.Instance.DbPrefix,
-                        QueryContext.Instance.EventMetadataTable,
-                        QueryContext.Instance.EventMetadataTableAlias,
-                        QueryContext.Instance.EventMetadataId,
-                        QueryContext.Instance.EventMetadataStartTime,
-                        QueryContext.Instance.EventMetadataEntityRecordId,
-                        limit,
-                        GetWhereString(string.Empty, select, results),
-                        GetSortByString<EventMetadataRecord>(
-                            QueryContext.Instance.EventMetadataTableAlias, 
-                            select,
-                            out latLong)))
-                       .AddEntity(typeof(EventMetadataRecord));
-
-            if (latLong != null)
-            {
-                result = (ISQLQuery)result
-                    .SetDouble("lat", latLong[0])
-                    .SetDouble("long", latLong[1]);
-            }
-
-            if (select.Where != null)
-            {
-                for (var i = 0; i < select.Where.Length; i++)
-                {
-                    result = 
-                        (ISQLQuery)result
-                            .SetParameter("v" + i, select.Where[i].Value);
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Generates an expression for a generic query accross table's records with sorting.
         /// </summary>
-        public static IQueryable<TRecord> SortBy<TRecord>(
+        public static IQueryable<TRecord> OrderBy<TRecord>(
             this IQueryable<TRecord> table,
             RequestSelect select)
         {
@@ -123,24 +61,8 @@ namespace SmartWalk.Server.Services.QueryService
                 var recordExpr = Expression.Parameter(typeof(TRecord), "rec");
                 var expression = queryable.Expression;
 
-                double[] latLong;
-                if (typeof(TRecord) == typeof(EventMetadataRecord) && 
-                    IsLatLongDistanceSorting(select.SortBy, out latLong))
-                {
-                    expression = Expression.Call(
-                        typeof(Queryable),
-                        "OrderBy",
-                        new[] { typeof(EventMetadataRecord), typeof(double) },
-                        expression,
-                        (Expression<Func<EventMetadataRecord, double>>)(emr => 
-                            Math.Abs(emr.Latitude - latLong[0]) + 
-                            Math.Abs(emr.Longitude - latLong[1])));
-                }
-
                 foreach (var sortBy in select.SortBy)
                 {
-                    if (SkipLatLongDistanceSorting(sortBy)) continue;
-
                     var sortByExpr = Expression.Property(
                         recordExpr, 
                         recordExpr.Type,
@@ -167,60 +89,6 @@ namespace SmartWalk.Server.Services.QueryService
             }
 
             return queryable;
-        }
-
-        /// <summary>
-        /// Generates a string for a generic query accross table's records with sorting.
-        /// </summary>
-        private static string GetSortByString<TRecord>(
-            string alias,
-            RequestSelect select,
-            out double[] latLong)
-        {
-            var result = string.Empty;
-            latLong = null;
-
-            // if there is sort by condition then build sort by expression
-            if (select.SortBy != null && select.SortBy.Length > 0)
-            {
-                if (typeof(TRecord) == typeof(EventMetadataRecord) &&
-                    IsLatLongDistanceSorting(select.SortBy, out latLong))
-                {
-                    result = string.Format(
-                        "ABS({0}.{1} - :lat) + ABS({0}.{2} - :long) ASC",
-                        alias,
-                        QueryContext.Instance.EventMetadataLatitude,
-                        QueryContext.Instance.EventMetadataLongitude);
-                }
-
-                foreach (var sortBy in select.SortBy)
-                {
-                    if (SkipLatLongDistanceSorting(sortBy)) continue;
-
-                    if (!Reflection<TRecord>.HasProperty(sortBy.Field))
-                    {
-                        throw new InvalidExpressionException(
-                            string.Format(
-                                Localization.CantFindFieldInRequestedItems,
-                                sortBy.Field));
-                    }
-
-                    result +=
-                        (result != string.Empty ? ", " : string.Empty) +
-                        string.Format(
-                            "{0}.{1} {2}",
-                            alias,
-                            sortBy.Field,
-                            sortBy.IsDescending.HasValue &&
-                            sortBy.IsDescending.Value
-                                ? "DESC"
-                                : "ASC");
-                }
-            }
-
-            return result != string.Empty
-                ? "ORDER BY " + result
-                : string.Empty;
         }
 
         private static Expression GetWhereExpression(
@@ -293,56 +161,6 @@ namespace SmartWalk.Server.Services.QueryService
             }
 
             return result;
-        }
-
-        // TODO: To support the rest of where's value cases
-        /// <summary>
-        /// Generates a string for a generic query accross table's records with where expression.
-        /// </summary>
-        private static string GetWhereString(
-            string alias, 
-            RequestSelect select,
-            IDictionary<string, object[]> results)
-        {
-            var result = string.Empty;
-
-            if (select.Where != null && select.Where.Length > 0)
-            {
-                for (var i = 0; i < select.Where.Length; i++)
-                {
-                    var where = select.Where[i];
-                    if (QueryContext.Instance.EventMetadataProperties
-                            .Contains(where.Field, StringComparer.OrdinalIgnoreCase))
-                    {
-                        if (RequestSelectWhereOperators.All
-                                .Contains(where.Operator, StringComparer.OrdinalIgnoreCase))
-                        {
-                            result +=
-                                (result != string.Empty ? " AND " : string.Empty) +
-                                string.Format(
-                                    "({0}{1}{2}:v{3})",
-                                    string.IsNullOrWhiteSpace(alias) ? string.Empty : alias + ".",
-                                    where.Field,
-                                    where.Operator,
-                                    i);
-                        }
-                        else
-                        {
-                            throw new InvalidExpressionException(
-                                string.Format("Operator '{0}' is not supported.", where.Operator));
-                        }
-                    }
-                    else
-                    {
-                        throw new InvalidExpressionException(
-                            string.Format("Can't find field '{0}'.", where.Field));
-                    }
-                }
-            }
-
-            return result != string.Empty
-                ? "WHERE " + result
-                : string.Empty;
         }
 
         private static Expression GetWhereValueExpression(Expression fieldExpr, object value)
@@ -535,36 +353,6 @@ namespace SmartWalk.Server.Services.QueryService
             }
 
             return property;
-        }
-
-        private static bool IsLatLongDistanceSorting(
-            RequestSelectSortBy[] sortBy,
-            out double[] latLong)
-        {
-            var latitude = sortBy
-                .FirstOrDefault(
-                    sb => sb.Field.EqualsIgnoreCase(QueryContext.Instance.EventMetadataLatitude));
-            var longitude = sortBy
-                .FirstOrDefault(
-                    sb => sb.Field.EqualsIgnoreCase(QueryContext.Instance.EventMetadataLongitude));
-
-            if (latitude != null && latitude.OfDistance.HasValue &&
-                longitude != null && longitude.OfDistance.HasValue)
-            {
-                latLong = new[] { latitude.OfDistance.Value, longitude.OfDistance.Value };
-                return true;
-            }
-
-            latLong = null;
-            return false;
-        }
-
-        private static bool SkipLatLongDistanceSorting(
-            RequestSelectSortBy sortBy)
-        {
-            return (sortBy.Field == QueryContext.Instance.EventMetadataLatitude ||
-                    sortBy.Field == QueryContext.Instance.EventMetadataLongitude) && 
-                    sortBy.OfDistance.HasValue;
         }
     }
 }

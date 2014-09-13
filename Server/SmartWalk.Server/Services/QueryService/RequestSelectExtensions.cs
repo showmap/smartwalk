@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts.Api;
 
 namespace SmartWalk.Server.Services.QueryService
@@ -23,7 +24,7 @@ namespace SmartWalk.Server.Services.QueryService
                         {
                             Field = QueryContext.Instance.EventMetadataStatus,
                             Operator = RequestSelectWhereOperators.EqualsTo,
-                            Value = true
+                            Value = (byte)EventStatus.Public
                         }
                 };
             select.Where = wheres.ToArray();

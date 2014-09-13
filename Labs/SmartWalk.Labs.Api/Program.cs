@@ -14,7 +14,7 @@ namespace SmartWalk.Labs.Api
 #if LOCAL
         private const string SmartWalkUrl = "http://localhost/api";
 #else
-        private const string SmartWalkUrl = "http://smartwalk.azurewebsites.net/api";
+        private const string SmartWalkUrl = "http://dev.smartwalk.me/api";
 #endif
 
         public static void Main(string[] args)

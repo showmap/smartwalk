@@ -280,6 +280,7 @@
     <Compile Include="Extensions\CompressFilter.cs" />
     <Compile Include="Services\EntityService\EntityValidator.cs" />
     <Compile Include="Services\EventService\EventValidator.cs" />
+    <Compile Include="Services\QueryService\GroupedEventsQueryFactory.cs" />
     <Compile Include="Utils\SecurityUtils.cs" />
     <Compile Include="Utils\SmartWalkRoles.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -353,7 +354,7 @@
     <Compile Include="Services\ImportService\IImportService.cs" />
     <Compile Include="Services\ImportService\ImportService.cs" />
     <Compile Include="Services\QueryService\DataContractsFactory.cs" />
-    <Compile Include="Services\QueryService\QueryFactory.cs" />
+    <Compile Include="Services\QueryService\GenericQueryFactory.cs" />
     <Compile Include="Services\QueryService\IQueryService.cs" />
     <Compile Include="Services\QueryService\QueryContext.cs" />
     <Compile Include="Services\QueryService\QueryService.cs" />

@@ -5,6 +5,8 @@ namespace SmartWalk.Shared.DataContracts.Api
     [UsedImplicitly]
     public class RequestSelect
     {
+        public int? Offset { get; set; }
+        public int? Fetch { get; set; }
         public string[] Fields { get; set; }
         public string As { get; set; }
         public string From { get; set; }
