@@ -35,10 +35,14 @@ namespace SmartWalk.Client.iOS
         {
             InitializeCacheSettings();
 
+#if DEBUG
+            var host = _settings.DebugServerHost;
+#else
+            var host = _settings.ServerHost;
+#endif
+
             Mvx.RegisterSingleton<IConfiguration>(
-                new Configuration(
-                    _settings.ServerHost,
-                    _dataCacheConfig));
+                new Configuration(host, _dataCacheConfig));
 
             CreatableTypes()
                 .EndingWith("Service")

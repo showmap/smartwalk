@@ -11,6 +11,8 @@ namespace SmartWalk.Client.Core.Services
             var request = new Request {
                 Selects = new[] {
                     new RequestSelect {
+                        Offset = 0,
+                        Fetch = 25,
                         Fields = new[] { "Host", "Title", "Picture", "StartTime" },
                         From = RequestSelectFromTables.GroupedEventMetadata,
                         As = "em",
@@ -22,6 +24,10 @@ namespace SmartWalk.Client.Core.Services
                             new RequestSelectSortBy {
                                 Field = "Longitude",
                                 OfDistance = location.Longitude
+                            },
+                            new RequestSelectSortBy {
+                                Field = "StartTime",
+                                IsDescending = true
                             }
                         }
                     },

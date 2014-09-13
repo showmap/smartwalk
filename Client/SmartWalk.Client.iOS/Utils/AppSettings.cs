@@ -17,6 +17,9 @@ namespace SmartWalk.Client.iOS.Utils
         [XmlElement("serverHost")]
         public string ServerHost { get;set; }
 
+        [XmlElement("debugServerHost")]
+        public string DebugServerHost { get;set; }
+
         [XmlElement("cachesPath")]
         public string CachesPath { get;set; }
 
