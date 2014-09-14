@@ -281,6 +281,7 @@
     <Compile Include="Services\EntityService\EntityValidator.cs" />
     <Compile Include="Services\EventService\EventValidator.cs" />
     <Compile Include="Services\QueryService\GroupedEventsQueryFactory.cs" />
+    <Compile Include="Utils\EnumConverterModelBinder.cs" />
     <Compile Include="Utils\SecurityUtils.cs" />
     <Compile Include="Utils\SmartWalkRoles.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

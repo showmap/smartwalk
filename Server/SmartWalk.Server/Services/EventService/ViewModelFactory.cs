@@ -24,10 +24,10 @@ namespace SmartWalk.Server.Services.EventService
 
             if (mode == LoadMode.Full)
             {
-                result.CombineType = record.CombineType;
+                result.CombineType = (CombineType)record.CombineType;
                 result.Latitude = record.Latitude;
                 result.Longitude = record.Longitude;
-                result.Status = record.Status;
+                result.Status = (EventStatus)record.Status;
                 result.Description = record.Description;
             }
 
@@ -62,8 +62,8 @@ namespace SmartWalk.Server.Services.EventService
             record.Description = eventVm.Description.StripTags();
             record.StartTime = eventVm.StartDate.Value;
             record.EndTime = eventVm.EndDate;
-            record.CombineType = eventVm.CombineType;
-            record.Status = eventVm.Status;
+            record.CombineType = (byte)eventVm.CombineType;
+            record.Status = (byte)eventVm.Status;
         }
 
         public static void UpdateByViewModel(ShowRecord record, ShowVm showVm)

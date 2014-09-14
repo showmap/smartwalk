@@ -403,6 +403,13 @@ EventViewModel.prototype.toJSON = function () {
     return json;
 };
 
+sw.vm.CombineType =
+{
+    None: 0,
+    ByVenue: 1,
+    ByHost: 2
+};
+
 sw.vm.EventStatus =
 {
     Private: 0,

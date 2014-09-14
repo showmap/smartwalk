@@ -1,5 +1,7 @@
-﻿using Orchard.Environment;
+﻿using System.Web.Mvc;
+using Orchard.Environment;
 using SmartWalk.Server.Providers;
+using SmartWalk.Server.Utils;
 using SmartWalk.Shared;
 
 namespace SmartWalk.Server
@@ -10,6 +12,7 @@ namespace SmartWalk.Server
         public void Activated()
         {
             JsonDotNetValueProviderFactory.RegisterFactory();
+            ModelBinders.Binders.DefaultBinder = new EnumConverterModelBinder();
         }
 
         public void Terminating()

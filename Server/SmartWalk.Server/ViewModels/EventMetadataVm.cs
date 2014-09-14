@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using SmartWalk.Server.Records;
 
 namespace SmartWalk.Server.ViewModels
 {
@@ -12,8 +13,8 @@ namespace SmartWalk.Server.ViewModels
         }
 
         public int Id { get; set; }
-        public byte CombineType { get; set; }
-        public byte Status { get; set; }
+        public CombineType CombineType { get; set; }
+        public EventStatus Status { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }

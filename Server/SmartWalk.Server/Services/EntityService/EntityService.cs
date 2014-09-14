@@ -31,7 +31,7 @@ namespace SmartWalk.Server.Services.EntityService
             return !_entityRepository
                 .Table
                 .Any(e => 
-                    e.Type == entityVm.Type && 
+                    e.Type == (byte)entityVm.Type && 
                     e.Id != entityVm.Id && 
                     e.Name == entityVm.Name &&
                     !e.IsDeleted);

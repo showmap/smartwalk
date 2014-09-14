@@ -54,7 +54,7 @@ namespace SmartWalk.Server.Controllers.Base
             if (access == AccessType.Deny) return new HttpUnauthorizedResult();
 
             var result = _entityService.GetEntityById(entityId);
-            if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
+            if (result == null || result.Type != EntityType) return new HttpNotFoundResult();
 
             var view = View(result);
             view.ViewData[ViewDataParams.AllowedActions] =
@@ -72,7 +72,7 @@ namespace SmartWalk.Server.Controllers.Base
             var access = _entityService.GetEntitiesAccess();
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
-            return View(new EntityVm { Type = (byte)EntityType});
+            return View(new EntityVm { Type = EntityType});
         }
 
         [Authorize]
@@ -83,7 +83,7 @@ namespace SmartWalk.Server.Controllers.Base
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             var result = _entityService.GetEntityById(entityId);
-            if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
+            if (result == null || result.Type != EntityType) return new HttpNotFoundResult();
 
             var view = View(result);
             view.ViewData[ViewDataParams.AllowedActions] =
@@ -104,7 +104,7 @@ namespace SmartWalk.Server.Controllers.Base
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             var result = _entityService.GetEntityById(entityId);
-            if (result == null || result.Type != (int)EntityType) return new HttpNotFoundResult();
+            if (result == null || result.Type != EntityType) return new HttpNotFoundResult();
 
             _entityService.DeleteEntity(entityId);
 

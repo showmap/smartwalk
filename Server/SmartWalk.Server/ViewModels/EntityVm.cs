@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using SmartWalk.Server.Records;
 using SmartWalk.Shared;
 
 namespace SmartWalk.Server.ViewModels
@@ -14,7 +15,7 @@ namespace SmartWalk.Server.ViewModels
         }
 
         public int Id { get; set; }
-        public byte Type { get; set; }
+        public EntityType Type { get; set; }
         public string Name { get; set; }
         public string Abbreviation { get; set; }
         public string Description { get; set; }

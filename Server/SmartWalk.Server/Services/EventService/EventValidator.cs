@@ -2,6 +2,7 @@
 using System.Linq;
 using Orchard.Localization;
 using SmartWalk.Server.Extensions;
+using SmartWalk.Server.Records;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared.Utils;
 
@@ -90,6 +91,14 @@ namespace SmartWalk.Server.Services.EventService
             var venues = model.Venues != null
                 ? model.Venues.Where(v => !v.Destroy).ToArray()
                 : new EntityVm[] { };
+
+            if (model.Status == EventStatus.Public && venues.Length < 1)
+            {
+                result.Add(new ValidationError(
+                               venuesProperty,
+                               T("At least one venue is required for public events.").Text));
+            }
+
             for (var i = 0; i < venues.Length; i++)
             {
                 var venueVm = venues[i];

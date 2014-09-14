@@ -68,7 +68,7 @@
                     <label for="organizedByComboBox">@T("Organized By"):</label>
                     <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Defines basic info about the organizer of the event. You as the editor can have more than one organizer to create events for, but every event is hosted by only one organizer.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a>
                     <div class="input-group">
-                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Select Organizer...")" data-bind="
+                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Search organizers...")" data-bind="
                             jqAuto: {
                                 value: autocompleteHostName,
                                 dataValue: autocompleteHostData,
@@ -164,12 +164,12 @@
 
 @Html.Partial(
     "../Entity/Edit", 
-    new EntityVm { Type = (int)EntityType.Host },
+    new EntityVm { Type = EntityType.Host },
     new ViewDataDictionary {{ViewDataParams.EntityFormId, hostFormId }})
 
 @Html.Partial(
     "../Entity/Edit", 
-    new EntityVm { Type = (int)EntityType.Venue },
+    new EntityVm { Type = EntityType.Venue },
     new ViewDataDictionary {{ViewDataParams.EntityFormId, venueFormId }})
 
 @using (Script.Foot())

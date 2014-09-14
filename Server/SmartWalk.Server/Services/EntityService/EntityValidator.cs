@@ -89,7 +89,7 @@ namespace SmartWalk.Server.Services.EntityService
                 ? model.Addresses.Where(v => !v.Destroy).ToArray()
                 : new AddressVm[] { };
 
-            if (model.Type == (int)EntityType.Venue &&
+            if (model.Type == EntityType.Venue &&
                 addresses.Length == 0)
             {
                 result.Add(new ValidationError(

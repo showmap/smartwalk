@@ -28,7 +28,7 @@ namespace SmartWalk.Server.Services.EntityService
 
             if (mode == LoadMode.Full)
             {
-                result.Type = record.Type;
+                result.Type = (EntityType)record.Type;
                 result.Description = record.Description;
                 result.Contacts = record.ContactRecords
                     .Where(c => !c.IsDeleted)
@@ -43,7 +43,7 @@ namespace SmartWalk.Server.Services.EntityService
         {
             record.DateModified = DateTime.UtcNow;
 
-            record.Type = entityVm.Type;
+            record.Type = (byte)entityVm.Type;
             record.Name = entityVm.Name.StripTags();
             record.Picture = entityVm.Picture.StripTags();
             record.Description = entityVm.Description.StripTags();
@@ -61,7 +61,7 @@ namespace SmartWalk.Server.Services.EntityService
 
         public static void UpdateByViewModel(ContactRecord record, ContactVm contactVm)
         {
-            record.Type = contactVm.Type;
+            record.Type = (byte)contactVm.Type;
             record.Title = contactVm.Title.StripTags();
             record.Contact = contactVm.Contact.StripTags();
 
@@ -89,7 +89,7 @@ namespace SmartWalk.Server.Services.EntityService
             return new ContactVm
                 {
                     Id = record.Id,
-                    Type = record.Type,
+                    Type = (ContactType)record.Type,
                     Title = record.Title,
                     Contact = record.Contact
                 };
