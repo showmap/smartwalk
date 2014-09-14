@@ -46,7 +46,7 @@ namespace SmartWalk.Shared.Utils
             var t = time.Value;
             var nextDay = day.Value.AddDays(1);
             var firstDay = range != null ? (DateTime?)range.Item1 : null;
-            var lastDay = range != null ? range.Item2 : null;
+            var lastDay = range != null ? range.Item2 ?? (DateTime?)range.Item1 : null; // using first day as last one to do not lose some out-of-range shows
 
             var result =
                 (firstDay != null && t.Date <= firstDay && day == firstDay) || // times ahead of first day

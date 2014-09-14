@@ -191,21 +191,25 @@ namespace SmartWalk.Server.Services.EventService
                                T("Show start time has to be less than or equal to the end time.").Text));
             }
 
-            if (model.StartTime.HasValue && eventVm.StartDate.HasValue &&
-                (model.StartTime.Value < eventVm.StartDate.Value.AddDays(-1) ||
-                (eventVm.EndDate.HasValue && model.StartTime.Value > eventVm.EndDate.Value.AddDays(1))))
+            var eventStartDate = eventVm.StartDate;
+            var eventEndDate = eventVm.EndDate ?? eventVm.StartDate;
+
+            if (model.StartTime.HasValue && eventStartDate.HasValue &&
+                (model.StartTime.Value < eventStartDate.Value.AddDays(-1) ||
+                (eventEndDate.HasValue && model.StartTime.Value > eventEndDate.Value.AddDays(1))))
             {
                 result.Add(new ValidationError(
                                prefix + startTimeProperty,
                                T("Show start time has to be between event start and end dates.").Text));
             }
 
-            if (model.EndTime.HasValue && eventVm.StartDate.HasValue &&
-                (model.EndTime.Value < eventVm.StartDate.Value.AddDays(-1) ||
-                (eventVm.EndDate.HasValue && model.EndTime.Value > eventVm.EndDate.Value.AddDays(2))))
+            var endTimeProperty = model.GetPropertyName(p => p.EndTime);
+            if (model.EndTime.HasValue && eventStartDate.HasValue &&
+                (model.EndTime.Value < eventStartDate.Value.AddDays(-1) ||
+                (eventEndDate.HasValue && model.EndTime.Value > eventEndDate.Value.AddDays(2))))
             {
                 result.Add(new ValidationError(
-                               prefix + startTimeProperty,
+                               prefix + endTimeProperty,
                                T("Show end time has to be between event start and end dates.").Text));
             }
 

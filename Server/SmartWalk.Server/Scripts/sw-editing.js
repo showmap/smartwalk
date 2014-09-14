@@ -15,22 +15,22 @@ ko.validation.rules["dependencies"] = {
 };
 
 ko.validation.rules["contactValidation"] = {
-    validator: function (val, otherVal) {
-        if (otherVal.allowEmpty && !val) return true;
+    validator: function (val, params) {
+        if (params.allowEmpty && !val) return true;
 
-        switch (otherVal.contactType()) {
+        switch (params.contactType()) {
             case 0:
-                this.message = otherVal.messages.contactEmailValidationMessage;
+                this.message = params.messages.contactEmailValidationMessage;
                 var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(val);
 
             case 1:
-                this.message = otherVal.messages.contactWebValidationMessage;
+                this.message = params.messages.contactWebValidationMessage;
                 var webRegex = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|(www\\.)?){1}([0-9A-Za-z-\\.@:%_\‌​+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
                 return webRegex.test(val);
 
             case 2:
-                this.message = otherVal.messages.contactPhoneValidationMessage;
+                this.message = params.messages.contactPhoneValidationMessage;
                 var phoneRegex = new RegExp("^[\s()+-]*([0-9][\s()+-]*){6,20}$");
                 return phoneRegex.test(val);
 
@@ -41,18 +41,18 @@ ko.validation.rules["contactValidation"] = {
 };
 
 ko.validation.rules["dateCompareValidation"] = {
-    validator: function (val, otherVal) {
-        var cmpDate = otherVal.compareVal();
-        if (otherVal.allowEmpty && (!val || !cmpDate)) return true;
+    validator: function (val, params) {
+        var cmpDate = params.compareVal();
+        if (params.allowEmpty && !val) return true;
 
-        if (otherVal.cmp == "GREATER_THAN") {
-            return val >= cmpDate;
-        } else if (otherVal.cmp == "LESS_THAN") {
-            return val <= cmpDate;
-        } else if (otherVal.cmp == "REGION") {
-            var cmpDateTo = otherVal.compareValTo();
-            if (!cmpDateTo) return true;
-            return val <= cmpDateTo && val >= cmpDate;
+        if (params.cmp == "GREATER_THAN") {
+            return cmpDate ? cmpDate <= val : true;
+        } else if (params.cmp == "LESS_THAN") {
+            return cmpDate ? val <= cmpDate : true;
+        } else if (params.cmp == "REGION") {
+            var cmpDateTo = params.compareValTo();
+            return (cmpDate ? cmpDate <= val : true) &&
+                (cmpDateTo ? val <= cmpDateTo : true);
         }
 
         return false;
@@ -60,8 +60,8 @@ ko.validation.rules["dateCompareValidation"] = {
 };
 
 ko.validation.rules["urlValidation"] = {
-    validator: function (val, otherVal) {
-        if (otherVal.allowEmpty && !val) return true;
+    validator: function (val, params) {
+        if (params.allowEmpty && !val) return true;
         var regex = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|(www\\.)?){1}([0-9A-Za-z-\\.@:%_\‌​+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
         return regex.test(val);
     }
@@ -69,14 +69,14 @@ ko.validation.rules["urlValidation"] = {
 
 ko.validation.rules["asyncValidation"] = {
     async: true,
-    validator: function (val, otherVal, callback) {
-        var model = otherVal.model || otherVal.modelHandler();
+    validator: function (val, params, callback) {
+        var model = params.model || params.modelHandler();
         if (model) {
-            model[otherVal.propName] = val;
+            model[params.propName] = val;
 
             sw.ajaxJsonRequest(
-                { propName: otherVal.propName, model: model },
-                otherVal.validationUrl,
+                { propName: params.propName, model: model },
+                params.validationUrl,
                 function () {
                     callback(true);
                 },

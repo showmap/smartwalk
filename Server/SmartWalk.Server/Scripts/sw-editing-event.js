@@ -192,9 +192,17 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                     allowEmpty: true,
                     cmp: "REGION",
                     compareVal: ko.computed(
-                        function () { return event.startDate() ? moment(event.startDate()).subtract(1, "days").toDate() : undefined; }),
+                        function () {
+                            return event.startDate()
+                                ? moment(event.startDate()).subtract(1, "days").toDate()
+                                : undefined;
+                        }),
                     compareValTo: ko.computed(
-                        function () { return event.endDate() ? moment(event.endDate()).add(1, "days").toDate() : undefined; }),
+                        function () {
+                            return event.endDate() || event.startDate()
+                                ? moment(event.endDate() || event.startDate()).add(1, "days").toDate()
+                                : undefined;
+                        }),
                 },
                 message: settings.showMessages.startDateValidationMessage
             }
@@ -217,9 +225,17 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
                     allowEmpty: true,
                     cmp: "REGION",
                     compareVal: ko.computed(
-                        function () { return event.startDate() ? moment(event.startDate()).subtract(1, "days").toDate() : undefined; }),
+                        function () {
+                            return event.startDate()
+                                ? moment(event.startDate()).subtract(1, "days").toDate()
+                                : undefined;
+                        }),
                     compareValTo: ko.computed(
-                        function () { return event.endDate() ? moment(event.endDate()).add(2, "days").toDate() : undefined; }), // 2 days, to cover the whole last day + night of next one
+                        function () {
+                            return event.endDate() || event.startDate()
+                                ? moment(event.endDate() || event.startDate()).add(2, "days").toDate()
+                                : undefined;
+                        }), // 2 days, to cover the whole last day + night of next one
                 },
                 message: settings.showMessages.endDateValidationMessage
             }
@@ -357,7 +373,7 @@ EventViewModelExtended.setupMultiday = function (event) {
         return result;
     });
 
-    self.currentDate = ko.observable(self.data.startDate());
+    self.currentDate = ko.observable(undefined);
     self.currentDay = ko.observable(self.isMultiday() ? 1 : undefined);
     
     self.currentDay.subscribe(function (day) {
@@ -375,6 +391,12 @@ EventViewModelExtended.setupMultiday = function (event) {
     if (self.settings.currentDay) {
         self.currentDay(self.settings.currentDay);
     }
+
+    EventViewModelExtended.setCurrentDate(self, self.data.startDate(), self.currentDay());
+
+    self.defaultDate = ko.computed(function() {
+         return self.currentDate() || self.data.startDate();
+    });
 };
 
 EventViewModelExtended.setCurrentDate = function(event, startDate, day) {
@@ -382,8 +404,6 @@ EventViewModelExtended.setCurrentDate = function(event, startDate, day) {
 
     if (startDate && day) {
         self.currentDate(moment(startDate).add(day - 1, "days").toDate());
-    } else if (startDate) {
-        self.currentDate(startDate);
     } else {
         self.currentDate(undefined);
     }
@@ -401,7 +421,8 @@ EventViewModelExtended.IsTimeThisDay = function(time, event, nightEdgeHour) {
     var day = moment(event.currentDate());
     var nextDay = moment(event.currentDate()).add(1, "days");
     var firstDay = event.data.startDate() ? moment(event.data.startDate()) : undefined;
-    var lastDay = event.data.endDate() ? moment(event.data.endDate()) : undefined;
+    var lastDay = event.data.endDate() || event.data.startDate()
+        ? moment(event.data.endDate() || event.data.startDate()) : undefined; // using first day as last one to do not lose some out-of-range shows
 
     var result =
         (firstDay && (tDay.isBefore(firstDay) || tDay.isSame(firstDay)) && day.isSame(firstDay)) || // times ahead of first day
