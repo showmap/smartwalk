@@ -200,6 +200,27 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             public string Title { get; set; }
             public Addresses Addresses { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var parameters = obj as Parameters;
+                if (parameters != null)
+                {
+                    return Equals(Location, parameters.Location) &&
+                        Equals(Title, parameters.Title) &&
+                        Equals(Addresses, parameters.Addresses);
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Initial
+                    .CombineHashCodeOrDefault(Location)
+                    .CombineHashCodeOrDefault(Title)
+                    .CombineHashCodeOrDefault(Addresses);
+            }
         }
 
         private string GetAddressText()

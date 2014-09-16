@@ -10,20 +10,21 @@ namespace SmartWalk.Client.Core.Services
         private const string HostFormat = "http://{0}/organizer/{1}";
         private const string VenueFormat = "http://{0}/venue/{1}";
 
-        public Configuration(string host, ICacheConfiguration cacheConfig)
+        public Configuration(string host, TimeSpan postponeTime, ICacheConfiguration cacheConfig)
         {
             if (host == null) throw new ArgumentNullException("host");
             if (cacheConfig == null) throw new ArgumentNullException("cacheConfig");
 
             Host = host;
             Api = string.Format(ApiFormat, Host);
-
+            PostponeTime = postponeTime;
             CacheConfig = cacheConfig;
         }
 
         public string Host { get; private set; }
         public string Api { get; private set; }
         public ICacheConfiguration CacheConfig { get; private set; }
+        public TimeSpan PostponeTime { get; private set; }
 
         public string GetEventUrl(int eventId)
         {

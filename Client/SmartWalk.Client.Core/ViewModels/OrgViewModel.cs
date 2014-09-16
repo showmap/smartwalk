@@ -6,6 +6,7 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -23,10 +24,12 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
-            IExceptionPolicyService exceptionPolicy) : 
+            IExceptionPolicyService exceptionPolicy,
+            IPostponeService postponeService) : 
                 base(configuration,
                     environmentService,
-                    analyticsService)
+                    analyticsService,
+                    postponeService)
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
@@ -128,7 +131,10 @@ namespace SmartWalk.Client.Core.ViewModels
                     Org = org;
                 }
 
-                RaiseRefreshCompleted(Org != null);
+                if (showProgress)
+                {
+                    RaiseRefreshCompleted(Org != null);
+                }
             }
             else
             {
@@ -141,6 +147,25 @@ namespace SmartWalk.Client.Core.ViewModels
         public class Parameters : ParametersBase
         {
             public int OrgId { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var parameters = obj as Parameters;
+                if (parameters != null)
+                {
+                    return Equals(Location, parameters.Location) && 
+                        OrgId == parameters.OrgId;
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Initial
+                    .CombineHashCodeOrDefault(Location)
+                    .CombineHashCode(OrgId);
+            }
         }
     }
 }

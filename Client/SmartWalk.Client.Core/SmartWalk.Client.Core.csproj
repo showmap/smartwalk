@@ -103,6 +103,8 @@
     <Compile Include="Services\IMvxExtendedFileStore.cs" />
     <Compile Include="Services\SmartWalkApiFactory.cs" />
     <Compile Include="Utils\MapType.cs" />
+    <Compile Include="Services\PostponeService.cs" />
+    <Compile Include="Services\IPostponeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

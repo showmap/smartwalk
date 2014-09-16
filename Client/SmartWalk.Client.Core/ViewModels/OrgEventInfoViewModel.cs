@@ -5,6 +5,7 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -21,11 +22,13 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             ISmartWalkApiService apiService,
             IAnalyticsService analyticsService,
-            IExceptionPolicyService exceptionPolicy) : 
+            IExceptionPolicyService exceptionPolicy,
+            IPostponeService postponeService) : 
                 base(
                     configuration,
                     environmentService,
-                    analyticsService)
+                    analyticsService,
+                    postponeService)
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
@@ -116,7 +119,10 @@ namespace SmartWalk.Client.Core.ViewModels
                     OrgEvent = orgEvent;
                 }
 
-                RaiseRefreshCompleted(OrgEvent != null);
+                if (showProgress)
+                {
+                    RaiseRefreshCompleted(OrgEvent != null);
+                }
             }
             else
             {
@@ -153,6 +159,25 @@ namespace SmartWalk.Client.Core.ViewModels
         public class Parameters : ParametersBase
         {
             public int EventId { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var parameters = obj as Parameters;
+                if (parameters != null)
+                {
+                    return Equals(Location, parameters.Location) && 
+                        EventId == parameters.EventId;
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Initial
+                    .CombineHashCodeOrDefault(Location)
+                    .CombineHashCode(EventId);
+            }
         }
     }
 }

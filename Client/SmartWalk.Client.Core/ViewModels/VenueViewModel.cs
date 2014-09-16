@@ -9,6 +9,7 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -32,11 +33,13 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             ISmartWalkApiService apiService, 
             IAnalyticsService analyticsService,
-            IExceptionPolicyService exceptionPolicy) : 
+            IExceptionPolicyService exceptionPolicy,
+            IPostponeService postponeService) : 
                 base(
                     configuration,
                     environmentService,
-                    analyticsService)
+                    analyticsService,
+                    postponeService)
         {
             _environmentService = environmentService;
             _apiService = apiService;
@@ -314,7 +317,10 @@ namespace SmartWalk.Client.Core.ViewModels
                     OrgEventVenues = venues;
                 }
 
-                RaiseRefreshCompleted(OrgEventVenues != null);
+                if (showProgress)
+                {
+                    RaiseRefreshCompleted(OrgEventVenues != null);
+                }
             }
             else
             {
@@ -359,6 +365,27 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             public int VenueId { get; set; }
             public int EventId { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var parameters = obj as Parameters;
+                if (parameters != null)
+                {
+                    return Equals(Location, parameters.Location) && 
+                        VenueId == parameters.VenueId &&
+                        EventId == parameters.EventId;
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Initial
+                    .CombineHashCodeOrDefault(Location)
+                    .CombineHashCode(VenueId)
+                    .CombineHashCode(EventId);
+            }
         }
     }
 }

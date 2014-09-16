@@ -42,8 +42,9 @@ namespace SmartWalk.Client.Core.ViewModels
         protected EntityViewModel(
             IConfiguration configuration,
             IEnvironmentService environmentService,
-            IAnalyticsService analyticsService) 
-            : base(environmentService.Reachability, analyticsService)
+            IAnalyticsService analyticsService,
+            IPostponeService postponeService) 
+            : base(environmentService.Reachability, analyticsService, postponeService)
         {
             _configuration = configuration;
             _environmentService = environmentService;

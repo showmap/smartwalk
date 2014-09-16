@@ -8,6 +8,7 @@ namespace SmartWalk.Client.Core.Services
         string Host { get; }
         string Api { get; }
         ICacheConfiguration CacheConfig { get; }
+        TimeSpan PostponeTime { get; }
 
         string GetEventUrl(int eventId);
         string GetEntityUrl(int entityId, EntityType type);

@@ -8,6 +8,8 @@ namespace SmartWalk.Client.iOS.Utils
     [XmlRoot(ElementName = "settings")]
     public class AppSettings
     {
+        private int _postponeTimeMinutes;
+
         [XmlElement("trackingId")]
         public string TrackingId { get;set; }
 
@@ -19,6 +21,22 @@ namespace SmartWalk.Client.iOS.Utils
 
         [XmlElement("debugServerHost")]
         public string DebugServerHost { get;set; }
+
+        [XmlElement("postponeTimeMinutes")]
+        public int PostponeTimeMinutes
+        {
+            get
+            {
+                return _postponeTimeMinutes;
+            }
+            set
+            {
+                _postponeTimeMinutes = value;
+                PostponeTime = TimeSpan.FromMinutes(_postponeTimeMinutes);
+            }
+        }
+
+        public TimeSpan PostponeTime { get;set; }
 
         [XmlElement("cachesPath")]
         public string CachesPath { get;set; }

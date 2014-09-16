@@ -26,8 +26,9 @@ namespace SmartWalk.Client.Core.ViewModels
             IExceptionPolicyService exceptionPolicy,
             IAnalyticsService analyticsService,
             IReachabilityService reachabilityService,
-            ILocationService locationService) 
-            : base(reachabilityService, analyticsService)
+            ILocationService locationService,
+            IPostponeService postponeService) 
+            : base(reachabilityService, analyticsService, postponeService)
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
@@ -161,6 +162,22 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public class Parameters : ParametersBase
         {
+            public override bool Equals(object obj)
+            {
+                var parameters = obj as ParametersBase;
+                if (parameters != null)
+                {
+                    return Equals(Location, parameters.Location);
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Initial
+                    .CombineHashCodeOrDefault(Location);
+            }
         }
     }
 }

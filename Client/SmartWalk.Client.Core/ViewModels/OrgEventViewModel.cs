@@ -75,8 +75,9 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             IAnalyticsService analyticsService,
             ICalendarService calendarService,
-            IExceptionPolicyService exceptionPolicy) 
-            : base(environmentService.Reachability, analyticsService)
+            IExceptionPolicyService exceptionPolicy,
+            IPostponeService postponeService) 
+            : base(environmentService.Reachability, analyticsService, postponeService)
         {
             _environmentService = environmentService;
             _apiService = apiService;
@@ -1158,7 +1159,10 @@ namespace SmartWalk.Client.Core.ViewModels
                     }
                 }
 
-                RaiseRefreshCompleted(OrgEvent != null);
+                if (showProgress)
+                {
+                    RaiseRefreshCompleted(OrgEvent != null);
+                }
             }
             else
             {
@@ -1279,6 +1283,27 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             public int EventId { get; set; }
             public bool Current { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var parameters = obj as Parameters;
+                if (parameters != null)
+                {
+                    return Equals(Location, parameters.Location) && 
+                        EventId == parameters.EventId &&
+                        Current == parameters.Current;
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Initial
+                    .CombineHashCodeOrDefault(Location)
+                    .CombineHashCode(EventId)
+                    .CombineHashCode(Current);
+            }
         }
 
         private class SearchKey

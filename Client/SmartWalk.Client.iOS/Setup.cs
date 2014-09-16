@@ -42,7 +42,7 @@ namespace SmartWalk.Client.iOS
 #endif
 
             Mvx.RegisterSingleton<IConfiguration>(
-                new Configuration(host, _dataCacheConfig));
+                new Configuration(host, _settings.PostponeTime, _dataCacheConfig));
 
             CreatableTypes()
                 .EndingWith("Service")

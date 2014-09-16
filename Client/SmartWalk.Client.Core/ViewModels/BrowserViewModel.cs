@@ -6,6 +6,7 @@ using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -149,6 +150,25 @@ namespace SmartWalk.Client.Core.ViewModels
         public class Parameters : ParametersBase
         {
             public string URL { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var parameters = obj as Parameters;
+                if (parameters != null)
+                {
+                    return Equals(Location, parameters.Location) && 
+                        Equals(URL, parameters.URL);
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Initial
+                    .CombineHashCodeOrDefault(Location)
+                    .CombineHashCodeOrDefault(URL);
+            }
         }
     }
 }
