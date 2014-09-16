@@ -307,14 +307,15 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
             else
             {
+                UpdateViewDataState(HasListData);
                 _progressView.IsLoading = false;
                 OnLoadedViewStateUpdate();
             }
         }
 
-        private void UpdateViewDataState(bool hasData)
+        private void UpdateViewDataState(bool hasListData)
         {
-            _progressView.IsDataUnavailable = !hasData;
+            _progressView.IsDataUnavailable = !hasListData;
         }
     }
 
