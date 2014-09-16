@@ -45,15 +45,15 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             WeekDayLabel.Text = DataContext != null && DataContext.StartTime.HasValue
-                ? string.Format("{0:ddd}", DataContext.StartTime.Value).ToUpper() 
+                ? string.Format("{0:MMM}", DataContext.StartTime.Value).ToUpper() 
                 : null;
 
             DayLabel.Text = DataContext != null && DataContext.StartTime.HasValue
                 ? DataContext.StartTime.Value.Day.ToString() 
                 : null;
 
-            DateLabel.Text = DataContext != null  && DataContext.StartTime.HasValue
-                ? string.Format("{0:d MMMM yyyy}", DataContext.StartTime.Value) 
+            DateLabel.Text = DataContext != null
+                ? string.Format("{0}", DataContext.Title) 
                 : null;
         }
 
