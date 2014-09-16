@@ -1198,7 +1198,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
                 else
                 {
-                    CurrentDay = 1; // Maybe persist day on refresh
+                    CurrentDay = null; // Maybe persist day on refresh
                 }
             }
         }
