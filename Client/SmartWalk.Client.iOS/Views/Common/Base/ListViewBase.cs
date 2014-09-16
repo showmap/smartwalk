@@ -149,11 +149,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void OnViewModelRefreshed(bool hasData)
         {
-            if (hasData)
-            {
-                ScrollViewToTop();
-            }
-            else
+            if (!hasData)
             {
                 ListView.View.Hidden = true;
             }
@@ -251,7 +247,12 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void OnRefreshCompleted(object sender, MvxValueEventArgs<bool> e)
         {
-            _refreshControl.EndRefreshing();
+            if (_refreshControl.Refreshing)
+            {
+                _refreshControl.EndRefreshing();
+                ScrollViewToTop();
+            }
+
             UpdateViewDataState(e.Value);
             OnViewModelRefreshed(e.Value);
         }

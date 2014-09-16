@@ -72,15 +72,6 @@ namespace SmartWalk.Client.Core.Services
 
             if (response != null && response.Data != null)
             {
-                // reset event venues cache, if event is refreshed from server
-                // this is to keep views' content synced
-                if (source == DataSource.Server)
-                {
-                    var venuesRequest = 
-                        SmartWalkApiFactory.CreateOrgEventVenuesRequest(id);
-                    _cacheService.InvalidateString(GenerateKey(venuesRequest));
-                }
-
                 var eventMetadata = response
                     .Data
                     .Selects[0].Records
