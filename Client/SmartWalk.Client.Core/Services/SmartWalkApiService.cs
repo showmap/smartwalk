@@ -28,44 +28,49 @@ namespace SmartWalk.Client.Core.Services
             _reachabilityService = reachabilityService;
         }
 
-        public async Task<OrgEvent[]> GetOrgEvents(Location location, DataSource source)
+        public async Task<IApiResult<OrgEvent[]>> GetOrgEvents(Location location, DataSource source)
         {
             var request = SmartWalkApiFactory.CreateOrgEventsRequest(location);
             var response = await GetResponse(request, source);
-            var result = default(OrgEvent[]);
+            var result = default(IApiResult<OrgEvent[]>);
 
-            if (response != null)
+            if (response != null && response.Data != null)
             {
                 var eventMetadatas = response
+                    .Data
                     .Selects[0].Records
                     .Cast<JObject>()
                     .Select(r => r.ToObject<EventMetadata>())
                     .ToArray();
 
                 var hosts = response
+                    .Data
                     .Selects[1].Records
                     .Cast<JObject>()
                     .Select(r => r.ToObject<Entity>())
                     .ToArray();
 
-                result = eventMetadatas
+                var orgEvents = eventMetadatas
                     .Select(em => 
-                        new OrgEvent(
-                            em, 
-                            hosts.First(h => h.Id == em.Host.Id())))
+                        new OrgEvent(em, hosts.First(h => h.Id == em.Host.Id())))
                     .ToArray();
+
+                result = new ApiResult<OrgEvent[]> {
+                    Data = orgEvents,
+                    Source = response.Source
+                };
             }
 
             return result;
         }
 
-        public async Task<OrgEvent> GetOrgEvent(int id, DataSource source)
+        public async Task<IApiResult<OrgEvent>> GetOrgEvent(int id, DataSource source)
         {
             var request = SmartWalkApiFactory.CreateOrgEventRequest(id);
             var response = await GetResponse(request, source);
-            var result = default(OrgEvent);
+            var result = default(IApiResult<OrgEvent>);
 
-            if (response != null)
+            if (response != null && response.Data != null)
             {
                 // reset event venues cache, if event is refreshed from server
                 // this is to keep views' content synced
@@ -77,18 +82,21 @@ namespace SmartWalk.Client.Core.Services
                 }
 
                 var eventMetadata = response
+                    .Data
                     .Selects[0].Records
                     .Cast<JObject>()
                     .Select(em => em.ToObject<EventMetadata>())
                     .FirstOrDefault();
 
                 var shows = response
+                    .Data
                     .Selects[1].Records
                     .Cast<JObject>()
                     .Select(s => s.ToObject<Show>())
                     .ToArray();
 
                 var venues = response
+                    .Data
                     .Selects[2].Records
                     .Cast<JObject>()
                     .Select(e =>
@@ -99,82 +107,103 @@ namespace SmartWalk.Client.Core.Services
                         })
                     .ToArray();
 
-                result = new OrgEvent(eventMetadata, null, venues);
+                var orgEvent = new OrgEvent(eventMetadata, null, venues);
+
+                result = new ApiResult<OrgEvent> {
+                    Data = orgEvent,
+                    Source = response.Source
+                };
             }
 
             return result;
         }
 
-        public async Task<Venue[]> GetOrgEventVenues(int id, DataSource source)
+        public async Task<IApiResult<Venue[]>> GetOrgEventVenues(int id, DataSource source)
         {
             var request = SmartWalkApiFactory.CreateOrgEventVenuesRequest(id);
             var response = await GetResponse(request, source);
-            var result = default(Venue[]);
+            var result = default(IApiResult<Venue[]>);
 
-            if (response != null)
+            if (response != null && response.Data != null)
             {
                 var shows = response
+                    .Data
                     .Selects[1].Records
                     .Cast<JObject>()
                     .Select(s => s.ToObject<Show>())
                     .ToArray();
 
-                result = response
+                var venues = response
+                    .Data
                     .Selects[2].Records
                     .Cast<JObject>()
                     .Select(e =>
-                    {
-                        var entity = e.ToObject<Entity>();
-                        var venue = CreateVenue(entity, shows);
-                        return venue;
-                    })
+                        {
+                            var entity = e.ToObject<Entity>();
+                            var venue = CreateVenue(entity, shows);
+                            return venue;
+                        })
                     .ToArray();
+
+                result = new ApiResult<Venue[]> {
+                    Data = venues,
+                    Source = response.Source
+                };
             }
 
             return result;
         }
 
-        public async Task<OrgEvent> GetOrgEventInfo(int id, DataSource source)
+        public async Task<IApiResult<OrgEvent>> GetOrgEventInfo(int id, DataSource source)
         {
             var request = SmartWalkApiFactory.CreateOrgEventInfoRequest(id);
             var response = await GetResponse(request, source);
-            var result = default(OrgEvent);
+            var result = default(IApiResult<OrgEvent>);
 
-            if (response != null)
+            if (response != null && response.Data != null)
             {
                 var eventMetadata = response
+                    .Data
                     .Selects[0].Records
                     .Cast<JObject>()
                     .Select(em => em.ToObject<EventMetadata>())
                     .FirstOrDefault();
 
                 var host = response
+                    .Data
                     .Selects[1].Records
                     .Cast<JObject>()
                     .Select(e => e.ToObject<Entity>())
                     .FirstOrDefault();
 
-                result = new OrgEvent(eventMetadata, host);
+                var orgEvent = new OrgEvent(eventMetadata, host);
+
+                result = new ApiResult<OrgEvent> {
+                    Data = orgEvent,
+                    Source = response.Source
+                };
             }
 
             return result;
         }
 
-        public async Task<Org> GetHost(int id, DataSource source)
+        public async Task<IApiResult<Org>> GetHost(int id, DataSource source)
         {
             var request = SmartWalkApiFactory.CreateHostRequest(id);
             var response = await GetResponse(request, source);
-            var result = default(Org);
+            var result = default(IApiResult<Org>);
 
-            if (response != null)
+            if (response != null && response.Data != null)
             {
                 var entity = response
+                    .Data
                     .Selects[0].Records
                     .Cast<JObject>()
                     .Select(e => e.ToObject<Entity>())
                     .FirstOrDefault();
 
                 var eventMetadatas = response
+                    .Data
                     .Selects[1].Records
                     .Cast<JObject>()
                     .Select(r => r.ToObject<EventMetadata>())
@@ -182,33 +211,46 @@ namespace SmartWalk.Client.Core.Services
 
                 if (entity != null)
                 {
-                    result = CreateOrg(entity, eventMetadatas);
+                    var org = CreateOrg(entity, eventMetadatas);
+
+                    result = new ApiResult<Org> {
+                        Data = org,
+                        Source = response.Source
+                    };
                 }
             }
 
             return result;
         }
 
-        private async Task<Response> GetResponse(Request request, DataSource source)
+        private async Task<ApiResult<Response>> GetResponse(Request request, DataSource source)
         {
-            var result = default(Response);
+            var result = default(ApiResult<Response>);
             var key = GenerateKey(request);
-            var isConnected = source != DataSource.Cache && 
+            var isConnected = 
+                source != DataSource.Cache &&
                 await _reachabilityService.GetIsReachable();
 
             if (!isConnected || source != DataSource.Server)
             {
-                result = _cacheService.GetObject<Response>(key);
+                result = new ApiResult<Response> { 
+                    Data = _cacheService.GetObject<Response>(key), 
+                    Source = DataSource.Cache
+                };
             }
 
-            if (isConnected && result == null)
+            if (isConnected && (result == null || result.Data == null))
             {
-                result = await _httpService.Get<Response>(request);
-
-                if (result != null)
+                var response = await _httpService.Get<Response>(request);
+                if (response != null)
                 {
-                    _cacheService.SetObject(key, result);
+                    _cacheService.SetObject(key, response);
                 }
+
+                result = new ApiResult<Response> { 
+                    Data = response, 
+                    Source = DataSource.Server
+                };
             }
 
             return result;

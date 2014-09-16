@@ -91,7 +91,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrg(DataSource.CacheOrServer).ContinueWithThrow();
+            UpdateData(UpdateOrg);
         }
 
         protected override void Refresh(DataSource source)
@@ -99,32 +99,43 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateOrg(source).ContinueWithThrow();
         }
 
-        private async Task UpdateOrg(DataSource source)
+        private async Task<DataSource> UpdateOrg(DataSource source, bool showProgress = true)
         {
             if (_parameters != null)
             {
-                IsLoading = true;
+                if (showProgress) IsLoading = true;
 
                 var org = default(Org);
 
                 try 
                 {
-                    org = await _apiService.GetHost(_parameters.OrgId, source);
+                    var result = await _apiService.GetHost(_parameters.OrgId, source);
+                    if (result != null)
+                    {
+                        org = result.Data;
+                        source = result.Source;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _exceptionPolicy.Trace(ex);
                 }
 
-                IsLoading = false;
+                if (showProgress) IsLoading = false;
 
-                Org = org;
+                if (org != null)
+                {
+                    Org = org;
+                }
+
                 RaiseRefreshCompleted(Org != null);
             }
             else
             {
                 Org = null;
             }
+
+            return source;
         }
 
         public class Parameters : ParametersBase

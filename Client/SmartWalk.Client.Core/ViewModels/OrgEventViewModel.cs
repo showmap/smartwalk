@@ -906,11 +906,15 @@ namespace SmartWalk.Client.Core.ViewModels
                             IsLoading = true;
 
                             var eventInfo = default(OrgEvent);
+
                             try
                             {
-                                eventInfo = await _apiService.GetOrgEventInfo(
+                                var result = await _apiService.GetOrgEventInfo(
                                     _parameters.EventId, 
                                     DataSource.CacheOrServer);
+                                if (result != null) {
+                                    eventInfo = result.Data;
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -1105,7 +1109,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEvent(DataSource.CacheOrServer).ContinueWithThrow();
+            UpdateData(UpdateOrgEvent);
         }
 
         protected override void Refresh(DataSource source)
@@ -1113,37 +1117,45 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateOrgEvent(source).ContinueWithThrow();
         }
 
-        private async Task UpdateOrgEvent(DataSource source)
+        private async Task<DataSource> UpdateOrgEvent(DataSource source, bool showProgress = true)
         {
             if (_parameters != null)
             {
-                IsLoading = true;
+                if (showProgress) IsLoading = true;
 
                 var orgEvent = default(OrgEvent);
 
                 try 
                 {
-                    orgEvent = await _apiService.GetOrgEvent(
+                    var result = await _apiService.GetOrgEvent(
                         _parameters.EventId, 
                         source);
+                    if (result != null)
+                    {
+                        orgEvent = result.Data;
+                        source = result.Source;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _exceptionPolicy.Trace(ex);
                 }
 
-                IsLoading = false;
+                if (showProgress) IsLoading = false;
 
-                UpdateDaysState(orgEvent);
-                _allDaysOrgEvent = orgEvent;
+                if (orgEvent != null)
+                {
+                    UpdateDaysState(orgEvent);
+                    _allDaysOrgEvent = orgEvent;
 
-                if (!CurrentDay.HasValue)
-                {
-                    OrgEvent = orgEvent;
-                }
-                else
-                {
-                    OrgEvent = GetOrgEventByDay(orgEvent);
+                    if (!CurrentDay.HasValue)
+                    {
+                        OrgEvent = orgEvent;
+                    }
+                    else
+                    {
+                        OrgEvent = GetOrgEventByDay(orgEvent);
+                    }
                 }
 
                 RaiseRefreshCompleted(OrgEvent != null);
@@ -1153,6 +1165,8 @@ namespace SmartWalk.Client.Core.ViewModels
                 _allDaysOrgEvent = null;
                 OrgEvent = null;
             }
+
+            return source;
         }
 
         private void UpdateDaysState(OrgEvent orgEvent)

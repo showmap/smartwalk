@@ -253,7 +253,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEventVenues(DataSource.CacheOrServer).ContinueWithThrow();
+            UpdateData(UpdateOrgEventVenues);
         }
 
         protected override void Refresh(DataSource source)
@@ -267,11 +267,11 @@ namespace SmartWalk.Client.Core.ViewModels
             RaiseRefreshCompleted(Venue != null);
         }
 
-        private async Task UpdateOrgEventVenues(DataSource source)
+        private async Task<DataSource> UpdateOrgEventVenues(DataSource source, bool showProgress = true)
         {
             if (_parameters != null)
             {
-                IsLoading = true;
+                if (showProgress) IsLoading = true;
 
                 var orgEvent = default(OrgEvent);
                 var venues = default(Venue[]);
@@ -286,24 +286,43 @@ namespace SmartWalk.Client.Core.ViewModels
 
                     await Task.WhenAll(eventTask, venuesTask);
 
-                    orgEvent = eventTask.Result;
-                    venues = venuesTask.Result;
+                    if (eventTask.Result != null)
+                    {
+                        orgEvent = eventTask.Result.Data;
+                    }
+
+                    if (eventTask.Result != null)
+                    {
+                        venues = venuesTask.Result.Data;
+                        source = venuesTask.Result.Source;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _exceptionPolicy.Trace(ex);
                 }
 
-                IsLoading = false;
-                    
-                OrgEvent = orgEvent;
-                OrgEventVenues = venues;
+                if (showProgress) IsLoading = false;
+
+                if (orgEvent != null)
+                {
+                    OrgEvent = orgEvent;
+                }
+
+                if (venues != null)
+                {
+                    OrgEventVenues = venues;
+                }
+
                 RaiseRefreshCompleted(OrgEventVenues != null);
             }
             else
             {
+                OrgEvent = null;
                 Venue = null;
             }
+
+            return source;
         }
 
         private int GetExpandedShowNumber()

@@ -78,7 +78,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _parameters = parameters;
 
-            UpdateOrgEventInfo(DataSource.CacheOrServer).ContinueWithThrow();
+            UpdateData(UpdateOrgEventInfo);
         }
 
         protected override void Refresh(DataSource source)
@@ -86,33 +86,44 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateOrgEventInfo(source).ContinueWithThrow();
         }
 
-        private async Task UpdateOrgEventInfo(DataSource source)
+        private async Task<DataSource> UpdateOrgEventInfo(DataSource source, bool showProgress = true)
         {
             if (_parameters != null)
             {
-                IsLoading = true;
+                if (showProgress) IsLoading = true;
 
                 var orgEvent = default(OrgEvent);
 
                 try 
                 {
-                    orgEvent = await _apiService
+                    var result = await _apiService
                         .GetOrgEventInfo(_parameters.EventId, source);
+                    if (result != null)
+                    {
+                        orgEvent = result.Data;
+                        source = result.Source;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _exceptionPolicy.Trace(ex);
                 }
 
-                IsLoading = false;
+                if (showProgress) IsLoading = false;
 
-                OrgEvent = orgEvent;
+                if (orgEvent != null)
+                {
+                    OrgEvent = orgEvent;
+                }
+
                 RaiseRefreshCompleted(OrgEvent != null);
             }
             else
             {
                 OrgEvent = null;
             }
+
+            return source;
         }
 
         private Entity CreateEntity()

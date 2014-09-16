@@ -66,6 +66,20 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             _reachabilityService.StateChanged -= OnReachableStateChanged;
         }
 
+        protected void UpdateData(Func<DataSource, bool, Task<DataSource>> updateHandler)
+        {
+            // firstly loading from cache or server
+            updateHandler(DataSource.CacheOrServer, true)
+                .ContinueWithUIThread(previous => {
+                    // if data is from cache then loading from server in the background for a quite refresh
+                    if (previous.Result == DataSource.Cache) 
+                    { 
+                        updateHandler(DataSource.Server, false);
+                    }
+                })
+                .ContinueWithThrow();
+        }
+
         protected void RaiseRefreshCompleted(bool hasData)
         {
             if (RefreshCompleted != null)

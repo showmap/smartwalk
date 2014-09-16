@@ -107,10 +107,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override void Start()
         {
-            // quickly loading from cache, and then loading from server in the background
-            UpdateEventInfos(DataSource.Cache)
-                .ContinueWithUIThread(previous => UpdateEventInfos(DataSource.Server, false))
-                .ContinueWithThrow();
+            UpdateData(UpdateEventInfos);
 
             base.Start();
         }
@@ -120,7 +117,7 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateEventInfos(source).ContinueWithThrow();
         }
 
-        private async Task UpdateEventInfos(DataSource source, bool showProgress = true)
+        private async Task<DataSource> UpdateEventInfos(DataSource source, bool showProgress = true)
         {
             if (showProgress) IsLoading = true;
 
@@ -128,9 +125,14 @@ namespace SmartWalk.Client.Core.ViewModels
 
             try
             {
-                eventInfos = await _apiService.GetOrgEvents(
+                var result = await _apiService.GetOrgEvents(
                     _locationService.CurrentLocation,
-                    source); 
+                    source);
+                if (result != null)
+                {
+                    eventInfos = result.Data;
+                    source = result.Source;
+                }
             }
             catch (Exception ex)
             {
@@ -139,12 +141,17 @@ namespace SmartWalk.Client.Core.ViewModels
                 
             if (showProgress) IsLoading = false;
 
-            EventInfos = eventInfos;
+            if (eventInfos != null)
+            {
+                EventInfos = eventInfos;
+            }
 
             if (showProgress)
             {
                 RaiseRefreshCompleted(EventInfos != null);
             }
+
+            return source;
         }
 
         private void UpdateLocationString()
