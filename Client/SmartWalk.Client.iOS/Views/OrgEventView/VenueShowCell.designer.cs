@@ -13,16 +13,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class VenueShowCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UILabel AllDayLabel { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DescriptionLeftConstraint { get; set; }
+		MonoTouch.UIKit.NSLayoutConstraint DescriptionRightConstraint { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DetailsHeightConstraint { get; set; }
@@ -62,11 +59,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (AllDayLabel != null) {
-				AllDayLabel.Dispose ();
-				AllDayLabel = null;
-			}
-
 			if (DescriptionAndImageSpaceConstraint != null) {
 				DescriptionAndImageSpaceConstraint.Dispose ();
 				DescriptionAndImageSpaceConstraint = null;
@@ -77,9 +69,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				DescriptionLabel = null;
 			}
 
-			if (DescriptionLeftConstraint != null) {
-				DescriptionLeftConstraint.Dispose ();
-				DescriptionLeftConstraint = null;
+			if (DescriptionRightConstraint != null) {
+				DescriptionRightConstraint.Dispose ();
+				DescriptionRightConstraint = null;
 			}
 
 			if (DetailsHeightConstraint != null) {
@@ -95,6 +87,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (EndTimeLabel != null) {
 				EndTimeLabel.Dispose ();
 				EndTimeLabel = null;
+			}
+
+			if (HeaderContainer != null) {
+				HeaderContainer.Dispose ();
+				HeaderContainer = null;
+			}
+
+			if (HeaderHeightConstraint != null) {
+				HeaderHeightConstraint.Dispose ();
+				HeaderHeightConstraint = null;
 			}
 
 			if (ImageAndDetailsSpaceConstraint != null) {
@@ -130,16 +132,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TimeBackgroundView != null) {
 				TimeBackgroundView.Dispose ();
 				TimeBackgroundView = null;
-			}
-
-			if (HeaderContainer != null) {
-				HeaderContainer.Dispose ();
-				HeaderContainer = null;
-			}
-
-			if (HeaderHeightConstraint != null) {
-				HeaderHeightConstraint.Dispose ();
-				HeaderHeightConstraint = null;
 			}
 		}
 	}

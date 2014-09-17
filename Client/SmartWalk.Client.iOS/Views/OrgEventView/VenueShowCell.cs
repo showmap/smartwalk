@@ -5,7 +5,6 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
-using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
@@ -19,16 +18,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
-        public readonly static float DefaultHeight = Gap + 
-            (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) + Gap;
+        public readonly static float DefaultHeight = VerticalGap + 
+            (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) + VerticalGap;
 
         private static readonly string TimeFormat = "{0:t}";
         private static readonly string Space = " ";
         private static readonly char M = 'm';
 
-        private const int ImageHeight = 100;
-        private const int TimeBlockWidth = 109;
-        private const int Gap = 12;
+        private const float ImageHeight = 100f;
+        private const float TimeBlockWidth = 106f;
+        private const float VerticalGap = 12f;
+        private const float BorderGap = 8f;
 
         private readonly MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _imageTapGesture;
@@ -75,15 +75,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var showText = show.GetText();  
                 if (showText != null)
                 {
-                    var logoHeight = show.HasPicture() ? Gap + ImageHeight : 0;
+                    var logoHeight = show.HasPicture() ? VerticalGap + ImageHeight : 0;
                     var detailsHeight = show.HasDetailsUrl()
-                        ? Gap + (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) 
+                        ? VerticalGap + (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) 
                         : 0;
                     var textHeight = 
-                        (float)Math.Ceiling(CalculateTextHeight(GetTextWidth(frameWidth), showText));
+                        (float)Math.Ceiling(CalculateTextHeight(GetTextWidth(frameWidth, show), showText));
                     cellHeight += Math.Max(
                         DefaultHeight, 
-                        Gap + textHeight + logoHeight + detailsHeight + Gap); // if no text, we still show times
+                        VerticalGap + textHeight + logoHeight + detailsHeight + VerticalGap); // if no text, we still show times
                 }
 
                 return cellHeight;
@@ -114,9 +114,29 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return 0;
         }
 
-        private static float GetTextWidth(float frameWidth)
+        private static float GetTextWidth(float frameWidth, Show show)
         {
-            return frameWidth - TimeBlockWidth - 8; // Description Label right gap
+            // - Left Border Gap - Time Block Width (inc. Right Border Gap)
+            return frameWidth - BorderGap - GetTimeBlockWidth(show);
+        }
+
+        private static float GetTimeBlockWidth(Show show)
+        {
+            var result = BorderGap; // Time Label right gap
+
+            if (show != null)
+            {
+                if (show.StartTime.HasValue && show.EndTime.HasValue)
+                {
+                    result += TimeBlockWidth;
+                }
+                else if (show.StartTime.HasValue || show.EndTime.HasValue)
+                {
+                    result += (float)Math.Ceiling((float)TimeBlockWidth / 2);
+                }
+            }
+
+            return result;
         }
 
         public ICommand ShowImageFullscreenCommand { get; set; }
@@ -222,7 +242,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ? VenueHeaderView.DefaultHeight
                     : 0;
 
-            DescriptionLeftConstraint.Constant = TimeBlockWidth;
+            DescriptionRightConstraint.Constant = GetTimeBlockWidth(DataContext);
 
             if (IsExpanded &&
                 DataContext.HasPicture() &&
@@ -230,7 +250,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 ImageHeightConstraint.Constant = ImageHeight;
                 ImageWidthConstraint.Constant = GetImageProportionalWidth();
-                DescriptionAndImageSpaceConstraint.Constant = Gap;
+                DescriptionAndImageSpaceConstraint.Constant = VerticalGap;
             }
             else
             {
@@ -245,7 +265,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 DetailsHeightConstraint.Constant = 
                     (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight);
-                ImageAndDetailsSpaceConstraint.Constant = Gap;
+                ImageAndDetailsSpaceConstraint.Constant = VerticalGap;
             }
             else
             {
@@ -289,21 +309,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ThumbImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
-            StartTimeLabel.AttributedText = DataContext != null && 
-                    DataContext.StartTime.HasValue
-                ? GetTimeText(DataContext.StartTime.Value, DataContext.GetStatus())
-                : new NSAttributedString();
+            var leftRightTimes = GetLeftAndRightTimeTexts(DataContext);
 
-            EndTimeLabel.AttributedText = DataContext != null && 
-                    DataContext.EndTime.HasValue
-                ? GetTimeText(DataContext.EndTime.Value, DataContext.GetStatus())
-                : new NSAttributedString();
-
-            AllDayLabel.Text = DataContext != null &&
-                    !DataContext.StartTime.HasValue &&
-                    !DataContext.EndTime.HasValue
-                ? Localization.AllDay
-                : null;
+            StartTimeLabel.AttributedText = leftRightTimes.Item1;
+            EndTimeLabel.AttributedText = leftRightTimes.Item2;
 
             DescriptionLabel.AttributedText = DataContext != null 
                 ? GetShowText(DataContext) 
@@ -369,6 +378,37 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return result;
         }
 
+        private static Tuple<NSAttributedString, NSAttributedString> GetLeftAndRightTimeTexts(Show show)
+        {
+            if (show != null)
+            {
+                if (show.StartTime.HasValue && show.EndTime.HasValue)
+                {
+                    return new Tuple<NSAttributedString, NSAttributedString>(
+                        GetTimeText(show.StartTime.Value, show.GetStatus()),
+                        GetTimeText(show.EndTime.Value, show.GetStatus()));
+                }
+
+                // putting start time to the right, for better layout
+                if (show.StartTime.HasValue)
+                {
+                    return new Tuple<NSAttributedString, NSAttributedString>(
+                        new NSAttributedString(),
+                        GetTimeText(show.StartTime.Value, show.GetStatus()));
+                }
+
+                if (show.EndTime.HasValue)
+                {
+                    return new Tuple<NSAttributedString, NSAttributedString>(
+                        new NSAttributedString(),
+                        GetTimeText(show.EndTime.Value, show.GetStatus()));
+                }
+            }
+
+            return new Tuple<NSAttributedString, NSAttributedString>(
+                new NSAttributedString(), new NSAttributedString());
+        }
+
         private void UpateImageState()
         {
             var url = IsExpanded && DataContext != null 
@@ -404,7 +444,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 var width = Math.Min(
                     (float)(1.0 * imageSize.Width * ImageHeight / imageSize.Height),
-                    GetTextWidth(Frame.Width));
+                    GetTextWidth(Frame.Width, DataContext));
                 return width;
             }
 
@@ -490,9 +530,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
             EndTimeLabel.TextColor = Theme.CellText;
-
-            AllDayLabel.Font = Theme.VenueShowCellTimeFont;
-            AllDayLabel.TextColor = Theme.CellText;
 
             DescriptionLabel.Font = Theme.VenueShowCellFont;
             DescriptionLabel.TextColor = Theme.CellText;

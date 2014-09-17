@@ -85,6 +85,11 @@ namespace SmartWalk.Client.Core.Services
                                     SelectName = "em"
                                 }
                             }
+                        },
+                        SortBy = new [] {
+                            new RequestSelectSortBy {
+                                Field = "StartTime"
+                            }
                         }
                     },
                     new RequestSelect {
@@ -183,6 +188,11 @@ namespace SmartWalk.Client.Core.Services
                                     Field = "Shows.Id",
                                     SelectName = "em"
                                 }
+                            }
+                        },
+                        SortBy = new [] {
+                            new RequestSelectSortBy {
+                                Field = "StartTime"
                             }
                         }
                     },
