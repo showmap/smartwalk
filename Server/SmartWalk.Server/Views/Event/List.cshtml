@@ -6,6 +6,8 @@
 @using SmartWalk.Server.ViewModels
 @model IList<EventMetadataVm>
 @{
+    this.SetiTunesMeta("events");
+    
     Style.Require("SmartWalk");
 
     Script.Require("ImageScale").AtFoot();

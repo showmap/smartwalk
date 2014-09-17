@@ -253,7 +253,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
-    <Compile Include="Utils\HtmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Layout.cshtml" />
@@ -292,7 +291,6 @@
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">
       <Project>{cfea2cf4-c0c6-47a4-9549-2acd230abd01}</Project>
       <Name>SmartWalk.Shared</Name>
-      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\SmartWalk.Server.Common\SmartWalk.Server.Common.csproj">
       <Project>{f7e6aafc-f878-4914-9b6f-31ba6adaf387}</Project>

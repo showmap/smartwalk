@@ -1,10 +1,13 @@
 ﻿@using System.Globalization
+@using SmartWalk.Server.Common.Utils
 @using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Utils
 @using SmartWalk.Shared.Utils
 @model EventMetadataVm
 @{
+    this.SetiTunesMeta("event/{0}", Model.Id);
+    
     Style.Require("SmartWalk");
     Style.Require("TextCollapse");
 
