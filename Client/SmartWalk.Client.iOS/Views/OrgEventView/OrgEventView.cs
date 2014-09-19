@@ -421,7 +421,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (ViewModel.OrgEvent == null)
             {
-                MapContentView.Hidden = true;
+                MapContentView.SetHidden(true, false);
+            }
+            else
+            {
+                MapContentView.SetHidden(false, true);
             }
         }
 
@@ -452,13 +456,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (ViewModel.OrgEvent == null)
             {
-                MapContentView.Hidden = true;
+                MapContentView.SetHidden(true, false);
             }
         }
 
         protected override void OnLoadedViewStateUpdate()
         {
-            MapContentView.SetHidden(false, true);
+            if (ViewModel.OrgEvent != null)
+            {
+                MapContentView.SetHidden(false, true);
+            }
 
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource == null || tableSource.IsHeaderViewHidden)

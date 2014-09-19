@@ -2,7 +2,6 @@ using System.Drawing;
 using System.Threading;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;
-using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
 using GoogleAnalytics;
 using MonoTouch.Foundation;
@@ -11,6 +10,7 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Services;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.Core.Services;
 #if ADHOC
 using MonoTouch.TestFlight;
 #endif
@@ -50,9 +50,7 @@ namespace SmartWalk.Client.iOS
 
             Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-            var presenter = new MvxTouchViewPresenter(this, Window);
-
-            var setup = new Setup(this, presenter, _settings);
+            var setup = new Setup(this, Window, _settings);
             setup.Initialize();
 
             var startup = Mvx.Resolve<IMvxAppStart>();
@@ -61,6 +59,13 @@ namespace SmartWalk.Client.iOS
             Window.MakeKeyAndVisible();
             
             return true;
+        }
+
+        public override bool OpenUrl(UIApplication application, NSUrl url, 
+            string sourceApplication, NSObject annotation)
+        {
+            var service = Mvx.Resolve<IDeeplinkingService>();
+            return service.NavigateView(url.ToString());
         }
 
         public override void DidEnterBackground(UIApplication application)

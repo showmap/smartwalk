@@ -71,7 +71,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewDidAppear(animated);
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
+                NavigationController != null) // HACK: in some cases of deeplinking (with dialog controller on) it maybe null, watchout!
             {
                 NavigationController.InteractivePopGestureRecognizer.Enabled = true;
                 NavigationController.InteractivePopGestureRecognizer.WeakDelegate = this;

@@ -105,6 +105,9 @@
     <Compile Include="Utils\MapType.cs" />
     <Compile Include="Services\PostponeService.cs" />
     <Compile Include="Services\IPostponeService.cs" />
+    <Compile Include="Services\DeeplinkingService.cs" />
+    <Compile Include="Services\IDeeplinkingService.cs" />
+    <Compile Include="Services\IMvxExtendedViewPresenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

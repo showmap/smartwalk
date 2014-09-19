@@ -24,9 +24,9 @@ namespace SmartWalk.Client.iOS
 
         public Setup(
             MvxApplicationDelegate appDelegate, 
-            IMvxTouchViewPresenter presenter,
+            UIWindow window,
             AppSettings settings)
-            : base(appDelegate, presenter)
+            : base(appDelegate, window)
         {
             _settings = settings;
         }
@@ -50,6 +50,15 @@ namespace SmartWalk.Client.iOS
                 .RegisterAsLazySingleton();
 
             return new SmartWalkApplication();
+        }
+
+        protected override IMvxTouchViewPresenter CreatePresenter()
+        {
+            var presenter = new MvxExtendedViewPresenter(ApplicationDelegate, Window);
+
+            Mvx.RegisterSingleton<IMvxExtendedViewPresenter>(presenter);
+
+            return presenter;
         }
 
         protected override IMvxPluginConfiguration GetPluginConfiguration(Type plugin)

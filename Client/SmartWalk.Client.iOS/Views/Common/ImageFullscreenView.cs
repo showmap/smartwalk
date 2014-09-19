@@ -9,7 +9,7 @@ using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class ImageFullscreenView : UIViewController
+    public partial class ImageFullscreenView : UIViewController, IFullscreenView
     {
         private string _imageUrl;
         private MvxImageViewLoader _imageHelper;
