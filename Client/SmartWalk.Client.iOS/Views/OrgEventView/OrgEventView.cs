@@ -371,7 +371,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
-                UpdateViewState(false);
+                UpdateViewState(true);
                 ReloadMap();
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
@@ -452,13 +452,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             InitializeSearchDisplayController();
         }
 
-        protected override void OnLoadingViewStateUpdate()
-        {
-            base.OnLoadingViewStateUpdate();
-        }
-
         protected override void OnLoadedViewStateUpdate()
         {
+            // delaying showing of ListView if data loaded to make sure that header is scrolled out
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource == null || tableSource.IsHeaderViewHidden)
             {

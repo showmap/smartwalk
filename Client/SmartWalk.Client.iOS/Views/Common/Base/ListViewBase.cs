@@ -162,10 +162,17 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void OnLoadingViewStateUpdate()
         {
+            // hiding ListView on view opening if data is being loaded
+            // to avoid Pull-To-Refreshes and to have fade id effect
+            if (!HasListData && (_refreshControl == null || !_refreshControl.Refreshing))
+            {
+                ListView.View.Hidden = true;
+            }
         }
 
         protected virtual void OnLoadedViewStateUpdate()
         {
+            ListView.View.SetHidden(false, true);
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)
@@ -224,7 +231,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             // make sure that it's behind all other views
             _refreshControl.Layer.ZPosition = -100;
-
             _refreshControl.ValueChanged += OnRefreshControlValueChanged;
 
             ListView.View.AddSubview(_refreshControl);
@@ -300,6 +306,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 UpdateViewDataState(HasListData);
                 _progressView.IsLoading = false;
+
                 OnLoadedViewStateUpdate();
             }
         }
