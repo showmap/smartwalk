@@ -124,10 +124,10 @@ namespace SmartWalk.Client.iOS.Resources
                 // TODO: bottom line has different color, bug?
                 UINavigationBar.Appearance.SetBackgroundImage(
                     NavBarLandscapeBackgroundImage,
-                    UIBarMetrics.LandscapePhone);
+                    UIBarMetrics.Compact);
 
                 UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(4, UIBarMetrics.Default);
-                UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.LandscapePhone);
+                UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.Compact);
             }
 
             UINavigationBar.Appearance.SetTitleTextAttributes(new UITextAttributes { 

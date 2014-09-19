@@ -111,11 +111,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             _listViewSource = CreateListViewSource();
             ListView.Source = _listViewSource;
-
-            // hiding list view initially, to show content errors and loading indicators
-            // TODO: To research, maybe we should keep it visible to allow Pull-To-Refresh
-            // although the cases where search bar is present should be handled separately
-            ListView.View.SetHidden(true, false);
         }
 
         protected abstract IListViewSource CreateListViewSource();
@@ -158,10 +153,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 ScrollViewToTop();
             }
-            else
-            {
-                ListView.View.SetHidden(true, true);
-            }
         }
 
         protected virtual void ScrollViewToTop()
@@ -171,18 +162,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void OnLoadingViewStateUpdate()
         {
-            if (!HasListData)
-            {
-                ListView.View.SetHidden(true, false);
-            }
         }
 
         protected virtual void OnLoadedViewStateUpdate()
         {
-            if (HasListData)
-            {
-                ListView.View.SetHidden(false, true);
-            }
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)

@@ -8,7 +8,6 @@ using MonoTouch.CoreLocation;
 using MonoTouch.EventKit;
 using MonoTouch.EventKitUI;
 using MonoTouch.Foundation;
-using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -21,7 +20,6 @@ using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
-using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -50,6 +48,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public new OrgEventViewModel ViewModel
         {
             get { return (OrgEventViewModel)base.ViewModel; }
+        }
+
+        private bool HasData
+        {
+            get { return ViewModel != null && ViewModel.OrgEvent != null; }
+        }
+
+        private OrgEventViewMode CurrentMode
+        {
+            get { return HasData ? ViewModel.Mode : OrgEventViewMode.List; }
         }
 
         public override void ViewDidLoad()
@@ -215,7 +223,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                             TablePanel));
             }
 
-            switch (ViewModel.Mode)
+            switch (CurrentMode)
             {
                 case OrgEventViewMode.Combo:
                     if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
@@ -363,12 +371,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
+                UpdateViewState(false);
                 ReloadMap();
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))
             {
-                if (ViewModel.Mode == OrgEventViewMode.Map ||
-                    ViewModel.Mode == OrgEventViewMode.Combo ||
+                if (CurrentMode == OrgEventViewMode.Map ||
+                    CurrentMode == OrgEventViewMode.Combo ||
                     ViewModel.SelectedVenueOnMap == null)
                 {
                     SelectVenueMapAnnotation(ViewModel.SelectedVenueOnMap);
@@ -402,7 +411,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsAvailable))
             {
-                UpdateTableHeaderState();
+                UpdateTableHeaderState(HasData);
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsShown))
             {
@@ -419,14 +428,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.OnViewModelRefreshed(hasData);
 
-            if (ViewModel.OrgEvent == null)
-            {
-                MapContentView.SetHidden(true, false);
-            }
-            else
-            {
-                MapContentView.SetHidden(false, true);
-            }
+            UpdateTableHeaderState(hasData);
         }
 
         protected override void ScrollViewToTop()
@@ -453,20 +455,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         protected override void OnLoadingViewStateUpdate()
         {
             base.OnLoadingViewStateUpdate();
-
-            if (ViewModel.OrgEvent == null)
-            {
-                MapContentView.SetHidden(true, false);
-            }
         }
 
         protected override void OnLoadedViewStateUpdate()
         {
-            if (ViewModel.OrgEvent != null)
-            {
-                MapContentView.SetHidden(false, true);
-            }
-
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource == null || tableSource.IsHeaderViewHidden)
             {
@@ -673,7 +665,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _headerView = OrgEventHeaderView.Create();
             _headerView.ShowOptionsCommand = ViewModel.ShowHideListOptionsCommand;
 
-            UpdateTableHeaderState();
+            UpdateTableHeaderState(HasData);
 
             VenuesAndShowsTableView.TableHeaderView = _headerView;
         }
@@ -687,11 +679,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private void UpdateTableHeaderState()
+        private void UpdateTableHeaderState(bool hasData)
         {
             if (_headerView != null)
             {
                 _headerView.IsListOptionsVisible = ViewModel.IsListOptionsAvailable;
+                _headerView.SetHidden(!hasData, false);
             }
         }
 
@@ -752,8 +745,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             _isMapViewInitialized = false;
 
-            if (ViewModel.Mode == OrgEventViewMode.Map ||
-                ViewModel.Mode == OrgEventViewMode.Combo)
+            if (CurrentMode == OrgEventViewMode.Map ||
+                CurrentMode == OrgEventViewMode.Combo)
             {
                 InitializeMapView();
             }
@@ -959,7 +952,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var result = headerLocation.Y + _headerView.Frame.Height;
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
-                ViewModel.Mode == OrgEventViewMode.List)
+                CurrentMode == OrgEventViewMode.List)
             {
                 result -= TopLayoutGuide.Length;
             }
@@ -998,7 +991,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
        
         private void UpdateViewState(bool animated)
         {
-            switch (ViewModel.Mode)
+            switch (CurrentMode)
             {
                 case OrgEventViewMode.Combo:
                     _modeButtonItem.CustomView = new UIView();
@@ -1030,7 +1023,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 case OrgEventViewMode.List:
                     _customModeButtonItem.CustomView = new UIView();
-                    _modeButtonItem.CustomView = _modeMapButton;
+                    _modeButtonItem.CustomView = HasData ? _modeMapButton : new UIView();
 
                     TablePanel.Hidden = false;
                     MapPanel.Hidden = true;
@@ -1049,7 +1042,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateNavBarState(bool animated)
         {
-            if (ViewModel.Mode == OrgEventViewMode.List)
+            if (CurrentMode == OrgEventViewMode.List && HasData)
             {
                 NavBarManager.Instance.SetNavBarHidden(false, true, animated);
 
