@@ -34,12 +34,12 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             var flowLayout = (UICollectionViewFlowLayout)CollectionViewLayout;
             var itemsInRow = ScreenUtil.IsVerticalOrientation ? 1 : 2;
 
-            var cellWith = (Frame.Width - 
+            var cellWidth = (Frame.Width - 
                             flowLayout.SectionInset.Left -
                             flowLayout.SectionInset.Right - 
                             flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
-            flowLayout.ItemSize = new SizeF(cellWith, OrgCell.DefaultHeight);
+            flowLayout.ItemSize = new SizeF(cellWidth, OrgCell.DefaultHeight);
             flowLayout.HeaderReferenceSize = new SizeF(Frame.Width, HomeHeaderView.DefaultHeight);
         }
     }

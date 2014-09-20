@@ -15,15 +15,6 @@
 	<string>6.0</string>
 	<key>CFBundleIdentifier</key>
 	<string>me.smartwalk.ios</string>
-	<key>CFBundleIconFiles</key>
-	<array>
-		<string>Icon@2x</string>
-		<string>Icon</string>
-		<string>Icon-60@2x</string>
-		<string>Icon-Small</string>
-		<string>Icon-Small@2x</string>
-		<string>Icon-Small-40@2x</string>
-	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIStatusBarStyle</key>
@@ -51,5 +42,9 @@
 	<string>1.6</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>XSLaunchImageAssets</key>
+	<string>Resources/Images.xcassets/LaunchImage.launchimage</string>
+	<key>XSAppIconAssets</key>
+	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
 </dict>
 </plist>

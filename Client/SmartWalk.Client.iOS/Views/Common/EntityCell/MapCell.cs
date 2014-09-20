@@ -8,13 +8,12 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
-    public partial class MapCell : CollectionCellBase
+    public partial class MapCell : ContentViewBase
     {
         public static readonly UINib Nib = UINib.FromName("MapCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("MapCell");
@@ -62,7 +61,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             MapView.Delegate = new MapDelegate { CanShowCallout = false };
         }
 
-        protected override void OnDataContextChanged()
+        protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             var previousAnnotations = MapView.Annotations.Where(a => !(a is MKUserLocation)).ToArray();
             var isFirstLoading = previousAnnotations.Length == 0;

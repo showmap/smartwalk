@@ -389,6 +389,7 @@
     </Compile>
     <Compile Include="Utils\MvvmCross\MvxExtendedViewPresenter.cs" />
     <Compile Include="Views\Common\IFullscreenView.cs" />
+    <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
@@ -484,15 +485,6 @@
     <BundleResource Include="Resources\Icons\Details%402x.png" />
     <BundleResource Include="Resources\Icons\ToolBarDirections.png" />
     <BundleResource Include="Resources\Icons\ToolBarDirections%402x.png" />
-    <BundleResource Include="Resources\Default-568h%402x.png" />
-    <BundleResource Include="Resources\Default.png" />
-    <BundleResource Include="Resources\Default%402x.png" />
-    <BundleResource Include="Resources\Icon-60%402x.png" />
-    <BundleResource Include="Resources\Icon-Small-40%402x.png" />
-    <BundleResource Include="Resources\Icon-Small.png" />
-    <BundleResource Include="Resources\Icon-Small%402x.png" />
-    <BundleResource Include="Resources\Icon.png" />
-    <BundleResource Include="Resources\Icon%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarMore.png" />
     <BundleResource Include="Resources\Icons\NavBarMore%402x.png" />
     <BundleResource Include="Resources\Images\Background%402x.png" />
@@ -511,6 +503,8 @@
     <BundleResource Include="Resources\Icons\ExitFullscreen%402x.png" />
     <BundleResource Include="Resources\Icons\Fullscreen.png" />
     <BundleResource Include="Resources\Icons\Fullscreen%402x.png" />
+    <BundleResource Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-667h%402x.png" />
+    <BundleResource Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-960h%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />
@@ -519,5 +513,20 @@
     </Content>
     <Content Include="settings.xml" />
     <Content Include="analytics.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-568h%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-1104h%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-621h%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40%402x.png" />
   </ItemGroup>
 </Project>

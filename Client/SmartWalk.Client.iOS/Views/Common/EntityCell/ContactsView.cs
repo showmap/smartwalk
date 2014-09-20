@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
@@ -135,9 +134,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             UpdateConstraints();
 
             base.LayoutSubviews();
-
-            ((UICollectionViewFlowLayout)CollectionView.CollectionViewLayout).ItemSize = 
-                new SizeF(ScreenUtil.IsVerticalOrientation ? 304 : 400, ContactCell.DefaultHeight);
         }
 
         public override void UpdateConstraints()
