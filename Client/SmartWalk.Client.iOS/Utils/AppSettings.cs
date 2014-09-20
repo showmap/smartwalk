@@ -10,9 +10,6 @@ namespace SmartWalk.Client.iOS.Utils
     {
         private int _postponeTimeMinutes;
 
-        [XmlElement("trackingId")]
-        public string TrackingId { get;set; }
-
         [XmlElement("testFlightToken")]
         public string TestFlightToken { get;set; }
 

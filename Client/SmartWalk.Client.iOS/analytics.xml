@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <analytics xmlns="http://googleanalyticssdk.codeplex.com/ns/easytracker">
-  <trackingId /> <!-- All Configs are defined in settings.xml file -->
+  <trackingId>UA-44480601-1</trackingId>
 </analytics>

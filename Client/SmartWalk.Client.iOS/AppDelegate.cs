@@ -134,7 +134,6 @@ namespace SmartWalk.Client.iOS
         private void InitializeGAI()
         {
             EasyTracker.GetTracker();
-            EasyTracker.Current.Config.TrackingId = _settings.TrackingId;
             EasyTracker.Current.Config.ReportUncaughtExceptions = true;
             EasyTracker.Current.Config.AutoAppLifetimeTracking = true;
 
