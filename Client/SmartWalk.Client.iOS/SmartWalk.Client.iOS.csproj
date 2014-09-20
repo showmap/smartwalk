@@ -82,7 +82,6 @@
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <DefineConstants>ADHOC;</DefineConstants>
-    <MtouchSdkVersion>7.1</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <Optimize>true</Optimize>
@@ -96,7 +95,6 @@
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <DefineConstants>APPSTORE;</DefineConstants>
-    <MtouchSdkVersion>7.1</MtouchSdkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
