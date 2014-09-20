@@ -75,7 +75,9 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             _reachabilityService.StateChanged -= OnReachableStateChanged;
         }
 
-        protected void UpdateData(Func<DataSource, bool, Task<DataSource>> updateHandler)
+        protected void UpdateData(
+            Func<DataSource, bool, Task<DataSource>> updateHandler, 
+            bool usePostponing = true)
         {
             // firstly loading from cache or server
             updateHandler(DataSource.CacheOrServer, true)
@@ -85,7 +87,7 @@ namespace SmartWalk.Client.Core.ViewModels.Common
                     // if data is from cache and it's been a while
                     // then loading from server in the background for a quite refresh
                     if (previous.Result == DataSource.Cache &&
-                        !_postponeService.ShouldPostpone(key)) 
+                        (!usePostponing || !_postponeService.ShouldPostpone(key))) 
                     { 
                         updateHandler(DataSource.Server, false);
                     }

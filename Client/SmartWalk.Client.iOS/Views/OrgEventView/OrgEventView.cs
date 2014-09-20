@@ -371,7 +371,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
-                UpdateViewState(true);
+                UpdateViewState(false);
                 ReloadMap();
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SelectedVenueOnMap))

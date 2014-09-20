@@ -121,7 +121,6 @@ namespace SmartWalk.Client.iOS.Resources
                 UINavigationBar.Appearance.SetBackgroundImage(
                     NavBarBackgroundImage,
                     UIBarMetrics.Default);
-                // TODO: bottom line has different color, bug?
                 UINavigationBar.Appearance.SetBackgroundImage(
                     NavBarLandscapeBackgroundImage,
                     UIBarMetrics.Compact);
