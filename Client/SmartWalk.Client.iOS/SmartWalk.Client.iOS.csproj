@@ -144,32 +144,32 @@
     <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
       <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.1.2-beta1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
     </Reference>
-    <Reference Include="Cirrious.CrossCore.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1-beta2\lib\MonoTouch\Cirrious.CrossCore.Touch.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross.Binding.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1-beta2\lib\MonoTouch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.CrossCore">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1-beta2\lib\MonoTouch\Cirrious.CrossCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross.Binding">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1-beta2\lib\MonoTouch\Cirrious.MvvmCross.Binding.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross.Localization">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1-beta2\lib\MonoTouch\Cirrious.MvvmCross.Localization.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross.Touch">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.2.1-beta2\lib\MonoTouch\Cirrious.MvvmCross.Touch.dll</HintPath>
-    </Reference>
-    <Reference Include="Cirrious.MvvmCross">
-      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.2.1-beta2\lib\MonoTouch\Cirrious.MvvmCross.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.5\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ModernHttpClient">
       <HintPath>..\..\packages\modernhttpclient.2.1.1\lib\MonoTouch\ModernHttpClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.CrossCore.Touch">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\MonoTouch\Cirrious.CrossCore.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Binding.Touch">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\MonoTouch\Cirrious.MvvmCross.Binding.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.CrossCore">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\MonoTouch\Cirrious.CrossCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Binding">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\MonoTouch\Cirrious.MvvmCross.Binding.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Localization">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.1\lib\MonoTouch\Cirrious.MvvmCross.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Touch">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.2.1\lib\MonoTouch\Cirrious.MvvmCross.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross">
+      <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.2.1\lib\MonoTouch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
