@@ -7,6 +7,7 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Client.Core.Constants;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -14,12 +15,14 @@ namespace SmartWalk.Client.Core.ViewModels
     {
         private readonly ISmartWalkApiService _apiService;
         private readonly IExceptionPolicyService _exceptionPolicy;
+        private readonly IAnalyticsService _analyticsService;
         private readonly ILocationService _locationService;
         private readonly Parameters _parameters;
 
         private string _locationString;
         private OrgEvent[] _eventInfos;
         private ICommand _navigateOrgEventViewCommand;
+        private ICommand _showLocationDetailsCommand;
 
         public HomeViewModel(
             ISmartWalkApiService apiService,
@@ -32,11 +35,12 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
+            _analyticsService = analyticsService;
             _locationService = locationService;
 
             _parameters = new Parameters();
 
-            _locationService.LocationChanged += (s, e) => Refresh(DataSource.Server);
+            _locationService.LocationChanged += (s, e) => UpdateData(UpdateEventInfos, false);
             _locationService.LocationStringChanged += (s, e) => UpdateLocationString();
 
             UpdateLocationString();
@@ -101,6 +105,31 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public ICommand ShowLocationDetailsCommand
+        {
+            get
+            {
+                if (_showLocationDetailsCommand == null)
+                {
+                    _showLocationDetailsCommand = new MvxCommand(
+                        () => 
+                        {
+                            if (_locationService.CurrentLocation == Location.Empty)
+                            {
+                                _locationService.ResolveLocationIssues();
+                            }
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelShowLocationDetails);
+                        });
+                }
+
+                return _showLocationDetailsCommand;
+            }
+        }
+
         protected override ParametersBase InitParameters
         {
             get { return _parameters; }
@@ -111,6 +140,16 @@ namespace SmartWalk.Client.Core.ViewModels
             UpdateData(UpdateEventInfos, false);
 
             base.Start();
+        }
+
+        protected override void OnActivate()
+        {
+            _locationService.IsActive = true;
+        }
+
+        protected override void OnDeactivate()
+        {
+            _locationService.IsActive = false;
         }
 
         protected override void Refresh(DataSource source)

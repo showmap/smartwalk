@@ -17,6 +17,8 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         public const float DefaultHeight = 44;
 
+        private UITapGestureRecognizer _titleTapGesture;
+
         public HomeHeaderView(IntPtr handle) : base(handle)
         {
             this.CreateBindingContext();
@@ -44,10 +46,21 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         public void Initialize()
         {
             this.CreateBinding(TitleLabel)
-                .To<HomeViewModel>(vm => vm.Title)
+                .To<HomeViewModel>(vm => vm.LocationString)
                 .Apply();
 
             InitializeStyle();
+            InitializeGestures();
+        }
+
+        public override void WillMoveToSuperview(UIView newsuper)
+        {
+            base.WillMoveToSuperview(newsuper);
+
+            if (newsuper == null)
+            {
+                DisposeGestures();
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -67,6 +80,33 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
             TitleLabel.Font = Theme.HomeHeaderFont;
             TitleLabel.TextColor = Theme.CellText;
+        }
+
+        private void InitializeGestures()
+        {
+            _titleTapGesture = new UITapGestureRecognizer(() => {
+                if (DataContext != null &&
+                    DataContext.ShowLocationDetailsCommand != null &&
+                    DataContext.ShowLocationDetailsCommand.CanExecute(null))
+                {
+                    DataContext.ShowLocationDetailsCommand.Execute(null);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
+            TitleLabel.AddGestureRecognizer(_titleTapGesture);
+        }
+
+        private void DisposeGestures()
+        {
+            if (_titleTapGesture != null)
+            {
+                TitleLabel.RemoveGestureRecognizer(_titleTapGesture);
+                _titleTapGesture.Dispose();
+                _titleTapGesture = null;
+            }
         }
     }
 }

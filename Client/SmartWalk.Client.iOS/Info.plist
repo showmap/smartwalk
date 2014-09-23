@@ -46,5 +46,9 @@
 	<string>Resources/Images.xcassets/LaunchImage.launchimage</string>
 	<key>XSAppIconAssets</key>
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
+	<key>NSLocationUsageDescription</key>
+	<string>The location is used to load the closest events in the given area.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The location is used to load the closest events in the given area.</string>
 </dict>
 </plist>
