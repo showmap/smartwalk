@@ -13,5 +13,6 @@ namespace SmartWalk.Client.Core.Services
         string CurrentLocationString { get; }
 
         void ResolveLocationIssues();
+        void RefreshLocation();
     }
 }

@@ -41,7 +41,15 @@ namespace SmartWalk.Client.iOS.Services
         {
             if (_reachability == null)
             {
-                await Initialize();
+                try
+                {
+                    await Initialize();
+                }
+                catch
+                {
+                    _reachability = null;
+                    IsReachable = false;
+                }
             }
 
             return IsReachable;

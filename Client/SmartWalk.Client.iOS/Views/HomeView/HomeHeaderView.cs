@@ -17,7 +17,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         public const float DefaultHeight = 44;
 
-        private UITapGestureRecognizer _titleTapGesture;
+        private UITapGestureRecognizer _viewTapGesture;
 
         public HomeHeaderView(IntPtr handle) : base(handle)
         {
@@ -46,7 +46,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         public void Initialize()
         {
             this.CreateBinding(TitleLabel)
-                .To<HomeViewModel>(vm => vm.LocationString)
+                .To<HomeViewModel>(vm => vm.Title)
                 .Apply();
 
             InitializeStyle();
@@ -84,28 +84,27 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         private void InitializeGestures()
         {
-            _titleTapGesture = new UITapGestureRecognizer(() => {
+            _viewTapGesture = new UITapGestureRecognizer(() => {
                 if (DataContext != null &&
-                    DataContext.ShowLocationDetailsCommand != null &&
-                    DataContext.ShowLocationDetailsCommand.CanExecute(null))
+                    DataContext.ShowTitleDetailsCommand != null &&
+                    DataContext.ShowTitleDetailsCommand.CanExecute(null))
                 {
-                    DataContext.ShowLocationDetailsCommand.Execute(null);
+                    DataContext.ShowTitleDetailsCommand.Execute(null);
                 }
             }) {
-                NumberOfTouchesRequired = (uint)1,
                 NumberOfTapsRequired = (uint)1
             };
 
-            TitleLabel.AddGestureRecognizer(_titleTapGesture);
+            AddGestureRecognizer(_viewTapGesture);
         }
 
         private void DisposeGestures()
         {
-            if (_titleTapGesture != null)
+            if (_viewTapGesture != null)
             {
-                TitleLabel.RemoveGestureRecognizer(_titleTapGesture);
-                _titleTapGesture.Dispose();
-                _titleTapGesture = null;
+                RemoveGestureRecognizer(_viewTapGesture);
+                _viewTapGesture.Dispose();
+                _viewTapGesture = null;
             }
         }
     }

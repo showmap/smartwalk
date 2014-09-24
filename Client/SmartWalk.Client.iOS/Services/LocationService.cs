@@ -18,27 +18,34 @@ namespace SmartWalk.Client.iOS.Services
 
         private readonly ISettings _settings;
         private readonly IExceptionPolicyService _exceptionPolicy;
+        private readonly IReachabilityService _reachabilityService;
         private readonly IEnvironmentService _environmentService;
 
-        private CLLocationManager _locationManager;
-        private CLGeocoder _geocoder;
+        private readonly CLLocationManager _locationManager;
+        private readonly CLGeocoder _geocoder;
 
+        private string _currentLocationString;
         private bool _isActive;
         private bool _isMonitoring;
 
         public LocationService(
             ISettings settings, 
             IExceptionPolicyService exceptionPolicy,
+            IReachabilityService reachabilityService,
             IEnvironmentService environmentService)
         {
             _settings = settings;
             _exceptionPolicy = exceptionPolicy;
             _environmentService = environmentService;
+            _reachabilityService = reachabilityService;
+            _reachabilityService.StateChanged += 
+                (s, e) => UpdateLocationString().ContinueWithThrow();
 
-            if (CLLocationManager.LocationServicesEnabled)
-            {
-                Initialize();
-            }
+            _geocoder = new CLGeocoder();
+            _locationManager = new CLLocationManager();
+            _locationManager.DesiredAccuracy = CLLocation.AccuracyThreeKilometers;
+            _locationManager.DistanceFilter = 3000; // 3 Km
+            _locationManager.AuthorizationChanged += OnAuthorizationChanged;
 
             SaveLocationSettings();
             UpdateLocationString().ContinueWithThrow();
@@ -100,14 +107,32 @@ namespace SmartWalk.Client.iOS.Services
             }
         }
 
-        public string CurrentLocationString { get; private set; }
+        public string CurrentLocationString
+        {
+            get
+            {
+                return _currentLocationString;
+            }
+            private set
+            {
+                if (_currentLocationString != value)
+                {
+                    _currentLocationString = value;
 
-        private bool IsLocationAccessible
+                    if (LocationStringChanged != null)
+                    {
+                        LocationStringChanged(this, EventArgs.Empty);
+                    }
+                }
+            }
+        }
+
+        private static bool IsLocationAccessible
         {
             get
             {
                 return 
-                    _locationManager != null &&
+                    CLLocationManager.LocationServicesEnabled && 
                     (CLLocationManager.Status == CLAuthorizationStatus.AuthorizedAlways ||
                         CLLocationManager.Status == CLAuthorizationStatus.AuthorizedWhenInUse);
             }
@@ -123,6 +148,8 @@ namespace SmartWalk.Client.iOS.Services
 
         public void ResolveLocationIssues()
         {
+            if (!IsActive) return;
+
             if (IsLocationAccessible)
             {
                 if (CurrentLocation == Location.Empty)
@@ -136,34 +163,30 @@ namespace SmartWalk.Client.iOS.Services
             {
                 if (!CLLocationManager.LocationServicesEnabled)
                 {
-                    _environmentService.Alert(Localization.LocationError, Localization.CantResolveLocationServicesOff);
+                    _environmentService.Alert(
+                        Localization.LocationError,
+                        Localization.CantResolveLocationServicesOff);
                 }
                 else if (CLLocationManager.Status == CLAuthorizationStatus.Denied ||
                          CLLocationManager.Status == CLAuthorizationStatus.Restricted)
                 {
-                    _environmentService.Alert(Localization.LocationError, Localization.CantResolveLocationDenied);
+                    _environmentService.Alert(
+                        Localization.LocationError, 
+                        Localization.CantResolveLocationDenied);
                 }
                 else
                 {
-                    Initialize();
                     StopMonitoring();
                     StartMonitoring();
                 }
             }
         }
 
-        private void Initialize()
+        public void RefreshLocation()
         {
-            if (_geocoder == null)
+            if (IsActive)
             {
-                _geocoder = new CLGeocoder();
-            }
-
-            if (_locationManager == null)
-            {
-                _locationManager = new CLLocationManager();
-                _locationManager.DesiredAccuracy = CLLocation.AccuracyThreeKilometers;
-                _locationManager.AuthorizationChanged += OnAuthorizationChanged;
+                StartMonitoring();
             }
         }
 
@@ -179,7 +202,7 @@ namespace SmartWalk.Client.iOS.Services
 
         private void StartMonitoring()
         {
-            if (_locationManager != null && !_isMonitoring)
+            if (CLLocationManager.LocationServicesEnabled && !_isMonitoring)
             {
                 var monitoringAllowed = false;
 
@@ -205,16 +228,7 @@ namespace SmartWalk.Client.iOS.Services
                 if (monitoringAllowed)
                 {
                     _locationManager.LocationsUpdated += OnLocationsUpdated;
-
-                    if (CLLocationManager.SignificantLocationChangeMonitoringAvailable)
-                    {
-                        _locationManager.StartMonitoringSignificantLocationChanges();
-                    }
-                    else
-                    {
-                        _locationManager.DistanceFilter = 3000; // 3 Km
-                        _locationManager.StartUpdatingLocation();
-                    }
+                    _locationManager.StartUpdatingLocation();
 
                     _isMonitoring = true;
                 }
@@ -223,11 +237,9 @@ namespace SmartWalk.Client.iOS.Services
 
         private void StopMonitoring()
         {
-            if (_locationManager != null && _isMonitoring)
+            if (_isMonitoring)
             {
-                _locationManager.StopMonitoringSignificantLocationChanges();
                 _locationManager.StopUpdatingLocation();
-                _locationManager.DistanceFilter = CLLocationDistance.FilterNone;
                 _locationManager.LocationsUpdated -= OnLocationsUpdated;
                 _isMonitoring = false;
             }
@@ -251,6 +263,9 @@ namespace SmartWalk.Client.iOS.Services
 
         private void OnLocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
         {
+            // we just need a location at current moment
+            StopMonitoring();
+
             var lastLocation = LoadLocationSettings();
             var location = _locationManager.Location == null 
                 ? (CLLocationCoordinate2D?)null 
@@ -259,62 +274,75 @@ namespace SmartWalk.Client.iOS.Services
             if (!Equals(lastLocation, location))
             {
                 SaveLocationSettings();
+                UpdateLocationString().ContinueWithThrow();
 
                 if (LocationChanged != null)
                 {
                     LocationChanged(this, EventArgs.Empty);
                 }
             }
-
-            UpdateLocationString().ContinueWithThrow();
         }
 
         private async Task UpdateLocationString()
         {
-            if (_geocoder != null && CurrentLocation != Location.Empty)
+            string result;
+
+            if (CurrentLocation != Location.Empty)
             {
-                var placemarks = default(CLPlacemark[]);
+                var isConnected = await _reachabilityService.GetIsReachable();
+                if (isConnected)
+                {
+                    var placemarks = default(CLPlacemark[]);
 
-                try
-                {
-                    var location = new CLLocation(
-                        CurrentLocation.Latitude, 
-                        CurrentLocation.Longitude);
-                    placemarks = await _geocoder
-                        .ReverseGeocodeLocationAsync(location);
-                }
-                catch (Exception ex)
-                {
-                    _exceptionPolicy.Trace(ex, false);
-                }
-
-                if (placemarks != null)
-                {
-                    var placemark = placemarks.FirstOrDefault();
-                    if (placemark != null &&
-                        placemark.Locality != null &&
-                        placemark.Country != null)
+                    try
                     {
-                        CurrentLocationString = string.Format(
-                            "{0}, {1}", 
-                            placemark.Locality, 
-                            placemark.Country);
+                        var location = 
+                            new CLLocation(
+                                CurrentLocation.Latitude, 
+                                CurrentLocation.Longitude);
+                        placemarks = await _geocoder
+                            .ReverseGeocodeLocationAsync(location);
+                    }
+                    catch (Exception ex)
+                    {
+                        _exceptionPolicy.Trace(ex, false);
+                    }
+
+                    if (placemarks != null)
+                    {
+                        var placemark = placemarks.FirstOrDefault();
+                        if (placemark != null &&
+                            placemark.Locality != null &&
+                            placemark.Country != null)
+                        {
+                            result = string.Format(
+                                "{0}, {1}", 
+                                placemark.Locality, 
+                                placemark.Country);
+                        }
+                        else
+                        {
+                            result = Localization.UnknownLocation;
+                        }
                     }
                     else
                     {
-                        CurrentLocationString = Localization.UnknownLocation;
+                        // using null means location couldn't be loaded
+                        result = string.Empty;
                     }
+                }
+                else
+                {
+                    // using empty means location couldn't be loaded
+                    result = string.Empty;
                 }
             }
             else
             {
-                CurrentLocationString = Localization.UnknownLocation;
+                result = Localization.UnknownLocation;
             }
 
-            if (LocationStringChanged != null)
-            {
-                LocationStringChanged(this, EventArgs.Empty);
-            }
+            CurrentLocationString = result;
         }
 
         private CLLocationCoordinate2D? LoadLocationSettings()

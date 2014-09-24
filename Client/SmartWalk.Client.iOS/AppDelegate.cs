@@ -87,6 +87,8 @@ namespace SmartWalk.Client.iOS
                 EasyTracker.Current.OnApplicationActivated(application);
             }
 
+            Mvx.Resolve<ILocationService>().RefreshLocation();
+
             AppSettingsUtil.HandleResetCache(_settings);
         }
 

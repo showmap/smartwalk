@@ -8,6 +8,7 @@ using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.Constants;
+using SmartWalk.Client.Core.Resources;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -48,7 +49,8 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override string Title
         {
-            get { return LocationString; }
+            // TODO: The direct check of Reachability service should be set up here
+            get { return LocationString == string.Empty ? Localization.NoNetworkConnection : LocationString; }
         }
 
         public string LocationString
@@ -105,7 +107,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public ICommand ShowLocationDetailsCommand
+        public ICommand ShowTitleDetailsCommand
         {
             get
             {
