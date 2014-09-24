@@ -1,4 +1,5 @@
-﻿using SmartWalk.Server.Common.Utils;
+﻿using SmartWalk.Server.Common;
+using SmartWalk.Server.Common.Utils;
 using SmartWalk.Shared;
 using Orchard.UI.Resources;
 
@@ -54,7 +55,7 @@ namespace SmartWalk.Server
             
             manifest.DefineScript("GoogleMapsApi")
                 .SetCdn(
-                    "http://maps.google.com/maps/api/js?key=AIzaSyCanvS2udvOBlQT4lj6HsM9eKfJgQ31BaY",
+                    "http://maps.google.com/maps/api/js?key=" + Settings.GoogleMapsKey,
                     "http://maps.google.com/maps/api/js");
 
             // SmartWalk

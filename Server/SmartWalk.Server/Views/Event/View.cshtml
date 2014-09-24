@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using SmartWalk.Server.Common
 @using SmartWalk.Server.Common.Utils
 @using SmartWalk.Server.Records
 @using SmartWalk.Server.ViewModels
@@ -140,7 +141,7 @@
         
         if (addthisevent) {
             addthisevent.settings({
-                license: "a253yx1lkz7hvkq8kmun",
+                license: "@Settings.AddThisEventLicense",
                 mouse: false,
                 css: true,
                 outlook: { show: true, text: "Outlook Calendar" },

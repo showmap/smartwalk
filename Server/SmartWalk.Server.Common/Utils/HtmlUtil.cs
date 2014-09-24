@@ -43,7 +43,7 @@ namespace SmartWalk.Server.Common.Utils
                     ? string.Empty
                     : string.Format(", app-argument={0}", string.Format(argument, args));
 
-            page.SetMeta("apple-itunes-app", string.Format("app-id=739528404{0}", appArgument), null, null);
+            page.SetMeta("apple-itunes-app", string.Format("app-id={0}{1}", Settings.iTunesAppId, appArgument), null, null);
         }
     }
 }
