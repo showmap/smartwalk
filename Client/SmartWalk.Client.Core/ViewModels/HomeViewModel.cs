@@ -18,12 +18,14 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly IExceptionPolicyService _exceptionPolicy;
         private readonly IAnalyticsService _analyticsService;
         private readonly ILocationService _locationService;
+        private readonly IReachabilityService _reachabilityService;
         private readonly Parameters _parameters;
 
         private string _locationString;
         private OrgEvent[] _eventInfos;
         private ICommand _navigateOrgEventViewCommand;
         private ICommand _showLocationDetailsCommand;
+        private bool? _isConnected;
 
         public HomeViewModel(
             ISmartWalkApiService apiService,
@@ -38,19 +40,25 @@ namespace SmartWalk.Client.Core.ViewModels
             _exceptionPolicy = exceptionPolicy;
             _analyticsService = analyticsService;
             _locationService = locationService;
+            _reachabilityService = reachabilityService;
 
             _parameters = new Parameters();
 
             _locationService.LocationChanged += (s, e) => UpdateData(UpdateEventInfos, false);
             _locationService.LocationStringChanged += (s, e) => UpdateLocationString();
 
+            _reachabilityService.StateChanged += (s, e) => UpdateConnectedStatus().ContinueWithThrow();
+
+            UpdateConnectedStatus().ContinueWithThrow();
             UpdateLocationString();
         }
 
         public override string Title
         {
-            // TODO: The direct check of Reachability service should be set up here
-            get { return LocationString == string.Empty ? Localization.NoNetworkConnection : LocationString; }
+            get
+            {
+                return _isConnected == false ? Localization.OffLineMode : LocationString;
+            }
         }
 
         public string LocationString
@@ -116,7 +124,8 @@ namespace SmartWalk.Client.Core.ViewModels
                     _showLocationDetailsCommand = new MvxCommand(
                         () => 
                         {
-                            if (_locationService.CurrentLocation == Location.Empty)
+                            if (_isConnected != false && 
+                                _locationService.CurrentLocationString == null)
                             {
                                 _locationService.ResolveLocationIssues();
                             }
@@ -146,11 +155,15 @@ namespace SmartWalk.Client.Core.ViewModels
 
         protected override void OnActivate()
         {
+            base.OnActivate();
+
             _locationService.IsActive = true;
         }
 
         protected override void OnDeactivate()
         {
+            base.OnDeactivate();
+
             _locationService.IsActive = false;
         }
 
@@ -198,7 +211,14 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private void UpdateLocationString()
         {
-            LocationString = _locationService.CurrentLocationString;
+            LocationString = _locationService.CurrentLocationString 
+                ?? Localization.UnknownLocation;
+        }
+
+        private async Task UpdateConnectedStatus()
+        {
+            _isConnected = await _reachabilityService.GetIsReachable();
+            RaisePropertyChanged(() => Title);
         }
 
         public class Parameters : ParametersBase

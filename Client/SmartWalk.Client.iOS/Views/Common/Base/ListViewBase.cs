@@ -117,7 +117,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void UpdateStatusBarLoadingState(bool animated)
         {
-            if (IsLoading)
+            if (IsLoading && 
+                _refreshControl != null && _refreshControl.Refreshing) // showing status only on Pull-to-Refresh
             {
                 SetStatusBarHidden(false, animated);
             }

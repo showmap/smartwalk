@@ -27,6 +27,7 @@ namespace SmartWalk.Client.iOS.Services
         private string _currentLocationString;
         private bool _isActive;
         private bool _isMonitoring;
+        private CLLocationCoordinate2D? _lastLocation;
 
         public LocationService(
             ISettings settings, 
@@ -79,27 +80,17 @@ namespace SmartWalk.Client.iOS.Services
             }
         }
 
-        public Location CurrentLocation 
+        public Location CurrentLocation
         { 
             get
             { 
-                CLLocationCoordinate2D? coordinate;
-
-                if (IsLocationAvailable)
-                {
-                    coordinate = _locationManager.Location.Coordinate;
-                }
-                else
-                {
-                    coordinate = LoadLocationSettings();
-                }
+                var coordinate = IsLocationAvailable 
+                    ? _locationManager.Location.Coordinate 
+                    : LoadLocationSettings();
 
                 if (coordinate.HasValue)
                 {
-                    // using bigger region to filter nearby events
-                    var result = new Location(
-                        Math.Round(coordinate.Value.Latitude, 2),
-                        Math.Round(coordinate.Value.Longitude, 2));
+                    var result = GetLocationByCoordinate(coordinate.Value);
                     return result;
                 }
 
@@ -152,7 +143,7 @@ namespace SmartWalk.Client.iOS.Services
 
             if (IsLocationAccessible)
             {
-                if (CurrentLocation == Location.Empty)
+                if (CurrentLocationString == null)
                 {
                     // if accessible but no location, maybe monitoring was turned off
                     StopMonitoring();
@@ -266,13 +257,14 @@ namespace SmartWalk.Client.iOS.Services
             // we just need a location at current moment
             StopMonitoring();
 
-            var lastLocation = LoadLocationSettings();
             var location = _locationManager.Location == null 
                 ? (CLLocationCoordinate2D?)null 
                 : _locationManager.Location.Coordinate;
 
-            if (!Equals(lastLocation, location))
+            if (!Equals(_lastLocation, location))
             {
+                _lastLocation = location;
+
                 SaveLocationSettings();
                 UpdateLocationString().ContinueWithThrow();
 
@@ -285,9 +277,10 @@ namespace SmartWalk.Client.iOS.Services
 
         private async Task UpdateLocationString()
         {
-            string result;
+            var result = default(string);
 
-            if (CurrentLocation != Location.Empty)
+            // if Location is disabled (even if we saved location before), showing a label to notify user
+            if (IsLocationAccessible && CurrentLocation != Location.Empty)
             {
                 var isConnected = await _reachabilityService.GetIsReachable();
                 if (isConnected)
@@ -320,26 +313,8 @@ namespace SmartWalk.Client.iOS.Services
                                 placemark.Locality, 
                                 placemark.Country);
                         }
-                        else
-                        {
-                            result = Localization.UnknownLocation;
-                        }
-                    }
-                    else
-                    {
-                        // using null means location couldn't be loaded
-                        result = string.Empty;
                     }
                 }
-                else
-                {
-                    // using empty means location couldn't be loaded
-                    result = string.Empty;
-                }
-            }
-            else
-            {
-                result = Localization.UnknownLocation;
             }
 
             CurrentLocationString = result;
@@ -347,15 +322,12 @@ namespace SmartWalk.Client.iOS.Services
 
         private CLLocationCoordinate2D? LoadLocationSettings()
         {
-            if (IsLocationAccessible)
-            {
-                var latitude = _settings.GetValueOrDefault<double?>(LastLocationLat);
-                var longitude = _settings.GetValueOrDefault<double?>(LastLocationLong);
+            var latitude = _settings.GetValueOrDefault<double?>(LastLocationLat);
+            var longitude = _settings.GetValueOrDefault<double?>(LastLocationLong);
 
-                if (latitude.HasValue && longitude.HasValue)
-                {
-                    return new CLLocationCoordinate2D(latitude.Value, longitude.Value);
-                }
+            if (latitude.HasValue && longitude.HasValue)
+            {
+                return GetCoordinateByLocation(new Location(latitude.Value, longitude.Value));
             }
 
             return null;
@@ -373,6 +345,23 @@ namespace SmartWalk.Client.iOS.Services
                     _locationManager.Location.Coordinate.Longitude);
                 _settings.Save();
             }
+        }
+
+        /// <summary>
+        /// Gets the SW location by coordinate with smaller precision to filter nearby events.
+        /// </summary>
+        private static Location GetLocationByCoordinate(CLLocationCoordinate2D coordinate)
+        {
+            var result = new Location(
+                Math.Round(coordinate.Latitude, 2),
+                Math.Round(coordinate.Longitude, 2));
+            return result;
+        }
+
+        private static CLLocationCoordinate2D GetCoordinateByLocation(Location location)
+        {
+            var result = new CLLocationCoordinate2D(location.Latitude, location.Longitude);
+            return result;
         }
     }
 }

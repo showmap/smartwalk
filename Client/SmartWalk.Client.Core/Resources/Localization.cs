@@ -22,7 +22,7 @@
         public const string ChangeMapTo = "Change Map to {0}";
         public const string NextPattern = "Next: {0}";
         public const string UnknownLocation = "Unknown Location";
-        public const string NoNetworkConnection = "No Network Connection";
+        public const string OffLineMode = "Offline Mode";
 
         public const string Error = "Error";
         public const string NetworkError = "Network Error";

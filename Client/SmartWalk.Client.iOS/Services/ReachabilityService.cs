@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MonoTouch.SystemConfiguration;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Services
@@ -9,13 +10,33 @@ namespace SmartWalk.Client.iOS.Services
     public class ReachabilityService : IReachabilityService, IDisposable
     {
         private readonly IConfiguration _configuration;
+        private readonly NetworkReachability _reachability;
+        private readonly Task _initializeTask;
 
         private bool _isReachable;
-        private NetworkReachability _reachability;
 
         public ReachabilityService(IConfiguration configuration)
         {
             _configuration = configuration;
+            _reachability = new NetworkReachability(_configuration.Host);
+
+            _initializeTask = Task.Run(() =>
+                {
+                    NetworkReachabilityFlags flags;
+
+                    var resultFlags = _reachability.TryGetFlags(out flags) 
+                            ? flags 
+                                : (NetworkReachabilityFlags)0;
+
+                    return resultFlags;
+                })
+                .ContinueWithUIThread(previousTask =>
+                    {
+                        OnNotification(previousTask.Result);
+
+                        _reachability.SetNotification(OnNotification);
+                        _reachability.Schedule();
+                    });
         }
 
         public event EventHandler StateChanged;
@@ -39,18 +60,7 @@ namespace SmartWalk.Client.iOS.Services
 
         public async Task<bool> GetIsReachable()
         {
-            if (_reachability == null)
-            {
-                try
-                {
-                    await Initialize();
-                }
-                catch
-                {
-                    _reachability = null;
-                    IsReachable = false;
-                }
-            }
+            await _initializeTask;
 
             return IsReachable;
         }
@@ -61,33 +71,7 @@ namespace SmartWalk.Client.iOS.Services
             {
                 _reachability.Unschedule();
                 _reachability.Dispose();
-                _reachability = null;
             }
-        }
-
-        private async Task Initialize()
-        {
-            _reachability = new NetworkReachability(_configuration.Host);
-
-            var reachability = _reachability;
-            var resultFlags = 
-                await Task.Run(
-                () =>
-                {
-                    NetworkReachabilityFlags flags;
-
-                    if (reachability.TryGetFlags(out flags))
-                    {
-                        return flags;
-                    }
-
-                    return (NetworkReachabilityFlags)0;
-                });
-
-            OnNotification(resultFlags);
-
-            _reachability.SetNotification(OnNotification);
-            _reachability.Schedule();
         }
 
         private void OnNotification(NetworkReachabilityFlags flags)
