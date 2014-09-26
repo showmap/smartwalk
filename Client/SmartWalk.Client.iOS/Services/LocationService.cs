@@ -24,10 +24,10 @@ namespace SmartWalk.Client.iOS.Services
         private readonly CLLocationManager _locationManager;
         private readonly CLGeocoder _geocoder;
 
-        private string _currentLocationString;
         private bool _isActive;
         private bool _isMonitoring;
-        private CLLocationCoordinate2D? _lastLocation;
+        private Location? _lastLocation;
+        private string _currentLocationString;
 
         public LocationService(
             ISettings settings, 
@@ -48,7 +48,7 @@ namespace SmartWalk.Client.iOS.Services
             _locationManager.DistanceFilter = 3000; // 3 Km
             _locationManager.AuthorizationChanged += OnAuthorizationChanged;
 
-            SaveLocationSettings();
+            SaveLocationSettings(CurrentLocation);
             UpdateLocationString().ContinueWithThrow();
         }
 
@@ -80,24 +80,27 @@ namespace SmartWalk.Client.iOS.Services
             }
         }
 
+        /// <summary>
+        /// Gets the current location if Loc Services are available or 
+        /// a last saved one, if they aren't.
+        /// </summary>
         public Location CurrentLocation
         { 
             get
             { 
-                var coordinate = IsLocationAvailable 
-                    ? _locationManager.Location.Coordinate 
+                var location = IsLocationAvailable 
+                    ? GetLocationByCoordinate(_locationManager.Location.Coordinate) 
                     : LoadLocationSettings();
 
-                if (coordinate.HasValue)
-                {
-                    var result = GetLocationByCoordinate(coordinate.Value);
-                    return result;
-                }
+                return location.HasValue ? location.Value : Location.Empty;
 
-                return Location.Empty;
             }
         }
 
+        /// <summary>
+        /// Gets the current location string if there is Network Connection and Loc Services are available.
+        /// Otherwise null is returned.
+        /// </summary>
         public string CurrentLocationString
         {
             get
@@ -193,27 +196,30 @@ namespace SmartWalk.Client.iOS.Services
 
         private void StartMonitoring()
         {
-            if (CLLocationManager.LocationServicesEnabled && !_isMonitoring)
+            if (!_isMonitoring)
             {
                 var monitoringAllowed = false;
 
-                switch (CLLocationManager.Status)
+                if (CLLocationManager.LocationServicesEnabled)
                 {
-                    case CLAuthorizationStatus.AuthorizedAlways: 
-                    case CLAuthorizationStatus.AuthorizedWhenInUse:
-                        monitoringAllowed = true;
-                        break;
-
-                    case CLAuthorizationStatus.NotDetermined:
-                        if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
-                        {
-                            _locationManager.RequestWhenInUseAuthorization();
-                        }
-                        else
-                        {
+                    switch (CLLocationManager.Status)
+                    {
+                        case CLAuthorizationStatus.AuthorizedAlways: 
+                        case CLAuthorizationStatus.AuthorizedWhenInUse:
                             monitoringAllowed = true;
-                        }
-                        break;
+                            break;
+
+                        case CLAuthorizationStatus.NotDetermined:
+                            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+                            {
+                                _locationManager.RequestWhenInUseAuthorization();
+                            }
+                            else
+                            {
+                                monitoringAllowed = true;
+                            }
+                            break;
+                    }
                 }
 
                 if (monitoringAllowed)
@@ -222,6 +228,11 @@ namespace SmartWalk.Client.iOS.Services
                     _locationManager.StartUpdatingLocation();
 
                     _isMonitoring = true;
+                }
+                else
+                {
+                    // Reseting location string to null
+                    UpdateLocationString().ContinueWithThrow();
                 }
             }
         }
@@ -254,18 +265,18 @@ namespace SmartWalk.Client.iOS.Services
 
         private void OnLocationsUpdated(object sender, CLLocationsUpdatedEventArgs e)
         {
-            // we just need a location at current moment
+            // we just need a one-time location at current moment
             StopMonitoring();
 
             var location = _locationManager.Location == null 
-                ? (CLLocationCoordinate2D?)null 
-                : _locationManager.Location.Coordinate;
+                ? (Location?)null 
+                : GetLocationByCoordinate(_locationManager.Location.Coordinate);
 
             if (!Equals(_lastLocation, location))
             {
                 _lastLocation = location;
 
-                SaveLocationSettings();
+                SaveLocationSettings(location);
                 UpdateLocationString().ContinueWithThrow();
 
                 if (LocationChanged != null)
@@ -279,7 +290,6 @@ namespace SmartWalk.Client.iOS.Services
         {
             var result = default(string);
 
-            // if Location is disabled (even if we saved location before), showing a label to notify user
             if (IsLocationAccessible && CurrentLocation != Location.Empty)
             {
                 var isConnected = await _reachabilityService.GetIsReachable();
@@ -320,29 +330,26 @@ namespace SmartWalk.Client.iOS.Services
             CurrentLocationString = result;
         }
 
-        private CLLocationCoordinate2D? LoadLocationSettings()
+        private Location? LoadLocationSettings()
         {
             var latitude = _settings.GetValueOrDefault<double?>(LastLocationLat);
             var longitude = _settings.GetValueOrDefault<double?>(LastLocationLong);
 
             if (latitude.HasValue && longitude.HasValue)
             {
-                return GetCoordinateByLocation(new Location(latitude.Value, longitude.Value));
+                return new Location(latitude.Value, longitude.Value);
             }
 
             return null;
         }
 
-        private void SaveLocationSettings()
+        private void SaveLocationSettings(Location? location)
         {
-            if (IsLocationAvailable)
+            if (IsLocationAccessible && 
+                location != null && location != Location.Empty)
             {
-                _settings.AddOrUpdateValue(
-                    LastLocationLat, 
-                    _locationManager.Location.Coordinate.Latitude);
-                _settings.AddOrUpdateValue(
-                    LastLocationLong, 
-                    _locationManager.Location.Coordinate.Longitude);
+                _settings.AddOrUpdateValue(LastLocationLat, location.Value.Latitude);
+                _settings.AddOrUpdateValue(LastLocationLong, location.Value.Longitude);
                 _settings.Save();
             }
         }
