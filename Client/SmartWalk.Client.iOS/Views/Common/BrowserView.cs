@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using MonoTouch.Foundation;
@@ -116,24 +117,24 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
+        protected override void OnInitializingActionSheet(List<string> titles)
         {
             if (ViewModel.OpenLinkCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.OpenInSafari);
+                titles.Add(Localization.OpenInSafari);
             }
 
             // TODO: To support Chrome some day
-            //actionSheet.AddButton(Localization.OpenInChrome);
+            //titles.Add(Localization.OpenInChrome);
 
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.CopyLink);
+                titles.Add(Localization.CopyLink);
             }
 
             if (ViewModel.ShareCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.ShareButton);
+                titles.Add(Localization.ShareButton);
             }
         }
 

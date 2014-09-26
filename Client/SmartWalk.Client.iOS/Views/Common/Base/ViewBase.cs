@@ -8,6 +8,7 @@ using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using System.Collections.Generic;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -123,17 +124,52 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected void ShowActionSheet()
         {
-            var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
+            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+            {
+                var actionSheet = ActionSheetUtil.CreateActionSheet();
+                var titles = new List<string>();
 
-            OnInitializingActionSheet(actionSheet);
+                OnInitializingActionSheet(titles);
 
-            actionSheet.AddButton(Localization.CancelButton);
-            actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
+                foreach (var title in titles)
+                {
+                    var action = 
+                        UIAlertAction.Create(
+                            title,
+                            UIAlertActionStyle.Default,
+                            a => OnActionSheetClick(a.Title));
+                    actionSheet.AddAction(action);
+                }
 
-            actionSheet.ShowInView(View);
+                var cancelAction = 
+                    UIAlertAction.Create(
+                        Localization.CancelButton,
+                        UIAlertActionStyle.Cancel,
+                        action => actionSheet.DismissViewController(true, null));
+                actionSheet.AddAction(cancelAction);
+
+                PresentViewController(actionSheet, true, null);
+            }
+            else
+            {
+                var actionSheet = ActionSheetUtil.CreateActionSheet(OnActionClicked);
+                var titles = new List<string>();
+
+                OnInitializingActionSheet(titles);
+
+                titles.Add(Localization.CancelButton);
+
+                foreach (var title in titles)
+                {
+                    actionSheet.AddButton(title);
+                }
+
+                actionSheet.CancelButtonIndex = actionSheet.ButtonCount - 1;
+                actionSheet.ShowInView(View);
+            }
         }
 
-        protected virtual void OnInitializingActionSheet(UIActionSheet actionSheet)
+        protected virtual void OnInitializingActionSheet(List<string> titles)
         {
         }
 

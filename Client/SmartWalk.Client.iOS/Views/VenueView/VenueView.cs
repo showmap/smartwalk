@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
@@ -65,31 +66,31 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             }
         }
 
-        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
+        protected override void OnInitializingActionSheet(List<string> titles)
         {
             if (ViewModel.ShowDirectionsCommand.CanExecute(ViewModel.Entity))
             {
-                actionSheet.AddButton(Localization.NavigateInMaps);
+                titles.Add(Localization.NavigateInMaps);
             }
 
             if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
             {
-                actionSheet.AddButton(Localization.ShowContactInfo);
+                titles.Add(Localization.ShowContactInfo);
             }
 
             if (ViewModel.CopyAddressCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.CopyAddress);
+                titles.Add(Localization.CopyAddress);
             }
 
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.CopyLink);
+                titles.Add(Localization.CopyLink);
             }
 
             if (ViewModel.ShareCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.ShareButton);
+                titles.Add(Localization.ShareButton);
             }
         }
 

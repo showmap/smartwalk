@@ -462,36 +462,36 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
+        protected override void OnInitializingActionSheet(List<string> titles)
         {
             if (ViewModel.CreateEventCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.SaveToCalendar);
+                titles.Add(Localization.SaveToCalendar);
             }
 
             if (ViewModel.NavigateOrgEventInfoCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.ShowEventInfo);
+                titles.Add(Localization.ShowEventInfo);
             }
 
             if (ViewModel.NavigateOrgCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.ShowOrganizerInfo);
+                titles.Add(Localization.ShowOrganizerInfo);
             }
 
             if (ViewModel.SwitchMapTypeCommand.CanExecute(null))
             {
-                actionSheet.AddButton(ViewModel.CurrentMapType.GetMapTypeButtonLabel());
+                titles.Add(ViewModel.CurrentMapType.GetMapTypeButtonLabel());
             }
 
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.CopyLink);
+                titles.Add(Localization.CopyLink);
             }
 
             if (ViewModel.ShareCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.ShareButton);
+                titles.Add(Localization.ShareButton);
             }
         }
 

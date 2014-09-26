@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Resources;
@@ -65,21 +66,21 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             }
         }
 
-        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
+        protected override void OnInitializingActionSheet(List<string> titles)
         {
             if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
             {
-                actionSheet.AddButton(Localization.ShowContactInfo);
+                titles.Add(Localization.ShowContactInfo);
             }
 
             if (ViewModel.CopyLinkCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.CopyLink);
+                titles.Add(Localization.CopyLink);
             }
 
             if (ViewModel.ShareCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.ShareButton);
+                titles.Add(Localization.ShareButton);
             }
         }
 

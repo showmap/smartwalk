@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
@@ -30,26 +31,26 @@ namespace SmartWalk.Client.iOS.Views.Common
             SelectAnnotation();
         }
 
-        protected override void OnInitializingActionSheet(UIActionSheet actionSheet)
+        protected override void OnInitializingActionSheet(List<string> titles)
         {
             if (ViewModel.ShowDirectionsCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.NavigateInMaps);
+                titles.Add(Localization.NavigateInMaps);
             }
 
             if (ViewModel.SwitchMapTypeCommand.CanExecute(null))
             {
-                actionSheet.AddButton(ViewModel.CurrentMapType.GetMapTypeButtonLabel());
+                titles.Add(ViewModel.CurrentMapType.GetMapTypeButtonLabel());
             }
 
             if (ViewModel.CopyAddressCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.CopyAddress);
+                titles.Add(Localization.CopyAddress);
             }
 
             if (ViewModel.ShareCommand.CanExecute(null))
             {
-                actionSheet.AddButton(Localization.ShareButton);
+                titles.Add(Localization.ShareButton);
             }
         }
 

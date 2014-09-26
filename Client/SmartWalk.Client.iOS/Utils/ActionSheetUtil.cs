@@ -17,6 +17,16 @@ namespace SmartWalk.Client.iOS.Utils
             return result;
         }
 
+        public static UIAlertController CreateActionSheet()
+        {
+            var result = UIAlertController.Create(null, null, 
+                UIAlertControllerStyle.ActionSheet);
+
+            result.View.TintColor = Theme.ActionSheetText;
+
+            return result;
+        }
+
         private static void OnWillPresent(object sender, EventArgs e)
         {
             var actionSheet = (UIActionSheet)sender;
