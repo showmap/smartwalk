@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -48,6 +49,46 @@ namespace SmartWalk.Client.iOS.Utils
             else
             {
                 view.Hidden = hidden;
+            }
+        }
+
+        public static void RemoveFromSuperview(this UIView view, bool animated)
+        {
+            // HACK: checking Alpha is 1, assuming it's smaller if animation started
+            if (view.Superview != null && Math.Abs(view.Alpha - 1) < 0.00001)
+            {
+                if (animated)
+                {
+                    view.Alpha = 1;
+                    UIView.Animate(
+                        UIConstants.AnimationDuration,
+                        new NSAction(() => view.Alpha = 0),
+                        new NSAction(view.RemoveFromSuperview));
+                }
+                else
+                {
+                    view.RemoveFromSuperview();
+                }
+            }
+        }
+
+        public static void Add(this UIView view, UIView subview, bool animated)
+        {
+            if (subview.Superview == null)
+            {
+                if (animated)
+                {
+                    subview.Alpha = 0;
+                    view.Add(subview);
+
+                    UIView.Animate(
+                        UIConstants.AnimationDuration,
+                        new NSAction(() => subview.Alpha = 1));
+                }
+                else
+                {
+                    view.Add(subview);
+                }
             }
         }
     }

@@ -88,17 +88,11 @@ namespace SmartWalk.Client.iOS.Utils
            
             if (customHidden)
             {
-                if (_customNavBar.Superview != null)
-                {
-                    _customNavBar.RemoveFromSuperview();
-                }
+                _customNavBar.RemoveFromSuperview(animated);
             }
             else
             {
-                if (_customNavBar.Superview == null)
-                {
-                    NavController.View.Add(_customNavBar);
-                }
+                NavController.View.Add(_customNavBar, animated);
             }
         }
 

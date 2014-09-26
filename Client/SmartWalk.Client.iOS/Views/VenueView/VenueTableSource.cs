@@ -15,6 +15,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
     public class VenueTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly VenueViewModel _viewModel;
+        private readonly ScrollDownToHideUIManager _scrollDownManager;
 
         public VenueTableSource(UITableView tableView, VenueViewModel viewModel)
             : base(tableView)
@@ -25,6 +26,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             tableView.RegisterNibForCellReuse(NextVenueCell.Nib, NextVenueCell.Key);
+
+            _scrollDownManager = new ScrollDownToHideUIManager(tableView);
         }
 
         public GroupContainer[] GroupItemsSource
@@ -32,9 +35,36 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             get { return (GroupContainer[])ItemsSource;}
         }
 
+        public override void ReloadTableData()
+        {
+            base.ReloadTableData();
+
+            _scrollDownManager.Reset();
+        }
+
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             TableView.DeselectRow(indexPath, false);
+        }
+
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            _scrollDownManager.DraggingStarted();
+        }
+
+        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+        {
+            _scrollDownManager.DraggingEnded();
+        }
+
+        public override void Scrolled(UIScrollView scrollView)
+        {
+            _scrollDownManager.Scrolled();
+        }
+
+        public override void DecelerationEnded(UIScrollView scrollView)
+        {
+            _scrollDownManager.ScrollFinished();
         }
 
         public override float GetHeightForHeader(UITableView tableView, int section)

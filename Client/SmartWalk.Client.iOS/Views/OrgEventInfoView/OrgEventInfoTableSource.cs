@@ -12,6 +12,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
     public class OrgEventInfoTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly OrgEventInfoViewModel _viewModel;
+        private readonly ScrollDownToHideUIManager _scrollDownManager;
 
         public OrgEventInfoTableSource(UITableView tableView, OrgEventInfoViewModel viewModel)
             : base(tableView)
@@ -19,6 +20,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
             _viewModel = viewModel;
 
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
+
+            _scrollDownManager = new ScrollDownToHideUIManager(tableView);
+        }
+
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            _scrollDownManager.DraggingStarted();
+        }
+
+        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+        {
+            _scrollDownManager.DraggingEnded();
+        }
+
+        public override void Scrolled(UIScrollView scrollView)
+        {
+            _scrollDownManager.Scrolled();
+        }
+
+        public override void DecelerationEnded(UIScrollView scrollView)
+        {
+            _scrollDownManager.ScrollFinished();
         }
 
         public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

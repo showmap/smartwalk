@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Resources;
@@ -17,36 +16,35 @@ namespace SmartWalk.Client.iOS.Views.Common
     {
         private const string DocTitle = "document.title";
 
-        private bool _showToolbars = true;
+        private bool _toolbarsHidden;
         private UIActivityIndicatorView _indicatorView;
-        private UITapGestureRecognizer _browserTapGesture;
 
         public new BrowserViewModel ViewModel
         {
             get { return (BrowserViewModel)base.ViewModel; }
         }
 
-        private bool ShowToolbars
+        public bool ToolbarsHidden
         {
             get
             {
-                return _showToolbars;
+                return _toolbarsHidden;
             }
             set
             {
-                if (_showToolbars != value)
+                if (_toolbarsHidden != value)
                 {
-                    _showToolbars = value;
+                    _toolbarsHidden = value;
 
-                    if (_showToolbars)
+                    if (_toolbarsHidden)
                     {
-                        NavBarManager.Instance.SetNavBarHidden(true, false, true);
-                        BottomToolbar.Hidden = false;
+                        NavBarManager.Instance.SetNavBarHidden(true, true, true);
+                        BottomToolbar.SetHidden(true, true);
                     }
                     else
                     {
-                        NavBarManager.Instance.SetNavBarHidden(true, true, true);
-                        BottomToolbar.Hidden = true;
+                        NavBarManager.Instance.SetNavBarHidden(true, false, true);
+                        BottomToolbar.SetHidden(false, true);
                     }
                 }
             }
@@ -58,25 +56,16 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             InitializeStyle();
             InitializeIndicator();
-            InitializeGestures();
             UpdateViewTitle();
 
             WebView.LoadStarted += OnWebViewLoadStarted;
             WebView.LoadError += OnWebViewLoadFinished;
             WebView.LoadFinished += OnWebViewLoadFinished;
 
+            WebView.ScrollView.Delegate = new BrowserScrollViewDelegate(this, WebView);
+
             LoadURL();
             UpdateNavButtonsState();
-        }
-
-        public override void DidMoveToParentViewController(UIViewController parent)
-        {
-            base.DidMoveToParentViewController(parent);
-
-            if (parent == null)
-            {
-                DisposeGestures();
-            }
         }
 
         public override void ViewWillAppear(bool animated)
@@ -175,34 +164,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             ProgressButton.CustomView = _indicatorView;
         }
 
-        private void InitializeGestures()
-        {
-            // TODO: Figure out how to cancel toolbar switch on link clicks
-            _browserTapGesture = new UITapGestureRecognizer(
-                () => Task.Run(async () => 
-                    {
-                        await Task.Delay(500);
-                        SwitchToolbarsState();
-                    })) 
-                {
-                    NumberOfTouchesRequired = (uint)1,
-                    NumberOfTapsRequired = (uint)1,
-                    Delegate = new WebViewTapGestureDelegate()
-                };
-
-            WebView.AddGestureRecognizer(_browserTapGesture);
-        }
-
-        private void DisposeGestures()
-        {
-            if (_browserTapGesture != null)
-            {
-                WebView.RemoveGestureRecognizer(_browserTapGesture);
-                _browserTapGesture.Dispose();
-                _browserTapGesture = null;
-            }
-        }
-
         private void LoadURL()
         {
             if (ViewModel.BrowserURL != null)
@@ -286,26 +247,53 @@ namespace SmartWalk.Client.iOS.Views.Common
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
         }
+    }
 
-        private void SwitchToolbarsState()
+    public class BrowserScrollViewDelegate : UIScrollViewDelegate
+    {
+        private readonly UIWebView _webView;
+        private readonly ScrollDownToHideUIManager _scrollDownManager;
+
+        public BrowserScrollViewDelegate(BrowserView view, UIWebView webView)
         {
-            InvokeOnMainThread(() =>
-                {
-                    if (!_indicatorView.IsAnimating)
-                    {
-                        ShowToolbars = !ShowToolbars;
-                    }
-                });
+            _webView = webView;
+            _scrollDownManager = new BrowserScrollDownToHideUIManager(view, _webView.ScrollView);
+        }
+
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            _scrollDownManager.DraggingStarted();
+        }
+
+        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+        {
+            _scrollDownManager.DraggingEnded();
+        }
+
+        public override void Scrolled(UIScrollView scrollView)
+        {
+            _scrollDownManager.Scrolled();
         }
     }
 
-    public class WebViewTapGestureDelegate : UIGestureRecognizerDelegate
+    public class BrowserScrollDownToHideUIManager : ScrollDownToHideUIManager
     {
-        public override bool ShouldRecognizeSimultaneously(
-            UIGestureRecognizer gestureRecognizer, 
-            UIGestureRecognizer otherGestureRecognizer)
+        private readonly BrowserView _view;
+
+        public BrowserScrollDownToHideUIManager(BrowserView view, UIScrollView scrollView) 
+            : base(scrollView)
         {
-            return true;
+            _view = view;
+        }
+
+        protected override void OnHideUI()
+        {
+            _view.ToolbarsHidden = true;
+        }
+
+        protected override void OnShowUI()
+        {
+            _view.ToolbarsHidden = false;
         }
     }
 }
