@@ -252,35 +252,35 @@ namespace SmartWalk.Client.iOS.Views.Common
     public class BrowserScrollViewDelegate : UIScrollViewDelegate
     {
         private readonly UIWebView _webView;
-        private readonly ScrollDownToHideUIManager _scrollDownManager;
+        private readonly ScrollToHideUIManager _scrollToHideManager;
 
         public BrowserScrollViewDelegate(BrowserView view, UIWebView webView)
         {
             _webView = webView;
-            _scrollDownManager = new BrowserScrollDownToHideUIManager(view, _webView.ScrollView);
+            _scrollToHideManager = new BrowserScrollToHideUIManager(view, _webView.ScrollView);
         }
 
         public override void DraggingStarted(UIScrollView scrollView)
         {
-            _scrollDownManager.DraggingStarted();
+            _scrollToHideManager.DraggingStarted();
         }
 
         public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
         {
-            _scrollDownManager.DraggingEnded();
+            _scrollToHideManager.DraggingEnded();
         }
 
         public override void Scrolled(UIScrollView scrollView)
         {
-            _scrollDownManager.Scrolled();
+            _scrollToHideManager.Scrolled();
         }
     }
 
-    public class BrowserScrollDownToHideUIManager : ScrollDownToHideUIManager
+    public class BrowserScrollToHideUIManager : ScrollToHideUIManager
     {
         private readonly BrowserView _view;
 
-        public BrowserScrollDownToHideUIManager(BrowserView view, UIScrollView scrollView) 
+        public BrowserScrollToHideUIManager(BrowserView view, UIScrollView scrollView) 
             : base(scrollView)
         {
             _view = view;

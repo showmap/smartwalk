@@ -15,7 +15,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
     public class VenueTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly VenueViewModel _viewModel;
-        private readonly ScrollDownToHideUIManager _scrollDownManager;
+        private readonly ScrollToHideUIManager _scrollToHideManager;
 
         public VenueTableSource(UITableView tableView, VenueViewModel viewModel)
             : base(tableView)
@@ -27,7 +27,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             tableView.RegisterNibForCellReuse(NextVenueCell.Nib, NextVenueCell.Key);
 
-            _scrollDownManager = new ScrollDownToHideUIManager(tableView);
+            _scrollToHideManager = new ScrollToHideUIManager(tableView);
         }
 
         public GroupContainer[] GroupItemsSource
@@ -39,7 +39,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
         {
             base.ReloadTableData();
 
-            _scrollDownManager.Reset();
+            _scrollToHideManager.Reset();
         }
 
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
@@ -49,22 +49,22 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         public override void DraggingStarted(UIScrollView scrollView)
         {
-            _scrollDownManager.DraggingStarted();
+            _scrollToHideManager.DraggingStarted();
         }
 
         public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
         {
-            _scrollDownManager.DraggingEnded();
+            _scrollToHideManager.DraggingEnded();
         }
 
         public override void Scrolled(UIScrollView scrollView)
         {
-            _scrollDownManager.Scrolled();
+            _scrollToHideManager.Scrolled();
         }
 
         public override void DecelerationEnded(UIScrollView scrollView)
         {
-            _scrollDownManager.ScrollFinished();
+            _scrollToHideManager.ScrollFinished();
         }
 
         public override float GetHeightForHeader(UITableView tableView, int section)

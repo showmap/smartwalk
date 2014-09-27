@@ -14,7 +14,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
     public class OrgTableSource : MvxTableViewSource, IListViewSource
     {
         private readonly OrgViewModel _viewModel;
-        private readonly ScrollDownToHideUIManager _scrollDownManager;
+        private readonly ScrollToHideUIManager _scrollToHideManager;
 
         public OrgTableSource(UITableView tableView, OrgViewModel viewModel)
             : base(tableView)
@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             tableView.RegisterNibForCellReuse(EntityCell.Nib, EntityCell.Key);
             tableView.RegisterNibForCellReuse(OrgEventCell.Nib, OrgEventCell.Key);
 
-            _scrollDownManager = new ScrollDownToHideUIManager(tableView);
+            _scrollToHideManager = new ScrollToHideUIManager(tableView);
         }
 
         public GroupContainer[] GroupItemsSource
@@ -48,22 +48,22 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         public override void DraggingStarted(UIScrollView scrollView)
         {
-            _scrollDownManager.DraggingStarted();
+            _scrollToHideManager.DraggingStarted();
         }
 
         public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
         {
-            _scrollDownManager.DraggingEnded();
+            _scrollToHideManager.DraggingEnded();
         }
 
         public override void Scrolled(UIScrollView scrollView)
         {
-            _scrollDownManager.Scrolled();
+            _scrollToHideManager.Scrolled();
         }
 
         public override void DecelerationEnded(UIScrollView scrollView)
         {
-            _scrollDownManager.ScrollFinished();
+            _scrollToHideManager.ScrollFinished();
         }
 
         public override float GetHeightForHeader(UITableView tableView, int section)

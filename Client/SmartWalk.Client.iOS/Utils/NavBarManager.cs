@@ -133,7 +133,8 @@ namespace SmartWalk.Client.iOS.Utils
                 {
                     _customNavBar.RemoveFromSuperview(
                         animated, 
-                        () => NavController.View.RemoveConstraints(NavBarConstraints));
+                        () => NavController.View.RemoveConstraints(NavBarConstraints),
+                        () => !_customHidden);
                 }
                 else
                 {

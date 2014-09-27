@@ -389,7 +389,7 @@
     <Compile Include="Utils\MvvmCross\MvxExtendedViewPresenter.cs" />
     <Compile Include="Views\Common\IFullscreenView.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
-    <Compile Include="Utils\ScrollDownToHideUIManager.cs" />
+    <Compile Include="Utils\ScrollToHideUIManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />

@@ -52,20 +52,32 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
-        public static void RemoveFromSuperview(this UIView view, bool animated, Action completeHandler = null)
+        public static void RemoveFromSuperview(
+            this UIView view, 
+            bool animated, 
+            Action completeHandler = null, 
+            Func<bool> cancelHandler = null)
         {
-            // HACK: checking Alpha is 1, assuming it's smaller if animation started
-            if (view.Superview != null && Math.Abs(view.Alpha - 1) < UIConstants.Epsilon)
+            if (view.Superview != null)
             {
                 if (animated)
                 {
                     view.Alpha = 1;
+
                     UIView.Animate(
                         UIConstants.AnimationDuration,
                         new NSAction(() => view.Alpha = 0),
                         new NSAction(() => {
-                            view.RemoveFromSuperview();
-                            if (completeHandler != null) completeHandler();
+                            // checking if remove operation was cancelled already
+                            if (cancelHandler == null || !cancelHandler())
+                            {
+                                view.RemoveFromSuperview();
+                                if (completeHandler != null) completeHandler();
+                            }
+                            else 
+                            {
+                                view.Alpha = 1;
+                            }
                         }));
                 }
                 else
