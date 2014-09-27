@@ -14,7 +14,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="302"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="HeaderContainer">
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="HeaderContainer">
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" id="grt-qG-RJY"/>
@@ -46,8 +46,8 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="206" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="8" y="12" width="206" height="137"/>
+                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Description" customClass="CopyLabel">
+                        <rect key="frame" x="8" y="12" width="206" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -60,8 +60,9 @@
                         </constraints>
                     </imageView>
                     <label hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
-                        <rect key="frame" x="8" y="273" width="173" height="17"/><constraints>
-                        <constraint firstAttribute="height" constant="17" id="367"/>
+                        <rect key="frame" x="8" y="273" width="173" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="367"/>
                         </constraints>
                         <attributedString key="attributedText">
                             <fragment content="more info">
@@ -107,7 +108,7 @@
                 <constraint firstItem="181" firstAttribute="top" secondItem="50" secondAttribute="bottom" constant="12" id="H0t-fT-ezL"/>
                 <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="top" id="RVd-iL-t0g"/>
                 <constraint firstItem="50" firstAttribute="trailing" secondItem="181" secondAttribute="trailing" id="ggf-wX-NXc"/>
-                <constraint firstItem="50" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="12" id="oIx-Bh-aFO"/>
+                <constraint firstItem="50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="9" secondAttribute="bottom" constant="12" id="oIx-Bh-aFO"/>
                 <constraint firstItem="6" firstAttribute="baseline" secondItem="3" secondAttribute="baseline" id="z7o-uO-yi2"/>
             </constraints>
             <connections>

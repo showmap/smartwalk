@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS.Utils
 
         public void ScrollFinished()
         {
-            if (System.Math.Abs(_scrollView.ContentOffset.Y) < 0.0001)
+            if (System.Math.Abs(_scrollView.ContentOffset.Y) < UIConstants.Epsilon)
             {
                 OnShowUI();
             }

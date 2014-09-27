@@ -96,20 +96,14 @@ namespace SmartWalk.Client.iOS
             UIApplication application, 
             RectangleF newStatusBarFrame)
         {
-            if (Window != null)
-            {
-                NavBarManager.Instance.Layout();
-            }
+            NavBarManager.Instance.Layout();
         }
 
         public override void DidChangeStatusBarOrientation(
             UIApplication application, 
             UIInterfaceOrientation oldStatusBarOrientation)
         {
-            if (Window != null)
-            {
-                NavBarManager.Instance.Layout();
-            }
+            NavBarManager.Instance.Layout();
         }
 
 #if ADHOC
