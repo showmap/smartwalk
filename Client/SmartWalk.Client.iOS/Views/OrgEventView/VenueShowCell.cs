@@ -72,14 +72,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ? VenueHeaderView.DefaultHeight 
                     : 0f;
 
-                var showText = show.GetText();  
-                if (showText != null)
+                var showText = GetShowText(show);  
+                if (showText.Length > 0)
                 {
                     var logoHeight = show.HasPicture() ? VerticalGap + ImageHeight : 0;
                     var detailsHeight = show.HasDetailsUrl()
                         ? VerticalGap + (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) 
                         : 0;
-                    var textHeight = 
+                    var textHeight =    
                         (float)Math.Ceiling(CalculateTextHeight(GetTextWidth(frameWidth, show), showText));
                     cellHeight += Math.Max(
                         DefaultHeight, 
@@ -92,21 +92,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return DefaultHeight;
         }
 
-        private static float CalculateTextHeight(float frameWidth, string text)
+        private static float CalculateTextHeight(float frameWidth, NSAttributedString text)
         {
-            if (!string.IsNullOrEmpty(text))
+            if (text.Length > 0)
             {
-                var frameSize = new SizeF(frameWidth, float.MaxValue); 
-                SizeF textSize;
-
-                // TODO: to complete iOS7 text measuring some day
-                using (var ns = new NSString(text))
-                {
-                    textSize = ns.StringSize(
-                        Theme.VenueShowCellFont,
-                        frameSize,
-                        UILineBreakMode.TailTruncation);
-                }
+                var frameSize = new SizeF(frameWidth, float.MaxValue);
+                var textSize = 
+                    text.GetBoundingRect(
+                       frameSize, 
+                       NSStringDrawingOptions.UsesLineFragmentOrigin |
+                       NSStringDrawingOptions.UsesFontLeading,
+                       null);
 
                 return textSize.Height;
             }
@@ -367,7 +363,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 result.SetAttributes(
                     new UIStringAttributes 
                     { 
-                        Font = Theme.VenueShowCellFont,
+                        Font = Theme.VenueShowDescriptionCellFont,
                         ForegroundColor = Theme.CellTextPassive
                     },
                     new NSRange(
