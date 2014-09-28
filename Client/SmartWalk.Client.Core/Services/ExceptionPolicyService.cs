@@ -29,8 +29,7 @@ namespace SmartWalk.Client.Core.Services
 
             if (ex is WebException)
             {
-                title = Localization.NetworkError;
-                message = Localization.CantAccessNetworkContent;
+                showAlert = false;
             }
             else if (ex is JsonReaderException)
             {

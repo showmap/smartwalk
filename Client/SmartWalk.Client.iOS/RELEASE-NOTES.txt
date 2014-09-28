@@ -1,48 +1,39 @@
-SW-160 Google Analytics Stats fixed
+SW-160 Bug with NavBar on Pull-To-Refresh fixed.
+Anoying flickering was violently killed by bunch of deltas...
 
-SW-160 Minor fixed of the UI.
-Disable postponing of loading data for home view.
-Turn of animation on initil showing of the Map.
+SW-160 Build settings updated.
+No Linking still doesn't work for iOS 7 debugging.
 
-SW-160 Layout updates to support bigger screens
-Collection cells fixed to be BIG.
-Couple of splash-screens were added.
+SW-160 Fix iOS8 bug with custom NavBar on rotation
 
-SW-160 Even better loading state handling.
-Some code reverted again, but now we hide ListView only on first loading if there is no data. After that it's always visible to do not break Pull-To-Refresh UX. Animation is turned on for loading data moment in OrgEventView.
+SW-160 Bigger font for Show title
 
-SW-160 Another update for initial view states
-The state with no content is better supported. Now you can Pull-To-Refresh again and again to see if the content available.
-Some obsolete code with hiding ListView was removed. This removes the nice fade in effect on content loading, but it was too much of state to carry for this feature.
-OrgEventView is updated with better state managment too. Map is always hidden if there is no content.
+SW-160 Hiding ToolBars on scroll down.
+A famous feature finally comes to SmartWalk.
 
-SW-234 Basic deeplinking was supported.
-Events / Host / Event views are opened upon a proper request from the external apps / browser.
-Refactoring. Couple of view state bugs on opening views in off-line mode were fixed.
+SW-160 ActionSheet style supported in iOS 8
 
-SW-159 Support for iTunes metadata
-This is to turn on iOS App banner while opening site in mobile Safari.
-Refactoring.
+SW-160 Bug with text height in Home cells fixed
 
-SW-160 Show Time labels moved to the right
+SW-160 Hooray, one more update to LocationService.
+ievgen authored a day ago
+Better handling of switching to and back from Location restricted modes.
+ModernHttpClient version updated.
 
-SW-160 ModernHttpClient updated to 2.1.1
+SW-160 One more update for LocationService
+ievgen authored 2 days ago
+Better support for offline mode. ReachabilityService was improved to make sure that all clients get the proper state.
 
-SW-233 The bug with showing no data label fixed
-It accured in cases when there is no data and loading is finished before view is loaded.
+SW-167 Custom Ids / Keys extracted to Settings
 
-SW-233 Postpone service was implemented
-This is to delay background server calls on every view open with a average 5 mins gap.
-Refresh handling updated. Raise Refresh event only if loading progress is visible.
+SW-160 Location service updated again.
+More cases supported. Now we always request current location just once on HomeView activating.
+Bugs fixed, showing of correct location string in different cases was fixed.
 
-SW-233 Fix for missing cache, UX improvements
-The old code of invalidating Venues cache removed, 'cause we use new model of requesting data.
-ScrollToTop only runs after user's pull-to-refresh action.
+SW-160 MvvmCross is updated to 3.2.1
 
-SW-160 Event Titles in OrgInfo view
-Using Titles instead of just old-school dates
-
-SW-160 Show all days by default
-
-SW-233 Better caching and refreshing of API content
-Load view data at the background always, and if different reload content in the UI.
+SW-160 Better implementation of Location service
+Using less heavy location update monitoring.
+Integrating with new iOS 8 privacy rules.
+Bug fixing.
+Location label is pressable, location error alerts supported.
