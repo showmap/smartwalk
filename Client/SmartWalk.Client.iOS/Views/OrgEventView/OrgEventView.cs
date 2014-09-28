@@ -38,6 +38,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private Show _previousExpandedShow;
         private ButtonBarButton _modeListButton;
         private ButtonBarButton _modeMapButton;
+        private ButtonBarButton _customModeListButton;
+        private ButtonBarButton _customModeMapButton;
         private ButtonBarButton _moreButton;
         private ButtonBarButton _dayButton;
         private ButtonBarButton _customDayButton;
@@ -548,55 +550,54 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.OnInitializeCustomNavBarItems(navBarItems);
 
+            // Day Button
             _customDayButton = ButtonBarUtil.Create(true);
             _customDayButton.TouchUpInside += OnDayButtonClicked;
 
             _customDayButtonItem = new UIBarButtonItem();
             _customDayButtonItem.CustomView = _customDayButton;
 
+            navBarItems.Add(_customDayButtonItem);
+
+            // Mode (List, Map, Combined) Button
+            _customModeListButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
+            _customModeListButton.TouchUpInside += OnModeButtonClicked;
+
+            _customModeMapButton = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape, true);
+            _customModeMapButton.TouchUpInside += OnModeButtonClicked;
+
             _customModeButtonItem = new UIBarButtonItem();
 
-            navBarItems.Add(_customDayButtonItem);
             navBarItems.Add(_customModeButtonItem);
-        }
-
-        private void InitializeStyle()
-        {
-            MapFullscreenButton.IsSemiTransparent = true;
-
-            _customDayButton.Font = Theme.NavBarFont;
-            _customDayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
-
-            _dayButton.Font = Theme.NavBarFont;
-            _dayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
-
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                VenuesMapView.TintColor = Theme.MapTint;
-            }
         }
 
         private void InitializeToolBar()
         {
-            _modeListButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
-            _modeListButton.TouchUpInside += OnModeButtonClicked;
-
-            _modeMapButton = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
-            _modeMapButton.TouchUpInside += OnModeButtonClicked;
-
+            // Day Button
             _dayButton = ButtonBarUtil.Create();
             _dayButton.TouchUpInside += OnDayButtonClicked;
             _dayButtonItem = new UIBarButtonItem();
             _dayButtonItem.CustomView = _dayButton;
 
-            _modeButtonItem = new UIBarButtonItem();
-            var gap = ButtonBarUtil.CreateGapSpacer();
+            // Mode (List, Map, Combined) Button
+            _modeListButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape);
+            _modeListButton.TouchUpInside += OnModeButtonClicked;
 
+            _modeMapButton = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
+            _modeMapButton.TouchUpInside += OnModeButtonClicked;
+
+            _modeButtonItem = new UIBarButtonItem();
+
+            // More (...) Button
             _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
             _moreButton.TouchUpInside += OnMoreButtonClicked;
 
             var moreBarButton = new UIBarButtonItem(_moreButton);
-            NavigationItem.SetRightBarButtonItems(new [] {gap, moreBarButton, _modeButtonItem, _dayButtonItem}, true);
+
+            var gap = ButtonBarUtil.CreateGapSpacer();
+            NavigationItem.SetRightBarButtonItems(
+                new [] {gap, moreBarButton, _modeButtonItem, _dayButtonItem}, 
+                true);
         }
 
         private void DisposeToolBar()
@@ -609,6 +610,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_modeMapButton != null)
             {
                 _modeMapButton.TouchUpInside -= OnModeButtonClicked;
+            }
+
+            if (_customModeListButton != null)
+            {
+                _customModeListButton.TouchUpInside -= OnModeButtonClicked;
+            }
+
+            if (_customModeMapButton != null)
+            {
+                _customModeMapButton.TouchUpInside -= OnModeButtonClicked;
             }
 
             if (_moreButton != null)
@@ -624,6 +635,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_customDayButton != null)
             {
                 _customDayButton.TouchUpInside -= OnDayButtonClicked;
+            }
+        }
+
+        private void InitializeStyle()
+        {
+            MapFullscreenButton.IsSemiTransparent = true;
+
+            _customDayButton.Font = Theme.NavBarFont;
+            _customDayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
+
+            _dayButton.Font = Theme.NavBarFont;
+            _dayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+            {
+                VenuesMapView.TintColor = Theme.MapTint;
             }
         }
 
@@ -990,8 +1017,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             switch (CurrentMode)
             {
                 case OrgEventViewMode.Combo:
-                    _modeButtonItem.CustomView = new UIView();
-                    _customModeButtonItem.CustomView = _modeListButton;
+                    _modeButtonItem.CustomView = _modeListButton;
+                    _customModeButtonItem.CustomView = _customModeListButton;
+
+                    _customModeListButton.SetHidden(false, animated);
+                    _customModeMapButton.SetHidden(false, animated);
+                    _modeListButton.SetHidden(true, animated);
+                    _modeMapButton.SetHidden(true, animated);
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;
                     MapFullscreenButton.UpdateState();
@@ -1004,8 +1036,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case OrgEventViewMode.Map:
-                    _modeButtonItem.CustomView = new UIView();
-                    _customModeButtonItem.CustomView = _modeListButton;
+                    _modeButtonItem.CustomView = _modeListButton;
+                    _customModeButtonItem.CustomView = _customModeListButton;
+
+                    _customModeListButton.SetHidden(false, animated);
+                    _customModeMapButton.SetHidden(false, animated);
+                    _modeListButton.SetHidden(true, animated);
+                    _modeMapButton.SetHidden(true, animated);
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.ExitFullscreen;
                     MapFullscreenButton.UpdateState();
@@ -1018,8 +1055,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case OrgEventViewMode.List:
-                    _customModeButtonItem.CustomView = new UIView();
+                    _customModeButtonItem.CustomView = HasData ? _customModeMapButton : new UIView();
                     _modeButtonItem.CustomView = HasData ? _modeMapButton : new UIView();
+
+                    _customModeListButton.SetHidden(true, animated);
+                    _customModeMapButton.SetHidden(true, animated);
+                    _modeListButton.SetHidden(false, animated);
+                    _modeMapButton.SetHidden(false, animated);
 
                     TablePanel.Hidden = false;
                     MapPanel.Hidden = true;
