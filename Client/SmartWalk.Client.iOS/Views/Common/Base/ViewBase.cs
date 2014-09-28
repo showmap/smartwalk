@@ -66,6 +66,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
             ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
+
+            UpdateStatusBarStyle();
         }
 
         public override void ViewDidAppear(bool animated)
@@ -213,21 +215,25 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             View.BackgroundColor = Theme.BackgroundPatternColor;
 
+            UpdateStatusBarStyle();
+        }
+
+        private void UpdateStatusBarStyle()
+        {
             if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
             {
-                EdgesForExtendedLayout = UIRectEdge.None;
                 UIApplication.SharedApplication
                     .SetStatusBarStyle(UIStatusBarStyle.Default, false);
             }
             else
             {
-                #pragma warning disable 618
+#pragma warning disable 618
 
                 WantsFullScreenLayout = true;
                 UIApplication.SharedApplication
                     .SetStatusBarStyle(UIStatusBarStyle.BlackTranslucent, false);
 
-                #pragma warning restore 618
+#pragma warning restore 618
             }
         }
 

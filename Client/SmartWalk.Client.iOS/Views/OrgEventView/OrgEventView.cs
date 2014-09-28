@@ -43,7 +43,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private ButtonBarButton _moreButton;
         private ButtonBarButton _dayButton;
         private ButtonBarButton _customDayButton;
-        private NSLayoutConstraint[] _topLayoutGuideConstraint;
 
         private NSTimer _timer;
 
@@ -110,8 +109,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 SetDialogViewFullscreenFrame(_listSettingsView);
             }
 
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(
-                new [] {_modeListButton, _modeMapButton, MapFullscreenButton});
+            UpdateButtonsFrameOnRotation();
         }
 
         public override void ViewDidDisappear(bool animated)
@@ -168,8 +166,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             UpdateViewConstraints();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(
-                new [] {_modeListButton, _modeMapButton, MapFullscreenButton});
+            UpdateButtonsFrameOnRotation();
 
             // HACK: hiding jerking search bar on rotation
             if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
@@ -210,36 +207,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateViewConstraints(bool animated)
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
-                _topLayoutGuideConstraint == null)
-            {
-                _topLayoutGuideConstraint = 
-                    NSLayoutConstraint.FromVisualFormat(
-                        "V:[topGuide]-0-[view]", 
-                        0, 
-                        null, 
-                        new NSDictionary(
-                            "topGuide", 
-                            TopLayoutGuide, 
-                            "view", 
-                            TablePanel));
-            }
-
             switch (CurrentMode)
             {
                 case OrgEventViewMode.Combo:
                     if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                     {
                         EdgesForExtendedLayout = UIRectEdge.None;
-                        View.RemoveConstraints(_topLayoutGuideConstraint);
-
-                        if (!View.Constraints.Contains(MapToTableConstraint))
-                        {
-                            View.AddConstraint(MapToTableConstraint);
-                        }
                     }
 
-                    TablePanel.RemoveConstraint(TableHeightConstraint);
+                    VenuesAndShowsTableView.RemoveConstraint(TableHeightConstraint);
 
                     if (!MapPanel.Constraints.Contains(MapHeightConstraint))
                     {
@@ -255,19 +231,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                     {
                         EdgesForExtendedLayout = UIRectEdge.None;
-                        View.RemoveConstraints(_topLayoutGuideConstraint);
-
-                        if (!View.Constraints.Contains(MapToTableConstraint))
-                        {
-                            View.AddConstraint(MapToTableConstraint);
-                        }
                     }
 
                     MapPanel.RemoveConstraint(MapHeightConstraint);
 
-                    if (!TablePanel.Constraints.Contains(TableHeightConstraint))
+                    if (!VenuesAndShowsTableView.Constraints.Contains(TableHeightConstraint))
                     {
-                        TablePanel.AddConstraint(TableHeightConstraint);
+                        VenuesAndShowsTableView.AddConstraint(TableHeightConstraint);
                     }
 
                     UpdateConstraint(
@@ -276,18 +246,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
 
                 case OrgEventViewMode.List:
-                    TablePanel.RemoveConstraint(TableHeightConstraint);
-
                     if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
                     {
                         EdgesForExtendedLayout = UIRectEdge.Top;
-                        View.RemoveConstraint(MapToTableConstraint);
-
-                        if (!_topLayoutGuideConstraint.Any(c => View.Constraints.Contains(c)))
-                        {
-                            View.AddConstraints(_topLayoutGuideConstraint);
-                        }
                     }
+
+                    VenuesAndShowsTableView.RemoveConstraint(TableHeightConstraint);
 
                     if (!MapPanel.Constraints.Contains(MapHeightConstraint))
                     {
@@ -1028,7 +992,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;
                     MapFullscreenButton.UpdateState();
 
-                    TablePanel.Hidden = false;
+                    VenuesAndShowsTableView.Hidden = false;
                     MapPanel.Hidden = false;
 
                     DeactivateSearchController();
@@ -1047,7 +1011,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapFullscreenButton.VerticalIcon = ThemeIcons.ExitFullscreen;
                     MapFullscreenButton.UpdateState();
 
-                    TablePanel.Hidden = true;
+                    VenuesAndShowsTableView.Hidden = true;
                     MapPanel.Hidden = false;
 
                     DeactivateSearchController();
@@ -1063,7 +1027,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     _modeListButton.SetHidden(false, animated);
                     _modeMapButton.SetHidden(false, animated);
 
-                    TablePanel.Hidden = false;
+                    VenuesAndShowsTableView.Hidden = false;
                     MapPanel.Hidden = true;
                     break;
             }
@@ -1190,6 +1154,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             tableView.BeginUpdates();
             tableView.EndUpdates();
+        }
+
+        // manually updating buttons that may be not in visual tree on rotation
+        private void UpdateButtonsFrameOnRotation()
+        {
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(
+                new [] {
+                    _customModeListButton, 
+                    _customModeMapButton,
+                    MapFullscreenButton});
         }
     }
 

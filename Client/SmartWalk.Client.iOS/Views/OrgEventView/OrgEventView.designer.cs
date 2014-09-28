@@ -22,9 +22,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.Line MapBottomSeparator { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView MapContentView { get; set; }
-
-		[Outlet]
 		SmartWalk.Client.iOS.Controls.ButtonBarButton MapFullscreenButton { get; set; }
 
 		[Outlet]
@@ -44,9 +41,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIView TablePanel { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
@@ -72,11 +66,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (MapBottomSeparator != null) {
 				MapBottomSeparator.Dispose ();
 				MapBottomSeparator = null;
-			}
-
-			if (MapContentView != null) {
-				MapContentView.Dispose ();
-				MapContentView = null;
 			}
 
 			if (MapFullscreenButton != null) {
@@ -112,11 +101,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TableHeightConstraint != null) {
 				TableHeightConstraint.Dispose ();
 				TableHeightConstraint = null;
-			}
-
-			if (TablePanel != null) {
-				TablePanel.Dispose ();
-				TablePanel = null;
 			}
 
 			if (VenuesAndShowsTableView != null) {
