@@ -12,6 +12,7 @@ using Orchard.Core.Settings.Models;
 using Orchard.Users.Models;
 using System.Linq;
 using SmartWalk.Shared;
+using Orchard.Environment.Configuration;
 
 namespace SmartWalk.Server
 {
@@ -20,10 +21,25 @@ namespace SmartWalk.Server
 
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<SmartWalkUserRecord> _userRepository;
+        private readonly ShellSettings _shellSettings;
 
-        public Migrations(IRepository<SmartWalkUserRecord> userRepository, IOrchardServices orchardServices) {
+        public Migrations(IRepository<SmartWalkUserRecord> userRepository, IOrchardServices orchardServices, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
             _userRepository = userRepository;
+            _shellSettings = shellSettings;
+        }
+
+        private string TablePrefix
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? _shellSettings.DataTablePrefix + "_" : "";
+            }
+        }
+
+        private string GetFullTableName(string tableName)
+        {
+            return string.Format("{0}SmartWalk_Server_{1}", TablePrefix, tableName);
         }
 
         private void PopulateData() {
@@ -752,5 +768,26 @@ namespace SmartWalk.Server
 
             return 9;
         }
+
+        [UsedImplicitly]
+        public int UpdateFrom9()
+        {
+            SchemaBuilder.CreateTable("EventEntityDetailRecord", table => table
+             .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+             .Column("EntityRecord_Id", DbType.Int32, c => c.NotNull())
+             .Column("EventMetaDataRecord_Id", DbType.Int32, c => c.NotNull())
+             .Column("Order", DbType.Int32, c => c.Nullable())
+             .Column("Description", DbType.String, c => c.Nullable().WithLength(255))
+             );            
+
+            SchemaBuilder.CreateForeignKey("EventEntityDetailRecord_EntityRecord", "EventEntityDetailRecord", new[] { "EntityRecord_Id" }, "EntityRecord", new[] { "Id" });
+            SchemaBuilder.CreateForeignKey("EventEntityDetailRecord_EventMetadataRecord", "EventEntityDetailRecord", new[] { "EventMetadataRecord_Id" }, "EventMetadataRecord", new[] { "Id" });
+
+            var sSql = string.Format("ALTER TABLE {0} ALTER COLUMN StartTime datetime NULL", GetFullTableName("EventMetadataRecord"));
+            SchemaBuilder.ExecuteSql(sSql);
+
+            return 10;
+        }
+
     }
 }

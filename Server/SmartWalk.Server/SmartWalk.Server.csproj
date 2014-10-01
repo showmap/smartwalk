@@ -278,6 +278,7 @@
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\CompressFilter.cs" />
+    <Compile Include="Records\EventEntityDetailRecord.cs" />
     <Compile Include="Services\EntityService\EntityValidator.cs" />
     <Compile Include="Services\EventService\EventValidator.cs" />
     <Compile Include="Services\QueryService\GroupedEventsQueryFactory.cs" />
