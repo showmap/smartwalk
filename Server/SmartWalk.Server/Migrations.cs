@@ -783,6 +783,12 @@ namespace SmartWalk.Server
             SchemaBuilder.CreateForeignKey("EventEntityDetailRecord_EntityRecord", "EventEntityDetailRecord", new[] { "EntityRecord_Id" }, "EntityRecord", new[] { "Id" });
             SchemaBuilder.CreateForeignKey("EventEntityDetailRecord_EventMetadataRecord", "EventEntityDetailRecord", new[] { "EventMetadataRecord_Id" }, "EventMetadataRecord", new[] { "Id" });
 
+            SchemaBuilder.AlterTable(
+                "EventMetadataRecord",
+                table => table.AddColumn(
+                    "VenueOrderType", DbType.Byte,
+                    c => c.NotNull().WithDefault(0)));
+
             var sSql = string.Format("ALTER TABLE {0} ALTER COLUMN StartTime datetime NULL", GetFullTableName("EventMetadataRecord"));
             SchemaBuilder.ExecuteSql(sSql);
 

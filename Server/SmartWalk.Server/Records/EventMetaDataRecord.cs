@@ -29,6 +29,8 @@ namespace SmartWalk.Server.Records
         public virtual byte Status { get; set; }
         public virtual bool IsDeleted { get; set; }
 
+        public virtual byte VenueOrderType { get; set; }
+
         [UsedImplicitly]
         public virtual DateTime DateCreated { get; set; }
 
@@ -54,6 +56,12 @@ namespace SmartWalk.Server.Records
             _eventMappingRecords = new List<EventMappingRecord>();
             _showRecords = new List<ShowRecord>();
         }
+    }
+
+    public enum VenueOrderType
+    {
+        Name = 0,
+        Custom = 1
     }
 
     public enum CombineType
