@@ -30,9 +30,13 @@ namespace SmartWalk.Client.iOS.Utils
                 {
                     foreach (var cache in settings.Caches)
                     {
-                        if (Directory.Exists(cache.CacheFolderPath))
+                        var cachePath = Path.Combine(
+                            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), 
+                            cache.CacheFolderPath);
+
+                        if (Directory.Exists(cachePath))
                         {
-                            Directory.Delete(cache.CacheFolderPath, true);
+                            Directory.Delete(cachePath, true);
                         }
                     }
 
