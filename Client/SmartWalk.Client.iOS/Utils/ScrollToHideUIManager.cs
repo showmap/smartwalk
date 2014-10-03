@@ -77,12 +77,12 @@ namespace SmartWalk.Client.iOS.Utils
 
         protected virtual void OnHideUI()
         {
-            NavBarManager.Instance.SetNavBarHidden(true, true, true);
+            NavBarManager.Instance.SetHidden(true, true);
         }
 
         protected virtual void OnShowUI()
         {
-            NavBarManager.Instance.SetNavBarHidden(true, false, true);
+            NavBarManager.Instance.SetHidden(false, true);
         }
 
         // Gets a little treshold delta before show/hide UI is starting

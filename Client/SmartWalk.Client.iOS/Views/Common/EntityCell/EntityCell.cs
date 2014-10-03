@@ -57,35 +57,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
                 SizeF textSize;
 
-                // TODO: iOS 7 text measuring is a broken shit
-                /*if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
+                using (var ns = new NSString(text))
                 {
-                    using (var ns = new NSMutableAttributedString(
-                        text, 
-                        new UIStringAttributes { 
-                            Font = Theme.EntityDescrFont,
-                            ParagraphStyle = new NSMutableParagraphStyle {
-                                Alignment = UITextAlignment.Left,
-                                LineBreakMode = UILineBreakMode.TailTruncation,
-                            }
-                        }))
-                    {
-                        textSize = ns.GetBoundingRect(
-                            frameSize,
-                            NSStringDrawingOptions.UsesLineFragmentOrigin |
-                            NSStringDrawingOptions.UsesFontLeading,
-                            null).Size;
-                    }
-                }
-                else*/
-                {
-                    using (var ns = new NSString(text))
-                    {
-                        textSize = ns.StringSize(
-                            Theme.EntityDescrFont,
-                            frameSize,
-                            UILineBreakMode.TailTruncation);
-                    }
+                    textSize = ns.StringSize(
+                        Theme.EntityDescrFont,
+                        frameSize,
+                        UILineBreakMode.TailTruncation);
                 }
 
                 return textSize.Height;

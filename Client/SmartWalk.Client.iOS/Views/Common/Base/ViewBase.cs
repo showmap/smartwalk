@@ -1,25 +1,46 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using Cirrious.CrossCore.Core;
+using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using System.Collections.Generic;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ViewBase : ActiveAwareViewBase
     {
-        private UISwipeGestureRecognizer _swipeRight;
         private ImageFullscreenView _imageFullscreenView;
+        private bool _statusBarHidden = true;
+
+        public override UIStatusBarAnimation PreferredStatusBarUpdateAnimation
+        {
+            get
+            {
+                return UIStatusBarAnimation.Slide;
+            }
+        }
+
+        protected virtual string ViewTitle
+        {
+            get
+            {
+                var refreshableViewModel = ViewModel as ITitleAware;
+                return refreshableViewModel != null ? refreshableViewModel.Title : null;
+            }
+        }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            AutomaticallyAdjustsScrollViewInsets = false;
+            EdgesForExtendedLayout = UIRectEdge.None;
 
             var notifyableViewModel = ViewModel as INotifyPropertyChanged;
             if (notifyableViewModel != null)
@@ -33,8 +54,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 shareableViewModel.Share += OnViewModelShare;
             }
 
-            InitializeGesture();
             InitializeStyle();
+            UpdateViewTitle();
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -55,46 +76,40 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                     shareableViewModel.Share -= OnViewModelShare;
                 }
 
-                DisposeGesture();
                 DisposeFullscreenView();
             }
         }
 
-        public override void ViewWillAppear(bool animated)
+        public override UIStatusBarStyle PreferredStatusBarStyle()
         {
-            base.ViewWillAppear(animated);
-
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
-
-            UpdateStatusBarStyle();
+            return UIStatusBarStyle.Default;
         }
 
-        public override void ViewDidAppear(bool animated)
+        public override bool PrefersStatusBarHidden()
         {
-            base.ViewDidAppear(animated);
+            return _statusBarHidden;
+        }
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
-                NavigationController != null) // HACK: in some cases of deeplinking (with dialog controller on) it maybe null, watchout!
+        // TODO: To remove this
+        protected virtual void SetStatusBarHidden(bool hidden, bool animated)
+        {
+            _statusBarHidden = hidden;
+
+            if (animated)
             {
-                NavigationController.InteractivePopGestureRecognizer.Enabled = true;
-                NavigationController.InteractivePopGestureRecognizer.WeakDelegate = this;
+                UIView.Animate(
+                    UIConstants.AnimationDuration, 
+                    new NSAction(SetNeedsStatusBarAppearanceUpdate));
+            }
+            else
+            {
+                SetNeedsStatusBarAppearanceUpdate();
             }
         }
 
-        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        protected virtual void UpdateViewTitle()
         {
-            base.WillAnimateRotation(toInterfaceOrientation, duration);
-
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.LeftBarButtonItems);
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.RightBarButtonItems);
-        }
-
-        protected virtual void SetStatusBarHidden(bool hidden, bool animated)
-        {
-            UIApplication.SharedApplication.SetStatusBarHidden(
-                hidden, 
-                animated ? UIStatusBarAnimation.Slide : UIStatusBarAnimation.None);
+            NavigationItem.Title = ViewTitle ?? string.Empty;
         }
 
         protected override void Dispose(bool disposing)
@@ -105,23 +120,17 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void OnViewModelPropertyChanged(string propertyName)
         {
+            var refreshableViewModel = ViewModel as ITitleAware;
+            if (refreshableViewModel != null &&
+                propertyName == refreshableViewModel.GetPropertyName(p => p.Title))
+            {
+                UpdateViewTitle();
+            }
         }
 
         protected void SetDialogViewFullscreenFrame(UIView view)
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
-                !NavigationController.NavigationBarHidden)
-            {
-                view.Frame = new RectangleF(
-                    View.Bounds.Left,
-                    View.Bounds.Top + TopLayoutGuide.Length,
-                    View.Bounds.Width, 
-                    View.Bounds.Height - TopLayoutGuide.Length);
-            }
-            else
-            {
-                view.Frame = View.Bounds;
-            }
+            view.Frame = View.Bounds;
         }
 
         protected void ShowActionSheet()
@@ -187,54 +196,9 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             OnActionSheetClick(actionSheet.ButtonTitle(e.ButtonIndex));
         }
 
-        private void InitializeGesture()
-        {
-            // in iOS 7 using built-in pop gesture recognizer
-            if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                _swipeRight = new UISwipeGestureRecognizer(() => 
-                NavigationController.PopViewControllerAnimated(true));
-
-                _swipeRight.Direction = UISwipeGestureRecognizerDirection.Right;
-
-                View.AddGestureRecognizer(_swipeRight);
-            }
-        }
-
-        private void DisposeGesture()
-        {
-            if (_swipeRight != null)
-            {
-                View.RemoveGestureRecognizer(_swipeRight);
-                _swipeRight.Dispose();
-                _swipeRight = null;
-            }
-        }
-
         private void InitializeStyle()
         {
             View.BackgroundColor = Theme.BackgroundPatternColor;
-
-            UpdateStatusBarStyle();
-        }
-
-        private void UpdateStatusBarStyle()
-        {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                UIApplication.SharedApplication
-                    .SetStatusBarStyle(UIStatusBarStyle.Default, false);
-            }
-            else
-            {
-#pragma warning disable 618
-
-                WantsFullScreenLayout = true;
-                UIApplication.SharedApplication
-                    .SetStatusBarStyle(UIStatusBarStyle.BlackTranslucent, false);
-
-#pragma warning restore 618
-            }
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

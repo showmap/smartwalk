@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Utils
         {
             if (scrollView.ContentSize.Height > headerHeight)
             {
-                scrollView.SetContentOffset(new PointF(0, headerHeight), animated);
+                SetContentOffset(scrollView, headerHeight, animated);
 
                 if (scrollView.Hidden)
                 {
@@ -65,15 +65,16 @@ namespace SmartWalk.Client.iOS.Utils
 
         public static void AdjustHeaderPosition(UIScrollView scrollView, float headerHeight)
         {
-            if (scrollView.ContentOffset.Y < 0 || scrollView.Decelerating) return;
+            var scrollViewOffset = scrollView.ContentOffset.Y + scrollView.ContentInset.Top;
+            if (scrollViewOffset < 0 || scrollView.Decelerating) return;
 
-            if (scrollView.ContentOffset.Y < headerHeight / 2)
+            if (scrollViewOffset < headerHeight / 2)
             {
-                scrollView.SetContentOffset(PointF.Empty, true);
+                SetContentOffset(scrollView, 0, true);
             }
-            else if (scrollView.ContentOffset.Y < headerHeight)
+            else if (scrollViewOffset < headerHeight)
             {
-                scrollView.SetContentOffset(new PointF(0, headerHeight), true);
+                SetContentOffset(scrollView, headerHeight, true);
             }
         }
 
@@ -112,6 +113,13 @@ namespace SmartWalk.Client.iOS.Utils
                 _timers[key].Dispose();
                 _timers.Remove(key);
             }
+        }
+
+        private static void SetContentOffset(UIScrollView scrollView, float height, bool animated)
+        {
+            scrollView.SetContentOffset(
+                new PointF(0, height - scrollView.ContentInset.Top), 
+                animated);
         }
     }
 }

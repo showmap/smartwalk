@@ -11,7 +11,5 @@ namespace SmartWalk.Client.Core.ViewModels.Interfaces
         event EventHandler<MvxValueEventArgs<bool>>  RefreshCompleted;
 
         ICommand RefreshCommand { get; }
-
-        string Title { get; }
     }
 }

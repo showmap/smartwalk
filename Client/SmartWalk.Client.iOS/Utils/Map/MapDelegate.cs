@@ -80,15 +80,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
                 {
                     var detailButton = UIButton.FromType(UIButtonType.Custom);
                     detailButton.Frame = new RectangleF(0, 0, 32, 32);
-
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                    {
-                        detailButton.SetImage(ThemeIcons.DetailsBlack, UIControlState.Normal);
-                    }
-                    else
-                    {
-                        detailButton.SetImage(ThemeIcons.Details, UIControlState.Normal);
-                    }
+                    detailButton.SetImage(ThemeIcons.DetailsBlack, UIControlState.Normal);
 
                     detailButton.TouchUpInside += (s, e) => 
                         {

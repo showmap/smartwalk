@@ -65,6 +65,11 @@ namespace SmartWalk.Client.iOS.Views.Common
             InitializeStyle();
         }
 
+        public override bool PrefersStatusBarHidden()
+        {
+            return true;
+        }
+
         public void Show()
         {
             if (PresentingViewController == null)
@@ -73,11 +78,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                     .RootViewController
                     .PresentViewController(this, true, null);
 
-                UIApplication.SharedApplication.SetStatusBarHidden(
-                    true, 
-                    UIStatusBarAnimation.Slide);
-
-                NavBarManager.Instance.SetNavBarHidden(true, true, true);
+                NavBarManager.Instance.SetHidden(true, true);
 
                 if (Shown != null)
                 {

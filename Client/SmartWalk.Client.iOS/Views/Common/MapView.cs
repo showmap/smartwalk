@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.CoreLocation;
 using MonoTouch.MapKit;
-using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
@@ -12,11 +11,22 @@ using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class MapView : CustomNavBarViewBase
+    public partial class MapView : NavBarViewBase
     {
         public new MapViewModel ViewModel
         {
             get { return (MapViewModel)base.ViewModel; }
+        }
+
+        protected override string ViewTitle
+        {
+            get
+            {
+                var result = ViewModel.Annotation != null
+                    ? ViewModel.Annotation.Title
+                    : null;
+                return result;
+            }
         }
 
         public override void ViewDidLoad()
@@ -129,19 +139,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        private void UpdateViewTitle()
-        {
-            NavigationItem.Title = ViewModel.Annotation != null
-                ? ViewModel.Annotation.Title
-                : null;
-        }
-
         private void InitializeStyle()
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                MapViewControl.TintColor = Theme.MapTint;
-            }
+            MapViewControl.TintColor = Theme.MapTint;
         }
     }
 }

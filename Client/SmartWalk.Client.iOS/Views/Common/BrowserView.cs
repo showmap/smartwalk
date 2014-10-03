@@ -12,7 +12,7 @@ using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class BrowserView : CustomNavBarViewBase
+    public partial class BrowserView : NavBarViewBase
     {
         private const string DocTitle = "document.title";
 
@@ -38,15 +38,27 @@ namespace SmartWalk.Client.iOS.Views.Common
 
                     if (_toolbarsHidden)
                     {
-                        NavBarManager.Instance.SetNavBarHidden(true, true, true);
+                        SetNavBarHidden(true, true);
                         BottomToolbar.SetHidden(true, true);
                     }
                     else
                     {
-                        NavBarManager.Instance.SetNavBarHidden(true, false, true);
+                        SetNavBarHidden(false, true);
                         BottomToolbar.SetHidden(false, true);
                     }
                 }
+            }
+        }
+
+        protected override string ViewTitle
+        {
+            get
+            {
+                var pageTitle = WebView.EvaluateJavascript(DocTitle);
+                var result = !string.IsNullOrEmpty(pageTitle)
+                    ? pageTitle
+                    : (WebView.CanGoBack ? string.Empty : ViewModel.BrowserURL);
+                return result;
             }
         }
 
@@ -218,22 +230,15 @@ namespace SmartWalk.Client.iOS.Views.Common
             buttonItem.CustomView.Alpha = isEnabled ? 1f : 0.5f;
         }
 
-        private void UpdateViewTitle()
-        {
-            var pageTitle = WebView.EvaluateJavascript(DocTitle);
-            NavigationItem.Title = !string.IsNullOrEmpty(pageTitle)
-                ? pageTitle
-                : (WebView.CanGoBack ? string.Empty : ViewModel.BrowserURL);
-        }
-
         private void InitializeStyle()
         {
             WebView.BackgroundColor = Theme.BackgroundPatternColor;
+            LeftSpacer.Width = Theme.NavBarPaddingCompensate;
 
-            LeftSpacer.Width = 
-                UIDevice.CurrentDevice.CheckSystemVersion(7, 0)
-                    ? Theme.NavBarPaddingCompensate
-                    : Theme.CustomNavBarPaddingCompensate;
+            BottomToolbar.Translucent = true;
+            BottomToolbar.SetBackgroundImage(new UIImage(), UIToolbarPosition.Any, UIBarMetrics.Default);
+            BottomToolbar.SetShadowImage(new UIImage(), UIToolbarPosition.Any);
+            BottomToolbar.BarTintColor = UIColor.Clear;
 
             var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape, true);
             button.TouchUpInside += OnBackButtonClick;

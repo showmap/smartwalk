@@ -41,6 +41,12 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             }
         }
 
+        protected override UINavigationController CreateNavigationController(UIViewController viewController)
+        {
+            var result = new ExtendedNavController(viewController);
+            return result;
+        }
+
         private IMvxViewModel GetCurrentViewModel()
         {
             if (MasterNavigationController.TopViewController == null)

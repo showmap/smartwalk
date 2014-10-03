@@ -119,20 +119,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 .FirstOrDefault();
             if (textField != null)
             {
-                if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                {
-                    textField.TextColor = UIColor.White;
-                }
-                else
-                {
-                    textField.Font = Theme.OrgEventHeaderFont;
-                }
+                textField.TextColor = UIColor.White;
             }
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                SearchBar.SearchBarStyle = UISearchBarStyle.Minimal;
-            }
+            SearchBar.SearchBarStyle = UISearchBarStyle.Minimal;
 
             OptionsButton.SetImage(ThemeIcons.ListOptions, UIControlState.Normal);
 

@@ -53,11 +53,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             InitializeGestures();
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                MapView.TintColor = Theme.MapTint;
-            }
-
+            MapView.TintColor = Theme.MapTint;
             MapView.Delegate = new MapDelegate { CanShowCallout = false };
         }
 

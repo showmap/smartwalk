@@ -26,25 +26,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     public partial class OrgEventView : ListViewBase
     {
         private OrgEventHeaderView _headerView;
-        private UIBarButtonItem _modeButtonItem;
-        private UIBarButtonItem _dayButtonItem;
-        private UIBarButtonItem _customModeButtonItem;
-        private UIBarButtonItem _customDayButtonItem;
         private UISearchDisplayController _searchDisplayController;
         private EKEventEditViewController _editCalEventController;
         private ListSettingsView _listSettingsView;
         private bool _isMapViewInitialized;
-        private PointF _tableContentOffset;
         private Show _previousExpandedShow;
-        private ButtonBarButton _modeListButton;
-        private ButtonBarButton _modeMapButton;
-        private ButtonBarButton _customModeListButton;
-        private ButtonBarButton _customModeMapButton;
-        private ButtonBarButton _moreButton;
+        private ButtonBarButton _modeButton;
         private ButtonBarButton _dayButton;
-        private ButtonBarButton _customDayButton;
-
-        private NSTimer _timer;
 
         public new OrgEventViewModel ViewModel
         {
@@ -68,10 +56,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ViewModel.ZoomSelectedVenue += OnZoomSelectedVenue;
             ViewModel.ScrollSelectedVenue += OnScrollSelectedVenue;
 
-            InitializeToolBar();
             InitializeStyle();
             InitializeGestures();
 
+            UpdateTableViewContentInset();
             UpdateViewState(false);
             UpdateDayButtonState();
         }
@@ -80,63 +68,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewWillAppear(animated);
 
-            SetStatusBarHidden(false, animated);
+            UpdateTableViewContentInset();
             UpdateNavBarState(animated);
-
-            // TODO: Find another soltuion. It must be much simpler.
-            // HACK: To persist table scroll offset on rotation and appearing
-            if (_tableContentOffset != PointF.Empty && _timer == null)
-            {
-                _timer = NSTimer.CreateRepeatingScheduledTimer(
-                    TimeSpan.MinValue, 
-                    new NSAction(() => 
-                    {
-                        if (VenuesAndShowsTableView.TableHeaderView != null &&
-                            VenuesAndShowsTableView.ContentSize.Height > 
-                            VenuesAndShowsTableView.TableHeaderView.Frame.Height)
-                        {
-                            VenuesAndShowsTableView.SetContentOffset(_tableContentOffset, false);
-                            _tableContentOffset = PointF.Empty;
-                            _timer.Invalidate();
-                            _timer.Dispose();
-                            _timer = null;
-                        }
-                    }));
-            }
+            UpdateButtonsFrameOnRotation();
 
             if (_listSettingsView != null)
             {
                 SetDialogViewFullscreenFrame(_listSettingsView);
             }
-
-            UpdateButtonsFrameOnRotation();
-        }
-
-        public override void ViewDidDisappear(bool animated)
-        {
-            base.ViewDidDisappear(animated);
-
-            #region HACK
-            // HACK: To persist table scroll offset
-            _tableContentOffset = VenuesAndShowsTableView.ContentOffset;
-
-            // HACK: To hide nav bar after iOS make it visible in next view
-            if (_searchDisplayController != null &&
-                _searchDisplayController.Active)
-            {
-                if (NavBarManager.Instance.NativeHidden !=
-                    NavigationController.NavigationBarHidden)
-                {
-                    NavigationController
-                        .SetNavigationBarHidden(NavBarManager.Instance.NativeHidden, false);
-                }
-                else
-                {
-                    UIApplication.SharedApplication.KeyWindow
-                        .RootViewController.View.LayoutSubviews();
-                }
-            }
-            #endregion
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -165,31 +104,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 SetDialogViewFullscreenFrame(_listSettingsView);
             }
 
+            UpdateTableViewContentInset();
             UpdateViewConstraints();
             UpdateButtonsFrameOnRotation();
-
-            // HACK: hiding jerking search bar on rotation
-            if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                if (_headerView != null)
-                {
-                    _headerView.SearchBarControl.Hidden = true;
-                }
-            }
-        }
-
-        public override void DidRotate(UIInterfaceOrientation fromInterfaceOrientation)
-        {
-            base.DidRotate(fromInterfaceOrientation);
-
-            // HACK: showing jerking search bar on rotation
-            if (!UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                if (_headerView != null)
-                {
-                    _headerView.SearchBarControl.Hidden = false;
-                }
-            }
         }
 
         public override void UpdateViewConstraints()
@@ -197,6 +114,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.UpdateViewConstraints();
 
             UpdateViewConstraints(false);
+        }
+
+        public override UIStatusBarStyle PreferredStatusBarStyle()
+        {
+            if (CurrentMode == OrgEventViewMode.List && HasData)
+            {
+                return UIStatusBarStyle.LightContent;
+            }
+
+            return UIStatusBarStyle.Default;
+        }
+
+        public override bool PrefersStatusBarHidden()
+        {
+            return false;
         }
 
         protected override void UpdateStatusBarLoadingState(bool animated)
@@ -210,11 +142,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             switch (CurrentMode)
             {
                 case OrgEventViewMode.Combo:
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                    {
-                        EdgesForExtendedLayout = UIRectEdge.None;
-                    }
-
                     VenuesAndShowsTableView.RemoveConstraint(TableHeightConstraint);
 
                     if (!MapPanel.Constraints.Contains(MapHeightConstraint))
@@ -225,14 +152,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     UpdateConstraint(
                         () => MapHeightConstraint.Constant = ScreenUtil.GetGoldenRatio(View.Frame.Height),
                         animated);
+
+                    MapToTableConstraint.Constant = -VenuesAndShowsTableView.ContentInset.Top;
                     break;
 
                 case OrgEventViewMode.Map:
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                    {
-                        EdgesForExtendedLayout = UIRectEdge.None;
-                    }
-
                     MapPanel.RemoveConstraint(MapHeightConstraint);
 
                     if (!VenuesAndShowsTableView.Constraints.Contains(TableHeightConstraint))
@@ -243,14 +167,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     UpdateConstraint(
                         () => TableHeightConstraint.Constant = 0,
                         animated);
+
+                    MapToTableConstraint.Constant = 0;
                     break;
 
                 case OrgEventViewMode.List:
-                    if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                    {
-                        EdgesForExtendedLayout = UIRectEdge.Top;
-                    }
-
                     VenuesAndShowsTableView.RemoveConstraint(TableHeightConstraint);
 
                     if (!MapPanel.Constraints.Contains(MapHeightConstraint))
@@ -261,6 +182,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     UpdateConstraint(
                         () => MapHeightConstraint.Constant = 0,
                         animated);
+
+                    MapToTableConstraint.Constant = 0;
                     break;
             }
 
@@ -510,95 +433,39 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        protected override void OnInitializeCustomNavBarItems(List<UIBarButtonItem> navBarItems)
+        protected override void OnInitializeNavBarItems(List<UIBarButtonItem> navBarItems)
         {
-            base.OnInitializeCustomNavBarItems(navBarItems);
+            base.OnInitializeNavBarItems(navBarItems);
 
             // Day Button
-            _customDayButton = ButtonBarUtil.Create(true);
-            _customDayButton.TouchUpInside += OnDayButtonClicked;
-
-            _customDayButtonItem = new UIBarButtonItem();
-            _customDayButtonItem.CustomView = _customDayButton;
-
-            navBarItems.Add(_customDayButtonItem);
-
-            // Mode (List, Map, Combined) Button
-            _customModeListButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
-            _customModeListButton.TouchUpInside += OnModeButtonClicked;
-
-            _customModeMapButton = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape, true);
-            _customModeMapButton.TouchUpInside += OnModeButtonClicked;
-
-            _customModeButtonItem = new UIBarButtonItem();
-
-            navBarItems.Add(_customModeButtonItem);
-        }
-
-        private void InitializeToolBar()
-        {
-            // Day Button
-            _dayButton = ButtonBarUtil.Create();
+            _dayButton = ButtonBarUtil.Create(true);
             _dayButton.TouchUpInside += OnDayButtonClicked;
-            _dayButtonItem = new UIBarButtonItem();
-            _dayButtonItem.CustomView = _dayButton;
+
+            var dayButtonItem = new UIBarButtonItem();
+            dayButtonItem.CustomView = _dayButton;
+
+            navBarItems.Add(dayButtonItem);
 
             // Mode (List, Map, Combined) Button
-            _modeListButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape);
-            _modeListButton.TouchUpInside += OnModeButtonClicked;
+            _modeButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
+            _modeButton.TouchUpInside += OnModeButtonClicked;
 
-            _modeMapButton = ButtonBarUtil.Create(ThemeIcons.NavBarMap, ThemeIcons.NavBarMapLandscape);
-            _modeMapButton.TouchUpInside += OnModeButtonClicked;
+            var modeButtonItem = new UIBarButtonItem();
+            modeButtonItem.CustomView = _modeButton;
 
-            _modeButtonItem = new UIBarButtonItem();
-
-            // More (...) Button
-            _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape);
-            _moreButton.TouchUpInside += OnMoreButtonClicked;
-
-            var moreBarButton = new UIBarButtonItem(_moreButton);
-
-            var gap = ButtonBarUtil.CreateGapSpacer();
-            NavigationItem.SetRightBarButtonItems(
-                new [] {gap, moreBarButton, _modeButtonItem, _dayButtonItem}, 
-                true);
+            navBarItems.Add(modeButtonItem);
         }
 
         private void DisposeToolBar()
         {
-            if (_modeListButton != null)
+            if (_modeButton != null)
             {
-                _modeListButton.TouchUpInside -= OnModeButtonClicked;
-            }
-
-            if (_modeMapButton != null)
-            {
-                _modeMapButton.TouchUpInside -= OnModeButtonClicked;
-            }
-
-            if (_customModeListButton != null)
-            {
-                _customModeListButton.TouchUpInside -= OnModeButtonClicked;
-            }
-
-            if (_customModeMapButton != null)
-            {
-                _customModeMapButton.TouchUpInside -= OnModeButtonClicked;
-            }
-
-            if (_moreButton != null)
-            {
-                _moreButton.TouchUpInside -= OnMoreButtonClicked;
+                _modeButton.TouchUpInside -= OnModeButtonClicked;
             }
 
             if (_dayButton != null)
             {
                 _dayButton.TouchUpInside -= OnDayButtonClicked;
-            }
-
-            if (_customDayButton != null)
-            {
-                _customDayButton.TouchUpInside -= OnDayButtonClicked;
             }
         }
 
@@ -606,16 +473,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             MapFullscreenButton.IsSemiTransparent = true;
 
-            _customDayButton.Font = Theme.NavBarFont;
-            _customDayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
-
             _dayButton.Font = Theme.NavBarFont;
             _dayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                VenuesMapView.TintColor = Theme.MapTint;
-            }
+            VenuesMapView.TintColor = Theme.MapTint;
         }
 
         private void OnModeButtonClicked(object sender, EventArgs e)
@@ -678,7 +539,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeSearchDisplayController()
         {
             _searchDisplayController = 
-                new ExtendedSearchDisplayController(_headerView.SearchBarControl, this);
+                new UISearchDisplayController(_headerView.SearchBarControl, this);
             _searchDisplayController.Delegate = 
                 new OrgEventSearchDelegate(_headerView, ViewModel);
 
@@ -903,21 +764,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 if (_listSettingsView == null)
                 {
                     InitializeListSettingsView();
-
-                    _listSettingsView.Alpha = 0;
-                    View.Add(_listSettingsView);
-                    UIView.BeginAnimations(null);
-                    _listSettingsView.Alpha = 1;
-                    UIView.CommitAnimations();
+                    View.Add(_listSettingsView, true);
                 }
             }
             else if (_listSettingsView != null)
             {
-                UIView.Animate(
-                    0.2, 
-                    new NSAction(() => _listSettingsView.Alpha = 0),
-                    new NSAction(_listSettingsView.RemoveFromSuperview));
-
+                _listSettingsView.RemoveFromSuperview(true);
                 DisposeListSettingsView();
             }
 
@@ -928,7 +780,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        // TODO: Maybe to support showing on Top of headerView if there is no bottom space
         private float GetListSettingsTopMargin()
         {
             var headerLocation = 
@@ -937,13 +788,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenuesAndShowsTableView);
 
             var result = headerLocation.Y + _headerView.Frame.Height;
-
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0) &&
-                CurrentMode == OrgEventViewMode.List)
-            {
-                result -= TopLayoutGuide.Length;
-            }
-
             return result;
         }
 
@@ -981,54 +825,52 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             switch (CurrentMode)
             {
                 case OrgEventViewMode.Combo:
-                    _modeButtonItem.CustomView = _modeListButton;
-                    _customModeButtonItem.CustomView = _customModeListButton;
-
-                    _customModeListButton.SetHidden(false, animated);
-                    _customModeMapButton.SetHidden(false, animated);
-                    _modeListButton.SetHidden(true, animated);
-                    _modeMapButton.SetHidden(true, animated);
+                    _modeButton.Hidden = false;
+                    _modeButton.VerticalIcon = ThemeIcons.NavBarList;
+                    _modeButton.LandscapeIcon = ThemeIcons.NavBarListLandscape;
+                    _modeButton.UpdateState();
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;
                     MapFullscreenButton.UpdateState();
 
                     VenuesAndShowsTableView.Hidden = false;
                     MapPanel.Hidden = false;
+                    MapFullscreenButton.SetHidden(false, animated);
 
                     DeactivateSearchController();
                     InitializeMapView();
                     break;
 
                 case OrgEventViewMode.Map:
-                    _modeButtonItem.CustomView = _modeListButton;
-                    _customModeButtonItem.CustomView = _customModeListButton;
-
-                    _customModeListButton.SetHidden(false, animated);
-                    _customModeMapButton.SetHidden(false, animated);
-                    _modeListButton.SetHidden(true, animated);
-                    _modeMapButton.SetHidden(true, animated);
+                    _modeButton.Hidden = false;
+                    _modeButton.VerticalIcon = ThemeIcons.NavBarList;
+                    _modeButton.LandscapeIcon = ThemeIcons.NavBarListLandscape;
+                    _modeButton.UpdateState();
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.ExitFullscreen;
                     MapFullscreenButton.UpdateState();
 
-                    VenuesAndShowsTableView.Hidden = true;
+                    VenuesAndShowsTableView.SetHidden(true, animated);
                     MapPanel.Hidden = false;
+                    MapFullscreenButton.SetHidden(false, animated);
 
                     DeactivateSearchController();
                     InitializeMapView();
                     break;
 
                 case OrgEventViewMode.List:
-                    _customModeButtonItem.CustomView = HasData ? _customModeMapButton : new UIView();
-                    _modeButtonItem.CustomView = HasData ? _modeMapButton : new UIView();
+                    _modeButton.Hidden = !HasData;
+                    _modeButton.VerticalIcon = ThemeIcons.NavBarMap;
+                    _modeButton.LandscapeIcon = ThemeIcons.NavBarMapLandscape;
+                    _modeButton.UpdateState();
 
-                    _customModeListButton.SetHidden(true, animated);
-                    _customModeMapButton.SetHidden(true, animated);
-                    _modeListButton.SetHidden(false, animated);
-                    _modeMapButton.SetHidden(false, animated);
+                    if (HasData)
+                    {
+                        VenuesAndShowsTableView.Hidden = false;
+                    }
 
-                    VenuesAndShowsTableView.Hidden = false;
-                    MapPanel.Hidden = true;
+                    MapPanel.SetHidden(true, animated);
+                    MapFullscreenButton.SetHidden(true, animated);
                     break;
             }
                     
@@ -1046,44 +888,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (CurrentMode == OrgEventViewMode.List && HasData)
             {
-                NavBarManager.Instance.SetNavBarHidden(false, true, animated);
-
-                if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                {
-                    UIApplication.SharedApplication
-                        .SetStatusBarStyle(UIStatusBarStyle.LightContent, animated);
-                }
-                else
-                {
-                    #pragma warning disable 618
-
-                    WantsFullScreenLayout = false;
-                    UIApplication.SharedApplication
-                        .SetStatusBarStyle(UIStatusBarStyle.BlackOpaque, animated);
-
-                    #pragma warning restore 618
-                }
+                SetNavBarTransparent(false, animated);
             }
             else
             {
-                NavBarManager.Instance.SetNavBarHidden(true, false, animated);
-
-                if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-                {
-                    UIApplication.SharedApplication
-                        .SetStatusBarStyle(UIStatusBarStyle.Default, animated);
-                }
-                else
-                {
-                    #pragma warning disable 618
-
-                    WantsFullScreenLayout = true;
-                    UIApplication.SharedApplication
-                        .SetStatusBarStyle(UIStatusBarStyle.BlackTranslucent, animated);
-
-                    #pragma warning restore 618
-                }
+                SetNavBarTransparent(true, animated);
             }
+
+            SetNeedsStatusBarAppearanceUpdate();
         }
 
         private void UpdateDayButtonState()
@@ -1091,16 +903,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.IsMultiday)
             {
                 _dayButton.Hidden = false;
-                _customDayButton.Hidden = false;
                 _dayButton.SetTitle(ViewModel.CurrentDayTitle, UIControlState.Normal);
-                _customDayButton.SetTitle(ViewModel.CurrentDayTitle, UIControlState.Normal);
             }
             else
             {
                 _dayButton.Hidden = true;
-                _customDayButton.Hidden = true;
                 _dayButton.SetTitle(null, UIControlState.Normal);
-                _customDayButton.SetTitle(null, UIControlState.Normal);
             }
         }
 
@@ -1156,40 +964,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             tableView.EndUpdates();
         }
 
-        // manually updating buttons that may be not in visual tree on rotation
+        private void UpdateTableViewContentInset()
+        {
+            VenuesAndShowsTableView.ContentInset = 
+                new UIEdgeInsets(NavBarManager.NavBarHeight, 0, 0, 0);
+        }
+
         private void UpdateButtonsFrameOnRotation()
         {
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(
-                new [] {
-                    _customModeListButton, 
-                    _customModeMapButton,
-                    MapFullscreenButton});
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(new [] { MapFullscreenButton });
         }
     }
-
-    #region HACK
-    // HACK: To hide nav bar after iOS make it visible in next view
-    public class ExtendedSearchDisplayController : UISearchDisplayController
-    {
-        public ExtendedSearchDisplayController(
-            UISearchBar searchBar, 
-            UIViewController viewController) 
-            : base(searchBar, viewController) {}
-
-        public override void SetActive(bool visible, bool animated)
-        {
-            var navCtr = SearchContentsController.NavigationController;
-            if (navCtr.VisibleViewController is OrgEventView)
-            {
-                base.SetActive(visible, animated);
-            }
-            else
-            {
-                var previousHidden = NavBarManager.Instance.NativeHidden;
-                base.SetActive(visible, animated);
-                navCtr.SetNavigationBarHidden(previousHidden, false);
-            }
-        }
-    }
-    #endregion
 }

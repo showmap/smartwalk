@@ -194,6 +194,7 @@
     <Folder Include="Utils\MvvmCross\" />
     <Folder Include="Views\OrgEventInfoView\" />
     <Folder Include="Bootstrap\" />
+    <Folder Include="Views\Common\Base\Cells\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -312,11 +313,8 @@
       <DependentUpon>GroupHeaderContentView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\GroupHeader\GroupHeaderView.cs" />
-    <Compile Include="Views\Common\Base\CollectionCellBase.cs" />
     <Compile Include="Views\Common\Base\ContentViewBase.cs" />
     <Compile Include="Views\Common\Base\ListViewBase.cs" />
-    <Compile Include="Views\Common\Base\TableCellBase.cs" />
-    <Compile Include="Views\Common\Base\TableHeaderBase.cs" />
     <Compile Include="Views\Common\EntityCell\EntityViewModelWrapper.cs" />
     <Compile Include="Views\VenueView\NextVenueCell.cs" />
     <Compile Include="Views\VenueView\NextVenueCell.designer.cs">
@@ -345,9 +343,7 @@
     <Compile Include="Views\Common\EntityCell\MapCell.designer.cs">
       <DependentUpon>MapCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TransparentToolBar.cs" />
     <Compile Include="Utils\NavBarManager.cs" />
-    <Compile Include="Views\Common\Base\CustomNavBarViewBase.cs" />
     <Compile Include="Views\Common\Base\ViewBase.cs" />
     <Compile Include="Views\OrgEventView\CustomUISearchBar.cs" />
     <Compile Include="Utils\UITouchGestureRecognizer.cs" />
@@ -390,6 +386,12 @@
     <Compile Include="Views\Common\IFullscreenView.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
     <Compile Include="Utils\ScrollToHideUIManager.cs" />
+    <Compile Include="Views\Common\Base\NavBarViewBase.cs" />
+    <Compile Include="Views\Common\Base\CollectionCellBase.cs" />
+    <Compile Include="Views\Common\Base\TableCellBase.cs" />
+    <Compile Include="Views\Common\Base\TableHeaderBase.cs" />
+    <Compile Include="Controls\TransparentNavBar.cs" />
+    <Compile Include="Utils\ExtendedNavController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
@@ -431,8 +433,6 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Images\Background.png" />
-    <BundleResource Include="Resources\Images\NavBarBackground.png" />
-    <BundleResource Include="Resources\Images\NavBarBackground%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarBack.png" />
     <BundleResource Include="Resources\Icons\NavBarBack%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarList.png" />
@@ -441,8 +441,6 @@
     <BundleResource Include="Resources\Icons\NavBarMap%402x.png" />
     <BundleResource Include="Resources\Images\Shadow.png" />
     <BundleResource Include="Resources\Images\Shadow%402x.png" />
-    <BundleResource Include="Resources\Images\NavBarLandscapeBackground%402x.png" />
-    <BundleResource Include="Resources\Images\NavBarLandscapeBackground.png" />
     <BundleResource Include="Resources\Icons\SmallMap.png" />
     <BundleResource Include="Resources\Icons\SmallMap%402x.png" />
     <BundleResource Include="Resources\Icons\GoRight.png" />
@@ -481,8 +479,6 @@
     <BundleResource Include="Resources\Icons\CloseBlack%402x.png" />
     <BundleResource Include="Resources\Icons\CloseWhite.png" />
     <BundleResource Include="Resources\Icons\CloseWhite%402x.png" />
-    <BundleResource Include="Resources\Icons\Details.png" />
-    <BundleResource Include="Resources\Icons\Details%402x.png" />
     <BundleResource Include="Resources\Icons\ToolBarDirections.png" />
     <BundleResource Include="Resources\Icons\ToolBarDirections%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarMore.png" />

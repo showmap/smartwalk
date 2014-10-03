@@ -22,16 +22,16 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
-        private static float NavBarHeight
+        public static float NavBarHeight
         {
             get
-            {
+            { 
                 var result = 
                     ScreenUtil.IsVerticalOrientation
                         ? UIConstants.ToolBarVerticalHeight
                         : UIConstants.ToolBarHorizontalHeight;
 
-                return result;
+                return result + UIConstants.StatusBarHeight;
             }
         }
 
@@ -48,25 +48,24 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
-        private TransparentToolBar _customNavBar;
+        private TransparentNavBar _navBar;
         private NSLayoutConstraint[] _navBarConstraints;
         private NSLayoutConstraint _navBarHeightConstraint;
-        private bool _nativeHidden;
-        private bool _customHidden = true;
+        private bool _hidden = true;
 
         private NavBarManager()
         {
-            InitializeBars();
+            Initialize();
         }
 
-        public bool NativeHidden
+        public UINavigationBar NavBar
         {
-            get { return _nativeHidden; }
+            get { return _navBar; }
         }
 
-        public bool CustomHidden
+        public bool IsTransparent
         {
-            get { return _customHidden; }
+            get { return _navBar.IsTransparent; }
         }
 
         private NSLayoutConstraint[] NavBarConstraints
@@ -84,20 +83,18 @@ namespace SmartWalk.Client.iOS.Utils
                             null, 
                             new NSDictionary(
                                 "navBar", 
-                                _customNavBar)));
+                                _navBar)));
 
                     var vertical =
                         NSLayoutConstraint.FromVisualFormat(
-                            "V:|-(statusBarHeight)-[navBar(navBarHeight)]", 
+                            "V:|-0-[navBar(navBarHeight)]", 
                             0, 
                             new NSDictionary(
-                                "statusBarHeight", 
-                                UIConstants.StatusBarHeight,
                                 "navBarHeight",
                                 NavBarHeight),
                             new NSDictionary(
                                 "navBar", 
-                                _customNavBar));
+                                _navBar));
 
                     _navBarHeightConstraint = vertical
                         .FirstOrDefault(c => Math.Abs(c.Constant - NavBarHeight) < UIConstants.Epsilon);
@@ -114,47 +111,44 @@ namespace SmartWalk.Client.iOS.Utils
         public void Layout()
         {
             UpdateNavBarConstraints();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(_customNavBar.Items);
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(_navBar.GetNavBarItems());
         }
 
-        public void SetNavBarHidden(
-            bool nativeHidden, 
-            bool customHidden, 
-            bool animated)
+        public void SetHidden(bool hidden, bool animated)
         {
-            _nativeHidden = nativeHidden;
-            NavController.SetNavigationBarHidden(nativeHidden, animated);
-
-            if (_customHidden != customHidden)
+            if (_hidden != hidden)
             {
-                _customHidden = customHidden;
+                _hidden = hidden;
            
-                if (customHidden)
+                if (hidden)
                 {
-                    _customNavBar.RemoveFromSuperview(
+                    _navBar.RemoveFromSuperview(
                         animated, 
                         () => NavController.View.RemoveConstraints(NavBarConstraints),
-                        () => !_customHidden);
+                        () => !_hidden);
                 }
                 else
                 {
-                    NavController.View.Add(_customNavBar, animated);
+                    NavController.View.Add(_navBar, animated);
                     NavController.View.AddConstraints(NavBarConstraints);
                 }
             }
         }
 
-        public void SetCustomItems(UIBarButtonItem[] items, bool animated)
+        public void SetTransparent(bool transparent, bool animated)
         {
-            _customNavBar.SetItems(items, animated);
+            _navBar.SetTransparent(transparent, animated);
+            _navBar.IsItemSemiTransparent = transparent;
         }
 
-        private void InitializeBars()
+        private void Initialize()
         {
-            _customNavBar = new TransparentToolBar();
-            _customNavBar.Translucent = true;
-            _customNavBar.BackgroundColor = UIColor.Clear;
-            _customNavBar.TranslatesAutoresizingMaskIntoConstraints = false;
+            _navBar = new TransparentNavBar
+                {
+                    IsTransparent = true
+                };
+
+            _navBar.TranslatesAutoresizingMaskIntoConstraints = false;
         }
 
         private void UpdateNavBarConstraints()

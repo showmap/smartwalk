@@ -52,28 +52,11 @@ namespace SmartWalk.Client.iOS.Utils
             return button;
         }
 
-        public static void OverrideNavigatorBackButton(
-            UINavigationItem navItem,
-            Action backButtonClickHandler)
-        {
-            navItem.HidesBackButton = true;
-
-            var button = Create(ThemeIcons.NavBarBack, ThemeIcons.NavBarBackLandscape);
-            button.TouchUpInside += (sender, e) => backButtonClickHandler();
-            var barButton = new UIBarButtonItem(button);
-
-            navItem.SetLeftBarButtonItems(new [] { CreateGapSpacer(), barButton }, true);
-        }
-
         public static void UpdateButtonsFrameOnRotation(UIBarButtonItem[] items)
         {
             if (items == null) return;
 
-            var buttons = items
-                .Select(i => i.CustomView as ButtonBarButton)
-                .Where(b => b != null)
-                .ToArray();
-
+            var buttons = GetButtonsFromBarItems(items);
             UpdateButtonsFrameOnRotation(buttons);
         }
 
@@ -85,6 +68,41 @@ namespace SmartWalk.Client.iOS.Utils
             {
                 button.UpdateState();
             }
+        }
+
+        public static ButtonBarButton[] GetButtonsFromBarItems(UIBarButtonItem[] items)
+        {
+            var result = items
+                .Select(i => i.CustomView as ButtonBarButton)
+                .Where(b => b != null)
+                .ToArray();
+            return result;
+        }
+
+        public static UIBarButtonItem[] GetNavItemBarItems(this UINavigationItem navItem)
+        {
+            var leftItems = 
+                navItem != null &&
+                navItem.LeftBarButtonItems != null
+                    ? navItem.LeftBarButtonItems
+                    : Enumerable.Empty<UIBarButtonItem>();
+
+            var rightItems = 
+                navItem != null &&
+                navItem.RightBarButtonItems != null
+                    ? navItem.RightBarButtonItems
+                    : Enumerable.Empty<UIBarButtonItem>();
+
+            var result = leftItems.Union(rightItems).ToArray();
+            return result;
+        }
+
+        public static UIBarButtonItem[] GetNavBarItems(this UINavigationBar navBar)
+        {
+            var result = navBar.Items
+                .SelectMany(navItem => navItem.GetNavItemBarItems())
+                .ToArray();
+            return result;
         }
     }
 }

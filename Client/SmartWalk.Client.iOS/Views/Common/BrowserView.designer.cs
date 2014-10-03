@@ -16,7 +16,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 		MonoTouch.UIKit.UIBarButtonItem BackButton { get; set; }
 
 		[Outlet]
-        SmartWalk.Client.iOS.Controls.TransparentToolBar BottomToolbar { get; set; }
+        MonoTouch.UIKit.UIToolbar BottomToolbar { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIBarButtonItem ForwardButton { get; set; }

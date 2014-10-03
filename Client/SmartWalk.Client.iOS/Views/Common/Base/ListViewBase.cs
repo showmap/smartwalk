@@ -11,7 +11,7 @@ using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
-    public abstract class ListViewBase : CustomNavBarViewBase
+    public abstract class ListViewBase : NavBarViewBase
     {
         private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
@@ -19,15 +19,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private ProgressView _progressView;
         private IListViewSource _listViewSource;
         private UITapGestureRecognizer _viewTapGesture;
-
-        protected string ViewTitle
-        {
-            get
-            {
-                var refreshableViewModel = ViewModel as IRefreshableViewModel;
-                return refreshableViewModel != null ? refreshableViewModel.Title : null;
-            }
-        }
 
         protected bool IsLoading
         {
@@ -66,12 +57,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 refreshableViewModel.RefreshCompleted += OnRefreshCompleted;
             }
 
-            InitializeConstraints();
             InitializeListView();
             InitializeProgressView();
             InitializeGesture();
 
-            UpdateViewTitle();
             UpdateViewLoadingState();
         }
 
@@ -139,11 +128,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
-        protected virtual void UpdateViewTitle()
-        {
-            NavigationItem.Title = ViewTitle ?? string.Empty;
-        }
-
         protected virtual void OnBeforeSetListViewSource()
         {
         }
@@ -187,13 +171,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 UpdateViewLoadingState();
                 UpdateStatusBarLoadingState(true);
             }
-
-            var refreshableViewModel = ViewModel as IRefreshableViewModel;
-            if (refreshableViewModel != null &&
-                propertyName == refreshableViewModel.GetPropertyName(p => p.Title))
-            {
-                UpdateViewTitle();
-            }
         }
 
         private void InitializeProgressView()
@@ -231,7 +208,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             };
 
             // make sure that it's behind all other views
-            _refreshControl.Layer.ZPosition = -100;
+            // TODO: Check this out
+            //_refreshControl.Layer.ZPosition = -100;
             _refreshControl.ValueChanged += OnRefreshControlValueChanged;
 
             ListView.View.AddSubview(_refreshControl);
@@ -265,29 +243,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 refreshableViewModel.RefreshCommand.CanExecute(null))
             {
                 refreshableViewModel.RefreshCommand.Execute(null);
-            }
-        }
-
-        private void InitializeConstraints()
-        {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                var progressViewTopConstraint = GetProgressViewTopConstraint();
-
-                if (_progressViewContainer != null &&
-                    progressViewTopConstraint != null)
-                {
-                    View.RemoveConstraint(progressViewTopConstraint);
-
-                    var views = new NSDictionary(
-                        "topGuide", 
-                        TopLayoutGuide, 
-                        "view", 
-                        _progressViewContainer);
-                    var constraint = 
-                        NSLayoutConstraint.FromVisualFormat("V:[topGuide]-0-[view]", 0, null, views);
-                    View.AddConstraints(constraint);
-                }
             }
         }
 

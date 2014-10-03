@@ -10,10 +10,6 @@ namespace SmartWalk.Client.iOS.Resources
         private const string HelveticaRegular = "HelveticaNeue";
         private const string HelveticaLight = "HelveticaNeue-Light";
 
-        public static readonly UIImage NavBarBackgroundImage = 
-            UIImage.FromFile("Images/NavBarBackground.png");
-        public static readonly UIImage NavBarLandscapeBackgroundImage = 
-            UIImage.FromFile("Images/NavBarLandscapeBackground.png");
         public static readonly UIImage ShadowImage = UIImage.FromFile("Images/Shadow.png")
             .CreateResizableImage(new UIEdgeInsets(0, 1, 0, 1));
         public static readonly UIColor BackgroundPatternColor = UIColor.FromPatternImage(
@@ -23,12 +19,11 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage SemiTransImage = UIImage.FromFile("Images/SemiTrans.png");
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGB(51, 51, 51);
-        public static readonly UIColor NavBarBackgroundiOS7 = UIColor.FromRGB(16, 16, 16);
+        public static readonly UIColor NavBarBackgroundiOS7 = UIColor.FromRGBA(20, 20, 20, 180);
         public static readonly UIColor NavBarText = UIColor.White;
         public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
-        public static int NavBarPaddingCompensate = 1;
-        public static int CustomNavBarPaddingCompensate = -6;
-        public static int ToolBarPaddingCompensate = -12;
+        public static int NavBarPaddingCompensate = -9;
+        public static int ToolBarPaddingCompensate = -16;
 
         public static readonly UIFont NoDataFont = UIFont.FromName(HelveticaMedium, 16);
         public static readonly UIFont LoadingFont = UIFont.FromName(HelveticaMedium, 16);
@@ -110,25 +105,8 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static void Apply()
         {
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                NavBarPaddingCompensate = -9;
-
-                UINavigationBar.Appearance.BarTintColor = NavBarBackgroundiOS7;
-                UINavigationBar.Appearance.TintColor = Theme.NavBarText;
-            }
-            else
-            {
-                UINavigationBar.Appearance.SetBackgroundImage(
-                    NavBarBackgroundImage,
-                    UIBarMetrics.Default);
-                UINavigationBar.Appearance.SetBackgroundImage(
-                    NavBarLandscapeBackgroundImage,
-                    UIBarMetrics.Compact);
-
-                UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(4, UIBarMetrics.Default);
-                UINavigationBar.Appearance.SetTitleVerticalPositionAdjustment(2, UIBarMetrics.Compact);
-            }
+            UINavigationBar.Appearance.BarTintColor = NavBarBackgroundiOS7;
+            UINavigationBar.Appearance.TintColor = Theme.NavBarText;
 
             UINavigationBar.Appearance.SetTitleTextAttributes(new UITextAttributes { 
                 Font = Theme.NavBarFont,
@@ -137,10 +115,11 @@ namespace SmartWalk.Client.iOS.Resources
                 TextShadowOffset = new UIOffset(0, 0)
             });
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                ToolBarPaddingCompensate = -16;
-            }
+            UIBarButtonItem.Appearance
+                .SetBackButtonTitlePositionAdjustment(
+                    new UIOffset(0, -64), UIBarMetrics.Default);
+
+            UIToolbar.Appearance.TintColor = Theme.NavBarText;
 
             UISwitch.Appearance.OnTintColor = UIColor.DarkGray;
             UISwitch.Appearance.TintColor = UIColor.Gray;

@@ -19,16 +19,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             get { return (HomeViewModel)base.ViewModel; }
         }
 
-        public override void ViewDidLoad()
-        {
-            base.ViewDidLoad();
-
-            if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
-            {
-                EdgesForExtendedLayout = UIRectEdge.None;
-            }
-        }
-
         protected override ListViewDecorator GetListView()
         { 
             return new ListViewDecorator(OrgCollectionView);

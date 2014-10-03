@@ -10,7 +10,7 @@ using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.Core.ViewModels.Common
 {
-    public abstract class RefreshableViewModel : ProgressViewModel, IRefreshableViewModel
+    public abstract class RefreshableViewModel : ProgressViewModel, IRefreshableViewModel, ITitleAware
     {
         private const string KeyPrefix = "refresh";
 
