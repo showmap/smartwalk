@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Controls
 {
-    public class ListViewDecorator
+    public class ListViewDecorator : IDisposable
     {
         private readonly UITableView _tableView;
         private readonly UICollectionView _collectionView;
+
+        private UIRefreshControl _refreshControl;
+        private UITableViewController _tableController;
 
         public ListViewDecorator(UITableView tableView)
         {
@@ -25,7 +29,7 @@ namespace SmartWalk.Client.iOS.Controls
         {
             get
             {
-                return (UIScrollView)_tableView ?? (UIScrollView)_collectionView;
+                return (UIScrollView)_tableView ?? _collectionView;
             }
         }
 
@@ -59,6 +63,36 @@ namespace SmartWalk.Client.iOS.Controls
             }
         }
 
+        public UIRefreshControl RefreshControl
+        {
+            get
+            {
+                return _refreshControl;
+            }
+            set
+            {
+                _refreshControl = value;
+
+                if (_refreshControl != null)
+                {
+                    if (_tableView != null)
+                    {
+                        if (_tableController == null)
+                        {
+                            _tableController = new UITableViewController();
+                            _tableController.TableView = _tableView;
+                        }
+                        _tableController.RefreshControl = _refreshControl;
+                    }
+
+                    if (_collectionView != null)
+                    {
+                        _collectionView.AddSubview(_refreshControl);
+                    }
+                }
+            }
+        }
+
         public void ReloadData()
         {
             if (_tableView != null)
@@ -70,6 +104,24 @@ namespace SmartWalk.Client.iOS.Controls
             {
                 _collectionView.ReloadData();
             }
+        }
+            
+        public void Dispose()
+        {
+            if (_tableController != null)
+            {
+                _tableController.RefreshControl = null;
+                _tableController.Dispose();
+            }
+
+            if (_refreshControl != null)
+            {
+                _refreshControl.RemoveFromSuperview();
+                _refreshControl.Dispose();
+                _refreshControl = null;
+            }
+
+            ConsoleUtil.LogDisposed(this);
         }
     }
 

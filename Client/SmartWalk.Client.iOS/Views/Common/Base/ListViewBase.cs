@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using Cirrious.CrossCore.Core;
-using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
@@ -13,7 +12,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ListViewBase : NavBarViewBase
     {
-        private UIRefreshControl _refreshControl;
         private ListViewDecorator _listView;
         private UIView _progressViewContainer;
         private ProgressView _progressView;
@@ -45,7 +43,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 return ListView.Source != null && ListView.Source.ItemsSource != null;
             }
         }
-            
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -84,6 +82,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 }
 
                 DisposeRefreshControl();
+                DisposeListView();
                 DisposeGesture();
             }
         }
@@ -107,7 +106,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         protected virtual void UpdateStatusBarLoadingState(bool animated)
         {
             if (IsLoading && 
-                _refreshControl != null && _refreshControl.Refreshing) // showing status only on Pull-to-Refresh
+                ListView.RefreshControl != null && 
+                ListView.RefreshControl.Refreshing) // showing status only on Pull-to-Refresh
             {
                 SetStatusBarHidden(false, animated);
             }
@@ -149,7 +149,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             // hiding ListView on view opening if data is being loaded
             // to avoid Pull-To-Refreshes and to have fade id effect
-            if (!HasListData && (_refreshControl == null || !_refreshControl.Refreshing))
+            if (!HasListData && 
+                (ListView.RefreshControl == null || !ListView.RefreshControl.Refreshing))
             {
                 ListView.View.Hidden = true;
             }
@@ -201,35 +202,40 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
+        private void DisposeListView()
+        {
+            ListView.Dispose();
+        }
+
         private void InitializeRefreshControl()
         {
-            _refreshControl = new UIRefreshControl {
+            var refreshControl = new UIRefreshControl {
                 TintColor = Theme.RefreshControl
             };
 
             // make sure that it's behind all other views
-            // TODO: Check this out
-            //_refreshControl.Layer.ZPosition = -100;
-            _refreshControl.ValueChanged += OnRefreshControlValueChanged;
+            refreshControl.Layer.ZPosition = -1;
+            refreshControl.ValueChanged += OnRefreshControlValueChanged;
 
-            ListView.View.AddSubview(_refreshControl);
+            ListView.RefreshControl = refreshControl;
         }
 
         private void DisposeRefreshControl()
         {
-            if (_refreshControl != null)
+            if (ListView.RefreshControl != null)
             {
-                _refreshControl.ValueChanged -= OnRefreshControlValueChanged;
-                _refreshControl.Dispose();
-                _refreshControl = null;
+                ListView.RefreshControl.ValueChanged -= OnRefreshControlValueChanged;
+                ListView.RefreshControl.Dispose();
+                ListView.RefreshControl = null;
             }
         }
 
         private void OnRefreshCompleted(object sender, MvxValueEventArgs<bool> e)
         {
-            if (_refreshControl.Refreshing)
+            if (ListView.RefreshControl != null &&
+                ListView.RefreshControl.Refreshing)
             {
-                _refreshControl.EndRefreshing();
+                ListView.RefreshControl.EndRefreshing();
             }
 
             UpdateViewDataState(e.Value);

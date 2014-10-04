@@ -57,7 +57,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ViewModel.ScrollSelectedVenue += OnScrollSelectedVenue;
 
             InitializeStyle();
-            InitializeGestures();
 
             UpdateTableViewContentInset();
             UpdateViewState(false);
@@ -76,6 +75,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 SetDialogViewFullscreenFrame(_listSettingsView);
             }
+
+            if (_searchDisplayController != null &&
+                _searchDisplayController.Active)
+            {
+                SetNavBarHidden(true, animated);
+            }
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -88,7 +93,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.ScrollSelectedVenue -= OnScrollSelectedVenue;
 
                 DisposeToolBar();
-                DisposeGestures();
                 DisposeTableHeader();
                 DisposeSearchDisplayController();
                 DisposeMapView();
@@ -128,7 +132,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override bool PrefersStatusBarHidden()
         {
-            return false;
+            return _searchDisplayController != null && _searchDisplayController.Active;
         }
 
         protected override void UpdateStatusBarLoadingState(bool animated)
@@ -276,10 +280,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 UpdateTableViewOnShowExpanding(VenuesAndShowsTableView);
 
-                if (SearchDisplayController.SearchResultsTableView.Superview != null &&
-                    !SearchDisplayController.SearchResultsTableView.Hidden)
+                if (_searchDisplayController != null &&
+                    _searchDisplayController.SearchResultsTableView.Superview != null &&
+                    !_searchDisplayController.SearchResultsTableView.Hidden)
                 {
-                    UpdateTableViewOnShowExpanding(SearchDisplayController.SearchResultsTableView);
+                    UpdateTableViewOnShowExpanding(_searchDisplayController.SearchResultsTableView);
                 }
 
                 _previousExpandedShow = ViewModel.ExpandedShow;
@@ -512,6 +517,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             _headerView = OrgEventHeaderView.Create();
             _headerView.ShowOptionsCommand = ViewModel.ShowHideListOptionsCommand;
+            _headerView.SearchBarControl.Delegate = new OrgEventSearchBarDelegate();
 
             UpdateTableHeaderState(HasData);
 
@@ -539,9 +545,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeSearchDisplayController()
         {
             _searchDisplayController = 
-                new UISearchDisplayController(_headerView.SearchBarControl, this);
+                new OrgEventSearchDisplayController(_headerView.SearchBarControl, this);
             _searchDisplayController.Delegate = 
-                new OrgEventSearchDelegate(_headerView, ViewModel);
+                new OrgEventSearchDelegate(VenuesAndShowsTableView, ViewModel);
 
             var searchTableSource = new OrgEventTableSource(ViewModel)
                 {
@@ -579,14 +585,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 _searchDisplayController.Dispose();
                 _searchDisplayController = null;
             }
-        }
-
-        private void InitializeGestures()
-        {
-        }
-
-        private void DisposeGestures()
-        {
         }
 
         private void ReloadMap()
@@ -873,7 +871,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapFullscreenButton.SetHidden(true, animated);
                     break;
             }
-                    
+
             UpdateNavBarState(animated);
             UpdateViewConstraints(animated);
 

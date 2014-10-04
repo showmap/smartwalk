@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -28,7 +27,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return (OrgEventHeaderView)Nib.Instantiate(null, null)[0];
         }
 
-        public CustomUISearchBar SearchBarControl 
+        public OrgEventSearchBar SearchBarControl 
         { 
             get { return SearchBar; }
         }
@@ -113,16 +112,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (_isStyleInitialized || SearchBar == null) return;
 
-            var textField = SearchBar
-                .GetAllSubViews()
-                .OfType<UITextField>()
-                .FirstOrDefault();
-            if (textField != null)
-            {
-                textField.TextColor = UIColor.White;
-            }
-
-            SearchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+            SearchBar.SetPassiveStyle();
 
             OptionsButton.SetImage(ThemeIcons.ListOptions, UIControlState.Normal);
 

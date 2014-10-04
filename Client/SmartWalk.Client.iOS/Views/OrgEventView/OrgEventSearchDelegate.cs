@@ -1,3 +1,4 @@
+using System.Drawing;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Utils;
@@ -9,14 +10,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly OrgEventHeaderView _headerView;
         private readonly OrgEventViewModel _viewModel;
 
+        private UITableView _tableView;
         private OrgEventViewMode _previousMode;
         private bool _previousIsListOptVisible;
+        private PointF _previousOffset;
+        private UIEdgeInsets _previousContentInset;
 
-        public OrgEventSearchDelegate(
-            OrgEventHeaderView headerView,
-            OrgEventViewModel viewModel)
+        public OrgEventSearchDelegate(UITableView tableView, OrgEventViewModel viewModel)
         {
-            _headerView = headerView;
+            _tableView = tableView;
+            _headerView = (OrgEventHeaderView)tableView.TableHeaderView;;
             _viewModel = viewModel;
         }
 
@@ -34,6 +37,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void WillBeginSearch(UISearchDisplayController controller)
         {
+            NavBarManager.Instance.SetHidden(true, false);
+
+            if (_viewModel.Mode == OrgEventViewMode.List)
+            {
+                _previousOffset = _tableView.ContentOffset;
+                _previousContentInset = _tableView.ContentInset;
+                _tableView.ContentInset = UIEdgeInsets.Zero;
+            }
+
             if (_viewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
             {
                 _previousMode = _viewModel.Mode;
@@ -51,10 +63,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void DidEndSearch(UISearchDisplayController controller)
         {
+            if (_previousMode == OrgEventViewMode.List)
+            {
+                _tableView.ContentInset = _previousContentInset;
+                _tableView.ContentOffset = _previousOffset;
+            }
+
             if (_viewModel.SwitchModeCommand.CanExecute(_previousMode))
             {
                 _viewModel.SwitchModeCommand.Execute(_previousMode);
             }
+
+            NavBarManager.Instance.SetHidden(false, true);
         }
 
         public override void WillShowSearchResults(UISearchDisplayController controller, UITableView tableView)

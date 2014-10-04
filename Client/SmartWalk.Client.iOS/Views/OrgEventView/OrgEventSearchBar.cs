@@ -3,16 +3,17 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     // HACK: To handle iOS7 search bar size weird behavior
-    [Register("CustomUISearchBar")]
-    public class CustomUISearchBar : UISearchBar
+    [Register("OrgEventSearchBar")]
+    public class OrgEventSearchBar : UISearchBar
     {
         private bool _isListOptionsVisible;
 
-        public CustomUISearchBar(IntPtr Handle) : base(Handle)
+        public OrgEventSearchBar(IntPtr handle) : base(handle)
         {
         }
 
@@ -48,7 +49,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private RectangleF GetFixedFrame(RectangleF frame)
         {
-            if (Superview != null)
+            if (Superview != null && 
+                SearchBarStyle != UISearchBarStyle.Prominent)
             {
                 frame.Width = Superview.Frame.Width - 
                     (IsListOptionsVisible
@@ -58,6 +60,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             return frame;
+        }
+    }
+
+    public static class OrgEventSearchBarExtensions
+    {
+        public static void SetPassiveStyle(this UISearchBar searchBar)
+        {
+            searchBar.BarStyle = UIBarStyle.Default;
+            searchBar.TintColor = Theme.SearchControl;
+            searchBar.BarTintColor = null;
+            searchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+        }
+
+        public static void SetActiveStyle(this UISearchBar searchBar)
+        {
+            searchBar.BarStyle = UIBarStyle.Default;
+            searchBar.TintColor = Theme.SearchControl;
+            searchBar.BarTintColor = Theme.NavBarBackgroundiOS7;
+            searchBar.SearchBarStyle = UISearchBarStyle.Prominent;
         }
     }
 }

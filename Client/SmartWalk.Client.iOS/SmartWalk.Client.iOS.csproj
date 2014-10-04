@@ -345,7 +345,6 @@
     </Compile>
     <Compile Include="Utils\NavBarManager.cs" />
     <Compile Include="Views\Common\Base\ViewBase.cs" />
-    <Compile Include="Views\OrgEventView\CustomUISearchBar.cs" />
     <Compile Include="Utils\UITouchGestureRecognizer.cs" />
     <Compile Include="Controls\CustomMKMap.cs" />
     <Compile Include="Views\HomeView\HomeHeaderView.cs" />
@@ -392,6 +391,9 @@
     <Compile Include="Views\Common\Base\TableHeaderBase.cs" />
     <Compile Include="Controls\TransparentNavBar.cs" />
     <Compile Include="Utils\ExtendedNavController.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventSearchBarDelegate.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventSearchDisplayController.cs" />
+    <Compile Include="Views\OrgEventView\OrgEventSearchBar.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />

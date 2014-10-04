@@ -57,7 +57,8 @@ namespace SmartWalk.Client.iOS
             startup.Start();
 
             ((UINavigationController)AppDelegate.Window.RootViewController)
-                .NavigationBarHidden = true; 
+                .NavigationBarHidden = true;
+            NavBarManager.Instance.SetHidden(false, false);
 
             Window.MakeKeyAndVisible();
             
