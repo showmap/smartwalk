@@ -2,7 +2,7 @@ using System;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Utils;
 
-namespace SmartWalk.Client.iOS.Views.Common.Base
+namespace SmartWalk.Client.iOS.Views.Common.Base.Cells
 {
     public class TableHeaderBase : UITableViewHeaderFooterView
     {

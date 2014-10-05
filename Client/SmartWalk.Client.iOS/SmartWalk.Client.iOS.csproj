@@ -313,7 +313,6 @@
       <DependentUpon>GroupHeaderContentView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\GroupHeader\GroupHeaderView.cs" />
-    <Compile Include="Views\Common\Base\ContentViewBase.cs" />
     <Compile Include="Views\Common\Base\ListViewBase.cs" />
     <Compile Include="Views\Common\EntityCell\EntityViewModelWrapper.cs" />
     <Compile Include="Views\VenueView\NextVenueCell.cs" />
@@ -386,14 +385,15 @@
     <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
     <Compile Include="Utils\ScrollToHideUIManager.cs" />
     <Compile Include="Views\Common\Base\NavBarViewBase.cs" />
-    <Compile Include="Views\Common\Base\CollectionCellBase.cs" />
-    <Compile Include="Views\Common\Base\TableCellBase.cs" />
-    <Compile Include="Views\Common\Base\TableHeaderBase.cs" />
     <Compile Include="Controls\TransparentNavBar.cs" />
     <Compile Include="Utils\ExtendedNavController.cs" />
     <Compile Include="Views\OrgEventView\OrgEventSearchBarDelegate.cs" />
     <Compile Include="Views\OrgEventView\OrgEventSearchDisplayController.cs" />
     <Compile Include="Views\OrgEventView\OrgEventSearchBar.cs" />
+    <Compile Include="Views\Common\Base\Cells\CollectionCellBase.cs" />
+    <Compile Include="Views\Common\Base\Cells\TableCellBase.cs" />
+    <Compile Include="Views\Common\Base\Cells\TableHeaderBase.cs" />
+    <Compile Include="Views\Common\Base\Cells\ContentViewBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
-using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.Common.GroupHeader

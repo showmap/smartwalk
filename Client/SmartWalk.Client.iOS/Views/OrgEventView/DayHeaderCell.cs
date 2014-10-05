@@ -5,7 +5,7 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView

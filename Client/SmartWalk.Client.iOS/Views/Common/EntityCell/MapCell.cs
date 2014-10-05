@@ -9,7 +9,7 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
-using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {

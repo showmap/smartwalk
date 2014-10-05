@@ -1,18 +1,16 @@
-using System;
+﻿using System;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Utils;
 
-namespace SmartWalk.Client.iOS.Views.Common.Base
+namespace SmartWalk.Client.iOS.Views.Common.Base.Cells
 {
-    public abstract class CollectionCellBase : UICollectionViewCell
+    public abstract class ContentViewBase : UIView
     {
         private bool _isInitialized;
         private object _dataContext;
 
-        protected CollectionCellBase(IntPtr handle) : base(handle)
+        protected ContentViewBase(IntPtr handle) : base(handle) 
         {
-            // HACK: http://stackoverflow.com/questions/19132908/auto-layout-constraints-issue-on-ios7-in-uitableviewcell
-            ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
         }
 
         public object DataContext
@@ -22,6 +20,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 if (!Equals(_dataContext, value))
                 {
+                    var previousContext = _dataContext;
                     _dataContext = value;
 
                     if (!_isInitialized)
@@ -30,7 +29,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                         _isInitialized = true;
                     }
 
-                    OnDataContextChanged();
+                    OnDataContextChanged(previousContext, _dataContext);
                 }
             }
         }
@@ -39,7 +38,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
         }
 
-        protected virtual void OnDataContextChanged()
+        protected virtual void OnDataContextChanged(object previousContext, object newContext)
         {
         }
 

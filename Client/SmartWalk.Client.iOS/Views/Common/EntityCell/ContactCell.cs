@@ -4,7 +4,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {

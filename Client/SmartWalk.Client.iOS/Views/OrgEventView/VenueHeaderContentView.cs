@@ -5,7 +5,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 using SmartWalk.Client.Core.Utils;
 
