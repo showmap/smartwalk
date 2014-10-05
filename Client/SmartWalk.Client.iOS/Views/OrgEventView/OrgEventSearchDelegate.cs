@@ -59,6 +59,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public override void WillEndSearch(UISearchDisplayController controller)
         {
             _headerView.IsListOptionsVisible = _previousIsListOptVisible;
+            controller.SearchBar.SetPassiveStyle();
         }
 
         public override void DidEndSearch(UISearchDisplayController controller)

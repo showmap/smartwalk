@@ -9,11 +9,5 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             searchBar.SetActiveStyle();
             return true;
         }
-
-        public override bool ShouldEndEditing(UISearchBar searchBar)
-        {
-            searchBar.SetPassiveStyle();
-            return true;
-        }
     }
 }
