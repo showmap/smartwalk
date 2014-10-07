@@ -62,6 +62,11 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
+        public void ScrolledToTop()
+        {
+            OnShowUI();
+        }
+
         public void ScrollFinished()
         {
             if (Math.Abs(_scrollView.ContentOffset.Y) < UIConstants.Epsilon)

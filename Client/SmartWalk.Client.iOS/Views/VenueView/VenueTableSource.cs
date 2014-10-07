@@ -62,6 +62,11 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             _scrollToHideManager.Scrolled();
         }
 
+        public override void ScrolledToTop(UIScrollView scrollView)
+        {
+            _scrollToHideManager.ScrolledToTop();
+        }
+
         public override void DecelerationEnded(UIScrollView scrollView)
         {
             _scrollToHideManager.ScrollFinished();

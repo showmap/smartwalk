@@ -357,7 +357,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public void ScrollOutHeader()
         {
-            if (IsAutohidingEnabled && !IsHeaderViewHidden)
+            if (IsAutohidingEnabled)
             {
                 ScrollUtil.ScrollOutHeader(
                     TableView, 
@@ -376,6 +376,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (((UITableView)scrollView).TableHeaderView == null) return;
 
             ScrollUtil.AdjustHeaderPosition(scrollView, HeaderHeight);
+        }
+
+        public override void ScrolledToTop(UIScrollView scrollView)
+        {
+            ScrollOutHeader();
         }
 
         public override int RowsInSection(UITableView tableview, int section)

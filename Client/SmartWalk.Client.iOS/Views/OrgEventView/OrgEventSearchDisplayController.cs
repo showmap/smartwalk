@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.SetActive(visible, animated);
 
-            SearchContentsController.SetNeedsStatusBarAppearanceUpdate();
+            ((OrgEventView)SearchContentsController).SetNeedStatusBarUpdate(animated);
         }
     }
 }

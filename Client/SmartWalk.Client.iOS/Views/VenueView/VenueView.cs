@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override ListViewDecorator GetListView()
         { 
-            return new ListViewDecorator(VenueShowsTableView);  
+            return ListViewDecorator.Create(VenueShowsTableView);  
         }
 
         protected override UIView GetProgressViewContainer()

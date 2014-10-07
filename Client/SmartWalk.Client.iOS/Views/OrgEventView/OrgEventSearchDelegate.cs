@@ -19,7 +19,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public OrgEventSearchDelegate(UITableView tableView, OrgEventViewModel viewModel)
         {
             _tableView = tableView;
-            _headerView = (OrgEventHeaderView)tableView.TableHeaderView;;
+            _headerView = (OrgEventHeaderView)tableView.TableHeaderView;
             _viewModel = viewModel;
         }
 
@@ -39,12 +39,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             NavBarManager.Instance.SetHidden(true, false);
 
-            if (_viewModel.Mode == OrgEventViewMode.List)
-            {
-                _previousOffset = _tableView.ContentOffset;
-                _previousContentInset = _tableView.ContentInset;
-                _tableView.ContentInset = UIEdgeInsets.Zero;
-            }
+            _previousOffset = _tableView.ContentOffset;
+            _previousContentInset = _tableView.ContentInset;
+            _tableView.ContentInset = UIEdgeInsets.Zero;
 
             if (_viewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
             {
@@ -54,21 +51,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _previousIsListOptVisible = _headerView.IsListOptionsVisible;
             _headerView.IsListOptionsVisible = false;
+            controller.SearchBar.SetActiveStyle();
         }
 
         public override void WillEndSearch(UISearchDisplayController controller)
         {
-            _headerView.IsListOptionsVisible = _previousIsListOptVisible;
-            controller.SearchBar.SetPassiveStyle();
         }
 
         public override void DidEndSearch(UISearchDisplayController controller)
         {
-            if (_previousMode == OrgEventViewMode.List)
-            {
-                _tableView.ContentInset = _previousContentInset;
-                _tableView.ContentOffset = _previousOffset;
-            }
+            _tableView.ContentInset = _previousContentInset;
+            _tableView.ContentOffset = _previousOffset;
+
+            _headerView.IsListOptionsVisible = _previousIsListOptVisible;
+            controller.SearchBar.SetPassiveStyle();
 
             if (_viewModel.SwitchModeCommand.CanExecute(_previousMode))
             {

@@ -13,6 +13,13 @@ namespace SmartWalk.Client.iOS.Utils
         private static readonly Dictionary<WeakReference<UIScrollView>, NSTimer> _timers = 
             new Dictionary<WeakReference<UIScrollView>, NSTimer>();
 
+        public static void SetContentOffset(UIScrollView scrollView, float height, bool animated)
+        {
+            scrollView.SetContentOffset(
+                new PointF(0, height - scrollView.ContentInset.Top), 
+                animated);
+        }
+
         public static void ScrollOutHeader(
             UIScrollView scrollView, 
             float headerHeight, 
@@ -113,13 +120,6 @@ namespace SmartWalk.Client.iOS.Utils
                 _timers[key].Dispose();
                 _timers.Remove(key);
             }
-        }
-
-        private static void SetContentOffset(UIScrollView scrollView, float height, bool animated)
-        {
-            scrollView.SetContentOffset(
-                new PointF(0, height - scrollView.ContentInset.Top), 
-                animated);
         }
     }
 }

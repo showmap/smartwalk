@@ -15,14 +15,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
     public abstract class ViewBase : ActiveAwareViewBase
     {
         private ImageFullscreenView _imageFullscreenView;
-        private bool _statusBarHidden = true;
 
         public override UIStatusBarAnimation PreferredStatusBarUpdateAnimation
         {
-            get
-            {
-                return UIStatusBarAnimation.Slide;
-            }
+            get { return UIStatusBarAnimation.Slide; }
         }
 
         protected virtual string ViewTitle
@@ -86,18 +82,15 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         public override bool PrefersStatusBarHidden()
         {
-            return _statusBarHidden;
+            return true;
         }
 
-        // TODO: To remove this
-        protected virtual void SetStatusBarHidden(bool hidden, bool animated)
+        public void SetNeedStatusBarUpdate(bool animated)
         {
-            _statusBarHidden = hidden;
-
             if (animated)
             {
                 UIView.Animate(
-                    UIConstants.AnimationDuration, 
+                    UIConstants.AnimationLongerDuration, 
                     new NSAction(SetNeedsStatusBarAppearanceUpdate));
             }
             else

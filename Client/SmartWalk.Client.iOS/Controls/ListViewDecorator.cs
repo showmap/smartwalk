@@ -71,26 +71,28 @@ namespace SmartWalk.Client.iOS.Controls
             }
             set
             {
+                if (_refreshControl != null)
+                {
+                    DisposeRefreshControl();
+                }
+
                 _refreshControl = value;
 
                 if (_refreshControl != null)
                 {
-                    if (_tableView != null)
-                    {
-                        if (_tableController == null)
-                        {
-                            _tableController = new UITableViewController();
-                            _tableController.TableView = _tableView;
-                        }
-                        _tableController.RefreshControl = _refreshControl;
-                    }
-
-                    if (_collectionView != null)
-                    {
-                        _collectionView.AddSubview(_refreshControl);
-                    }
+                    InitializeRefreshControl();
                 }
             }
+        }
+
+        public static ListViewDecorator Create(UITableView tableView)
+        {
+            return tableView != null ? new ListViewDecorator(tableView) : null;
+        }
+
+        public static ListViewDecorator Create(UICollectionView collectionView)
+        {
+            return collectionView != null ? new ListViewDecorator(collectionView) : null;
         }
 
         public void ReloadData()
@@ -114,19 +116,48 @@ namespace SmartWalk.Client.iOS.Controls
                 _tableController.Dispose();
             }
 
+            DisposeRefreshControl();
+
+            ConsoleUtil.LogDisposed(this);
+        }
+
+        private void InitializeRefreshControl()
+        {
+            if (_refreshControl != null)
+            {
+                if (_tableView != null)
+                {
+                    if (_tableController == null)
+                    {
+                        _tableController = new UITableViewController();
+                        _tableController.TableView = _tableView;
+                    }
+
+                    _tableController.RefreshControl = _refreshControl;
+                }
+
+                if (_collectionView != null)
+                {
+                    _collectionView.AddSubview(_refreshControl);
+                }
+            }
+        }
+
+        private void DisposeRefreshControl()
+        {
             if (_refreshControl != null)
             {
                 _refreshControl.RemoveFromSuperview();
                 _refreshControl.Dispose();
                 _refreshControl = null;
             }
-
-            ConsoleUtil.LogDisposed(this);
         }
     }
 
     public interface IListViewSource 
     {
         IEnumerable ItemsSource { get; }
+
+        void ScrolledToTop(UIScrollView scrollView);
     }
 }

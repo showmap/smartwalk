@@ -32,6 +32,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             base.ViewWillAppear(animated);
 
+            SetNavBarHidden(false, animated);
             SetNavBarTransparent(true, animated);
         }
 

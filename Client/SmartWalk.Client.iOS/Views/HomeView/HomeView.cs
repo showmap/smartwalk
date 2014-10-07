@@ -21,7 +21,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         protected override ListViewDecorator GetListView()
         { 
-            return new ListViewDecorator(OrgCollectionView);
+            return ListViewDecorator.Create(OrgCollectionView);
         }
 
         protected override UIView GetProgressViewContainer()

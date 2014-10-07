@@ -49,6 +49,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get { return HasData ? ViewModel.Mode : OrgEventViewMode.List; }
         }
 
+        private bool IsInSearch
+        {
+            get
+            { 
+                return _searchDisplayController != null &&
+                    _searchDisplayController.Active;
+            }
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -74,12 +83,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_listSettingsView != null)
             {
                 SetDialogViewFullscreenFrame(_listSettingsView);
-            }
-
-            if (_searchDisplayController != null &&
-                _searchDisplayController.Active)
-            {
-                SetNavBarHidden(true, animated);
             }
         }
 
@@ -132,13 +135,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override bool PrefersStatusBarHidden()
         {
-            return _searchDisplayController != null && _searchDisplayController.Active;
+            return IsInSearch;
         }
 
-        protected override void UpdateStatusBarLoadingState(bool animated)
+        protected override void SetNavBarHidden(bool hidden, bool animated)
         {
-            // overriding the base class logic of showing status bar during loading
-            // status bar is always visible in this view
+            if (IsInSearch)
+            {
+                base.SetNavBarHidden(true, animated);
+            }
+            else
+            {
+                base.SetNavBarHidden(hidden, animated);
+            }
         }
 
         private void UpdateViewConstraints(bool animated)
@@ -198,29 +207,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             FullscreenHeightConstraint.Constant = size.Height;
         }
 
-        private void UpdateConstraint(Action updateHandler, bool animated)
+        private void UpdateConstraint(Action animationHandler, bool animated)
         {
-            const double animationSpeed = 0.2;
-
             if (animated)
             {
                 UIView.Animate(
-                    animationSpeed, 
+                    UIConstants.AnimationDuration, 
                     () =>
                     {
-                        updateHandler();
+                        animationHandler();
                         View.LayoutIfNeeded();
                     });
             }
             else
             {
-                updateHandler();
+                animationHandler();
             }
         }
 
         protected override ListViewDecorator GetListView()
         { 
-            return new ListViewDecorator(VenuesAndShowsTableView);  
+            return ListViewDecorator.Create(VenuesAndShowsTableView);  
         }
 
         protected override UIView GetProgressViewContainer()
@@ -280,7 +287,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 UpdateTableViewOnShowExpanding(VenuesAndShowsTableView);
 
-                if (_searchDisplayController != null &&
+                if (IsInSearch &&
                     _searchDisplayController.SearchResultsTableView.Superview != null &&
                     !_searchDisplayController.SearchResultsTableView.Hidden)
                 {
@@ -517,7 +524,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             _headerView = OrgEventHeaderView.Create();
             _headerView.ShowOptionsCommand = ViewModel.ShowHideListOptionsCommand;
-            _headerView.SearchBarControl.Delegate = new OrgEventSearchBarDelegate();
 
             UpdateTableHeaderState(HasData);
 
@@ -874,6 +880,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             UpdateNavBarState(animated);
             UpdateViewConstraints(animated);
+            SetNeedStatusBarUpdate(animated);
 
             // hiding ListOptions on switching to any state
             if (ViewModel.ShowHideListOptionsCommand.CanExecute(false))
@@ -892,8 +899,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 SetNavBarTransparent(true, animated);
             }
-
-            SetNeedsStatusBarAppearanceUpdate();
         }
 
         private void UpdateDayButtonState()

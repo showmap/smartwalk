@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using Cirrious.CrossCore.Core;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
@@ -20,7 +19,12 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected bool IsLoading
         {
-            get { return ViewModel is IProgressViewModel && ((IProgressViewModel)ViewModel).IsLoading; }
+            get
+            { 
+                return 
+                    ViewModel is IProgressViewModel &&
+                    ((IProgressViewModel)ViewModel).IsLoading;
+            }
         }
 
         private ListViewDecorator ListView 
@@ -40,7 +44,20 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             get
             {
-                return ListView.Source != null && ListView.Source.ItemsSource != null;
+                return 
+                    ListView.Source != null && 
+                    ListView.Source.ItemsSource != null;
+            }
+        }
+
+        private bool IsRefreshingAfterPull
+        {
+            get
+            {
+                return 
+                    ListView != null &&
+                    ListView.RefreshControl != null &&
+                    ListView.RefreshControl.Refreshing;
             }
         }
 
@@ -60,13 +77,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             InitializeGesture();
 
             UpdateViewLoadingState();
-        }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            UpdateStatusBarLoadingState(animated);
+            SetNeedStatusBarUpdate(true);
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -87,6 +98,14 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
+        public override bool PrefersStatusBarHidden()
+        {
+            var visible = 
+                (IsLoading && !HasListData) || 
+                (IsLoading && IsRefreshingAfterPull);
+            return !visible;
+        }
+
         protected abstract ListViewDecorator GetListView();
 
         protected abstract UIView GetProgressViewContainer();
@@ -103,31 +122,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected abstract IListViewSource CreateListViewSource();
 
-        protected virtual void UpdateStatusBarLoadingState(bool animated)
-        {
-            if (IsLoading && 
-                ListView.RefreshControl != null && 
-                ListView.RefreshControl.Refreshing) // showing status only on Pull-to-Refresh
-            {
-                SetStatusBarHidden(false, animated);
-            }
-            else
-            {
-                SetStatusBarHidden(true, animated);
-            }
-        }
-
-        protected override void SetStatusBarHidden(bool hidden, bool animated)
-        {
-            // making sure that view is still visible on screen after loading finished
-            if (IsActive)
-            {
-                hidden = !IsLoading && hidden;
-
-                base.SetStatusBarHidden(hidden, animated);
-            }
-        }
-
         protected virtual void OnBeforeSetListViewSource()
         {
         }
@@ -142,15 +136,20 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void ScrollViewToTop()
         {
-            ListView.View.SetContentOffset(PointF.Empty, true);
+            ScrollUtil.SetContentOffset(ListView.View, 0, true);
+
+            if (ListView != null &&
+                ListView.Source != null)
+            {
+                ListView.Source.ScrolledToTop(ListView.View);
+            }
         }
 
         protected virtual void OnLoadingViewStateUpdate()
         {
             // hiding ListView on view opening if data is being loaded
             // to avoid Pull-To-Refreshes and to have fade id effect
-            if (!HasListData && 
-                (ListView.RefreshControl == null || !ListView.RefreshControl.Refreshing))
+            if (!HasListData && !IsRefreshingAfterPull)
             {
                 ListView.View.Hidden = true;
             }
@@ -170,7 +169,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 propertyName == progressViewModel.GetPropertyName(p => p.IsLoading))
             {
                 UpdateViewLoadingState();
-                UpdateStatusBarLoadingState(true);
+                SetNeedStatusBarUpdate(true);
             }
         }
 
@@ -183,9 +182,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeGesture()
         {
-            _viewTapGesture = new UITapGestureRecognizer(() => 
-                ListView.View.SetContentOffset(PointF.Empty, true))
-            {
+            _viewTapGesture = new UITapGestureRecognizer(ScrollViewToTop) {
                 Delegate = new ListViewTapGestureDelegate()
             };
 
@@ -213,8 +210,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 TintColor = Theme.RefreshControl
             };
 
-            // make sure that it's behind all other views
-            refreshControl.Layer.ZPosition = -1;
             refreshControl.ValueChanged += OnRefreshControlValueChanged;
 
             ListView.RefreshControl = refreshControl;

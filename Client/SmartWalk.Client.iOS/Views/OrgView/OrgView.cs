@@ -30,7 +30,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         protected override ListViewDecorator GetListView()
         { 
-            return new ListViewDecorator(OrgEventsTableView);  
+            return ListViewDecorator.Create(OrgEventsTableView);  
         }
 
         protected override UIView GetProgressViewContainer()

@@ -279,6 +279,11 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             _scrollToHideManager.Scrolled();
         }
+
+        public override void ScrolledToTop(UIScrollView scrollView)
+        {
+            _scrollToHideManager.ScrolledToTop();
+        }
     }
 
     public class BrowserScrollToHideUIManager : ScrollToHideUIManager

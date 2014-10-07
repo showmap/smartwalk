@@ -21,7 +21,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 
         protected override ListViewDecorator GetListView()
         { 
-            return new ListViewDecorator(OrgEventInfoTableView);  
+            return ListViewDecorator.Create(OrgEventInfoTableView);  
         }
 
         protected override UIView GetProgressViewContainer()
