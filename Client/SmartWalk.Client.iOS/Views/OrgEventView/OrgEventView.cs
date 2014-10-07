@@ -109,10 +109,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_listSettingsView != null)
             {
                 SetDialogViewFullscreenFrame(_listSettingsView);
+                UpdateListSettingsView();
             }
 
             UpdateTableViewContentInset();
-            UpdateViewConstraints();
+            UpdateViewConstraints(true);
             UpdateButtonsFrameOnRotation();
         }
 
@@ -271,6 +272,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
+                UpdateTableViewContentInset();
                 UpdateViewState(false);
                 ReloadMap();
             }
@@ -351,16 +353,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {   
             InitializeTableHeader();
             InitializeSearchDisplayController();
-        }
-
-        protected override void OnLoadedViewStateUpdate()
-        {
-            // delaying showing of ListView if data loaded to make sure that header is scrolled out
-            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
-            if (tableSource == null || tableSource.IsHeaderViewHidden)
-            {
-                base.OnLoadedViewStateUpdate();
-            }
         }
 
         protected override void OnInitializingActionSheet(List<string> titles)
@@ -798,9 +790,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeListSettingsView()
         {
             _listSettingsView = ListSettingsView.Create();
-            _listSettingsView.MarginTop = GetListSettingsTopMargin();
 
             SetDialogViewFullscreenFrame(_listSettingsView);
+            UpdateListSettingsView();
 
             _listSettingsView.IsGroupByLocation = ViewModel.IsGroupedByLocation;
             _listSettingsView.SortBy = ViewModel.SortBy;
@@ -810,6 +802,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _listSettingsView.GroupByLocationCommand = ViewModel.GroupByLocationCommand;
             _listSettingsView.SortByCommand = ViewModel.SortByCommand;
             _listSettingsView.CloseCommand = ViewModel.ShowHideListOptionsCommand;
+        }
+
+        private void UpdateListSettingsView()
+        {
+            _listSettingsView.MarginTop = GetListSettingsTopMargin();
         }
 
         private void DisposeListSettingsView()
@@ -969,8 +966,23 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateTableViewContentInset()
         {
-            VenuesAndShowsTableView.ContentInset = 
-                new UIEdgeInsets(NavBarManager.NavBarHeight, 0, 0, 0);
+            if (IsInSearch) return;
+
+            if (HasData)
+            {
+                var previousOffset = VenuesAndShowsTableView.ContentOffset;
+                var delta = VenuesAndShowsTableView.ContentInset.Top - NavBarManager.NavBarHeight;
+
+                VenuesAndShowsTableView.ContentInset = 
+                    new UIEdgeInsets(NavBarManager.NavBarHeight, 0, 0, 0);
+
+                VenuesAndShowsTableView.ContentOffset =
+                    new PointF(previousOffset.X, previousOffset.Y + delta);
+            }
+            else 
+            {
+                VenuesAndShowsTableView.ContentInset = UIEdgeInsets.Zero;
+            }
         }
 
         private void UpdateButtonsFrameOnRotation()

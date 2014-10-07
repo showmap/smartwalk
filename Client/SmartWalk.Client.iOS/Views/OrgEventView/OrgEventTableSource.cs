@@ -326,7 +326,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get
             {
                 return TableView.TableHeaderView == null ||
-                    TableView.ContentOffset.Y >= HeaderHeight;
+                    TableView.ActualContentOffset() >= HeaderHeight;
             }
         }
 
@@ -375,7 +375,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (((UITableView)scrollView).TableHeaderView == null) return;
 
-            ScrollUtil.AdjustHeaderPosition(scrollView, HeaderHeight);
+            ScrollUtil.AdjustHeaderPosition(scrollView, HeaderHeight, true);
         }
 
         public override void ScrolledToTop(UIScrollView scrollView)

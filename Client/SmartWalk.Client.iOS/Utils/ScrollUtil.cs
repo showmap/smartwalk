@@ -13,7 +13,13 @@ namespace SmartWalk.Client.iOS.Utils
         private static readonly Dictionary<WeakReference<UIScrollView>, NSTimer> _timers = 
             new Dictionary<WeakReference<UIScrollView>, NSTimer>();
 
-        public static void SetContentOffset(UIScrollView scrollView, float height, bool animated)
+        public static float ActualContentOffset(this UIScrollView scrollView)
+        {
+            var result = scrollView.ContentOffset.Y + scrollView.ContentInset.Top;
+            return result;
+        }
+
+        public static void SetActualContentOffset(this UIScrollView scrollView, float height, bool animated)
         {
             scrollView.SetContentOffset(
                 new PointF(0, height - scrollView.ContentInset.Top), 
@@ -27,7 +33,7 @@ namespace SmartWalk.Client.iOS.Utils
         {
             if (scrollView.ContentSize.Height > headerHeight)
             {
-                SetContentOffset(scrollView, headerHeight, animated);
+                scrollView.SetActualContentOffset(headerHeight, animated);
 
                 if (scrollView.Hidden)
                 {
@@ -70,18 +76,18 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
-        public static void AdjustHeaderPosition(UIScrollView scrollView, float headerHeight)
+        public static void AdjustHeaderPosition(UIScrollView scrollView, float headerHeight, bool animation)
         {
-            var scrollViewOffset = scrollView.ContentOffset.Y + scrollView.ContentInset.Top;
+            var scrollViewOffset = scrollView.ActualContentOffset();
             if (scrollViewOffset < 0 || scrollView.Decelerating) return;
 
             if (scrollViewOffset < headerHeight / 2)
             {
-                SetContentOffset(scrollView, 0, true);
+                scrollView.SetActualContentOffset(0, animation);
             }
             else if (scrollViewOffset < headerHeight)
             {
-                SetContentOffset(scrollView, headerHeight, true);
+                scrollView.SetActualContentOffset(headerHeight, animation);
             }
         }
 

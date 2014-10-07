@@ -32,7 +32,8 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             get
             {
-                return _collectionView.ContentOffset.Y >= HomeHeaderView.DefaultHeight;
+                return _collectionView.ActualContentOffset() >= 
+                    HomeHeaderView.DefaultHeight;
             }
         }
 
@@ -75,7 +76,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
         {
-            ScrollUtil.AdjustHeaderPosition(scrollView, HomeHeaderView.DefaultHeight);
+            ScrollUtil.AdjustHeaderPosition(scrollView, HomeHeaderView.DefaultHeight, true);
         }
 
         protected override void Dispose(bool disposing)

@@ -96,13 +96,6 @@ namespace SmartWalk.Client.iOS
             AppSettingsUtil.HandleResetCache(_settings);
         }
 
-        public override void WillChangeStatusBarFrame(
-            UIApplication application, 
-            RectangleF newStatusBarFrame)
-        {
-            NavBarManager.Instance.Layout();
-        }
-
         public override void DidChangeStatusBarOrientation(
             UIApplication application, 
             UIInterfaceOrientation oldStatusBarOrientation)

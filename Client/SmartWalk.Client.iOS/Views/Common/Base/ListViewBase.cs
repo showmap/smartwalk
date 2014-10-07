@@ -136,7 +136,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void ScrollViewToTop()
         {
-            ScrollUtil.SetContentOffset(ListView.View, 0, true);
+            ListView.View.SetActualContentOffset(0, true);
 
             if (ListView != null &&
                 ListView.Source != null)
@@ -157,7 +157,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void OnLoadedViewStateUpdate()
         {
-            ListView.View.SetHidden(false, true);
+            if (ListView.View.Hidden)
+            {
+                ListView.View.SetHidden(false, true);
+            }
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)
