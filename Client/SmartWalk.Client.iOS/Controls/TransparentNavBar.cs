@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
@@ -68,6 +67,25 @@ namespace SmartWalk.Client.iOS.Controls
             }
 
             return base.HitTest(point, uievent);
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            // manually adjusting position of items in landscape (stick it to bottom)
+            if (!ScreenUtil.IsVerticalOrientation)
+            {
+                var itemViews = ButtonBarUtil.GetViewsFromBarItems(TopItem.GetNavItemBarItems());
+
+                foreach (var itemView in itemViews)
+                {
+                    var frame = new RectangleF(
+                        new PointF(itemView.Frame.X, Frame.Height - itemView.Frame.Height),
+                        itemView.Frame.Size);
+                    itemView.Frame = frame;
+                }
+            }
         }
 
         private void Initialize()

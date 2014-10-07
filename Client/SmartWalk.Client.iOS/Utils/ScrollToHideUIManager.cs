@@ -1,6 +1,6 @@
-﻿using MonoTouch.UIKit;
-using System;
+﻿using System;
 using System.Linq;
+using MonoTouch.UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -69,7 +69,7 @@ namespace SmartWalk.Client.iOS.Utils
 
         public void ScrollFinished()
         {
-            if (Math.Abs(_scrollView.ContentOffset.Y) < UIConstants.Epsilon)
+            if (_scrollView.ContentOffset.Y.EqualsF(0))
             {
                 OnShowUI();
             }
@@ -102,7 +102,7 @@ namespace SmartWalk.Client.iOS.Utils
         private bool IsCausedByRefreshControl()
         {
             return _refreshControlHeight.HasValue && 
-                Math.Abs(_refreshControlHeight.Value + _scrollView.ContentOffset.Y) < UIConstants.Epsilon;
+                _refreshControlHeight.Value.EqualsF(_scrollView.ContentOffset.Y);
         }
     }
 }

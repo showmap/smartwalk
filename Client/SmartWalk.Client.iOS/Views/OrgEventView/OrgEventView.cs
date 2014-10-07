@@ -102,19 +102,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        public override void WillAnimateRotation(
+            UIInterfaceOrientation toInterfaceOrientation, 
+            double duration)
         {
             base.WillAnimateRotation(toInterfaceOrientation, duration);
-
-            if (_listSettingsView != null)
-            {
-                SetDialogViewFullscreenFrame(_listSettingsView);
-                UpdateListSettingsView();
-            }
 
             UpdateTableViewContentInset();
             UpdateViewConstraints(true);
             UpdateButtonsFrameOnRotation();
+
+            // hiding ListOptions on rotation
+            if (ViewModel.ShowHideListOptionsCommand.CanExecute(false))
+            {
+                ViewModel.ShowHideListOptionsCommand.Execute(false);
+            }
         }
 
         public override void UpdateViewConstraints()
@@ -781,8 +783,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var headerLocation = 
                 View.ConvertPointFromView(
                     _headerView.Frame.Location, 
-                    VenuesAndShowsTableView);
-
+                    _headerView);
+                
             var result = headerLocation.Y + _headerView.Frame.Height;
             return result;
         }

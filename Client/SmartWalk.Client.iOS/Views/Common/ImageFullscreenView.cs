@@ -149,7 +149,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void ZoomTo()
         {
-            if (Math.Abs(ScrollView.MinimumZoomScale - ScrollView.MaximumZoomScale) < 0.1f)
+            if (ScrollView.MinimumZoomScale.EqualsF(ScrollView.MaximumZoomScale))
             {
                 return;
             }

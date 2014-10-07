@@ -79,6 +79,15 @@ namespace SmartWalk.Client.iOS.Utils
             return result;
         }
 
+        public static UIView[] GetViewsFromBarItems(UIBarButtonItem[] items)
+        {
+            var result = items
+                .Select(i => i.CustomView)
+                .Where(b => b != null)
+                .ToArray();
+            return result;
+        }
+
         public static UIBarButtonItem[] GetNavItemBarItems(this UINavigationItem navItem)
         {
             var leftItems = 

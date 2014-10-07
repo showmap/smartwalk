@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
@@ -78,26 +77,20 @@ namespace SmartWalk.Client.iOS.Utils
 
                     constraints.AddRange(
                         NSLayoutConstraint.FromVisualFormat(
-                            "H:|-0-[navBar]-0-|", 
-                            0,
-                            null, 
-                            new NSDictionary(
-                                "navBar", 
-                                _navBar)));
+                            "H:|-0-[navBar]-0-|", 0,
+                            "navBar", 
+                            _navBar));
 
                     var vertical =
                         NSLayoutConstraint.FromVisualFormat(
-                            "V:|-0-[navBar(navBarHeight)]", 
-                            0, 
-                            new NSDictionary(
-                                "navBarHeight",
-                                NavBarHeight),
-                            new NSDictionary(
-                                "navBar", 
-                                _navBar));
+                            "V:|-0-[navBar(navBarHeight)]", 0,
+                            "navBarHeight",
+                            NavBarHeight,
+                            "navBar", 
+                            _navBar);
 
                     _navBarHeightConstraint = vertical
-                        .FirstOrDefault(c => Math.Abs(c.Constant - NavBarHeight) < UIConstants.Epsilon);
+                        .FirstOrDefault(c => c.Constant.EqualsF(NavBarHeight));
 
                     constraints.AddRange(vertical);
 
@@ -145,7 +138,7 @@ namespace SmartWalk.Client.iOS.Utils
         {
             _navBar = new TransparentNavBar
                 {
-                    IsTransparent = true
+                    IsTransparent = true,
                 };
 
             _navBar.TranslatesAutoresizingMaskIntoConstraints = false;
