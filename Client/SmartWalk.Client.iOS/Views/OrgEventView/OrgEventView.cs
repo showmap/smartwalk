@@ -552,7 +552,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             this.CreateBinding(searchTableSource)
                 .For(ts => ts.ItemsSource)
-                .To<OrgEventViewModel>(vm => vm.SearchResults)
+                .To<OrgEventViewModel>(vm => vm.SearchListItems)
                 .WithConversion(new OrgEventTableSourceConverter(), ViewModel)
                 .Apply();
 

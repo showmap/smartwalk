@@ -46,6 +46,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private Venue[] _searchResults;
         private Dictionary<SearchKey, string> _searchableTexts;
         private Venue[] _allShows;
+        private Venue[] _allSearchShows;
 
         private MvxCommand<string> _searchCommand;
         private MvxCommand<Show> _expandCollapseShowCommand;
@@ -198,6 +199,32 @@ namespace SmartWalk.Client.Core.ViewModels
                 return IsGroupedByLocation 
                     ? (OrgEvent != null ? OrgEvent.Venues : null)
                     : AllShows; 
+            }
+        }
+
+        public Venue[] SearchResults
+        {
+            get
+            {
+                return _searchResults;
+            }
+            private set
+            {
+                if (!_searchResults.EnumerableEquals(value))
+                {
+                    _searchResults = value;
+                    _allSearchShows = null;
+                    RaisePropertyChanged(() => SearchResults);
+                    RaisePropertyChanged(() => SearchListItems);
+                }
+            }
+        }
+
+        public Venue[] SearchListItems
+        {
+            get
+            {
+                return IsGroupedByLocation ? SearchResults : AllSearchShows; 
             }
         }
 
@@ -392,22 +419,6 @@ namespace SmartWalk.Client.Core.ViewModels
 
                     RaisePropertyChanged(() => SortBy);
                     RaisePropertyChanged(() => ListItems);
-                }
-            }
-        }
-
-        public Venue[] SearchResults
-        {
-            get
-            {
-                return _searchResults;
-            }
-            private set
-            {
-                if (!_searchResults.EnumerableEquals(value))
-                {
-                    _searchResults = value;
-                    RaisePropertyChanged(() => SearchResults);
                 }
             }
         }
@@ -1071,6 +1082,23 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _allShows;
+            }
+        }
+
+        private Venue[] AllSearchShows
+        {
+            get
+            {
+                if (_allSearchShows == null &&
+                    SearchResults != null)
+                {
+                    var shows = SearchResults
+                        .SelectMany(v => v.Shows ?? new Show[] { })
+                        .ToArray();
+                    _allSearchShows = GetAllShowsSortBy(shows);
+                }
+
+                return _allSearchShows;
             }
         }
 
