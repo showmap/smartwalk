@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
@@ -54,16 +55,15 @@ namespace SmartWalk.Client.iOS.Controls
             }
         }
 
-        // TODO FIX
-        // TODO: To figure out how to hitTest map callout views
         public override UIView HitTest(PointF point, UIEvent uievent)
         {
             if (IsTransparent)
             {
                 var view = base.HitTest(point, uievent);
-                return view == this 
-                    ? Window.RootViewController.View.Subviews[0].HitTest(point, uievent) 
-                        : view;
+                var rootView = GetRootView();
+                return view == this && rootView != null
+                    ? rootView.HitTest(point, uievent) 
+                    : view;
             }
 
             return base.HitTest(point, uievent);
@@ -136,6 +136,13 @@ namespace SmartWalk.Client.iOS.Controls
             {
                 button.IsSemiTransparent = IsItemSemiTransparent;
             }
+        }
+
+        private UIView GetRootView()
+        {
+            var result = Window.RootViewController.View.Subviews
+                .FirstOrDefault(sv => sv != this);
+            return result;
         }
     }
 }
