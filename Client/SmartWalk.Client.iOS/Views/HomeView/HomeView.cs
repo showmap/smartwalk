@@ -29,11 +29,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             return ProgressViewContainer;  
         }
 
-        protected override NSLayoutConstraint GetProgressViewTopConstraint()
-        {
-            return ProgressViewTopConstraint;
-        }
-
         protected override void InitializeListView()
         {
             base.InitializeListView();

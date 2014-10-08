@@ -38,11 +38,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             return ProgressViewContainer;
         }
 
-        protected override NSLayoutConstraint GetProgressViewTopConstraint()
-        {
-            return ProgressViewTopConstraint;
-        }
-
         protected override IListViewSource CreateListViewSource()
         {
             var tableSource = new OrgTableSource(OrgEventsTableView, ViewModel);

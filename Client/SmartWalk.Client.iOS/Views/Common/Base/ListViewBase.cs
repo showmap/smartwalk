@@ -110,8 +110,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected abstract UIView GetProgressViewContainer();
 
-        protected abstract NSLayoutConstraint GetProgressViewTopConstraint();
-
         protected virtual void InitializeListView()
         {
             OnBeforeSetListViewSource();
