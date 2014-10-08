@@ -77,6 +77,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.ViewWillAppear(animated);
 
             UpdateTableViewContentInset();
+            UpdateViewConstraints(false); // to get a right golden-ratio in time
             UpdateNavBarState(animated);
             UpdateButtonsFrameOnRotation();
 
