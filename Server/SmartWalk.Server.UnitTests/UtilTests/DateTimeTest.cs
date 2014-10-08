@@ -1,10 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartWalk.Shared;
 using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.UnitTests.UtilTests
 {
     [TestClass]
+    [UsedImplicitly]
     public class DateTimeTest
     {
         [TestMethod]
@@ -24,11 +26,11 @@ namespace SmartWalk.Server.UnitTests.UtilTests
         {
             var day = new DateTime(2014, 11, 29);
 
-            var range1 = new Tuple<DateTime, DateTime?>(day, null);
+            var range1 = new Tuple<DateTime?, DateTime?>(day, null);
             var time1 = new DateTime(2014, 11, 29, 5, 20, 0);
             Assert.IsTrue(time1.IsTimeThisDay(day, range1)); // 'cause it's before 6am but first day
 
-            var range2 = new Tuple<DateTime, DateTime?>(day.AddDays(-2), null);
+            var range2 = new Tuple<DateTime?, DateTime?>(day.AddDays(-2), null);
             Assert.IsFalse(time1.IsTimeThisDay(day, range2)); // 'cause it's before 6am and not first day
         }
 
@@ -37,7 +39,7 @@ namespace SmartWalk.Server.UnitTests.UtilTests
         {
             var day = new DateTime(2014, 11, 29);
 
-            var range1 = new Tuple<DateTime, DateTime?>(day.AddDays(-2), day.AddDays(2));
+            var range1 = new Tuple<DateTime?, DateTime?>(day.AddDays(-2), day.AddDays(2));
             var time1 = new DateTime(2014, 11, 29, 5, 20, 0);
             Assert.IsFalse(time1.IsTimeThisDay(day, range1)); // 'cause it's before 6am
 
@@ -50,7 +52,7 @@ namespace SmartWalk.Server.UnitTests.UtilTests
         {
             var day = new DateTime(2014, 11, 29);
 
-            var range1 = new Tuple<DateTime, DateTime?>(day.AddDays(-2), day.AddDays(2));
+            var range1 = new Tuple<DateTime?, DateTime?>(day.AddDays(-2), day.AddDays(2));
             var time1 = new DateTime(2014, 11, 20, 5, 20, 0);
             Assert.IsFalse(time1.IsTimeThisDay(day, range1)); // 'cause it's outside range and it's not first day now
             Assert.IsTrue(time1.IsTimeThisDay(day.AddDays(-2), range1)); // the day has all ahead times

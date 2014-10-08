@@ -10,7 +10,8 @@ namespace SmartWalk.Server.Records
     {
         private IList<EventMappingRecord> _eventMappingRecords;
         private IList<ShowRecord> _showRecords;
-
+        private IList<EventEntityDetailRecord> _eventEntityDetailRecords;
+            
         [UsedImplicitly]
         public virtual int Id { get; set; }
         public virtual EntityRecord EntityRecord { get; set; }
@@ -20,7 +21,7 @@ namespace SmartWalk.Server.Records
         [StringLengthMax]
         public virtual string Description { get; set; }
 
-        public virtual DateTime StartTime { get; set; }
+        public virtual DateTime? StartTime { get; set; }
         public virtual DateTime? EndTime { get; set; }
         public virtual string Picture { get; set; }
         public virtual double Latitude { get; set; }
@@ -51,10 +52,19 @@ namespace SmartWalk.Server.Records
             set { _showRecords = value; }
         }
 
+        [CascadeAllDeleteOrphan]
+        public virtual IList<EventEntityDetailRecord> EventEntityDetailRecords
+        {
+            get { return _eventEntityDetailRecords; }
+            [UsedImplicitly]
+            set { _eventEntityDetailRecords = value; }
+        }
+
         public EventMetadataRecord()
         {
             _eventMappingRecords = new List<EventMappingRecord>();
             _showRecords = new List<ShowRecord>();
+            _eventEntityDetailRecords = new List<EventEntityDetailRecord>();
         }
     }
 
