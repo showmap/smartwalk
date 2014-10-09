@@ -109,6 +109,15 @@ namespace SmartWalk.Server.Services.EventService
                                    T("The venue should be selected.").Text));
                 }
 
+                if (venueVm.EventDetail != null &&
+                    venueVm.EventDetail.Description != null &&
+                    venueVm.EventDetail.Description.Length > 3000)
+                {
+                    result.Add(new ValidationError(
+                                    string.Format("{0}[{1}]", venuesProperty, i + 1),
+                                    T("Venue description can not be longer than 3000 characters.").Text));
+                }
+
                 var shows = venueVm.Shows != null
                     ? venueVm.Shows.Where(v => !v.Destroy).ToArray()
                     : new ShowVm[] { };

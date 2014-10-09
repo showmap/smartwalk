@@ -336,6 +336,28 @@ AddressViewModel.prototype.toJSON = function () {
     return json;
 };
 
+function EventEntityDetailViewModel(data) {
+    var self = this;
+
+    self.sortOrder = ko.observable();
+    self.description = ko.observable();
+
+    self.loadData(data);
+}
+
+EventEntityDetailViewModel.prototype.loadData = function (detailData) {
+    this.sortOrder(detailData.SortOrder);
+    this.description(detailData.Description);
+};
+
+EventEntityDetailViewModel.prototype.toJSON = function () {
+    var json = {
+        SortOrder: this.sortOrder(),
+        Description: this.description()
+    };
+    return json;
+};
+
 function EventViewModel(data) {
     var self = this;
 
@@ -344,6 +366,7 @@ function EventViewModel(data) {
     self.startDate = ko.observable();
     self.endDate = ko.observable();
     self.status = ko.observable();
+    self.venueOrderType = ko.observable();
     self.picture = ko.observable();
     self.combineType = ko.observable(data.combineType);
     self.description = ko.observable(data.description);
@@ -366,6 +389,7 @@ EventViewModel.prototype.loadData = function (eventData) {
     this.status(eventData.Status);
     this.picture(eventData.Picture);
     this.combineType(eventData.CombineType);
+    this.venueOrderType(eventData.VenueOrderType);
     this.description(eventData.Description);
     /*this.latitude(eventData.Latitude);
     this.longitude(eventData.Longitude);*/
@@ -382,6 +406,7 @@ EventViewModel.prototype.toJSON = function () {
     var json = {
         Id: this.id(),
         CombineType: this.combineType(),
+        VenueOrderType: this.venueOrderType(),
         Title: this.title(),
         StartDate: this.startDate()
             ? sw.convertToUTC(this.startDate()).toJSON() : undefined,
@@ -410,6 +435,11 @@ sw.vm.CombineType =
     ByHost: 2
 };
 
+sw.vm.VenueOrderType = {
+    Name: 0,
+    Custom: 1
+};
+
 sw.vm.EventStatus =
 {
     Private: 0,
@@ -432,6 +462,7 @@ function EntityViewModel(data) {
     self.abbreviation = ko.observable();
     self.picture = ko.observable();
     self.description = ko.observable();
+    self.eventDetail = ko.observable();
 
     self.contacts = ko.observableArray();
     self.addresses = ko.observableArray();
@@ -448,6 +479,10 @@ EntityViewModel.prototype.loadData = function (entityData) {
     this.picture(entityData.Picture);
     this.description(entityData.Description);
 
+    this.eventDetail(entityData.EventDetail
+        ? new EventEntityDetailViewModel(entityData.EventDetail)
+        : undefined);
+    
     this.contacts(
         entityData.Contacts
             ? $.map(entityData.Contacts,
@@ -475,6 +510,11 @@ EntityViewModel.prototype.toJSON = function () {
         Abbreviation: this.abbreviation(),
         Picture: this.picture(),
         Description: this.description(),
+
+        EventDetail: this.eventDetail() &&
+                (this.eventDetail().sortOrder() || this.eventDetail().description())
+            ? this.eventDetail().toJSON.apply(this.eventDetail())
+            : undefined,
 
         Contacts: this.contacts()
             ? $.map(this.contacts(), function (contact) { return contact.toJSON.apply(contact); })

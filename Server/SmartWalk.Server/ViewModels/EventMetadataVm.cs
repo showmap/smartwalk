@@ -15,6 +15,7 @@ namespace SmartWalk.Server.ViewModels
         public int Id { get; set; }
         public CombineType CombineType { get; set; }
         public EventStatus Status { get; set; }
+        public VenueOrderType VenueOrderType { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }

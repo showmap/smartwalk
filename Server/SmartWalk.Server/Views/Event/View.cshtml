@@ -116,8 +116,14 @@
                     var address = venue.FirstAddress();
                     <br />
                     <address>@address.Address</address><i class="tip description">@address.Tip</i>
-                }                            
-                </td>
+                }            
+                    
+                @if (venue.EventDetail != null && venue.EventDetail.Description != null)
+                {
+                    <br /><br />
+                    <span class="description">@Html.Raw(@venue.EventDetail.Description.ActivateLinks())</span>
+                }
+</td>
             </tr>
                 foreach (var show in venue.Shows)
                 {

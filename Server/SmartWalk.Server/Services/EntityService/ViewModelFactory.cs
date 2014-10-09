@@ -39,6 +39,18 @@ namespace SmartWalk.Server.Services.EntityService
             return result;
         }
 
+        public static EntityVm CreateViewModel(EntityRecord record, EventEntityDetailRecord detailRecord)
+        {
+            var result = CreateViewModel(record, LoadMode.Full);
+
+            if (detailRecord != null)
+            {
+                result.EventDetail = CreateViewModel(detailRecord);
+            }
+
+            return result;
+        }
+
         public static void UpdateByViewModel(EntityRecord record, EntityVm entityVm)
         {
             record.DateModified = DateTime.UtcNow;
@@ -68,6 +80,12 @@ namespace SmartWalk.Server.Services.EntityService
             record.IsDeleted = contactVm.Destroy;
         }
 
+        public static void UpdateByViewModel(EventEntityDetailRecord record, EventEntityDetailVm detailVm)
+        {
+            record.SortOrder = detailVm != null ? detailVm.SortOrder : null;
+            record.Description = detailVm != null ? detailVm.Description.StripTags() : null;
+        }
+
         private static AddressVm CreateViewModel(AddressRecord record)
         {
             if (record == null) throw new ArgumentNullException("record");
@@ -92,6 +110,17 @@ namespace SmartWalk.Server.Services.EntityService
                     Type = (ContactType)record.Type,
                     Title = record.Title,
                     Contact = record.Contact
+                };
+        }
+
+        private static EventEntityDetailVm CreateViewModel(EventEntityDetailRecord record)
+        {
+            if (record == null) throw new ArgumentNullException("record");
+
+            return new EventEntityDetailVm
+                {
+                    SortOrder = record.SortOrder,
+                    Description = record.Description
                 };
         }
     }

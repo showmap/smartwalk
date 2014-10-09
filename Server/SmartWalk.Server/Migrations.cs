@@ -23,7 +23,11 @@ namespace SmartWalk.Server
         private readonly IRepository<SmartWalkUserRecord> _userRepository;
         private readonly ShellSettings _shellSettings;
 
-        public Migrations(IRepository<SmartWalkUserRecord> userRepository, IOrchardServices orchardServices, ShellSettings shellSettings) {
+        public Migrations(
+            IRepository<SmartWalkUserRecord> userRepository,
+            IOrchardServices orchardServices,
+            ShellSettings shellSettings)
+        {
             _orchardServices = orchardServices;
             _userRepository = userRepository;
             _shellSettings = shellSettings;
@@ -33,7 +37,9 @@ namespace SmartWalk.Server
         {
             get
             {
-                return !string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? _shellSettings.DataTablePrefix + "_" : "";
+                return !string.IsNullOrEmpty(_shellSettings.DataTablePrefix) 
+                    ? _shellSettings.DataTablePrefix + "_" 
+                    : "";
             }
         }
 
@@ -795,5 +801,24 @@ namespace SmartWalk.Server
             return 10;
         }
 
+        [UsedImplicitly]
+        public int UpdateFrom10()
+        {
+            var sSql = string.Format("EXEC sp_RENAME '{0}.[Order]', 'SortOrder', 'COLUMN'", 
+                GetFullTableName("EventEntityDetailRecord"));
+            SchemaBuilder.ExecuteSql(sSql);
+
+            return 11;
+        }
+
+        [UsedImplicitly]
+        public int UpdateFrom11()
+        {
+            SchemaBuilder.AlterTable(
+                "EventEntityDetailRecord",
+                table => table.AlterColumn("Description", c => c.WithType(DbType.String).Unlimited().WithDefault(null)));
+
+            return 12;
+        }
     }
 }

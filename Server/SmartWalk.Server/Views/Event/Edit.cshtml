@@ -106,7 +106,7 @@
 		    <div class="col-sm-8" data-bind="validationElement: data.description">
 		        <div class="form-group">
 		            <label for="descriptionTextArea">@T("Description"):</label>
-		            <textarea class="form-control" id="descriptionTextArea"  rows="5" data-bind="value: data.description, enable: isEnabled"></textarea>
+		            <textarea class="form-control" id="descriptionTextArea" rows="5" data-bind="value: data.description, enable: isEnabled"></textarea>
 		        </div>
 		    </div>
             
@@ -124,8 +124,17 @@
             <div class="col-md-12">
                 <ul class="event-days-picker" data-bind="template: { name: 'multiDayItemTemplate', foreach: days }"></ul>
             </div>
-        </div>                                              
+        </div>                                           
  
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="orderByButtonsGroup">@T("Order Venues"):</label><br />
+                    <fieldset class="btn-group" id="orderByButtonsGroup" data-bind="switcher: data.venueOrderType, switcherOptions: { values: [{val: sw.vm.VenueOrderType.Name, disp: '@T("By Name")'}, {val: sw.vm.VenueOrderType.Custom, disp: '@T("Manually")'}]}, enable: isEnabled"></fieldset>
+                </div>
+            </div>
+        </div>    
+
         <div class="row add-venue" data-bind="visible: venuesManager.items().length > 0">
             <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>

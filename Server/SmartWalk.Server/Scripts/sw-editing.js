@@ -156,23 +156,42 @@ function VmItemsManager(allItems, createItemHandler, settings) {
 
     // private
 
-    self._previousItemData = ko.observable(null);
+    // assuming that all initial items are saved on server
+    self._savedItems = allItems() ? allItems().slice(0) : [];
+    // and edited at least once
+    self._editedItems = allItems() ? allItems().slice(0) : [];
+
+    self._isItemSaved = function (item) {
+        return self._savedItems.indexOf(item) >= 0;
+    };
+
+    self._isItemEdited = function (item) {
+        return self._editedItems.indexOf(item) >= 0;
+    };
+
+    self._setItemAsEdited = function (item) {
+        if (!self._isItemEdited(item)) {
+            self._editedItems.push(item);
+        }
+    };
+
+    self._previousItemData = null;
 
     self._processIsEditingChange = function (item, isEditing) {
         if (isEditing) {
-            if (item.id() && item.id() != 0) {
-                self._previousItemData(item.toJSON.apply(item));
+            if (self._isItemEdited(item)) {
+                self._previousItemData = item.toJSON.apply(item);
             }
         } else {
-            if (item.id() && item.id() != 0) {
-                if (self._previousItemData() != null) {
-                    item.loadData.apply(item, [self._previousItemData()]);
+            if (self._isItemEdited(item)) {
+                if (self._previousItemData) {
+                    item.loadData.apply(item, [self._previousItemData]);
                 }
             } else {
                 self._allItems.remove(item);
             }
 
-            self._previousItemData(null);
+            self._previousItemData = null;
         }
     };
     
@@ -245,7 +264,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
             cancelItem(item);
         }
 
-        if (item.id() && item.id() > 0) {
+        if (self._isItemSaved(item)) {
             self._allItems.destroy(item);
         } else {
             self._allItems.remove(item);
@@ -271,15 +290,12 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
 
         if (!item.errors || item.errors().length == 0) {
-            if (!item.id() || item.id() == 0) {
-                item.id(-1);
-            }
-            
             if (settings.afterSave) {
                 settings.afterSave(item);
             }
 
-            self._previousItemData(null);
+            self._previousItemData = null;
+            self._setItemAsEdited(item);
             self.setEditingItem(null);
         } else {
             item.errors.showAllMessages();

@@ -136,20 +136,23 @@ textarea {
 	vertical-align: bottom;
 }
 
-.table-hover > tbody > tr.venue:hover > td,
-.table-hover > tbody > tr.venue:hover > th,
 .table-hover > tbody > tr.add-venue-show:hover > td {
   background-color: #fff;
 }
 
+.table-hover > tbody > tr.venue:hover > td,
+.table-hover > tbody > tr.venue:hover > th,
 .table-hover > tbody > tr.venue-show:hover > td,
-.table-hover > tbody > tr.venue-show:hover > th,
-.table-hover > tbody > tr.add-venue-show:hover > td {
+.table-hover > tbody > tr.venue-show:hover > th {
   cursor: pointer;
 }
 
-.table tr.venue td {
+.table.table-content tr.venue td {
 	padding-top: 35px;
+}
+
+.table tr.venue-gap {
+    height: 35px;
 }
 
 .table.edit tr.venue td {
@@ -508,10 +511,6 @@ td.editing-container {
 .editing-container .form-group .input-group-btn,
 .input-group .input-group-btn {
     vertical-align: top;
-}
-
-.venue.editing-container .well {
-    margin-top: 25px;
 }
 
 .row.alert {

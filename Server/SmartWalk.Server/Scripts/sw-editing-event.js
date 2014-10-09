@@ -258,6 +258,14 @@ EventViewModelExtended.setupVenueValidation = function(venue, settings) {
             }
         });
 
+    venue.eventDetailDescription
+        .extend({
+            maxLength: {
+                params: 3000,
+                message: settings.descriptionLengthValidationMessage
+            }
+        });
+
     venue.errors = ko.validation.group(venue);
 };
 
@@ -269,11 +277,36 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
 
     venue.autocompleteData = ko.computed({
         read: function () { return null; },
-        write: function (venueData) { venue.loadData.apply(venue, [venueData || {}]); }
+        write: function (venueData) {
+            var data = venueData || {};
+
+            if (venue.eventDetail()) {
+                data.EventDetail = venue.eventDetail().toJSON.apply(venue.eventDetail());
+            }
+
+            venue.loadData.apply(venue, [data]);
+        }
     });
 
     venue.autocompleteName.extend({ notify: "always" });
     venue.name.extend({ notify: "always" });
+
+    venue.lazyEventDetail = function () {
+        if (!venue.eventDetail()) {
+            venue.eventDetail(new EventEntityDetailViewModel({}));
+        }
+
+        return venue.eventDetail();
+    };
+
+    venue.eventDetailDescription = ko.pureComputed({
+        read: function() {
+             return venue.eventDetail() ? venue.eventDetail().description() : null;
+        },
+        write: function(value) {
+            venue.lazyEventDetail().description(value);
+        }
+    });
     
     venue.showsManager = new VmItemsManager(
         venue.shows,

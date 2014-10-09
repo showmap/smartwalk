@@ -300,6 +300,7 @@
     <Compile Include="ViewModels\AddressMapVm.cs" />
     <Compile Include="Utils\AllowedActions.cs" />
     <Compile Include="ViewModels\ErrorResultVm.cs" />
+    <Compile Include="ViewModels\EventEntityDetailVm.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
     <Compile Include="Views\ViewSettings.cs" />
     <Compile Include="Extensions\AntiForgeryRelocation.cs">

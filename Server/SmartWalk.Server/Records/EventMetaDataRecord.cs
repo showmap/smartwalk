@@ -28,9 +28,8 @@ namespace SmartWalk.Server.Records
         public virtual double Longitude { get; set; }
         public virtual byte CombineType { get; set; }
         public virtual byte Status { get; set; }
-        public virtual bool IsDeleted { get; set; }
-
         public virtual byte VenueOrderType { get; set; }
+        public virtual bool IsDeleted { get; set; }
 
         [UsedImplicitly]
         public virtual DateTime DateCreated { get; set; }

@@ -153,13 +153,18 @@ namespace SmartWalk.Server.Services.EventService
             foreach (var venueVm in eventVm.Venues)
             {
                 var venue = _entityRepository.Get(venueVm.Id);
+                if (venue == null) continue;
+
+                if (!venueVm.Destroy)
+                {
+                    SaveVenueDetail(eventMeta, venue, venueVm);
+                }
 
                 foreach (var showVm in venueVm.Shows)
                 {
-                    // ReSharper disable AccessToForEachVariableInClosure
+                    // ReSharper disable once AccessToForEachVariableInClosure
                     var show = eventMeta.ShowRecords.FirstOrDefault(s => s.Id == showVm.Id);
-                    // ReSharper restore AccessToForEachVariableInClosure
-                    if (show == null)
+                    if (show == null && !venueVm.Destroy)
                     {
                         show = new ShowRecord
                             {
@@ -171,12 +176,15 @@ namespace SmartWalk.Server.Services.EventService
                     }
 
                     // if parent venue is deleted, all shows are deleted too
-                    if (venueVm.Destroy)
+                    if (show != null && venueVm.Destroy)
                     {
                         showVm.Destroy = true;
                     }
 
-                    ViewModelFactory.UpdateByViewModel(show, showVm);
+                    if (show != null)
+                    {
+                        ViewModelFactory.UpdateByViewModel(show, showVm);
+                    }
                 }
 
                 UpdateReferenceShow(eventMeta, venue, 
@@ -215,6 +223,37 @@ namespace SmartWalk.Server.Services.EventService
             eventMeta.DateModified = DateTime.UtcNow;
 
             _eventMetadataRepository.Flush();
+        }
+
+        private static void SaveVenueDetail(EventMetadataRecord eventMeta, EntityRecord venue, EntityVm venueVm)
+        {
+            // ReSharper disable once AccessToForEachVariableInClosure
+            var entityDetail = eventMeta
+                .EventEntityDetailRecords
+                .FirstOrDefault(eedr => eedr.EntityRecord.Id == venueVm.Id);
+            if (venueVm.EventDetail != null)
+            {
+                entityDetail = entityDetail ?? new EventEntityDetailRecord
+                    {
+                        EntityRecord = venue,
+                        EventMetadataRecord = eventMeta
+                    };
+
+                EntityService
+                    .ViewModelFactory
+                    .UpdateByViewModel(entityDetail, venueVm.EventDetail);
+
+                if (entityDetail.Id == 0)
+                {
+                    eventMeta.EventEntityDetailRecords.Add(entityDetail);
+                }
+            }
+            else if (entityDetail != null)
+            {
+                EntityService
+                    .ViewModelFactory
+                    .UpdateByViewModel(entityDetail, null);
+            }
         }
 
         private static IList<EventMetadataVm> GetEvents(
@@ -277,25 +316,27 @@ namespace SmartWalk.Server.Services.EventService
                 day == null
                     ? null
                     : (eventMeta.IsMultiDay() && eventMeta.StartTime.HasValue
-                           ? (DateTime?)eventMeta.StartTime.Value.AddDays(day.Value)
-                           : null);
+                        ? (DateTime?)eventMeta.StartTime.Value.AddDays(day.Value)
+                        : null);
 
             var allShows =
                 eventMeta.ShowRecords
-                        .Where(s =>
-                               !s.IsDeleted &&
-                               (s.IsReference || s.StartTime.IsTimeThisDay(currentDay, range)))
-                        .ToArray();
+                    .Where(s =>
+                        !s.IsDeleted &&
+                        (s.IsReference || s.StartTime.IsTimeThisDay(currentDay, range)))
+                    .ToArray();
 
-            var result = allShows
+            var venues = allShows
                 .Select(s => s.EntityRecord)
                 .Distinct()
-                .OrderBy(e => e.Name)
                 .Select(e =>
                     {
+                        var venueDetail = eventMeta
+                            .EventEntityDetailRecords
+                            .FirstOrDefault(eedr => eedr.EntityRecord.Id == e.Id);
                         var venueVm = EntityService
                             .ViewModelFactory
-                            .CreateViewModel(e, LoadMode.Full);
+                            .CreateViewModel(e, venueDetail);
 
                         venueVm.Shows = allShows
                             .Where(s => s.EntityRecord.Id == e.Id && !s.IsReference)
@@ -304,8 +345,31 @@ namespace SmartWalk.Server.Services.EventService
                             .ToArray();
 
                         return venueVm;
-                    })
-                .ToArray();
+                    });
+
+            EntityVm[] result;
+
+            if (eventMeta.VenueOrderType == (byte)VenueOrderType.Custom)
+            {
+                result = venues
+                    .OrderBy(v =>
+                        v.EventDetail != null &&
+                        v.EventDetail.SortOrder != null
+                            ? v.EventDetail.SortOrder.Value
+                            : 0)
+                    .ToArray();
+            }
+            else if (eventMeta.VenueOrderType == (byte)VenueOrderType.Name)
+            {
+                result = venues
+                    .OrderBy(v => v.Name)
+                    .ToArray();
+            }
+            else
+            {
+                result = venues.ToArray();
+            }
+
             return result;
         }
 
