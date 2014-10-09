@@ -18,17 +18,10 @@
         },
         {
             setEditingItem: function (editingItem) {
-                if (self.data.venues()) {
-                    self.data.venues().forEach(function (venue) {
-                        venue.isEditing(editingItem == venue);
-
-                        if (venue.shows()) {
-                            venue.shows().forEach(function (show) {
-                                show.isEditing(editingItem == show);
-                            });
-                        }
+                VmItemsManager.setEditingItem(self.data.venues(), editingItem,
+                    function(venue) {
+                        VmItemsManager.setEditingItem(venue.shows(), editingItem);
                     });
-                }
             },
             initItem: function (venue) {
                 EventViewModelExtended.initVenueViewModel(venue, self);
@@ -306,6 +299,10 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
         write: function(value) {
             venue.lazyEventDetail().description(value);
         }
+    });
+
+    venue.shows.subscribe(function (shows) {
+        var a = shows;
     });
     
     venue.showsManager = new VmItemsManager(

@@ -126,9 +126,10 @@ namespace SmartWalk.Server.Services.EntityService
 
             foreach (var contactVm in entityVm.Contacts)
             {
-                // ReSharper disable AccessToForEachVariableInClosure
-                var contact = entity.ContactRecords.FirstOrDefault(cr => cr.Id == contactVm.Id);
-                // ReSharper restore AccessToForEachVariableInClosure
+                // ReSharper disable once AccessToForEachVariableInClosure
+                var contact = contactVm.Id > 0
+                    ? entity.ContactRecords.FirstOrDefault(cr => cr.Id == contactVm.Id)
+                    : null;
                 if (contact == null)
                 {
                     contact = new ContactRecord { EntityRecord = entity };
@@ -140,9 +141,10 @@ namespace SmartWalk.Server.Services.EntityService
 
             foreach (var addressVm in entityVm.Addresses)
             {
-                // ReSharper disable AccessToForEachVariableInClosure
-                var address = entity.AddressRecords.FirstOrDefault(ar => ar.Id == addressVm.Id);
-                // ReSharper restore AccessToForEachVariableInClosure
+                // ReSharper disable once AccessToForEachVariableInClosure
+                var address = addressVm.Id > 0
+                    ? entity.AddressRecords.FirstOrDefault(ar => ar.Id == addressVm.Id)
+                    : null;
                 if (address == null)
                 {
                     address = new AddressRecord { EntityRecord = entity };

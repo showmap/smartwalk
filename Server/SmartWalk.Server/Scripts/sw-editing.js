@@ -175,23 +175,23 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
     };
 
-    self._previousItemData = null;
+    self._previousItemData = new Hashtable();
 
     self._processIsEditingChange = function (item, isEditing) {
         if (isEditing) {
             if (self._isItemEdited(item)) {
-                self._previousItemData = item.toJSON.apply(item);
+                self._previousItemData.put(item, item.toJSON.apply(item));
             }
         } else {
             if (self._isItemEdited(item)) {
-                if (self._previousItemData) {
-                    item.loadData.apply(item, [self._previousItemData]);
+                if (self._previousItemData.containsKey(item)) {
+                    item.loadData.apply(item, [self._previousItemData.get(item)]);
                 }
             } else {
                 self._allItems.remove(item);
             }
 
-            self._previousItemData = null;
+            self._previousItemData.remove(item);
         }
     };
     
@@ -233,11 +233,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         : allItems;
     
     self.setEditingItem = settings.setEditingItem || function (editingItem) {
-        if (self._allItems()) {
-            self._allItems().forEach(function (item) {
-                item.isEditing(item == editingItem);
-            });
-        }
+        VmItemsManager.setEditingItem(self._allItems(), editingItem);
     };
     
     self.getItemView = function (item) {
@@ -294,7 +290,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
                 settings.afterSave(item);
             }
 
-            self._previousItemData = null;
+            self._previousItemData.remove(item);
             self._setItemAsEdited(item);
             self.setEditingItem(null);
         } else {
@@ -305,6 +301,14 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     };
 };
 
+VmItemsManager.setEditingItem = function (items, editingItem, iterateHandler) {
+    if (items) {
+        items.forEach(function (item) {
+            item.isEditing(item == editingItem);
+            if (iterateHandler) iterateHandler(item);
+        });
+    }
+};
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
 

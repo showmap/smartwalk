@@ -41,6 +41,17 @@ namespace SmartWalk.Server
                 .SetVersion("2.8.2")
                 .SetVersionUrl("moment.min.js", "moment.js");
 
+            // 3rd Party - JsHashtable
+
+            manifest.DefineScript("JsHashtable")
+                .SetVersion("3.0")
+                .SetVersionUrl("hashtable.min.js", "hashtable.js");
+
+            manifest.DefineScript("JsHashset")
+                .SetVersion("3.0")
+                .SetVersionUrl("hashset.min.js", "hashset.js")
+                .SetDependencies("JsHashtable");
+
             // 3rd Party - Leaflet
 
             /*manifest.DefineScript("Leaflet")
@@ -97,7 +108,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Editing")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-editing.min.js", "sw-editing.js")
-                .SetDependencies("SmartWalk.Common", "jQueryUI", "ko.validation",
+                .SetDependencies("SmartWalk.Common", "jQueryUI", "JsHashtable", "ko.validation",
                     // TODO: Maybe to fully relocate validation init into 3rd party components files
                     "ko.autocomplete", "ko.datetime", "ko.switcher", "ko.mappicker");
 

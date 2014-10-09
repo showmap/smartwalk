@@ -17,7 +17,8 @@
 
 <script type="text/html" id="entityItemTemplate">
     <tr class="venue-gap"></tr>
-    <tr class="venue" data-bind="template: {name: $root.venuesManager.getItemView, afterRender: sw.scaleImages}"></tr>
+    <!-- ko template: {name: $root.venuesManager.getItemView, afterRender: sw.scaleImages} -->    
+    <!-- /ko -->
     <tr class="add-venue-show" data-bind="
         visible: !isEditing() && 
             showsManager.items() && 
@@ -40,74 +41,78 @@
 </script>
 
 <script type="text/html" id="eventVenueItemTemplate">
-    <td colspan="2">
-        <div data-bind="click: function() { if ($root.isEnabled()) $root.venuesManager.editItem($data) }">
-            <a class="bg-image" target="_blank" data-bind="attr: {href: '/venue/' + id()}">
-                <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }" alt="" />
-                <span class="abbr" data-bind="text: abbreviation()"></span>
-            </a>
-            <a target="_blank" data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>
-            <br />
-            <address data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></address>
-            <i class="tip description" data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].tip() : ''"></i>
-            <span data-bind="visible: eventDetailDescription"><br /><br /></span>
-            <span class="description" data-bind="text: eventDetailDescription"></span>
-        </div>
-    </td>
-    <td class="td-align td-valign">
-        <button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.venuesManager.deleteItem($data); }">
-            <span class="glyphicon glyphicon-remove"></span>
-        </button>
-    </td>
+    <tr class="venue">
+        <td colspan="2">
+            <div data-bind="click: function() { if ($root.isEnabled()) $root.venuesManager.editItem($data) }">
+                <a class="bg-image" target="_blank" data-bind="attr: {href: '/venue/' + id()}">
+                    <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }" alt="" />
+                    <span class="abbr" data-bind="text: abbreviation()"></span>
+                </a>
+                <a target="_blank" data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>
+                <br />
+                <address data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></address>
+                <i class="tip description" data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].tip() : ''"></i>
+                <span data-bind="visible: eventDetailDescription"><br /><br /></span>
+                <span class="description" data-bind="text: eventDetailDescription"></span>
+            </div>
+        </td>
+        <td class="td-align td-valign">
+            <button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.venuesManager.deleteItem($data); }">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </td>
+    </tr>
 </script>
 
 <script type="text/html" id="eventVenueItemTemplateEdit">
-    <td colspan="3" class="venue editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
-        <div class="well">
-            <div class="row">
-                <div class="col-sm-8" data-bind="validationElement: id">
-                    <div class="form-group">
-                        <label for="venueComboBox">@T("Venue"):</label>
-                        <div class="input-group">
-                            <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Search venues...")" data-bind="
-                                        jqAuto: {
-                                            value: autocompleteName,
-                                            dataValue: autocompleteData,
-                                            source: $root.getAutocompleteVenues,
-                                            inputProp: 'Name',
-                                            template: 'autocompleteEntityItemTemplate'
-                                        },
-                                        validationTag: id,
-                                        enable: !shows() || shows().length == 0" />
-                            <span class="input-group-btn">
-                                <button type="button" id="createVenueButton" class="btn btn-default" data-bind="click: $root.createVenue, enable: !shows() || shows().length == 0">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
-                            </span>
+    <tr>
+        <td colspan="3" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-8" data-bind="validationElement: id">
+                        <div class="form-group">
+                            <label for="venueComboBox">@T("Venue"):</label>
+                            <div class="input-group">
+                                <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Search venues...")" data-bind="
+                                            jqAuto: {
+                                                value: autocompleteName,
+                                                dataValue: autocompleteData,
+                                                source: $root.getAutocompleteVenues,
+                                                inputProp: 'Name',
+                                                template: 'autocompleteEntityItemTemplate'
+                                            },
+                                            validationTag: id,
+                                            enable: !shows() || shows().length == 0" />
+                                <span class="input-group-btn">
+                                    <button type="button" id="createVenueButton" class="btn btn-default" data-bind="click: $root.createVenue, enable: !shows() || shows().length == 0">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+									   							
+                <div class="row">			
+                    <div class="col-sm-8">
+                        <div class="form-group" data-bind="validationElement: eventDetailDescription">
+                            <label for="venueDescriptionTextArea">@T("Description"):</label>
+                            <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("A short description of the event's details in this venue.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a>
+                            <textarea class="form-control" id="venueDescriptionTextArea" rows="4" data-bind="value: eventDetailDescription"></textarea>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="row">
+                    <div class="col-sm-8"></div>
+                    <div class="col-sm-4 text-right">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default" data-bind="click: function() { $root.venuesManager.cancelItem($data) }">@T("Cancel")</button>
+                            <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function() { $root.venuesManager.saveItem($data) }">@T("Save Venue")</button>
                         </div>
                     </div>
                 </div>
             </div>
-									   							
-            <div class="row">			
-                <div class="col-sm-8">
-                    <div class="form-group" data-bind="validationElement: eventDetailDescription">
-                        <label for="venueDescriptionTextArea">@T("Description"):</label>
-                        <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("A short description of the event's details in this venue.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a>
-                        <textarea class="form-control" id="venueDescriptionTextArea" rows="4" data-bind="value: eventDetailDescription"></textarea>
-                    </div>
-                </div>
-            </div> 
-
-            <div class="row">
-                <div class="col-sm-8"></div>
-                <div class="col-sm-4 text-right">
-				    <div class="form-group">
-					    <button type="button" class="btn btn-default" data-bind="click: function() { $root.venuesManager.cancelItem($data) }">@T("Cancel")</button>
-					    <button type="button" class="btn btn-success" id="saveVenueButton" data-bind="click: function() { $root.venuesManager.saveItem($data) }">@T("Save Venue")</button>
-				    </div>
-			    </div>
-		    </div>
-	    </div>
-    </td>
+        </td>
+    </tr>
 </script>
 
 <script type="text/html" id="showItemTemplate">

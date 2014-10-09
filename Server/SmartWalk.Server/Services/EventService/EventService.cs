@@ -163,7 +163,9 @@ namespace SmartWalk.Server.Services.EventService
                 foreach (var showVm in venueVm.Shows)
                 {
                     // ReSharper disable once AccessToForEachVariableInClosure
-                    var show = eventMeta.ShowRecords.FirstOrDefault(s => s.Id == showVm.Id);
+                    var show = showVm.Id > 0 
+                        ? eventMeta.ShowRecords.FirstOrDefault(s => s.Id == showVm.Id)
+                        : null;
                     if (show == null && !venueVm.Destroy)
                     {
                         show = new ShowRecord

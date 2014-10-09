@@ -6,18 +6,9 @@
     self.settings = settings;
     self.data = new EntityViewModel(data);
 
-    self.setEditingItem = function (item) {
-        if (self.data.addresses()) {
-            self.data.addresses().forEach(function (address) {
-                address.isEditing(item == address);
-            });
-        }
-
-        if (self.data.contacts()) {
-            self.data.contacts().forEach(function (contact) {
-                contact.isEditing(item == contact);
-            });
-        }
+    self.setEditingItem = function (editingItem) {
+        VmItemsManager.setEditingItem(self.data.addresses(), editingItem);
+        VmItemsManager.setEditingItem(self.data.contacts(), editingItem);
     };
 
     self.contactsManager = new VmItemsManager(
