@@ -315,13 +315,9 @@ namespace SmartWalk.Client.iOS.Services
                     {
                         var placemark = placemarks.FirstOrDefault();
                         if (placemark != null &&
-                            placemark.Locality != null &&
-                            placemark.Country != null)
+                            placemark.Locality != null)
                         {
-                            result = string.Format(
-                                "{0}, {1}", 
-                                placemark.Locality, 
-                                placemark.Country);
+                            result = placemark.Locality;
                         }
                     }
                 }
