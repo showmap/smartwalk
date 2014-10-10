@@ -6,11 +6,6 @@
     self.settings = settings;
     self.data = new EntityViewModel(data);
 
-    self.setEditingItem = function (editingItem) {
-        VmItemsManager.setEditingItem(self.data.addresses(), editingItem);
-        VmItemsManager.setEditingItem(self.data.contacts(), editingItem);
-    };
-
     self.contactsManager = new VmItemsManager(
         self.data.contacts,
         function() {
@@ -18,7 +13,9 @@
             return contact;
         },
         {
-            setEditingItem: self.setEditingItem,
+            beforeEdit: function () {
+                self.addressesManager.cancelAll();
+            },
             beforeSave: function (contact) {
                 if (!contact.errors) {
                     EntityViewModelExtended.setupContactValidation(contact, self.settings);
@@ -35,9 +32,11 @@
             return address;
         },
         {
-            setEditingItem: self.setEditingItem,
             initItem: function (address) {
                 EntityViewModelExtended.initAddressViewModel(address);
+            },
+            beforeEdit: function () {
+                self.contactsManager.cancelAll();
             },
             beforeSave: function (address) {
                 if (!address.errors) {

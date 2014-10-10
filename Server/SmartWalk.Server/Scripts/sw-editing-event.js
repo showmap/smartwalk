@@ -17,14 +17,13 @@
             return venue;
         },
         {
-            setEditingItem: function (editingItem) {
-                VmItemsManager.setEditingItem(self.data.venues(), editingItem,
-                    function(venue) {
-                        VmItemsManager.setEditingItem(venue.shows(), editingItem);
-                    });
-            },
             initItem: function (venue) {
                 EventViewModelExtended.initVenueViewModel(venue, self);
+            },
+            beforeEdit: function () {
+                self.data.venues().forEach(function(venue) {
+                    venue.showsManager.cancelAll();
+                });
             },
             beforeSave: function (venue) {
                 if (!venue.errors) {
@@ -300,10 +299,6 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             venue.lazyEventDetail().description(value);
         }
     });
-
-    venue.shows.subscribe(function (shows) {
-        var a = shows;
-    });
     
     venue.showsManager = new VmItemsManager(
         venue.shows,
@@ -318,6 +313,12 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             filterItem: function (show) {
                 return show.isEditing() ||
                     EventViewModelExtended.IsTimeThisDay(show.startTime(), event, 0);
+            },
+            beforeEdit: function () {
+                event.venuesManager.cancelAll();
+                event.data.venues().forEach(function (otherVenue) {
+                    otherVenue.showsManager.cancelAll();
+                });
             },
             beforeSave: function (show) {
                 if (!show.errors) {

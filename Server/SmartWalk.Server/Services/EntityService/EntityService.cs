@@ -130,13 +130,16 @@ namespace SmartWalk.Server.Services.EntityService
                 var contact = contactVm.Id > 0
                     ? entity.ContactRecords.FirstOrDefault(cr => cr.Id == contactVm.Id)
                     : null;
-                if (contact == null)
+                if (contact == null && !contactVm.Destroy)
                 {
                     contact = new ContactRecord { EntityRecord = entity };
                     entity.ContactRecords.Add(contact);
                 }
 
-                ViewModelFactory.UpdateByViewModel(contact, contactVm);
+                if (contact != null)
+                {
+                    ViewModelFactory.UpdateByViewModel(contact, contactVm);
+                }
             }
 
             foreach (var addressVm in entityVm.Addresses)
@@ -145,13 +148,16 @@ namespace SmartWalk.Server.Services.EntityService
                 var address = addressVm.Id > 0
                     ? entity.AddressRecords.FirstOrDefault(ar => ar.Id == addressVm.Id)
                     : null;
-                if (address == null)
+                if (address == null && !addressVm.Destroy)
                 {
                     address = new AddressRecord { EntityRecord = entity };
                     entity.AddressRecords.Add(address);
                 }
 
-                ViewModelFactory.UpdateByViewModel(address, addressVm);
+                if (address != null)
+                {
+                    ViewModelFactory.UpdateByViewModel(address, addressVm);
+                }
             }
 
             if (entity.Id == 0)

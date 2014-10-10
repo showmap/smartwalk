@@ -108,7 +108,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Editing")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-editing.min.js", "sw-editing.js")
-                .SetDependencies("SmartWalk.Common", "jQueryUI", "JsHashtable", "ko.validation",
+                .SetDependencies("SmartWalk.Common", "jQueryUI", "JsHashset", "ko.validation",
                     // TODO: Maybe to fully relocate validation init into 3rd party components files
                     "ko.autocomplete", "ko.datetime", "ko.switcher", "ko.mappicker");
 

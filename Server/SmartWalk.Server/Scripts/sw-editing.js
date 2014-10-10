@@ -142,9 +142,8 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     ///   <param name="settings" type="PlainObject">A set of key/value pairs that configure the manager.
     ///   {
     ///     initItem: function(item) A handler to externally init an item state.
-    ///     setEditingItem: function(item) A handler to override default logic of setting item's editing state.
+    ///     beforeEdit: function(item) A handler to run some logic before an item is edited.
     ///     beforeSave: function(item) A handler to run some logic before an item is saved.
-    ///     afterSave: function(item) A handler to run some logic after an item was saved.
     ///     itemView: A string id of the item view template.
     ///     itemEditView: A string id of the item edit template.
     ///     filterItem: function(item) A handler to filter items array.
@@ -156,58 +155,18 @@ function VmItemsManager(allItems, createItemHandler, settings) {
 
     // private
 
-    // assuming that all initial items are saved on server
-    self._savedItems = allItems() ? allItems().slice(0) : [];
-    // and edited at least once
-    self._editedItems = allItems() ? allItems().slice(0) : [];
-
-    self._isItemSaved = function (item) {
-        return self._savedItems.indexOf(item) >= 0;
-    };
-
-    self._isItemEdited = function (item) {
-        return self._editedItems.indexOf(item) >= 0;
-    };
-
-    self._setItemAsEdited = function (item) {
-        if (!self._isItemEdited(item)) {
-            self._editedItems.push(item);
-        }
-    };
-
+    self._allItems = allItems;
     self._previousItemData = new Hashtable();
-
-    self._processIsEditingChange = function (item, isEditing) {
-        if (isEditing) {
-            if (self._isItemEdited(item)) {
-                self._previousItemData.put(item, item.toJSON.apply(item));
-            }
-        } else {
-            if (self._isItemEdited(item)) {
-                if (self._previousItemData.containsKey(item)) {
-                    item.loadData.apply(item, [self._previousItemData.get(item)]);
-                }
-            } else {
-                self._allItems.remove(item);
-            }
-
-            self._previousItemData.remove(item);
-        }
-    };
+    self._editingItems = new HashSet();
     
     self._initItem = function (item) {
         item.isEditing = ko.observable(false);
-        item.isEditing.subscribe(function (isEditing) {
-            self._processIsEditingChange(item, isEditing);
-        });
         
         if (settings.initItem) {
             settings.initItem(item);
         }
     };
 
-    self._allItems = allItems;
-    
     if (self._allItems()) {
         self._allItems().forEach(function (item) {
             self._initItem(item);
@@ -232,10 +191,6 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         })
         : allItems;
     
-    self.setEditingItem = settings.setEditingItem || function (editingItem) {
-        VmItemsManager.setEditingItem(self._allItems(), editingItem);
-    };
-    
     self.getItemView = function (item) {
         return item.isEditing() ? settings.itemEditView : settings.itemView;
     };
@@ -246,13 +201,32 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         if (!self._allItems()) {
             self._allItems([]);
         }
+
         self._allItems.push(item);
-        
-        self.editItem(item);
+        self._editItem(item, false);
+    };
+
+    self._editItem = function (item, savePreviousData) {
+        if (self._allItems.indexOf(item) < 0 ||
+            self._editingItems.contains(item)) return;
+
+        self.cancelAll();
+
+        if (settings.beforeEdit) {
+            settings.beforeEdit(item);
+        }
+
+        self._editingItems.add(item);
+
+        if (savePreviousData) {
+            self._previousItemData.put(item, item.toJSON.apply(item));
+        }
+
+        item.isEditing(true);
     };
 
     self.editItem = function (item) {
-        self.setEditingItem(item);
+        self._editItem(item, true);
     };
 
     self.deleteItem = function (item) {
@@ -260,22 +234,39 @@ function VmItemsManager(allItems, createItemHandler, settings) {
             cancelItem(item);
         }
 
-        if (self._isItemSaved(item)) {
-            self._allItems.destroy(item);
-        } else {
-            self._allItems.remove(item);
-        }
+        self._allItems.destroy(item);
     };
 
     self.cancelItem = function (item) {
-        self.setEditingItem(null);
-        
+        if (self._allItems.indexOf(item) < 0 ||
+            !self._editingItems.contains(item)) return;
+
+        if (self._previousItemData.containsKey(item)) {
+            item.loadData.apply(item, [self._previousItemData.get(item)]);
+            self._previousItemData.remove(item);
+        } else {
+            self._allItems.remove(item);
+        }
+
+        self._editingItems.remove(item);
+
         if (item.errors) {
             item.errors.showAllMessages(false);
         }
+
+        item.isEditing(false);
+    };
+
+    self.cancelAll = function() {
+        self._editingItems.values().forEach(function (editingItem) {
+            self.cancelItem(editingItem);
+        });
     };
 
     self.saveItem = function (item) {
+        if (self._allItems.indexOf(item) < 0 ||
+            !self._editingItems.contains(item)) return false;
+
         if (settings.beforeSave) {
             settings.beforeSave(item);
         }
@@ -286,28 +277,16 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
 
         if (!item.errors || item.errors().length == 0) {
-            if (settings.afterSave) {
-                settings.afterSave(item);
-            }
-
             self._previousItemData.remove(item);
-            self._setItemAsEdited(item);
-            self.setEditingItem(null);
+            self._editingItems.remove(item);
         } else {
             item.errors.showAllMessages();
         }
 
+        item.isEditing(false);
+
         return true;
     };
-};
-
-VmItemsManager.setEditingItem = function (items, editingItem, iterateHandler) {
-    if (items) {
-        items.forEach(function (item) {
-            item.isEditing(item == editingItem);
-            if (iterateHandler) iterateHandler(item);
-        });
-    }
 };
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
