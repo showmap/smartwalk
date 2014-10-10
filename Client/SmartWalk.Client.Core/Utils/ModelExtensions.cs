@@ -14,17 +14,21 @@ namespace SmartWalk.Client.Core.Utils
 
         public static int GetStatus(this OrgEvent orgEvent)
         {
+            // current
+            if (!orgEvent.StartTime.HasValue ||
+                (DateTime.Now.AddDays(-2) <= orgEvent.StartTime &&
+                    orgEvent.StartTime <= DateTime.Now.AddDays(2)))
+            {
+                return 0;
+            }
+
+            // past
             if (orgEvent.StartTime < DateTime.Now.AddDays(-2))
             {
                 return -1;
             }
 
-            if (DateTime.Now.AddDays(-2) <= orgEvent.StartTime &&
-                orgEvent.StartTime <= DateTime.Now.AddDays(2))
-            {
-                return 0;
-            }
-
+            // future
             if (orgEvent.StartTime > DateTime.Now.AddDays(2))
             {
                 return 1;
@@ -151,11 +155,11 @@ namespace SmartWalk.Client.Core.Utils
 
         public static string GetDateString(this OrgEvent orgEvent)
         {
-            var result = orgEvent != null 
+            var result = orgEvent != null && orgEvent.StartTime.HasValue
                 ? string.Format(
                     "{0:D}{1}{2:D}", 
                     orgEvent.StartTime, 
-                    orgEvent.EndTime != null ? " - " : string.Empty, 
+                    orgEvent.EndTime.HasValue ? " - " : string.Empty, 
                     orgEvent.EndTime)
                 : null;
             return result;
@@ -188,17 +192,17 @@ namespace SmartWalk.Client.Core.Utils
             return null;
         }
 
-        public static Tuple<DateTime, DateTime?> GetOrgEventRange(this OrgEvent orgEvent)
+        public static Tuple<DateTime?, DateTime?> GetOrgEventRange(this OrgEvent orgEvent)
         {
             var result = orgEvent != null && orgEvent.StartTime.HasValue
-                ? new Tuple<DateTime, DateTime?>(orgEvent.StartTime.Value, orgEvent.EndTime)
+                ? new Tuple<DateTime?, DateTime?>(orgEvent.StartTime, orgEvent.EndTime)
                 : null;
             return result;
         }
 
         public static Dictionary<DateTime, Show[]> GroupByDay(
             this Show[] shows,
-            Tuple<DateTime, DateTime?> range)
+            Tuple<DateTime?, DateTime?> range)
         {
             if (shows == null || 
                 shows.Length == 0 || 
@@ -228,7 +232,7 @@ namespace SmartWalk.Client.Core.Utils
             return result.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray());
         }
 
-        public static Show[] GroupByDayShow(this Show[] shows, Tuple<DateTime, DateTime?> range)
+        public static Show[] GroupByDayShow(this Show[] shows, Tuple<DateTime?, DateTime?> range)
         {
             var groupes = GroupByDay(shows, range);
             if (groupes == null) return shows;
@@ -245,7 +249,7 @@ namespace SmartWalk.Client.Core.Utils
             return result.ToArray();
         }
 
-        public static Venue[] GroupByDayVenue(this Show[] shows, Tuple<DateTime, DateTime?> range)
+        public static Venue[] GroupByDayVenue(this Show[] shows, Tuple<DateTime?, DateTime?> range)
         {
             var groupes = GroupByDay(shows, range);
             if (groupes == null) return null;

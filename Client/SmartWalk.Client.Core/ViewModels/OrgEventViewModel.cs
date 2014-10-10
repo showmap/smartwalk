@@ -1238,7 +1238,9 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private OrgEvent GetOrgEventByDay(OrgEvent orgEvent)
         {
-            if (orgEvent == null || !CurrentDay.HasValue) return orgEvent;
+            if (orgEvent == null || 
+                !orgEvent.StartTime.HasValue || 
+                !CurrentDay.HasValue) return orgEvent;
 
             var firstDay = orgEvent.StartTime.Value.Date;
             var day = firstDay.AddDays(CurrentDay.Value - 1);
@@ -1267,7 +1269,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private static Show[] GetShowsByDay(
             Show[] shows, 
             DateTime day, 
-            Tuple<DateTime, DateTime?> range)
+            Tuple<DateTime?, DateTime?> range)
         {
             if (shows == null) return null;
 
