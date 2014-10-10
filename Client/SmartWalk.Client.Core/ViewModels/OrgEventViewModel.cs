@@ -396,6 +396,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     _isGroupedByLocation = value;
                     RaisePropertyChanged(() => IsGroupedByLocation);
                     RaisePropertyChanged(() => ListItems);
+                    RaisePropertyChanged(() => SearchListItems);
                 }
             }
         }
