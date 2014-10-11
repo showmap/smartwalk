@@ -19,6 +19,7 @@ using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -921,6 +922,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
                 cell.HeaderView = 
                     tableSoure.GetHeaderForShowCell(cell.IsExpanded, cell.DataContext);
+                cell.SubHeaderView = 
+                    tableSoure.GetSubHeaderForShowCell(cell.IsExpanded, cell.DataContext);
             }
 
             if (!ViewModel.IsGroupedByLocation)
@@ -935,18 +938,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ? tableSoure.GetItemIndex(ViewModel.ExpandedShow)
                     : null;
 
+                var headerHeight = 
+                    (tableSoure.GetIsCellHeaderVisibile() ? VenueHeaderView.DefaultHeight : 0) +
+                    (tableSoure.GetIsCellSubHeaderVisibile() ? GroupHeaderView.DefaultHeight : 0);
+
+                var previuosCellHeight = 
+                    previousIndex != null &&
+                    currentIndex != null &&
+                    previousIndex.Section < currentIndex.Section
+                        ? VenueShowCell.CalculateCellHeight(
+                            tableView.Frame.Width, true, false, false,
+                            _previousExpandedShow) + 25 // just a magic number, really
+                        : 0;
+
                 var delta = 
-                    (ViewModel.ExpandedShow != null ? 1: -1) * 
-                        VenueHeaderView.DefaultHeight -
-                        (previousIndex != null && 
-                            currentIndex != null && 
-                                previousIndex.Section < currentIndex.Section
-                            ? VenueShowCell.CalculateCellHeight(
-                                tableView.Frame.Width,
-                                true,
-                                false,
-                                _previousExpandedShow) + 25 // just a magic number, really
-                            : 0);
+                    (ViewModel.ExpandedShow != null ? 1 : -1) *
+                    headerHeight - previuosCellHeight;
 
                 // Compensating the shift created by expanded headers or previous cells
                 if (tableView.ScrollEnabled &&

@@ -14,7 +14,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="302"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="HeaderContainer">
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Gf-8G-gFc" userLabel="HeaderContainer">
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" id="rDG-LL-Yqd"/>
+                        </constraints>
+                    </view>
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="SubHeaderContainer">
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" id="grt-qG-RJY"/>
@@ -84,9 +90,11 @@
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="hFa-pB-6q0" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="0YC-1a-iJG"/>
+                    <constraint firstItem="hFa-pB-6q0" firstAttribute="top" secondItem="0Gf-8G-gFc" secondAttribute="bottom" id="30n-hp-Jz1"/>
                     <constraint firstItem="9" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="8" id="DFg-T2-Ly1"/>
                     <constraint firstAttribute="trailing" secondItem="hFa-pB-6q0" secondAttribute="trailing" id="FCz-O7-eUg"/>
+                    <constraint firstItem="0Gf-8G-gFc" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="MTM-Q2-T82"/>
+                    <constraint firstItem="0Gf-8G-gFc" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="MnY-Ud-DPV"/>
                     <constraint firstItem="9" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" constant="12" id="R12-9d-utz"/>
                     <constraint firstAttribute="trailing" secondItem="K9o-xv-nfu" secondAttribute="trailing" id="Saq-Ut-4Ls"/>
                     <constraint firstItem="592" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="UTs-ha-cCo"/>
@@ -96,6 +104,7 @@
                     <constraint firstAttribute="bottom" secondItem="181" secondAttribute="bottom" constant="12" id="e9g-Hw-SsH"/>
                     <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="5" id="fLo-Av-da9"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" id="lkf-0X-0xe"/>
+                    <constraint firstAttribute="trailing" secondItem="0Gf-8G-gFc" secondAttribute="trailing" id="lkh-ir-ijZ"/>
                     <constraint firstItem="hFa-pB-6q0" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="nv5-LC-vXP"/>
                     <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="8" id="viT-Fi-EmO"/>
                     <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" constant="106" id="zyo-g5-Tzk"/>
@@ -118,13 +127,15 @@
                 <outlet property="DetailsHeightConstraint" destination="367" id="384"/>
                 <outlet property="DetailsLabel" destination="181" id="378"/>
                 <outlet property="EndTimeLabel" destination="6" id="380"/>
-                <outlet property="HeaderContainer" destination="hFa-pB-6q0" id="sTd-pd-QwT"/>
-                <outlet property="HeaderHeightConstraint" destination="grt-qG-RJY" id="vkh-1M-8Jr"/>
+                <outlet property="HeaderContainer" destination="0Gf-8G-gFc" id="rKi-sy-u4c"/>
+                <outlet property="HeaderHeightConstraint" destination="rDG-LL-Yqd" id="CY7-aL-f5h"/>
                 <outlet property="ImageAndDetailsSpaceConstraint" destination="H0t-fT-ezL" id="3e4-L4-wPc"/>
                 <outlet property="ImageHeightConstraint" destination="139" id="383"/>
                 <outlet property="ImageWidthConstraint" destination="173" id="387"/>
                 <outlet property="Separator" destination="K9o-xv-nfu" id="7ox-7Q-xIt"/>
                 <outlet property="StartTimeLabel" destination="3" id="379"/>
+                <outlet property="SubHeaderContainer" destination="hFa-pB-6q0" id="rVw-pp-F08"/>
+                <outlet property="SubHeaderHeightConstraint" destination="grt-qG-RJY" id="EyH-5T-lO4"/>
                 <outlet property="ThumbImageView" destination="50" id="389"/>
                 <outlet property="TimeBackgroundView" destination="592" id="625"/>
             </connections>

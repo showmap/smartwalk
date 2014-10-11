@@ -63,6 +63,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 : null;
         }
 
+        public bool GetIsCellHeaderVisibile()
+        {
+            return !_viewModel.IsGroupedByLocation;
+        }
+
+        public bool GetIsCellSubHeaderVisibile(Show show = null)
+        {
+            return !_viewModel.IsGroupedByLocation &&
+                _viewModel.SortBy == SortBy.Name && _viewModel.IsMultiday &&
+                (show == null || show.StartTime.HasValue);
+        }
+
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             tableView.DeselectRow(indexPath, false);
@@ -98,7 +110,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenueShowCell.CalculateCellHeight(
                         tableView.Frame.Width,
                         isExpanded,
-                        isExpanded && !_viewModel.IsGroupedByLocation,
+                        isExpanded && GetIsCellHeaderVisibile(),
+                        isExpanded && GetIsCellSubHeaderVisibile(show),
                         show);
                 return height;
             }
@@ -157,7 +170,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public UIView GetHeaderForShowCell(bool isCellExpanded, Show show)
         {
-            var headerView = isCellExpanded && !_viewModel.IsGroupedByLocation
+            var headerView = isCellExpanded && GetIsCellHeaderVisibile()
                 ? VenueHeaderContentView.Create()
                 : null;
 
@@ -172,6 +185,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             return headerView;
+        }
+
+        public UIView GetSubHeaderForShowCell(bool isCellExpanded, Show show)
+        {
+            var subHeaderView = isCellExpanded && GetIsCellSubHeaderVisibile(show)
+                ? GroupHeaderContentView.Create()
+                : null;
+
+            if (subHeaderView != null)
+            {
+                subHeaderView.BackgroundColor = Theme.HeaderCellBackground;
+
+                subHeaderView.DataContext = show.StartTime.GetCurrentDayString();
+            }
+
+            return subHeaderView;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
@@ -203,6 +232,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
                 venueCell.HeaderView = GetHeaderForShowCell(venueCell.IsExpanded, show);
+                venueCell.SubHeaderView = GetSubHeaderForShowCell(venueCell.IsExpanded, show);
 
                 venueCell.IsSeparatorVisible = 
                     !_viewModel.IsGroupedByLocation ||

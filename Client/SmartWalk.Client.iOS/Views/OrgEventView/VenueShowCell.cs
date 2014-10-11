@@ -10,6 +10,7 @@ using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
+using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -36,6 +37,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UITapGestureRecognizer _detailsTapGesture;
         private bool _isExpanded;
         private UIView _headerView;
+        private UIView _subHeaderView;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
@@ -63,14 +65,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static float CalculateCellHeight(
             float frameWidth, 
             bool isExpanded, 
-            bool isHeaderVisible, 
+            bool isHeaderVisible,
+            bool isSubHeaderVisible, 
             Show show)
         {
             if (isExpanded)
             {
-                var cellHeight = isHeaderVisible 
+                var cellHeight = (isHeaderVisible 
                     ? VenueHeaderView.DefaultHeight 
-                    : 0f;
+                    : 0f) + 
+                    (isSubHeaderVisible 
+                        ? GroupHeaderView.DefaultHeight 
+                        : 0f);
 
                 var showText = GetShowText(show);  
                 if (showText.Length > 0)
@@ -198,6 +204,36 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        public UIView SubHeaderView
+        {
+            get
+            {
+                return _subHeaderView;
+            }
+            set
+            {
+                if (_subHeaderView != value)
+                {
+                    if (_subHeaderView != null)
+                    {
+                        _subHeaderView.RemoveFromSuperview();
+                    }
+
+                    _subHeaderView = value;
+                    UpdateVisibility();
+                    UpdateConstraints();
+                    UpdateBackgroundColor();
+
+                    if (_subHeaderView != null)
+                    {
+                        _subHeaderView.Frame = SubHeaderContainer.Bounds;
+
+                        SubHeaderContainer.AddSubview(_subHeaderView);
+                    }
+                }
+            }
+        }
+
         public bool IsSeparatorVisible
         {
             get { return !Separator.Hidden; }
@@ -227,7 +263,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ? CalculateCellHeight(
                         Frame.Width, 
                         IsExpanded, 
-                        HeaderView != null, 
+                        HeaderView != null,
+                        SubHeaderView != null,
                         DataContext)
                     : 0;
 
@@ -236,6 +273,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 HeaderView != null &&
                 Frame.Height >= calculatedHeight
                     ? VenueHeaderView.DefaultHeight
+                    : 0;
+
+            SubHeaderHeightConstraint.Constant = 
+                IsExpanded && 
+                SubHeaderView != null &&
+                Frame.Height >= calculatedHeight
+                    ? GroupHeaderView.DefaultHeight
                     : 0;
 
             DescriptionRightConstraint.Constant = GetTimeBlockWidth(DataContext);
@@ -428,6 +472,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var isHeaderHidden = !IsExpanded || HeaderView == null;
             HeaderContainer.SetHidden(isHeaderHidden, !isHeaderHidden);
+
+            var isSubHeaderHidden = !IsExpanded || SubHeaderView == null;
+            SubHeaderContainer.SetHidden(isSubHeaderHidden, !isSubHeaderHidden);
         }
 
         private float GetImageProportionalWidth()
@@ -536,6 +583,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
             HeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);
             HeaderContainer.Layer.ShadowOpacity = 0.1f;
+
+            SubHeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
+            SubHeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);
+            SubHeaderContainer.Layer.ShadowOpacity = 0.1f;
         }
 
         private void UpdateClockIcon()
@@ -565,7 +616,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateBackgroundColor()
         {
             BackgroundView.BackgroundColor = 
-                HeaderView != null 
+                HeaderView != null || SubHeaderView != null
                     ? Theme.CellSemiHighlight 
                     : Theme.CellBackground;
         }

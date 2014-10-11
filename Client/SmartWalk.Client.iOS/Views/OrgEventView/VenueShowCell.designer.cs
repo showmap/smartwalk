@@ -52,6 +52,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIView SubHeaderContainer { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint SubHeaderHeightConstraint { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
 
 		[Outlet]
@@ -92,6 +98,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (HeaderContainer != null) {
 				HeaderContainer.Dispose ();
 				HeaderContainer = null;
+			}
+
+			if (SubHeaderContainer != null) {
+				SubHeaderContainer.Dispose ();
+				SubHeaderContainer = null;
+			}
+
+			if (SubHeaderHeightConstraint != null) {
+				SubHeaderHeightConstraint.Dispose ();
+				SubHeaderHeightConstraint = null;
 			}
 
 			if (HeaderHeightConstraint != null) {

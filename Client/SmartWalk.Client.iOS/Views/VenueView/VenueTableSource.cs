@@ -102,6 +102,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     tableView.Frame.Width,
                     Equals(_viewModel.ExpandedShow, venueShow),
                     false,
+                    false,
                     venueShow);
                 return height;
             }
