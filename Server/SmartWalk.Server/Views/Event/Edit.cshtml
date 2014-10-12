@@ -18,9 +18,9 @@
     Script.Require("SmartWalk.Editing.Event").AtFoot();
 
     Html.AppendTitleParts(
-        Model.Id > 0 
+        Model.Id > 0
             ? Convert.ToString(T("Edit: {0}", Model.DisplayName()))
-            : Convert.ToString(T("Create")), 
+            : Convert.ToString(T("Create")),
         Convert.ToString(T("Event")));
 
     const string hostFormId = "edit-host-form-dialog";
@@ -31,155 +31,158 @@
 }
 
 <div id="event-item">
-        @Html.AntiForgeryTokenOrchard()
-        @Html.Partial("../ServerErrors")
+    @Html.AntiForgeryTokenOrchard()
+    @Html.Partial("../ServerErrors")
 
-        <div class="row">
-			<div class="col-xs-8" data-bind="validationElement: data.title">
-			    <div class="form-group">
-			        <label class="titleLabel" for="eventTitleTextInput">@T("Event Title"):</label>
-			        <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: data.title, enable: isEnabled" />
-			    </div>
-			</div>
-            <div class="col-xs-4 text-right">
-                <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
-                <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
+    <div class="row">
+        <div class="col-xs-8" data-bind="validationElement: data.title">
+            <div class="form-group">
+                <label class="titleLabel" for="eventTitleTextInput">@T("Event Title"):</label>
+                <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: data.title, enable: isEnabled" />
             </div>
-		</div>
-
-        <div class="row">
-			<div class="col-sm-4" data-bind="validationElement: data.startDate">
-				<div class="form-group">
-					<label for="startDateInput">@T("Start Date"):</label>
-					<input type="date" class="form-control" id="startDateInput" data-bind="datepicker: data.startDate, enable: isEnabled">
-				</div>
-			</div>
-			<div class="col-sm-4" data-bind="validationElement: data.endDate">
-				<div class="form-group">
-					<label for="endDateInput">@T("End Date"):</label>
-					<input type="date" class="form-control" id="endDateInput" data-bind="datepicker: data.endDate, enable: isEnabled">
-				</div>
-			</div>
-		</div>	    
-
-        <div class="row">
-            <div class="col-sm-8" data-bind="validationElement: data.host">
-                <div class="form-group">
-                    <label for="organizedByComboBox">@T("Organized By"):</label>
-                    <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Defines basic info about the organizer of the event. You as the editor can have more than one organizer to create events for, but every event is hosted by only one organizer.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a>
-                    <div class="input-group">
-                        <input class="form-control" id="organizedByComboBox" placeholder="@T("Search organizers...")" data-bind="
-                            jqAuto: {
-                                value: autocompleteHostName,
-                                dataValue: autocompleteHostData,
-                                source: getAutocompleteHosts,
-                                inputProp: 'Name',
-                                template: 'autocompleteEntityItemTemplate'
-                            },
-                            validationTag: data.host,
-                            enable: isEnabled" />
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost, enable: isEnabled">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            @*<div class="col-sm-4">
-				<div class="form-group">
-					<label for="combinetypeButtonsGroup">@T("Combine type"):</label><br/>
-					<div class="btn-group" id="combinetypeButtonsGroup" data-bind="switcher: data.combinetype, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}], enable: isEnabled}"></div>
-				</div>
-			</div>            
-            *@
-		</div>		       
-        
-        <div class="row">
-			<div class="col-sm-8" data-bind="validationElement: data.picture">
-				<div class="form-group">
-					<label for="pictureTextInput">@T("Picture"):</label>
-					<input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: data.picture, enable: isEnabled"/>
-				</div>
-			</div>
-		</div>
-		
-		<div class="row">
-		    <div class="col-sm-8" data-bind="validationElement: data.description">
-		        <div class="form-group">
-		            <label for="descriptionTextArea">@T("Description"):</label>
-		            <textarea class="form-control" id="descriptionTextArea" rows="5" data-bind="value: data.description, enable: isEnabled"></textarea>
-		        </div>
-		    </div>
-            
-			<div class="col-sm-4">
-			    <div class="form-group">
-			        <label for="visibilityButtonsGroup">@T("Visibility"):</label>
-			        <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Public - visible to all website and mobile app users, Unlisted - visible to users by the URL link only, Private - visible only to the editor.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a><br/>
-			        <fieldset class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: data.status, switcherOptions: { values: [{val: 1, disp: '@T("Public")    ', @(canCreatePublic ? "" : "enable: false")}, {val: 2, disp: '@T("Unlisted")    '}, {val: 0, disp: '@T("Private")    '}]}, enable: isEnabled"></fieldset>
-                    @if (!canCreatePublic) { <div class="text-muted">@T("Currently your account is not verified to create public events. Please {0}request a verification{1}.", "<a href='" + Url.Action("EditProfile", "Account") +  "' target='_blank'>", "</a>")</div> }
-			    </div>
-			</div>
-		</div>
-    
-        <div class="row gap" data-bind="visible: isMultiday">
-            <div class="col-md-12">
-                <ul class="event-days-picker" data-bind="template: { name: 'multiDayItemTemplate', foreach: days }"></ul>
-            </div>
-        </div>                                           
- 
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label for="orderByButtonsGroup">@T("Order Venues"):</label><br />
-                    <fieldset class="btn-group" id="orderByButtonsGroup" data-bind="switcher: data.venueOrderType, switcherOptions: { values: [{val: sw.vm.VenueOrderType.Name, disp: '@T("By Name")'}, {val: sw.vm.VenueOrderType.Custom, disp: '@T("Manually")'}]}, enable: isEnabled"></fieldset>
-                </div>
-            </div>
-        </div>    
-
-        <div class="row add-venue" data-bind="visible: venuesManager.items().length > 0">
-            <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
         </div>
-       
-        <table class="table table-hover edit">
-			<thead>
-				<tr>
-					<th><h4>@T("Venues and Shows")</h4></th>
-					<th>@T("Show Time")</th>
-					<th class="td-align"></th>
-				</tr>
-			</thead>
-			<tbody data-bind="template: { name: 'entityItemTemplate', foreach: venuesManager.items() }"></tbody>
-		</table>
-    
-        <div class="row add-venue" data-bind="visible: $.grep(venuesManager.items(), function (venue) { return venue.isEditing() }).length == 0">
-            <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+        <div class="col-xs-4 text-right">
+            <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
+            <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
         </div>
+    </div>
 
-        <div class="row double-gap">
-            <div class="col-xs-4">
-                @if (Model.Id != 0) {
-                    using(Html.BeginForm("Delete", "Event", FormMethod.Get)) {
-                        <input type="hidden" name="eventId" value="@Model.Id" />
-                        <button type="submit" class="btn btn-danger" data-bind="enable: isEnabled" onclick="return confirm('@T("Are you shure you wish to delete this event?")')" >@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
-                    }
-                }                
+    <div class="row">
+        <div class="col-sm-4" data-bind="validationElement: data.startDate">
+            <div class="form-group">
+                <label for="startDateInput">@T("Start Date"):</label>
+                <input type="date" class="form-control" id="startDateInput" data-bind="datepicker: data.startDate, enable: isEnabled">
             </div>
-            <div class="col-xs-8 text-right">
-                <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
-                <button type="button" class="btn btn-default" data-bind="click: cancelEvent">@T("Cancel")</button>
-                <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>        
+        </div>
+        <div class="col-sm-4" data-bind="validationElement: data.endDate">
+            <div class="form-group">
+                <label for="endDateInput">@T("End Date"):</label>
+                <input type="date" class="form-control" id="endDateInput" data-bind="datepicker: data.endDate, enable: isEnabled">
             </div>
         </div>
     </div>
 
-@Html.Partial(
-    "../Entity/Edit", 
-    new EntityVm { Type = EntityType.Host },
-    new ViewDataDictionary {{ViewDataParams.EntityFormId, hostFormId }})
+    <div class="row">
+        <div class="col-sm-8" data-bind="validationElement: data.host">
+            <div class="form-group">
+                <label for="organizedByComboBox">@T("Organized By"):</label>
+                <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Defines basic info about the organizer of the event. You as the editor can have more than one organizer to create events for, but every event is hosted by only one organizer.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a>
+                <div class="input-group">
+                    <input class="form-control" id="organizedByComboBox" placeholder="@T("Search organizers...")" data-bind="
+                        jqAuto: {
+                            value: autocompleteHostName,
+                            dataValue: autocompleteHostData,
+                            source: getAutocompleteHosts,
+                            inputProp: 'Name',
+                            template: 'autocompleteEntityItemTemplate'
+                        },
+                        validationTag: data.host,
+                        enable: isEnabled" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost, enable: isEnabled">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        @*<div class="col-sm-4">
+                <div class="form-group">
+                    <label for="combinetypeButtonsGroup">@T("Combine type"):</label><br/>
+                    <div class="btn-group" id="combinetypeButtonsGroup" data-bind="switcher: data.combinetype, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}], enable: isEnabled}"></div>
+                </div>
+            </div>
+        *@
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8" data-bind="validationElement: data.picture">
+            <div class="form-group">
+                <label for="pictureTextInput">@T("Picture"):</label>
+                <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: data.picture, enable: isEnabled" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8" data-bind="validationElement: data.description">
+            <div class="form-group">
+                <label for="descriptionTextArea">@T("Description"):</label>
+                <textarea class="form-control" id="descriptionTextArea" rows="5" data-bind="value: data.description, enable: isEnabled"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gap" data-bind="visible: isMultiday">
+        <div class="col-md-12">
+            <ul class="event-days-picker" data-bind="template: { name: 'multiDayItemTemplate', foreach: days }"></ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 event-options">
+            <div class="form-group">
+                <label for="visibilityButtonsGroup">@T("Visibility"):</label>
+                <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Public - visible to all website and mobile app users, Unlisted - visible to users by the URL link only, Private - visible only to the editor.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a><br/>
+                <fieldset class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: data.status, switcherOptions: { values: [{val: 1, disp: '@T("Public")    ', @(canCreatePublic ? "" : "enable: false")}, {val: 2, disp: '@T("Unlisted")    '}, {val: 0, disp: '@T("Private")    '}]}, enable: isEnabled"></fieldset>
+                @if (!canCreatePublic) { <div class="text-muted">@T("Currently your account is not verified to create public events. Please {0}request a verification{1}.", "<a href='" + Url.Action("EditProfile", "Account") +  "' target='_blank'>", "</a>")</div> }
+            </div>
+            <div class="form-group">
+                <label for="orderByButtonsGroup">@T("Order Venues"):</label><br />
+                <fieldset class="btn-group" id="orderByButtonsGroup" data-bind="switcher: data.venueOrderType, switcherOptions: { values: [{val: sw.vm.VenueOrderType.Name, disp: '@T("By Name")'}, {val: sw.vm.VenueOrderType.Custom, disp: '@T("Manually")'}]}, enable: isEnabled"></fieldset>
+            </div>
+            <div class="form-group">
+                <label for="venueTitleFormatButtonsGroup">@T("Show Numbers"):</label><br />
+                <fieldset class="btn-group" id="venueTitleFormatButtonsGroup" data-bind="switcher: data.venueTitleFormatType, switcherOptions: { values: [{val: sw.vm.VenueTitleFormatType.NameAndNumber, disp: '@T("Yes")'}, {val: sw.vm.VenueTitleFormatType.Name, disp: '&nbsp;@T("No")&nbsp;'}]}, enable: isEnabled"></fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div class="row add-venue" data-bind="visible: venuesManager.items().length > 0">
+        <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+    </div>
+
+    <table class="table table-hover edit">
+        <thead>
+            <tr>
+                <th><h4>@T("Venues and Shows")</h4></th>
+                <th class="td-align" colspan="2">@T("Time")</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="template: { name: 'entityItemTemplate', foreach: venuesManager.items() }"></tbody>
+    </table>
+
+    <div class="row add-venue" data-bind="visible: $.grep(venuesManager.items(), function (venue) { return venue.isEditing() }).length == 0">
+        <a data-bind="click: function () { if (isEnabled()) venuesManager.addItem(); }, css: {disabled: !isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Add Venue")</a>
+    </div>
+
+    <div class="row double-gap">
+        <div class="col-xs-4">
+    @if (Model.Id != 0)
+    {
+        using (Html.BeginForm("Delete", "Event", FormMethod.Get))
+        {
+            <input type="hidden" name="eventId" value="@Model.Id" />
+            <button type="submit" class="btn btn-danger" data-bind="enable: isEnabled" onclick="return confirm('@T("Are you shure you wish to delete this event?")')">@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
+        }
+    }
+        </div>
+        <div class="col-xs-8 text-right">
+            <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
+            <button type="button" class="btn btn-default" data-bind="click: cancelEvent">@T("Cancel")</button>
+            <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
+        </div>
+    </div>
+</div>
 
 @Html.Partial(
-    "../Entity/Edit", 
+    "../Entity/Edit",
+    new EntityVm { Type = EntityType.Host },
+    new ViewDataDictionary { { ViewDataParams.EntityFormId, hostFormId } })
+
+@Html.Partial(
+    "../Entity/Edit",
     new EntityVm { Type = EntityType.Venue },
-    new ViewDataDictionary {{ViewDataParams.EntityFormId, venueFormId }})
+    new ViewDataDictionary { { ViewDataParams.EntityFormId, venueFormId } })
 
 @using (Script.Foot())
 {
@@ -192,9 +195,9 @@
 <script type="text/javascript">
     $(function() {
         $("a").tooltip();
-        
+
         var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
-            
+
         var settings = {
             titleLengthValidationMessage: '@T("Title can not be longer than 255 characters.")',
             startTimeRequiredValidationMessage: '@T("Start time is required.")',
@@ -206,58 +209,56 @@
 
             pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
             picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
-                  
-            showMessages: {
-                allDayMessage: '@T("All day")',                
 
+            showMessages: {
                 titleRequiredValidationMessage: '@T("Show title is required.")',
                 titleLengthValidationMessage: '@T("Show title can not be longer than 255 characters.")',
-                    
+
                 pictureValidationMessage: '@T("Picture does not match url pattern.")',
                 pictureLengthValidationMessage: '@T("Picture can not be longer than 255 characters.")',
-                    
+
                 detailsValidationMessage: '@T("Details does not match url pattern.")',
                 detailsLengthValidationMessage: '@T("Details can not be longer than 255 characters.")',
-                    
+
                 startDateValidationMessage: '@T("Show start date has to be between event start and end dates.")',
                 startTimeValidationMessage: '@T("Show start time has to be less than end time.")',
-                    
+
                 endDateValidationMessage: '@T("Show end date has to be between event start and end dates.")',
                 endTimeValidationMessage: '@T("Show end time has to be bigger than start time.")',
             },
-            
+
             dialogCancelText: '@T("Cancel")',
             dialogCreateVenueText: '@T("Create Venue")',
             dialogCreateHostText: '@T("Create Organizer")',
             dialogAddVenueText: '@T("Add Venue")',
             dialogAddHostText: '@T("Add Organizer")',
-            
+
             currentDay: @(currentDay ?? (int?)0),
 
             hostFormName: "#@hostFormId",
             venueFormName: "#@venueFormId",
-                
+
             eventSaveUrl: '@Url.Action("SaveEvent", "Event")',
             eventAfterCancelAction: function(event) {
-                window.location.href = @Html.Raw(Model.Id == 0 
-                    ? "'" + Url.Action("List", new {display = DisplayType.My}) + "'"
-                    : "'" +Url.Action("View") + "'" + " + (event.currentDay() ? '/day/' + event.currentDay() : '')");
+                window.location.href = @Html.Raw(Model.Id == 0
+                ? "'" + Url.Action("List", new {display = DisplayType.My}) + "'"
+                : "'" +Url.Action("View") + "'" + " + (event.currentDay() ? '/day/' + event.currentDay() : '')");
             },
             eventAfterSaveAction: function(id, event) {
                 window.location.href = '@Url.Action("View", new { eventId = ""})/' + id +
                     (event.currentDay() ? '/day/' + event.currentDay() : '');
             },
-    
+
             showView: "showItemTemplate",
             showEditView: "showItemTemplateEdit",
 
             eventVenueView: "eventVenueItemTemplate",
             eventVenueEditView: "eventVenueItemTemplateEdit",
-            
+
             loadingTemplate: "loadingImgTemplate",
 
             hostAutocompleteUrl: '@Url.Action("AutoCompleteHost", "Host")',
-            venueAutocompleteUrl: '@Url.Action("AutoCompleteVenue", "Venue")',                               
+            venueAutocompleteUrl: '@Url.Action("AutoCompleteVenue", "Venue")',
         };
 
         var vm = new EventViewModelExtended(settings, data);

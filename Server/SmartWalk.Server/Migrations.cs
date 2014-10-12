@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Data.Migration;
+using Orchard.Environment.Configuration;
+using Orchard.Users.Models;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Records;
-using Orchard.ContentManagement;
-using Orchard.Core.Settings.Models;
-using Orchard.Users.Models;
-using System.Linq;
 using SmartWalk.Shared;
-using Orchard.Environment.Configuration;
 
 namespace SmartWalk.Server
 {
@@ -819,6 +819,22 @@ namespace SmartWalk.Server
                 table => table.AlterColumn("Description", c => c.WithType(DbType.String).Unlimited().WithDefault(null)));
 
             return 12;
+        }
+
+        [UsedImplicitly]
+        public int UpdateFrom12()
+        {
+            SchemaBuilder.AlterTable(
+                "EventEntityDetailRecord",
+                table => table.AddColumn("IsDeleted", DbType.Boolean, c => c.NotNull().WithDefault(false)));
+
+            SchemaBuilder.AlterTable(
+                "EventMetadataRecord",
+                table => table.AddColumn(
+                    "VenueTitleFormatType", DbType.Byte,
+                    c => c.NotNull().WithDefault(0)));
+
+            return 13;
         }
     }
 }

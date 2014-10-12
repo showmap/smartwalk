@@ -26,6 +26,7 @@ namespace SmartWalk.Server.Services.EventService
             {
                 result.CombineType = (CombineType)record.CombineType;
                 result.VenueOrderType = (VenueOrderType)record.VenueOrderType;
+                result.VenueTitleFormatType = (VenueTitleFormatType)record.VenueTitleFormatType;
                 result.Latitude = record.Latitude;
                 result.Longitude = record.Longitude;
                 result.Status = (EventStatus)record.Status;
@@ -66,6 +67,7 @@ namespace SmartWalk.Server.Services.EventService
             record.CombineType = (byte)eventVm.CombineType;
             record.Status = (byte)eventVm.Status;
             record.VenueOrderType = (byte)eventVm.VenueOrderType;
+            record.VenueTitleFormatType = (byte)eventVm.VenueTitleFormatType;
         }
 
         public static void UpdateByViewModel(ShowRecord record, ShowVm showVm)

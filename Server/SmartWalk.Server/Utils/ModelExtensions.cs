@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Orchard.Localization;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Shared.Utils;
@@ -41,16 +40,34 @@ namespace SmartWalk.Server.Utils
             return eventMeta.Picture ?? (eventMeta.Host != null ? eventMeta.Host.Picture : null);
         }
 
-        public static string DisplayTime(this ShowVm show, CultureInfo culture, Localizer localizer)
+        public static string DisplayName(this EntityVm venue, EventMetadataVm eventMeta)
         {
-            var result = show.StartTime.ToString("t", culture) +
-                   (show.EndTime.HasValue ? " - " + show.EndTime.ToString("t", culture) : string.Empty);
+            var number = eventMeta.VenueTitleFormatType == VenueTitleFormatType.Name 
+                ? null
+                : (eventMeta.VenueOrderType == VenueOrderType.Name
+                    ? eventMeta.Venues.IndexOf(venue) + 1
+                    : (venue.EventDetail != null ? venue.EventDetail.SortOrder : null));
+            var result = (number.HasValue ? string.Format("{0}. ", number) : string.Empty) + venue.Name;
+            return result;
+        }
 
-            if (string.IsNullOrEmpty(result))
-            {
-                result = localizer("All day").Text;
-            }
+        public static string DisplayTime(this ShowVm show, CultureInfo culture)
+        {
+            var result = DisplayStartTime(show, culture) + DisplayEndTime(show, culture);
+            return result;
+        }
 
+        public static string DisplayStartTime(this ShowVm show, CultureInfo culture)
+        {
+            var result = show.StartTime.HasValue && show.EndTime.HasValue
+                ? show.StartTime.ToString("t", culture)
+                : string.Empty;
+            return result;
+        }
+
+        public static string DisplayEndTime(this ShowVm show, CultureInfo culture)
+        {
+            var result = (show.EndTime ?? show.StartTime).ToString("t", culture);
             return result;
         }
 

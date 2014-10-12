@@ -7,5 +7,6 @@
         public virtual EventMetadataRecord EventMetadataRecord { get; set; }
         public virtual int? SortOrder { get; set; }
         public virtual string Description { get; set; }
+        public virtual bool IsDeleted { get; set; }
     }
 }

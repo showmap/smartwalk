@@ -144,6 +144,8 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     ///     initItem: function(item) A handler to externally init an item state.
     ///     beforeEdit: function(item) A handler to run some logic before an item is edited.
     ///     beforeSave: function(item) A handler to run some logic before an item is saved.
+    ///     afterSave: function(item) A handler to run some logic after an item is saved.
+    ///     afterDelete: function(item) A handler to run some logic after an item is deleted.
     ///     itemView: A string id of the item view template.
     ///     itemEditView: A string id of the item edit template.
     ///     filterItem: function(item) A handler to filter items array.
@@ -235,6 +237,10 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
 
         self._allItems.destroy(item);
+
+        if (settings.afterDelete) {
+            settings.afterDelete();
+        }
     };
 
     self.cancelItem = function (item) {
@@ -279,6 +285,10 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         if (!item.errors || item.errors().length == 0) {
             self._previousItemData.remove(item);
             self._editingItems.remove(item);
+
+            if (settings.afterSave) {
+                settings.afterSave(item);
+            }
         } else {
             item.errors.showAllMessages();
         }

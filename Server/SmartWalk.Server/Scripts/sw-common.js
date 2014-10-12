@@ -367,6 +367,7 @@ function EventViewModel(data) {
     self.endDate = ko.observable();
     self.status = ko.observable();
     self.venueOrderType = ko.observable();
+    self.venueTitleFormatType = ko.observable();
     self.picture = ko.observable();
     self.combineType = ko.observable(data.combineType);
     self.description = ko.observable(data.description);
@@ -390,6 +391,7 @@ EventViewModel.prototype.loadData = function (eventData) {
     this.picture(eventData.Picture);
     this.combineType(eventData.CombineType);
     this.venueOrderType(eventData.VenueOrderType);
+    this.venueTitleFormatType(eventData.VenueTitleFormatType);
     this.description(eventData.Description);
     /*this.latitude(eventData.Latitude);
     this.longitude(eventData.Longitude);*/
@@ -407,6 +409,7 @@ EventViewModel.prototype.toJSON = function () {
         Id: this.id(),
         CombineType: this.combineType(),
         VenueOrderType: this.venueOrderType(),
+        VenueTitleFormatType: this.venueTitleFormatType(),
         Title: this.title(),
         StartDate: this.startDate()
             ? sw.convertToUTC(this.startDate()).toJSON() : undefined,
@@ -438,6 +441,11 @@ sw.vm.CombineType =
 sw.vm.VenueOrderType = {
     Name: 0,
     Custom: 1
+};
+
+sw.vm.VenueTitleFormatType = {
+    Name: 0,
+    NameAndNumber: 1
 };
 
 sw.vm.EventStatus =
@@ -590,13 +598,17 @@ sw.ext.displayDate = function (event) {
         (event.endDate() ? " - " + moment(event.endDate()).format("LL") : "");
 };
 
-sw.ext.displayTime = function (show, allDayStr) {
-    var result = (show.startTime() ? moment(show.startTime()).format("LT") : "") +
-        (show.endTime() ? " - " + moment(show.endTime()).format("LT") : "");
+sw.ext.displayTime = function (show) {
+    var result = sw.ext.displayStartTime(show) + sw.ext.displayEndTime(show);
+    return result;
+};
 
-    if (result == "") {
-        result = allDayStr;
-    }
+sw.ext.displayStartTime = function (show) {
+    var result = show.startTime() && show.endTime() ? moment(show.startTime()).format("LT") : "";
+    return result;
+};
 
+sw.ext.displayEndTime = function (show) {
+    var result = show.endTime() || show.startTime() ? moment(show.endTime() || show.startTime()).format("LT") : "";
     return result;
 };

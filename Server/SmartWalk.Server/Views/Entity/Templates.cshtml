@@ -12,7 +12,7 @@
 <script type="text/html" id="viewAddressTemplate">
     <tr>
 		<td data-bind="text: address() || ('(' + latitude() + ',' + longitude() + ')'), click: function () { if ($root.isEnabled()) $root.addressesManager.editItem($data) } "></td>
-		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.addressesManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+		<td class="td-align td-valign"><button type="button" class="action close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the address?")')) $root.addressesManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 
@@ -78,7 +78,7 @@
         <td data-bind="
             text: (title() ? title() + ': ' : '') + (contact() || ''), 
             click: function () { if ($root.isEnabled()) $root.contactsManager.editItem($data) }"></td>
-		<td class="td-align td-valign"><button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.contactsManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
+		<td class="td-align td-valign"><button type="button" class="action close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the contact?")')) $root.contactsManager.deleteItem($data); }"><span class="glyphicon glyphicon-remove"></span></button></td>
 	</tr>
 </script>
 

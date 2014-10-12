@@ -258,7 +258,7 @@ namespace SmartWalk.Server.Services.EventService
             }
         }
 
-        private static IList<EventMetadataVm> GetEvents(
+        private IList<EventMetadataVm> GetEvents(
             IQueryable<EventMetadataRecord> query, int pageNumber, int pageSize,
             SortType sort, bool isDesc = false,
             string searchString = null)
@@ -291,7 +291,7 @@ namespace SmartWalk.Server.Services.EventService
             return result;
         }
 
-        private static EventMetadataVm CreateViewModelContract(
+        private EventMetadataVm CreateViewModelContract(
             EventMetadataRecord eventMeta,
             int? day,
             LoadMode mode = LoadMode.Full)
@@ -311,7 +311,7 @@ namespace SmartWalk.Server.Services.EventService
             return result;
         }
 
-        private static IList<EntityVm> GetEventVenues(EventMetadataRecord eventMeta, int? day)
+        private IList<EntityVm> GetEventVenues(EventMetadataRecord eventMeta, int? day)
         {
             var range = new Tuple<DateTime?, DateTime?>(eventMeta.StartTime, eventMeta.EndTime);
             var currentDay =
@@ -364,7 +364,7 @@ namespace SmartWalk.Server.Services.EventService
             else if (eventMeta.VenueOrderType == (byte)VenueOrderType.Name)
             {
                 result = venues
-                    .OrderBy(v => v.Name)
+                    .OrderBy(v => v.Name, NameComparer)
                     .ToArray();
             }
             else

@@ -28,6 +28,7 @@ a.disabled {
     white-space: pre-line;
 }
 
+div.description,
 span.description,
 i.description {
 	color: #777;
@@ -124,6 +125,11 @@ textarea {
 	margin-top: 0;
 }
 
+.row .event-options .form-group {
+    display: inline-block;
+    margin-right: 15px; 
+}
+
 .table-content {
     margin-bottom: -5px;
 }
@@ -159,13 +165,17 @@ textarea {
     border-top-style: none;
 }
 
+.table .venue-margin {
+    height: 11px;
+}
+
 .table tr.venue a.bg-image {
     position: relative;
     overflow: hidden;
     width: 60px;
 	height: 60px;
 	float: left;
-	margin-right: 10px;
+    margin: 0 10px 8px 0;
     background-color: #ccc;
     text-decoration: none;
 }
@@ -194,9 +204,7 @@ textarea {
 }
 
 .table tr.venue h4 {
-    display: inline-block;
-	margin-top: 8px;
-    margin-bottom: 8px;
+    display: inline;
     word-wrap: break-word;
 }
 
@@ -205,15 +213,27 @@ textarea {
 }
 
 .table tr.venue address {
-	margin-bottom: 0;
     display: inline;
+}
+
+.table .venue-actions {
+    float: right;
+    margin: 8px 1px 0 10px;
 }
 
 .table tr.venue-show td.show-text {
     width: 100%;
 }
 
-.remove.close {
+.table td.show-start-time {
+    padding-right: 10px;
+}
+
+.table td.show-end-time {
+    padding-left: 0;
+}
+
+.action.close {
     font-size: 16px;
     margin-left: 8px;
     margin-right: 8px;
@@ -221,13 +241,13 @@ textarea {
     opacity: .5;
 }
 
-.remove.close:hover,
-.remove.close:focus {
+.action.close:hover,
+.action.close:focus {
     filter: alpha(opacity=90);
     opacity: .9;
 }
 
-.table .venue .remove.close {
+.table .venue .action.close {
     font-size: 21px;
     margin-right: 5px;
 }

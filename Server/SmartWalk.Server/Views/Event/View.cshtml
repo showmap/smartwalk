@@ -99,38 +99,39 @@
 {     
     <table class="table table-content">
         <thead>
-            <tr><th><h4>@T("Venues and Shows")</h4></th><th>@T("Time")</th></tr>
+            <tr><th><h4>@T("Venues and Shows")</h4></th><th class="td-align" colspan="2">@T("Time")</th></tr>
         </thead>
         <tbody>
         @foreach (var venue in Model.Venues)
         {
             <tr class="venue">
-                <td colspan="2" class="venue">
-                    <a class="bg-image" href="@Url.Action("View", "Venue", new { entityId = venue.Id })">
-                        <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
-                        <span class="abbr">@venue.Abbreviation</span>
-                    </a>
-                    <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.Name</h4></a>
-                @if (venue.HasAddresses())
-                {
-                    var address = venue.FirstAddress();
-                    <br />
-                    <address>@address.Address</address><i class="tip description">@address.Tip</i>
-                }            
-                    
+                <td colspan="4">
+                    <div class="clearfix">
+                        <a class="bg-image" href="@Url.Action("View", "Venue", new { entityId = venue.Id })">
+                            <img class="scale" data-scale="best-fill" data-align="center" src="@venue.Picture" />
+                            <span class="abbr">@venue.Abbreviation</span>
+                        </a>
+                        <div class="venue-margin hidden-xs"></div>
+                        <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.DisplayName(Model)</h4></a><br />
+                    @if (venue.HasAddresses())
+                    {
+                        var address = venue.FirstAddress();
+                        <address><span>@address.Address</span><i class="tip description">@address.Tip</i></address>
+                    }
+                    </div>
                 @if (venue.EventDetail != null && venue.EventDetail.Description != null)
                 {
-                    <br /><br />
-                    <span class="description">@Html.Raw(@venue.EventDetail.Description.ActivateLinks())</span>
+                    <div class="description">@Html.Raw(@venue.EventDetail.Description.ActivateLinks())</div>
                 }
-</td>
+                </td>
             </tr>
                 foreach (var show in venue.Shows)
                 {
             <tr class="venue-show">
                 <td class="show-text">@show.Title<br/>@if (@show.Description != null)
                     {<span class="description">@Html.Raw(show.Description.ActivateLinks())</span>}</td>                        
-                <td class="td-valign">@Html.Raw(@show.DisplayTime(culture, T).Replace(" ", "&nbsp;"))</td>
+                <td class="show-start-time">@Html.Raw(@show.DisplayStartTime(culture).Replace(" ", "&nbsp;"))</td>
+                <td class="show-end-time">@Html.Raw(@show.DisplayEndTime(culture).Replace(" ", "&nbsp;"))</td>
             </tr>   
                 }
         }                

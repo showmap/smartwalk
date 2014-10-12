@@ -6,8 +6,17 @@
     self.settings = settings;
     self.data = new EventViewModel(data);
 
+    self.actualVenues = function() {
+        var result = self.data.venues() 
+            ? $.grep(self.data.venues(),
+                function (venue) { return venue.id() > 0 && !venue._destroy; })
+            : [];
+        return result;
+    };
+
     EventViewModelExtended.setupAutocomplete(self);
     EventViewModelExtended.setupMultiday(self);
+    EventViewModelExtended.setupSorting(self);
     EventViewModelExtended.setupDialogs(self);
     
     self.venuesManager = new VmItemsManager(
@@ -30,9 +39,21 @@
                     EventViewModelExtended.setupVenueValidation(venue, self.settings);
                 }
             },
+            afterSave: function(venue) {
+                if (self.data.venueOrderType() == sw.vm.VenueOrderType.Custom) {
+                    venue.eventDetail().sortOrder(self.actualVenues().length);
+                }
+            },
+            afterDelete: function () {
+                if (self.data.venueOrderType() == sw.vm.VenueOrderType.Custom) {
+                    self.updateVenueDetailOrder();
+                }
+            },
             itemView: self.settings.eventVenueView,
             itemEditView: self.settings.eventVenueEditView
         });
+
+    self.sortVenues();
 
     self.createVenue = function () {
         $(self.settings.venueFormName).dialog("open");
@@ -262,6 +283,10 @@ EventViewModelExtended.setupVenueValidation = function(venue, settings) {
 };
 
 EventViewModelExtended.initVenueViewModel = function (venue, event) {
+    if (!venue.eventDetail()) {
+        venue.eventDetail(new EventEntityDetailViewModel({}));
+    }
+
     venue.autocompleteName = ko.pureComputed({
         read: function () { return venue.name() || null; },
         write: function() {}
@@ -283,21 +308,31 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.autocompleteName.extend({ notify: "always" });
     venue.name.extend({ notify: "always" });
 
-    venue.lazyEventDetail = function () {
-        if (!venue.eventDetail()) {
-            venue.eventDetail(new EventEntityDetailViewModel({}));
-        }
-
-        return venue.eventDetail();
-    };
-
     venue.eventDetailDescription = ko.pureComputed({
         read: function() {
-             return venue.eventDetail() ? venue.eventDetail().description() : null;
+             return venue.eventDetail().description();
         },
         write: function(value) {
-            venue.lazyEventDetail().description(value);
+            venue.eventDetail().description(value);
         }
+    });
+
+    venue.displayName = ko.computed(function () {
+        var number = null;
+
+        if (event.data.venueTitleFormatType() == sw.vm.VenueTitleFormatType.NameAndNumber) {
+            switch (event.data.venueOrderType()) {
+                case sw.vm.VenueOrderType.Name:
+                    number = event.actualVenues().indexOf(venue) + 1;
+                    break;
+
+                case sw.vm.VenueOrderType.Custom:
+                    number = venue.eventDetail().sortOrder();
+                    break;
+            }
+        }
+
+        return (number ? number + ". " : "") + venue.name();
     });
     
     venue.showsManager = new VmItemsManager(
@@ -312,7 +347,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             },
             filterItem: function (show) {
                 return show.isEditing() ||
-                    EventViewModelExtended.IsTimeThisDay(show.startTime(), event, 0);
+                    EventViewModelExtended.isTimeThisDay(show.startTime(), event, 0);
             },
             beforeEdit: function () {
                 event.venuesManager.cancelAll();
@@ -367,8 +402,7 @@ EventViewModelExtended.setupAutocomplete = function (event) {
             {
                 term: searchTerm,
                 excludeIds: self.data.venues()
-                    ? $.map(
-                        $.grep(self.data.venues(), function (venue) { return venue.id() > 0 && !venue._destroy; }),
+                    ? $.map(self.actualVenues(),
                         function (venue) { return venue.id(); })
                     : null
             },
@@ -440,7 +474,7 @@ EventViewModelExtended.setCurrentDate = function(event, startDate, day) {
     }
 };
 
-EventViewModelExtended.IsTimeThisDay = function(time, event, nightEdgeHour) {
+EventViewModelExtended.isTimeThisDay = function(time, event, nightEdgeHour) {
     if (!time || !event.currentDate()) return true; // if time is not set we asume it goes to all days
     
     if (nightEdgeHour != 0 && !nightEdgeHour) {
@@ -463,6 +497,67 @@ EventViewModelExtended.IsTimeThisDay = function(time, event, nightEdgeHour) {
 
     return result;
 };
+
+EventViewModelExtended.setupSorting = function (event) {
+    var self = event;
+
+    self.data.venueOrderType.subscribe(function (orderType) {
+        if (orderType == sw.vm.VenueOrderType.Custom) {
+            var isOrderEmpty = 
+                $.grep(self.actualVenues(),
+                    function (venue) { return !venue.eventDetail().sortOrder(); }).length > 0;
+            if (isOrderEmpty) {
+                self.updateVenueDetailOrder();
+            }
+        }
+
+        self.sortVenues();
+    });
+
+    self.sortVenues = function () {
+        switch (self.data.venueOrderType()) {
+            case sw.vm.VenueOrderType.Name:
+                self.data.venues.sort(function (left, right) {
+                    return left.name().localeCompare(right.name());
+                });
+                break;
+
+            case sw.vm.VenueOrderType.Custom:
+                self.data.venues.sort(function (left, right) {
+                    var leftNumber = left.eventDetail() && left.eventDetail().sortOrder()
+                        ? left.eventDetail().sortOrder() : 0;
+                    var rightNumber = right.eventDetail() && right.eventDetail().sortOrder()
+                        ? right.eventDetail().sortOrder() : 0;
+
+                    return leftNumber == rightNumber ? 0 : (leftNumber < rightNumber ? -1 : 1);
+                });
+                break;
+        }
+    };
+
+    self.updateVenueDetailOrder = function () {
+        var i = 1;
+        self.actualVenues().forEach(function (venue) {
+            venue.eventDetail().sortOrder(i++);
+        });
+    };
+
+    self.moveVenueUp = function (venue) {
+        var sortOrder = venue.eventDetail().sortOrder();
+        venue.eventDetail().sortOrder(sortOrder - 1.5);
+
+        self.sortVenues();
+        self.updateVenueDetailOrder();
+    };
+
+    self.moveVenueDown = function(venue) {
+        var sortOrder = venue.eventDetail().sortOrder();
+        venue.eventDetail().sortOrder(sortOrder + 1.5);
+
+        self.sortVenues();
+        self.updateVenueDetailOrder();        
+    };
+}
 
 EventViewModelExtended.setupDialogs = function (event) {
     var dialogOptions = {

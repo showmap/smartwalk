@@ -23,7 +23,7 @@
         visible: !isEditing() && 
             showsManager.items() && 
             showsManager.items().length > 8">
-        <td colspan="3">
+        <td colspan="4">
             <div class="add-venue-show"><a data-bind="click: function () { if ($root.isEnabled()) $data.showsManager.addItem(); }, css: {disabled: !$root.isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
         </td>
     </tr>
@@ -34,7 +34,7 @@
             showsManager.items() && 
             $.grep(showsManager.items(), function (show) { 
                 return show.isEditing() }).length == 0">
-        <td colspan="3">
+        <td colspan="4">
             <div class="add-venue-show"><a data-bind="click: function () { if ($root.isEnabled()) $data.showsManager.addItem(); }, css: {disabled: !$root.isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
         </td>
     </tr>
@@ -42,38 +42,59 @@
 
 <script type="text/html" id="eventVenueItemTemplate">
     <tr class="venue">
-        <td colspan="2">
-            <div data-bind="click: function() { if ($root.isEnabled()) $root.venuesManager.editItem($data) }">
-                <a class="bg-image" target="_blank" data-bind="attr: {href: '/venue/' + id()}">
+        <td colspan="4" data-bind="click: function() { if ($root.isEnabled()) $root.venuesManager.editItem($data) }">
+            <div class="clearfix">
+                <a class="bg-image">
                     <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }" alt="" />
                     <span class="abbr" data-bind="text: abbreviation()"></span>
                 </a>
-                <a target="_blank" data-bind="attr: {href: '/venue/' + id()}"><h4 data-bind="text: name"></h4></a>
-                <br />
-                <address data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></address>
-                <i class="tip description" data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].tip() : ''"></i>
-                <span data-bind="visible: eventDetailDescription"><br /><br /></span>
-                <span class="description" data-bind="text: eventDetailDescription"></span>
+
+                <div class="venue-actions">
+                    <button type="button" class="action close" data-bind="
+                            enable: $root.isEnabled(), 
+                            click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.venuesManager.deleteItem($data); }, 
+                            clickBubble: false">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+
+                    <button type="button" class="action close" data-bind="
+                            visible: $root.data.venueOrderType() == sw.vm.VenueOrderType.Custom &&
+                                $root.data.venues().indexOf($data) < $root.data.venues().length - 1,
+                            enable: $root.isEnabled(),
+                            click: $root.moveVenueDown.bind($data),
+                            clickBubble: false">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+
+                    <button type="button" class="action close" data-bind="
+                            visible: $root.data.venueOrderType() == sw.vm.VenueOrderType.Custom &&
+                                $root.data.venues().indexOf($data) > 0,
+                            enable: $root.isEnabled(),
+                            click: $root.moveVenueUp.bind($data),
+                            clickBubble: false">
+                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    </button>
+                </div>
+                
+                <div class="venue-margin hidden-xs"></div>
+                <a target="_blank" data-bind="attr: {href: '/venue/' + id()}, click: function() { return true; }, clickBubble: false"><h4 data-bind="text: displayName"></h4></a><br />
+                <address><span data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></span><i class="tip description" data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].tip() : ''"></i></address>
             </div>
-        </td>
-        <td class="td-align td-valign">
-            <button type="button" class="remove close" data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to remove this venue with all shows?")')) $root.venuesManager.deleteItem($data); }">
-                <span class="glyphicon glyphicon-remove"></span>
-            </button>
+            <div class="description" data-bind="text: eventDetailDescription, visible: eventDetailDescription"></div>
         </td>
     </tr>
 </script>
 
 <script type="text/html" id="eventVenueItemTemplateEdit">
     <tr>
-        <td colspan="3" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
+        <td colspan="4" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
             <div class="well">
                 <div class="row">
                     <div class="col-sm-8" data-bind="validationElement: id">
                         <div class="form-group">
                             <label for="venueComboBox">@T("Venue"):</label>
                             <div class="input-group">
-                                <input id="venueComboBox" class="form-control pull-left" placeholder="@T("Search venues...")" data-bind="
+                                <input id="venueComboBox" class="form-control pull-left" autofocus placeholder="@T("Search venues...")" data-bind="
                                             jqAuto: {
                                                 value: autocompleteName,
                                                 dataValue: autocompleteData,
@@ -116,15 +137,19 @@
 </script>
 
 <script type="text/html" id="showItemTemplate">
-    <tr class="venue-show">
-        <td class="show-text" data-bind="click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data) }">
+    <tr class="venue-show" data-bind="click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data) }">
+        <td class="show-text">
             <span data-bind="text: title"></span>
             <br/>
             <span class="description" data-bind="text: description"></span>
         </td>
-        <td class="td-valign" data-bind="html: sw.ext.displayTime($data, $root.settings.showMessages.allDayMessage).replace(/ /g, '&nbsp;'), click: function() { if ($root.isEnabled()) $parent.showsManager.editItem($data); }"></td>
-        <td class="td-align td-valign">
-            <button type="button" class="remove close" data-bind="enable: $root.isEnabled, click: function() { if(confirm('@T("Are you sure you want to remove show?")')) $parent.showsManager.deleteItem($data); }">
+        <td class="show-start-time" data-bind="html: sw.ext.displayStartTime($data).replace(/ /g, '&nbsp;')"></td>
+        <td class="show-end-time" data-bind="html: sw.ext.displayEndTime($data).replace(/ /g, '&nbsp;')"></td>
+        <td class="td-align">
+            <button type="button" class="action close" data-bind="
+                    enable: $root.isEnabled, 
+                    click: function() { if(confirm('@T("Are you sure you want to remove show?")')) $parent.showsManager.deleteItem($data); },
+                    clickBubble: false">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </td>
@@ -133,13 +158,13 @@
 
 <script type="text/html" id="showItemTemplateEdit">
     <tr>
-		<td colspan="3" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
+		<td colspan="4" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
 			<div class="well">							
 				<div class="row">
 					<div class="col-sm-8">
 						<div class="form-group" data-bind="validationElement: title">
 							<label for="titleTextInput">@T("Title"):</label>
-							<input type="text" class="form-control" id="titleTextInput" data-bind="value: title">
+							<input type="text" class="form-control" id="titleTextInput" autofocus data-bind="value: title">
 						</div>
 									
 						<div class="form-group">

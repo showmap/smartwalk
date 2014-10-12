@@ -29,6 +29,7 @@ namespace SmartWalk.Server.Records
         public virtual byte CombineType { get; set; }
         public virtual byte Status { get; set; }
         public virtual byte VenueOrderType { get; set; }
+        public virtual byte VenueTitleFormatType { get; set; }
         public virtual bool IsDeleted { get; set; }
 
         [UsedImplicitly]
@@ -71,6 +72,12 @@ namespace SmartWalk.Server.Records
     {
         Name = 0,
         Custom = 1
+    }
+
+    public enum VenueTitleFormatType
+    {
+        Name = 0,
+        NameAndNumber = 1
     }
 
     public enum CombineType
