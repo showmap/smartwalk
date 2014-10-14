@@ -223,8 +223,6 @@ EntityViewModelExtended.initAddressViewModel = function (address) {
         write: function (data) {
             if (data && data.geometry && data.geometry.location) {
                 address.mapPoint(ko.googleMap.toSWLatLng(data.geometry.location));
-            } else {
-                address.mapPoint(undefined);
             }
         }
     });
