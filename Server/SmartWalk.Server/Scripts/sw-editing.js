@@ -289,13 +289,13 @@ function VmItemsManager(allItems, createItemHandler, settings) {
             if (settings.afterSave) {
                 settings.afterSave(item);
             }
+
+            item.isEditing(false);
+            return true;
         } else {
             item.errors.showAllMessages();
+            return false;
         }
-
-        item.isEditing(false);
-
-        return true;
     };
 };
 

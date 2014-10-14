@@ -405,28 +405,38 @@ EventViewModel.prototype.loadData = function (eventData) {
 };
 
 EventViewModel.prototype.toJSON = function () {
-    var json = {
-        Id: this.id(),
-        CombineType: this.combineType(),
-        VenueOrderType: this.venueOrderType(),
-        VenueTitleFormatType: this.venueTitleFormatType(),
-        Title: this.title(),
-        StartDate: this.startDate()
-            ? sw.convertToUTC(this.startDate()).toJSON() : undefined,
-        EndDate: this.endDate()
-            ? sw.convertToUTC(this.endDate()).toJSON() : undefined,
-        Status: this.status(),
-        Picture: this.picture(),
-        Description: this.description(),
-        /*Latitude: this.latitude(),
-        Longitude: this.longitude(),*/
+    var self = this;
 
-        Host: this.host() ? this.host().toJSON.apply(this.host()) : undefined,
-        Venues: this.venues()
-            ? $.map(this.venues(), function (venue) { return venue.toJSON.apply(venue); })
+    var json = {
+        Id: self.id(),
+        CombineType: self.combineType(),
+        VenueOrderType: self.venueOrderType(),
+        VenueTitleFormatType: self.venueTitleFormatType(),
+        Title: self.title(),
+        StartDate: self.startDate()
+            ? sw.convertToUTC(self.startDate()).toJSON() : undefined,
+        EndDate: self.endDate()
+            ? sw.convertToUTC(self.endDate()).toJSON() : undefined,
+        Status: self.status(),
+        Picture: self.picture(),
+        Description: self.description(),
+        /*Latitude: self.latitude(),
+        Longitude: self.longitude(),*/
+
+        Host: self.host() ? self.host().toJSON.apply(self.host()) : undefined,
+        Venues: self.venues()
+            ? $.map(self.venues(),
+                function (venue) {
+                    if (self.venueOrderType() == sw.vm.VenueOrderType.Name &&
+                        venue.eventDetail()) {
+                        venue.eventDetail().sortOrder(undefined);
+                    }
+
+                    return venue.toJSON.apply(venue);
+                })
             : undefined,
 
-        Destroy: this._destroy
+        Destroy: self._destroy
     };
     return json;
 };
@@ -487,10 +497,12 @@ EntityViewModel.prototype.loadData = function (entityData) {
     this.picture(entityData.Picture);
     this.description(entityData.Description);
 
-    this.eventDetail(entityData.EventDetail
-        ? new EventEntityDetailViewModel(entityData.EventDetail)
-        : undefined);
-    
+    if (this.eventDetail()) {
+        this.eventDetail().loadData.apply(this.eventDetail(), [entityData.EventDetail || {}]);
+    } else {
+        this.eventDetail(new EventEntityDetailViewModel(entityData.EventDetail || {}));
+    }
+
     this.contacts(
         entityData.Contacts
             ? $.map(entityData.Contacts,

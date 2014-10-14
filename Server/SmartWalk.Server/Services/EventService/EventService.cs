@@ -150,15 +150,13 @@ namespace SmartWalk.Server.Services.EventService
 
             ViewModelFactory.UpdateByViewModel(eventMeta, eventVm, host);
 
-            foreach (var venueVm in eventVm.Venues)
+            var venues = CompressVenues(eventVm.Venues);
+            foreach (var venueVm in venues)
             {
                 var venue = _entityRepository.Get(venueVm.Id);
                 if (venue == null) continue;
 
-                if (!venueVm.Destroy)
-                {
-                    SaveVenueDetail(eventMeta, venue, venueVm);
-                }
+                SaveVenueDetail(eventMeta, venue, venueVm);
 
                 foreach (var showVm in venueVm.Shows)
                 {
@@ -233,6 +231,7 @@ namespace SmartWalk.Server.Services.EventService
             var entityDetail = eventMeta
                 .EventEntityDetailRecords
                 .FirstOrDefault(eedr => eedr.EntityRecord.Id == venueVm.Id);
+
             if (venueVm.EventDetail != null)
             {
                 entityDetail = entityDetail ?? new EventEntityDetailRecord
@@ -255,6 +254,11 @@ namespace SmartWalk.Server.Services.EventService
                 EntityService
                     .ViewModelFactory
                     .UpdateByViewModel(entityDetail, null);
+            }
+
+            if (entityDetail != null)
+            {
+                entityDetail.IsDeleted = venueVm.Destroy;
             }
         }
 
@@ -443,6 +447,24 @@ namespace SmartWalk.Server.Services.EventService
                 eventMeta.Latitude = 0;
                 eventMeta.Longitude = 0;
             }
+        }
+
+        private static IEnumerable<EntityVm> CompressVenues(IList<EntityVm> venues)
+        {
+            var alive = venues.Where(v => !v.Destroy).ToArray();
+            var destroyed = venues.Where(v => v.Destroy).ToList();
+
+            foreach (var venue in destroyed.ToArray())
+            {
+                // ReSharper disable once AccessToForEachVariableInClosure
+                if (alive.Any(v => v.Id == venue.Id))
+                {
+                    destroyed.Remove(venue);
+                }
+            }
+
+            var result = alive.Union(destroyed).ToArray();
+            return result;
         }
     }
 }

@@ -40,14 +40,14 @@ namespace SmartWalk.Server.Utils
             return eventMeta.Picture ?? (eventMeta.Host != null ? eventMeta.Host.Picture : null);
         }
 
-        public static string DisplayName(this EntityVm venue, EventMetadataVm eventMeta)
+        public static string DisplayNumber(this EntityVm venue, EventMetadataVm eventMeta)
         {
             var number = eventMeta.VenueTitleFormatType == VenueTitleFormatType.Name 
                 ? null
                 : (eventMeta.VenueOrderType == VenueOrderType.Name
                     ? eventMeta.Venues.IndexOf(venue) + 1
                     : (venue.EventDetail != null ? venue.EventDetail.SortOrder : null));
-            var result = (number.HasValue ? string.Format("{0}. ", number) : string.Empty) + venue.Name;
+            var result = number.HasValue ? string.Format("{0}. ", number) : string.Empty;
             return result;
         }
 

@@ -39,8 +39,8 @@
                     EventViewModelExtended.setupVenueValidation(venue, self.settings);
                 }
             },
-            afterSave: function(venue) {
-                if (self.data.venueOrderType() == sw.vm.VenueOrderType.Custom) {
+            afterSave: function (venue) {
+                if (!venue.eventDetail().sortOrder()) {
                     venue.eventDetail().sortOrder(self.actualVenues().length);
                 }
             },
@@ -271,7 +271,7 @@ EventViewModelExtended.setupVenueValidation = function(venue, settings) {
             }
         });
 
-    venue.eventDetailDescription
+    venue.eventDetail().description
         .extend({
             maxLength: {
                 params: 3000,
@@ -279,14 +279,10 @@ EventViewModelExtended.setupVenueValidation = function(venue, settings) {
             }
         });
 
-    venue.errors = ko.validation.group(venue);
+    venue.errors = ko.validation.group([venue.id, venue.eventDetail().description]);
 };
 
 EventViewModelExtended.initVenueViewModel = function (venue, event) {
-    if (!venue.eventDetail()) {
-        venue.eventDetail(new EventEntityDetailViewModel({}));
-    }
-
     venue.autocompleteName = ko.pureComputed({
         read: function () { return venue.name() || null; },
         write: function() {}
@@ -308,16 +304,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.autocompleteName.extend({ notify: "always" });
     venue.name.extend({ notify: "always" });
 
-    venue.eventDetailDescription = ko.pureComputed({
-        read: function() {
-             return venue.eventDetail().description();
-        },
-        write: function(value) {
-            venue.eventDetail().description(value);
-        }
-    });
-
-    venue.displayName = ko.computed(function () {
+    venue.number = ko.computed(function () {
         var number = null;
 
         if (event.data.venueTitleFormatType() == sw.vm.VenueTitleFormatType.NameAndNumber) {
@@ -332,7 +319,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             }
         }
 
-        return (number ? number + ". " : "") + venue.name();
+        return number ? number + ". " : "";
     });
     
     venue.showsManager = new VmItemsManager(
@@ -502,16 +489,11 @@ EventViewModelExtended.setupSorting = function (event) {
     var self = event;
 
     self.data.venueOrderType.subscribe(function (orderType) {
-        if (orderType == sw.vm.VenueOrderType.Custom) {
-            var isOrderEmpty = 
-                $.grep(self.actualVenues(),
-                    function (venue) { return !venue.eventDetail().sortOrder(); }).length > 0;
-            if (isOrderEmpty) {
-                self.updateVenueDetailOrder();
-            }
-        }
-
         self.sortVenues();
+
+        if (orderType == sw.vm.VenueOrderType.Custom) {
+            self.updateVenueDetailOrder();
+        }
     });
 
     self.sortVenues = function () {

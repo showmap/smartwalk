@@ -112,7 +112,8 @@
                             <span class="abbr">@venue.Abbreviation</span>
                         </a>
                         <div class="venue-margin hidden-xs"></div>
-                        <a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.DisplayName(Model)</h4></a><br />
+                        @{ var venueNumber = @venue.DisplayNumber(Model); }
+                        @if (venueNumber != string.Empty) {<h4>@venueNumber</h4>}<a href="@Url.Action("View", "Venue", new { entityId = venue.Id })"><h4>@venue.Name</h4></a><br />
                     @if (venue.HasAddresses())
                     {
                         var address = venue.FirstAddress();

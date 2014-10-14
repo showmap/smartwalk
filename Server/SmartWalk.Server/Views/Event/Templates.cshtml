@@ -77,10 +77,10 @@
                 </div>
                 
                 <div class="venue-margin hidden-xs"></div>
-                <a target="_blank" data-bind="attr: {href: '/venue/' + id()}, click: function() { return true; }, clickBubble: false"><h4 data-bind="text: displayName"></h4></a><br />
+                <h4 data-bind="text: number, visible: number"></h4><a target="_blank" data-bind="attr: {href: '/venue/' + id()}, click: function() { return true; }, clickBubble: false"><h4 data-bind="text: name"></h4></a><br />
                 <address><span data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].address() : ''"></span><i class="tip description" data-bind="text: addresses() && addresses().length > 0 ? addresses()[0].tip() : ''"></i></address>
             </div>
-            <div class="description" data-bind="text: eventDetailDescription, visible: eventDetailDescription"></div>
+            <div class="description" data-bind="text: eventDetail().description(), visible: eventDetail().description()"></div>
         </td>
     </tr>
 </script>
@@ -114,10 +114,10 @@
 									   							
                 <div class="row">			
                     <div class="col-sm-8">
-                        <div class="form-group" data-bind="validationElement: eventDetailDescription">
+                        <div class="form-group" data-bind="validationElement: eventDetail().description">
                             <label for="venueDescriptionTextArea">@T("Description"):</label>
                             <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("A short description of the event's details in this venue.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a>
-                            <textarea class="form-control" id="venueDescriptionTextArea" rows="4" data-bind="value: eventDetailDescription"></textarea>
+                            <textarea class="form-control" id="venueDescriptionTextArea" rows="4" data-bind="value: eventDetail().description"></textarea>
                         </div>
                     </div>
                 </div> 
