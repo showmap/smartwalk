@@ -7,5 +7,6 @@
         public const string GroupedEventMetadata = "GroupedEventMetadata";
         public const string Show = "Show";
         public const string Entity = "Entity";
+        public const string EventVenueDetail = "EventVenueDetail";
     }
 }

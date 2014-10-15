@@ -183,6 +183,7 @@ namespace SmartWalk.Server.Services.EventService
 
                     if (show != null)
                     {
+                        show.EntityRecord = venue; // in case if shows moved to another venue
                         ViewModelFactory.UpdateByViewModel(show, showVm);
                     }
                 }
@@ -191,6 +192,7 @@ namespace SmartWalk.Server.Services.EventService
                     !venueVm.Destroy && venueVm.Shows.Count(s => !s.Destroy) == 0);
             }
 
+            DestroyMissingVenues(eventMeta, venues);
             RecalcEventCoordinates(eventMeta);
 
             if (eventMeta.Id == 0)
@@ -248,17 +250,12 @@ namespace SmartWalk.Server.Services.EventService
                 {
                     eventMeta.EventEntityDetailRecords.Add(entityDetail);
                 }
+
+                entityDetail.IsDeleted = venueVm.Destroy;
             }
             else if (entityDetail != null)
             {
-                EntityService
-                    .ViewModelFactory
-                    .UpdateByViewModel(entityDetail, null);
-            }
-
-            if (entityDetail != null)
-            {
-                entityDetail.IsDeleted = venueVm.Destroy;
+                entityDetail.IsDeleted = true;
             }
         }
 
@@ -339,7 +336,7 @@ namespace SmartWalk.Server.Services.EventService
                     {
                         var venueDetail = eventMeta
                             .EventEntityDetailRecords
-                            .FirstOrDefault(eedr => eedr.EntityRecord.Id == e.Id);
+                            .FirstOrDefault(eedr => !eedr.IsDeleted && eedr.EntityRecord.Id == e.Id);
                         var venueVm = EntityService
                             .ViewModelFactory
                             .CreateViewModel(e, venueDetail);
@@ -449,7 +446,33 @@ namespace SmartWalk.Server.Services.EventService
             }
         }
 
-        private static IEnumerable<EntityVm> CompressVenues(IList<EntityVm> venues)
+        private void DestroyMissingVenues(EventMetadataRecord eventMeta, EntityVm[] venues)
+        {
+            var eventVenues = GetEventVenues(eventMeta, null);
+            var missingVenues = eventVenues
+                .Where(ev => venues.All(v => v.Id != ev.Id))
+                .ToArray();
+
+            foreach (var venueVm in missingVenues)
+            {
+                var venue = _entityRepository.Get(venueVm.Id);
+                if (venue == null) continue;
+
+                venueVm.Destroy = true;
+                SaveVenueDetail(eventMeta, venue, venueVm);
+            }
+
+            var missingVenueIds = missingVenues.Select(v => v.Id).ToArray();
+            var shows = eventMeta.ShowRecords.Where(s => missingVenueIds.Contains(s.EntityRecord.Id));
+
+            foreach (var show in shows)
+            {
+                show.IsDeleted = true;
+                show.DateModified = DateTime.UtcNow;
+            }
+        }
+
+        private static EntityVm[] CompressVenues(IList<EntityVm> venues)
         {
             var alive = venues.Where(v => !v.Destroy).ToArray();
             var destroyed = venues.Where(v => v.Destroy).ToList();

@@ -352,6 +352,22 @@ namespace SmartWalk.Server.Services.QueryService
                 }
             }
 
+            if (targetRecordType == typeof(EventEntityDetailRecord))
+            {
+                if (property == QueryContext.Instance.EventVenueDetailEvent)
+                {
+                    return QueryContext.Instance.EventVenueDetailEventMetadataRecord;
+                }
+            }
+
+            if (targetRecordType == typeof(EventEntityDetailRecord))
+            {
+                if (property == QueryContext.Instance.EventVenueDetailVenue)
+                {
+                    return QueryContext.Instance.EventVenueDetailEntityRecord;
+                }
+            }
+
             return property;
         }
     }

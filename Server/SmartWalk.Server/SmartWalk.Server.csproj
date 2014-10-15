@@ -270,6 +270,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Controllers\RedirectController.cs" />
+    <Compile Include="Models\DataContracts\EventVenueDetail.cs" />
     <Compile Include="Providers\CultureSelector.cs" />
     <Compile Include="Providers\JsonDotNetValueProviderFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

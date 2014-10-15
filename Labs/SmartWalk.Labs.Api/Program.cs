@@ -32,6 +32,9 @@ namespace SmartWalk.Labs.Api
                     });
             Console.WriteLine(json);
 
+            var eventId = 0;
+            var hostId = 0;
+
             using (var client = new WebClient())
             {
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
@@ -51,6 +54,11 @@ namespace SmartWalk.Labs.Api
                         .Cast<JObject>()
                         .Select(r => r.ToObject<EventMetadata>()).ToArray();
 
+                    eventId = eventMetadatas.Select(em => em.Id).FirstOrDefault();
+                    hostId = eventMetadatas
+                        .Select(em => em.Host.Select(h => h.Id).FirstOrDefault())
+                        .FirstOrDefault();
+
                     Console.WriteLine("EventMetadatas hash code: " + eventMetadatas.GetHashCode());
                 }
                 catch (Exception ex)
@@ -60,7 +68,7 @@ namespace SmartWalk.Labs.Api
             }
 
             Console.WriteLine("\nEvent View");
-            var eventViewRequest = RequestFactory.CreateEventViewRequest(36);
+            var eventViewRequest = RequestFactory.CreateEventViewRequest(eventId);
             json = JsonConvert.SerializeObject(
                 eventViewRequest,
                 new JsonSerializerSettings
@@ -88,8 +96,8 @@ namespace SmartWalk.Labs.Api
                 }
             }
 
-            Console.WriteLine("\nVenue View");
-            var venueViewRequest = RequestFactory.CreateVenueViewRequest(6, new[] { 220, 221, 222, 223, 224 });
+            Console.WriteLine("\nVenues View");
+            var venueViewRequest = RequestFactory.CreateVenuesViewRequest(eventId);
             json = JsonConvert.SerializeObject(
                 venueViewRequest,
                 new JsonSerializerSettings
@@ -118,7 +126,7 @@ namespace SmartWalk.Labs.Api
             }
 
             Console.WriteLine("\nHost View");
-            var hostViewRequest = RequestFactory.CreateHostViewRequest(513);
+            var hostViewRequest = RequestFactory.CreateHostViewRequest(hostId);
             json = JsonConvert.SerializeObject(
                 hostViewRequest,
                 new JsonSerializerSettings

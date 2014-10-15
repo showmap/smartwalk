@@ -35,13 +35,13 @@ namespace SmartWalk.Server.Services.QueryService
 	                        (SELECT EMR.*, ROW_NUMBER() OVER ({3}) as Row
                             FROM
 	                            (SELECT 
-		                            MAX(StartTime) AS StartTime, MAX(Id) AS Id
+		                            EntityRecord_Id AS HostId, MAX(StartTime) AS StartTime
 	                            FROM 
 		                            {0}
                                 {4}
 	                            GROUP BY EntityRecord_Id) EMRGroupped
                             INNER JOIN
-	                            {0} EMR ON EMRGroupped.Id = EMR.Id) EMR
+	                            {0} EMR ON EMRGroupped.HostId = EMR.EntityRecord_Id AND EMRGroupped.StartTime = EMR.StartTime) EMR
                         WHERE EMR.Row > {1} and EMR.Row <= {2}
                         {5}",
                         eventMetadataTableName,

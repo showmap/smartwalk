@@ -293,8 +293,14 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
         write: function (venueData) {
             var data = venueData || {};
 
+            // keeping current venue details for new venue
             if (venue.eventDetail()) {
                 data.EventDetail = venue.eventDetail().toJSON.apply(venue.eventDetail());
+            }
+
+            // keeping current shows for new venue
+            if (venue.shows()) {
+                data.Shows = $.map(venue.shows(), function (show) { return show.toJSON.apply(show); });
             }
 
             venue.loadData.apply(venue, [data]);
@@ -363,9 +369,7 @@ EventViewModelExtended.setupAutocomplete = function (event) {
     });
 
     self.autocompleteHostData = ko.pureComputed({
-        read: function () {
-            return self.data.host() ? self.data.host().toJSON.apply(self.data.host()) : null;
-        },
+        read: function () { return null; },
         write: function (hostData) {
             self.data.host(hostData && $.isPlainObject(hostData)
                 ? new EntityViewModel(hostData) : null);
@@ -389,8 +393,7 @@ EventViewModelExtended.setupAutocomplete = function (event) {
             {
                 term: searchTerm,
                 excludeIds: self.data.venues()
-                    ? $.map(self.actualVenues(),
-                        function (venue) { return venue.id(); })
+                    ? $.map(self.actualVenues(), function (venue) { return venue.id(); })
                     : null
             },
             self.settings.venueAutocompleteUrl,
@@ -506,12 +509,10 @@ EventViewModelExtended.setupSorting = function (event) {
 
             case sw.vm.VenueOrderType.Custom:
                 self.data.venues.sort(function (left, right) {
-                    var leftNumber = left.eventDetail() && left.eventDetail().sortOrder()
-                        ? left.eventDetail().sortOrder() : 0;
-                    var rightNumber = right.eventDetail() && right.eventDetail().sortOrder()
-                        ? right.eventDetail().sortOrder() : 0;
+                    var leftNum = (left.eventDetail() && left.eventDetail().sortOrder()) || 0;
+                    var rightNum = (right.eventDetail() && right.eventDetail().sortOrder()) || 0;
 
-                    return leftNumber == rightNumber ? 0 : (leftNumber < rightNumber ? -1 : 1);
+                    return leftNum == rightNum ? 0 : (leftNum < rightNum ? -1 : 1);
                 });
                 break;
         }
@@ -615,7 +616,7 @@ EventViewModelExtended.setupDialogs = function (event) {
                         var editingVenue = $.grep(event.data.venues(),
                             function (item) { return item.isEditing(); })[0];
                         if (editingVenue) {
-                            editingVenue.loadData.apply(editingVenue, [entityData]);
+                            editingVenue.autocompleteData(entityData);
                             $(dialog).dialog("close");
                         }
                     });

@@ -102,10 +102,9 @@
                                                 inputProp: 'Name',
                                                 template: 'autocompleteEntityItemTemplate'
                                             },
-                                            validationTag: id,
-                                            enable: !shows() || shows().length == 0" />
+                                            validationTag: id" />
                                 <span class="input-group-btn">
-                                    <button type="button" id="createVenueButton" class="btn btn-default" data-bind="click: $root.createVenue, enable: !shows() || shows().length == 0">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
+                                    <button type="button" id="createVenueButton" class="btn btn-default" data-bind="click: $root.createVenue">@T("Create <span class=\"hidden-xs\"> Venue</span>")...</button>
                                 </span>
                             </div>
                         </div>

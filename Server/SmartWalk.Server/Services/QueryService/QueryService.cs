@@ -21,18 +21,22 @@ namespace SmartWalk.Server.Services.QueryService
 
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
+        private readonly IRepository<EventEntityDetailRecord> _eventEntityDetailRepository;
         private readonly IRepository<ShowRecord> _showRepository;
 
         private readonly ISessionLocator _sessionLocator;
 
         public QueryService(
             IRepository<EventMetadataRecord> eventMetadataRepository,
-            ISessionLocator sessionLocator, ShellSettings shellSettings,
+            ISessionLocator sessionLocator,
+            ShellSettings shellSettings,
             IRepository<EntityRecord> entityRepository,
+            IRepository<EventEntityDetailRecord> eventEntityDetailRepository,
             IRepository<ShowRecord> showRepository)
         {
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
+            _eventEntityDetailRepository = eventEntityDetailRepository;
             _showRepository = showRepository;
 
             _sessionLocator = sessionLocator;
@@ -143,6 +147,20 @@ namespace SmartWalk.Server.Services.QueryService
                     .ToArray();
                 var dataContracts = records
                     .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
+                    .ToArray();
+                return dataContracts;
+            }
+
+            if (select.From.EqualsIgnoreCase(RequestSelectFromTables.EventVenueDetail))
+            {
+                var queryable = GenericQueryFactory.CreateQuery(_eventEntityDetailRepository.Table, select, results);
+                var records = queryable
+                    .Where(r => !r.IsDeleted)
+                    .OrderBy(select)
+                    .Take(DefaultEntitiesLimit)
+                    .ToArray();
+                var dataContracts = records
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
                     .ToArray();
                 return dataContracts;
             }

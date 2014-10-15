@@ -92,6 +92,19 @@ namespace SmartWalk.Server.Services.QueryService
             EntityAddresses =
                 Reflection<Entity>.GetProperty(p => p.Addresses).Name;
 
+            EventVenueDetailVenue =
+                Reflection<EventVenueDetail>.GetProperty(p => p.Venue).Name;
+            EventVenueDetailEntityRecord =
+                Reflection<EventEntityDetailRecord>.GetProperty(p => p.EntityRecord).Name;
+            EventVenueDetailEvent =
+                Reflection<EventVenueDetail>.GetProperty(p => p.Event).Name;
+            EventVenueDetailEventMetadataRecord =
+                Reflection<EventEntityDetailRecord>.GetProperty(p => p.EventMetadataRecord).Name;
+            EventVenueDetailSortOrder =
+                Reflection<EventVenueDetail>.GetProperty(p => p.SortOrder).Name;
+            EventVenueDetailDescription =
+                Reflection<EventVenueDetail>.GetProperty(p => p.Description).Name;
+
             ShowVenue =
                 Reflection<Show>.GetProperty(p => p.Venue).Name;
             ShowEntityRecord =
@@ -140,6 +153,13 @@ namespace SmartWalk.Server.Services.QueryService
         public string EntityPicture { get; private set; }
         public string EntityContacts { get; private set; }
         public string EntityAddresses { get; private set; }
+
+        public string EventVenueDetailVenue { get; private set; }
+        public string EventVenueDetailEntityRecord { get; private set; }
+        public string EventVenueDetailEvent { get; private set; }
+        public string EventVenueDetailEventMetadataRecord { get; private set; }
+        public string EventVenueDetailSortOrder { get; private set; }
+        public string EventVenueDetailDescription { get; private set; }
 
         public string ShowVenue { get; private set; }
         public string ShowEntityRecord { get; private set; }

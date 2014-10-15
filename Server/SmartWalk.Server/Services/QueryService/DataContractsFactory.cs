@@ -74,6 +74,7 @@ namespace SmartWalk.Server.Services.QueryService
                 {
                     result.Shows =
                         record.ShowRecords
+                              .Where(s => !s.IsDeleted)
                               .Select(mr => new Reference
                                   {
                                       Id = mr.Id,
@@ -125,6 +126,35 @@ namespace SmartWalk.Server.Services.QueryService
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityAddresses))
                 {
                     result.Addresses = record.AddressRecords.Select(CreateDataContract).ToArray();
+                }
+            }
+
+            return result;
+        }
+
+        public static EventVenueDetail CreateDataContract(
+            EventEntityDetailRecord record,
+            string[] fields,
+            string[] storages)
+        {
+            var result = new EventVenueDetail();
+
+            if (fields != null)
+            {
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventVenueDetailVenue) &&
+                    record.EntityRecord != null)
+                {
+                    result.Venue = GetEntityReferences(record.EntityRecord, storages);
+                }
+
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventVenueDetailSortOrder))
+                {
+                    result.SortOrder = record.SortOrder;
+                }
+
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventVenueDetailDescription))
+                {
+                    result.Description = record.Description;
                 }
             }
 

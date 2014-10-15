@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SmartWalk.Shared.DataContracts;
+﻿using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.DataContracts.Api;
 
 namespace SmartWalk.Labs.Api
@@ -14,8 +13,8 @@ namespace SmartWalk.Labs.Api
                         {
                             new RequestSelect
                                 {
-                                    Offset = 1,
-                                    Fetch = 3,
+                                    Offset = 0,
+                                    Fetch = 5,
                                     Fields = new[] {"host", "title", "picture", "startTime", "latitude", "longitude"},
                                     From = RequestSelectFromTables.GroupedEventMetadata.ToLowerInvariant(),
                                     As = "em",
@@ -124,13 +123,6 @@ namespace SmartWalk.Labs.Api
                                                             SelectName = "s"
                                                         }
                                                 }
-                                        },
-                                    SortBy = new[]
-                                        {
-                                            new RequestSelectSortBy
-                                                {
-                                                    Field = "name"
-                                                }
                                         }
                                 }
                         },
@@ -140,12 +132,58 @@ namespace SmartWalk.Labs.Api
             return result;
         }
 
-        public static Request CreateVenueViewRequest(int venueId, int[] showIds)
+        public static Request CreateVenuesViewRequest(int eventId)
         {
             var result = new Request
                 {
                     Selects = new[]
                         {
+                            new RequestSelect
+                                {
+                                    Fields = new[] {"Shows"},
+                                    From = RequestSelectFromTables.EventMetadata,
+                                    As = "em",
+                                    Where = new[]
+                                        {
+                                            new RequestSelectWhere
+                                                {
+                                                    Field = "Id",
+                                                    Operator = RequestSelectWhereOperators.EqualsTo,
+                                                    Value = eventId
+                                                }
+                                        }
+                                },
+                            new RequestSelect
+                                {
+                                    Fields = new[]
+                                        {
+                                            "Venue", "IsReference", "Title",
+                                            "Description", "StartTime", "EndTime",
+                                            "Picture", "DetailsUrl"
+                                        },
+                                    From = RequestSelectFromTables.Show,
+                                    As = "s",
+                                    Where = new[]
+                                        {
+                                            new RequestSelectWhere
+                                                {
+                                                    Field = "Id",
+                                                    Operator = RequestSelectWhereOperators.EqualsTo,
+                                                    SelectValue = new RequestSelectWhereSelectValue
+                                                        {
+                                                            Field = "Shows.Id",
+                                                            SelectName = "em"
+                                                        }
+                                                }
+                                        },
+                                    SortBy = new[]
+                                        {
+                                            new RequestSelectSortBy
+                                                {
+                                                    Field = "StartTime"
+                                                }
+                                        }
+                                },
                             new RequestSelect
                                 {
                                     Fields = new[] {"Name", "Description", "Picture", "Contacts", "Addresses"},
@@ -156,26 +194,47 @@ namespace SmartWalk.Labs.Api
                                                 {
                                                     Field = "Id",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Value = venueId
+                                                    SelectValue = new RequestSelectWhereSelectValue
+                                                        {
+                                                            Field = "Venue.Id",
+                                                            SelectName = "s"
+                                                        }
+                                                }
+                                        },
+                                    SortBy = new[]
+                                        {
+                                            new RequestSelectSortBy
+                                                {
+                                                    Field = "name"
                                                 }
                                         }
                                 },
                             new RequestSelect
                                 {
-                                    Fields =
-                                        new[] {"Title", "Description", "StartTime", "EndTime", "Picture", "DetailsUrl"},
-                                    From = RequestSelectFromTables.Show,
+                                    Fields = new[] {"Venue", "SortOrder", "Description"},
+                                    From = RequestSelectFromTables.EventVenueDetail,
                                     Where = new[]
                                         {
                                             new RequestSelectWhere
                                                 {
-                                                    Field = "Id",
+                                                    Field = "Event.Id",
                                                     Operator = RequestSelectWhereOperators.EqualsTo,
-                                                    Values = showIds.Cast<object>().ToArray()
+                                                    Value = eventId
+                                                },
+                                            new RequestSelectWhere
+                                                {
+                                                    Field = "Venue.Id",
+                                                    Operator = RequestSelectWhereOperators.EqualsTo,
+                                                    SelectValue = new RequestSelectWhereSelectValue
+                                                        {
+                                                            Field = "Venue.Id",
+                                                            SelectName = "s"
+                                                        }
                                                 }
                                         }
                                 }
-                        }
+                        },
+                    Storages = new[] {Storage.SmartWalk}
                 };
 
             return result;
