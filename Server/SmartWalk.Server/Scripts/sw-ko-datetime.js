@@ -205,23 +205,27 @@ ko.datetime.onChangeTime = function (args) {
     observable(newTime);
 };
 
-ko.datetime.updateDate = function (element, value) {
-    var current = $(element).datepicker("getDate");
+ko.datetime.updateDatePickerWithValue = function (element, value, restoreDate) {
+    if (typeof restoreDate === "undefined" || restoreDate === null)
+        restoreDate = false;
+
+    var current = restoreDate
+        ? ko.datetimeUtil.restoreDate($(element).datepicker("getDate"), value)
+        : $(element).datepicker("getDate");
+
     if (current - value !== 0) {
-        $(element).unbind("change", ko.datetime.onChangeDate);
+        $(element).datepicker('disable');
         $(element).datepicker("setDate", value);
-        $(element).bind("change", ko.datetime.onChangeDate);
+        $(element).datepicker('enable');
     }
 };
 
+ko.datetime.updateDate = function (element, value) {
+    ko.datetime.updateDatePickerWithValue(element, value);
+};
+
 ko.datetime.updateTime = function (element, value) {
-    var current = $(element).datepicker("getDate");
-    current = ko.datetimeUtil.restoreDate(current, value);
-    if (current - value !== 0) {
-        $(element).unbind("change", ko.datetime.onChangeTime);
-        $(element).datepicker("setDate", value);
-        $(element).bind("change", ko.datetime.onChangeTime);
-    }
+    ko.datetime.updateDatePickerWithValue(element, value, true);
 };
 
 ko.datetime.dispose = function (element, onChangeHandler) {
