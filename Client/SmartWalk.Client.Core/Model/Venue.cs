@@ -19,6 +19,8 @@ namespace SmartWalk.Client.Core.Model
             get { return _entity; }
         }
 
+        public int? EventSortOrder { get; set; }
+        public string EventDescription { get; set; }
         public Show[] Shows { get; set; }
 
         public override bool Equals(object obj)
@@ -27,7 +29,9 @@ namespace SmartWalk.Client.Core.Model
             if (venue != null)
             {
                 return Equals(_entity, venue._entity) &&
-                    Shows.EnumerableEquals(venue.Shows);
+                    Shows.EnumerableEquals(venue.Shows) &&
+                    EventSortOrder == venue.EventSortOrder &&
+                    EventDescription == venue.EventDescription;
             }
 
             return false;
@@ -37,15 +41,18 @@ namespace SmartWalk.Client.Core.Model
         {
             return HashCode.Initial
                     .CombineHashCode(_entity.GetHashCode())
-                    .CombineHashCodeOrDefault(Shows);
+                    .CombineHashCodeOrDefault(Shows)
+                    .CombineHashCode(EventSortOrder)
+                    .CombineHashCodeOrDefault(EventDescription);
         }
 
         public override string ToString()
         {
             return string.Format(
-                "Id={0}, ShowsCount={1}", 
+                "Id={0}, ShowsCount={1}, Order={2}", 
                 Info.Id, 
-                Shows != null ? Shows.Length : 0);
+                Shows != null ? Shows.Length : 0,
+                EventSortOrder ?? 0);
         }
     }
 }

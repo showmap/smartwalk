@@ -86,16 +86,24 @@ namespace SmartWalk.Client.Core.Services
                     .Select(s => s.ToObject<Show>())
                     .ToArray();
 
-                var venues = response
+                var venueDetails = response
                     .Data
                     .Selects[2].Records
+                    .Cast<JObject>()
+                    .Select(s => s.ToObject<EventVenueDetail>())
+                    .ToArray();
+
+                var venues = response
+                    .Data
+                    .Selects[3].Records
                     .Cast<JObject>()
                     .Select(e =>
                         {
                             var entity = e.ToObject<Entity>();
-                            var venue = CreateVenue(entity, shows);
+                            var venue = CreateVenue(entity, venueDetails, shows);
                             return venue;
                         })
+                    .OrderBy(eventMetadata.VenueOrderType)
                     .ToArray();
 
                 var orgEvent = new OrgEvent(eventMetadata, null, venues);
@@ -117,6 +125,13 @@ namespace SmartWalk.Client.Core.Services
 
             if (response != null && response.Data != null)
             {
+                var eventMetadata = response
+                    .Data
+                    .Selects[0].Records
+                    .Cast<JObject>()
+                    .Select(em => em.ToObject<EventMetadata>())
+                    .FirstOrDefault();
+
                 var shows = response
                     .Data
                     .Selects[1].Records
@@ -124,16 +139,24 @@ namespace SmartWalk.Client.Core.Services
                     .Select(s => s.ToObject<Show>())
                     .ToArray();
 
-                var venues = response
+                var venueDetails = response
                     .Data
                     .Selects[2].Records
+                    .Cast<JObject>()
+                    .Select(s => s.ToObject<EventVenueDetail>())
+                    .ToArray();
+
+                var venues = response
+                    .Data
+                    .Selects[3].Records
                     .Cast<JObject>()
                     .Select(e =>
                         {
                             var entity = e.ToObject<Entity>();
-                            var venue = CreateVenue(entity, shows);
+                            var venue = CreateVenue(entity, venueDetails, shows);
                             return venue;
                         })
+                    .OrderBy(eventMetadata.VenueOrderType)
                     .ToArray();
 
                 result = new ApiResult<Venue[]> {
@@ -255,10 +278,12 @@ namespace SmartWalk.Client.Core.Services
                     : string.Empty);
         }
 
-        private static Venue CreateVenue(Entity entity, Show[] shows)
+        private static Venue CreateVenue(Entity entity, EventVenueDetail[] details, Show[] shows)
         {
             entity.Type = EntityType.Venue; // saving a bit traffic here
 
+            var venueDetail = details
+                .FirstOrDefault(d => d.Venue.Id() == entity.Id);
             var venueShows = 
                 shows
                     .Where(
@@ -268,6 +293,8 @@ namespace SmartWalk.Client.Core.Services
                     .ToArray();
             var result = new Venue(entity) 
                 { 
+                    EventSortOrder = venueDetail != null ? venueDetail.SortOrder : null,
+                    EventDescription = venueDetail != null ? venueDetail.Description : null,
                     Shows = venueShows.Length > 0 ? venueShows : null
                 };
             return result;

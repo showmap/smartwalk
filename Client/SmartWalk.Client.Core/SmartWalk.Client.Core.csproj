@@ -109,6 +109,7 @@
     <Compile Include="Services\IDeeplinkingService.cs" />
     <Compile Include="Services\IMvxExtendedViewPresenter.cs" />
     <Compile Include="ViewModels\Interfaces\ITitleAware.cs" />
+    <Compile Include="Model\DataContracts\EventVenueDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

@@ -57,7 +57,9 @@ namespace SmartWalk.Client.Core.Services
             var request = new Request {
                 Selects = new[] {
                     new RequestSelect {
-                        Fields = new[] { "Host", "StartTime", "EndTime", "Shows" },
+                        Fields = new[] { "Host", "StartTime", "EndTime", 
+                            "VenueOrderType", "VenueTitleFormatType", "Shows"
+                        },
                         From = RequestSelectFromTables.EventMetadata,
                         As = "em",
                         Where = new[] {
@@ -93,6 +95,25 @@ namespace SmartWalk.Client.Core.Services
                         }
                     },
                     new RequestSelect {
+                        Fields = new[] { "Venue", "SortOrder" },
+                        From = RequestSelectFromTables.EventVenueDetail,
+                        Where = new[] {
+                            new RequestSelectWhere {
+                                Field = "Event.Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                Value = id
+                            },
+                            new RequestSelectWhere {
+                                Field = "Venue.Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                SelectValue = new RequestSelectWhereSelectValue {
+                                    Field = "Venue.Id",
+                                    SelectName = "s"
+                                }
+                            }
+                        }
+                    },
+                    new RequestSelect {
                         Fields = new[] { "Name", "Picture", "Addresses" },
                         From = RequestSelectFromTables.Entity,
                         Where = new[] {
@@ -103,11 +124,6 @@ namespace SmartWalk.Client.Core.Services
                                     Field = "Venue.Id",
                                     SelectName = "s"
                                 }
-                            }
-                        },
-                        SortBy = new[] {
-                            new RequestSelectSortBy {
-                                Field = "Name"
                             }
                         }
                     }
@@ -161,7 +177,7 @@ namespace SmartWalk.Client.Core.Services
             var request = new Request {
                 Selects = new[] {
                     new RequestSelect {
-                        Fields = new[] { "Shows" },
+                        Fields = new[] { "VenueOrderType", "VenueTitleFormatType", "Shows" },
                         From = RequestSelectFromTables.EventMetadata,
                         As = "em",
                         Where = new[] {
@@ -197,6 +213,25 @@ namespace SmartWalk.Client.Core.Services
                         }
                     },
                     new RequestSelect {
+                        Fields = new[] { "Venue", "SortOrder", "Description" },
+                        From = RequestSelectFromTables.EventVenueDetail,
+                        Where = new[] {
+                            new RequestSelectWhere {
+                                Field = "Event.Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                Value = id
+                            },
+                            new RequestSelectWhere {
+                                Field = "Venue.Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                SelectValue = new RequestSelectWhereSelectValue {
+                                    Field = "Venue.Id",
+                                    SelectName = "s"
+                                }
+                            }
+                        }
+                    },
+                    new RequestSelect {
                         Fields = new[] { "Name", "Description", "Picture", "Contacts", "Addresses" },
                         From = RequestSelectFromTables.Entity,
                         Where = new[] {
@@ -207,11 +242,6 @@ namespace SmartWalk.Client.Core.Services
                                     Field = "Venue.Id",
                                     SelectName = "s"
                                 }
-                            }
-                        },
-                        SortBy = new[] {
-                            new RequestSelectSortBy {
-                                Field = "name"
                             }
                         }
                     }

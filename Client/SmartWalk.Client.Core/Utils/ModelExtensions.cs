@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SmartWalk.Shared.DataContracts;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
-using System.Collections.Generic;
-using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.Utils
 {
@@ -151,6 +151,33 @@ namespace SmartWalk.Client.Core.Utils
                 ? refs.FirstOrDefault(r => r.Storage == Storage.SmartWalk) 
                 : null;
             return smartWalkRef != null ? smartWalkRef.Id : 0;
+        }
+
+        public static Venue[] OrderBy(this IEnumerable<Venue> venues, VenueOrderType? orderType)
+        {
+            Venue[] result;
+
+            if (orderType == VenueOrderType.Custom)
+            {
+                result = venues
+                    .OrderBy(v =>
+                        v.EventSortOrder != null
+                            ? v.EventSortOrder.Value
+                            : 0)
+                    .ToArray();
+            }
+            else if (orderType == VenueOrderType.Name)
+            {
+                result = venues
+                    .OrderBy(v => v.Info.Name, StringComparer.CurrentCulture)
+                    .ToArray();
+            }
+            else
+            {
+                result = venues.ToArray();
+            }
+
+            return result;
         }
 
         public static string GetDateString(this OrgEvent orgEvent)
