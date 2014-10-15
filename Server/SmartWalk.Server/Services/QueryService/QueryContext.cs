@@ -58,6 +58,10 @@ namespace SmartWalk.Server.Services.QueryService
                 Reflection<EventMetadataRecord>.GetProperty(p => p.Longitude).Name;
             EventMetadataCombineType =
                 Reflection<EventMetadataRecord>.GetProperty(p => p.CombineType).Name;
+            EventMetadataVenueOrderType =
+                Reflection<EventMetadataRecord>.GetProperty(p => p.VenueOrderType).Name;
+            EventMetadataVenueTitleFormatType =
+                Reflection<EventMetadataRecord>.GetProperty(p => p.VenueTitleFormatType).Name;
             EventMetadataShows =
                 Reflection<EventMetadata>.GetProperty(p => p.Shows).Name;
 
@@ -144,6 +148,8 @@ namespace SmartWalk.Server.Services.QueryService
         public string EventMetadataLatitude { get; private set; }
         public string EventMetadataLongitude { get; private set; }
         public string EventMetadataCombineType { get; private set; }
+        public string EventMetadataVenueOrderType { get; private set; }
+        public string EventMetadataVenueTitleFormatType { get; private set; }
         public string EventMetadataShows { get; private set; }
         public string[] EventMetadataProperties { get; private set; }
 

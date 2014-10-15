@@ -5,6 +5,8 @@ using SmartWalk.Server.Records;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 using CombineType = SmartWalk.Shared.DataContracts.CombineType;
+using VenueOrderType = SmartWalk.Shared.DataContracts.VenueOrderType;
+using VenueTitleFormatType = SmartWalk.Shared.DataContracts.VenueTitleFormatType;
 using ContactType = SmartWalk.Shared.DataContracts.ContactType;
 using EntityType = SmartWalk.Shared.DataContracts.EntityType;
 
@@ -68,6 +70,16 @@ namespace SmartWalk.Server.Services.QueryService
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataCombineType))
                 {
                     result.CombineType = (CombineType)record.CombineType;
+                }
+
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataVenueOrderType))
+                {
+                    result.VenueOrderType = (VenueOrderType)record.VenueOrderType;
+                }
+
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataVenueTitleFormatType))
+                {
+                    result.VenueTitleFormatType = (VenueTitleFormatType)record.VenueTitleFormatType;
                 }
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataShows))

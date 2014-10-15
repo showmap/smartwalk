@@ -70,7 +70,8 @@ namespace SmartWalk.Labs.Api
                         {
                             new RequestSelect
                                 {
-                                    Fields = new[] {"Host", "Title", "StartTime", "Shows"},
+                                    Fields = new[] {"Host", "Title", "StartTime", 
+                                        "VenueOrderType", "VenueTitleFormatType", "Shows"},
                                     From = RequestSelectFromTables.EventMetadata,
                                     As = "em",
                                     Where = new[]

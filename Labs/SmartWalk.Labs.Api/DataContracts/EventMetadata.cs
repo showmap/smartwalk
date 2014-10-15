@@ -15,6 +15,8 @@ namespace SmartWalk.Labs.Api.DataContracts
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public CombineType? CombineType { get; set; }
+        public VenueOrderType? VenueOrderType { get; set; }
+        public VenueTitleFormatType? VenueTitleFormatType { get; set; }
         public Reference[] Shows { get; set; }
 
         IReference[] IEventMetadata.Host

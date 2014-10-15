@@ -14,6 +14,8 @@ namespace SmartWalk.Shared.DataContracts
         double? Latitude { get; set; }
         double? Longitude { get; set; }
         CombineType? CombineType { get; set; }
+        VenueOrderType? VenueOrderType { get; set; }
+        VenueTitleFormatType? VenueTitleFormatType { get; set; }
         IReference[] Shows { get; set; } 
     }
 }
