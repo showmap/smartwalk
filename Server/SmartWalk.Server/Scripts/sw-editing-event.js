@@ -311,19 +311,9 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.name.extend({ notify: "always" });
 
     venue.number = ko.computed(function () {
-        var number = null;
-
-        if (event.data.venueTitleFormatType() == sw.vm.VenueTitleFormatType.NameAndNumber) {
-            switch (event.data.venueOrderType()) {
-                case sw.vm.VenueOrderType.Name:
-                    number = event.actualVenues().indexOf(venue) + 1;
-                    break;
-
-                case sw.vm.VenueOrderType.Custom:
-                    number = venue.eventDetail().sortOrder();
-                    break;
-            }
-        }
+        var number = event.data.venueTitleFormatType() == sw.vm.VenueTitleFormatType.NameAndNumber
+            ? event.actualVenues().indexOf(venue) + 1
+            : null;
 
         return number ? number + ". " : "";
     });

@@ -42,11 +42,9 @@ namespace SmartWalk.Server.Utils
 
         public static string DisplayNumber(this EntityVm venue, EventMetadataVm eventMeta)
         {
-            var number = eventMeta.VenueTitleFormatType == VenueTitleFormatType.Name 
-                ? null
-                : (eventMeta.VenueOrderType == VenueOrderType.Name
-                    ? eventMeta.Venues.IndexOf(venue) + 1
-                    : (venue.EventDetail != null ? venue.EventDetail.SortOrder : null));
+            var number = eventMeta.VenueTitleFormatType == VenueTitleFormatType.NameAndNumber
+                ? eventMeta.Venues.IndexOf(venue) + 1
+                : (int?)null;
             var result = number.HasValue ? string.Format("{0}. ", number) : string.Empty;
             return result;
         }
