@@ -103,7 +103,7 @@ namespace SmartWalk.Client.Core.Services
                             var venue = CreateVenue(entity, venueDetails, shows);
                             return venue;
                         })
-                    .OrderBy(eventMetadata.VenueOrderType)
+                    .OrderBy(venueDetails, eventMetadata.VenueOrderType)
                     .ToArray();
 
                 var orgEvent = new OrgEvent(eventMetadata, null, venues);
@@ -156,7 +156,7 @@ namespace SmartWalk.Client.Core.Services
                             var venue = CreateVenue(entity, venueDetails, shows);
                             return venue;
                         })
-                    .OrderBy(eventMetadata.VenueOrderType)
+                    .OrderBy(venueDetails, eventMetadata.VenueOrderType)
                     .ToArray();
 
                 result = new ApiResult<Venue[]> {
@@ -278,11 +278,11 @@ namespace SmartWalk.Client.Core.Services
                     : string.Empty);
         }
 
-        private static Venue CreateVenue(Entity entity, EventVenueDetail[] details, Show[] shows)
+        private static Venue CreateVenue(Entity entity, EventVenueDetail[] venueDetails, Show[] shows)
         {
             entity.Type = EntityType.Venue; // saving a bit traffic here
 
-            var venueDetail = details
+            var venueDetail = venueDetails
                 .FirstOrDefault(d => d.Venue.Id() == entity.Id);
             var venueShows = 
                 shows
@@ -291,10 +291,10 @@ namespace SmartWalk.Client.Core.Services
                             entity.Id == s.Venue.Id() && 
                             s.IsReference != true)
                     .ToArray();
-            var result = new Venue(entity) 
-                { 
-                    EventSortOrder = venueDetail != null ? venueDetail.SortOrder : null,
-                    EventDescription = venueDetail != null ? venueDetail.Description : null,
+            var result = new Venue(
+                    entity,
+                    venueDetail != null ? venueDetail.Description : null) 
+                {
                     Shows = venueShows.Length > 0 ? venueShows : null
                 };
             return result;

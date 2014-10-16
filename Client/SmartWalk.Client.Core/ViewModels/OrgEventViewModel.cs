@@ -457,7 +457,11 @@ namespace SmartWalk.Client.Core.ViewModels
                                         var shows = match.Key.Show != null 
                                             ? new [] { match.Key.Show } 
                                             : new Show[0];
-                                        venue = new Venue(match.Key.Venue.Info) { Shows = shows };
+                                        venue = new Venue(
+                                            match.Key.Venue.Info,
+                                            match.Key.Venue.Description) { 
+                                            Shows = shows 
+                                        };
                                         searchResults.Add(venue);
                                     }
                                     else
@@ -1249,7 +1253,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 orgEvent.Venues
                 .Select(
                     v => 
-                        new Venue(v.Info)
+                        new Venue(v.Info, v.Description)
                         { 
                             Shows = GetShowsByDay(v.Shows, day, orgEvent.GetOrgEventRange())
                         })
@@ -1300,7 +1304,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             var result = 
                 new [] {
-                    new Venue(new Entity()) 
+                    new Venue(new Entity(), null) 
                     {
                         Shows = shows
                             .OrderBy(v => v, new ShowComparer(SortBy))

@@ -71,7 +71,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
                     Font = Theme.MapPinFont,
                     TextAlignment = UITextAlignment.Center,
                     BackgroundColor = UIColor.Clear,
-                    Text = mapAnnotation.Abbr,
+                    Text = mapAnnotation.Pin,
                     Frame = new RectangleF(Theme.MapPinTextOffset, new SizeF(25, 25))
                 };
                 annotationView.AddSubview(numberLabel);

@@ -7,20 +7,15 @@ namespace SmartWalk.Client.Core.Model
     {
         public const int DayGroupId = -1000;
 
-        private readonly Entity _entity;
-
-        public Venue(Entity entity)
+        public Venue(Entity entity, string description)
         {
-            _entity = entity;
+            Info = entity;
+            Description = description;
         }
 
-        public Entity Info
-        {
-            get { return _entity; }
-        }
-
-        public int? EventSortOrder { get; set; }
-        public string EventDescription { get; set; }
+        public int? Number { get; set; }
+        public Entity Info { get; private set; }
+        public string Description { get; private set; }
         public Show[] Shows { get; set; }
 
         public override bool Equals(object obj)
@@ -28,10 +23,9 @@ namespace SmartWalk.Client.Core.Model
             var venue = obj as Venue;
             if (venue != null)
             {
-                return Equals(_entity, venue._entity) &&
+                return Equals(Info, venue.Info) &&
                     Shows.EnumerableEquals(venue.Shows) &&
-                    EventSortOrder == venue.EventSortOrder &&
-                    EventDescription == venue.EventDescription;
+                    Description == venue.Description;
             }
 
             return false;
@@ -40,19 +34,17 @@ namespace SmartWalk.Client.Core.Model
         public override int GetHashCode()
         {
             return HashCode.Initial
-                    .CombineHashCode(_entity.GetHashCode())
-                    .CombineHashCodeOrDefault(Shows)
-                    .CombineHashCode(EventSortOrder)
-                    .CombineHashCodeOrDefault(EventDescription);
+                .CombineHashCode(Info.GetHashCode())
+                .CombineHashCodeOrDefault(Shows)
+                .CombineHashCodeOrDefault(Description);
         }
 
         public override string ToString()
         {
             return string.Format(
-                "Id={0}, ShowsCount={1}, Order={2}", 
+                "Id={0}, ShowsCount={1}", 
                 Info.Id, 
-                Shows != null ? Shows.Length : 0,
-                EventSortOrder ?? 0);
+                Shows != null ? Shows.Length : 0);
         }
     }
 }

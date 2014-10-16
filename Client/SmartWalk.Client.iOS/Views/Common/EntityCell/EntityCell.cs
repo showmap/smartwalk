@@ -36,14 +36,15 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         public static float CalculateCellHeight(
             RectangleF frame,
-            bool isExpanded, 
-            Entity entity)
+            IEntityCellContext context)
         {
-            var textHeight = CalculateTextHeight(frame.Width - Gap * 2, entity.Description);
+            var textHeight = CalculateTextHeight(frame.Width - Gap * 2, context.FullDescription());
             var result = 
-                GetHeaderHeight(frame, entity) + 
+                GetHeaderHeight(frame, context.Entity) + 
                 ((int)textHeight != 0 ? Gap * 2 : 0) + 
-                (isExpanded ? textHeight : Math.Min(textHeight, Theme.EntityDescrFont.LineHeight * 3));
+                (context.IsDescriptionExpanded ?
+                    textHeight 
+                    : Math.Min(textHeight, Theme.EntityDescrFont.LineHeight * 3));
             return (float)Math.Ceiling(result);
         }
 
@@ -251,7 +252,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
             DescriptionLabel.Text = DataContext != null 
-                ? DataContext.Entity.Description 
+                ? DataContext.FullDescription()
                 : null;
 
             ImageBackground.Title = DataContext != null
@@ -282,8 +283,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 ? DataContext.Entity.Picture
                 : null;
 
-            MapCell.DataContext = DataContext != null &&
-                DataContext.Entity.HasAddresses()
+            MapCell.DataContext = DataContext != null && DataContext.Entity.HasAddresses()
                 ? DataContext.Entity
                 : null;
 

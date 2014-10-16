@@ -7,6 +7,7 @@ using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
@@ -67,7 +68,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 DataContext.HasAddresses())
             {
                 var annotations = DataContext.Addresses
-                    .Select( a => new MapViewAnnotation(DataContext.Name, a))
+                    .Select(a => new MapViewAnnotation(
+                        DataContext.Name.GetAbbreviation(2), 
+                        DataContext.Name,
+                        a))
                     .ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 

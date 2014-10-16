@@ -2,6 +2,7 @@ using System;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.DataContracts;
 
 namespace SmartWalk.Client.Core.Model
 {
@@ -23,6 +24,16 @@ namespace SmartWalk.Client.Core.Model
             _eventMetadata = eventMetadata;
             _host = host;
             _venues = venues;
+
+            if (_eventMetadata.VenueTitleFormatType ==
+                VenueTitleFormatType.NameAndNumber)
+            {
+                for (var i = 0; i < venues.Length; i++)
+                {
+                    var venue = venues[i];
+                    venue.Number = i + 1;
+                }
+            }
         }
 
         internal EventMetadata EventMetadata

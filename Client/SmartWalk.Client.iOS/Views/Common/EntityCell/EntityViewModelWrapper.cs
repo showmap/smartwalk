@@ -10,6 +10,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private readonly EntityViewModel _viewModel;
 
         public EntityViewModelWrapper(EntityViewModel viewModel, ModelMode mode)
+            : this(viewModel, mode, null)
+        {
+        }
+
+        public EntityViewModelWrapper(
+            EntityViewModel viewModel, 
+            ModelMode mode,
+            string description = null)
         {
             _viewModel = viewModel;
             _viewModel.PropertyChanged += (sender, e) => 
@@ -25,17 +33,16 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             Entity = viewModel.Entity;
             Title = viewModel.Title;
             Subtitle = viewModel.Subtitle;
+            Description = description;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Entity Entity { get; private set; }
-
         public ModelMode Mode { get; private set; }
-
         public string Title { get; private set; }
-
         public string Subtitle { get; private set; }
+        public string Description { get; private set; }
 
         public bool IsDescriptionExpanded
         {

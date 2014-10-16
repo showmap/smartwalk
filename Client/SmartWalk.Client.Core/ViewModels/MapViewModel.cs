@@ -187,6 +187,7 @@ namespace SmartWalk.Client.Core.ViewModels
             if (parameters != null)
             {
                 Annotation = new MapAnnotation(
+                    parameters.Title.GetAbbreviation(2),
                     parameters.Title,
                     parameters.Addresses.Items);
             }
@@ -261,13 +262,16 @@ namespace SmartWalk.Client.Core.ViewModels
     public class MapAnnotation
     {
         public MapAnnotation(
+            string pin,
             string title,
             Address[] addresses)
         {
+            Pin = pin;
             Title = title;
             Addresses = addresses;
         }
 
+        public string Pin { get; private set; }
         public string Title { get; private set; }
         public Address[] Addresses { get; private set; }
 

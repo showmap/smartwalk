@@ -93,7 +93,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 }
             }
 
-            NameLabel.Text = DataContext.Info.Name;
+            NameLabel.Text = DataContext.DisplayName();
             ImageLabel.Text = DataContext.Info.Name.GetAbbreviation(2);
 
             // TODO: to support showing more than one address

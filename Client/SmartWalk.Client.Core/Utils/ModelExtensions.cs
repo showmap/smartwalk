@@ -153,7 +153,10 @@ namespace SmartWalk.Client.Core.Utils
             return smartWalkRef != null ? smartWalkRef.Id : 0;
         }
 
-        public static Venue[] OrderBy(this IEnumerable<Venue> venues, VenueOrderType? orderType)
+        public static Venue[] OrderBy(
+            this IEnumerable<Venue> venues, 
+            EventVenueDetail[] venueDetails,
+            VenueOrderType? orderType)
         {
             Venue[] result;
 
@@ -161,9 +164,13 @@ namespace SmartWalk.Client.Core.Utils
             {
                 result = venues
                     .OrderBy(v =>
-                        v.EventSortOrder != null
-                            ? v.EventSortOrder.Value
-                            : 0)
+                        {
+                            var venueDetail = venueDetails
+                                .FirstOrDefault(vd => vd.Venue.Id() == v.Info.Id);
+                            return venueDetail != null && venueDetail.SortOrder != null
+                                ? venueDetail.SortOrder
+                                : 0;
+                        })
                     .ToArray();
             }
             else if (orderType == VenueOrderType.Name)
@@ -177,6 +184,32 @@ namespace SmartWalk.Client.Core.Utils
                 result = venues.ToArray();
             }
 
+            return result;
+        }
+
+        public static string DisplayName(this Venue venue)
+        {
+            var result = venue != null && venue.Info != null
+                ? (venue.Number != null 
+                    ? string.Format("{0}. {1}", venue.Number, venue.Info.Name)
+                    : venue.Info.Name)
+                : null;
+            return result;
+        }
+
+        public static string PinText(this Venue venue)
+        {
+            var result = venue != null && venue.Info != null
+                ? PinText(venue.Number, venue.Info.Name)
+                : null;
+            return result;
+        }
+
+        public static string PinText(int? number, string name)
+        {
+            var result = number != null 
+                ? number.ToString()
+                : name.GetAbbreviation(2);
             return result;
         }
 
@@ -305,10 +338,12 @@ namespace SmartWalk.Client.Core.Utils
 
         private static Venue GetDayGroupVenue(DateTime day)
         {
-            return new Venue(new Entity {
-                Id = Venue.DayGroupId,
-                Name = day.GetCurrentDayString()
-            });
+            return new Venue(
+                new Entity {
+                    Id = Venue.DayGroupId,
+                    Name = day.GetCurrentDayString()
+                },
+                null);
         }
     }
 

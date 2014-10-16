@@ -125,6 +125,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 var annotations = ViewModel.Annotation.Addresses
                     .Select(address => new MapViewAnnotation(
+                        ViewModel.Annotation.Pin,
                         ViewModel.Annotation.Title,
                         address)).ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);

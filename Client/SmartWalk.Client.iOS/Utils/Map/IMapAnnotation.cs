@@ -2,7 +2,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
 {
     public interface IMapAnnotation
     {
-        string Abbr { get; }
+        string Pin { get; }
         object DataContext { get; }
     }
 }

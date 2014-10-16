@@ -12,36 +12,34 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var venues = value as Venue[];
+            var result = value as Venue[];
             var viewModel = parameter as OrgEventViewModel;
 
-            if (venues != null &&
+            if (result != null &&
                 viewModel != null &&
                 viewModel.IsMultiday &&
                 !viewModel.CurrentDay.HasValue)
             {
                 if (viewModel.IsGroupedByLocation)
                 {
-                    var result = 
-                        venues.Select(
-                            v => new Venue(v.Info) {
+                    result = result
+                        .Select(v => 
+                            new Venue(v.Info, v.Description) {
+                                Number = v.Number,
                                 Shows = v.Shows.GroupByDayShow(
                                     viewModel.OrgEvent.GetOrgEventRange())
-                            }).ToArray();
-                    return result;
+                            })
+                        .ToArray();
                 }
-
-                if (viewModel.SortBy == SortBy.Time &&
-                      venues.Length > 0)
+                else if (viewModel.SortBy == SortBy.Time && result.Length > 0)
                 {
-                    var fooVenue = venues[0]; // expecting foo venue that holds all shows
-                    var result = fooVenue.Shows.GroupByDayVenue(
+                    var fooVenue = result[0]; // expecting foo venue that holds all shows
+                    result = fooVenue.Shows.GroupByDayVenue(
                         viewModel.OrgEvent.GetOrgEventRange());
-                    return result;
                 }
             }
 
-            return venues;
+            return result;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
