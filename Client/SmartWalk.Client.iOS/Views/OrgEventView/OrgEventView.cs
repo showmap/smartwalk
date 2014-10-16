@@ -331,6 +331,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.OnViewModelRefreshed(hasData);
 
             UpdateTableHeaderState(hasData);
+            UpdateTableViewContentInset();
         }
 
         protected override void ScrollViewToTop()
