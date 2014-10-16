@@ -3,6 +3,7 @@
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -66,7 +67,7 @@
                         </constraints>
                     </imageView>
                     <label hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
-                        <rect key="frame" x="8" y="273" width="173" height="17"/>
+                        <rect key="frame" x="8" y="273" width="296" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="367"/>
                         </constraints>
@@ -101,6 +102,7 @@
                     <constraint firstAttribute="bottom" secondItem="592" secondAttribute="bottom" id="Z4Z-UY-RgZ"/>
                     <constraint firstAttribute="bottom" secondItem="K9o-xv-nfu" secondAttribute="bottom" id="ZUK-hY-8aQ"/>
                     <constraint firstItem="3" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" constant="11" id="aBT-oz-Aye"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="181" secondAttribute="trailing" constant="8" id="brI-xG-IGi"/>
                     <constraint firstAttribute="bottom" secondItem="181" secondAttribute="bottom" constant="12" id="e9g-Hw-SsH"/>
                     <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="5" id="fLo-Av-da9"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" id="lkf-0X-0xe"/>
@@ -116,7 +118,6 @@
                 <constraint firstItem="50" firstAttribute="leading" secondItem="9" secondAttribute="leading" id="FN9-RG-HkB"/>
                 <constraint firstItem="181" firstAttribute="top" secondItem="50" secondAttribute="bottom" constant="12" id="H0t-fT-ezL"/>
                 <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="top" id="RVd-iL-t0g"/>
-                <constraint firstItem="50" firstAttribute="trailing" secondItem="181" secondAttribute="trailing" id="ggf-wX-NXc"/>
                 <constraint firstItem="50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="9" secondAttribute="bottom" constant="12" id="oIx-Bh-aFO"/>
                 <constraint firstItem="6" firstAttribute="baseline" secondItem="3" secondAttribute="baseline" id="z7o-uO-yi2"/>
             </constraints>
