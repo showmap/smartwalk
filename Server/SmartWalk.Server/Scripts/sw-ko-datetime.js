@@ -173,6 +173,7 @@ ko.datetime = {};
 ko.datetime.initDefaultDate = function (element, settings) {
     ko.datetimeUtil.initDefaultDate(element, settings,
         function (date) {
+            // ReSharper disable once UnknownCssClass
             if ($(element).hasClass("hasDatepicker")) {
                 $(element).datepicker("option", "defaultDate", date);
             } else {
@@ -205,27 +206,26 @@ ko.datetime.onChangeTime = function (args) {
     observable(newTime);
 };
 
-ko.datetime.updateDatePickerWithValue = function (element, value, restoreDate) {
-    if (typeof restoreDate === "undefined" || restoreDate === null)
-        restoreDate = false;
-
-    var current = restoreDate
-        ? ko.datetimeUtil.restoreDate($(element).datepicker("getDate"), value)
-        : $(element).datepicker("getDate");
-
-    if (current - value !== 0) {
-        $(element).datepicker('disable');
-        $(element).datepicker("setDate", value);
-        $(element).datepicker('enable');
-    }
-};
-
 ko.datetime.updateDate = function (element, value) {
-    ko.datetime.updateDatePickerWithValue(element, value);
+    ko.datetime.updateDateTime(element, value);
 };
 
 ko.datetime.updateTime = function (element, value) {
-    ko.datetime.updateDatePickerWithValue(element, value, true);
+    ko.datetime.updateDateTime(element, value, true);
+};
+
+ko.datetime.updateDateTime = function (element, value, restoreDate) {
+    var current = $(element).datepicker("getDate");
+
+    if (restoreDate) {
+        current = ko.datetimeUtil.restoreDate(current, value);
+    }
+
+    if (current - value !== 0) {
+        $(element).datepicker("disable");
+        $(element).datepicker("setDate", value);
+        $(element).datepicker("enable");
+    }
 };
 
 ko.datetime.dispose = function (element, onChangeHandler) {
