@@ -18,6 +18,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public DayHeaderCell(IntPtr handle) : base(handle)
         {
+            SelectionStyle = UITableViewCellSelectionStyle.None;
             BackgroundView = new UIView { BackgroundColor = Theme.HeaderCellBackground };
             ContentView = GroupHeaderContentView.Create();
             Frame = ContentView.Bounds;
