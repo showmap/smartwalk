@@ -288,7 +288,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
         write: function() {}
     });
 
-    venue.autocompleteData = ko.computed({
+    venue.autocompleteData = ko.pureComputed({
         read: function () { return null; },
         write: function (venueData) {
             var data = venueData || {};
@@ -382,9 +382,7 @@ EventViewModelExtended.setupAutocomplete = function (event) {
         sw.ajaxJsonRequest(
             {
                 term: searchTerm,
-                excludeIds: self.data.venues()
-                    ? $.map(self.actualVenues(), function (venue) { return venue.id(); })
-                    : null
+                excludeIds: $.map(self.actualVenues(), function (venue) { return venue.id(); })
             },
             self.settings.venueAutocompleteUrl,
             callback

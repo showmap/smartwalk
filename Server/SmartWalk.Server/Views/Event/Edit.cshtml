@@ -111,12 +111,6 @@
         </div>
     </div>
 
-    <div class="row gap" data-bind="visible: isMultiday">
-        <div class="col-md-12">
-            <ul class="event-days-picker" data-bind="template: { name: 'multiDayItemTemplate', foreach: days }"></ul>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-sm-8 event-options">
             <div class="form-group">
@@ -133,6 +127,12 @@
                 <label for="venueTitleFormatButtonsGroup">@T("Show Numbers"):</label><br />
                 <fieldset class="btn-group" id="venueTitleFormatButtonsGroup" data-bind="switcher: data.venueTitleFormatType, switcherOptions: { values: [{val: sw.vm.VenueTitleFormatType.NameAndNumber, disp: '@T("Yes")'}, {val: sw.vm.VenueTitleFormatType.Name, disp: '&nbsp;@T("No")&nbsp;'}]}, enable: isEnabled"></fieldset>
             </div>
+        </div>
+    </div>
+    
+    <div class="row gap" data-bind="visible: isMultiday">
+        <div class="col-md-12">
+            <ul class="event-days-picker" data-bind="template: { name: 'multiDayItemTemplate', foreach: days }"></ul>
         </div>
     </div>
 
