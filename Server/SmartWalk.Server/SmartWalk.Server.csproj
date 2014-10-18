@@ -256,7 +256,7 @@
     <Content Include="Scripts\sw-list-initial.min.js.map">
       <DependentUpon>sw-list-initial.js</DependentUpon>
     </Content>
-    <Content Include="Views\AddressMap\GoogleMapsApi.cshtml" />
+    <Content Include="Views\GoogleMapsApi.cshtml" />
     <None Include="Views\ServerErrors.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">
