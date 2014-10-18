@@ -2,7 +2,6 @@
 @using SmartWalk.Server.ViewModels
 @model AddressMapVm
 @{
-    Script.Require("GoogleMapsApi").AtFoot();
     var nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
     if (Model.Addresses.Any())
@@ -11,51 +10,59 @@
 
         using (Script.Foot())
         {
+            @Display(New.GoogleMapsApi())
+
 <script type="text/javascript">
     $(function() {
         $("#map-container").one("click", function() {
             $(this).removeClass("shield");
         });
 
-        if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
-            var addresses = [];
-            @foreach (var address in Model.Addresses)
-    {
-<text>            addresses.push({latLng: new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), title: "@address.Address"});</text>
-    }
+        function initializeMap() {
+            if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
+                var addresses = [];
+                @foreach (var address in Model.Addresses)
+                {
+<text>                addresses.push({latLng: new google.maps.LatLng(@address.Latitude.ToString(nfi), @address.Longitude.ToString(nfi)), title: "@address.Address"});</text>
+                }
 
-            var settings = {
-                backgroundColor: "#B4D1FF",
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
-                streetViewControl: false
-            };
+                var settings = {
+                    backgroundColor: "#B4D1FF",
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                    streetViewControl: false
+                };
 
-            if (addresses.length == 1) {
-                settings.zoom = 14;
-                settings.center = addresses[0].latLng;
+                if (addresses.length == 1) {
+                    settings.zoom = 14;
+                    settings.center = addresses[0].latLng;
+                }
+
+                var map = new google.maps.Map(document.getElementById("googleMap"), settings);
+
+                function addMarker(latlng, map, title) {
+                    return new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: title
+                    });
+                }
+
+                var bounds = new google.maps.LatLngBounds();
+
+                for (var i = 0; i < addresses.length; i++) {
+                    bounds.extend(addresses[i].latLng);
+                    addMarker(addresses[i].latLng, map, addresses[i].title);
+                }
+
+                if (addresses.length > 1) {
+                    map.fitBounds(bounds);
+                }
             }
+        }
 
-            var map = new google.maps.Map(document.getElementById("googleMap"), settings);
-
-            function addMarker(latlng, map, title) {
-                return new google.maps.Marker({
-                    position: latlng,
-                    map: map,
-                    title: title
-                });
-            }
-
-            var bounds = new google.maps.LatLngBounds();
-
-            for (var i = 0; i < addresses.length; i++) {
-                bounds.extend(addresses[i].latLng);
-                addMarker(addresses[i].latLng, map, addresses[i].title);
-            }
-
-            if (addresses.length > 1) {
-                map.fitBounds(bounds);
-            }
+        if (sw && sw.maps && sw.maps.mapsLoadedCallbacks) {
+            sw.maps.mapsLoadedCallbacks.push(initializeMap);
         }
     });
 </script>

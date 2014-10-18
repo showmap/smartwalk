@@ -1,0 +1,37 @@
+﻿@using Orchard.UI.Resources
+@using SmartWalk.Server.Common.Utils
+@{
+    // prevent the shape from being rendered twice in a page
+    if (WorkContext.GetState<object>("GoogleMapsApi") != null)
+    {
+        return;
+    }
+
+    WorkContext.SetState("GoogleMapsApi", new object());
+
+    var scriptUrl = ResourceManager
+        .FindResource(new RequireSettings { Name = "GoogleMapsApi", Type = "script" })
+        .ResourceUrl(WorkContext, true);
+
+    using (Script.Foot())
+    {
+        <script type="text/javascript">
+            $(function () {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = "@scriptUrl&callback=sw.maps.onGoogleMapsApiLoaded";
+                document.body.appendChild(script);
+
+                if (typeof sw === "undefined") window.sw = {};
+                sw.maps = sw.maps || {};
+                sw.maps.mapsLoadedCallbacks = [];
+
+                sw.maps.onGoogleMapsApiLoaded = function() {
+                    sw.maps.mapsLoadedCallbacks.forEach(function(callback) {
+                        callback();
+                    });
+                };
+            });
+        </script>
+    }
+}

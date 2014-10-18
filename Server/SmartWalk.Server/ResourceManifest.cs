@@ -66,8 +66,8 @@ namespace SmartWalk.Server
             
             manifest.DefineScript("GoogleMapsApi")
                 .SetCdn(
-                    "http://maps.google.com/maps/api/js?key=" + Settings.GoogleMapsKey,
-                    "http://maps.google.com/maps/api/js");
+                    "http://maps.google.com/maps/api/js?v=3.exp&key=" + Settings.GoogleMapsKey,
+                    "http://maps.google.com/maps/api/js?v=3.exp");
 
             // SmartWalk
 
@@ -84,7 +84,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("ko.mappicker")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-ko-mappicker.min.js", "sw-ko-mappicker.js")
-                .SetDependencies("ko", "jQueryUI", "GoogleMapsApi"); // "Leaflet", 
+                .SetDependencies("ko", "jQueryUI"); // on window loaded "GoogleMapsApi"
 
             manifest.DefineScript("ko.switcher")
                 .SetVersion(VersionUtil.CurrentVersion)
@@ -115,7 +115,7 @@ namespace SmartWalk.Server
             manifest.DefineScript("SmartWalk.Editing.Entity")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-editing-entity.min.js", "sw-editing-entity.js")
-                .SetDependencies("SmartWalk.Editing", "GoogleMapsApi");
+                .SetDependencies("SmartWalk.Editing"); // on window loaded "GoogleMapsApi"
 
             manifest.DefineScript("SmartWalk.Editing.Event")
                 .SetVersion(VersionUtil.CurrentVersion)

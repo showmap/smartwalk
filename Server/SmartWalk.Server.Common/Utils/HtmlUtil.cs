@@ -36,6 +36,19 @@ namespace SmartWalk.Server.Common.Utils
             return new HtmlString(File.ReadAllText(context.HttpContext.Server.MapPath(url)));
         }
 
+        public static string ResourceUrl(this ResourceDefinition resource, WorkContext context, bool cdnMode = false)
+        {
+            var result = resource != null
+                ? resource.ResolveUrl(new RequireSettings
+                    {
+                        DebugMode = context.HttpContext.IsDebuggingEnabled,
+                        CdnMode = cdnMode
+                    }, null)
+                : null;
+
+            return result;
+        }
+
         public static void SetiTunesMeta(this IOrchardViewPage page, string argument = null, params object[] args)
         {
             var appArgument =

@@ -118,6 +118,7 @@
 
 @using (Script.Foot())
 {
+    @Display(New.GoogleMapsApi())
     @Html.Partial("../Entity/Templates")
 
 <script type="text/javascript">
@@ -168,8 +169,19 @@
             contactTypes: ['@T("E-mail")', '@T("Web")', '@T("Phone")'],
         });
 
-        var vmHost = new EntityViewModelExtended(settings, data);
-        ko.applyBindings(vmHost, document.getElementById("@formId"));
+        var entityVm = new EntityViewModelExtended(settings, data);
+        ko.applyBindings(entityVm, document.getElementById("@formId"));
+
+    @if (Model.Type == EntityType.Venue)
+    {
+        <text>
+        if (sw && sw.maps && sw.maps.mapsLoadedCallbacks) {
+            sw.maps.mapsLoadedCallbacks.push(function() {
+                EntityViewModelExtended.setupAutocompleteAddress(entityVm);
+            });
+        }
+        </text>
+    }
     });
 </script>
 }
