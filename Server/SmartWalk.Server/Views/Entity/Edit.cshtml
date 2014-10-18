@@ -123,11 +123,12 @@
 <script type="text/javascript">
     $(function() {
         $("a").tooltip();
-        
+
         var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
 
         var settings = settings || [];
         settings = $.extend(settings, {
+            unsavedChangesMessage: '@T("There are unsaved changes made to the {0}.", entityTypeName.ToLower())',
             nameRequiredValidationMessage: '@T("Name can not be empty.")',
             nameLengthValidationMessage: '@T("Name can not be longer than 255 characters.")',
             pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',

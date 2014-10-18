@@ -1,5 +1,6 @@
 ﻿EntityViewModelExtended = function (settings, data) {
     var self = this;
+    self._initialData = data;
 
     EntityViewModelExtended.superClass_.constructor.call(self, data);
 
@@ -77,6 +78,8 @@
                     if (resultHandler && $.isFunction(resultHandler)) {
                         resultHandler(entityData);
                     } else {
+                        self._initialData = entityData;
+                        self.data.loadData(entityData);
                         self.settings.entityAfterSaveAction(entityData.Id);
                     }
                 },
@@ -98,6 +101,16 @@
         } else {
             self.settings.entityAfterCancelAction();
         }
+    };
+
+    self.onWindowClose = function () {
+        var initialModel = new EntityViewModel(self._initialData);
+
+        if (JSON.stringify(initialModel.toJSON()) != JSON.stringify(self.data.toJSON())) {
+            return settings.unsavedChangesMessage;
+        }
+
+        return undefined;
     };
 
     EntityViewModelExtended.setupAutocompleteAddress(self);

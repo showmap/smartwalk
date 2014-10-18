@@ -1,5 +1,6 @@
 ﻿EventViewModelExtended = function (settings, data) {
     var self = this;
+    self._initialData = data;
 
     EventViewModelExtended.superClass_.constructor.call(self, data);
 
@@ -78,6 +79,8 @@
                 self.data.toJSON.apply(self.data),
                 self.settings.eventSaveUrl,
                 function (eventData) {
+                    self._initialData = eventData;
+                    self.data.loadData(eventData);
                     self.settings.eventAfterSaveAction(eventData.Id, self);
                 },
                 function (errorResult) {
@@ -98,6 +101,16 @@
         } else {
             self.settings.eventAfterCancelAction(self);
         }
+    };
+
+    self.onWindowClose = function () {
+        var initialModel = new EventViewModel(self._initialData);
+
+        if (JSON.stringify(initialModel.toJSON()) != JSON.stringify(self.data.toJSON())) {
+            return settings.unsavedChangesMessage;
+        }
+
+        return undefined;
     };
 };
 

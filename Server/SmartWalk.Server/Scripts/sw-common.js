@@ -203,6 +203,9 @@ ViewModelBase = function () {
         self.serverValidErrors(undefined);
         self.serverError(undefined);
     };
+
+    self.onWindowClose = function() { return undefined; };
+    window.onbeforeunload = function() { return self.onWindowClose(); };
 };
 
 ListViewModel = function (parameters, url) {
