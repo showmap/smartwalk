@@ -27,9 +27,9 @@
 
         <div class="row">
             <div class="col-xs-8">
-                <div class="form-group" data-bind="validationElement: data.name">
+                <div class="form-group" data-bind="validationElement: model.name">
                     <label class="titleLabel" for="entityNameTextInput">@T(entityTypeName + " Name"):</label>
-                    <input id="entityNameTextInput" class="form-control" type="text" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: data.name, enable: isEnabled" />
+                    <input id="entityNameTextInput" class="form-control" type="text" placeholder="@T("Type " + entityTypeName.ToLower() + " name...")" data-bind="value: model.name, enable: isEnabled" />
                 </div>
             </div>
             <div class="col-xs-4 text-right">
@@ -42,19 +42,19 @@
         
         <div class="row">
 	        <div class="col-sm-8">
-		        <div class="form-group" data-bind="validationElement: data.picture">
+		        <div class="form-group" data-bind="validationElement: model.picture">
 			        <label for="pictureTextInput">@T("Picture"):</label>
-			        <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: data.picture, enable: isEnabled" />
+                    <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: model.picture, enable: isEnabled" />
 		        </div>
 	        </div>
         </div>
         
         <div class="row">
 	        <div class="col-sm-8">
-		        <div class="form-group" data-bind="validationElement: data.description">
-			        <label for="descriptionTextArea">@T("Description"):</label>
-			        <textarea class="form-control" id="descriptionTextArea" rows="4" data-bind="value: data.description, enable: isEnabled"></textarea>
-		        </div>
+                <div class="form-group" data-bind="validationElement: model.description">
+                    <label for="descriptionTextArea">@T("Description"):</label>
+                    <textarea class="form-control" id="descriptionTextArea" rows="4" data-bind="value: model.description, enable: isEnabled"></textarea>
+                </div>
 	        </div>
         </div>
         

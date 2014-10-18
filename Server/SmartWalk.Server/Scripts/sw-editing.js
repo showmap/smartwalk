@@ -221,7 +221,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         self._editingItems.add(item);
 
         if (savePreviousData) {
-            self._previousItemData.put(item, item.toJSON.apply(item));
+            self._previousItemData.put(item, item.toJSON());
         }
 
         item.isEditing(true);
@@ -248,7 +248,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
             !self._editingItems.contains(item)) return;
 
         if (self._previousItemData.containsKey(item)) {
-            item.loadData.apply(item, [self._previousItemData.get(item)]);
+            item.loadData(self._previousItemData.get(item));
             self._previousItemData.remove(item);
         } else {
             self._allItems.remove(item);

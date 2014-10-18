@@ -1,14 +1,13 @@
 ﻿EntityViewModelExtended = function (settings, data) {
     var self = this;
-    self._initialData = data;
 
     EntityViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
-    self.data = new EntityViewModel(data);
+    self.model = new EntityViewModel(data);
 
     self.contactsManager = new VmItemsManager(
-        self.data.contacts,
+        self.model.contacts,
         function() {
             var contact = new ContactViewModel({ Type: sw.vm.ContactType.Url });
             return contact;
@@ -27,7 +26,7 @@
         });
     
     self.addressesManager = new VmItemsManager(
-        self.data.addresses,
+        self.model.addresses,
         function () {
             var address = new AddressViewModel({});
             return address;
@@ -52,34 +51,34 @@
         return self.settings.contactTypes[contact.type()];
     };
 
-    self.data.toTinyJSON = function () {
+    self.model.toTinyJSON = function () {
         return {
-            Id: self.data.id(),
-            Type: self.data.type(),
-            Name: self.data.name()
+            Id: self.model.id(),
+            Type: self.model.type(),
+            Name: self.model.name()
         };
     };
 
     self.saveEntity = function (resultHandler) {
-        if (!self.data.errors) {
-            EntityViewModelExtended.setupValidation(self.data, settings);
+        if (!self.model.errors) {
+            EntityViewModelExtended.setupValidation(self.model, settings);
         }
 
-        if (self.data.isValidating()) {
+        if (self.model.isValidating()) {
             setTimeout(function () { self.saveEntity(resultHandler); }, 50);
             return false;
         }
 
-        if (self.data.errors().length == 0) {
+        if (self.model.errors().length == 0) {
             self.currentRequest = sw.ajaxJsonRequest(
-                self.data.toJSON.apply(self.data),
+                self.model.toJSON(),
                 self.settings.entitySaveUrl,
                 function (entityData) {
                     if (resultHandler && $.isFunction(resultHandler)) {
                         resultHandler(entityData);
                     } else {
-                        self._initialData = entityData;
-                        self.data.loadData(entityData);
+                        data = entityData;
+                        self.model.loadData(entityData);
                         self.settings.entityAfterSaveAction(entityData.Id);
                     }
                 },
@@ -89,7 +88,7 @@
                 self
             );
         } else {
-            self.data.errors.showAllMessages();
+            self.model.errors.showAllMessages();
         }
 
         return true;
@@ -104,9 +103,9 @@
     };
 
     self.onWindowClose = function () {
-        var initialModel = new EntityViewModel(self._initialData);
+        var initModel = new EntityViewModel(data);
 
-        if (JSON.stringify(initialModel.toJSON()) != JSON.stringify(self.data.toJSON())) {
+        if (JSON.stringify(initModel.toJSON()) != JSON.stringify(self.model.toJSON())) {
             return settings.unsavedChangesMessage;
         }
 

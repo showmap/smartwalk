@@ -372,10 +372,10 @@ function EventViewModel(data) {
     self.venueOrderType = ko.observable();
     self.venueTitleFormatType = ko.observable();
     self.picture = ko.observable();
-    self.combineType = ko.observable(data.combineType);
-    self.description = ko.observable(data.description);
-    /*self.latitude = ko.observable(data.latitude);
-    self.longitude = ko.observable(data.longitude);*/
+    self.combineType = ko.observable();
+    self.description = ko.observable();
+    /*self.latitude = ko.observable();
+    self.longitude = ko.observable();*/
     
     self.host = ko.observable();
     self.venues = ko.observableArray();
@@ -426,7 +426,7 @@ EventViewModel.prototype.toJSON = function () {
         /*Latitude: self.latitude(),
         Longitude: self.longitude(),*/
 
-        Host: self.host() ? self.host().toJSON.apply(self.host()) : undefined,
+        Host: self.host() ? self.host().toJSON() : undefined,
         Venues: self.venues()
             ? $.map(self.venues(),
                 function (venue) {
@@ -435,7 +435,7 @@ EventViewModel.prototype.toJSON = function () {
                         venue.eventDetail().sortOrder(undefined);
                     }
 
-                    return venue.toJSON.apply(venue);
+                    return venue.toJSON();
                 })
             : undefined,
 
@@ -501,7 +501,7 @@ EntityViewModel.prototype.loadData = function (entityData) {
     this.description(entityData.Description);
 
     if (this.eventDetail()) {
-        this.eventDetail().loadData.apply(this.eventDetail(), [entityData.EventDetail || {}]);
+        this.eventDetail().loadData(entityData.EventDetail || {});
     } else {
         this.eventDetail(new EventEntityDetailViewModel(entityData.EventDetail || {}));
     }
@@ -536,17 +536,17 @@ EntityViewModel.prototype.toJSON = function () {
 
         EventDetail: this.eventDetail() &&
                 (this.eventDetail().sortOrder() || this.eventDetail().description())
-            ? this.eventDetail().toJSON.apply(this.eventDetail())
+            ? this.eventDetail().toJSON()
             : undefined,
 
         Contacts: this.contacts()
-            ? $.map(this.contacts(), function (contact) { return contact.toJSON.apply(contact); })
+            ? $.map(this.contacts(), function (contact) { return contact.toJSON(); })
             : undefined,
         Addresses: this.addresses()
-            ? $.map(this.addresses(), function (address) { return address.toJSON.apply(address); })
+            ? $.map(this.addresses(), function (address) { return address.toJSON(); })
             : undefined,
         Shows: this.shows()
-            ? $.map(this.shows(), function (show) { return show.toJSON.apply(show); })
+            ? $.map(this.shows(), function (show) { return show.toJSON(); })
             : undefined,
 
         Destroy: this._destroy

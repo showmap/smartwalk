@@ -35,10 +35,10 @@
     @Html.Partial("../ServerErrors")
 
     <div class="row">
-        <div class="col-xs-8" data-bind="validationElement: data.title">
+        <div class="col-xs-8" data-bind="validationElement: model.title">
             <div class="form-group">
                 <label class="titleLabel" for="eventTitleTextInput">@T("Event Title"):</label>
-                <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: data.title, enable: isEnabled" />
+                <input id="eventTitleTextInput" class="form-control" type="text" placeholder="@T("Type event title...")" data-bind="value: model.title, enable: isEnabled" />
             </div>
         </div>
         <div class="col-xs-4 text-right">
@@ -48,22 +48,22 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-4" data-bind="validationElement: data.startDate">
+        <div class="col-sm-4" data-bind="validationElement: model.startDate">
             <div class="form-group">
                 <label for="startDateInput">@T("Start Date"):</label>
-                <input type="date" class="form-control" id="startDateInput" data-bind="datepicker: data.startDate, enable: isEnabled">
+                <input type="date" class="form-control" id="startDateInput" data-bind="datepicker: model.startDate, enable: isEnabled">
             </div>
         </div>
-        <div class="col-sm-4" data-bind="validationElement: data.endDate">
+        <div class="col-sm-4" data-bind="validationElement: model.endDate">
             <div class="form-group">
                 <label for="endDateInput">@T("End Date"):</label>
-                <input type="date" class="form-control" id="endDateInput" data-bind="datepicker: data.endDate, enable: isEnabled">
+                <input type="date" class="form-control" id="endDateInput" data-bind="datepicker: model.endDate, enable: isEnabled">
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-8" data-bind="validationElement: data.host">
+        <div class="col-sm-8" data-bind="validationElement: model.host">
             <div class="form-group">
                 <label for="organizedByComboBox">@T("Organized By"):</label>
                 <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Defines basic info about the organizer of the event. You as the editor can have more than one organizer to create events for, but every event is hosted by only one organizer.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a>
@@ -76,7 +76,7 @@
                             inputProp: 'Name',
                             template: 'autocompleteEntityItemTemplate'
                         },
-                        validationTag: data.host,
+                        validationTag: model.host,
                         enable: isEnabled" />
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost, enable: isEnabled">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
@@ -87,26 +87,26 @@
         @*<div class="col-sm-4">
                 <div class="form-group">
                     <label for="combinetypeButtonsGroup">@T("Combine type"):</label><br/>
-                    <div class="btn-group" id="combinetypeButtonsGroup" data-bind="switcher: data.combinetype, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}], enable: isEnabled}"></div>
+                    <div class="btn-group" id="combinetypeButtonsGroup" data-bind="switcher: model.combinetype, switcherOptions: { values: [{'val':0, 'disp':'@T("None")    '}, {'val':1, 'disp':'@T("By Venue")    '}, {'val':2, 'disp':'@T("By Organizer")    '}], enable: isEnabled}"></div>
                 </div>
             </div>
         *@
     </div>
 
     <div class="row">
-        <div class="col-sm-8" data-bind="validationElement: data.picture">
+        <div class="col-sm-8" data-bind="validationElement: model.picture">
             <div class="form-group">
                 <label for="pictureTextInput">@T("Picture"):</label>
-                <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: data.picture, enable: isEnabled" />
+                <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: model.picture, enable: isEnabled" />
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-8" data-bind="validationElement: data.description">
+        <div class="col-sm-8" data-bind="validationElement: model.description">
             <div class="form-group">
                 <label for="descriptionTextArea">@T("Description"):</label>
-                <textarea class="form-control" id="descriptionTextArea" rows="5" data-bind="value: data.description, enable: isEnabled"></textarea>
+                <textarea class="form-control" id="descriptionTextArea" rows="5" data-bind="value: model.description, enable: isEnabled"></textarea>
             </div>
         </div>
     </div>
@@ -116,16 +116,16 @@
             <div class="form-group">
                 <label for="visibilityButtonsGroup">@T("Visibility"):</label>
                 <a class="tooltip-container to-label" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Public - visible to all website and mobile app users, Unlisted - visible to users by the URL link only, Private - visible only to the editor.")'><span class="glyphicon glyphicon-question-sign text-muted"></span></a><br/>
-                <fieldset class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: data.status, switcherOptions: { values: [{val: 1, disp: '@T("Public")    ', @(canCreatePublic ? "" : "enable: false")}, {val: 2, disp: '@T("Unlisted")    '}, {val: 0, disp: '@T("Private")    '}]}, enable: isEnabled"></fieldset>
+                <fieldset class="btn-group" id="visibilityButtonsGroup" data-bind="switcher: model.status, switcherOptions: { values: [{val: 1, disp: '@T("Public")    ', @(canCreatePublic ? "" : "enable: false")}, {val: 2, disp: '@T("Unlisted")    '}, {val: 0, disp: '@T("Private")    '}]}, enable: isEnabled"></fieldset>
                 @if (!canCreatePublic) { <div class="text-muted">@T("Currently your account is not verified to create public events. Please {0}request a verification{1}.", "<a href='" + Url.Action("EditProfile", "Account") +  "' target='_blank'>", "</a>")</div> }
             </div>
             <div class="form-group">
                 <label for="orderByButtonsGroup">@T("Order Venues"):</label><br />
-                <fieldset class="btn-group" id="orderByButtonsGroup" data-bind="switcher: data.venueOrderType, switcherOptions: { values: [{val: sw.vm.VenueOrderType.Name, disp: '@T("By Name")'}, {val: sw.vm.VenueOrderType.Custom, disp: '@T("Manually")'}]}, enable: isEnabled"></fieldset>
+                <fieldset class="btn-group" id="orderByButtonsGroup" data-bind="switcher: model.venueOrderType, switcherOptions: { values: [{val: sw.vm.VenueOrderType.Name, disp: '@T("By Name")'}, {val: sw.vm.VenueOrderType.Custom, disp: '@T("Manually")'}]}, enable: isEnabled"></fieldset>
             </div>
             <div class="form-group">
                 <label for="venueTitleFormatButtonsGroup">@T("Show Numbers"):</label><br />
-                <fieldset class="btn-group" id="venueTitleFormatButtonsGroup" data-bind="switcher: data.venueTitleFormatType, switcherOptions: { values: [{val: sw.vm.VenueTitleFormatType.NameAndNumber, disp: '@T("Yes")'}, {val: sw.vm.VenueTitleFormatType.Name, disp: '&nbsp;@T("No")&nbsp;'}]}, enable: isEnabled"></fieldset>
+                <fieldset class="btn-group" id="venueTitleFormatButtonsGroup" data-bind="switcher: model.venueTitleFormatType, switcherOptions: { values: [{val: sw.vm.VenueTitleFormatType.NameAndNumber, disp: '@T("Yes")'}, {val: sw.vm.VenueTitleFormatType.Name, disp: '&nbsp;@T("No")&nbsp;'}]}, enable: isEnabled"></fieldset>
             </div>
         </div>
     </div>

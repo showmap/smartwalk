@@ -1,15 +1,14 @@
 ﻿EventViewModelExtended = function (settings, data) {
     var self = this;
-    self._initialData = data;
 
     EventViewModelExtended.superClass_.constructor.call(self, data);
 
     self.settings = settings;
-    self.data = new EventViewModel(data);
+    self.model = new EventViewModel(data);
 
     self.actualVenues = function() {
-        var result = self.data.venues() 
-            ? $.grep(self.data.venues(),
+        var result = self.model.venues() 
+            ? $.grep(self.model.venues(),
                 function (venue) { return venue.id() > 0 && !venue._destroy; })
             : [];
         return result;
@@ -21,7 +20,7 @@
     EventViewModelExtended.setupDialogs(self);
     
     self.venuesManager = new VmItemsManager(
-        self.data.venues,
+        self.model.venues,
         function () {
             var venue = new EntityViewModel({ Type: sw.vm.EntityType.Venue });
             return venue;
@@ -31,7 +30,7 @@
                 EventViewModelExtended.initVenueViewModel(venue, self);
             },
             beforeEdit: function () {
-                self.data.venues().forEach(function(venue) {
+                self.model.venues().forEach(function(venue) {
                     venue.showsManager.cancelAll();
                 });
             },
@@ -46,7 +45,7 @@
                 }
             },
             afterDelete: function () {
-                if (self.data.venueOrderType() == sw.vm.VenueOrderType.Custom) {
+                if (self.model.venueOrderType() == sw.vm.VenueOrderType.Custom) {
                     self.updateVenueDetailOrder();
                 }
             },
@@ -65,22 +64,22 @@
     };
     
     self.saveEvent = function () {
-        if (!self.data.errors) {
-            EventViewModelExtended.setupValidation(self.data, settings);
+        if (!self.model.errors) {
+            EventViewModelExtended.setupValidation(self.model, settings);
         }
         
-        if (self.data.isValidating()) {
+        if (self.model.isValidating()) {
             setTimeout(function () { self.saveEvent(); }, 50);
             return false;
         }
 
-        if (self.data.errors().length == 0) {
+        if (self.model.errors().length == 0) {
             self.currentRequest = sw.ajaxJsonRequest(
-                self.data.toJSON.apply(self.data),
+                self.model.toJSON(),
                 self.settings.eventSaveUrl,
                 function (eventData) {
-                    self._initialData = eventData;
-                    self.data.loadData(eventData);
+                    data = eventData;
+                    self.model.loadData(eventData);
                     self.settings.eventAfterSaveAction(eventData.Id, self);
                 },
                 function (errorResult) {
@@ -89,7 +88,7 @@
                 self
             );
         } else {
-            self.data.errors.showAllMessages();
+            self.model.errors.showAllMessages();
         }
 
         return true;
@@ -104,9 +103,9 @@
     };
 
     self.onWindowClose = function () {
-        var initialModel = new EventViewModel(self._initialData);
+        var initModel = new EventViewModel(data);
 
-        if (JSON.stringify(initialModel.toJSON()) != JSON.stringify(self.data.toJSON())) {
+        if (JSON.stringify(initModel.toJSON()) != JSON.stringify(self.model.toJSON())) {
             return settings.unsavedChangesMessage;
         }
 
@@ -308,15 +307,15 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
 
             // keeping current venue details for new venue
             if (venue.eventDetail()) {
-                data.EventDetail = venue.eventDetail().toJSON.apply(venue.eventDetail());
+                data.EventDetail = venue.eventDetail().toJSON();
             }
 
             // keeping current shows for new venue
             if (venue.shows()) {
-                data.Shows = $.map(venue.shows(), function (show) { return show.toJSON.apply(show); });
+                data.Shows = $.map(venue.shows(), function (show) { return show.toJSON(); });
             }
 
-            venue.loadData.apply(venue, [data]);
+            venue.loadData(data);
         }
     });
 
@@ -324,7 +323,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
     venue.name.extend({ notify: "always" });
 
     venue.number = ko.computed(function () {
-        var number = event.data.venueTitleFormatType() == sw.vm.VenueTitleFormatType.NameAndNumber
+        var number = event.model.venueTitleFormatType() == sw.vm.VenueTitleFormatType.NameAndNumber
             ? event.actualVenues().indexOf(venue) + 1
             : null;
 
@@ -347,13 +346,13 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             },
             beforeEdit: function () {
                 event.venuesManager.cancelAll();
-                event.data.venues().forEach(function (otherVenue) {
+                event.model.venues().forEach(function (otherVenue) {
                     otherVenue.showsManager.cancelAll();
                 });
             },
             beforeSave: function (show) {
                 if (!show.errors) {
-                    EventViewModelExtended.setupShowValidation(show, event.data, event.settings);
+                    EventViewModelExtended.setupShowValidation(show, event.model, event.settings);
                 }
             },
             itemView: event.settings.showView,
@@ -366,7 +365,7 @@ EventViewModelExtended.setupAutocomplete = function (event) {
     
     self.autocompleteHostName = ko.pureComputed({
         read: function () {
-            return self.data.host() ? self.data.host().name() : null;
+            return self.model.host() ? self.model.host().name() : null;
         },
         write: function () { }
     });
@@ -374,13 +373,13 @@ EventViewModelExtended.setupAutocomplete = function (event) {
     self.autocompleteHostData = ko.pureComputed({
         read: function () { return null; },
         write: function (hostData) {
-            self.data.host(hostData && $.isPlainObject(hostData)
+            self.model.host(hostData && $.isPlainObject(hostData)
                 ? new EntityViewModel(hostData) : null);
         }
     });
 
     // to make sure bindings are re-evaluated on empty values
-    self.data.host.extend({ notify: "always" });
+    self.model.host.extend({ notify: "always" });
     self.autocompleteHostName.extend({ notify: "always" });
     
     self.getAutocompleteHosts = function (searchTerm, callback) {
@@ -407,9 +406,9 @@ EventViewModelExtended.setupMultiday = function (event) {
     var self = event;
     
     self.daysCount = ko.computed(function () {
-        if (!self.data.startDate() || !self.data.endDate()) return 0;
+        if (!self.model.startDate() || !self.model.endDate()) return 0;
 
-        return moment(self.data.endDate()).diff(moment(self.data.startDate()), "days");
+        return moment(self.model.endDate()).diff(moment(self.model.startDate()), "days");
     });
 
     self.isMultiday = ko.computed(function () {
@@ -422,7 +421,7 @@ EventViewModelExtended.setupMultiday = function (event) {
                 .map(function (x, i) {
                     return {
                         day: i + 1,
-                        momentDate: moment(self.data.startDate()).add(i, "days")
+                        momentDate: moment(self.model.startDate()).add(i, "days")
                     };
                 })
             : null;
@@ -433,10 +432,10 @@ EventViewModelExtended.setupMultiday = function (event) {
     self.currentDay = ko.observable(self.isMultiday() ? 1 : undefined);
     
     self.currentDay.subscribe(function (day) {
-        EventViewModelExtended.setCurrentDate(self, self.data.startDate(), day);
+        EventViewModelExtended.setCurrentDate(self, self.model.startDate(), day);
     });
     
-    self.data.startDate.subscribe(function (date) {
+    self.model.startDate.subscribe(function (date) {
         EventViewModelExtended.setCurrentDate(self, date, self.currentDay());
     });
 
@@ -448,10 +447,10 @@ EventViewModelExtended.setupMultiday = function (event) {
         self.currentDay(self.settings.currentDay);
     }
 
-    EventViewModelExtended.setCurrentDate(self, self.data.startDate(), self.currentDay());
+    EventViewModelExtended.setCurrentDate(self, self.model.startDate(), self.currentDay());
 
     self.defaultDate = ko.computed(function() {
-         return self.currentDate() || self.data.startDate();
+         return self.currentDate() || self.model.startDate();
     });
 };
 
@@ -476,9 +475,9 @@ EventViewModelExtended.isTimeThisDay = function(time, event, nightEdgeHour) {
     var tDay = moment(time).startOf("day");
     var day = moment(event.currentDate());
     var nextDay = moment(event.currentDate()).add(1, "days");
-    var firstDay = event.data.startDate() ? moment(event.data.startDate()) : undefined;
-    var lastDay = event.data.endDate() || event.data.startDate()
-        ? moment(event.data.endDate() || event.data.startDate()) : undefined; // using first day as last one to do not lose some out-of-range shows
+    var firstDay = event.model.startDate() ? moment(event.model.startDate()) : undefined;
+    var lastDay = event.model.endDate() || event.model.startDate()
+        ? moment(event.model.endDate() || event.model.startDate()) : undefined; // using first day as last one to do not lose some out-of-range shows
 
     var result =
         (firstDay && (tDay.isBefore(firstDay) || tDay.isSame(firstDay)) && day.isSame(firstDay)) || // times ahead of first day
@@ -492,7 +491,7 @@ EventViewModelExtended.isTimeThisDay = function(time, event, nightEdgeHour) {
 EventViewModelExtended.setupSorting = function (event) {
     var self = event;
 
-    self.data.venueOrderType.subscribe(function (orderType) {
+    self.model.venueOrderType.subscribe(function (orderType) {
         self.sortVenues();
 
         if (orderType == sw.vm.VenueOrderType.Custom) {
@@ -501,15 +500,15 @@ EventViewModelExtended.setupSorting = function (event) {
     });
 
     self.sortVenues = function () {
-        switch (self.data.venueOrderType()) {
+        switch (self.model.venueOrderType()) {
             case sw.vm.VenueOrderType.Name:
-                self.data.venues.sort(function (left, right) {
+                self.model.venues.sort(function (left, right) {
                     return left.name().localeCompare(right.name());
                 });
                 break;
 
             case sw.vm.VenueOrderType.Custom:
-                self.data.venues.sort(function (left, right) {
+                self.model.venues.sort(function (left, right) {
                     var leftNum = (left.eventDetail() && left.eventDetail().sortOrder()) || 0;
                     var rightNum = (right.eventDetail() && right.eventDetail().sortOrder()) || 0;
 
@@ -553,10 +552,10 @@ EventViewModelExtended.setupDialogs = function (event) {
         close: function () {
             var entity = ko.dataFor(this);
             entity.isBusy(false);
-            entity.data.loadData.apply(entity.data, [{ Type: entity.data.type() }]);
+            entity.model.loadData({ Type: entity.model.type() });
             entity.resetServerErrors();
-            if (entity.data.errors) {
-                entity.data.errors.showAllMessages(false);
+            if (entity.model.errors) {
+                entity.model.errors.showAllMessages(false);
             }
         },
     };
@@ -587,7 +586,7 @@ EventViewModelExtended.setupDialogs = function (event) {
                     var host = ko.dataFor(dialog);
                     host.saveEntity(function (entityData) {
                         var newHost = new EntityViewModel(entityData);
-                        event.data.host(newHost);
+                        event.model.host(newHost);
                         $(dialog).dialog("close");
                     });
                 }
@@ -614,7 +613,7 @@ EventViewModelExtended.setupDialogs = function (event) {
                     var dialog = this;
                     var venue = ko.dataFor(dialog);
                     venue.saveEntity(function (entityData) {
-                        var editingVenue = $.grep(event.data.venues(),
+                        var editingVenue = $.grep(event.model.venues(),
                             function (item) { return item.isEditing(); })[0];
                         if (editingVenue) {
                             editingVenue.autocompleteData(entityData);

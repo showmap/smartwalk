@@ -58,8 +58,8 @@
                     </button>
 
                     <button type="button" class="action close" data-bind="
-                            visible: $root.data.venueOrderType() == sw.vm.VenueOrderType.Custom &&
-                                $root.data.venues().indexOf($data) < $root.data.venues().length - 1,
+                            visible: $root.model.venueOrderType() == sw.vm.VenueOrderType.Custom &&
+                                $root.actualVenues().indexOf($data) < $root.actualVenues().length - 1,
                             enable: $root.isEnabled(),
                             click: $root.moveVenueDown.bind($data),
                             clickBubble: false">
@@ -67,8 +67,8 @@
                     </button>
 
                     <button type="button" class="action close" data-bind="
-                            visible: $root.data.venueOrderType() == sw.vm.VenueOrderType.Custom &&
-                                $root.data.venues().indexOf($data) > 0,
+                            visible: $root.model.venueOrderType() == sw.vm.VenueOrderType.Custom &&
+                                $root.actualVenues().indexOf($data) > 0,
                             enable: $root.isEnabled(),
                             click: $root.moveVenueUp.bind($data),
                             clickBubble: false">
