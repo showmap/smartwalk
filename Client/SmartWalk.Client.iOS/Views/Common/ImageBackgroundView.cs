@@ -292,10 +292,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void UpdateGradientState()
         {
-            if (BackgroundImage != null &&
-                (BackgroundImage.Image == null ||
-                    BackgroundImage.Image.Size == Theme.DefaultImageSize ||
-                    BackgroundImage.Image.Size == Theme.ErrorImageSize))
+            if (BackgroundImage != null && !BackgroundImage.HasImage())
             {
                 HideGradient();
             }

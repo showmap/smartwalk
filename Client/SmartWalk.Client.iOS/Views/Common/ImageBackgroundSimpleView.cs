@@ -94,6 +94,8 @@ namespace SmartWalk.Client.iOS.Views.Common
             TitleLabel.Text = null;
             SubtitleLabel.Text = null;
 
+            BackgroundImage.Hidden = true;
+
             InitializeImageHelper();
             InitializeStyle();
             InitializeBottomGradientState();
@@ -125,12 +127,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             if (_resizeImage)
             {
                 _resizedImageHelper = 
-                    new MvxResizedImageViewLoader(() => BackgroundImage);
+                    new MvxResizedImageViewLoader(() => BackgroundImage, OnImageChanged);
             }
             else
             {
                 _imageHelper = 
-                    new MvxImageViewLoader(() => BackgroundImage);
+                    new MvxImageViewLoader(() => BackgroundImage, OnImageChanged);
             }
         }
 
@@ -174,6 +176,11 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 GradientPlaceholder.Layer.InsertSublayer(_bottomGradient, 0);
             }
+        }
+
+        private void OnImageChanged()
+        {
+            BackgroundImage.SetHidden(!BackgroundImage.HasImage(), true);
         }
     }
 }

@@ -8,6 +8,7 @@ using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -27,11 +28,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     if (LogoImageView != null)
                     {
-                        var noImage = LogoImageView.Image == null || 
-                            LogoImageView.Image.Size == Theme.DefaultImageSize || 
-                            LogoImageView.Image.Size == Theme.ErrorImageSize; 
-                        LogoImageView.Hidden = noImage;
-                        ImageLabelView.Hidden = !noImage;
+                        var noImage = !LogoImageView.HasImage(); 
+                        LogoImageView.SetHidden(noImage, !noImage);
+                        ImageLabelView.SetHidden(!noImage, false);
                     }
                 });
         }
@@ -76,9 +75,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             LogoImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
-            _imageHelper.ImageUrl = DataContext != null 
-                ? DataContext.Info.Picture : null;
-
             if (DataContext != null)
             {
                 if (DataContext.Info.HasPicture())
@@ -102,6 +98,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 DataContext.Info.Addresses.Length > 0 
                 ? DataContext.Info.Addresses[0].AddressText 
                 : null;
+                
+            _imageHelper.ImageUrl = DataContext != null 
+                ? DataContext.Info.Picture : null;
         }
 
         private void InitializeGestures()

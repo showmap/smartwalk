@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -106,6 +107,14 @@ namespace SmartWalk.Client.iOS.Utils
                     view.Add(subview);
                 }
             }
+        }
+
+        public static bool HasImage(this UIImageView imageView)
+        {
+            var result = imageView.Image != null &&
+                imageView.Image.Size != Theme.DefaultImageSize &&
+                imageView.Image.Size != Theme.ErrorImageSize;
+            return result;
         }
     }
 }
