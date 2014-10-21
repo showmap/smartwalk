@@ -211,6 +211,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 TintColor = Theme.RefreshControl
             };
 
+            refreshControl.Layer.ZPosition = -100; // HACK: Trying to put it behind table/collection header
             refreshControl.ValueChanged += OnRefreshControlValueChanged;
 
             ListView.RefreshControl = refreshControl;
