@@ -35,5 +35,6 @@
         public const string AccessDenied = "Access Denied";
         public const string UserDeniedAccessToCalendars = "User Denied Access to Calendars";
         public const string NoContentAvailable = "No Content Available. \nPlease refresh or try later.";
+        public const string CantCompleteActionOffline = "Can't complete action because application is in offline mode.";
     }
 }

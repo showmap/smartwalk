@@ -14,6 +14,7 @@ using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
+using SmartWalk.Client.Core.Resources;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -613,8 +614,9 @@ namespace SmartWalk.Client.Core.ViewModels
                                     : Analytics.ActionLabelSwitchMapToHybrid));
                         },
                         () => 
-                            Mode == OrgEventViewMode.Combo ||
-                            Mode == OrgEventViewMode.Map);
+                            OrgEvent != null &&
+                            (Mode == OrgEventViewMode.Combo ||
+                                Mode == OrgEventViewMode.Map));
                 }
 
                 return _switchMapTypeCommand;
@@ -927,7 +929,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             try
                             {
                                 var result = await _apiService.GetOrgEventInfo(
-                                    _parameters.EventId, 
+                                    OrgEvent.Id, 
                                     DataSource.CacheOrServer);
                                 if (result != null) {
                                     eventInfo = result.Data;
@@ -950,12 +952,18 @@ namespace SmartWalk.Client.Core.ViewModels
                                     _exceptionPolicy.Trace(ex);
                                 }
                             }
+                            else 
+                            {
+                                _environmentService.Alert(
+                                    Localization.OffLineMode, 
+                                    Localization.CantCompleteActionOffline);
+                            }
 
                             IsLoading = false;
                         },
                         () => 
-                            _parameters != null &&
-                            _parameters.EventId != 0);
+                            OrgEvent != null &&
+                            OrgEvent.Id != 0);
                 }
 
                 return _createEventCommand;
