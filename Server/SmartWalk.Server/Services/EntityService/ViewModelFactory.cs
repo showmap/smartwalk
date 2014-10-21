@@ -56,17 +56,17 @@ namespace SmartWalk.Server.Services.EntityService
             record.DateModified = DateTime.UtcNow;
 
             record.Type = (byte)entityVm.Type;
-            record.Name = entityVm.Name.StripTags();
-            record.Picture = entityVm.Picture.StripTags();
-            record.Description = entityVm.Description.StripTags();
+            record.Name = entityVm.Name.TrimIt().StripTags();
+            record.Picture = entityVm.Picture.TrimIt().StripTags();
+            record.Description = entityVm.Description.TrimIt().StripTags();
         }
 
         public static void UpdateByViewModel(AddressRecord record, AddressVm addressVm)
         {
-            record.Address = addressVm.Address.StripTags();
+            record.Address = addressVm.Address.TrimIt().StripTags();
             record.Latitude = addressVm.Latitude;
             record.Longitude = addressVm.Longitude;
-            record.Tip = addressVm.Tip.StripTags();
+            record.Tip = addressVm.Tip.TrimIt().StripTags();
 
             record.IsDeleted = addressVm.Destroy;
         }
@@ -74,8 +74,8 @@ namespace SmartWalk.Server.Services.EntityService
         public static void UpdateByViewModel(ContactRecord record, ContactVm contactVm)
         {
             record.Type = (byte)contactVm.Type;
-            record.Title = contactVm.Title.StripTags();
-            record.Contact = contactVm.Contact.StripTags();
+            record.Title = contactVm.Title.TrimIt().StripTags();
+            record.Contact = contactVm.Contact.TrimIt().StripTags();
 
             record.IsDeleted = contactVm.Destroy;
         }
@@ -83,7 +83,7 @@ namespace SmartWalk.Server.Services.EntityService
         public static void UpdateByViewModel(EventEntityDetailRecord record, EventEntityDetailVm detailVm)
         {
             record.SortOrder = detailVm != null ? detailVm.SortOrder : null;
-            record.Description = detailVm != null ? detailVm.Description.StripTags() : null;
+            record.Description = detailVm != null ? detailVm.Description.TrimIt().StripTags() : null;
         }
 
         private static AddressVm CreateViewModel(AddressRecord record)
