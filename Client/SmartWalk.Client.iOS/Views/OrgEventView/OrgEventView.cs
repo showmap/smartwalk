@@ -729,7 +729,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeCalEventViewController()
         {
-            _editCalEventController = new EKEventEditViewController();
+            _editCalEventController = new OrgEventEditViewController();
             _editCalEventController.EventStore = (EKEventStore)ViewModel.CurrentCalendarEvent.EventStore;
             _editCalEventController.Event = (EKEvent)ViewModel.CurrentCalendarEvent.EventObj;
 
