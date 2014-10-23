@@ -109,6 +109,14 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
+        // Default image is shown during loading
+        public static bool ProgressEnded(this UIImageView imageView)
+        {
+            var result = imageView.Image == null ||
+                imageView.Image.Size != Theme.DefaultImageSize;
+            return result;
+        }
+
         public static bool HasImage(this UIImageView imageView)
         {
             var result = imageView.Image != null &&

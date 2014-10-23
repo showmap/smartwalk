@@ -58,13 +58,6 @@ namespace SmartWalk.Client.Core.Utils
             return status;
         }
 
-        public static string GetText(this Show show)
-        {
-            var result = show.Title + 
-                (show.Description != null ? Space + show.Description : string.Empty);
-            return result;
-        }
-
         public static string GetSearchableText(this object model)
         {
             var result = default(string);
@@ -128,11 +121,60 @@ namespace SmartWalk.Client.Core.Utils
         {
             return 
                 entity != null && 
+                entity.Addresses.HasAddresses();
+        }
+
+        public static bool HasAddresses(this Address[] addresses)
+        {
+            return
+                addresses != null && 
+                addresses.Length > 0 &&
+                addresses.Any(a => !a.Latitude.EqualsF(0) && !a.Longitude.EqualsF(0));
+        }
+
+        public static bool HasAddressText(this Entity entity)
+        {
+            return 
+                entity != null && 
                 entity.Addresses != null && 
                 entity.Addresses.Length > 0 &&
-                // Analysis disable RedundantCast
-                entity.Addresses.Any(a => (int)a.Latitude != 0 && (int)a.Longitude != 0);
-                // Analysis enable RedundantCast;
+                entity.Addresses.Any(a => !string.IsNullOrWhiteSpace(a.AddressText));
+        }
+
+        public static string GetAddressText(this Entity entity)
+        {
+            var text = entity != null 
+                ? entity.Addresses.GetAddressText()
+                : null;
+            return text;
+        }
+
+        public static string GetAddressText(this Address[] addresses)
+        {
+            var text = addresses != null 
+                ? addresses
+                    .Select(a => a.AddressText)
+                    .FirstOrDefault(t => !string.IsNullOrWhiteSpace(t))
+                : null;
+            return text;
+        }
+
+        public static string GetAddressOrCoordText(this Entity entity)
+        {
+            return entity.Addresses.GetAddressOrCoordText();
+        }
+
+        public static string GetAddressOrCoordText(this Address[] addresses)
+        {
+            var text = GetAddressText(addresses);
+
+            if (addresses.HasAddresses() && text == null)
+            {
+                var addr = addresses.FirstOrDefault();
+                text = string.Format("{0},{1}", addr.Latitude, addr.Longitude);
+            }
+
+            return text;
         }
 
         public static bool HasPicture(this Show show)

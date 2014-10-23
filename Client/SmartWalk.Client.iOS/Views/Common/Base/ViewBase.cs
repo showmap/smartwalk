@@ -190,7 +190,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeStyle()
         {
-            View.BackgroundColor = Theme.BackgroundPatternColor;
+            View.BackgroundColor = UIColor.White;
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

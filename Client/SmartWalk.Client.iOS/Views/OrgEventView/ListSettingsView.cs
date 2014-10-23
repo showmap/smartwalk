@@ -94,7 +94,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             TopSeparator.IsLineOnTop = true;
 
-            PlaceholderView.BackgroundColor = Theme.BackgroundPatternColor;
+            PlaceholderView.BackgroundColor = Theme.HeaderCellBackground;
             PlaceholderView.Layer.ShadowColor = UIColor.Black.CGColor;
             PlaceholderView.Layer.ShadowOffset = new SizeF(0, 5);
             PlaceholderView.Layer.ShadowOpacity = 0.3f;

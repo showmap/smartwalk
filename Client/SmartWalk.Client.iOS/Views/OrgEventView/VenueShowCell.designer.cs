@@ -62,6 +62,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Outlet]
 		MonoTouch.UIKit.UIView TimeBackgroundView { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint TitleAndDescriptionSpaceConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -100,16 +106,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				HeaderContainer = null;
 			}
 
-			if (SubHeaderContainer != null) {
-				SubHeaderContainer.Dispose ();
-				SubHeaderContainer = null;
-			}
-
-			if (SubHeaderHeightConstraint != null) {
-				SubHeaderHeightConstraint.Dispose ();
-				SubHeaderHeightConstraint = null;
-			}
-
 			if (HeaderHeightConstraint != null) {
 				HeaderHeightConstraint.Dispose ();
 				HeaderHeightConstraint = null;
@@ -140,6 +136,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				StartTimeLabel = null;
 			}
 
+			if (SubHeaderContainer != null) {
+				SubHeaderContainer.Dispose ();
+				SubHeaderContainer = null;
+			}
+
+			if (SubHeaderHeightConstraint != null) {
+				SubHeaderHeightConstraint.Dispose ();
+				SubHeaderHeightConstraint = null;
+			}
+
 			if (ThumbImageView != null) {
 				ThumbImageView.Dispose ();
 				ThumbImageView = null;
@@ -148,6 +154,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TimeBackgroundView != null) {
 				TimeBackgroundView.Dispose ();
 				TimeBackgroundView = null;
+			}
+
+			if (TitleLabel != null) {
+				TitleLabel.Dispose ();
+				TitleLabel = null;
+			}
+
+			if (TitleAndDescriptionSpaceConstraint != null) {
+				TitleAndDescriptionSpaceConstraint.Dispose ();
+				TitleAndDescriptionSpaceConstraint = null;
 			}
 		}
 	}

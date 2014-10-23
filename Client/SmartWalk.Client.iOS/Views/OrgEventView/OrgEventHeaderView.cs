@@ -112,6 +112,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (_isStyleInitialized || SearchBar == null) return;
 
+            BackgroundColor = Theme.HeaderCellBackground;
             SearchBar.SetPassiveStyle();
 
             OptionsButton.SetImage(ThemeIcons.ListOptions, UIControlState.Normal);

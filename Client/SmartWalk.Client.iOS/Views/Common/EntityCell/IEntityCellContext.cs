@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using SmartWalk.Client.Core.Model.DataContracts;
 
@@ -10,7 +11,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         string Subtitle { get; }
         string Description { get; }
         bool IsDescriptionExpanded { get; }
-        EntityViewModelWrapper.ModelMode Mode { get; }
     }
 
     public static class EntityCellContextExtensions
@@ -28,8 +28,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
 
             var result = string.Format(
-                "{0}\r\n\r\n{1}", 
+                "{0}{1}{1}{2}", 
                 context.Description, 
+                Environment.NewLine,
                 context.Entity.Description);
             return result;
         }

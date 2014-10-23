@@ -16,8 +16,8 @@ namespace SmartWalk.Client.Core.Model.DataContracts
             if (ad != null)
             {
                 return AddressText == ad.AddressText &&
-                    Latitude == ad.Latitude &&
-                    Longitude == ad.Longitude &&
+                    Latitude.EqualsF(ad.Latitude) &&
+                    Longitude.EqualsF(ad.Longitude) &&
                     Tip == ad.Tip;
             }
 

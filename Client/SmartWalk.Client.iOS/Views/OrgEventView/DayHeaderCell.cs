@@ -14,12 +14,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         public static readonly NSString Key = new NSString("DayHeaderCell");
 
-        public const float DefaultHeight = 22;
+        public const float DefaultHeight = 28;
 
         public DayHeaderCell(IntPtr handle) : base(handle)
         {
             SelectionStyle = UITableViewCellSelectionStyle.None;
-            BackgroundView = new UIView { BackgroundColor = Theme.HeaderCellBackground };
+            BackgroundView = new UIView { BackgroundColor = Theme.GroupCellBackground };
             ContentView = GroupHeaderContentView.Create();
             Frame = ContentView.Bounds;
             base.ContentView.RemoveSubviews();

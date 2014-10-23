@@ -232,7 +232,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            WebView.BackgroundColor = Theme.BackgroundPatternColor;
+            WebView.BackgroundColor = UIColor.White;
             LeftSpacer.Width = Theme.NavBarPaddingCompensate;
 
             BottomToolbar.Translucent = true;

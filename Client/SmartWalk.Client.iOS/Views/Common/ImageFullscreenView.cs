@@ -4,6 +4,7 @@ using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 

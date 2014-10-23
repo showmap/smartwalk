@@ -282,7 +282,6 @@
     <Compile Include="Controls\CopyLabel.cs" />
     <Compile Include="Utils\ButtonBarUtil.cs" />
     <Compile Include="Resources\Theme.cs" />
-    <Compile Include="Controls\Shadow.cs" />
     <Compile Include="Utils\Map\IMapAnnotation.cs" />
     <Compile Include="Utils\Map\MapDelegate.cs" />
     <Compile Include="Utils\Map\MapUtil.cs" />
@@ -334,10 +333,6 @@
       <DependentUpon>ListSettingsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\Base\DialogViewBase.cs" />
-    <Compile Include="Views\Common\ImageBackgroundView.cs" />
-    <Compile Include="Views\Common\ImageBackgroundView.designer.cs">
-      <DependentUpon>ImageBackgroundView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Common\EntityCell\MapCell.cs" />
     <Compile Include="Views\Common\EntityCell\MapCell.designer.cs">
       <DependentUpon>MapCell.cs</DependentUpon>
@@ -394,6 +389,7 @@
     <Compile Include="Views\Common\Base\Cells\ContentViewBase.cs" />
     <Compile Include="Utils\ExtendedNavController.cs" />
     <Compile Include="Views\OrgEventView\OrgEventEditViewController.cs" />
+    <Compile Include="Utils\AnimationDelay.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
@@ -427,14 +423,12 @@
     <InterfaceDefinition Include="Views\Common\GroupHeader\GroupHeaderContentView.xib" />
     <InterfaceDefinition Include="Views\VenueView\NextVenueCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\ListSettingsView.xib" />
-    <InterfaceDefinition Include="Views\Common\ImageBackgroundView.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\HomeView\HomeHeaderView.xib" />
     <InterfaceDefinition Include="Views\OrgEventInfoView\OrgEventInfoView.xib" />
     <InterfaceDefinition Include="Views\Common\ImageBackgroundSimpleView.xib" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Images\Background.png" />
     <BundleResource Include="Resources\Icons\NavBarBack.png" />
     <BundleResource Include="Resources\Icons\NavBarBack%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarList.png" />
@@ -485,7 +479,6 @@
     <BundleResource Include="Resources\Icons\ToolBarDirections%402x.png" />
     <BundleResource Include="Resources\Icons\NavBarMore.png" />
     <BundleResource Include="Resources\Icons\NavBarMore%402x.png" />
-    <BundleResource Include="Resources\Images\Background%402x.png" />
     <BundleResource Include="Resources\Images\Black.png" />
     <BundleResource Include="Resources\Icons\DetailsBlack.png" />
     <BundleResource Include="Resources\Icons\DetailsBlack%402x.png" />

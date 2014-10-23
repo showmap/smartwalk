@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.UIKit;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 

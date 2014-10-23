@@ -20,7 +20,6 @@
         public const string ShareButton = "Share";
         public const string CancelButton = "Cancel";
         public const string ChangeMapTo = "Change Map to {0}";
-        public const string NextPattern = "Next: {0}";
         public const string UnknownLocation = "Unknown Location";
         public const string OffLineMode = "Offline Mode";
 

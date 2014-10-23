@@ -8,13 +8,12 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
-using SmartWalk.Client.iOS.Views.OrgEventView;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class EntityCell : TableCellBase
     {
-        private const int MapVerticalHeight = 80;
+        private const int ImageVerticalHeight = 150;
         private const int Gap = 10;
 
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
@@ -22,11 +21,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         // HACK: Can't call to Superview due to memory leak
         private WeakReference<UIView> _parentTableRef;
+        private UITapGestureRecognizer _headerImageTapGesture;
         private UITapGestureRecognizer _descriptionTapGesture;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView { BackgroundColor = Theme.BackgroundPatternColor };
+            BackgroundView = new UIView { BackgroundColor = UIColor.White };
         }
 
         public static EntityCell Create()
@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 ((int)textHeight != 0 ? Gap * 2 : 0) + 
                 (context.IsDescriptionExpanded ?
                     textHeight 
-                    : Math.Min(textHeight, Theme.EntityDescrFont.LineHeight * 3));
+                    : Math.Min(textHeight, Theme.EntityDescriptionFont.LineHeight * 3));
             return (float)Math.Ceiling(result);
         }
 
@@ -61,7 +61,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 using (var ns = new NSString(text))
                 {
                     textSize = ns.StringSize(
-                        Theme.EntityDescrFont,
+                        Theme.EntityDescriptionFont,
                         frameSize,
                         UILineBreakMode.TailTruncation);
                 }
@@ -74,17 +74,18 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private static float GetHeaderHeight(RectangleF frame, Entity entity)
         {
-            var goldenHeight = ScreenUtil.GetGoldenRatio(frame.Height);
-
             if (ScreenUtil.IsVerticalOrientation)
             {
                 var result = 
-                    goldenHeight - 
-                    (!entity.HasAddresses() ? MapVerticalHeight : 0) +
-                    VenueHeaderView.DefaultHeight; // compensate to fit the header image
+                    ImageVerticalHeight +
+                    (entity.HasAddresses() 
+                        ? MapCell.DefaultHeight - 
+                            (!entity.HasAddressText() ? MapCell.DefaultAddressHeight : 0)
+                        : 0);
                 return result;
             }
 
+            var goldenHeight = ScreenUtil.GetGoldenRatio(frame.Height);
             return goldenHeight;
         }
 
@@ -104,9 +105,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             get { return DataContext != null ? DataContext.Entity : null; }
         }
 
-        private ImageBackgroundView ImageBackground
+        private ImageBackgroundSimpleView ImageBackground
         {
-            get { return (ImageBackgroundView)ImageCellPlaceholder.Content; }
+            get { return (ImageBackgroundSimpleView)ImageCellPlaceholder.Content; }
         }
 
         private MapCell MapCell
@@ -160,34 +161,31 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 HeaderHeightConstraint.Constant = 0;
             }
 
-            var imageVerticalHeight = headerHeight - 
-                (entity.HasAddresses() ? MapVerticalHeight : 0);
-
-            if (DataContext != null &&
-                Frame.Height >= headerHeight)
+            if (entity != null && Frame.Height >= headerHeight)
             {
                 if (ScreenUtil.IsVerticalOrientation)
                 {
                     ImageWidthConstraint.Constant = Bounds.Width;
-                    ImageHeightConstraint.Constant = imageVerticalHeight;
+                    ImageHeightConstraint.Constant = ImageVerticalHeight;
                 }
                 else
                 {
-                    ImageWidthConstraint.Constant = DataContext.Entity.HasAddresses()
+                    ImageWidthConstraint.Constant = entity.HasAddresses()
                         ? Bounds.Width / 2
                         : Bounds.Width;
                     ImageHeightConstraint.Constant = headerHeight;
                 }
 
-                if (DataContext.Entity.HasAddresses())
+                if (entity.HasAddresses())
                 {
                     if (ScreenUtil.IsVerticalOrientation)
                     {
                         MapXConstraint.Constant = 0;
-                        MapYConstraint.Constant = imageVerticalHeight;
+                        MapYConstraint.Constant = ImageVerticalHeight;
 
                         MapWidthConstraint.Constant = Bounds.Width;
-                        MapHeightConstraint.Constant = MapVerticalHeight;
+                        MapHeightConstraint.Constant = MapCell.DefaultHeight
+                            - (!entity.HasAddressText() ? MapCell.DefaultAddressHeight : 0);
                     }
                     else
                     {
@@ -226,8 +224,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 MapWidthConstraint.Constant,
                 MapHeightConstraint.Constant);
 
-            if (DataContext != null &&
-                DataContext.Entity.Description != null)
+            if (entity != null && entity.Description != null)
             {
                 DescriptionTopConstraint.Constant = Gap;
                 DescriptionBottomConstraint.Constant = Gap;
@@ -242,9 +239,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         protected override void OnInitialize()
         {
             InitializeStyle();
-            InitializeGestures();
             InitializeHeaderImage();
             InitializeMapCell();
+            InitializeGestures();
 
             SetNeedsLayout();
         }
@@ -259,25 +256,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 ? DataContext.Title
                 : null;
 
-            if (DataContext.Mode == EntityViewModelWrapper.ModelMode.Event)
-            {
-                ImageBackground.Uptitle = DataContext != null
-                    ? DataContext.Subtitle
-                    : null;
-            }
-            else
-            {
-                ImageBackground.Subtitle = DataContext != null
-                    ? DataContext.Subtitle
-                    : null;
-            }
-
-            ImageBackground.SubtitleButtonImage = 
-                DataContext != null &&
-                DataContext.Subtitle != null &&
-                DataContext.Mode == EntityViewModelWrapper.ModelMode.Venue
-                    ? ThemeIcons.NavBarMapLandscape
-                    : null;
+            ImageBackground.Subtitle = DataContext != null
+                ? DataContext.Subtitle
+                : null;
 
             ImageBackground.ImageUrl = DataContext != null
                 ? DataContext.Entity.Picture
@@ -293,6 +274,19 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeGestures()
         {
+            _headerImageTapGesture = new UITapGestureRecognizer(() => {
+                if (ShowImageFullscreenCommand != null &&
+                    ShowImageFullscreenCommand.CanExecute(ImageBackground.ImageUrl))
+                {
+                    ShowImageFullscreenCommand.Execute(ImageBackground.ImageUrl);
+                }
+            }) {
+                NumberOfTouchesRequired = (uint)1,
+                NumberOfTapsRequired = (uint)1
+            };
+
+            ImageBackground.AddGestureRecognizer(_headerImageTapGesture);
+
             _descriptionTapGesture = new UITapGestureRecognizer(() => {
                 if (ExpandCollapseCommand != null &&
                     ExpandCollapseCommand.CanExecute(null))
@@ -309,6 +303,13 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void DisposeGestures()
         {
+            if (_headerImageTapGesture != null)
+            {
+                ImageBackground.RemoveGestureRecognizer(_headerImageTapGesture);
+                _headerImageTapGesture.Dispose();
+                _headerImageTapGesture = null;
+            }
+
             if (_descriptionTapGesture != null)
             {
                 DescriptionLabel.RemoveGestureRecognizer(_descriptionTapGesture);
@@ -319,23 +320,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeHeaderImage()
         {
-            ImageCellPlaceholder.Content = ImageBackgroundView.Create();
-
+            ImageCellPlaceholder.Content = ImageBackgroundSimpleView.Create();
             ImageBackground.Initialize();
-            ImageBackground.ShowImageFullscreenCommand = ShowImageFullscreenCommand;
-
-            if (DataContext != null &&
-                DataContext.Mode == EntityViewModelWrapper.ModelMode.Venue)
-            {
-                ImageBackground.ShowSubtitleContentCommand = NavigateAddressesCommand;
-            }
         }
 
         private void DisposeHeaderImage()
         {
-            ImageBackground.ShowImageFullscreenCommand = null;
-            ImageBackground.ShowSubtitleContentCommand = null;
-
             ImageBackground.Dispose();
             ImageCellPlaceholder.Content = null;
         }
@@ -357,10 +347,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
-            PlaceholderSeparator.Color = Theme.EntitySeparator;
-
-            DescriptionLabel.Font = Theme.EntityDescrFont;
-            DescriptionLabel.TextColor = Theme.CellText;
+            DescriptionLabel.Font = Theme.EntityDescriptionFont;
+            DescriptionLabel.TextColor = Theme.EntityDescription;
         }
     }
 }

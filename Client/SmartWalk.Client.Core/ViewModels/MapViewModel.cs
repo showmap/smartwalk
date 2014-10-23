@@ -83,12 +83,12 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCopyAddress);
 
-                            var address = GetAddressText();
+                            var address = Annotation.Addresses.GetAddressOrCoordText();
                             _environmentService.Copy(address);
                         },
                         () => 
                             Annotation != null &&
-                            Annotation.Addresses != null);
+                            Annotation.Addresses.HasAddresses());
                 }
 
                 return _copyAddressCommand;
@@ -108,7 +108,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelShare);
 
-                            var address = GetAddressText();
+                            var address = Annotation.Addresses.GetAddressOrCoordText();
                             if (address != null && Share != null)
                             {
                                 Share(this, new MvxValueEventArgs<string>(address));
@@ -116,7 +116,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         },
                         () => 
                             Annotation != null &&
-                            Annotation.Addresses != null);
+                            Annotation.Addresses.HasAddresses());
                 }
 
                 return _shareCommand;
@@ -222,17 +222,6 @@ namespace SmartWalk.Client.Core.ViewModels
                     .CombineHashCodeOrDefault(Title)
                     .CombineHashCodeOrDefault(Addresses);
             }
-        }
-
-        private string GetAddressText()
-        {
-            var address = 
-                Annotation != null && Annotation.Addresses != null
-                ? Annotation.Addresses
-                    .Select(a => a.AddressText)
-                    .FirstOrDefault()
-                : null;
-            return address;
         }
     }
 

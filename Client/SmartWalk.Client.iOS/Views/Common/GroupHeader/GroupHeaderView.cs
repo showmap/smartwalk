@@ -11,11 +11,11 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
     {
         public static readonly NSString Key = new NSString("GroupHeaderContentView");
 
-        public const float DefaultHeight = 26;
+        public const float DefaultHeight = 28;
 
         public GroupHeaderView(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView { BackgroundColor = Theme.HeaderCellBackground };
+            BackgroundView = new UIView { BackgroundColor = Theme.GroupCellBackground };
             ContentView = GroupHeaderContentView.Create();
             Frame = ContentView.Bounds;
             base.ContentView.RemoveSubviews();

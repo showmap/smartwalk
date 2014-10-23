@@ -16,6 +16,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class MapCell : ContentViewBase
     {
+        public const int DefaultHeight = 120;
+        public const int DefaultAddressHeight = 30;
+
         public static readonly UINib Nib = UINib.FromName("MapCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("MapCell");
 
@@ -50,11 +53,28 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
+        public override void UpdateConstraints()
+        {
+            base.UpdateConstraints();
+
+            if (AddressLabel != null)
+            {
+                if (AddressLabel.Text != null)
+                {
+                    AddressHeightConstraint.Constant = DefaultAddressHeight;
+                }
+                else
+                {
+                    AddressHeightConstraint.Constant = 0;
+                }
+            }
+        }
+
         protected override void OnInitialize()
         {
+            InitializeStyle();
             InitializeGestures();
 
-            MapView.TintColor = Theme.MapTint;
             MapView.Delegate = new MapDelegate { CanShowCallout = false };
         }
 
@@ -64,14 +84,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             var isFirstLoading = previousAnnotations.Length == 0;
             MapView.RemoveAnnotations(previousAnnotations);
 
-            if (DataContext != null && 
+            if (DataContext != null &&
                 DataContext.HasAddresses())
             {
                 var annotations = DataContext.Addresses
                     .Select(a => new MapViewAnnotation(
-                        DataContext.Name.GetAbbreviation(2), 
-                        DataContext.Name,
-                        a))
+                                      DataContext.Name.GetAbbreviation(2), 
+                                      DataContext.Name,
+                                      a))
                     .ToArray();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 
@@ -91,7 +111,23 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
                     MapView.AddAnnotations(annotations);
                 }
+
+                AddressLabel.Text = DataContext.GetAddressText();
             }
+            else
+            {
+                AddressLabel.Text = null;
+            }
+
+            SetNeedsUpdateConstraints();
+        }
+
+        private void InitializeStyle()
+        {
+            MapView.TintColor = Theme.MapTint;
+
+            AddressLabel.Font = Theme.MapCellAddressFont;
+            AddressLabel.TextColor = Theme.MapCellAddress;
         }
 
         private void InitializeGestures()

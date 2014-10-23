@@ -13,6 +13,15 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 	partial class MapCell
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIView AddressContainer { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint AddressHeightConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIView CoverView { get; set; }
 
 		[Outlet]
@@ -20,14 +29,29 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (CoverView != null) {
+				CoverView.Dispose ();
+				CoverView = null;
+			}
+
 			if (MapView != null) {
 				MapView.Dispose ();
 				MapView = null;
 			}
 
-			if (CoverView != null) {
-				CoverView.Dispose ();
-				CoverView = null;
+			if (AddressLabel != null) {
+				AddressLabel.Dispose ();
+				AddressLabel = null;
+			}
+
+			if (AddressHeightConstraint != null) {
+				AddressHeightConstraint.Dispose ();
+				AddressHeightConstraint = null;
+			}
+
+			if (AddressContainer != null) {
+				AddressContainer.Dispose ();
+				AddressContainer = null;
 			}
 		}
 	}

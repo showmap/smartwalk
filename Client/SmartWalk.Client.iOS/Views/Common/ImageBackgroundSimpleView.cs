@@ -13,6 +13,7 @@ namespace SmartWalk.Client.iOS.Views.Common
     public partial class ImageBackgroundSimpleView : UIView
     {
         public static readonly UINib Nib = UINib.FromName("ImageBackgroundSimpleView", NSBundle.MainBundle);
+        private readonly AnimationDelay _animationDelay = new AnimationDelay();
 
         private MvxImageViewLoader _imageHelper;
         private MvxResizedImageViewLoader _resizedImageHelper;
@@ -55,8 +56,10 @@ namespace SmartWalk.Client.iOS.Views.Common
 
                 if (value != null)
                 {
-                    BackgroundImage.StartProgress();
+                    ProgressView.StartAnimating();
                 }
+
+                _animationDelay.Reset();
 
                 if (_resizeImage)
                 {
@@ -94,14 +97,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             TitleLabel.Text = null;
             SubtitleLabel.Text = null;
 
-            BackgroundImage.Hidden = true;
-
             InitializeImageHelper();
             InitializeStyle();
             InitializeBottomGradientState();
-
-            BackgroundImage.ActivityIndicatorViewStyle = 
-                UIActivityIndicatorViewStyle.White;
         }
 
         public override void LayoutSubviews()
@@ -113,6 +111,19 @@ namespace SmartWalk.Client.iOS.Views.Common
             if (_bottomGradient != null)
             {
                 _bottomGradient.Frame = GradientPlaceholder.Bounds;
+            }
+
+            UpdateConstraints();
+        }
+
+        public override void UpdateConstraints()
+        {
+            base.UpdateConstraints();
+
+            if (SubtitleLabel != null)
+            {
+                TitleBottomGapConstraint.Constant = 
+                    SubtitleLabel.Text != null ? 3 : 10;
             }
         }
 
@@ -133,18 +144,20 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 _imageHelper = 
                     new MvxImageViewLoader(() => BackgroundImage, OnImageChanged);
+                _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
+                _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
             }
         }
 
         private void InitializeStyle()
         {
-            BackgroundColor = Theme.HeaderCellBackground;
+            BackgroundColor = Theme.GroupCellBackground;
 
-            TitleLabel.Font = Theme.SimpleImageTitleTextFont;
-            TitleLabel.TextColor = Theme.SimpleImageTitleText;
+            TitleLabel.Font = Theme.BackgroundImageTitleTextFont;
+            TitleLabel.TextColor = Theme.BackgroundImageTitleText;
 
-            SubtitleLabel.Font = Theme.SimpleImageSubtitleTextFont;
-            SubtitleLabel.TextColor = Theme.SimpleImageSubtitleText;
+            SubtitleLabel.Font = Theme.BackgroundImageSubtitleTextFont;
+            SubtitleLabel.TextColor = Theme.BackgroundImageSubtitleText;
         }
 
         private void InitializeBottomGradientState()
@@ -180,7 +193,16 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void OnImageChanged()
         {
-            BackgroundImage.SetHidden(!BackgroundImage.HasImage(), true);
+            if (BackgroundImage.ProgressEnded())
+            {
+                ProgressView.StopAnimating();
+            }
+
+            if (BackgroundImage.HasImage() && _animationDelay.Animate)
+            {
+                BackgroundImage.Hidden = true;
+                BackgroundImage.SetHidden(false, true);
+            }
         }
     }
 }

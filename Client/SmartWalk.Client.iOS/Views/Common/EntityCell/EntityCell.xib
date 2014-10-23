@@ -17,7 +17,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="HeaderPlaceholder">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" customClass="Placeholder">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" userLabel="Map Placeholder" customClass="Placeholder">
                                 <rect key="frame" x="0.0" y="160" width="320" height="80"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -25,7 +25,7 @@
                                     <constraint firstAttribute="width" constant="320" id="1032"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" customClass="Placeholder">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" userLabel="Image Placeholder" customClass="Placeholder">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="160"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -43,13 +43,6 @@
                             <constraint firstAttribute="height" constant="240" id="1033"/>
                         </constraints>
                     </view>
-                    <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1056" userLabel="PlaceholderSeparator" customClass="Line">
-                        <rect key="frame" x="0.0" y="239" width="320" height="1"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="1" id="1070"/>
-                        </constraints>
-                    </view>
                     <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description Description Description Description Description Description Description Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="Description" customClass="CopyLabel">
                         <rect key="frame" x="10" y="250" width="300" height="282"/>
                         <gestureRecognizers/>
@@ -57,31 +50,18 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U3N-hC-GE0" userLabel="Separator" customClass="Line">
-                        <rect key="frame" x="0.0" y="541" width="320" height="1"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="1" id="1m8-zH-3st"/>
-                        </constraints>
-                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="U3N-hC-GE0" secondAttribute="bottom" id="28D-Tg-OlE"/>
-                    <constraint firstAttribute="trailing" secondItem="1056" secondAttribute="trailing" id="AaP-99-NVm"/>
                     <constraint firstItem="19" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" priority="800" constant="10" id="Cuo-fo-L5r"/>
                     <constraint firstItem="999" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="Fcf-bu-ehO"/>
-                    <constraint firstItem="U3N-hC-GE0" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="FfR-dD-NUg"/>
                     <constraint firstAttribute="trailing" secondItem="999" secondAttribute="trailing" id="RZc-C1-wQF"/>
                     <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" priority="800" constant="10" id="bd6-1O-KDF"/>
-                    <constraint firstAttribute="trailing" secondItem="U3N-hC-GE0" secondAttribute="trailing" id="duc-Mt-2Gg"/>
                     <constraint firstItem="999" firstAttribute="top" secondItem="Q3o-AI-f2B" secondAttribute="top" id="erS-LN-8ki"/>
-                    <constraint firstItem="1056" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="r3T-QA-hJg"/>
                     <constraint firstAttribute="bottom" secondItem="19" secondAttribute="bottom" priority="800" constant="10" id="sU9-x5-c4S"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
                 <constraint firstItem="19" firstAttribute="top" secondItem="999" secondAttribute="bottom" priority="800" constant="10" id="DQK-qT-KNl"/>
-                <constraint firstItem="999" firstAttribute="bottom" secondItem="1056" secondAttribute="bottom" id="kGd-35-sJO"/>
             </constraints>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
@@ -97,8 +77,6 @@
                 <outlet property="MapWidthConstraint" destination="1032" id="1039"/>
                 <outlet property="MapXConstraint" destination="1024" id="1040"/>
                 <outlet property="MapYConstraint" destination="1025" id="1041"/>
-                <outlet property="PlaceholderSeparator" destination="1056" id="5KK-bg-0xI"/>
-                <outlet property="Separator" destination="U3N-hC-GE0" id="Mfe-CC-8vU"/>
             </connections>
         </tableViewCell>
     </objects>

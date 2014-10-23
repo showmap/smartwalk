@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
-using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -146,7 +146,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 result.Addresses = new [] {
                     new Address 
                     { 
-                        AddressText = _orgEvent.Title,
                         Latitude = _orgEvent.Latitude.Value,
                         Longitude = _orgEvent.Longitude.Value
                     }

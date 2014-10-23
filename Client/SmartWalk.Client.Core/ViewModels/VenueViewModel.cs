@@ -62,16 +62,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override string Subtitle
         {
-            get
-            {
-                if (Venue != null && 
-                    Venue.Info.HasAddresses())
-                {
-                    return Venue.Info.Addresses[0].AddressText;
-                }
-
-                return null;
-            }
+            get { return null; }
         }
 
         public OrgEvent OrgEvent
@@ -219,14 +210,12 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionTouch,
                                 Analytics.ActionLabelCopyAddress);
 
-                            var address = Entity.Addresses
-                                .Select(a => a.AddressText)
-                                .FirstOrDefault();
+                            var address = Entity.GetAddressOrCoordText();
                             _environmentService.Copy(address);
                         },
                         () => 
                             Entity != null &&
-                            Entity.Addresses != null);
+                            Entity.HasAddresses());
                 }
 
                 return _copyAddressCommand;
@@ -294,7 +283,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         orgEvent = eventTask.Result.Data;
                     }
 
-                    if (eventTask.Result != null)
+                    if (venuesTask.Result != null)
                     {
                         venues = venuesTask.Result.Data;
                         source = venuesTask.Result.Source;

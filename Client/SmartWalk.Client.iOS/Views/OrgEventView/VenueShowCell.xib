@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VenueShowCell" rowHeight="451" id="2" customClass="VenueShowCell">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VenueShowCell" id="2" customClass="VenueShowCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="303"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2" id="auL-5q-RG9">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="302"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Gf-8G-gFc" userLabel="HeaderContainer">
+                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Gf-8G-gFc" userLabel="HeaderContainer">
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" id="rDG-LL-Yqd"/>
                         </constraints>
                     </view>
-                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="SubHeaderContainer">
+                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="SubHeaderContainer">
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" id="grt-qG-RJY"/>
@@ -53,21 +53,21 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="8" y="12" width="206" height="18"/>
+                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Title" customClass="CopyLabel">
+                        <rect key="frame" x="10" y="12" width="204" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
-                        <rect key="frame" x="8" y="161" width="173" height="100"/>
+                        <rect key="frame" x="10" y="161" width="173" height="100"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="100" id="139"/>
                             <constraint firstAttribute="width" constant="173" id="173"/>
                         </constraints>
                     </imageView>
                     <label hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
-                        <rect key="frame" x="8" y="273" width="296" height="17"/>
+                        <rect key="frame" x="10" y="273" width="292" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="367"/>
                         </constraints>
@@ -83,33 +83,43 @@
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K9o-xv-nfu" userLabel="Separator" customClass="Line">
-                        <rect key="frame" x="5" y="301" width="315" height="1"/>
+                        <rect key="frame" x="0.0" y="301" width="320" height="1"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="leb-9w-1Ar"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" clipsSubviews="YES" contentMode="top" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZg-8z-Khe" userLabel="Description" customClass="CopyLabel">
+                        <rect key="frame" x="10" y="32" width="292" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="hFa-pB-6q0" firstAttribute="top" secondItem="0Gf-8G-gFc" secondAttribute="bottom" id="30n-hp-Jz1"/>
-                    <constraint firstItem="9" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="8" id="DFg-T2-Ly1"/>
+                    <constraint firstItem="9" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="10" id="DFg-T2-Ly1"/>
                     <constraint firstAttribute="trailing" secondItem="hFa-pB-6q0" secondAttribute="trailing" id="FCz-O7-eUg"/>
+                    <constraint firstItem="9" firstAttribute="leading" secondItem="eZg-8z-Khe" secondAttribute="leading" id="Gjq-HX-BdO"/>
                     <constraint firstItem="0Gf-8G-gFc" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="MTM-Q2-T82"/>
                     <constraint firstItem="0Gf-8G-gFc" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="MnY-Ud-DPV"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="eZg-8z-Khe" secondAttribute="trailing" priority="900" constant="10" id="Q8x-s6-Qb4"/>
                     <constraint firstItem="9" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" constant="12" id="R12-9d-utz"/>
                     <constraint firstAttribute="trailing" secondItem="K9o-xv-nfu" secondAttribute="trailing" id="Saq-Ut-4Ls"/>
                     <constraint firstItem="592" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="UTs-ha-cCo"/>
                     <constraint firstAttribute="bottom" secondItem="592" secondAttribute="bottom" id="Z4Z-UY-RgZ"/>
                     <constraint firstAttribute="bottom" secondItem="K9o-xv-nfu" secondAttribute="bottom" id="ZUK-hY-8aQ"/>
                     <constraint firstItem="3" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" constant="11" id="aBT-oz-Aye"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="181" secondAttribute="trailing" constant="8" id="brI-xG-IGi"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="181" secondAttribute="trailing" priority="900" constant="10" id="brI-xG-IGi"/>
                     <constraint firstAttribute="bottom" secondItem="181" secondAttribute="bottom" constant="12" id="e9g-Hw-SsH"/>
-                    <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="5" id="fLo-Av-da9"/>
+                    <constraint firstItem="50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="eZg-8z-Khe" secondAttribute="bottom" priority="900" constant="12" id="f5C-H9-OZF"/>
+                    <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="fLo-Av-da9"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" id="lkf-0X-0xe"/>
                     <constraint firstAttribute="trailing" secondItem="0Gf-8G-gFc" secondAttribute="trailing" id="lkh-ir-ijZ"/>
                     <constraint firstItem="hFa-pB-6q0" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="nv5-LC-vXP"/>
+                    <constraint firstItem="eZg-8z-Khe" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="2" id="tvp-dH-0ZU"/>
                     <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="8" id="viT-Fi-EmO"/>
-                    <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" constant="106" id="zyo-g5-Tzk"/>
+                    <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" priority="900" constant="106" id="zyo-g5-Tzk"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
@@ -118,12 +128,11 @@
                 <constraint firstItem="50" firstAttribute="leading" secondItem="9" secondAttribute="leading" id="FN9-RG-HkB"/>
                 <constraint firstItem="181" firstAttribute="top" secondItem="50" secondAttribute="bottom" constant="12" id="H0t-fT-ezL"/>
                 <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="top" id="RVd-iL-t0g"/>
-                <constraint firstItem="50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="9" secondAttribute="bottom" constant="12" id="oIx-Bh-aFO"/>
                 <constraint firstItem="6" firstAttribute="baseline" secondItem="3" secondAttribute="baseline" id="z7o-uO-yi2"/>
             </constraints>
             <connections>
-                <outlet property="DescriptionAndImageSpaceConstraint" destination="oIx-Bh-aFO" id="5nt-CW-Yes"/>
-                <outlet property="DescriptionLabel" destination="9" id="376"/>
+                <outlet property="DescriptionAndImageSpaceConstraint" destination="f5C-H9-OZF" id="skv-7s-Zaq"/>
+                <outlet property="DescriptionLabel" destination="eZg-8z-Khe" id="Qdi-e3-Hjs"/>
                 <outlet property="DescriptionRightConstraint" destination="zyo-g5-Tzk" id="sSL-ir-ln2"/>
                 <outlet property="DetailsHeightConstraint" destination="367" id="384"/>
                 <outlet property="DetailsLabel" destination="181" id="378"/>
@@ -139,6 +148,8 @@
                 <outlet property="SubHeaderHeightConstraint" destination="grt-qG-RJY" id="EyH-5T-lO4"/>
                 <outlet property="ThumbImageView" destination="50" id="389"/>
                 <outlet property="TimeBackgroundView" destination="592" id="625"/>
+                <outlet property="TitleAndDescriptionSpaceConstraint" destination="tvp-dH-0ZU" id="zuD-w5-CSw"/>
+                <outlet property="TitleLabel" destination="9" id="GY8-hV-yKW"/>
             </connections>
         </tableViewCell>
     </objects>

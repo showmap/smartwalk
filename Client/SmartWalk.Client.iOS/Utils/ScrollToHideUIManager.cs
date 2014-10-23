@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using MonoTouch.UIKit;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.iOS.Utils
 {

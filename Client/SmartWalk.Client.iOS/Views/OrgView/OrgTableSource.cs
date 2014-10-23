@@ -153,9 +153,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             {
                 cell = tableView.DequeueReusableCell(OrgEventCell.Key, indexPath);
                 ((OrgEventCell)cell).DataContext = orgEvent;
-                ((OrgEventCell)cell).IsSeparatorVisible = 
-                    indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
-                    indexPath.Section == GroupItemsSource.Length - 1;
+                ((OrgEventCell)cell).IsSeparatorVisible = true;
             }
 
             return cell;

@@ -13,16 +13,19 @@ namespace SmartWalk.Client.iOS.Views.Common
 	partial class ImageBackgroundSimpleView
 	{
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.ProgressImageView BackgroundImage { get; set; }
+		MonoTouch.UIKit.UIImageView BackgroundImage { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIView GradientPlaceholder { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint SubtitleHeightConstraint { get; set; }
+		MonoTouch.UIKit.UIActivityIndicatorView ProgressView { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel SubtitleLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint TitleBottomGapConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
@@ -39,19 +42,24 @@ namespace SmartWalk.Client.iOS.Views.Common
 				GradientPlaceholder = null;
 			}
 
-			if (SubtitleHeightConstraint != null) {
-				SubtitleHeightConstraint.Dispose ();
-				SubtitleHeightConstraint = null;
-			}
-
 			if (SubtitleLabel != null) {
 				SubtitleLabel.Dispose ();
 				SubtitleLabel = null;
 			}
 
+			if (TitleBottomGapConstraint != null) {
+				TitleBottomGapConstraint.Dispose ();
+				TitleBottomGapConstraint = null;
+			}
+
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
+			}
+
+			if (ProgressView != null) {
+				ProgressView.Dispose ();
+				ProgressView = null;
 			}
 		}
 	}

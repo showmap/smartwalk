@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using Cirrious.CrossCore.Converters;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
@@ -47,6 +49,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             this.CreateBinding(TitleLabel)
                 .To<HomeViewModel>(vm => vm.Title)
+                .WithConversion(new ToUpperConvert(), null)
                 .Apply();
 
             InitializeStyle();
@@ -106,6 +109,25 @@ namespace SmartWalk.Client.iOS.Views.HomeView
                 _viewTapGesture.Dispose();
                 _viewTapGesture = null;
             }
+        }
+    }
+
+    public class ToUpperConvert : IMvxValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var text = value as string;
+            if (text != null)
+            {
+                return text.ToUpper();
+            }
+
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

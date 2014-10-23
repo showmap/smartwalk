@@ -17,6 +17,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueHeaderContentView", NSBundle.MainBundle);
 
         private readonly MvxResizedImageViewLoader _imageHelper;
+        private readonly AnimationDelay _animationDelay = new AnimationDelay();
+
         private UITapGestureRecognizer _cellTapGesture;
         private UILongPressGestureRecognizer _cellPressGesture;
 
@@ -28,8 +30,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     if (LogoImageView != null)
                     {
-                        var noImage = !LogoImageView.HasImage(); 
-                        LogoImageView.SetHidden(noImage, !noImage);
+                        var noImage = !LogoImageView.HasImage();
+                        LogoImageView.SetHidden(noImage, _animationDelay.Animate);
                         ImageLabelView.SetHidden(!noImage, false);
                     }
                 });
@@ -72,6 +74,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
+            _animationDelay.Reset();
+
             LogoImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
@@ -92,13 +96,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             NameLabel.Text = DataContext.DisplayName();
             ImageLabel.Text = DataContext.Info.Name.GetAbbreviation(2);
 
-            // TODO: to support showing more than one address
-            AddressLabel.Text = DataContext != null && 
-                DataContext.Info.Addresses != null && 
-                DataContext.Info.Addresses.Length > 0 
-                ? DataContext.Info.Addresses[0].AddressText 
+            AddressLabel.Text = DataContext != null
+                ? DataContext.Info.GetAddressText()
                 : null;
-                
+
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Picture : null;
         }
@@ -187,7 +188,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else
             {
-                BackgroundView.BackgroundColor = Theme.BackgroundPatternColor;
+                BackgroundView.BackgroundColor = Theme.HeaderCellBackground;
             }
 
             NameLabel.Highlighted = isSelected;

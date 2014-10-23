@@ -54,7 +54,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            NextTitleLabel.Text = string.Format(Localization.NextPattern, DataContext);
+            NextTitleLabel.Text = DataContext != null ? DataContext.ToUpper() : null;
         }
 
         private void InitializeGestures()
@@ -90,7 +90,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             DownImageView.Image = ThemeIcons.NextEntity;
 
             NextTitleLabel.Font = Theme.NextEntityFont;
-            NextTitleLabel.TextColor = Theme.CellText;
+            NextTitleLabel.TextColor = Theme.NextEntity;
         }
     }
 }

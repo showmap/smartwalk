@@ -77,7 +77,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             searchBar.BarStyle = UIBarStyle.Default;
             searchBar.TintColor = Theme.SearchControl;
-            searchBar.BarTintColor = Theme.NavBarBackgroundiOS7;
+            searchBar.BarTintColor = Theme.NavBarBackground;
             searchBar.SearchBarStyle = UISearchBarStyle.Prominent;
         }
     }

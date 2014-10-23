@@ -1,8 +1,8 @@
 using System;
-using MonoTouch.UIKit;
 using MonoTouch.Foundation;
-using SmartWalk.Client.iOS.Utils;
+using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Controls
 {
@@ -38,8 +38,7 @@ namespace SmartWalk.Client.iOS.Controls
             {
                 base.Image = value;
 
-                if (value == null || 
-                    value.Size != Theme.DefaultImageSize) // size of DefaultImage.png
+                if (this.ProgressEnded())
                 {
                     StopProgress();
                 }

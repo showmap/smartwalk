@@ -17,9 +17,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
             {
                 var result = new [] 
                     { 
-                        new EntityViewModelWrapper(
-                            viewModel, 
-                            EntityViewModelWrapper.ModelMode.Event) 
+                        new EntityViewModelWrapper(viewModel) 
                     };
                 return result;
             }

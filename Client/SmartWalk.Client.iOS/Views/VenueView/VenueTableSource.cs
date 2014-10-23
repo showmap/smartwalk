@@ -170,9 +170,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
-                ((VenueShowCell)cell).IsSeparatorVisible = 
-                    indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
-                    indexPath.Section == GroupItemsSource.Length - 1;
+                ((VenueShowCell)cell).IsSeparatorVisible = true;
             }
 
             var nextVenueTitle = item as string;

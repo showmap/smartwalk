@@ -176,7 +176,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (headerView != null)
             {
-                headerView.BackgroundColor = Theme.BackgroundPatternColor;
+                headerView.BackgroundColor = Theme.HeaderCellBackground;
                 headerView.BackgroundView = headerView;
 
                 headerView.DataContext = _viewModel.OrgEvent.Venues.GetVenueByShow(show);
@@ -195,7 +195,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (subHeaderView != null)
             {
-                subHeaderView.BackgroundColor = Theme.HeaderCellBackground;
+                subHeaderView.BackgroundColor = Theme.GroupCellBackground;
 
                 subHeaderView.DataContext = show.StartTime.GetCurrentDayString();
             }
@@ -234,11 +234,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.HeaderView = GetHeaderForShowCell(venueCell.IsExpanded, show);
                 venueCell.SubHeaderView = GetSubHeaderForShowCell(venueCell.IsExpanded, show);
 
-                venueCell.IsSeparatorVisible = 
-                    !_viewModel.IsGroupedByLocation ||
-                    !(IsLastInDayGroup(show, indexPath) ||
-                        IsLastInSection(indexPath)) ||
-                    IsInLastSection(indexPath);
+                venueCell.IsSeparatorVisible = true;
             }
 
             return cell;
@@ -274,26 +270,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
            
             return null;
-        }
-
-        private bool IsLastInDayGroup(Show show, NSIndexPath indexPath)
-        {
-            var shows = ItemsSource[indexPath.Section].Shows;
-            var index = Array.IndexOf(shows, show);
-            var result = index < shows.Length - 1 && shows[index + 1].Id == Show.DayGroupId;
-            return result;
-        }
-
-        private bool IsLastInSection(NSIndexPath indexPath)
-        {
-            var result = indexPath.Row == ItemsSource[indexPath.Section].Shows.Length - 1;
-            return result;
-        }
-
-        private bool IsInLastSection(NSIndexPath indexPath)
-        {
-            var result = indexPath.Section == ItemsSource.Length - 1;
-            return result;
         }
     }
 
