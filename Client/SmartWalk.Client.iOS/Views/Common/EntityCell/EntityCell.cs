@@ -105,9 +105,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             get { return DataContext != null ? DataContext.Entity : null; }
         }
 
-        private ImageBackgroundSimpleView ImageBackground
+        private ImageBackgroundView ImageBackground
         {
-            get { return (ImageBackgroundSimpleView)ImageCellPlaceholder.Content; }
+            get { return (ImageBackgroundView)ImageCellPlaceholder.Content; }
         }
 
         private MapCell MapCell
@@ -320,7 +320,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeHeaderImage()
         {
-            ImageCellPlaceholder.Content = ImageBackgroundSimpleView.Create();
+            ImageCellPlaceholder.Content = ImageBackgroundView.Create();
             ImageBackground.Initialize();
         }
 

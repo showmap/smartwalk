@@ -9,8 +9,8 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-	[Register ("ImageBackgroundSimpleView")]
-	partial class ImageBackgroundSimpleView
+    [Register ("ImageBackgroundView")]
+	partial class ImageBackgroundView
 	{
 		[Outlet]
 		MonoTouch.UIKit.UIImageView BackgroundImage { get; set; }

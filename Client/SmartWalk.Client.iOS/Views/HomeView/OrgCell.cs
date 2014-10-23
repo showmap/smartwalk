@@ -25,9 +25,9 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             set { base.DataContext = value; }
         }
 
-        private ImageBackgroundSimpleView ImageBackground
+        private ImageBackgroundView ImageBackground
         {
-            get { return (ImageBackgroundSimpleView)Placeholder.Content; }
+            get { return (ImageBackgroundView)Placeholder.Content; }
         }
 
         public static OrgCell Create()
@@ -59,7 +59,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         private void InitializeHeaderImage()
         {
-            var view = ImageBackgroundSimpleView.Create();
+            var view = ImageBackgroundView.Create();
             // Making sure that it has proper frame for loading a resized image
             view.Frame = Bounds;
 

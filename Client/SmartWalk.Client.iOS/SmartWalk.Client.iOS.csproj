@@ -371,10 +371,6 @@
     <Compile Include="Utils\MvvmCross\MvxExtendedFileStore.cs" />
     <Compile Include="Utils\MvvmCross\CacheConfiguration.cs" />
     <Compile Include="Utils\ConsoleUtil.cs" />
-    <Compile Include="Views\Common\ImageBackgroundSimpleView.cs" />
-    <Compile Include="Views\Common\ImageBackgroundSimpleView.designer.cs">
-      <DependentUpon>ImageBackgroundSimpleView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils\MvvmCross\MvxExtendedViewPresenter.cs" />
     <Compile Include="Views\Common\IFullscreenView.cs" />
     <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
@@ -390,6 +386,10 @@
     <Compile Include="Utils\ExtendedNavController.cs" />
     <Compile Include="Views\OrgEventView\OrgEventEditViewController.cs" />
     <Compile Include="Utils\AnimationDelay.cs" />
+    <Compile Include="Views\Common\ImageBackgroundView.cs" />
+    <Compile Include="Views\Common\ImageBackgroundView.designer.cs">
+      <DependentUpon>ImageBackgroundView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
@@ -426,7 +426,7 @@
     <InterfaceDefinition Include="Views\Common\EntityCell\MapCell.xib" />
     <InterfaceDefinition Include="Views\HomeView\HomeHeaderView.xib" />
     <InterfaceDefinition Include="Views\OrgEventInfoView\OrgEventInfoView.xib" />
-    <InterfaceDefinition Include="Views\Common\ImageBackgroundSimpleView.xib" />
+    <InterfaceDefinition Include="Views\Common\ImageBackgroundView.xib" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Icons\NavBarBack.png" />

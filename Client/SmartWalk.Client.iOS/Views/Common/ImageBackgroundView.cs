@@ -10,9 +10,9 @@ using SmartWalk.Client.iOS.Utils.MvvmCross;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class ImageBackgroundSimpleView : UIView
+    public partial class ImageBackgroundView : UIView
     {
-        public static readonly UINib Nib = UINib.FromName("ImageBackgroundSimpleView", NSBundle.MainBundle);
+        public static readonly UINib Nib = UINib.FromName("ImageBackgroundView", NSBundle.MainBundle);
         private readonly AnimationDelay _animationDelay = new AnimationDelay();
 
         private MvxImageViewLoader _imageHelper;
@@ -21,13 +21,13 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private bool _resizeImage;
 
-        public ImageBackgroundSimpleView(IntPtr handle) : base(handle)
+        public ImageBackgroundView(IntPtr handle) : base(handle)
         {
         }
 
-        public static ImageBackgroundSimpleView Create()
+        public static ImageBackgroundView Create()
         {
-            return (ImageBackgroundSimpleView)Nib.Instantiate(null, null)[0];
+            return (ImageBackgroundView)Nib.Instantiate(null, null)[0];
         }
 
         public string Title
