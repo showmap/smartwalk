@@ -28,10 +28,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 () => LogoImageView,
                 () => 
                 {
-                    if (LogoImageView != null)
+                    if (LogoImageView != null && LogoImageView.ProgressEnded())
                     {
                         var noImage = !LogoImageView.HasImage();
                         LogoImageView.SetHidden(noImage, _animationDelay.Animate);
+
+                        // showing abbr if image couldn't be loaded
                         ImageLabelView.SetHidden(!noImage, false);
                     }
                 });
