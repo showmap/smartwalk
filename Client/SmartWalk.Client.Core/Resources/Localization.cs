@@ -7,7 +7,6 @@
         public const string CurrentEvents = "Current Events";
         public const string UpcomingEvents = "Upcoming Events";
         public const string PastEvents = "Past Events";
-        public const string Shows = "Shows";
         public const string SaveToCalendar = "Save To Calendar";
         public const string ShowEventInfo = "Show Event Info";
         public const string ShowContactInfo = "Show Contact Info";

@@ -52,5 +52,7 @@
 	<string>The location is used to load the closest events in the given area.</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>CFBundleVersion</key>
+	<string>3</string>
 </dict>
 </plist>
