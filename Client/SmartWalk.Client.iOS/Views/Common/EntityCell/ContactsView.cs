@@ -15,8 +15,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("ContactsView", NSBundle.MainBundle);
 
         private const float Gap = 8;
-        private const float DefaultPlaceholderMargin = 40;
-        private const float DefaultPlaceholderLandscapeMargin = 15;
+        private const float DefaultPlaceholderMargin = 65;
+        private const float DefaultPlaceholderLandscapeMargin = 55;
 
         private Entity _entity;
         private ICommand _callPhoneCommand;

@@ -5,8 +5,6 @@ namespace SmartWalk.Client.iOS.Resources
 {
     public static class Theme
     {
-        private const string HelveticaCondBlack = "HelveticaNeue-CondensedBlack";
-        private const string HelveticaCondBold = "HelveticaNeue-CondensedBold";
         private const string HelveticaBold = "HelveticaNeue-Bold";
         private const string HelveticaMedium = "HelveticaNeue-Medium";
         private const string HelveticaRegular = "HelveticaNeue";
@@ -22,8 +20,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static int NavBarPaddingCompensate = -9;
         public static int ToolBarPaddingCompensate = -16;
 
-        public static readonly UIFont NoDataFont = UIFont.FromName(HelveticaMedium, 16);
-        public static readonly UIFont LoadingFont = UIFont.FromName(HelveticaMedium, 16);
+        public static readonly UIFont NoDataFont = UIFont.FromName(HelveticaRegular, 16);
+        public static readonly UIFont LoadingFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIColor LoadingText = UIColor.FromRGB(170, 170, 170);
         public static readonly UIFont HomeHeaderFont = UIFont.FromName(HelveticaBold, 15);
         public static readonly UIFont ActionSheetFont = UIFont.FromName(HelveticaBold, 17);

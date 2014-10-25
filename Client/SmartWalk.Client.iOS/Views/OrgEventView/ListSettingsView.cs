@@ -6,6 +6,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -116,20 +117,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return;
             }
 
-            const double animationSpeed = 0.2;
-
             if (IsGroupByLocation)
             {
                 UIView.Transition(
                     SortByPlaceholder, 
-                    animationSpeed, 
+                    UIConstants.AnimationDuration, 
                     UIViewAnimationOptions.TransitionCrossDissolve,
                     () => {},
                     () => 
                     {
                         LayoutIfNeeded();
                         UIView.Animate(
-                            animationSpeed, 
+                            UIConstants.AnimationDuration, 
                             () =>
                             {
                                 ContainerHeightConstraint.Constant = CollapsedHeight;
@@ -143,7 +142,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 LayoutIfNeeded();
                 UIView.Animate(
-                    animationSpeed, 
+                    UIConstants.AnimationDuration, 
                     () =>
                     {
                         ContainerHeightConstraint.Constant = DefaultHeight;
@@ -153,7 +152,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         UIView.Transition(
                             SortByPlaceholder, 
-                            animationSpeed, 
+                            UIConstants.AnimationDuration, 
                             UIViewAnimationOptions.TransitionCrossDissolve,
                             () => {},
                             null);

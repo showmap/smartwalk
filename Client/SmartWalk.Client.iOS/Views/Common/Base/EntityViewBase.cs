@@ -5,6 +5,7 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Shared.Utils;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -64,11 +65,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 {
                     InitializeContactsView(contactsProvider);
 
-                    _contactsView.Alpha = 0;
                     View.Add(_contactsView);
-                    UIView.BeginAnimations(null);
-                    _contactsView.Alpha = 1;
-                    UIView.CommitAnimations();
+                    UIView.Animate(
+                        UIConstants.AnimationDuration, 
+                        new NSAction(() => _contactsView.Alpha = 1));
                 }
 
                 _contactsView.Entity = entity;
@@ -76,7 +76,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             else if (_contactsView != null)
             {
                 UIView.Animate(
-                    0.2, 
+                    UIConstants.AnimationDuration, 
                     new NSAction(() => _contactsView.Alpha = 0),
                     new NSAction(_contactsView.RemoveFromSuperview));
 
