@@ -103,7 +103,7 @@ namespace SmartWalk.Client.iOS.Utils
         private bool IsCausedByRefreshControl()
         {
             return _refreshControlHeight.HasValue && 
-                _refreshControlHeight.Value.EqualsF(_scrollView.ContentOffset.Y);
+                _refreshControlHeight.Value.EqualsF(Math.Abs(_scrollView.ContentOffset.Y));
         }
     }
 }
