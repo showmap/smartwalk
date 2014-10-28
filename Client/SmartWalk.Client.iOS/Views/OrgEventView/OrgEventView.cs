@@ -68,7 +68,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             InitializeStyle();
 
-            UpdateTableViewContentInset();
+            UpdateTableViewInset();
             UpdateViewState(false);
             UpdateDayButtonState();
         }
@@ -77,7 +77,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewWillAppear(animated);
 
-            UpdateTableViewContentInset();
+            UpdateTableViewInset();
             UpdateViewConstraints(false); // to get a right golden-ratio in time
             UpdateNavBarState(animated);
             UpdateButtonsFrameOnRotation();
@@ -110,7 +110,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.WillAnimateRotation(toInterfaceOrientation, duration);
 
-            UpdateTableViewContentInset();
+            UpdateTableViewInset();
             UpdateViewConstraints(true);
             UpdateButtonsFrameOnRotation();
 
@@ -271,7 +271,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
-                UpdateTableViewContentInset();
+                UpdateTableViewInset();
                 UpdateViewState(false);
                 ReloadMap();
             }
@@ -331,7 +331,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.OnViewModelRefreshed(hasData);
 
             UpdateTableHeaderState(hasData);
-            UpdateTableViewContentInset();
+            UpdateTableViewInset();
         }
 
         protected override void ScrollViewToTop()
@@ -970,7 +970,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             tableView.EndUpdates();
         }
 
-        private void UpdateTableViewContentInset()
+        private void UpdateTableViewInset()
         {
             if (IsInSearch) return;
 
@@ -981,6 +981,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 VenuesAndShowsTableView.ContentInset = 
                     new UIEdgeInsets(NavBarManager.NavBarHeight, 0, 0, 0);
+                VenuesAndShowsTableView.ScrollIndicatorInsets =
+                    VenuesAndShowsTableView.ContentInset;
 
                 VenuesAndShowsTableView.ContentOffset =
                     new PointF(previousOffset.X, previousOffset.Y + delta);
@@ -988,6 +990,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             else 
             {
                 VenuesAndShowsTableView.ContentInset = UIEdgeInsets.Zero;
+                VenuesAndShowsTableView.ScrollIndicatorInsets = UIEdgeInsets.Zero;
             }
         }
 
