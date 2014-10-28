@@ -111,6 +111,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.WillAnimateRotation(toInterfaceOrientation, duration);
 
             UpdateTableViewInset();
+            UpdateDayButtonState();
             UpdateViewConstraints(true);
             UpdateButtonsFrameOnRotation();
 
@@ -272,6 +273,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
                 UpdateTableViewInset();
+                UpdateDayButtonState();
                 UpdateViewState(false);
                 ReloadMap();
             }
@@ -320,7 +322,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ShowHideListSettingsView(ViewModel.IsListOptionsShown);
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsMultiday) ||
-                propertyName == ViewModel.GetPropertyName(vm => vm.CurrentDayTitle))
+                propertyName == ViewModel.GetPropertyName(vm => vm.CurrentDay))
             {
                 UpdateDayButtonState();
             }
@@ -443,6 +445,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             // Day Button
             _dayButton = ButtonBarUtil.Create(true);
+            _dayButton.LineBreakMode = UILineBreakMode.WordWrap;
             _dayButton.TouchUpInside += OnDayButtonClicked;
 
             var dayButtonItem = new UIBarButtonItem();
@@ -476,10 +479,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeStyle()
         {
             MapFullscreenButton.IsSemiTransparent = true;
-
-            _dayButton.Font = Theme.NavBarFont;
-            _dayButton.SetTitleColor(Theme.NavBarText, UIControlState.Normal);
-
             VenuesMapView.TintColor = Theme.MapTint;
         }
 
@@ -900,16 +899,97 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateDayButtonState()
         {
-            if (ViewModel.IsMultiday)
+            var dateString = GetOrgEventDate();
+            if (dateString != null)
             {
                 _dayButton.Hidden = false;
-                _dayButton.SetTitle(ViewModel.CurrentDayTitle, UIControlState.Normal);
+                _dayButton.SetAttributedTitle(GetOrgEventDate(), UIControlState.Normal);
             }
             else
             {
                 _dayButton.Hidden = true;
-                _dayButton.SetTitle(null, UIControlState.Normal);
             }
+
+            if (ViewModel.IsMultiday)
+            {
+                _dayButton.SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
+
+                if (ViewModel.CurrentDay == null)
+                {
+                    _dayButton.TitleEdgeInsets = new UIEdgeInsets(-3, 0.5f, 0, 0);
+                }
+                else
+                {
+                    _dayButton.TitleEdgeInsets = UIEdgeInsets.Zero;
+                }
+            }
+            else
+            {
+                _dayButton.SetBackgroundImage(null, UIControlState.Highlighted);
+                _dayButton.TitleEdgeInsets = UIEdgeInsets.Zero;
+            }
+        }
+
+        private NSAttributedString GetOrgEventDate()
+        {
+            if (ViewModel.OrgEvent == null ||
+                !ViewModel.OrgEvent.StartTime.HasValue) return null;
+
+            var result = new NSMutableAttributedString();
+
+            result.Append(
+                new NSAttributedString(
+                    string.Format("{0:MMM}{1}", 
+                        ViewModel.OrgEvent.StartTime.Value,
+                        Environment.NewLine).ToUpper(),
+                    ScreenUtil.IsVerticalOrientation
+                        ? Theme.OrgEventMonthFont
+                        : Theme.OrgEventMonthLandscapeFont,
+                    Theme.NavBarText,
+                    null,
+                    null,
+                    new NSMutableParagraphStyle { 
+                        Alignment = UITextAlignment.Center
+                    }));
+
+            if (ViewModel.IsMultiday && ViewModel.CurrentDay == null)
+            {
+                result.Append(
+                    new NSAttributedString(
+                        string.Format("{0}-{1}", 
+                            ViewModel.OrgEvent.StartTime.Value.Day,
+                            ViewModel.OrgEvent.EndTime.Value.Day),
+                        ScreenUtil.IsVerticalOrientation
+                            ? Theme.OrgEventTwoDaysFont
+                            : Theme.OrgEventTwoDaysLandscapeFont,
+                        Theme.NavBarText,
+                        null,
+                        null,
+                        new NSMutableParagraphStyle { 
+                            Alignment = UITextAlignment.Center,
+                            LineHeightMultiple = 0.85f
+                        }));
+            }
+            else
+            {
+                result.Append(
+                    new NSAttributedString(
+                        string.Format("{0}", 
+                            ViewModel.OrgEvent.StartTime.Value
+                                .AddDays(ViewModel.CurrentDay ?? 1 - 1).Day),
+                        ScreenUtil.IsVerticalOrientation
+                            ? Theme.OrgEventDayFont
+                            : Theme.OrgEventDayLandscapeFont,
+                        Theme.NavBarText,
+                        null,
+                        null,
+                        new NSMutableParagraphStyle { 
+                            Alignment = UITextAlignment.Center,
+                            LineHeightMultiple = 0.85f
+                        }));
+            }
+
+            return result;
         }
 
         private void UpdateTableViewOnShowExpanding(UITableView tableView)

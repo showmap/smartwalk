@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            WeekDayLabel.Text = DataContext != null && DataContext.StartTime.HasValue
+            MonthLabel.Text = DataContext != null && DataContext.StartTime.HasValue
                 ? string.Format("{0:MMM}", DataContext.StartTime.Value).ToUpper() 
                 : null;
 
@@ -52,21 +52,21 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                 ? DataContext.StartTime.Value.Day.ToString() 
                 : null;
 
-            DateLabel.Text = DataContext != null
+            EventTitleLabel.Text = DataContext != null
                 ? string.Format("{0}", DataContext.Title) 
                 : null;
         }
 
         private void InitializeLabelsStyle()
         {
-            WeekDayLabel.Font = Theme.OrgEventWeekDayFont;
-            WeekDayLabel.TextColor = Theme.CellTextHighlight;
+            MonthLabel.Font = Theme.OrgEventMonthFont;
+            MonthLabel.TextColor = Theme.CellTextHighlight;
 
             DayLabel.Font = Theme.OrgEventDayFont;
             DayLabel.TextColor = Theme.CellTextHighlight;
 
-            DateLabel.Font = Theme.OrgEventDateFont;
-            DateLabel.TextColor = Theme.CellText;
+            EventTitleLabel.Font = Theme.OrgEventTitleFont;
+            EventTitleLabel.TextColor = Theme.CellText;
         }
     }
 }

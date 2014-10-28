@@ -101,7 +101,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void UpdateViewTitle()
         {
-            NavigationItem.Title = ViewTitle ?? string.Empty;
         }
 
         protected override void Dispose(bool disposing)

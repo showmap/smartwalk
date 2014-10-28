@@ -97,39 +97,7 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             get
             {
-                if (OrgEvent != null && OrgEvent.StartTime.HasValue)
-                {
-                    var startDate = OrgEvent.StartTime.Value;
-                    var endDate = OrgEvent.EndTime.HasValue 
-                        ? OrgEvent.EndTime.Value 
-                        : default(DateTime);
-
-                    if (!IsMultiday || CurrentDay.HasValue)
-                    {
-                        var currentDate = 
-                            IsMultiday
-                                ? (startDate.Date.AddDays(CurrentDay.Value - 1))
-                                : startDate;
-
-                        return currentDate.GetCurrentDayString();
-                    }
-
-                    if (startDate.Month == endDate.Month)
-                    {
-                        return string.Format(
-                            "{0}-{1} {2:MMM}", 
-                            startDate.Day,
-                            endDate.Day,
-                            startDate);
-                    }
-
-                    return string.Format(
-                        "{0:d MMMM} - {1:d MMMM}", 
-                        startDate,
-                        endDate);
-                }
-
-                return null;
+                return OrgEvent != null ? OrgEvent.Title : null;
             }
         }
 
@@ -241,7 +209,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _currentDay = value;
                     RaisePropertyChanged(() => CurrentDay);
-                    RaisePropertyChanged(() => CurrentDayTitle);
                     OrgEvent = GetOrgEventByDay(_allDaysOrgEvent);
                 }
             }
@@ -260,26 +227,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     _daysCount = value;
                     RaisePropertyChanged(() => DaysCount);
                     RaisePropertyChanged(() => IsMultiday);
-                    RaisePropertyChanged(() => CurrentDayTitle);
                 }
-            }
-        }
-
-        public string CurrentDayTitle
-        {
-            get
-            {
-                if (DaysCount > 1)
-                {
-                    if (!CurrentDay.HasValue)
-                    {
-                        return "All";
-                    }
-
-                    return string.Format("{0}/{1}", CurrentDay.Value, DaysCount);
-                }
-
-                return null;
             }
         }
 

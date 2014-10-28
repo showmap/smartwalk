@@ -61,8 +61,12 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor DialogOutside = UIColor.FromRGBA(0, 0, 0, 200);
 
         public static readonly UIFont OrgEventDayFont = UIFont.FromName(HelveticaLight, 18);
-        public static readonly UIFont OrgEventWeekDayFont = UIFont.FromName(HelveticaBold, 10);
-        public static readonly UIFont OrgEventDateFont = UIFont.FromName(HelveticaRegular, 16);
+        public static readonly UIFont OrgEventDayLandscapeFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIFont OrgEventTwoDaysFont = UIFont.FromName(HelveticaLight, 14);
+        public static readonly UIFont OrgEventTwoDaysLandscapeFont = UIFont.FromName(HelveticaLight, 11.5f);
+        public static readonly UIFont OrgEventMonthFont = UIFont.FromName(HelveticaBold, 10);
+        public static readonly UIFont OrgEventMonthLandscapeFont = UIFont.FromName(HelveticaBold, 8);
+        public static readonly UIFont OrgEventTitleFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIColor OrgEventActive = CellHighlight;
         public static readonly UIColor OrgEventPassive = UIColor.FromRGB(187, 187, 187);
 

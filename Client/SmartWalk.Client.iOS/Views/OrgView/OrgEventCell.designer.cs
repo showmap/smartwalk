@@ -16,16 +16,16 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 		MonoTouch.UIKit.UIView CalendarView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel DateLabel { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UILabel DayLabel { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
+		MonoTouch.UIKit.UILabel EventTitleLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel WeekDayLabel { get; set; }
+		MonoTouch.UIKit.UILabel MonthLabel { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -34,9 +34,9 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 				CalendarView = null;
 			}
 
-			if (DateLabel != null) {
-				DateLabel.Dispose ();
-				DateLabel = null;
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
 			}
 
 			if (DayLabel != null) {
@@ -44,14 +44,14 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 				DayLabel = null;
 			}
 
-			if (Separator != null) {
-				Separator.Dispose ();
-				Separator = null;
+			if (MonthLabel != null) {
+				MonthLabel.Dispose ();
+				MonthLabel = null;
 			}
 
-			if (WeekDayLabel != null) {
-				WeekDayLabel.Dispose ();
-				WeekDayLabel = null;
+			if (EventTitleLabel != null) {
+				EventTitleLabel.Dispose ();
+				EventTitleLabel = null;
 			}
 		}
 	}
