@@ -39,7 +39,10 @@ namespace SmartWalk.Client.iOS.Views.HomeView
                             flowLayout.SectionInset.Right - 
                             flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
-            flowLayout.ItemSize = new SizeF(cellWidth, OrgCell.DefaultHeight);
+            var cellHeight = ScreenUtil.GetProportionalHeight(
+                new SizeF(OrgCell.DefaultWidth, OrgCell.DefaultHeight), Frame.Size);
+
+            flowLayout.ItemSize = new SizeF(cellWidth, cellHeight);
             flowLayout.HeaderReferenceSize = new SizeF(Frame.Width, HomeHeaderView.DefaultHeight);
         }
     }

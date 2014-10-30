@@ -88,7 +88,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             var entityCellContext = item as IEntityCellContext;
             if (entityCellContext != null)
             {
-                var height = EntityCell.CalculateCellHeight(tableView.Frame, entityCellContext);
+                var height = EntityCell.CalculateCellHeight(tableView.Frame.Size, entityCellContext);
                 return height;
             }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using MonoTouch.UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
@@ -22,6 +23,15 @@ namespace SmartWalk.Client.iOS.Utils
         public static float GetGoldenRatio(float frameHeight)
         {
             var result = (float)Math.Ceiling(2 * (frameHeight / 5));
+            return result;
+        }
+
+        public static float GetProportionalHeight(
+            SizeF defaultSize,
+            SizeF containerSize)
+        {
+            var containerWidth = Math.Min(containerSize.Width, containerSize.Height);
+            var result = containerWidth * defaultSize.Height / defaultSize.Width;
             return result;
         }
     }

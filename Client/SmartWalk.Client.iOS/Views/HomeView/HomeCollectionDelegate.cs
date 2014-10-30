@@ -4,7 +4,6 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
@@ -35,18 +34,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
                 return _collectionView.ActualContentOffset() >= 
                     HomeHeaderView.DefaultHeight;
             }
-        }
-
-        public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
-        {
-            var cell = (OrgCell)collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = Theme.CellHighlight;
-        }
-
-        public override void ItemUnhighlighted(UICollectionView collectionView, NSIndexPath indexPath)
-        {
-            var cell = (OrgCell)collectionView.CellForItem(indexPath);
-            cell.ContentView.BackgroundColor = null;
         }
 
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)

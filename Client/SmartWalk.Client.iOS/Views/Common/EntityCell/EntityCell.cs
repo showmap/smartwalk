@@ -13,7 +13,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
     public partial class EntityCell : TableCellBase
     {
-        private const int ImageVerticalHeight = 150;
+        private const float DefaultImageVerticalWidth = 320f;
+        private const float DefaultImageVerticalHeight = 150f;
         private const int Gap = 10;
 
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
@@ -35,12 +36,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         }
 
         public static float CalculateCellHeight(
-            RectangleF frame,
+            SizeF containerSize,
             IEntityCellContext context)
         {
-            var textHeight = CalculateTextHeight(frame.Width - Gap * 2, context.FullDescription());
+            var textHeight = CalculateTextHeight(containerSize.Width - Gap * 2, context.FullDescription());
             var result = 
-                GetHeaderHeight(frame, context.Entity) + 
+                GetHeaderHeight(containerSize, context.Entity) + 
                 ((int)textHeight != 0 ? Gap * 2 : 0) + 
                 (context.IsDescriptionExpanded ?
                     textHeight 
@@ -72,12 +73,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return 0;
         }
 
-        private static float GetHeaderHeight(RectangleF frame, Entity entity)
+        private static float GetHeaderHeight(SizeF containerSize, Entity entity)
         {
             if (ScreenUtil.IsVerticalOrientation)
             {
                 var result = 
-                    ImageVerticalHeight +
+                    GetImageVerticalHeight(containerSize) +
                     (entity.HasAddresses() 
                         ? MapCell.DefaultHeight - 
                             (!entity.HasAddressText() ? MapCell.DefaultAddressHeight : 0)
@@ -85,8 +86,15 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 return result;
             }
 
-            var goldenHeight = ScreenUtil.GetGoldenRatio(frame.Height);
+            var goldenHeight = ScreenUtil.GetGoldenRatio(containerSize.Height);
             return goldenHeight;
+        }
+
+        private static float GetImageVerticalHeight(SizeF containerSize)
+        {
+            var result = ScreenUtil.GetProportionalHeight(
+                new SizeF(DefaultImageVerticalWidth, DefaultImageVerticalHeight), containerSize);
+            return result;
         }
 
         public ICommand ExpandCollapseCommand { get; set; }
@@ -151,7 +159,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             if (_parentTableRef == null || !_parentTableRef.TryGetTarget(out parentTable)) return;
 
             var entity = DataContext != null ? DataContext.Entity : null;
-            var headerHeight = GetHeaderHeight(parentTable.Frame, entity);
+            var headerHeight = GetHeaderHeight(parentTable.Frame.Size, entity);
             if (Frame.Height >= headerHeight)
             {
                 HeaderHeightConstraint.Constant = headerHeight;
@@ -161,12 +169,13 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 HeaderHeightConstraint.Constant = 0;
             }
 
+            var imageVerticalHeight = GetImageVerticalHeight(parentTable.Frame.Size);
             if (entity != null && Frame.Height >= headerHeight)
             {
                 if (ScreenUtil.IsVerticalOrientation)
                 {
                     ImageWidthConstraint.Constant = Bounds.Width;
-                    ImageHeightConstraint.Constant = ImageVerticalHeight;
+                    ImageHeightConstraint.Constant = imageVerticalHeight;
                 }
                 else
                 {
@@ -181,7 +190,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                     if (ScreenUtil.IsVerticalOrientation)
                     {
                         MapXConstraint.Constant = 0;
-                        MapYConstraint.Constant = ImageVerticalHeight;
+                        MapYConstraint.Constant = imageVerticalHeight;
 
                         MapWidthConstraint.Constant = Bounds.Width;
                         MapHeightConstraint.Constant = MapCell.DefaultHeight
