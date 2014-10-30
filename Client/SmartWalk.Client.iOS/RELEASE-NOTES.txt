@@ -1,1 +1,1 @@
-Many fixes including visual design update.
+Multi-day selector design was updated.

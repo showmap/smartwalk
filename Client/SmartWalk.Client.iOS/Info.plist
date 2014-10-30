@@ -53,6 +53,6 @@
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>4</string>
 </dict>
 </plist>
