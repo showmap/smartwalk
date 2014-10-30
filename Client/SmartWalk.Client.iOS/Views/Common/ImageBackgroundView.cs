@@ -39,7 +39,10 @@ namespace SmartWalk.Client.iOS.Views.Common
         public string Subtitle
         {
             get { return SubtitleLabel.Text; }
-            set { SubtitleLabel.Text = value; }
+            set { 
+                SubtitleLabel.Text = value;
+                SetNeedsUpdateConstraints();
+            }
         }
 
         public string ImageUrl
@@ -99,21 +102,17 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             InitializeImageHelper();
             InitializeStyle();
-            InitializeBottomGradientState();
+            InitializeGradient();
         }
 
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
 
-            ShowGradient();
-
             if (_bottomGradient != null)
             {
-                _bottomGradient.Frame = GradientPlaceholder.Bounds;
+                _bottomGradient.Frame = BackgroundImage.Bounds;
             }
-
-            UpdateConstraints();
         }
 
         public override void UpdateConstraints()
@@ -160,12 +159,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             SubtitleLabel.TextColor = Theme.BackgroundImageSubtitleText;
         }
 
-        private void InitializeBottomGradientState()
+        private void InitializeGradient()
         {
             if (_bottomGradient == null)
             {
                 _bottomGradient = new CAGradientLayer {
-                    Frame = GradientPlaceholder.Bounds,
+                    Frame = BackgroundImage.Bounds,
                     Colors = new [] { 
                         Theme.ImageGradient.ColorWithAlpha(0.25f).CGColor, 
                         Theme.ImageGradient.ColorWithAlpha(0.8f).CGColor 
@@ -176,18 +175,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                     },
                 };
 
-                ShowGradient();
-            }
-        }
-
-        private void ShowGradient()
-        {
-            if (GradientPlaceholder != null &&
-                GradientPlaceholder.Layer != null &&
-                _bottomGradient != null &&
-                Array.IndexOf(GradientPlaceholder.Layer.Sublayers, _bottomGradient) < 0)
-            {
-                GradientPlaceholder.Layer.InsertSublayer(_bottomGradient, 0);
+                BackgroundImage.Layer.InsertSublayer(_bottomGradient, 0);
             }
         }
 

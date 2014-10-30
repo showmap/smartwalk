@@ -15,7 +15,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </imageView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JOT-4w-4bo" userLabel="Gradient Placeholder">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JOT-4w-4bo" userLabel="Placeholder">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                     <subviews>
                         <label opaque="NO" clipsSubviews="YES" contentMode="bottom" text="Mission Arts &amp; Performance Project" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
@@ -45,7 +45,7 @@
                         <constraint firstItem="Qrq-nK-B4N" firstAttribute="leading" secondItem="JOT-4w-4bo" secondAttribute="leading" constant="20" symbolic="YES" id="znV-t0-zZu"/>
                     </constraints>
                 </view>
-                <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.60000000000000004" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="fpk-Eh-ozz">
+                <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.60000000000000009" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="fpk-Eh-ozz">
                     <rect key="frame" x="150" y="150" width="20" height="20"/>
                 </activityIndicatorView>
             </subviews>
@@ -66,7 +66,6 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="BackgroundImage" destination="Eue-t7-Ebm" id="ft5-Hs-bAU"/>
-                <outlet property="GradientPlaceholder" destination="JOT-4w-4bo" id="yv5-h5-sAY"/>
                 <outlet property="ProgressView" destination="fpk-Eh-ozz" id="9WX-T3-awQ"/>
                 <outlet property="SubtitleLabel" destination="Qrq-nK-B4N" id="4bK-1Q-g6S"/>
                 <outlet property="TitleBottomGapConstraint" destination="BN4-po-jtC" id="nvc-0k-tmL"/>
