@@ -94,7 +94,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             var result = ScreenUtil.GetProportionalHeight(
                 new SizeF(DefaultImageVerticalWidth, DefaultImageVerticalHeight), containerSize);
-            return result;
+            return (float)Math.Ceiling(result);
         }
 
         public ICommand ExpandCollapseCommand { get; set; }
