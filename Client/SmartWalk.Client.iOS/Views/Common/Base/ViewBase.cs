@@ -7,7 +7,6 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
-using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base

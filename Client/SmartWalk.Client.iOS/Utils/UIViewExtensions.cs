@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
@@ -123,6 +124,25 @@ namespace SmartWalk.Client.iOS.Utils
                 imageView.Image.Size != Theme.DefaultImageSize &&
                 imageView.Image.Size != Theme.ErrorImageSize;
             return result;
+        }
+
+        public static void UpdateLayout(this UITableView tableView)
+        {
+            CATransaction.Begin();
+
+            CATransaction.CompletionBlock = new NSAction(() => {
+                var tableSource = tableView.WeakDelegate as UITableViewSource;
+                if (tableSource != null)
+                {
+                    // to run NavBar show logic, if table is at (0,0) offset
+                    tableSource.DecelerationEnded(tableView);
+                }
+            });
+
+            tableView.BeginUpdates();
+            tableView.EndUpdates();
+
+            CATransaction.Commit();
         }
     }
 }

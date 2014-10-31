@@ -5,6 +5,7 @@ using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
@@ -14,18 +15,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         public new OrgViewModel ViewModel
         {
             get { return (OrgViewModel)base.ViewModel; }
-        }
-
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            // HACK: to fix the bug with floating tableview, probably iOS 6 only
-            if (OrgEventsTableView.VisibleCells.Length > 0)
-            {
-                OrgEventsTableView.BeginUpdates();
-                OrgEventsTableView.EndUpdates();
-            }
         }
 
         protected override ListViewDecorator GetListView()
@@ -56,8 +45,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
             if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
-                OrgEventsTableView.BeginUpdates();
-                OrgEventsTableView.EndUpdates();
+                OrgEventsTableView.UpdateLayout();
             }
         }
 

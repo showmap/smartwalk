@@ -6,6 +6,7 @@ using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 
@@ -46,8 +47,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
             if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
-                VenueShowsTableView.BeginUpdates();
-                VenueShowsTableView.EndUpdates();
+                VenueShowsTableView.UpdateLayout();
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
@@ -56,8 +56,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
                 }
 
-                VenueShowsTableView.BeginUpdates();
-                VenueShowsTableView.EndUpdates();
+                VenueShowsTableView.UpdateLayout();
             }
         }
 

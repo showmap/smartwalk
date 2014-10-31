@@ -3,6 +3,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
@@ -47,8 +48,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 
             if (propertyName == ViewModel.GetPropertyName(vm => vm.IsDescriptionExpanded))
             {
-                OrgEventInfoTableView.BeginUpdates();
-                OrgEventInfoTableView.EndUpdates();
+                OrgEventInfoTableView.UpdateLayout();
             }
         }
     }
