@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -12,10 +12,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Header Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ck9-zw-Bgi">
-                    <rect key="frame" x="10" y="0.0" width="300" height="26"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="26" id="yRW-c5-b7o"/>
-                    </constraints>
+                    <rect key="frame" x="10" y="4" width="300" height="18"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <size key="shadowOffset" width="0.0" height="0.0"/>
@@ -29,8 +26,8 @@
                 </view>
             </subviews>
             <constraints>
-                <constraint firstItem="Ck9-zw-Bgi" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="10" id="CIO-n9-Xbk"/>
-                <constraint firstAttribute="trailing" secondItem="Ck9-zw-Bgi" secondAttribute="trailing" constant="10" id="KPl-9H-nzA"/>
+                <constraint firstItem="Ck9-zw-Bgi" firstAttribute="leading" secondItem="1" secondAttribute="leading" priority="900" constant="10" id="CIO-n9-Xbk"/>
+                <constraint firstAttribute="trailing" secondItem="Ck9-zw-Bgi" secondAttribute="trailing" priority="900" constant="10" id="KPl-9H-nzA"/>
                 <constraint firstAttribute="trailing" secondItem="rTJ-LY-aD8" secondAttribute="trailing" id="OlP-8R-4U6"/>
                 <constraint firstAttribute="centerY" secondItem="Ck9-zw-Bgi" secondAttribute="centerY" id="hAs-yb-7Dp"/>
                 <constraint firstItem="rTJ-LY-aD8" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="hlF-8m-jrP"/>

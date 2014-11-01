@@ -278,7 +278,6 @@
     <Compile Include="Views\Common\EntityCell\ContactsView.designer.cs">
       <DependentUpon>ContactsView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\HomeView\HomeCollectionView.cs" />
     <Compile Include="Controls\CopyLabel.cs" />
     <Compile Include="Utils\ButtonBarUtil.cs" />
     <Compile Include="Resources\Theme.cs" />
@@ -373,7 +372,6 @@
     <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="Utils\MvvmCross\MvxExtendedViewPresenter.cs" />
     <Compile Include="Views\Common\IFullscreenView.cs" />
-    <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
     <Compile Include="Utils\ScrollToHideUIManager.cs" />
     <Compile Include="Views\Common\Base\NavBarViewBase.cs" />
     <Compile Include="Controls\TransparentNavBar.cs" />
@@ -390,6 +388,7 @@
     <Compile Include="Views\Common\ImageBackgroundView.designer.cs">
       <DependentUpon>ImageBackgroundView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />

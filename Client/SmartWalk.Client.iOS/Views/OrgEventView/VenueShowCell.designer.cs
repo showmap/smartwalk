@@ -19,9 +19,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DescriptionRightConstraint { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint DetailsHeightConstraint { get; set; }
 
 		[Outlet]
@@ -68,6 +65,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint TitleRightConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -81,9 +81,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				DescriptionLabel = null;
 			}
 
-			if (DescriptionRightConstraint != null) {
-				DescriptionRightConstraint.Dispose ();
-				DescriptionRightConstraint = null;
+			if (TitleRightConstraint != null) {
+				TitleRightConstraint.Dispose ();
+				TitleRightConstraint = null;
 			}
 
 			if (DetailsHeightConstraint != null) {
@@ -156,14 +156,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				TimeBackgroundView = null;
 			}
 
-			if (TitleLabel != null) {
-				TitleLabel.Dispose ();
-				TitleLabel = null;
-			}
-
 			if (TitleAndDescriptionSpaceConstraint != null) {
 				TitleAndDescriptionSpaceConstraint.Dispose ();
 				TitleAndDescriptionSpaceConstraint = null;
+			}
+
+			if (TitleLabel != null) {
+				TitleLabel.Dispose ();
+				TitleLabel = null;
 			}
 		}
 	}

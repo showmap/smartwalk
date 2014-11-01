@@ -86,6 +86,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont VenueShowCellTimeAmPmFont = UIFont.FromName(HelveticaLight, 9);
         public static readonly UIFont VenueShowCellFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIFont VenueShowDescriptionCellFont = UIFont.FromName(HelveticaLight, 14);
+        public static readonly UIFont VenueShowDetailsCellFont = UIFont.FromName(HelveticaLight, 16);
 
         public static readonly UIColor MapTint = UIColor.FromRGB(51, 51, 51);
         public static readonly UIColor MapPinText = UIColor.White;

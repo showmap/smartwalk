@@ -144,5 +144,23 @@ namespace SmartWalk.Client.iOS.Utils
 
             CATransaction.Commit();
         }
+
+        public static void UpdateConstraint(this UIView view, Action animationHandler, bool animated)
+        {
+            if (animated)
+            {
+                UIView.Animate(
+                    UIConstants.AnimationDuration, 
+                    () =>
+                    {
+                        animationHandler();
+                        view.LayoutIfNeeded();
+                    });
+            }
+            else
+            {
+                animationHandler();
+            }
+        }
     }
 }

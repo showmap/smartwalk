@@ -5,6 +5,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
@@ -25,6 +26,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private UITapGestureRecognizer _headerImageTapGesture;
         private UITapGestureRecognizer _descriptionTapGesture;
 
+        private NSObject _orientationObserver;
+
         public EntityCell(IntPtr handle) : base(handle)
         {
             BackgroundView = new UIView { BackgroundColor = UIColor.White };
@@ -39,32 +42,33 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             SizeF containerSize,
             IEntityCellContext context)
         {
-            var textHeight = CalculateTextHeight(containerSize.Width - Gap * 2, context.FullDescription());
+            var textHeight = (float)Math.Ceiling(
+                CalculateTextHeight(containerSize.Width - Gap * 2, context.FullDescription()));
             var result = 
                 GetHeaderHeight(containerSize, context.Entity) + 
-                ((int)textHeight != 0 ? Gap * 2 : 0) + 
+                (!textHeight.EqualsF(0) ? Gap * 2 : 0) + 
                 (context.IsDescriptionExpanded ?
                     textHeight 
-                    : Math.Min(textHeight, Theme.EntityDescriptionFont.LineHeight * 3));
-            return (float)Math.Ceiling(result);
+                    : Math.Min(textHeight, (float)Math.Ceiling(Theme.EntityDescriptionFont.LineHeight * 3)));
+            return result;
         }
 
         private static float CalculateTextHeight(float frameWidth, string text)
         {
             if (!string.IsNullOrEmpty(text))
             {
-                var frameSize = new SizeF(
-                    frameWidth,
-                    float.MaxValue); 
+                var frameSize = new SizeF(frameWidth, float.MaxValue); 
 
-                SizeF textSize;
+                RectangleF textSize;
 
                 using (var ns = new NSString(text))
                 {
-                    textSize = ns.StringSize(
-                        Theme.EntityDescriptionFont,
+                    textSize = ns.GetBoundingRect(
                         frameSize,
-                        UILineBreakMode.TailTruncation);
+                        NSStringDrawingOptions.UsesLineFragmentOrigin |
+                        NSStringDrawingOptions.UsesFontLeading,
+                        new UIStringAttributes { Font = Theme.EntityDescriptionFont },
+                        null);
                 }
 
                 return textSize.Height;
@@ -141,36 +145,55 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 DisposeGestures();
                 DisposeHeaderImage();
                 DisposeMapCell();
+                DisposeOrientationObserver();
             }
         }
 
-        public override void LayoutSubviews()
+        protected override void OnInitialize()
         {
-            base.LayoutSubviews();
-
-            UpdateConstraints();
+            InitializeStyle();
+            InitializeHeaderImage();
+            InitializeMapCell();
+            InitializeGestures();
+            InitializeOrientationObserver();
         }
 
-        public override void UpdateConstraints()
+        protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            base.UpdateConstraints();
+            DescriptionLabel.Text = DataContext != null 
+                ? DataContext.FullDescription()
+                : null;
 
+            ImageBackground.Title = DataContext != null
+                ? DataContext.Title
+                : null;
+
+            ImageBackground.Subtitle = DataContext != null
+                ? DataContext.Subtitle
+                : null;
+
+            ImageBackground.ImageUrl = DataContext != null
+                ? DataContext.Entity.Picture
+                : null;
+
+            MapCell.DataContext = DataContext != null && DataContext.Entity.HasAddresses()
+                ? DataContext.Entity
+                : null;
+
+            UpdateConstraintConstants();
+        }
+
+        private void UpdateConstraintConstants()
+        {
             UIView parentTable;
             if (_parentTableRef == null || !_parentTableRef.TryGetTarget(out parentTable)) return;
 
             var entity = DataContext != null ? DataContext.Entity : null;
             var headerHeight = GetHeaderHeight(parentTable.Frame.Size, entity);
-            if (Frame.Height >= headerHeight)
-            {
-                HeaderHeightConstraint.Constant = headerHeight;
-            }
-            else
-            {
-                HeaderHeightConstraint.Constant = 0;
-            }
+            HeaderHeightConstraint.Constant = headerHeight;
 
             var imageVerticalHeight = GetImageVerticalHeight(parentTable.Frame.Size);
-            if (entity != null && Frame.Height >= headerHeight)
+            if (entity != null)
             {
                 if (ScreenUtil.IsVerticalOrientation)
                 {
@@ -245,40 +268,26 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        protected override void OnInitialize()
+        private void InitializeOrientationObserver()
         {
-            InitializeStyle();
-            InitializeHeaderImage();
-            InitializeMapCell();
-            InitializeGestures();
+            _orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(
+                UIDevice.OrientationDidChangeNotification,
+                DeviceOrientationDidChange);
 
-            SetNeedsLayout();
+            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
         }
 
-        protected override void OnDataContextChanged(object previousContext, object newContext)
+        private void DeviceOrientationDidChange(NSNotification notification)
         {
-            DescriptionLabel.Text = DataContext != null 
-                ? DataContext.FullDescription()
-                : null;
+            UpdateConstraintConstants();
+        }
 
-            ImageBackground.Title = DataContext != null
-                ? DataContext.Title
-                : null;
-
-            ImageBackground.Subtitle = DataContext != null
-                ? DataContext.Subtitle
-                : null;
-
-            ImageBackground.ImageUrl = DataContext != null
-                ? DataContext.Entity.Picture
-                : null;
-
-            MapCell.DataContext = DataContext != null && DataContext.Entity.HasAddresses()
-                ? DataContext.Entity
-                : null;
-
-            SetNeedsLayout();
-            SetNeedsUpdateConstraints();
+        private void DisposeOrientationObserver()
+        {
+            if (_orientationObserver != null)
+            {
+                NSNotificationCenter.DefaultCenter.RemoveObserver(_orientationObserver);
+            }
         }
 
         private void InitializeGestures()

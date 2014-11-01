@@ -31,7 +31,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const float ImageHeight = 120f;
         private const float TimeBlockWidth = 106f;
         private const float VerticalGap = 12f;
-        private const float TitleAndDescriptionGap = 2f;
+        private const float TitleAndDescriptionGap = 3f;
         private const float TimeBorderGap = 8f;
         private const float BorderGap = 10f;
 
@@ -50,19 +50,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
                 () => 
+            {
+                if (_imageHelper.ImageUrl != null && 
+                    ThumbImageView.Image != null)
                 {
-                    if (_imageHelper.ImageUrl != null && 
-                        ThumbImageView.Image != null)
-                    {
-                        SetNeedsLayout();
+                    UpdateConstraintConstants(false);
 
-                        if (_animationDelay.Animate)
-                        {
-                            ThumbImageView.Hidden = true;
-                            ThumbImageView.SetHidden(false, true);
-                        }
+                    if (_animationDelay.Animate)
+                    {
+                        ThumbImageView.Hidden = true;
+                        ThumbImageView.SetHidden(false, true);
                     }
-                });
+                }
+            });
             _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
             _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
         }
@@ -88,22 +88,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         ? GroupHeaderView.DefaultHeight 
                         : 0f);
 
-                var logoHeight = show.HasPicture() ? VerticalGap + ImageHeight : 0;
-                var detailsHeight = show.HasDetailsUrl()
-                    ? VerticalGap + (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) 
-                    : 0;
                 var titleHeight = show.Title != null
                     ? (float)Math.Ceiling(CalculateTextHeight(
                         GetTitleBlockWidth(frameWidth, show), 
                         show.Title, 
                         Theme.VenueShowCellFont))
                     : 0;
+
                 var descriptionHeight = show.Description != null
                     ? (float)Math.Ceiling(CalculateTextHeight(
                         GetDescriptionBlockWidth(frameWidth), 
                         show.Description, 
                         Theme.VenueShowDescriptionCellFont)) + 
                         (titleHeight > 0 ? TitleAndDescriptionGap : 0)
+                    : 0;
+
+                var logoHeight = show.HasPicture() ? VerticalGap + ImageHeight : 0;
+
+                var detailsHeight = show.HasDetailsUrl()
+                    ? VerticalGap + (float)Math.Ceiling(Theme.VenueShowDetailsCellFont.LineHeight) 
                     : 0;
 
                 cellHeight += Math.Max(
@@ -119,15 +122,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private static float CalculateTextHeight(float frameWidth, string text, UIFont font)
         {
-            if (text.Length > 0)
+            if (!string.IsNullOrEmpty(text))
             {
                 var frameSize = new SizeF(frameWidth, float.MaxValue);
 
-                SizeF textSize;
+                RectangleF textSize;
 
                 using (var ns = new NSString(text))
                 {
-                    textSize = ns.StringSize(font, frameSize, UILineBreakMode.TailTruncation);
+                    textSize = ns.GetBoundingRect(
+                        frameSize,
+                        NSStringDrawingOptions.UsesLineFragmentOrigin |
+                        NSStringDrawingOptions.UsesFontLeading,
+                        new UIStringAttributes { Font = font },
+                        null);
                 }
 
                 return textSize.Height;
@@ -185,19 +193,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             set
             {
-                if (_isExpanded != value)
-                {
-                    _isExpanded = value;
-                    UpateImageState();
-                    UpdateVisibility();
-                    UpdateDescriptionState();
-                    UpdateConstraints();
-
-                    if (!_isExpanded)
-                    {
-                        HeaderView = null;
-                    }
-                }
+                SetIsExpanded(value, false);
             }
         }
 
@@ -217,8 +213,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
 
                     _headerView = value;
-                    UpdateVisibility();
-                    UpdateConstraints();
                     UpdateBackgroundColor();
 
                     if (_headerView != null)
@@ -247,8 +241,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
 
                     _subHeaderView = value;
-                    UpdateVisibility();
-                    UpdateConstraints();
                     UpdateBackgroundColor();
 
                     if (_subHeaderView != null)
@@ -267,99 +259,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             set { Separator.Hidden = !value; }
         }
 
+        public void SetIsExpanded(bool isExpanded, bool animated)
+        {
+            if (_isExpanded != isExpanded)
+            {
+                _isExpanded = isExpanded;
+                UpateImageState();
+                UpdateConstraintConstants(animated);
+                UpdateVisibility(animated);
+
+                if (!_isExpanded)
+                {
+                    HeaderView = null;
+                    SubHeaderView = null;
+                }
+            }
+        }
+
         public override void PrepareForReuse()
         {
             base.PrepareForReuse();
 
             IsExpanded = false;
-        }
-
-        public override void LayoutSubviews()
-        {
-            base.LayoutSubviews();
-
-            UpdateConstraints();
-        }
-
-        public override void UpdateConstraints()
-        {
-            base.UpdateConstraints();
-
-            var calculatedHeight = 
-                DataContext != null 
-                    ? CalculateCellHeight(
-                        Frame.Width, 
-                        IsExpanded, 
-                        HeaderView != null,
-                        SubHeaderView != null,
-                        DataContext)
-                    : 0;
-
-            HeaderHeightConstraint.Constant = 
-                IsExpanded && 
-                HeaderView != null &&
-                Frame.Height >= calculatedHeight
-                    ? VenueHeaderView.DefaultHeight
-                    : 0;
-
-            SubHeaderHeightConstraint.Constant = 
-                IsExpanded && 
-                SubHeaderView != null &&
-                Frame.Height >= calculatedHeight
-                    ? GroupHeaderView.DefaultHeight
-                    : 0;
-
-            DescriptionRightConstraint.Constant = GetTimeBlockWidth(DataContext);
-
-            if (IsExpanded &&
-                DataContext.Title != null &&
-                DataContext.Description != null &&
-                Frame.Height >= calculatedHeight)
-            {
-                TitleAndDescriptionSpaceConstraint.Constant = TitleAndDescriptionGap;
-            }
-            else
-            {
-                TitleAndDescriptionSpaceConstraint.Constant = 0;
-            }
-
-            if (IsExpanded &&
-                DataContext.HasPicture() &&
-                Frame.Height >= calculatedHeight)
-            {
-                ImageHeightConstraint.Constant = ImageHeight;
-                ImageWidthConstraint.Constant = GetImageProportionalWidth();
-                DescriptionAndImageSpaceConstraint.Constant = VerticalGap;
-            }
-            else
-            {
-                ImageHeightConstraint.Constant = 0;
-                ImageWidthConstraint.Constant = 0;
-                DescriptionAndImageSpaceConstraint.Constant = 0;
-            }
-
-            if (IsExpanded && 
-                DataContext.HasDetailsUrl() &&
-                Frame.Height >= calculatedHeight)
-            {
-                DetailsHeightConstraint.Constant = 
-                    (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight);
-                ImageAndDetailsSpaceConstraint.Constant = VerticalGap;
-            }
-            else
-            {
-                DetailsHeightConstraint.Constant = 0;
-                ImageAndDetailsSpaceConstraint.Constant = 0;
-            }
-
-            /*EndTimeLeftSpaceConstraint.Constant =
-                EndTimeLabel.Text != null &&
-                    EndTimeLabel.Text.StartsWith("1", StringComparison.InvariantCultureIgnoreCase)
-                    ? 2 : 3;
-            EndTimeRightSpaceConstraint.Constant =
-                EndTimeLabel.Text != null &&
-                    EndTimeLabel.Text.StartsWith("1", StringComparison.InvariantCultureIgnoreCase)
-                    ? 9 : 8;*/
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -372,6 +293,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ShowImageFullscreenCommand = null;
                 NavigateDetailsLinkCommand = null;
                 HeaderView = null;
+                SubHeaderView = null;
 
                 DisposeGestures();
             }
@@ -396,12 +318,73 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             EndTimeLabel.AttributedText = leftRightTimes.Item2;
 
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
+            DescriptionLabel.Text = DataContext != null ? DataContext.Description : null;
 
             UpdateClockIcon();
             UpateImageState();
-            UpdateVisibility();
-            UpdateDescriptionState();
-            UpdateConstraints();
+            UpdateConstraintConstants(false);
+            UpdateVisibility(false);
+        }
+
+        private void UpdateConstraintConstants(bool animated)
+        {
+            HeaderHeightConstraint.Constant = 
+                IsExpanded &&
+                HeaderView != null
+                ? VenueHeaderView.DefaultHeight
+                : 0;
+
+            SubHeaderHeightConstraint.Constant = 
+                IsExpanded &&
+                SubHeaderView != null
+                ? GroupHeaderView.DefaultHeight
+                : 0;
+
+            TitleRightConstraint.Constant = GetTimeBlockWidth(DataContext);
+
+            if (IsExpanded &&
+                DataContext.Title != null &&
+                DataContext.Description != null)
+            {
+                TitleAndDescriptionSpaceConstraint.Constant = TitleAndDescriptionGap;
+            }
+            else
+            {
+                TitleAndDescriptionSpaceConstraint.Constant = 0;
+            }
+
+            this.UpdateConstraint(() =>
+                {
+                    if (IsExpanded && DataContext.HasPicture())
+                    {
+                        ImageHeightConstraint.Constant = ImageHeight;
+                        ImageWidthConstraint.Constant = GetImageProportionalWidth();
+                        DescriptionAndImageSpaceConstraint.Constant = VerticalGap;
+                    }
+                    else
+                    {
+                        ImageHeightConstraint.Constant = 0;
+                        ImageWidthConstraint.Constant = 0;
+                        DescriptionAndImageSpaceConstraint.Constant = 0;
+                    }
+                },
+                IsExpanded && animated);
+
+            this.UpdateConstraint(() =>
+                {
+                    if (IsExpanded && DataContext.HasDetailsUrl())
+                    {
+                        DetailsHeightConstraint.Constant = 
+                            (float)Math.Ceiling(Theme.VenueShowDetailsCellFont.LineHeight);
+                        ImageAndDetailsSpaceConstraint.Constant = VerticalGap;
+                    }
+                    else
+                    {
+                        DetailsHeightConstraint.Constant = 0;
+                        ImageAndDetailsSpaceConstraint.Constant = 0;
+                    }
+                },
+                animated);
         }
 
         private static NSAttributedString GetTimeText(DateTime time, ShowStatus status)
@@ -420,11 +403,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 result.SetAttributes(
                     new UIStringAttributes 
-                    { 
-                        Font = status == ShowStatus.Finished 
-                            ? Theme.VenueShowCellFinishedTimeFont 
-                            : Theme.VenueShowCellTimeFont
-                    }, 
+                { 
+                    Font = status == ShowStatus.Finished 
+                        ? Theme.VenueShowCellFinishedTimeFont 
+                        : Theme.VenueShowCellTimeFont
+                }, 
                     new NSRange(0, ampmIndex));
                 result.SetAttributes(
                     new UIStringAttributes { Font = Theme.VenueShowCellTimeAmPmFont },
@@ -478,31 +461,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper.ImageUrl = url;
         }
 
-        private void UpdateVisibility()
+        private void UpdateVisibility(bool animated)
         {
-            ThumbImageView.Hidden = !IsExpanded || 
-                !DataContext.HasPicture();
-
-            DetailsLabel.Hidden = !IsExpanded || 
-                !DataContext.HasDetailsUrl();
-
             var isHeaderHidden = !IsExpanded || HeaderView == null;
-            HeaderContainer.SetHidden(isHeaderHidden, !isHeaderHidden);
+            HeaderContainer.SetHidden(isHeaderHidden, animated);
 
             var isSubHeaderHidden = !IsExpanded || SubHeaderView == null;
-            SubHeaderContainer.SetHidden(isSubHeaderHidden, !isSubHeaderHidden);
-        }
+            SubHeaderContainer.SetHidden(isSubHeaderHidden, animated);
 
-        private void UpdateDescriptionState()
-        {
-            if (IsExpanded)
-            {
-                DescriptionLabel.Text = DataContext != null ? DataContext.Description : null;
-            }
-            else
-            {
-                DescriptionLabel.Text = null;
-            }
+            var isDescriptionHidden = !IsExpanded || DataContext.Description == null;
+            DescriptionLabel.SetHidden(isDescriptionHidden, animated);
+
+            var isImageHidden = !IsExpanded || !DataContext.HasPicture();
+            ThumbImageView.SetHidden(isImageHidden, !isImageHidden && animated);
+
+            var isDetailsHidden = !IsExpanded || !DataContext.HasDetailsUrl();
+            DetailsLabel.SetHidden(isDetailsHidden, animated);
         }
 
         private float GetImageProportionalWidth()
@@ -569,7 +543,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ThumbImageView.AddGestureRecognizer(_imageTapGesture);
             DetailsLabel.AddGestureRecognizer(_detailsTapGesture);
         }
-             
+
         private void DisposeGestures()
         {
             if (_cellTapGesture != null)
@@ -608,16 +582,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
             EndTimeLabel.TextColor = Theme.CellText;
 
-            DetailsLabel.Font = Theme.VenueShowCellFont;
+            DetailsLabel.Font = Theme.VenueShowDetailsCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
 
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
             HeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);
             HeaderContainer.Layer.ShadowOpacity = 0.1f;
-
-            SubHeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
-            SubHeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);
-            SubHeaderContainer.Layer.ShadowOpacity = 0.1f;
         }
 
         private void UpdateClockIcon()
@@ -648,8 +618,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             BackgroundView.BackgroundColor = 
                 HeaderView != null || SubHeaderView != null
-                    ? Theme.CellSemiHighlight 
-                    : Theme.CellBackground;
+                ? Theme.CellSemiHighlight 
+                : Theme.CellBackground;
         }
     }
 }

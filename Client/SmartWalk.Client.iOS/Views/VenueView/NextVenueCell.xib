@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -14,21 +14,18 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y4W-hZ-hB6">
-                        <rect key="frame" x="20" y="20" width="280" height="61"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y4W-hZ-hB6">
+                        <rect key="frame" x="104.5" y="20" width="91" height="61"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="w50-Gx-wfb" userLabel="Down">
                                 <rect key="frame" x="0.0" y="8" width="44" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="z4q-9o-gse"/>
                                     <constraint firstAttribute="width" constant="44" id="zkX-to-4ns"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0O-mg-Nsv" userLabel="Next Title">
-                                <rect key="frame" x="49" y="8" width="231" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0O-mg-Nsv" userLabel="Next Title">
+                                <rect key="frame" x="49" y="20" width="42" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -39,17 +36,16 @@
                             <constraint firstItem="h0O-mg-Nsv" firstAttribute="leading" secondItem="w50-Gx-wfb" secondAttribute="trailing" constant="5" id="9Yl-bQ-c8e"/>
                             <constraint firstItem="w50-Gx-wfb" firstAttribute="leading" secondItem="y4W-hZ-hB6" secondAttribute="leading" id="E7K-2s-QQQ"/>
                             <constraint firstAttribute="centerY" secondItem="w50-Gx-wfb" secondAttribute="centerY" id="OyB-Ct-6el"/>
-                            <constraint firstAttribute="bottom" secondItem="h0O-mg-Nsv" secondAttribute="bottom" constant="8" id="Vjz-gU-8N7"/>
+                            <constraint firstAttribute="centerY" secondItem="h0O-mg-Nsv" secondAttribute="centerY" id="XAv-8t-oBE"/>
                             <constraint firstAttribute="trailing" secondItem="h0O-mg-Nsv" secondAttribute="trailing" id="mlF-aK-XyU"/>
-                            <constraint firstItem="h0O-mg-Nsv" firstAttribute="top" secondItem="y4W-hZ-hB6" secondAttribute="top" constant="8" id="wbX-Z2-fFj"/>
                         </constraints>
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="y4W-hZ-hB6" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Dzh-az-Mo8" secondAttribute="leading" constant="20" id="2Tn-ed-dPf"/>
-                    <constraint firstItem="y4W-hZ-hB6" firstAttribute="top" secondItem="Dzh-az-Mo8" secondAttribute="top" constant="20" id="FMT-dM-TjP"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="y4W-hZ-hB6" secondAttribute="trailing" constant="20" id="LFb-6A-6on"/>
-                    <constraint firstAttribute="bottom" secondItem="y4W-hZ-hB6" secondAttribute="bottom" constant="20" id="wJZ-Yv-IId"/>
+                    <constraint firstItem="y4W-hZ-hB6" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Dzh-az-Mo8" secondAttribute="leading" priority="900" constant="20" id="2Tn-ed-dPf"/>
+                    <constraint firstItem="y4W-hZ-hB6" firstAttribute="top" secondItem="Dzh-az-Mo8" secondAttribute="top" priority="900" constant="20" id="FMT-dM-TjP"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="y4W-hZ-hB6" secondAttribute="trailing" priority="900" constant="20" id="LFb-6A-6on"/>
+                    <constraint firstAttribute="bottom" secondItem="y4W-hZ-hB6" secondAttribute="bottom" priority="900" constant="20" id="wJZ-Yv-IId"/>
                     <constraint firstAttribute="centerX" secondItem="y4W-hZ-hB6" secondAttribute="centerX" constant="10" id="zed-Ek-Rb7"/>
                 </constraints>
             </tableViewCellContentView>
@@ -61,4 +57,9 @@
             </connections>
         </tableViewCell>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

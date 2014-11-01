@@ -72,6 +72,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             return !_viewModel.IsGroupedByLocation &&
                 _viewModel.SortBy == SortBy.Name && _viewModel.IsMultiday &&
+                !_viewModel.CurrentDay.HasValue &&
                 (show == null || show.StartTime.HasValue);
         }
 
@@ -230,10 +231,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 venueCell.DataContext = show;
 
-                venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
-                venueCell.HeaderView = GetHeaderForShowCell(venueCell.IsExpanded, show);
-                venueCell.SubHeaderView = GetSubHeaderForShowCell(venueCell.IsExpanded, show);
-
+                var isExpanded = Equals(_viewModel.ExpandedShow, show);
+                venueCell.HeaderView = GetHeaderForShowCell(isExpanded, show);
+                venueCell.SubHeaderView = GetSubHeaderForShowCell(isExpanded, show);
+                venueCell.IsExpanded = isExpanded;
                 venueCell.IsSeparatorVisible = true;
             }
 

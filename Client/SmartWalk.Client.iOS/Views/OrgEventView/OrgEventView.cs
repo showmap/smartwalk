@@ -168,7 +168,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         MapPanel.AddConstraint(MapHeightConstraint);
                     }
 
-                    UpdateConstraint(
+                    View.UpdateConstraint(
                         () => MapHeightConstraint.Constant = ScreenUtil.GetGoldenRatio(View.Frame.Height),
                         animated);
 
@@ -183,7 +183,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         VenuesAndShowsTableView.AddConstraint(TableHeightConstraint);
                     }
 
-                    UpdateConstraint(
+                    View.UpdateConstraint(
                         () => TableHeightConstraint.Constant = 0,
                         animated);
 
@@ -198,7 +198,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         MapPanel.AddConstraint(MapHeightConstraint);
                     }
 
-                    UpdateConstraint(
+                    View.UpdateConstraint(
                         () => MapHeightConstraint.Constant = 0,
                         animated);
 
@@ -211,24 +211,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 : ButtonBarButton.DefaultLandscapeSize;
             FullscreenWidthConstraint.Constant = size.Width;
             FullscreenHeightConstraint.Constant = size.Height;
-        }
-
-        private void UpdateConstraint(Action animationHandler, bool animated)
-        {
-            if (animated)
-            {
-                UIView.Animate(
-                    UIConstants.AnimationDuration, 
-                    () =>
-                    {
-                        animationHandler();
-                        View.LayoutIfNeeded();
-                    });
-            }
-            else
-            {
-                animationHandler();
-            }
         }
 
         protected override ListViewDecorator GetListView()
@@ -976,7 +958,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     new NSAttributedString(
                         string.Format("{0}", 
                             ViewModel.OrgEvent.StartTime.Value
-                                .AddDays(ViewModel.CurrentDay ?? 1 - 1).Day),
+                                .AddDays((ViewModel.CurrentDay ?? 1) - 1).Day),
                         ScreenUtil.IsVerticalOrientation
                             ? Theme.OrgEventDayFont
                             : Theme.OrgEventDayLandscapeFont,
@@ -1000,11 +982,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
             {
-                cell.IsExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+                var isExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
                 cell.HeaderView = 
-                    tableSoure.GetHeaderForShowCell(cell.IsExpanded, cell.DataContext);
+                    tableSoure.GetHeaderForShowCell(isExpanded, cell.DataContext);
                 cell.SubHeaderView = 
-                    tableSoure.GetSubHeaderForShowCell(cell.IsExpanded, cell.DataContext);
+                    tableSoure.GetSubHeaderForShowCell(isExpanded, cell.DataContext);
+                cell.SetIsExpanded(isExpanded, true);
             }
 
             if (!ViewModel.IsGroupedByLocation)

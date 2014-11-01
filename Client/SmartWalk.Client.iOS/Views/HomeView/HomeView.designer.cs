@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 	partial class HomeView
 	{
 		[Outlet]
-		SmartWalk.Client.iOS.Views.HomeView.HomeCollectionView OrgCollectionView { get; set; }
+        MonoTouch.UIKit.UICollectionView OrgCollectionView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }

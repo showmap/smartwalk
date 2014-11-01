@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
@@ -22,6 +23,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private ICommand _callPhoneCommand;
         private ICommand _composeEmailCommand;
         private ICommand _navigateWebSiteCommand;
+
+        private NSObject _orientationObserver;
 
         public ContactsView(IntPtr handle) : base(handle)
         {
@@ -104,7 +107,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                         .ItemsSource =
                             _entity != null ? _entity.Contacts : null;
 
-                    SetNeedsUpdateConstraints();
+                    UpdateConstraintConstants();
                 }
             }
         }
@@ -126,39 +129,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 CallPhoneCommand = null;
                 ComposeEmailCommand = null;
                 NavigateWebSiteCommand = null;
-            }
-        }
 
-        public override void LayoutSubviews()
-        {
-            UpdateConstraints();
-
-            base.LayoutSubviews();
-        }
-
-        public override void UpdateConstraints()
-        {
-            base.UpdateConstraints();
-
-            var colletionSource = CollectionView.WeakDataSource as ContactCollectionSource;
-            if (colletionSource != null)
-            {
-                var itemsCount = colletionSource.ItemsSource != null
-                    ? colletionSource.ItemsSource.Cast<object>().Count()
-                        : 0;
-                var collectionHeight = itemsCount * ContactCell.DefaultHeight + (itemsCount - 1) * Gap;
-                var placeholderHeight = 
-                    CollectionTopConstraint.Constant +
-                        collectionHeight +
-                        CollectionBottomConstraint.Constant;
-                var placeholderMargin = (Bounds.Height - placeholderHeight) / 2.0;
-
-                var defaultMargin = ScreenUtil.IsVerticalOrientation 
-                    ? DefaultPlaceholderMargin 
-                    : DefaultPlaceholderLandscapeMargin; 
-
-                PlaceholderTopConstraint.Constant = Math.Max((float)placeholderMargin, defaultMargin);
-                PlaceholderBottomConstraint.Constant = Math.Max((float)placeholderMargin, defaultMargin);
+                DisposeOrientationObserver();
             }
         }
 
@@ -168,6 +140,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
             InitializeStyle();
             InitializeCollectionView();
+            InitializeOrientationObserver();
         }
 
         private void InitializeCollectionView()
@@ -197,6 +170,52 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             CloseButton.TouchDown += (sender, e) => CloseButton.BackgroundColor = UIColor.DarkGray;
             CloseButton.TouchUpInside += (sender, e) => CloseButton.BackgroundColor = Theme.CellBackground;
             CloseButton.TouchUpOutside += (sender, e) => CloseButton.BackgroundColor = Theme.CellBackground;
+        }
+
+        private void InitializeOrientationObserver()
+        {
+            _orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(
+                UIDevice.OrientationDidChangeNotification,
+                DeviceOrientationDidChange);
+
+            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
+        }
+
+        private void DeviceOrientationDidChange(NSNotification notification)
+        {
+            UpdateConstraintConstants();
+        }
+
+        private void DisposeOrientationObserver()
+        {
+            if (_orientationObserver != null)
+            {
+                NSNotificationCenter.DefaultCenter.RemoveObserver(_orientationObserver);
+            }
+        }
+
+        private void UpdateConstraintConstants()
+        {
+            var colletionSource = CollectionView.WeakDataSource as ContactCollectionSource;
+            if (colletionSource != null)
+            {
+                var itemsCount = colletionSource.ItemsSource != null
+                    ? colletionSource.ItemsSource.Cast<object>().Count()
+                    : 0;
+                var collectionHeight = itemsCount * ContactCell.DefaultHeight + (itemsCount - 1) * Gap;
+                var placeholderHeight = 
+                    CollectionTopConstraint.Constant +
+                    collectionHeight +
+                    CollectionBottomConstraint.Constant;
+                var placeholderMargin = (Bounds.Height - placeholderHeight) / 2.0;
+
+                var defaultMargin = ScreenUtil.IsVerticalOrientation 
+                    ? DefaultPlaceholderMargin 
+                    : DefaultPlaceholderLandscapeMargin; 
+
+                PlaceholderTopConstraint.Constant = Math.Max((float)placeholderMargin, defaultMargin);
+                PlaceholderBottomConstraint.Constant = Math.Max((float)placeholderMargin, defaultMargin);
+            }
         }
 
         partial void OnCloseButtonClick(NSObject sender, UIEvent @event)

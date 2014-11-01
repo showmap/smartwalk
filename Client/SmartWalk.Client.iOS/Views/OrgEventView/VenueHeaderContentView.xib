@@ -50,7 +50,7 @@
                     <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TYG-yN-nra" userLabel="Address" customClass="CopyLabel">
-                    <rect key="frame" x="90" y="37" width="53" height="17"/>
+                    <rect key="frame" x="90" y="36" width="53" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -93,7 +93,7 @@
                 <constraint firstItem="trZ-gJ-tnq" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="1Fx-UK-iP8"/>
                 <constraint firstItem="Cvh-qX-983" firstAttribute="top" secondItem="1" secondAttribute="top" id="3eT-9y-P1F"/>
                 <constraint firstItem="prj-64-Tjh" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="EUZ-Ma-9O2"/>
-                <constraint firstAttribute="bottom" secondItem="TYG-yN-nra" secondAttribute="bottom" priority="900" constant="10" id="EsA-Bt-Uv9"/>
+                <constraint firstAttribute="bottom" secondItem="TYG-yN-nra" secondAttribute="bottom" priority="900" constant="11" id="EsA-Bt-Uv9"/>
                 <constraint firstAttribute="centerY" secondItem="cEe-0r-q6s" secondAttribute="centerY" id="HMX-4h-NLf"/>
                 <constraint firstItem="TYG-yN-nra" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1" secondAttribute="top" constant="10" id="IBL-ih-gjV"/>
                 <constraint firstItem="UkY-cD-CsE" firstAttribute="top" secondItem="1" secondAttribute="top" constant="12" id="JXO-RW-786"/>
