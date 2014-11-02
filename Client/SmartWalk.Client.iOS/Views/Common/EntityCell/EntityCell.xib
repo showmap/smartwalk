@@ -44,7 +44,7 @@
                         </constraints>
                     </view>
                     <label opaque="NO" clipsSubviews="YES" contentMode="top" verticalCompressionResistancePriority="250" text="Description Description Description Description Description Description Description Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="10" y="250" width="300" height="282"/>
+                        <rect key="frame" x="10" y="250" width="300" height="54"/>
                         <gestureRecognizers/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -52,16 +52,16 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="19" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" priority="800" constant="10" id="Cuo-fo-L5r"/>
+                    <constraint firstItem="19" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" priority="900" constant="10" id="Cuo-fo-L5r"/>
                     <constraint firstItem="999" firstAttribute="leading" secondItem="Q3o-AI-f2B" secondAttribute="leading" id="Fcf-bu-ehO"/>
                     <constraint firstAttribute="trailing" secondItem="999" secondAttribute="trailing" id="RZc-C1-wQF"/>
-                    <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" priority="800" constant="10" id="bd6-1O-KDF"/>
+                    <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" priority="900" constant="10" id="bd6-1O-KDF"/>
                     <constraint firstItem="999" firstAttribute="top" secondItem="Q3o-AI-f2B" secondAttribute="top" id="erS-LN-8ki"/>
-                    <constraint firstAttribute="bottom" secondItem="19" secondAttribute="bottom" priority="800" constant="10" id="sU9-x5-c4S"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="19" secondAttribute="bottom" priority="900" constant="10" id="sU9-x5-c4S"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
-                <constraint firstItem="19" firstAttribute="top" secondItem="999" secondAttribute="bottom" priority="800" constant="10" id="DQK-qT-KNl"/>
+                <constraint firstItem="19" firstAttribute="top" secondItem="999" secondAttribute="bottom" priority="900" constant="10" id="DQK-qT-KNl"/>
             </constraints>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>

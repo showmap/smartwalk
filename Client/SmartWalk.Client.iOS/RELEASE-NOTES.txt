@@ -1,1 +1,5 @@
-Multi-day selector design was updated.
+Performance improvements. Make sure that LayoutSubviews is not abused. Constaints are calculated separatelly, this increased all cells rendering performance.
+To show NavBar on table's layout update end. If the offset position is (0,0) showing NavBar.
+A height calc bug fixed.
+Possible fix for missing gradient sometimes.
+Org/Venue image height is proportional now.

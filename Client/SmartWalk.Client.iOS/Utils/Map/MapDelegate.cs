@@ -12,8 +12,8 @@ namespace SmartWalk.Client.iOS.Utils.Map
 {
     public class MapDelegate : MKMapViewDelegate
     {
-        private readonly List<MKPinAnnotationView> _viewLinksList = 
-            new List<MKPinAnnotationView>(); // to prevent GC
+        private readonly List<MKAnnotationView> _viewLinksList = 
+            new List<MKAnnotationView>(); // to prevent GC
 
         private readonly string _annotationIdentifier = "BasicAnnotation";
 
@@ -40,12 +40,11 @@ namespace SmartWalk.Client.iOS.Utils.Map
                 return null;
             }
 
-            var annotationView = (MKPinAnnotationView)mapView
-                .DequeueReusableAnnotation(_annotationIdentifier);
+            var annotationView = mapView.DequeueReusableAnnotation(_annotationIdentifier);
             if (annotationView == null)
             {
                 annotationView = 
-                    new MKPinAnnotationView(annotation, _annotationIdentifier);
+                    new MKAnnotationView(annotation, _annotationIdentifier);
             }
             else
             {

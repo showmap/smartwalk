@@ -90,9 +90,9 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor MapTint = UIColor.FromRGB(51, 51, 51);
         public static readonly UIColor MapPinText = UIColor.White;
-        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaMedium, 13);
-        public static readonly PointF MapPinOffset = new PointF(-8, -4);
-        public static readonly PointF MapPinTextOffset = new PointF(5, 5);
+        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaLight, 12);
+        public static readonly PointF MapPinOffset = new PointF(0, -16);
+        public static readonly PointF MapPinTextOffset = new PointF(1, 0);
 
         public static readonly SizeF DefaultImageSize = new SizeF(10, 10);
         public static readonly SizeF ErrorImageSize = new SizeF(20, 20);
