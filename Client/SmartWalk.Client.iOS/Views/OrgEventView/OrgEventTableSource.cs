@@ -57,7 +57,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public NSIndexPath GetItemIndex(Venue venue)
         {
-            var venueNumber = Array.IndexOf(ItemsSource, venue);
+            var venueNumber = ItemsSource.ToList().FindIndex(v => v.Info.Id == venue.Info.Id);
             return venueNumber >= 0 
                 ? NSIndexPath.FromRowSection(int.MaxValue, venueNumber)
                 : null;
