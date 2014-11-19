@@ -18,6 +18,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private const float DefaultImageVerticalHeight = 150f;
         private const int Gap = 10;
 
+        private static readonly float DefaultDescriptionTextHeight = 
+            ScreenUtil.CalculateTextHeight(
+                300, 
+                string.Format("Ap{0}Bp{0}Cp", Environment.NewLine),
+                Theme.EntityDescriptionFont); // 3 rows
+
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
 
@@ -42,39 +48,17 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             SizeF containerSize,
             IEntityCellContext context)
         {
-            var textHeight = (float)Math.Ceiling(
-                CalculateTextHeight(containerSize.Width - Gap * 2, context.FullDescription()));
+            var textHeight = ScreenUtil.CalculateTextHeight(
+                containerSize.Width - Gap * 2, 
+                context.FullDescription(), 
+                Theme.EntityDescriptionFont);
             var result = 
                 GetHeaderHeight(containerSize, context.Entity) + 
                 (!textHeight.EqualsF(0) ? Gap * 2 : 0) + 
                 (context.IsDescriptionExpanded ?
                     textHeight 
-                    : Math.Min(textHeight, (float)Math.Ceiling(Theme.EntityDescriptionFont.LineHeight * 3)));
+                    : Math.Min(textHeight, DefaultDescriptionTextHeight));
             return result;
-        }
-
-        private static float CalculateTextHeight(float frameWidth, string text)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                var frameSize = new SizeF(frameWidth, float.MaxValue); 
-
-                RectangleF textSize;
-
-                using (var ns = new NSString(text))
-                {
-                    textSize = ns.GetBoundingRect(
-                        frameSize,
-                        NSStringDrawingOptions.UsesLineFragmentOrigin |
-                        NSStringDrawingOptions.UsesFontLeading,
-                        new UIStringAttributes { Font = Theme.EntityDescriptionFont },
-                        null);
-                }
-
-                return textSize.Height;
-            }
-
-            return 0;
         }
 
         private static float GetHeaderHeight(SizeF containerSize, Entity entity)

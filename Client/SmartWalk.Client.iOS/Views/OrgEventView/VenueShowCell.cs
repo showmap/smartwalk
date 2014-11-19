@@ -5,6 +5,7 @@ using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
@@ -16,17 +17,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class VenueShowCell : TableCellBase
     {
-        public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
-        public static readonly NSString Key = new NSString("VenueShowCell");
-
-        public readonly static float DefaultHeight = VerticalGap + 
-            (float)Math.Ceiling(Theme.VenueShowCellFont.LineHeight) + VerticalGap;
-
-        private readonly AnimationDelay _animationDelay = new AnimationDelay();
-
-        private static readonly string TimeFormat = "{0:t}";
-        private static readonly string Space = " ";
-        private static readonly char M = 'm';
+        private const string TimeFormat = "{0:t}";
+        private const string Space = " ";
+        private const char M = 'm';
 
         private const float ImageHeight = 120f;
         private const float TimeBlockWidth = 106f;
@@ -35,6 +28,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const float TimeBorderGap = 8f;
         private const float BorderGap = 10f;
 
+        private static readonly float ShowTitleTextHeight = 
+            ScreenUtil.CalculateTextHeight(300, "Showp", Theme.VenueShowCellFont);
+        private static readonly float DetailsTextHeight = 
+            ScreenUtil.CalculateTextHeight(300, Localization.MoreInfo, Theme.VenueShowDetailsCellFont);
+
+        public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
+        public static readonly NSString Key = new NSString("VenueShowCell");
+
+        public static readonly float DefaultHeight = VerticalGap + ShowTitleTextHeight + VerticalGap;
+
+        private readonly AnimationDelay _animationDelay = new AnimationDelay();
         private readonly MvxImageViewLoader _imageHelper;
         private UITapGestureRecognizer _imageTapGesture;
         private UITapGestureRecognizer _cellTapGesture;
@@ -50,19 +54,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
                 () => 
-            {
-                if (_imageHelper.ImageUrl != null && 
-                    ThumbImageView.Image != null)
                 {
-                    UpdateConstraintConstants(false);
-
-                    if (_animationDelay.Animate)
+                    if (_imageHelper.ImageUrl != null && 
+                        ThumbImageView.Image != null)
                     {
-                        ThumbImageView.Hidden = true;
-                        ThumbImageView.SetHidden(false, true);
+                        UpdateConstraintConstants(false);
+
+                        if (_animationDelay.Animate)
+                        {
+                            ThumbImageView.Hidden = true;
+                            ThumbImageView.SetHidden(false, true);
+                        }
                     }
-                }
-            });
+                });
             _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
             _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
         }
@@ -89,25 +93,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         : 0f);
 
                 var titleHeight = show.Title != null
-                    ? (float)Math.Ceiling(CalculateTextHeight(
+                    ? ScreenUtil.CalculateTextHeight(
                         GetTitleBlockWidth(frameWidth, show), 
                         show.Title, 
-                        Theme.VenueShowCellFont))
+                        Theme.VenueShowCellFont)
                     : 0;
 
                 var descriptionHeight = show.Description != null
-                    ? (float)Math.Ceiling(CalculateTextHeight(
+                    ? ScreenUtil.CalculateTextHeight(
                         GetDescriptionBlockWidth(frameWidth), 
                         show.Description, 
-                        Theme.VenueShowDescriptionCellFont)) + 
+                        Theme.VenueShowDescriptionCellFont) + 
                         (titleHeight > 0 ? TitleAndDescriptionGap : 0)
                     : 0;
 
                 var logoHeight = show.HasPicture() ? VerticalGap + ImageHeight : 0;
-
-                var detailsHeight = show.HasDetailsUrl()
-                    ? VerticalGap + (float)Math.Ceiling(Theme.VenueShowDetailsCellFont.LineHeight) 
-                    : 0;
+                var detailsHeight = show.HasDetailsUrl() ? VerticalGap + DetailsTextHeight : 0;
 
                 cellHeight += Math.Max(
                     DefaultHeight, 
@@ -118,30 +119,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             return DefaultHeight;
-        }
-
-        private static float CalculateTextHeight(float frameWidth, string text, UIFont font)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                var frameSize = new SizeF(frameWidth, float.MaxValue);
-
-                RectangleF textSize;
-
-                using (var ns = new NSString(text))
-                {
-                    textSize = ns.GetBoundingRect(
-                        frameSize,
-                        NSStringDrawingOptions.UsesLineFragmentOrigin |
-                        NSStringDrawingOptions.UsesFontLeading,
-                        new UIStringAttributes { Font = font },
-                        null);
-                }
-
-                return textSize.Height;
-            }
-
-            return 0;
         }
 
         private static float GetTitleBlockWidth(float frameWidth, Show show)
@@ -264,11 +241,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (_isExpanded != isExpanded)
             {
                 _isExpanded = isExpanded;
-                UpateImageState();
+
                 UpdateConstraintConstants(animated);
                 UpdateVisibility(animated);
 
-                if (!_isExpanded)
+                if (_isExpanded)
+                {
+                    UpateImageState();
+                }
+                else
                 {
                     HeaderView = null;
                     SubHeaderView = null;
@@ -374,8 +355,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     if (IsExpanded && DataContext.HasDetailsUrl())
                     {
-                        DetailsHeightConstraint.Constant = 
-                            (float)Math.Ceiling(Theme.VenueShowDetailsCellFont.LineHeight);
+                        DetailsHeightConstraint.Constant = DetailsTextHeight;
                         ImageAndDetailsSpaceConstraint.Constant = VerticalGap;
                     }
                     else
@@ -453,12 +433,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var url = IsExpanded && DataContext != null 
                 ? DataContext.Picture : null;
 
-            if (url != null)
+            if (_imageHelper.ImageUrl != url)
             {
-                ThumbImageView.StartProgress();
-            }
+                if (url != null)
+                {
+                    ThumbImageView.StartProgress();
+                }
 
-            _imageHelper.ImageUrl = url;
+                _imageHelper.ImageUrl = url;
+            }
         }
 
         private void UpdateVisibility(bool animated)
@@ -473,7 +456,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             DescriptionLabel.SetHidden(isDescriptionHidden, animated);
 
             var isImageHidden = !IsExpanded || !DataContext.HasPicture();
-            ThumbImageView.SetHidden(isImageHidden, !isImageHidden && animated);
+            ThumbImageView.SetHidden(isImageHidden, !isImageHidden && animated, 0.6);
 
             var isDetailsHidden = !IsExpanded || !DataContext.HasDetailsUrl();
             DetailsLabel.SetHidden(isDetailsHidden, animated);
@@ -584,6 +567,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             DetailsLabel.Font = Theme.VenueShowDetailsCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
+            DetailsLabel.Text = Localization.MoreInfo;
 
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
             HeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);

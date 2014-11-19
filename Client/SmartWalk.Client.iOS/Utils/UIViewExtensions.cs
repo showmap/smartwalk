@@ -37,13 +37,14 @@ namespace SmartWalk.Client.iOS.Utils
                     view.Superview.IsChildOf<T>());
         }
 
-        public static void SetHidden(this UIView view, bool hidden, bool animated)
+        public static void SetHidden(this UIView view, bool hidden, bool animated, 
+            double duration = UIConstants.AnimationDuration)
         {
             if (animated)
             {
                 UIView.Transition(
                     view,
-                    UIConstants.AnimationDuration,
+                    duration,
                     UIViewAnimationOptions.TransitionCrossDissolve,
                     new NSAction(() => view.Hidden = hidden),
                     null);

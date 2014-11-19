@@ -21,6 +21,7 @@
         public const string ChangeMapTo = "Change Map to {0}";
         public const string UnknownLocation = "Unknown Location";
         public const string OffLineMode = "Offline Mode";
+        public const string MoreInfo = "more info";
 
         public const string Error = "Error";
         public const string NetworkError = "Network Error";

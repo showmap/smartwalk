@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using MonoTouch.UIKit;
+using MonoTouch.Foundation;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -33,6 +34,30 @@ namespace SmartWalk.Client.iOS.Utils
             var containerWidth = Math.Min(containerSize.Width, containerSize.Height);
             var result = containerWidth * defaultSize.Height / defaultSize.Width;
             return result;
+        }
+
+        public static float CalculateTextHeight(float frameWidth, string text, UIFont font)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                var frameSize = new SizeF(frameWidth, float.MaxValue);
+
+                RectangleF textSize;
+
+                using (var ns = new NSString(text))
+                {
+                    textSize = ns.GetBoundingRect(
+                        frameSize,
+                        NSStringDrawingOptions.UsesLineFragmentOrigin |
+                        NSStringDrawingOptions.UsesFontLeading,
+                        new UIStringAttributes { Font = font },
+                        null);
+                }
+
+                return (float)Math.Ceiling(textSize.Height);
+            }
+
+            return 0;
         }
     }
 }
