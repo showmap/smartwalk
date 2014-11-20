@@ -240,7 +240,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 MapWidthConstraint.Constant,
                 MapHeightConstraint.Constant);
 
-            if (entity != null && entity.Description != null)
+            if (DataContext != null && DataContext.FullDescription() != null)
             {
                 DescriptionTopConstraint.Constant = Gap;
                 DescriptionBottomConstraint.Constant = Gap;
