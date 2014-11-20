@@ -310,9 +310,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        protected override void OnViewModelRefreshed(bool hasData)
+        protected override void OnViewModelRefreshed(bool hasData, bool pullToRefresh)
         {
-            base.OnViewModelRefreshed(hasData);
+            base.OnViewModelRefreshed(hasData, pullToRefresh);
 
             UpdateTableHeaderState(hasData);
             UpdateTableViewInset();

@@ -124,9 +124,9 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
         }
 
-        protected virtual void OnViewModelRefreshed(bool hasData)
+        protected virtual void OnViewModelRefreshed(bool hasData, bool pullToRefresh)
         {
-            if (hasData)
+            if (hasData && pullToRefresh)
             {
                 ScrollViewToTop();
             }
@@ -229,14 +229,17 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void OnRefreshCompleted(object sender, MvxValueEventArgs<bool> e)
         {
-            if (ListView.RefreshControl != null &&
-                ListView.RefreshControl.Refreshing)
+            var pullToRefresh = 
+                ListView.RefreshControl != null &&
+                ListView.RefreshControl.Refreshing;
+
+            if (pullToRefresh)
             {
                 ListView.RefreshControl.EndRefreshing();
             }
 
             UpdateViewDataState(e.Value);
-            OnViewModelRefreshed(e.Value);
+            OnViewModelRefreshed(e.Value, pullToRefresh);
         }
 
         private void OnRefreshControlValueChanged(object sender, EventArgs e)
