@@ -27,12 +27,9 @@ namespace SmartWalk.Client.iOS.Utils
             return result;
         }
 
-        public static float GetProportionalHeight(
-            SizeF defaultSize,
-            SizeF containerSize)
+        public static float GetProportionalHeight(SizeF defaultSize, float frameWidth)
         {
-            var containerWidth = Math.Min(containerSize.Width, containerSize.Height);
-            var result = containerWidth * defaultSize.Height / defaultSize.Width;
+            var result = frameWidth * defaultSize.Height / defaultSize.Width;
             return result;
         }
 

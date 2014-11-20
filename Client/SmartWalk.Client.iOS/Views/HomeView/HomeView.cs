@@ -10,6 +10,8 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 {
     public partial class HomeView : ListViewBase
     {
+        private float? _cellProportionalHeight;
+
         public HomeView()
         {
             IsBackButtonVisible = false;
@@ -21,20 +23,36 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             get { return (HomeViewModel)base.ViewModel; }
         }
 
+        private float CellProportionalHeight
+        {
+            get
+            {
+                if (_cellProportionalHeight == null)
+                {
+                    var frameWidth = ScreenUtil.IsVerticalOrientation
+                        ? View.Frame.Width : View.Frame.Height;
+
+                    _cellProportionalHeight = ScreenUtil.GetProportionalHeight(
+                        new SizeF(OrgCell.DefaultWidth, OrgCell.DefaultHeight), 
+                        frameWidth);
+                }
+
+                return (float)_cellProportionalHeight;
+            }
+        }
+
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
 
-            UpdateLayoutSizes(UIApplication.SharedApplication.StatusBarOrientation, View.Frame.Size);
+            UpdateLayoutSizes(UIApplication.SharedApplication.StatusBarOrientation, View.Frame.Size.Width);
         }
 
         public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
         {
             base.WillRotate(toInterfaceOrientation, duration);
 
-            UpdateLayoutSizes(
-                toInterfaceOrientation, 
-                new SizeF(View.Frame.Size.Height, View.Frame.Size.Width));
+            UpdateLayoutSizes(toInterfaceOrientation, View.Frame.Height);
         }
 
         protected override ListViewDecorator GetListView()
@@ -82,24 +100,20 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             }
         }
 
-        private void UpdateLayoutSizes(UIInterfaceOrientation orientation, SizeF frameSize)
+        private void UpdateLayoutSizes(UIInterfaceOrientation orientation, float frameWidth)
         {
             var flowLayout = (UICollectionViewFlowLayout)OrgCollectionView.CollectionViewLayout;
             var itemsInRow = ScreenUtil.GetIsVerticalOrientation(orientation) ? 1 : 2;
 
             var cellWidth = 
-                (frameSize.Width -
+                (frameWidth -
                     flowLayout.SectionInset.Left -
                     flowLayout.SectionInset.Right -
                     flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
-            var cellHeight = ScreenUtil.GetProportionalHeight(
-                new SizeF(OrgCell.DefaultWidth, OrgCell.DefaultHeight), 
-                frameSize);
-
-            flowLayout.ItemSize = new SizeF(cellWidth, cellHeight);
+            flowLayout.ItemSize = new SizeF(cellWidth, CellProportionalHeight);
             flowLayout.HeaderReferenceSize = new SizeF(
-                frameSize.Width, 
+                frameWidth, 
                 HomeHeaderView.DefaultHeight);
             flowLayout.InvalidateLayout();
         }

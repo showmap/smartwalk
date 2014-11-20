@@ -44,16 +44,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return (EntityCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static float CalculateCellHeight(
-            SizeF containerSize,
-            IEntityCellContext context)
+        public static float CalculateCellHeight(SizeF frame, IEntityCellContext context)
         {
             var textHeight = ScreenUtil.CalculateTextHeight(
-                containerSize.Width - Gap * 2, 
+                frame.Width - Gap * 2, 
                 context.FullDescription(), 
                 Theme.EntityDescriptionFont);
             var result = 
-                GetHeaderHeight(containerSize, context.Entity) + 
+                GetHeaderHeight(frame, context.Entity) + 
                 (!textHeight.EqualsF(0) ? Gap * 2 : 0) + 
                 (context.IsDescriptionExpanded ?
                     textHeight 
@@ -61,12 +59,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return result;
         }
 
-        private static float GetHeaderHeight(SizeF containerSize, Entity entity)
+        private static float GetHeaderHeight(SizeF frame, Entity entity)
         {
             if (ScreenUtil.IsVerticalOrientation)
             {
                 var result = 
-                    GetImageVerticalHeight(containerSize) +
+                    GetImageVerticalHeight(frame.Width) +
                     (entity.HasAddresses() 
                         ? MapCell.DefaultHeight - 
                             (!entity.HasAddressText() ? MapCell.DefaultAddressHeight : 0)
@@ -74,14 +72,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 return result;
             }
 
-            var goldenHeight = ScreenUtil.GetGoldenRatio(containerSize.Height);
+            var goldenHeight = ScreenUtil.GetGoldenRatio(frame.Height);
             return goldenHeight;
         }
 
-        private static float GetImageVerticalHeight(SizeF containerSize)
+        private static float GetImageVerticalHeight(float frameWidth)
         {
             var result = ScreenUtil.GetProportionalHeight(
-                new SizeF(DefaultImageVerticalWidth, DefaultImageVerticalHeight), containerSize);
+                new SizeF(DefaultImageVerticalWidth, DefaultImageVerticalHeight), frameWidth);
             return (float)Math.Ceiling(result);
         }
 
@@ -172,11 +170,13 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             UIView parentTable;
             if (_parentTableRef == null || !_parentTableRef.TryGetTarget(out parentTable)) return;
 
+            // HACK: getting frame of superview due to wrong size on rotation (height is content height)
+            var frame = parentTable.Superview.Frame;
             var entity = DataContext != null ? DataContext.Entity : null;
-            var headerHeight = GetHeaderHeight(parentTable.Frame.Size, entity);
+            var headerHeight = GetHeaderHeight(frame.Size, entity);
             HeaderHeightConstraint.Constant = headerHeight;
 
-            var imageVerticalHeight = GetImageVerticalHeight(parentTable.Frame.Size);
+            var imageVerticalHeight = GetImageVerticalHeight(frame.Width);
             if (entity != null)
             {
                 if (ScreenUtil.IsVerticalOrientation)
