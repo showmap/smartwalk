@@ -57,7 +57,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             ScrollView.ViewForZoomingInScrollView += sv => ImageView;
 
             ImageView.StartProgress();
-            _imageHelper = new MvxImageViewLoader(() => ImageView);
+            _imageHelper = new MvxImageViewLoader(
+                () => ImageView,
+                () => {
+                    ScrollView.UpdateZoomConstants();
+                    ScrollView.SetNeedsLayout();
+                });
             _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
             _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
             _imageHelper.ImageUrl = ImageURL;
@@ -92,6 +97,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             if (PresentingViewController != null)
             {
+                DisposeGestures();
                 DismissViewController(true, null);
 
                 if (Hidden != null)
@@ -143,6 +149,30 @@ namespace SmartWalk.Client.iOS.Views.Common
             ScrollView.AddGestureRecognizer(_swipeRecognizer);
         }
 
+        private void DisposeGestures()
+        {
+            if (_singleTapRecognizer != null)
+            {
+                ScrollView.RemoveGestureRecognizer(_singleTapRecognizer);
+                _singleTapRecognizer.Dispose();
+                _singleTapRecognizer = null;
+            }
+
+            if (_doubleTapRecognizer != null)
+            {
+                ScrollView.RemoveGestureRecognizer(_doubleTapRecognizer);
+                _doubleTapRecognizer.Dispose();
+                _doubleTapRecognizer = null;
+            }
+
+            if (_swipeRecognizer != null)
+            {
+                ScrollView.RemoveGestureRecognizer(_swipeRecognizer);
+                _swipeRecognizer.Dispose();
+                _swipeRecognizer = null;
+            }
+        }
+
         private void InitializeStyle()
         {
             CloseButton.SetImage(ThemeIcons.CloseWhite, UIControlState.Normal);
@@ -155,30 +185,43 @@ namespace SmartWalk.Client.iOS.Views.Common
                 return;
             }
 
+            // HACK: Using custom zoom animation due to jerking in iOS7
             if (ScrollView.ZoomScale > ScrollView.MinimumZoomScale)
             {
-                ScrollView.SetZoomScale(ScrollView.MinimumZoomScale, true);
+                UIView.Animate(
+                    UIConstants.AnimationLongerDuration,
+                    () =>
+                    {
+                        ScrollView.SetZoomScale(ScrollView.MinimumZoomScale, false);
+                        ScrollView.LayoutSubviews();
+                    });
             }
             else
             {
-                var point = _doubleTapRecognizer.LocationInView(ScrollView);
-                var zoomRect = GetZoomRect(ScrollView.MaximumZoomScale, point);
-                ScrollView.ZoomToRect(zoomRect, true);
+                var center = _doubleTapRecognizer.LocationInView(ImageView);
+                var zoomRect = GetZoomRect(ScrollView.MaximumZoomScale, center);
+
+                UIView.Animate(
+                    UIConstants.AnimationLongerDuration,
+                    () =>
+                    {
+                        ScrollView.ZoomToRect(zoomRect, false);
+                        ScrollView.LayoutSubviews();
+                    });
             }
         }
 
         private RectangleF GetZoomRect(float scale, PointF center)
         {
             var size = new SizeF(
-                ImageView.Frame.Size.Height / scale,
-                ImageView.Frame.Size.Width / scale);
+                ScrollView.Frame.Size.Width / scale,
+                ScrollView.Frame.Size.Height / scale);
 
-            var centerInImageView = ScrollView.ConvertPointToView(center, ImageView);
-            var point = new PointF(
-                centerInImageView.X - (size.Width / 2.0f),
-                centerInImageView.Y - (size.Height / 2.0f));
+            var location = new PointF(
+                center.X - (size.Width / 2.0f),
+                center.Y - (size.Height / 2.0f));
 
-            var result = new RectangleF(point, size);
+            var result = new RectangleF(location, size);
             return result;
         }
     }
@@ -215,7 +258,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         public void UpdateZoomConstants()
         {
-            var imageSize = ImageView.Image != null
+            var imageSize = ImageView.HasImage()
                 ? ImageView.Image.Size
                 : Bounds.Size;
 
@@ -223,14 +266,14 @@ namespace SmartWalk.Client.iOS.Views.Common
             var heightScale = Bounds.Size.Height / imageSize.Height;
 
             MinimumZoomScale = 
-            Math.Min(MaximumZoomScale, Math.Min(widthScale, heightScale));
+                Math.Min(MaximumZoomScale, Math.Min(widthScale, heightScale));
             SetZoomScale(MinimumZoomScale, false);
             SetContentOffset(PointF.Empty, false);
         }
 
         private RectangleF GetCenteredImageFrame()
         {
-            var imageFrame = ImageView.Image != null 
+            var imageFrame = ImageView.HasImage()
                 ? ImageView.Frame
                 : Bounds;
             var result = imageFrame;
