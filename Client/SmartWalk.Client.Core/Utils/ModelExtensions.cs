@@ -267,16 +267,18 @@ namespace SmartWalk.Client.Core.Utils
             return result;
         }
 
-        public static string GetCurrentDayString(this DateTime date)
+        public static string GetCurrentDayString(this DateTime date, string empty = null)
         {
-            var result = string.Format("{0:ddd, d MMMM}", date);
+            var result = date != DateTime.MinValue
+                ? string.Format("{0:ddd, d MMMM}", date)
+                : empty;
             return result;
         }
 
-        public static string GetCurrentDayString(this DateTime? date)
+        public static string GetCurrentDayString(this DateTime? date, string empty = null)
         {
             var result = date.HasValue 
-                ? date.Value.GetCurrentDayString() 
+                ? date.Value.GetCurrentDayString(empty) 
                 : null;
             return result;
         }
@@ -302,27 +304,19 @@ namespace SmartWalk.Client.Core.Utils
             return result;
         }
 
-        public static Dictionary<DateTime, Show[]> GroupByDay(
-            this Show[] shows,
-            Tuple<DateTime?, DateTime?> range)
+        public static Dictionary<DateTime, Show[]> GroupByDay(this Show[] shows)
         {
-            if (shows == null || 
-                shows.Length == 0 || 
-                !shows.Any(s => s.StartTime.HasValue)) return null;
+            if (shows == null || shows.Length == 0) return null;
 
             var orderedShows = shows.OrderBy(s => s.StartTime).ToArray();
-            var firstDay = orderedShows
-                .FirstOrDefault(s => s.StartTime.HasValue)
-                .StartTime.Value.Date;
-            var day = firstDay;
+            var day = (orderedShows.First().StartTime ?? DateTime.MinValue).Date;
 
             var result = new Dictionary<DateTime, List<Show>>();
             result[day] = new List<Show>();
 
             foreach (var show in orderedShows)
             {
-                if (show.StartTime.HasValue &&
-                    !show.StartTime.IsTimeThisDay(day, range))
+                if (show.StartTime.HasValue && !show.StartTime.IsTimeThisDay(day))
                 {
                     day = show.StartTime.Value.Date;
                     result[day] = new List<Show>();
@@ -334,9 +328,9 @@ namespace SmartWalk.Client.Core.Utils
             return result.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray());
         }
 
-        public static Show[] GroupByDayShow(this Show[] shows, Tuple<DateTime?, DateTime?> range)
+        public static Show[] GroupByDayShow(this Show[] shows)
         {
-            var groupes = GroupByDay(shows, range);
+            var groupes = GroupByDay(shows);
             if (groupes == null) return shows;
 
             var venue = shows[0].Venue;
@@ -344,16 +338,20 @@ namespace SmartWalk.Client.Core.Utils
 
             foreach (var day in groupes.Keys)
             {
-                result.Add(GetDayGroupShow(day, venue));
+                if (day != DateTime.MinValue)
+                {
+                    result.Add(GetDayGroupShow(day, venue));
+                }
+
                 result.AddRange(groupes[day]);
             }
 
             return result.ToArray();
         }
 
-        public static Venue[] GroupByDayVenue(this Show[] shows, Tuple<DateTime?, DateTime?> range)
+        public static Venue[] GroupByDayVenue(this Show[] shows)
         {
-            var groupes = GroupByDay(shows, range);
+            var groupes = GroupByDay(shows);
             if (groupes == null) return null;
 
             var result = new List<Venue>();

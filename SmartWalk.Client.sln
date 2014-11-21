@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Shared", "Shared\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Client.Core", "Client\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj", "{A9012546-5146-407B-BDDB-B6A4FCABCB4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Client.UnitTests", "Client\SmartWalk.Client.UnitTests\SmartWalk.Client.UnitTests.csproj", "{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
@@ -19,6 +21,18 @@ Global
 		AppStore|iPhone = AppStore|iPhone
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Release|iPhone.Build.0 = Release|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
 		{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
 		{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
@@ -59,6 +73,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CFEA2CF4-C0C6-47A4-9549-2ACD230ABD01} = {9EA7B2F4-E7A2-4C0B-B13A-DF0AA9C69FBD}
 		{A9012546-5146-407B-BDDB-B6A4FCABCB4A} = {9EA7B2F4-E7A2-4C0B-B13A-DF0AA9C69FBD}
+		{166BCD48-A4EF-4A1B-AD57-E2156512AE8E} = {9EA7B2F4-E7A2-4C0B-B13A-DF0AA9C69FBD}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Client\SmartWalk.Client.iOS\SmartWalk.csproj

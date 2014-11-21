@@ -88,7 +88,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return VenueHeaderView.DefaultHeight;
             }
 
-            if (ShowVenueGroupHeader)
+            var venue = ItemsSource[section];
+            if (ShowVenueGroupHeader && venue.Info.Name != null)
             {
                 return GroupHeaderView.DefaultHeight;
             }
@@ -157,7 +158,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return headerView;
             }
 
-            if (ShowVenueGroupHeader)
+            if (ShowVenueGroupHeader && venue.Info.Name != null)
             {
                 var groupView = (GroupHeaderView)tableView.DequeueReusableHeaderFooterView(GroupHeaderView.Key);
 

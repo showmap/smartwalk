@@ -61,7 +61,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
 
         public override string ToString()
         {
-            return string.Format("Id={0}, Title={1})", Id, Title);
+            return string.Format("Id={0}, Title={1}, StartTime={2})", Id, Title, StartTime);
         }
     }
 
@@ -78,29 +78,34 @@ namespace SmartWalk.Client.Core.Model.DataContracts
         {
             if (_sortBy == SortBy.Time)
             {
-                if (x.StartTime < y.StartTime)
+                if (x.StartTime < y.StartTime ||
+                    (!x.StartTime.HasValue && y.StartTime.HasValue))
                 {
                     return -1;
                 }
 
-                if (x.StartTime > y.StartTime)
+                if (x.StartTime > y.StartTime ||
+                    (x.StartTime.HasValue && !y.StartTime.HasValue))
                 {
                     return 1;
                 }
 
-                if (x.EndTime < y.EndTime)
+                if (x.EndTime < y.EndTime ||
+                    (!x.EndTime.HasValue && y.EndTime.HasValue))
                 {
                     return -1;
                 }
 
-                if (x.EndTime > y.EndTime)
+                if (x.EndTime > y.EndTime ||
+                    (x.EndTime.HasValue && !y.EndTime.HasValue))
                 {
                     return 1;
                 }
             }
             else if (_sortBy == SortBy.Name)
             {
-                return x.Title.CompareTo(y.Title);
+                return string.Compare(x.Title, y.Title, 
+                    StringComparison.CurrentCulture);
             }
 
             return 0;
