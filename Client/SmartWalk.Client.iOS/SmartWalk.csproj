@@ -12,6 +12,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <ReleaseVersion>
     </ReleaseVersion>
+    <AssemblyName>SmartWalk</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +26,6 @@
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>i386</MtouchArch>
-    <AssemblyName>SmartWalkClientiOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
@@ -36,7 +36,6 @@
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>i386</MtouchArch>
-    <AssemblyName>SmartWalkClientiOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,7 +54,6 @@
     <MtouchArch>ARMv7</MtouchArch>
     <BuildIpa>true</BuildIpa>
     <MtouchLink>None</MtouchLink>
-    <AssemblyName>SmartWalk</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <Optimize>true</Optimize>
@@ -69,7 +67,6 @@
     </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
-    <AssemblyName>SmartWalk</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <Optimize>true</Optimize>
@@ -85,7 +82,6 @@
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <DefineConstants>ADHOC;</DefineConstants>
-    <AssemblyName>SmartWalk</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <Optimize>true</Optimize>
@@ -100,7 +96,6 @@
     <MtouchArch>ARMv7</MtouchArch>
     <DefineConstants>APPSTORE;</DefineConstants>
     <MtouchUseLlvm>true</MtouchUseLlvm>
-    <AssemblyName>SmartWalk</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Client.iOS", "Client\SmartWalk.Client.iOS\SmartWalk.Client.iOS.csproj", "{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk", "Client\SmartWalk.Client.iOS\SmartWalk.csproj", "{A6329FF3-0D60-4F09-9CD8-E05E37E252D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{9EA7B2F4-E7A2-4C0B-B13A-DF0AA9C69FBD}"
 EndProject
@@ -61,7 +61,7 @@ Global
 		{A9012546-5146-407B-BDDB-B6A4FCABCB4A} = {9EA7B2F4-E7A2-4C0B-B13A-DF0AA9C69FBD}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Client\SmartWalk.Client.iOS\SmartWalk.Client.iOS.csproj
+		StartupItem = Client\SmartWalk.Client.iOS\SmartWalk.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
