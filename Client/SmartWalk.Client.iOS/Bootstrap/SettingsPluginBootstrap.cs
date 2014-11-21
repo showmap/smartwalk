@@ -1,4 +1,3 @@
-// Bootstrap/SettingsPluginBootstrap.cs
 using Cirrious.CrossCore.Plugins;
 
  namespace SmartWalk.Client.iOS.Bootstrap

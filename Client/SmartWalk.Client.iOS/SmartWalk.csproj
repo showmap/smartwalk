@@ -112,12 +112,6 @@
     <Reference Include="GoogleAnalytics">
       <HintPath>..\..\..\smartwalk-binaries\Client\GAN\GoogleAnalytics.dll</HintPath>
     </Reference>
-    <Reference Include="Refractored.MvxPlugins.Settings.Touch">
-      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.2.0.2\lib\monotouch\Refractored.MvxPlugins.Settings.Touch.dll</HintPath>
-    </Reference>
-    <Reference Include="Refractored.MvxPlugins.Settings">
-      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.2.0.2\lib\monotouch\Refractored.MvxPlugins.Settings.dll</HintPath>
-    </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PhoneCall">
       <HintPath>..\..\packages\MvvmCross.HotTuna.Plugin.PhoneCall.3.1.2-beta1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.PhoneCall.dll</HintPath>
     </Reference>
@@ -166,11 +160,17 @@
     <Reference Include="Cirrious.MvvmCross">
       <HintPath>..\..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.2.1\lib\MonoTouch\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
-    <Reference Include="ModernHttpClient">
-      <HintPath>..\..\packages\modernhttpclient.2.1.2\lib\MonoTouch\ModernHttpClient.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.6\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ModernHttpClient">
+      <HintPath>..\..\packages\modernhttpclient.2.1.4\lib\MonoTouch\ModernHttpClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Refractored.MvxPlugins.Settings.Touch">
+      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.4.0.1\lib\monotouch\Refractored.MvxPlugins.Settings.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Refractored.MvxPlugins.Settings">
+      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.4.0.1\lib\monotouch\Refractored.MvxPlugins.Settings.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -356,7 +356,6 @@
     <Compile Include="Views\OrgEventView\DayHeaderCell.cs" />
     <Compile Include="Utils\SettingKeys.cs" />
     <Compile Include="Views\Common\Base\ActiveAwareViewBase.cs" />
-    <Compile Include="Bootstrap\SettingsPluginBootstrap.cs" />
     <Compile Include="Utils\UIConstants.cs" />
     <Compile Include="Utils\AppSettings.cs" />
     <Compile Include="Utils\AppSettingsUtil.cs" />
@@ -389,6 +388,7 @@
       <DependentUpon>ImageBackgroundView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\EntityCell\ContactCollectionView.cs" />
+    <Compile Include="Bootstrap\SettingsPluginBootstrap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
