@@ -262,7 +262,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.PrepareForReuse();
 
             IsExpanded = false;
-            ThumbImageView.Image = null;
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
