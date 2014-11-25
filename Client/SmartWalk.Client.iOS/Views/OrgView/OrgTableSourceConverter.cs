@@ -63,20 +63,14 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                         .GroupBy(e => e.StartTime.Value.Year)
                         .ToDictionary(key => key.Key, el => el.ToArray());
 
-                    result.Add(
-                        new GroupContainer(yearsDict[DateTime.Now.Year]) 
-                        {
-                            Key = Localization.PastEvents
-                        });
-
-                    foreach (var previousYear in yearsDict.Keys
-                        .Where(k => k != DateTime.Now.Year)
-                        .ToArray())
+                    foreach (var year in yearsDict.Keys)
                     {
                         result.Add(
-                            new GroupContainer(yearsDict[previousYear]) 
+                            new GroupContainer(yearsDict[year]) 
                             {
-                                Key = previousYear.ToString()
+                                Key = year == DateTime.Now.Year 
+                                    ? Localization.PastEvents 
+                                    : year.ToString()
                             });
                     }
                 }
