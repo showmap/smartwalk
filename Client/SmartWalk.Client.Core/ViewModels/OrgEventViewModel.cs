@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.CrossCore.Core;
@@ -10,11 +11,11 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
-using SmartWalk.Client.Core.Resources;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -1273,6 +1274,8 @@ namespace SmartWalk.Client.Core.ViewModels
         public class Parameters : ParametersBase
         {
             public int EventId { get; set; }
+
+            [IgnoreDataMember]
             public bool Current { get; set; }
 
             public override bool Equals(object obj)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace SmartWalk.Shared.Utils
@@ -912,7 +913,10 @@ namespace SmartWalk.Shared.Utils
 
             foreach (var property in properties)
             {
-                result[property.Name.ToLowerInvariant()] = obj.GetValue<object>(property.Name);
+                if (property.CustomAttributes.All(ca => ca.AttributeType != typeof(IgnoreDataMemberAttribute)))
+                {
+                    result[property.Name.ToLowerInvariant()] = obj.GetValue<object>(property.Name);
+                }
             }
 
             return result;
