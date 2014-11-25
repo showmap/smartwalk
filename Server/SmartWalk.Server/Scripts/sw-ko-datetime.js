@@ -207,24 +207,26 @@ ko.datetime.onChangeTime = function (args) {
 };
 
 ko.datetime.updateDate = function (element, value) {
-    ko.datetime.updateDateTime(element, value);
+    ko.datetime.updateDateTime(element, value, ko.datetime.onChangeDate);
 };
 
 ko.datetime.updateTime = function (element, value) {
-    ko.datetime.updateDateTime(element, value, true);
+    ko.datetime.updateDateTime(element, value, ko.datetime.onChangeTime, true);
 };
 
-ko.datetime.updateDateTime = function (element, value, restoreDate) {
+ko.datetime.updateDateTime = function (element, value, changeHandler, restoreDate) {
     var current = $(element).datepicker("getDate");
 
     if (restoreDate) {
         current = ko.datetimeUtil.restoreDate(current, value);
     }
 
-    if (current - value !== 0) {
+    if ((current || value) && (current - value !== 0)) {
+        $(element).unbind("change", changeHandler);
         $(element).datepicker("disable");
         $(element).datepicker("setDate", value);
         $(element).datepicker("enable");
+        $(element).bind("change", changeHandler);
     }
 };
 
