@@ -5,9 +5,11 @@
 @model EntityVm
 @{
     Style.Require("SmartWalk");
+    Style.Require("jquery.fileupload");
 
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Editing.Entity").AtFoot();
+    Script.Require("jquery.fileupload").AtFoot();
 
     var allowedActions = (AllowedActions)ViewData[ViewDataParams.AllowedActions];
     var formId = ViewData[ViewDataParams.EntityFormId] ?? "edit-entity-form";
@@ -41,11 +43,30 @@
         </div>
         
         <div class="row">
-	        <div class="col-sm-8">
-		        <div class="form-group" data-bind="validationElement: model.picture">
-			        <label for="pictureTextInput">@T("Picture"):</label>
+            <div class="col-sm-8">
+                <div class="form-group" data-bind="validationElement: model.picture">
+                    <label for="pictureTextInput">@T("Picture"):</label>
                     <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: model.picture, enable: isEnabled" />
-		        </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+	        <div class="col-sm-8">
+	            <div class="form-group">
+	                <label for="pictureTextInput">@T("Picture"):</label>
+	                <span class="btn btn-success fileinput-button">
+	                    <i class="glyphicon glyphicon-plus"></i>
+	                    <span>Select files...</span>
+	                    <input id="fileupload" type="file" name="files[]" multiple>
+	                </span>
+	            </div>
+                
+	            <div id="progress" class="progress">
+	                <div class="progress-bar progress-bar-success"></div>
+	            </div>
+
+                <div id="files" class="files"></div>
 	        </div>
         </div>
         
@@ -171,6 +192,22 @@
 
         var entityVm = new EntityViewModelExtended(settings, data);
         ko.applyBindings(entityVm, document.getElementById("@formId"));
+
+        $("#fileupload").fileupload({
+            url: '@Url.Action("Upload", entityController)',
+            dataType: "json",
+            done: function(e, uploadData) {
+                $("<p/>").text(uploadData.result.message).appendTo("#files");
+            },
+            progressall: function(e, uploadData) {
+                var progress = parseInt(uploadData.loaded / uploadData.total * 100, 10);
+                $("#progress .progress-bar").css(
+                    "width",
+                    progress + "%"
+                );
+            }
+        }).prop("disabled", !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : "disabled");
 
     @if (Model.Type == EntityType.Venue)
     {

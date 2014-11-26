@@ -75,6 +75,9 @@
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Orchard.MediaLibrary">
+      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.MediaLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Roles, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Roles.dll</HintPath>
@@ -149,6 +152,14 @@
     <Content Include="Scripts\hashset.min.js" />
     <Content Include="Scripts\hashtable.js" />
     <Content Include="Scripts\hashtable.min.js" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.fileupload.min.js">
+      <DependentUpon>jquery.fileupload.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jquery.iframe-transport.min.js">
+      <DependentUpon>jquery.iframe-transport.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\knockout-3.2.0.debug.js" />
     <Content Include="Scripts\knockout-3.2.0.js" />
     <Content Include="Scripts\knockout-jqAutocomplete.min.js" />
@@ -207,6 +218,10 @@
     <Content Include="Scripts\text-collapse.min.js">
       <DependentUpon>text-collapse.js</DependentUpon>
     </Content>
+    <Content Include="Styles\jquery.fileupload.css" />
+    <Content Include="Styles\jquery.fileupload.min.css">
+      <DependentUpon>jquery.fileupload.css</DependentUpon>
+    </Content>
     <Content Include="Styles\leaflet.css" />
     <Content Include="Styles\sw.css" />
     <Content Include="Styles\sw.min.css">
@@ -257,6 +272,12 @@
       <DependentUpon>sw-list-initial.js</DependentUpon>
     </Content>
     <Content Include="Views\GoogleMapsApi.cshtml" />
+    <Content Include="Scripts\jquery.fileupload.min.js.map">
+      <DependentUpon>jquery.fileupload.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.iframe-transport.min.js.map">
+      <DependentUpon>jquery.iframe-transport.min.js</DependentUpon>
+    </Content>
     <None Include="Views\ServerErrors.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">

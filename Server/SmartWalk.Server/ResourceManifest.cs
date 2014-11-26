@@ -52,6 +52,22 @@ namespace SmartWalk.Server
                 .SetVersionUrl("hashset.min.js", "hashset.js")
                 .SetDependencies("JsHashtable");
 
+            // 3rd Party - JQuery-File-Upload
+
+            manifest.DefineStyle("jquery.fileupload")
+                .SetVersion("1.3.0")
+                .SetVersionUrl("jquery.fileupload.min.css", "jquery.fileupload.css");
+
+            manifest.DefineScript("jquery.iframe-transport")
+                .SetVersion("1.8.2")
+                .SetVersionUrl("jquery.iframe-transport.min.js", "jquery.iframe-transport.js")
+                .SetDependencies("jQuery");
+
+            manifest.DefineScript("jquery.fileupload")
+                .SetVersion("5.42.0")
+                .SetVersionUrl("jquery.fileupload.min.js", "jquery.fileupload.js")
+                .SetDependencies("jQueryUI");
+
             // 3rd Party - Leaflet
 
             /*manifest.DefineScript("Leaflet")
