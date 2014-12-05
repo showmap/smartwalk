@@ -37,14 +37,12 @@ sw.attachVerticalScroll = function(callback) {
     });
 };
 
-sw.ajaxJsonRequest = function(ajData, url, onSuccess, onError, busyObject) {
-    var self = this;
-
+sw.ajaxJsonRequest = function(jsonData, url, busyObject) {
     var config = {
         async: true,
         url: url,
         type: "POST",
-        data: JSON.stringify(ajData),
+        data: JSON.stringify(jsonData),
         dataType: "json",
         cache: false,
         contentType: "application/json; charset=utf-8",
@@ -52,14 +50,7 @@ sw.ajaxJsonRequest = function(ajData, url, onSuccess, onError, busyObject) {
 
     if (busyObject && busyObject.isBusy) busyObject.isBusy(true);
 
-    var request = $.ajax(config)
-        .done(function(response, statusText, xhr) {
-            if (onSuccess) onSuccess.call(self, response, statusText, xhr);
-        })
-        .fail(function(response, statusText, xhr) {
-            if (onError) onError.call(self, response, statusText, xhr);
-        })
-        .always(function() {
+    var request = $.ajax(config).always(function() {
             if (busyObject && busyObject.isBusy) busyObject.isBusy(false);
         });
     
@@ -222,28 +213,25 @@ ListViewModel = function (parameters, url) {
     self.addItem = function () { }; // abstract ;-)
 
     self.getData = function (pageNumber) {
-        if (!self._finished && !self.isBusy() &&
-            self._currentPage != pageNumber) {
+        if (!self._finished && !self.isBusy() && self._currentPage != pageNumber) {
             sw.ajaxJsonRequest(
-                {
-                    pageNumber: pageNumber,
-                    query: self.query(),
-                    parameters: parameters
-                },
-                url,
-                function (items) {
+                    {
+                        pageNumber: pageNumber,
+                        query: self.query(),
+                        parameters: parameters
+                    },
+                    url, self)
+                .done(function(items) {
                     if (items && items.length > 0) {
                         self._currentPage = self._currentPage + 1;
                         items.forEach(function(item) { self.addItem(item); });
                     } else {
                         self._finished = true;
                     }
-                },
-                function (errorResult) {
+                })
+                .fail(function(errorResult) {
                     self.handleServerError(errorResult);
-                },
-                self
-            );
+                });
         }
     };
 

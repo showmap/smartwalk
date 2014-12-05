@@ -79,5 +79,12 @@ namespace SmartWalk.Shared.Utils
 
             return result;
         }
+
+        public static bool IsWebUrl(this string text)
+        {
+            Uri result;
+            return Uri.TryCreate(text, UriKind.Absolute, out result) && 
+                result.Scheme.ToLowerInvariant().Contains("http");
+        }
     }
 }

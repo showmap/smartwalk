@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using Orchard;
 using Orchard.Data;
+using Orchard.FileSystems.Media;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.Base;
 using SmartWalk.Server.Utils;
@@ -20,15 +21,18 @@ namespace SmartWalk.Server.Services.EventService
     {
         private readonly IRepository<EventMetadataRecord> _eventMetadataRepository;
         private readonly IRepository<EntityRecord> _entityRepository;
+        private readonly IStorageProvider _storageProvider;
 
         public EventService(
             IOrchardServices orchardServices,
             IRepository<EventMetadataRecord> eventMetadataRepository,
-            IRepository<EntityRecord> entityRepository)
+            IRepository<EntityRecord> entityRepository,
+            IStorageProvider storageProvider)
             : base(orchardServices)
         {
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
+            _storageProvider = storageProvider;
         }
 
         public AccessType GetEventsAccess()
@@ -302,7 +306,7 @@ namespace SmartWalk.Server.Services.EventService
             var result = ViewModelFactory.CreateViewModel(eventMeta, mode);
             result.Host =
                 EntityService
-                    .ViewModelFactory.CreateViewModel(eventMeta.EntityRecord, mode);
+                    .ViewModelFactory.CreateViewModel(eventMeta.EntityRecord, mode, _storageProvider);
 
             if (mode == LoadMode.Full)
             {
@@ -339,7 +343,7 @@ namespace SmartWalk.Server.Services.EventService
                             .FirstOrDefault(eedr => !eedr.IsDeleted && eedr.EntityRecord.Id == e.Id);
                         var venueVm = EntityService
                             .ViewModelFactory
-                            .CreateViewModel(e, venueDetail);
+                            .CreateViewModel(e, venueDetail, _storageProvider);
 
                         venueVm.Shows = allShows
                             .Where(s => s.EntityRecord.Id == e.Id && !s.IsReference)

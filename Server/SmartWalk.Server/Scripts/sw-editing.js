@@ -74,18 +74,16 @@ ko.validation.rules["asyncValidation"] = {
         if (model) {
             model[params.propName] = val;
 
-            sw.ajaxJsonRequest(
-                { propName: params.propName, model: model },
-                params.validationUrl,
-                function () {
+            sw.ajaxJsonRequest({ propName: params.propName, model: model }, params.validationUrl)
+                .done(function () {
                     callback(true);
-                },
-                function (response) {
+                })
+                .fail(function (response) {
                     if (response.responseJSON &&
                         response.responseJSON.ValidationErrors &&
                         response.responseJSON.ValidationErrors.length > 0) {
                         var message = $.map(response.responseJSON.ValidationErrors,
-                            function(ve) {
+                            function (ve) {
                                 return ve.Error;
                             }).join(" ");
 
@@ -93,8 +91,7 @@ ko.validation.rules["asyncValidation"] = {
                     }
 
                     callback({ isValid: false });
-                }
-            );
+                });
         }
     }
 };

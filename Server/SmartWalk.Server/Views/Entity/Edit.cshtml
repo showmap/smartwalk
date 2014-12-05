@@ -44,30 +44,29 @@
         
         <div class="row">
             <div class="col-sm-8">
-                <div class="form-group" data-bind="validationElement: model.picture">
-                    <label for="pictureTextInput">@T("Picture"):</label>
-                    <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: model.picture, enable: isEnabled" />
+                <div class="panel panel-default">
+                    <div id="dropzonePanel" class="panel-body dropzone">
+                        <span class="image-preview-container" data-bind="visible: picturePreview">
+                            <img id="previewImg" class="image-preview" data-bind="attr: {src: picturePreview}"
+                                 alt="@T("Picture preview unavailable")" />
+                            <button type="button" class="action close" data-bind="enable: isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the picture?")')) deletePicture(); }"><span class="glyphicon glyphicon-remove"></span></button>
+                        </span>
+                        
+                        <div class="image-select">
+                            <span class="btn btn-success fileinput-button" data-bind="css: {disabled: !isEnabled()}">
+                                <i class="glyphicon glyphicon-picture"></i>
+                                <span>@T("Select picture...")</span>
+                                <input id="fileupload" type="file" name="file" data-bind="enable: isEnabled" />
+                            </span>
+                        </div>
+                        <p class="text-muted">@T("... or drag and drop it on this panel")</p>
+                        
+                        <div id="progress" class="progress" style="display: none">
+                            <div class="progress-bar progress-bar-info" data-bind="style: {width: pictureProgress}"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="row">
-	        <div class="col-sm-8">
-	            <div class="form-group">
-	                <label for="pictureTextInput">@T("Picture"):</label>
-	                <span class="btn btn-success fileinput-button">
-	                    <i class="glyphicon glyphicon-plus"></i>
-	                    <span>Select files...</span>
-	                    <input id="fileupload" type="file" name="files[]" multiple>
-	                </span>
-	            </div>
-                
-	            <div id="progress" class="progress">
-	                <div class="progress-bar progress-bar-success"></div>
-	            </div>
-
-                <div id="files" class="files"></div>
-	        </div>
         </div>
         
         <div class="row">
@@ -153,8 +152,6 @@
             unsavedChangesMessage: '@T("There are unsaved changes made to the {0}.", entityTypeName.ToLower())',
             nameRequiredValidationMessage: '@T("Name can not be empty.")',
             nameLengthValidationMessage: '@T("Name can not be longer than 255 characters.")',
-            pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
-            picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
             descriptionLengthValidationMessage: '@T("Description can not be longer than 3000 characters.")',
 
             addressMessages: {
@@ -194,20 +191,30 @@
         ko.applyBindings(entityVm, document.getElementById("@formId"));
 
         $("#fileupload").fileupload({
-            url: '@Url.Action("Upload", entityController)',
+            url: "@Url.Action("UploadImage", "File")",
             dataType: "json",
-            done: function(e, uploadData) {
-                $("<p/>").text(uploadData.result.message).appendTo("#files");
+            autoUpload: false,
+            replaceFileInput: false,
+            maxNumberOfFiles: 1,
+            dropZone: "#dropzonePanel",
+            add: entityVm.onPictureAdded,
+            start: function() {
+                $("#progress").toggle(true);
             },
-            progressall: function(e, uploadData) {
-                var progress = parseInt(uploadData.loaded / uploadData.total * 100, 10);
-                $("#progress .progress-bar").css(
-                    "width",
-                    progress + "%"
-                );
+            stop: function() {
+                $("#progress").toggle(false);
+            },
+            progressall: entityVm.onUploadPictureProgress
+        });
+
+        // TODO: Extract into binding
+        entityVm.isBusy.subscribe(function(isBusy) {
+            if (isBusy) {
+                $("#fileupload").fileupload("disable");
+            } else {
+                $("#fileupload").fileupload("enable");
             }
-        }).prop("disabled", !$.support.fileInput)
-            .parent().addClass($.support.fileInput ? undefined : "disabled");
+        });
 
     @if (Model.Type == EntityType.Venue)
     {

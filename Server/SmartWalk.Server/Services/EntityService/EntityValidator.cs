@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using Orchard.Localization;
-using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
@@ -66,10 +65,6 @@ namespace SmartWalk.Server.Services.EntityService
                     result.Add(new ValidationError(
                                    pictureProperty,
                                    T("Picture url can not be longer than 255 characters.").Text));
-                }
-                else if (!model.Picture.IsUrlValid())
-                {
-                    result.Add(new ValidationError(pictureProperty, T("Picture URL has bad format.").Text));
                 }
             }
 

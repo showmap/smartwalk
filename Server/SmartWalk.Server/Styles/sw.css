@@ -588,3 +588,28 @@ td.editing-container {
 .event-days-picker li a.selected {
     background-color: #ffd800;
 }
+
+.dropzone {
+    background: #f5f5f5;
+    text-align: center;
+}
+
+.dropzone .image-preview-container .action.close {
+    float: none;
+    margin: 0;
+    margin-right: -16px;
+}
+
+.dropzone .image-preview {
+    max-width: 90%;
+    max-height: 150px;
+}
+
+.dropzone .image-select {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.dropzone .progress {
+    margin-bottom: 0;
+}

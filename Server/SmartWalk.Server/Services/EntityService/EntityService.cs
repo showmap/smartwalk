@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security;
 using Orchard;
 using Orchard.Data;
+using Orchard.FileSystems.Media;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.Base;
 using SmartWalk.Server.Utils;
@@ -17,13 +18,16 @@ namespace SmartWalk.Server.Services.EntityService
     public class EntityService : OrchardBaseService, IEntityService
     {
         private readonly IRepository<EntityRecord> _entityRepository;
+        private readonly IStorageProvider _storageProvider;
 
         public EntityService(
             IOrchardServices orchardServices,
-            IRepository<EntityRecord> entityRepository)
+            IRepository<EntityRecord> entityRepository,
+            IStorageProvider storageProvider)
             : base(orchardServices)
         {
             _entityRepository = entityRepository;
+            _storageProvider = storageProvider;
         }
 
         public bool IsNameUnique(EntityVm entityVm)
@@ -101,7 +105,7 @@ namespace SmartWalk.Server.Services.EntityService
             if (access == AccessType.Deny)
                 throw new SecurityException("Can't get entity.");
 
-            var result = ViewModelFactory.CreateViewModel(entity, LoadMode.Full);
+            var result = ViewModelFactory.CreateViewModel(entity, LoadMode.Full, _storageProvider);
             return result;
         }
 
@@ -121,6 +125,9 @@ namespace SmartWalk.Server.Services.EntityService
 
             if (entity.IsDeleted)
                 throw new InvalidOperationException("Can't edit deleted entity.");
+
+            entityVm.Picture = FileUtil.SaveUploadedPicture(entity.Picture, entityVm.Picture, 
+                string.Format("entity/{0}", entityVm.Id), _storageProvider);
 
             ViewModelFactory.UpdateByViewModel(entity, entityVm);
 
@@ -167,7 +174,7 @@ namespace SmartWalk.Server.Services.EntityService
 
             _entityRepository.Flush();
 
-            var result = ViewModelFactory.CreateViewModel(entity, LoadMode.Full);
+            var result = ViewModelFactory.CreateViewModel(entity, LoadMode.Full, _storageProvider);
             return result;
         }
 
@@ -199,7 +206,7 @@ namespace SmartWalk.Server.Services.EntityService
             _entityRepository.Flush();
         }
 
-        private static IList<EntityVm> GetEntities(
+        private IList<EntityVm> GetEntities(
             IQueryable<EntityRecord> query,
             EntityType type,
             int pageNumber,
@@ -230,7 +237,7 @@ namespace SmartWalk.Server.Services.EntityService
             return
                 query.Skip(pageSize * pageNumber)
                      .Take(pageSize)
-                     .Select(e => ViewModelFactory.CreateViewModel(e, LoadMode.Compact))
+                     .Select(e => ViewModelFactory.CreateViewModel(e, LoadMode.Compact, _storageProvider))
                      .ToArray();
         }
 

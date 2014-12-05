@@ -114,13 +114,6 @@ namespace SmartWalk.Server.Controllers.Base
         // TODO: To catch exceptions and return ErrorResultVm (with code) for all HttpPost methods
 
         [HttpPost]
-        public ActionResult Upload()
-        {
-            var myFile = Request.Files["files[]"];
-            return Json(new { message = "Uploaded successfull. Size " + myFile.ContentLength });
-        }
-
-        [HttpPost]
         [CompressFilter]
         public ActionResult GetEntities(int pageNumber, string query, ListViewParametersVm parameters)
         {

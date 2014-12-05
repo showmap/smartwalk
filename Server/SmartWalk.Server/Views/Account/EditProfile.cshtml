@@ -127,16 +127,13 @@
         });
 
         self.requestVerification = function() {
-            sw.ajaxJsonRequest({},
-                verificationUrl,
-                function (result) {
-                    self.isVerificationRequested(result);
-                },
-                function (errorResult) {
-                    self.handleServerError(errorResult);
-                },
-                self
-            );
+            sw.ajaxJsonRequest({}, verificationUrl, self)
+            .done(function (result) {
+                self.isVerificationRequested(result);
+            })
+            .fail(function (errorResult) {
+                self.handleServerError(errorResult);
+            });
         };
     };
 

@@ -13,10 +13,12 @@ namespace SmartWalk.Server
         {
             JsonDotNetValueProviderFactory.RegisterFactory();
             ModelBinders.Binders.DefaultBinder = new EnumConverterModelBinder();
+            FileUtil.CleanupUploadedImageStorage();
         }
 
         public void Terminating()
         {
+            FileUtil.CleanupUploadedImageStorage();
         }
     }
 }

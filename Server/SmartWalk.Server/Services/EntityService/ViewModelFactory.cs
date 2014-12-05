@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Orchard.FileSystems.Media;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
@@ -9,7 +10,8 @@ namespace SmartWalk.Server.Services.EntityService
 {
     public static class ViewModelFactory
     {
-        public static EntityVm CreateViewModel(EntityRecord record, LoadMode mode)
+        public static EntityVm CreateViewModel(EntityRecord record, LoadMode mode, 
+            IStorageProvider storageProvider)
         {
             if (record == null) throw new ArgumentNullException("record");
 
@@ -19,7 +21,7 @@ namespace SmartWalk.Server.Services.EntityService
             {
                 result.Name = record.Name;
                 result.Abbreviation = record.Name.GetAbbreviation(2);
-                result.Picture = record.Picture;
+                result.Picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
                 result.Addresses = record.AddressRecords
                     .Where(ar => !ar.IsDeleted)
                     .Select(CreateViewModel)
@@ -39,9 +41,10 @@ namespace SmartWalk.Server.Services.EntityService
             return result;
         }
 
-        public static EntityVm CreateViewModel(EntityRecord record, EventEntityDetailRecord detailRecord)
+        public static EntityVm CreateViewModel(EntityRecord record, EventEntityDetailRecord detailRecord,
+            IStorageProvider storageProvider)
         {
-            var result = CreateViewModel(record, LoadMode.Full);
+            var result = CreateViewModel(record, LoadMode.Full, storageProvider);
 
             if (detailRecord != null)
             {

@@ -112,10 +112,8 @@
         self.eventItems = ko.observableArray();
 
         self.loadData = function() {
-            sw.ajaxJsonRequest(
-                { entityId: @Model.Id }, 
-                "@Url.Action("GetEventsByEntity", "Event")", 
-                function(events) {
+            sw.ajaxJsonRequest({ entityId: @Model.Id }, "@Url.Action("GetEventsByEntity", "Event")")
+                .done(function(events) {
                     if (events) {
                         self.eventItems($.map(events, 
                             function(event) { return new EventViewModel(event); }));                            

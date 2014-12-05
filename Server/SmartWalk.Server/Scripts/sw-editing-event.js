@@ -75,18 +75,15 @@
 
         if (self.model.errors().length == 0) {
             self.currentRequest = sw.ajaxJsonRequest(
-                self.model.toJSON(),
-                self.settings.eventSaveUrl,
-                function (eventData) {
-                    data = eventData;
-                    self.model.loadData(eventData);
-                    self.settings.eventAfterSaveAction(eventData.Id, self);
-                },
-                function (errorResult) {
-                    self.handleServerError(errorResult);
-                },
-                self
-            );
+                self.model.toJSON(), self.settings.eventSaveUrl, self)
+            .done(function (eventData) {
+                data = eventData;
+                self.model.loadData(eventData);
+                self.settings.eventAfterSaveAction(eventData.Id, self);
+            })
+            .fail(function (errorResult) {
+                self.handleServerError(errorResult);
+            });
         } else {
             self.model.errors.showAllMessages();
         }
@@ -383,11 +380,8 @@ EventViewModelExtended.setupAutocomplete = function (event) {
     self.autocompleteHostName.extend({ notify: "always" });
     
     self.getAutocompleteHosts = function (searchTerm, callback) {
-        sw.ajaxJsonRequest(
-            { term: searchTerm },
-            self.settings.hostAutocompleteUrl,
-            callback
-        );
+        sw.ajaxJsonRequest({ term: searchTerm }, self.settings.hostAutocompleteUrl)
+            .done(callback);
     };
 
     self.getAutocompleteVenues = function (searchTerm, callback) {
@@ -396,9 +390,7 @@ EventViewModelExtended.setupAutocomplete = function (event) {
                 term: searchTerm,
                 excludeIds: $.map(self.actualVenues(), function (venue) { return venue.id(); })
             },
-            self.settings.venueAutocompleteUrl,
-            callback
-        );
+            self.settings.venueAutocompleteUrl).done(callback);
     };
 };
 
