@@ -12,7 +12,7 @@ namespace SmartWalk.Server.Utils
 
         public static IsolatedStorageFile GetUploadedImageStorage()
         {
-            var storage = IsolatedStorageFile.GetUserStoreForAssembly();
+            var storage = IsolatedStorageFile.GetMachineStoreForAssembly();
             if (!storage.DirectoryExists(ImageUploadsDir))
             {
                 storage.CreateDirectory(ImageUploadsDir);
@@ -62,39 +62,58 @@ namespace SmartWalk.Server.Utils
             return result;
         }
 
-        public static string SaveUploadedPicture(string previousPicture, string picture, 
+        /// <summary>
+        /// Handles routine around uploaded pictures. Moves uploaded pictures into storage. Deletes previous pictures.
+        /// </summary>
+        public static string ProcessUploadedPicture(string previousPicture, string picture, 
             string storagePath, IStorageProvider storageProvider)
         {
-            var result = picture;
-
+            var result = previousPicture;
             var previousPictureUrl = GetPictureUrl(previousPicture, storageProvider);
-            if (previousPictureUrl != picture && picture != null) // if picture has uploaded file name
+
+            // if picture has a valid uploaded file name
+            if (previousPictureUrl != picture && picture != null && IsFileNameValid(picture))
             {
-                var fileName = Path.GetFileNameWithoutExtension(picture);
-                Guid fileGuid;
-                if (Guid.TryParse(fileName, out fileGuid)) // make sure file name is a valid Guid (not a malformed path)
+                var uploadedStorage = GetUploadedImageStorage();
+                var uploadedFilePath = GetUploadedImagePath(picture);
+                using (var uploadedStream = uploadedStorage.OpenFile(uploadedFilePath, FileMode.Open))
                 {
-                    var uploadedStorage = GetUploadedImageStorage();
-                    var uploadedFilePath = GetUploadedImagePath(picture);
-                    using (var uploadedStream = uploadedStorage.OpenFile(uploadedFilePath, FileMode.Open))
-                    {
-                        var storageFilePath = Path.Combine(storagePath, picture);
-                        storageProvider.SaveStream(storageFilePath, uploadedStream);
-                        result = storageFilePath;
+                    var storageFilePath = Path.Combine(storagePath, picture);
+                    storageProvider.SaveStream(storageFilePath, uploadedStream);
 
-                        // if previous picture is in media storage then delete it
-                        if (previousPicture != null && !previousPicture.IsWebUrl() &&
-                            storageProvider.FileExists(previousPicture))
-                        {
-                            storageProvider.DeleteFile(previousPicture);
-                        }
-                    }
-
-                    uploadedStorage.DeleteFile(uploadedFilePath);
+                    result = storageFilePath;
+                    DeleteFile(previousPicture, storageProvider);
                 }
+
+                uploadedStorage.DeleteFile(uploadedFilePath);
+            }
+            else if (picture == null)
+            {
+                result = null;
+                DeleteFile(previousPicture, storageProvider);
             }
 
+            // NOTE: it's not allowed for now to accept external Urls for picture field
+
             return result;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether file name is a valid Guid and not a malformed path.
+        /// </summary>
+        public static bool IsFileNameValid(string fileName)
+        {
+            Guid fileGuid;
+            return Guid.TryParse(Path.GetFileNameWithoutExtension(fileName), out fileGuid);
+        }
+
+        private static void DeleteFile(string fileName, IStorageProvider storageProvider)
+        {
+            // if previous picture is in media storage then delete it
+            if (fileName != null && !fileName.IsWebUrl() && storageProvider.FileExists(fileName))
+            {
+                storageProvider.DeleteFile(fileName);
+            }
         }
     }
 }

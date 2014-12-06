@@ -8,6 +8,7 @@
     Style.Require("jQueryUI");
     Style.Require("jQueryUI.TimePicker");
     Style.Require("SmartWalk");
+    Style.Require("jquery.fileupload");
 
     Script.Require("ImageScale").AtFoot();
     Script.Require("jQueryUI.TimePicker").AtFoot();
@@ -94,11 +95,8 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-8" data-bind="validationElement: model.picture">
-            <div class="form-group">
-                <label for="pictureTextInput">@T("Picture"):</label>
-                <input id="pictureTextInput" class="form-control" type="text" placeholder="@T("Paste picture URL")" data-bind="value: model.picture, enable: isEnabled" />
-            </div>
+        <div class="col-sm-8">
+            @Html.Partial("../FileUpload")
         </div>
     </div>
 
@@ -208,9 +206,6 @@
             hostRequiredValidationMessage: '@T("Organizer is required.")',
             venueRequiredValidationMessage: '@T("Venue is required.")',
 
-            pictureLengthValidationMessage: '@T("Picture url can not be longer than 255 characters.")',
-            picturePatternValidationMessage: '@T("Picture url does not match url pattern.")',
-
             showMessages: {
                 titleRequiredValidationMessage: '@T("Show title is required.")',
                 titleLengthValidationMessage: '@T("Show title can not be longer than 255 characters.")',
@@ -262,8 +257,14 @@
             venueAutocompleteUrl: '@Url.Action("AutoCompleteVenue", "Venue")',
         };
 
-        var vm = new EventViewModelExtended(settings, data);
-        ko.applyBindings(vm, document.getElementById("event-item"));
+        var eventVm = new EventViewModelExtended(settings, data);
+        ko.applyBindings(eventVm, document.getElementById("event-item"));
+
+        sw.initFileUpload(
+            "#fileupload",
+            "@Url.Action("UploadImage", "File")",
+            eventVm,
+            "#dropzonePanel");
     });
 </script>
 }

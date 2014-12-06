@@ -9,7 +9,6 @@
 
     Script.Require("SmartWalk.AntiForgery").AtFoot();
     Script.Require("SmartWalk.Editing.Entity").AtFoot();
-    Script.Require("jquery.fileupload").AtFoot();
 
     var allowedActions = (AllowedActions)ViewData[ViewDataParams.AllowedActions];
     var formId = ViewData[ViewDataParams.EntityFormId] ?? "edit-entity-form";
@@ -44,28 +43,7 @@
         
         <div class="row">
             <div class="col-sm-8">
-                <div class="panel panel-default">
-                    <div id="dropzonePanel" class="panel-body dropzone">
-                        <span class="image-preview-container" data-bind="visible: picturePreview">
-                            <img id="previewImg" class="image-preview" data-bind="attr: {src: picturePreview}"
-                                 alt="@T("Picture preview unavailable")" />
-                            <button type="button" class="action close" data-bind="enable: isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the picture?")')) deletePicture(); }"><span class="glyphicon glyphicon-remove"></span></button>
-                        </span>
-                        
-                        <div class="image-select">
-                            <span class="btn btn-success fileinput-button" data-bind="css: {disabled: !isEnabled()}">
-                                <i class="glyphicon glyphicon-picture"></i>
-                                <span>@T("Select picture...")</span>
-                                <input id="fileupload" type="file" name="file" data-bind="enable: isEnabled" />
-                            </span>
-                        </div>
-                        <p class="text-muted">@T("... or drag and drop it on this panel")</p>
-                        
-                        <div id="progress" class="progress" style="display: none">
-                            <div class="progress-bar progress-bar-info" data-bind="style: {width: pictureProgress}"></div>
-                        </div>
-                    </div>
-                </div>
+                @Html.Partial("../FileUpload")
             </div>
         </div>
         
@@ -190,31 +168,11 @@
         var entityVm = new EntityViewModelExtended(settings, data);
         ko.applyBindings(entityVm, document.getElementById("@formId"));
 
-        $("#fileupload").fileupload({
-            url: "@Url.Action("UploadImage", "File")",
-            dataType: "json",
-            autoUpload: false,
-            replaceFileInput: false,
-            maxNumberOfFiles: 1,
-            dropZone: "#dropzonePanel",
-            add: entityVm.onPictureAdded,
-            start: function() {
-                $("#progress").toggle(true);
-            },
-            stop: function() {
-                $("#progress").toggle(false);
-            },
-            progressall: entityVm.onUploadPictureProgress
-        });
-
-        // TODO: Extract into binding
-        entityVm.isBusy.subscribe(function(isBusy) {
-            if (isBusy) {
-                $("#fileupload").fileupload("disable");
-            } else {
-                $("#fileupload").fileupload("enable");
-            }
-        });
+        sw.initFileUpload(
+            "#fileupload", 
+            "@Url.Action("UploadImage", "File")", 
+            entityVm, 
+            "#dropzonePanel");
 
     @if (Model.Type == EntityType.Venue)
     {

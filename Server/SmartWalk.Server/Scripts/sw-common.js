@@ -158,15 +158,15 @@ sw.vm = {};
 ViewModelBase = function () {
     var self = this;
 
-    self.currentRequest = null;
+    self.request = null;
 
     self.isBusy = ko.observable(false).extend({ throttle: 1 });
     self.isEnabled = ko.computed(function () { return !self.isBusy(); });
 
     self.isBusy.subscribe(function (isBusy) {
-        if (!isBusy && self.currentRequest) {
-            self.currentRequest.abort();
-            self.currentRequest = undefined;
+        if (!isBusy && self.request) {
+            self.request.abort();
+            self.request = undefined;
         }
     });
 

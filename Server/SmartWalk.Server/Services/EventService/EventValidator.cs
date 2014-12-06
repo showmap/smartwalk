@@ -60,12 +60,6 @@ namespace SmartWalk.Server.Services.EventService
                                    pictureProperty,
                                    T("Picture URL can not be longer than 255 characters.").Text));
                 }
-                else if (!model.Picture.IsUrlValid())
-                {
-                    result.Add(new ValidationError(
-                                   pictureProperty,
-                                   T("Picture URL has bad format.").Text));
-                }
             }
 
             var descriptionProperty = model.GetPropertyName(p => p.Description);

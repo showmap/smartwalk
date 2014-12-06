@@ -126,7 +126,7 @@ namespace SmartWalk.Server.Services.EntityService
             if (entity.IsDeleted)
                 throw new InvalidOperationException("Can't edit deleted entity.");
 
-            entityVm.Picture = FileUtil.SaveUploadedPicture(entity.Picture, entityVm.Picture, 
+            entityVm.Picture = FileUtil.ProcessUploadedPicture(entity.Picture, entityVm.Picture, 
                 string.Format("entity/{0}", entityVm.Id), _storageProvider);
 
             ViewModelFactory.UpdateByViewModel(entity, entityVm);

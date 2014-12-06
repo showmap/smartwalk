@@ -610,6 +610,10 @@ td.editing-container {
     margin-bottom: 10px;
 }
 
+.dropzone p {
+    margin: 0;
+}
+
 .dropzone .progress {
     margin-bottom: 0;
 }

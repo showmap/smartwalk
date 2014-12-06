@@ -47,6 +47,8 @@
             itemEditView: self.settings.addressEditView
         });
 
+    self.uploadManager = new FileUploadManager(self);
+
     self.getContactType = function (contact) {
         return self.settings.contactTypes[contact.type()];
     };
@@ -70,8 +72,10 @@
         }
 
         if (self.model.errors().length == 0) {
-            self.savePicture().done(function() {
-                 self._saveEntityRequest(resultHandler);
+            self.isBusy(true); // explicitly setting busy in case if image is being uploaded
+
+            self.uploadManager.request.done(function() {
+                self._saveEntity(resultHandler);
             });
         } else {
             self.model.errors.showAllMessages();
@@ -80,8 +84,8 @@
         return true;
     };
 
-    self._saveEntityRequest = function(resultHandler) {
-        self.currentRequest = sw.ajaxJsonRequest(
+    self._saveEntity = function(resultHandler) {
+        self.request = sw.ajaxJsonRequest(
                 self.model.toJSON(), self.settings.entitySaveUrl, self)
             .done(function(entityData) {
                 if (resultHandler && $.isFunction(resultHandler)) {
@@ -116,7 +120,6 @@
     };
 
     EntityViewModelExtended.setupAutocompleteAddress(self);
-    EntityViewModelExtended.setupPicture(self);
 };
 
 sw.inherits(EntityViewModelExtended, ViewModelBase);
@@ -153,7 +156,6 @@ EntityViewModelExtended.setupValidation = function (entity, settings) {
 
     entity.isValidating = ko.computed(function () {
         return entity.name.isValidating() ||
-            entity.picture.isValidating() ||
             entity.description.isValidating();
     });
 
@@ -238,63 +240,4 @@ EntityViewModelExtended.initAddressViewModel = function (address) {
             }
         }
     });
-};
-
-EntityViewModelExtended.setupPicture = function (viewModel) {
-    viewModel._pictureData = null;
-    viewModel.picturePreview = ko.observable(viewModel.model.picture());
-    viewModel.pictureProgress = ko.observable();
-
-    viewModel.onPictureAdded = function(e, data) {
-        if (data.files && data.files[0]) {
-            viewModel._pictureData = data;
-
-            if (FileReader) {
-                var reader = new FileReader();
-                reader.onload = function(arg) {
-                    viewModel.picturePreview(arg.target.result);
-                };
-                reader.readAsDataURL(data.files[0]);
-            } else {
-                viewModel.picturePreview(undefined);
-            }
-        } else {
-            viewModel._pictureData = null;
-            viewModel.picturePreview(undefined);
-        }
-    };
-
-    viewModel.onUploadPictureProgress = function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        viewModel.pictureProgress(progress + "%");
-    };
-
-    viewModel.deletePicture = function () {
-        viewModel.model.picture(undefined);
-        viewModel.picturePreview(undefined);
-        viewModel._pictureData = null;
-    };
-
-    viewModel.savePicture = function () {
-        if (viewModel._pictureData) {
-            viewModel.pictureProgress(null);
-            viewModel.isBusy(true);
-
-            viewModel.currentRequest = viewModel._pictureData.submit()
-                .done(function (result) {
-                    viewModel._pictureData = null;
-                    viewModel.model.picture(result.fileName);
-                })
-                .fail(function (errorResult) {
-                    viewModel.handleServerError(errorResult);
-                })
-                .always(function() {
-                     viewModel.isBusy(false); 
-                });
-
-            return viewModel.currentRequest;
-        } else {
-            return $.Deferred().resolve();
-        }
-    };
 };

@@ -152,6 +152,9 @@ namespace SmartWalk.Server.Services.EventService
                 && !Services.Authorizer.Authorize(Permissions.CreatePublicContent))
                 throw new SecurityException("Current user can not make public events.");
 
+            eventVm.Picture = FileUtil.ProcessUploadedPicture(eventMeta.Picture, eventVm.Picture,
+                string.Format("event/{0}", eventVm.Id), _storageProvider);
+
             ViewModelFactory.UpdateByViewModel(eventMeta, eventVm, host);
 
             var venues = CompressVenues(eventVm.Venues);
@@ -303,7 +306,7 @@ namespace SmartWalk.Server.Services.EventService
         {
             if (eventMeta == null) throw new ArgumentNullException("eventMeta");
 
-            var result = ViewModelFactory.CreateViewModel(eventMeta, mode);
+            var result = ViewModelFactory.CreateViewModel(eventMeta, mode, _storageProvider);
             result.Host =
                 EntityService
                     .ViewModelFactory.CreateViewModel(eventMeta.EntityRecord, mode, _storageProvider);
@@ -348,7 +351,7 @@ namespace SmartWalk.Server.Services.EventService
                         venueVm.Shows = allShows
                             .Where(s => s.EntityRecord.Id == e.Id && !s.IsReference)
                             .OrderBy(s => s.StartTime)
-                            .Select(ViewModelFactory.CreateViewModel)
+                            .Select(s => ViewModelFactory.CreateViewModel(s, _storageProvider))
                             .ToArray();
 
                         return venueVm;

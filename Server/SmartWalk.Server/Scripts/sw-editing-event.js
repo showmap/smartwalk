@@ -53,6 +53,8 @@
             itemEditView: self.settings.eventVenueEditView
         });
 
+    self.uploadManager = new FileUploadManager(self);
+
     self.sortVenues();
 
     self.createVenue = function () {
@@ -74,7 +76,17 @@
         }
 
         if (self.model.errors().length == 0) {
-            self.currentRequest = sw.ajaxJsonRequest(
+            self.isBusy(true); // explicitly setting busy in case if image is being uploaded
+            self.uploadManager.request.done(self._saveEvent);
+        } else {
+            self.model.errors.showAllMessages();
+        }
+
+        return true;
+    };
+
+    self._saveEvent = function () {
+        self.request = sw.ajaxJsonRequest(
                 self.model.toJSON(), self.settings.eventSaveUrl, self)
             .done(function (eventData) {
                 data = eventData;
@@ -84,11 +96,6 @@
             .fail(function (errorResult) {
                 self.handleServerError(errorResult);
             });
-        } else {
-            self.model.errors.showAllMessages();
-        }
-
-        return true;
     };
 
     self.cancelEvent = function () {
@@ -145,20 +152,6 @@ EventViewModelExtended.setupValidation = function (event, settings) {
             message: settings.endTimeCompareValidationMessage
         },
     });
-    
-    event.picture
-        .extend({
-            maxLength: {
-                params: 255,
-                message: settings.pictureLengthValidationMessage
-            }
-        })
-        .extend({
-            urlValidation: {
-                params: { allowEmpty: true },
-                message: settings.picturePatternValidationMessage
-            }
-        });
 
     event.description
         .extend({
@@ -176,7 +169,6 @@ EventViewModelExtended.setupValidation = function (event, settings) {
         return event.title.isValidating() ||
             event.startDate.isValidating() ||
             event.endDate.isValidating() ||
-            event.picture.isValidating() ||
             event.description.isValidating() ||
             event.host.isValidating();
     });

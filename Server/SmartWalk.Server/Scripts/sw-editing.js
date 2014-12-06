@@ -296,6 +296,106 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     };
 };
 
+function FileUploadManager(viewModel) {
+    var self = this;
+
+    self._pictureData = null;
+    self._picturePreview = ko.observable();
+
+    self.picturePreview = ko.computed(function() {
+        return self._picturePreview() || viewModel.model.picture();
+    });
+
+    viewModel.model.picture.subscribe(function () {
+        self._picturePreview(undefined);
+    });
+
+    self.pictureProgress = ko.observable();
+    self.isBusyUploading = ko.observable(false);
+
+    self.request = $.Deferred().resolve();
+
+    self.onPictureAdded = function(e, data) {
+        self._picturePreview(undefined);
+
+        if (data.files && data.files[0]) {
+            self._pictureData = data;
+            self.savePicture();
+        } else {
+            self._pictureData = null;
+        }
+    };
+
+    self.onUploadPictureProgress = function(e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        self.pictureProgress(progress + "%");
+    };
+
+    self.deletePicture = function() {
+        viewModel.model.picture(undefined);
+        self._pictureData = null;
+        self._picturePreview(undefined);
+
+        if (self.request && self.request.abort) {
+            self.request.abort();
+        }
+    };
+
+    self.savePicture = function() {
+        if (self._pictureData) {
+            self.pictureProgress(null);
+            self.isBusyUploading(true);
+
+            self.request = self._pictureData.submit()
+                .done(function(result) {
+                    viewModel.model.picture(result.fileName);
+                    self._pictureData = null;
+                    self._picturePreview(result.url);
+                })
+                .fail(function(errorResult) {
+                    viewModel.handleServerError(errorResult);
+                })
+                .always(function() {
+                    self.isBusyUploading(false);
+                    self.request = $.Deferred().resolve();
+                });
+        }
+
+        return self.request;
+    };
+};
+
+sw.initFileUpload = function (id, url, viewModel, dropZone) {
+    $(id).fileupload({
+        url: url,
+        dataType: "json",
+        autoUpload: false,
+        maxNumberOfFiles: 1,
+        dropZone: dropZone,
+        add: viewModel.uploadManager.onPictureAdded,
+        start: function () {
+            $("#progress").toggle(true);
+        },
+        stop: function () {
+            $("#progress").toggle(false);
+        },
+        progressall: viewModel.uploadManager.onUploadPictureProgress
+    });
+
+    var busyHandler = function (isBusy) {
+        if (isBusy) {
+            $(id).fileupload("disable");
+        } else {
+            $(id).fileupload("enable");
+        }
+
+        $(id).fileupload("option", "fileInput").attr("disabled", isBusy);
+    };
+
+    viewModel.isBusy.subscribe(busyHandler);
+    viewModel.uploadManager.isBusyUploading.subscribe(busyHandler);
+};
+
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############
 
 sw.widgets = {};

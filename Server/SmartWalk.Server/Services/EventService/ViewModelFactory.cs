@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.FileSystems.Media;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
@@ -8,7 +9,8 @@ namespace SmartWalk.Server.Services.EventService
 {
     public static class ViewModelFactory
     {
-        public static EventMetadataVm CreateViewModel(EventMetadataRecord record, LoadMode mode)
+        public static EventMetadataVm CreateViewModel(EventMetadataRecord record, LoadMode mode,
+            IStorageProvider storageProvider)
         {
             if (record == null) throw new ArgumentNullException("record");
 
@@ -19,7 +21,7 @@ namespace SmartWalk.Server.Services.EventService
                 result.Title = record.Title;
                 result.StartDate = record.StartTime;
                 result.EndDate = record.EndTime;
-                result.Picture = record.Picture;
+                result.Picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
             }
 
             if (mode == LoadMode.Full)
@@ -36,7 +38,7 @@ namespace SmartWalk.Server.Services.EventService
             return result;
         }
 
-        public static ShowVm CreateViewModel(ShowRecord record)
+        public static ShowVm CreateViewModel(ShowRecord record, IStorageProvider storageProvider)
         {
             if (record == null) throw new ArgumentNullException("record");
 
@@ -47,7 +49,7 @@ namespace SmartWalk.Server.Services.EventService
                     Description = record.Description,
                     StartTime = record.StartTime,
                     EndTime = record.EndTime,
-                    Picture = record.Picture,
+                    Picture = FileUtil.GetPictureUrl(record.Picture, storageProvider),
                     DetailsUrl = record.DetailsUrl
                 };
         }
