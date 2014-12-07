@@ -230,6 +230,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 venueCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
+                venueCell.NextShow = GetNextItemAt(indexPath);
                 venueCell.DataContext = show;
 
                 var isExpanded = Equals(_viewModel.ExpandedShow, show);
@@ -272,6 +273,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
            
             return null;
+        }
+
+        private Show GetNextItemAt(NSIndexPath indexPath)
+        {
+            var nextIndexPath = NSIndexPath.FromRowSection(indexPath.Row + 1, indexPath.Section);
+            return GetItemAt(nextIndexPath);
         }
     }
 

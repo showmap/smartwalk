@@ -162,6 +162,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             set { base.DataContext = value; }
         }
 
+        public Show NextShow { get; set; }
+
         public bool IsExpanded
         {
             get
@@ -293,7 +295,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ThumbImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
-            var leftRightTimes = GetLeftAndRightTimeTexts(DataContext);
+            var leftRightTimes = GetLeftAndRightTimeTexts(DataContext, NextShow);
 
             StartTimeLabel.AttributedText = leftRightTimes.Item1;
             EndTimeLabel.AttributedText = leftRightTimes.Item2;
@@ -396,15 +398,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return result;
         }
 
-        private static Tuple<NSAttributedString, NSAttributedString> GetLeftAndRightTimeTexts(Show show)
+        private static Tuple<NSAttributedString, NSAttributedString> GetLeftAndRightTimeTexts(
+            Show show, Show nextShow)
         {
             if (show != null)
             {
+                var status = show.GetStatus(nextShow);
+
                 if (show.StartTime.HasValue && show.EndTime.HasValue)
                 {
                     return new Tuple<NSAttributedString, NSAttributedString>(
-                        GetTimeText(show.StartTime.Value, show.GetStatus()),
-                        GetTimeText(show.EndTime.Value, show.GetStatus()));
+                        GetTimeText(show.StartTime.Value, status),
+                        GetTimeText(show.EndTime.Value, status));
                 }
 
                 // putting start time to the right, for better layout
@@ -412,14 +417,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     return new Tuple<NSAttributedString, NSAttributedString>(
                         new NSAttributedString(),
-                        GetTimeText(show.StartTime.Value, show.GetStatus()));
+                        GetTimeText(show.StartTime.Value, status));
                 }
 
                 if (show.EndTime.HasValue)
                 {
                     return new Tuple<NSAttributedString, NSAttributedString>(
                         new NSAttributedString(),
-                        GetTimeText(show.EndTime.Value, show.GetStatus()));
+                        GetTimeText(show.EndTime.Value, status));
                 }
             }
 
@@ -581,7 +586,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return;
             }
 
-            switch (DataContext.GetStatus())
+            switch (DataContext.GetStatus(NextShow))
             {
                 case ShowStatus.NotStarted:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;

@@ -168,6 +168,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
+                ((VenueShowCell)cell).NextShow = GetNextItemAt(indexPath) as Show;
                 ((VenueShowCell)cell).DataContext = venueShow;
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
                 ((VenueShowCell)cell).IsSeparatorVisible = true;
@@ -186,13 +187,21 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override object GetItemAt(NSIndexPath indexPath)
         {
-            return GroupItemsSource[indexPath.Section][indexPath.Row];
+            return indexPath.Row < GroupItemsSource[indexPath.Section].Count
+                ? GroupItemsSource[indexPath.Section][indexPath.Row]
+                : null;
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
+        }
+
+        private object GetNextItemAt(NSIndexPath indexPath)
+        {
+            var nextIndexPath = NSIndexPath.FromRowSection(indexPath.Row + 1, indexPath.Section);
+            return GetItemAt(nextIndexPath);
         }
     }
 }

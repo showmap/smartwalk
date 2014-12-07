@@ -37,20 +37,22 @@ namespace SmartWalk.Client.Core.Utils
             return -2;
         }
 
-        public static ShowStatus GetStatus(this Show show)
+        public static ShowStatus GetStatus(this Show show, Show nextShow = null)
         {
+            var startTime = show.StartTime;
+            var endTime = show.EndTime ?? (nextShow != null ? nextShow.StartTime : null);
+
             var status = 
-                (show.StartTime.HasValue && show.StartTime.Value.Date != DateTime.Now.Date) ||
-                (!show.StartTime.HasValue && show.EndTime >= DateTime.Now) ||
-                !show.EndTime.HasValue || 
-                show.EndTime >= DateTime.Now
+                (startTime.HasValue && startTime.Value.Date != DateTime.Now.Date) ||
+                (!startTime.HasValue && endTime >= DateTime.Now) ||
+                !endTime.HasValue || endTime >= DateTime.Now
                 ? ShowStatus.NotStarted 
                 : ShowStatus.Finished;
 
-            if (show.StartTime.HasValue &&
-                show.StartTime.Value.Date == DateTime.Now.Date &&
-                show.StartTime <= DateTime.Now &&
-                (!show.EndTime.HasValue || DateTime.Now <= show.EndTime))
+            if (startTime.HasValue &&
+                startTime.Value.Date == DateTime.Now.Date &&
+                startTime <= DateTime.Now &&
+                (!endTime.HasValue || DateTime.Now <= endTime))
             {
                 status = ShowStatus.Started;
             }
