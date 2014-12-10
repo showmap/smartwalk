@@ -345,7 +345,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     else
                     {
                         ImageHeightConstraint.Constant = 0;
-                        ImageWidthConstraint.Constant = 0;
                         DescriptionAndImageSpaceConstraint.Constant = 0;
                     }
                 },
