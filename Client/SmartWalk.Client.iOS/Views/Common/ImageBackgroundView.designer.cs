@@ -9,14 +9,11 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    [Register ("ImageBackgroundView")]
+	[Register ("ImageBackgroundView")]
 	partial class ImageBackgroundView
 	{
 		[Outlet]
 		MonoTouch.UIKit.UIImageView BackgroundImage { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UIView GradientPlaceholder { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIActivityIndicatorView ProgressView { get; set; }
@@ -37,9 +34,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 				BackgroundImage = null;
 			}
 
-			if (GradientPlaceholder != null) {
-				GradientPlaceholder.Dispose ();
-				GradientPlaceholder = null;
+			if (ProgressView != null) {
+				ProgressView.Dispose ();
+				ProgressView = null;
 			}
 
 			if (SubtitleLabel != null) {
@@ -55,11 +52,6 @@ namespace SmartWalk.Client.iOS.Views.Common
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
-			}
-
-			if (ProgressView != null) {
-				ProgressView.Dispose ();
-				ProgressView = null;
 			}
 		}
 	}

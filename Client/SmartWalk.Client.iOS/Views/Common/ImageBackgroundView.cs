@@ -39,9 +39,10 @@ namespace SmartWalk.Client.iOS.Views.Common
         public string Subtitle
         {
             get { return SubtitleLabel.Text; }
-            set { 
+            set
+            { 
                 SubtitleLabel.Text = value;
-                SetNeedsUpdateConstraints();
+                TitleBottomGapConstraint.Constant = value != null ? 3 : 10;
             }
         }
 
@@ -72,8 +73,6 @@ namespace SmartWalk.Client.iOS.Views.Common
                 {
                     _imageHelper.ImageUrl = value;
                 }
-
-                SetNeedsLayout();
             }
         }
 
@@ -115,17 +114,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        public override void UpdateConstraints()
-        {
-            base.UpdateConstraints();
-
-            if (SubtitleLabel != null)
-            {
-                TitleBottomGapConstraint.Constant = 
-                    SubtitleLabel.Text != null ? 3 : 10;
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -150,8 +138,6 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            BackgroundColor = Theme.GroupCellBackground;
-
             TitleLabel.Font = Theme.BackgroundImageTitleTextFont;
             TitleLabel.TextColor = Theme.BackgroundImageTitleText;
 
@@ -173,6 +159,8 @@ namespace SmartWalk.Client.iOS.Views.Common
                         new NSNumber(0),
                         new NSNumber(1)
                     },
+                    ShouldRasterize = true,
+                    RasterizationScale = UIScreen.MainScreen.Scale
                 };
 
                 BackgroundImage.Layer.InsertSublayer(_bottomGradient, 0);
