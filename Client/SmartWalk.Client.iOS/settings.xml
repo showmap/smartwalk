@@ -25,7 +25,7 @@
         <cache>
             <CacheName>Data.SmartWalk</CacheName>
             <CacheFolderPath>../Library/Caches/SmartWalkData.Cache/</CacheFolderPath>
-            <MaxFileAgeDays>3</MaxFileAgeDays>
+            <MaxFileAgeDays>10</MaxFileAgeDays>
         </cache>
     </caches>
 </settings>
