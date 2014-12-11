@@ -210,9 +210,6 @@
                 titleRequiredValidationMessage: '@T("Show title is required.")',
                 titleLengthValidationMessage: '@T("Show title can not be longer than 255 characters.")',
 
-                pictureValidationMessage: '@T("Picture does not match url pattern.")',
-                pictureLengthValidationMessage: '@T("Picture can not be longer than 255 characters.")',
-
                 detailsValidationMessage: '@T("Details does not match url pattern.")',
                 detailsLengthValidationMessage: '@T("Details can not be longer than 255 characters.")',
 
@@ -237,12 +234,12 @@
             eventSaveUrl: '@Url.Action("SaveEvent", "Event")',
             eventAfterCancelAction: function(event) {
                 window.location.href = @Html.Raw(Model.Id == 0
-                ? "'" + Url.Action("List", new {display = DisplayType.My}) + "'"
-                : "'" +Url.Action("View") + "'" + " + (event.currentDay() ? '/day/' + event.currentDay() : '')");
+                                           ? "'" + Url.Action("List", new { display = DisplayType.My }) + "'"
+                                           : "'" + Url.Action("View") + "'" + " + (event.currentDay() ? '/day/' + event.currentDay() : '')");
             },
             eventAfterSaveAction: function(id, event) {
-                window.location.href = '@Url.Action("View", new { eventId = ""})/' + id +
-                    (event.currentDay() ? '/day/' + event.currentDay() : '');
+                window.location.href = '@Url.Action("View", new { eventId = "" })/' + id +
+                (event.currentDay() ? '/day/' + event.currentDay() : '');
             },
 
             showView: "showItemTemplate",
@@ -263,7 +260,7 @@
         sw.initFileUpload(
             "#fileupload",
             "@Url.Action("UploadImage", "File")",
-            eventVm,
+            eventVm, eventVm.uploadManager,
             "#dropzonePanel");
     });
 </script>

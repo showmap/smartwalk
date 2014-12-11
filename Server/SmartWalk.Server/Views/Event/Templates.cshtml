@@ -27,7 +27,7 @@
             <div class="add-venue-show"><a data-bind="click: function () { if ($root.isEnabled()) $data.showsManager.addItem(); }, css: {disabled: !$root.isEnabled()}"><span class="glyphicon glyphicon-plus-sign"></span> @T("Create Show")</a></div>
         </td>
     </tr>
-    <!-- ko template: {name: showsManager.getItemView, foreach: showsManager.items() } -->    
+    <!-- ko template: {name: showsManager.getItemView, foreach: showsManager.items()} -->    
     <!-- /ko -->
     <tr class="add-venue-show" data-bind="
         visible: !isEditing() && 
@@ -157,68 +157,72 @@
 
 <script type="text/html" id="showItemTemplateEdit">
     <tr>
-		<td colspan="4" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow'">
-			<div class="well">							
-				<div class="row">
-					<div class="col-sm-8">
-						<div class="form-group" data-bind="validationElement: title">
-							<label for="titleTextInput">@T("Title"):</label>
-							<input type="text" class="form-control" id="titleTextInput" data-bind="value: title">
-						</div>
-									
-						<div class="form-group">
-							<label for="showDescriptionTextArea">@T("Description"):</label>
-							<textarea class="form-control" id="showDescriptionTextArea" data-bind="value: description"></textarea>
-						</div>
-					</div>
-							
-					<div class="col-sm-2" data-bind="validationElement: startTime">
-						<div class="form-group">
-							<label for="showStartTimeInput">@T("Start Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }" />
-						</div>
-									
-						<div class="form-group">
-							<label for="showStartDateInput">@T("Start Date"):</label><br/>
-							<input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.defaultDate }" />
-						</div>
-					</div>
-							
-					<div class="col-sm-2" data-bind="validationElement: endTime">
-						<div class="form-group" >
-							<label for="showStartTimeInput">@T("End Time"):</label><br/>
-							<input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }" />
-						</div>
-									
-						<div class="form-group">
-							<label for="showEndDateInput">@T("End Date"):</label><br/>
-							<input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.defaultDate }" />
-						</div>
-					</div>
-				</div>
-							
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="form-group" data-bind="validationElement: picture">
-							<label for="pictureTextInput">@T("Picture"):</label>
-							<input type="text" class="form-control" id="pictureTextInput" data-bind="value: picture">
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group" data-bind="validationElement: detailsUrl">
-							<label for="detailsURLTextInput">@T("Details URL"):</label><br/>
-							<input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: detailsUrl" />
-						</div>
-					</div>
-					<div class="col-sm-4 text-right">
-						<div class="form-group">
-							<label for="saveShowButton">&nbsp;</label><br/>
-							<button type="button" class="btn btn-default" data-bind="click: function() {$parent.showsManager.cancelItem($data); }">@T("Cancel")</button>
-							<button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$parent.showsManager.saveItem($data); } ">@T("Save Show")</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</td>
+        <td colspan="4" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow', fileUpload: { id: '#showFileupload', url: '@Url.Action("UploadImage", "File")', busyObject: $root, uploadManager: uploadManager, dropZone: '#showDropzonePanel' }">
+            <div class="well">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group" data-bind="validationElement: title">
+                            <label for="titleTextInput">@T("Title"):</label>
+                            <input type="text" class="form-control" id="titleTextInput" data-bind="value: title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="showDescriptionTextArea">@T("Description"):</label>
+                            <textarea class="form-control" id="showDescriptionTextArea" data-bind="value: description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2" data-bind="validationElement: startTime">
+                        <div class="form-group">
+                            <label for="showStartTimeInput">@T("Start Time"):</label><br />
+                            <input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="showStartDateInput">@T("Start Date"):</label><br />
+                            <input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.defaultDate }" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2" data-bind="validationElement: endTime">
+                        <div class="form-group">
+                            <label for="showStartTimeInput">@T("End Time"):</label><br />
+                            <input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="showEndDateInput">@T("End Date"):</label><br />
+                            <input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.defaultDate }" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        @Html.Partial("../FileUpload", new ViewDataDictionary
+						{
+						    { "inputId", "showFileupload" },
+                            { "dropZoneId", "showDropzonePanel" }
+						})
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group" data-bind="validationElement: detailsUrl">
+                            <label for="detailsURLTextInput">@T("Details URL"):</label><br />
+                            <input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: detailsUrl" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <div class="form-group">
+                            <label for="saveShowButton">&nbsp;</label><br />
+                            <button type="button" class="btn btn-default" data-bind="click: function() {$parent.showsManager.cancelItem($data); }">@T("Cancel")</button>
+                            <button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$parent.showsManager.saveItem($data); } ">@T("Save Show")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
 	</tr>         
 </script>

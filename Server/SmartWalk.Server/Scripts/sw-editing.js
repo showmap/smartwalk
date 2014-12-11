@@ -296,17 +296,17 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     };
 };
 
-function FileUploadManager(viewModel) {
+function FileUploadManager(viewModel, pictureHandler) {
     var self = this;
 
     self._pictureData = null;
     self._picturePreview = ko.observable();
 
     self.picturePreview = ko.computed(function() {
-        return self._picturePreview() || viewModel.model.picture();
+        return self._picturePreview() || pictureHandler();
     });
 
-    viewModel.model.picture.subscribe(function () {
+    pictureHandler.subscribe(function () {
         self._picturePreview(undefined);
     });
 
@@ -332,7 +332,7 @@ function FileUploadManager(viewModel) {
     };
 
     self.deletePicture = function() {
-        viewModel.model.picture(undefined);
+        pictureHandler(undefined);
         self._pictureData = null;
         self._picturePreview(undefined);
 
@@ -348,7 +348,7 @@ function FileUploadManager(viewModel) {
 
             self.request = self._pictureData.submit()
                 .done(function(result) {
-                    viewModel.model.picture(result.fileName);
+                    pictureHandler(result.fileName);
                     self._pictureData = null;
                     self._picturePreview(result.url);
                 })
@@ -365,21 +365,21 @@ function FileUploadManager(viewModel) {
     };
 };
 
-sw.initFileUpload = function (id, url, viewModel, dropZone) {
+sw.initFileUpload = function (id, url, busyObject, uploadManager, dropZone) {
     $(id).fileupload({
         url: url,
         dataType: "json",
         autoUpload: false,
         maxNumberOfFiles: 1,
         dropZone: dropZone,
-        add: viewModel.uploadManager.onPictureAdded,
+        add: uploadManager.onPictureAdded,
         start: function () {
             $("#progress").toggle(true);
         },
         stop: function () {
             $("#progress").toggle(false);
         },
-        progressall: viewModel.uploadManager.onUploadPictureProgress
+        progressall: uploadManager.onUploadPictureProgress
     });
 
     var busyHandler = function (isBusy) {
@@ -392,8 +392,16 @@ sw.initFileUpload = function (id, url, viewModel, dropZone) {
         $(id).fileupload("option", "fileInput").attr("disabled", isBusy);
     };
 
-    viewModel.isBusy.subscribe(busyHandler);
-    viewModel.uploadManager.isBusyUploading.subscribe(busyHandler);
+    busyObject.isBusy.subscribe(busyHandler);
+    uploadManager.isBusyUploading.subscribe(busyHandler);
+};
+
+ko.bindingHandlers.fileUpload = {
+    init: function (element, valueAccessor) {
+        var settings = ko.utils.unwrapObservable(valueAccessor());
+        sw.initFileUpload(settings.id, settings.url,
+            settings.busyObject, settings.uploadManager, settings.dropZone);
+    }
 };
 
 // ##########    3 r d    P a r t y    Ov e r r i d e s    ##############

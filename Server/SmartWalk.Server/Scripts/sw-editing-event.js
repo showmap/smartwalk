@@ -53,7 +53,7 @@
             itemEditView: self.settings.eventVenueEditView
         });
 
-    self.uploadManager = new FileUploadManager(self);
+    self.uploadManager = new FileUploadManager(self, self.model.picture);
 
     self.sortVenues();
 
@@ -181,10 +181,6 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
         .extend({ required: { params: true, message: settings.showMessages.titleRequiredValidationMessage } })
         .extend({ maxLength: { params: 255, message: settings.showMessages.titleLengthValidationMessage } });
 
-    show.picture
-        .extend({ maxLength: { params: 255, message: settings.showMessages.pictureLengthValidationMessage } })
-        .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.pictureValidationMessage } });
-
     show.detailsUrl
         .extend({ maxLength: { params: 255, message: settings.showMessages.detailsLengthValidationMessage } })
         .extend({ urlValidation: { params: { allowEmpty: true }, message: settings.showMessages.detailsValidationMessage } });
@@ -256,9 +252,8 @@ EventViewModelExtended.setupShowValidation = function (show, event, settings) {
         });
     
     show.isValidating = ko.computed(function () {
-        return show.title.isValidating() || show.picture.isValidating() ||
-            show.detailsUrl.isValidating() || show.startTime.isValidating() ||
-            show.endTime.isValidating();
+        return show.title.isValidating() || show.detailsUrl.isValidating() ||
+            show.startTime.isValidating() || show.endTime.isValidating();
     });
 
     show.errors = ko.validation.group(show);
@@ -326,6 +321,9 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             return show;
         },
         {
+            initItem: function (show) {
+                show.uploadManager = new FileUploadManager(event, show.picture);
+            },
             setEditingItem: function (item) {
                  return event.venuesManager.setEditingItem(item);
             },

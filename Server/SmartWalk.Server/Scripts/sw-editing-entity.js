@@ -47,7 +47,7 @@
             itemEditView: self.settings.addressEditView
         });
 
-    self.uploadManager = new FileUploadManager(self);
+    self.uploadManager = new FileUploadManager(self, self.model.picture);
 
     self.getContactType = function (contact) {
         return self.settings.contactTypes[contact.type()];

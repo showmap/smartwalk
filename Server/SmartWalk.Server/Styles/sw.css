@@ -603,11 +603,11 @@ td.editing-container {
 .dropzone .image-preview {
     max-width: 90%;
     max-height: 150px;
+    margin-bottom: 15px;
 }
 
 .dropzone .image-select {
-    margin-top: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .dropzone p {
