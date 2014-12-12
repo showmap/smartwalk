@@ -10,14 +10,14 @@
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EntityCell" rowHeight="591" id="2" customClass="EntityCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="543"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2" id="Q3o-AI-f2B">
+            <tableViewCellContentView key="contentView" clipsSubviews="YES" contentMode="center" tableViewCell="2" id="Q3o-AI-f2B">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="542"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="HeaderPlaceholder">
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="HeaderPlaceholder">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" userLabel="Map Placeholder" customClass="Placeholder">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" userLabel="Map Placeholder" customClass="Placeholder">
                                 <rect key="frame" x="0.0" y="160" width="320" height="80"/>
                                 <color key="backgroundColor" red="1" green="0.97254901959999995" blue="0.81568627449999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -25,7 +25,7 @@
                                     <constraint firstAttribute="width" constant="320" id="1032"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" userLabel="Image Placeholder" customClass="Placeholder">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" userLabel="Image Placeholder" customClass="Placeholder">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="160"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>

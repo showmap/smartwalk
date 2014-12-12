@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
@@ -18,13 +17,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class VenueShowCell : TableCellBase
     {
-        private static readonly string TimeFormat = CultureInfo.CurrentCulture.DateTimeFormat
-            .ShortTimePattern.Replace(" tt", "t");
+        private static readonly NSDateFormatter TimeFormatter = new NSDateFormatter {
+            DateStyle = NSDateFormatterStyle.None,
+            TimeStyle = NSDateFormatterStyle.Short,
+            TimeZone = NSTimeZone.FromName("UTC")
+        };
         private const string Space = " ";
         private const char M = 'm';
 
         private const float ImageHeight = 120f;
-        private const float TimeBlockWidth = 60f;
+        private const float TimeBlockWidth = 70f;
         private const float VerticalGap = 12f;
         private const float TitleAndDescriptionGap = 3f;
         private const float TimeBorderGap = 8f;
@@ -291,10 +293,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _imageHelper.ImageUrl = null;
 
             StartTimeLabel.Text = DataContext != null && DataContext.StartTime.HasValue
-                ? DataContext.StartTime.Value.ToString(TimeFormat)
+                ? TimeFormatter.ToString(DataContext.StartTime.Value)
                 : null;
             EndTimeLabel.Text = DataContext != null && DataContext.EndTime.HasValue
-                ? DataContext.EndTime.Value.ToString(TimeFormat)
+                ? TimeFormatter.ToString(DataContext.EndTime.Value)
                 : null;
 
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
