@@ -39,6 +39,8 @@ namespace SmartWalk.Client.Core.Utils
 
         public static ShowStatus GetStatus(this Show show, Show nextShow = null)
         {
+            if (show == null) return default(ShowStatus);
+
             var startTime = show.StartTime;
             var endTime = show.EndTime ?? (nextShow != null ? nextShow.StartTime : null);
 

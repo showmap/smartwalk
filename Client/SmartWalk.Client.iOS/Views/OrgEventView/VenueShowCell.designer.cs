@@ -61,6 +61,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UIView TimeBackgroundView { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint TimeTopConstraint { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.NSLayoutConstraint TitleAndDescriptionSpaceConstraint { get; set; }
 
 		[Outlet]
@@ -79,11 +82,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (DescriptionLabel != null) {
 				DescriptionLabel.Dispose ();
 				DescriptionLabel = null;
-			}
-
-			if (TitleRightConstraint != null) {
-				TitleRightConstraint.Dispose ();
-				TitleRightConstraint = null;
 			}
 
 			if (DetailsHeightConstraint != null) {
@@ -156,6 +154,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				TimeBackgroundView = null;
 			}
 
+			if (TimeTopConstraint != null) {
+				TimeTopConstraint.Dispose ();
+				TimeTopConstraint = null;
+			}
+
 			if (TitleAndDescriptionSpaceConstraint != null) {
 				TitleAndDescriptionSpaceConstraint.Dispose ();
 				TitleAndDescriptionSpaceConstraint = null;
@@ -164,6 +167,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
+			}
+
+			if (TitleRightConstraint != null) {
+				TitleRightConstraint.Dispose ();
+				TitleRightConstraint = null;
 			}
 		}
 	}

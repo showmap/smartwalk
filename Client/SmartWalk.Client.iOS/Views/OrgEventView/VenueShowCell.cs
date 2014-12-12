@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using MonoTouch.Foundation;
@@ -17,12 +18,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class VenueShowCell : TableCellBase
     {
-        private const string TimeFormat = "{0:t}";
+        private static readonly string TimeFormat = CultureInfo.CurrentCulture.DateTimeFormat
+            .ShortTimePattern.Replace(" tt", "t");
         private const string Space = " ";
         private const char M = 'm';
 
         private const float ImageHeight = 120f;
-        private const float TimeBlockWidth = 106f;
+        private const float TimeBlockWidth = 60f;
         private const float VerticalGap = 12f;
         private const float TitleAndDescriptionGap = 3f;
         private const float TimeBorderGap = 8f;
@@ -137,16 +139,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             var result = TimeBorderGap; // Time Label right gap
 
-            if (show != null)
+            if (show != null && (show.StartTime.HasValue || show.EndTime.HasValue))
             {
-                if (show.StartTime.HasValue && show.EndTime.HasValue)
-                {
-                    result += TimeBlockWidth;
-                }
-                else if (show.StartTime.HasValue || show.EndTime.HasValue)
-                {
-                    result += (float)Math.Ceiling((float)TimeBlockWidth / 2);
-                }
+                result += TimeBlockWidth;
             }
 
             return result;
@@ -295,15 +290,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ThumbImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
-            var leftRightTimes = GetLeftAndRightTimeTexts(DataContext, NextShow);
-
-            StartTimeLabel.AttributedText = leftRightTimes.Item1;
-            EndTimeLabel.AttributedText = leftRightTimes.Item2;
+            StartTimeLabel.Text = DataContext != null && DataContext.StartTime.HasValue
+                ? DataContext.StartTime.Value.ToString(TimeFormat)
+                : null;
+            EndTimeLabel.Text = DataContext != null && DataContext.EndTime.HasValue
+                ? DataContext.EndTime.Value.ToString(TimeFormat)
+                : null;
 
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
             DescriptionLabel.Text = DataContext != null ? DataContext.Description : null;
 
-            UpdateClockIcon();
+            UpdateStatusStyle();
             UpateImageState();
             UpdateConstraintConstants(false);
             UpdateVisibility(false);
@@ -336,6 +333,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 TitleAndDescriptionSpaceConstraint.Constant = 0;
             }
 
+            TimeTopConstraint.Constant = DataContext != null &&
+                (DataContext.StartTime.HasValue && DataContext.EndTime.HasValue)
+                    ? 8 : 13;
+
             this.UpdateConstraint(() =>
                 {
                     if (IsExpanded && DataContext.HasPicture())
@@ -366,70 +367,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
                 },
                 animated);
-        }
-
-        private static NSAttributedString GetTimeText(DateTime time, ShowStatus status)
-        {
-            var timeStr = String.Format(TimeFormat, time)
-                .Replace(Space, string.Empty).ToLower();
-
-            var index = timeStr.IndexOf(M);
-            var result = new NSMutableAttributedString(
-                timeStr,
-                Theme.VenueShowCellTimeFont);
-
-            if (index > 0)
-            {
-                var ampmIndex = index - 1;
-
-                result.SetAttributes(
-                    new UIStringAttributes 
-                { 
-                    Font = status == ShowStatus.Finished 
-                        ? Theme.VenueShowCellFinishedTimeFont 
-                        : Theme.VenueShowCellTimeFont
-                }, 
-                    new NSRange(0, ampmIndex));
-                result.SetAttributes(
-                    new UIStringAttributes { Font = Theme.VenueShowCellTimeAmPmFont },
-                    new NSRange(ampmIndex, timeStr.Length - ampmIndex));
-            }
-
-            return result;
-        }
-
-        private static Tuple<NSAttributedString, NSAttributedString> GetLeftAndRightTimeTexts(
-            Show show, Show nextShow)
-        {
-            if (show != null)
-            {
-                var status = show.GetStatus(nextShow);
-
-                if (show.StartTime.HasValue && show.EndTime.HasValue)
-                {
-                    return new Tuple<NSAttributedString, NSAttributedString>(
-                        GetTimeText(show.StartTime.Value, status),
-                        GetTimeText(show.EndTime.Value, status));
-                }
-
-                // putting start time to the right, for better layout
-                if (show.StartTime.HasValue)
-                {
-                    return new Tuple<NSAttributedString, NSAttributedString>(
-                        new NSAttributedString(),
-                        GetTimeText(show.StartTime.Value, status));
-                }
-
-                if (show.EndTime.HasValue)
-                {
-                    return new Tuple<NSAttributedString, NSAttributedString>(
-                        new NSAttributedString(),
-                        GetTimeText(show.EndTime.Value, status));
-                }
-            }
-
-            return new Tuple<NSAttributedString, NSAttributedString>(
-                new NSAttributedString(), new NSAttributedString());
         }
 
         private void UpateImageState()
@@ -567,7 +504,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             StartTimeLabel.TextColor = Theme.CellText;
 
             EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
-            EndTimeLabel.TextColor = Theme.CellText;
+            EndTimeLabel.TextColor = Theme.CellTextPassive;
 
             DetailsLabel.Font = Theme.VenueShowDetailsCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
@@ -578,7 +515,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             HeaderContainer.Layer.ShadowOpacity = 0.1f;
         }
 
-        private void UpdateClockIcon()
+        private void UpdateStatusStyle()
         {
             if (DataContext == null)
             {
@@ -586,7 +523,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return;
             }
 
-            switch (DataContext.GetStatus(NextShow))
+            var status = DataContext.GetStatus(NextShow);
+
+            switch (status)
             {
                 case ShowStatus.NotStarted:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
@@ -600,6 +539,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
                     break;
             }
+
+            StartTimeLabel.Font = status == ShowStatus.Finished 
+                ? Theme.VenueShowCellFinishedTimeFont : Theme.VenueShowCellTimeFont;
+            EndTimeLabel.Font = status == ShowStatus.Finished 
+                ? Theme.VenueShowCellFinishedEndTimeFont : Theme.VenueShowCellEndTimeFont;
         }
 
         private void UpdateBackgroundColor()
