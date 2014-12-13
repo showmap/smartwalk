@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.Core.Model.DataContracts
 {
@@ -19,6 +20,8 @@ namespace SmartWalk.Client.Core.Model.DataContracts
         public DateTime? EndTime { get; set; }
         public string Picture { get; set; }
         public string DetailsUrl { get; set; }
+
+        public ShowStatus Status { get; set; }
 
         IReference[] IShow.Venue { 
             get { return Venue; } 

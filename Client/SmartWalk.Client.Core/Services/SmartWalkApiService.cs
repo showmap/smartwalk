@@ -284,17 +284,20 @@ namespace SmartWalk.Client.Core.Services
 
             var venueDetail = venueDetails
                 .FirstOrDefault(d => d.Venue.Id() == entity.Id);
-            var venueShows = 
-                shows
-                    .Where(
-                        s => 
-                            entity.Id == s.Venue.Id() && 
-                            s.IsReference != true)
+            var venueShows = shows
+                    .Where(s => entity.Id == s.Venue.Id() && s.IsReference != true)
                     .ToArray();
-            var result = new Venue(
-                    entity,
-                    venueDetail != null ? venueDetail.Description : null) 
-                {
+
+            for (var i = 0; i < venueShows.Length; i++)
+            {
+                var show = venueShows[i];
+                var nextShow = i + 1 < venueShows.Length ? venueShows[i + 1] : null;
+                show.Status = show.GetStatus(nextShow);
+            }
+
+            var result = 
+                new Venue(entity,
+                    venueDetail != null ? venueDetail.Description : null) {
                     Shows = venueShows.Length > 0 ? venueShows : null
                 };
             return result;

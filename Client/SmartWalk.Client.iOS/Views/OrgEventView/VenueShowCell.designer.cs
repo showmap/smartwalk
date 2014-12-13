@@ -68,9 +68,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TitleRightConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -167,11 +164,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
-			}
-
-			if (TitleRightConstraint != null) {
-				TitleRightConstraint.Dispose ();
-				TitleRightConstraint = null;
 			}
 		}
 	}

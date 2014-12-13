@@ -37,37 +37,31 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
-                        <rect key="frame" x="248" y="8" width="64" height="17"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="64" id="495"/>
-                        </constraints>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalCompressionResistancePriority="900" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
+                        <rect key="frame" x="280" y="8" width="31.5" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="End" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="End">
-                        <rect key="frame" x="257" y="24" width="55" height="13.5"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="55" id="496"/>
-                        </constraints>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalCompressionResistancePriority="900" text="End" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="End">
+                        <rect key="frame" x="280" y="24" width="31.5" height="13.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="500" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Title" customClass="CopyLabel">
-                        <rect key="frame" x="10" y="12" width="240" height="18"/>
+                        <rect key="frame" x="10" y="12" width="265" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="SubHeaderContainer">
+                    <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFa-pB-6q0" userLabel="SubHeaderContainer">
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" priority="900" id="grt-qG-RJY"/>
                         </constraints>
                     </view>
-                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Gf-8G-gFc" userLabel="HeaderContainer">
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Gf-8G-gFc" userLabel="HeaderContainer">
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" priority="900" id="rDG-LL-Yqd"/>
@@ -110,11 +104,12 @@
                     <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="fLo-Av-da9"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="hFa-pB-6q0" secondAttribute="bottom" id="lkf-0X-0xe"/>
                     <constraint firstAttribute="trailing" secondItem="0Gf-8G-gFc" secondAttribute="trailing" id="lkh-ir-ijZ"/>
+                    <constraint firstItem="6" firstAttribute="width" secondItem="3" secondAttribute="width" id="mRO-93-3Ot"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6" secondAttribute="bottom" constant="3" id="ntX-rC-rmO"/>
                     <constraint firstItem="hFa-pB-6q0" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="nv5-LC-vXP"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="top" secondItem="9" secondAttribute="bottom" priority="900" constant="3" id="tvp-dH-0ZU"/>
                     <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="8" id="viT-Fi-EmO"/>
-                    <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" priority="900" constant="70" id="zyo-g5-Tzk"/>
+                    <constraint firstItem="3" firstAttribute="leading" secondItem="9" secondAttribute="trailing" constant="5" id="y2f-W3-srI"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
@@ -142,7 +137,6 @@
                 <outlet property="TimeTopConstraint" destination="0qO-C0-gwD" id="WyN-SC-R6L"/>
                 <outlet property="TitleAndDescriptionSpaceConstraint" destination="tvp-dH-0ZU" id="zuD-w5-CSw"/>
                 <outlet property="TitleLabel" destination="9" id="GY8-hV-yKW"/>
-                <outlet property="TitleRightConstraint" destination="zyo-g5-Tzk" id="1sB-9Y-Bd7"/>
             </connections>
         </tableViewCell>
     </objects>

@@ -22,13 +22,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             TimeStyle = NSDateFormatterStyle.Short,
             TimeZone = NSTimeZone.FromName("UTC")
         };
+
         private const string Space = " ";
         private const char M = 'm';
 
         private const float ImageHeight = 120f;
-        private const float TimeBlockWidth = 70f;
         private const float VerticalGap = 12f;
         private const float TitleAndDescriptionGap = 3f;
+        private const float TitleAndTimeGap = 5f;
         private const float TimeBorderGap = 8f;
         private const float BorderGap = 10f;
 
@@ -139,11 +140,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private static float GetTimeBlockWidth(Show show)
         {
-            var result = TimeBorderGap; // Time Label right gap
+            var result = TitleAndTimeGap + TimeBorderGap; // Title Label Gap + Time Label Right Gap
 
-            if (show != null && (show.StartTime.HasValue || show.EndTime.HasValue))
+            if (show != null)
             {
-                result += TimeBlockWidth;
+                var time = default(string);
+                var font = default(UIFont);
+
+                if (show.StartTime.HasValue)
+                {
+                    time = GetShowTimeText(show.StartTime);
+                    font = GetShowStartTimeFont(show.Status);
+
+                }
+                else if (show.EndTime.HasValue)
+                {
+                    time = GetShowTimeText(show.EndTime);
+                    font = GetShowEndTimeFont(show.Status);
+                }
+
+                var width = time != null 
+                    ? ScreenUtil.CalculateTextWidth(20, time, font) : 0f;
+                result += width;
             }
 
             return result;
@@ -158,8 +176,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             get { return (Show)base.DataContext; }
             set { base.DataContext = value; }
         }
-
-        public Show NextShow { get; set; }
 
         public bool IsExpanded
         {
@@ -292,12 +308,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ThumbImageView.Image = null;
             _imageHelper.ImageUrl = null;
 
-            StartTimeLabel.Text = DataContext != null && DataContext.StartTime.HasValue
-                ? TimeFormatter.ToString(DataContext.StartTime.Value)
-                : null;
-            EndTimeLabel.Text = DataContext != null && DataContext.EndTime.HasValue
-                ? TimeFormatter.ToString(DataContext.EndTime.Value)
-                : null;
+            StartTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.StartTime) : null;
+            EndTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.EndTime) : null;
 
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
             DescriptionLabel.Text = DataContext != null ? DataContext.Description : null;
@@ -322,8 +334,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ? GroupHeaderView.DefaultHeight
                 : 0;
 
-            TitleRightConstraint.Constant = GetTimeBlockWidth(DataContext);
-
             if (IsExpanded &&
                 DataContext.Title != null &&
                 DataContext.Description != null)
@@ -337,7 +347,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             TimeTopConstraint.Constant = DataContext != null &&
                 (DataContext.StartTime.HasValue && DataContext.EndTime.HasValue)
-                    ? 8 : 13;
+                    ? 9 : 14;
 
             this.UpdateConstraint(() =>
                 {
@@ -525,9 +535,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return;
             }
 
-            var status = DataContext.GetStatus(NextShow);
-
-            switch (status)
+            switch (DataContext.Status)
             {
                 case ShowStatus.NotStarted:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
@@ -542,9 +550,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
             }
 
-            StartTimeLabel.Font = status == ShowStatus.Finished 
+            StartTimeLabel.Font = GetShowStartTimeFont(DataContext.Status);
+            EndTimeLabel.Font = GetShowEndTimeFont(DataContext.Status);
+        }
+
+        private static string GetShowTimeText(DateTime? time)
+        {
+            return time.HasValue ? TimeFormatter.ToString(time.Value) : null;
+        }
+
+        private static UIFont GetShowStartTimeFont(ShowStatus status)
+        {
+            return status == ShowStatus.Finished 
                 ? Theme.VenueShowCellFinishedTimeFont : Theme.VenueShowCellTimeFont;
-            EndTimeLabel.Font = status == ShowStatus.Finished 
+        }
+
+        private static UIFont GetShowEndTimeFont(ShowStatus status)
+        {
+            return status == ShowStatus.Finished 
                 ? Theme.VenueShowCellFinishedEndTimeFont : Theme.VenueShowCellEndTimeFont;
         }
 

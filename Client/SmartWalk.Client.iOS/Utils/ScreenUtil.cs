@@ -33,28 +33,38 @@ namespace SmartWalk.Client.iOS.Utils
             return result;
         }
 
+        public static float CalculateTextWidth(float frameHeight, string text, UIFont font)
+        {
+            return CalculateTextSize(new SizeF(float.MaxValue, frameHeight), text, font).Width;
+        }
+
         public static float CalculateTextHeight(float frameWidth, string text, UIFont font)
+        {
+            return CalculateTextSize(new SizeF(frameWidth, float.MaxValue), text, font).Height;
+        }
+
+        public static SizeF CalculateTextSize(SizeF frame, string text, UIFont font)
         {
             if (!string.IsNullOrEmpty(text))
             {
-                var frameSize = new SizeF(frameWidth, float.MaxValue);
-
                 RectangleF textSize;
 
                 using (var ns = new NSString(text))
                 {
                     textSize = ns.GetBoundingRect(
-                        frameSize,
+                        frame,
                         NSStringDrawingOptions.UsesLineFragmentOrigin |
                         NSStringDrawingOptions.UsesFontLeading,
                         new UIStringAttributes { Font = font },
                         null);
                 }
 
-                return (float)Math.Ceiling(textSize.Height);
+                return new SizeF(
+                    (float)Math.Ceiling(textSize.Width), 
+                    (float)Math.Ceiling(textSize.Height));
             }
 
-            return 0;
+            return SizeF.Empty;
         }
     }
 }
