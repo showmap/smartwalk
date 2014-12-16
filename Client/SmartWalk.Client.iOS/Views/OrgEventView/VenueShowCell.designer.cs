@@ -19,9 +19,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DetailsHeightConstraint { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UILabel DetailsLabel { get; set; }
 
 		[Outlet]
@@ -79,11 +76,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (DescriptionLabel != null) {
 				DescriptionLabel.Dispose ();
 				DescriptionLabel = null;
-			}
-
-			if (DetailsHeightConstraint != null) {
-				DetailsHeightConstraint.Dispose ();
-				DetailsHeightConstraint = null;
 			}
 
 			if (DetailsLabel != null) {

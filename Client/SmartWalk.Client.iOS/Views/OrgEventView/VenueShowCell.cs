@@ -314,6 +314,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
             DescriptionLabel.Text = DataContext != null ? DataContext.Description : null;
 
+            DetailsLabel.Text = DataContext != null && DataContext.HasDetailsUrl()
+                ? Localization.MoreInfo : null;
+
             UpdateStatusStyle();
             UpateImageState();
             UpdateConstraintConstants(false);
@@ -369,12 +372,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     if (IsExpanded && DataContext.HasDetailsUrl())
                     {
-                        DetailsHeightConstraint.Constant = DetailsTextHeight;
                         ImageAndDetailsSpaceConstraint.Constant = VerticalGap;
                     }
                     else
                     {
-                        DetailsHeightConstraint.Constant = 0;
                         ImageAndDetailsSpaceConstraint.Constant = 0;
                     }
                 },
@@ -520,7 +521,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             DetailsLabel.Font = Theme.VenueShowDetailsCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
-            DetailsLabel.Text = Localization.MoreInfo;
 
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
             HeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);

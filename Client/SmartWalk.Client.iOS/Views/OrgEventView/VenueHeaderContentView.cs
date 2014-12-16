@@ -163,6 +163,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             BottomSeparator.IsLineOnTop = true;
 
+            ImageLabelView.BackgroundColor = Theme.VenueCellThumbLabel;
+            ImageLabel.Font = Theme.VenueCellThumbLabelFont;
+            ImageLabel.TextColor = Theme.VenueCellThumbLabelText;
+
             NameLabel.Font = Theme.VenueCellTitleFont;
             NameLabel.TextColor = Theme.CellText;
 

@@ -45,7 +45,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellTextHighlight = UIColor.White;
         public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
         public static readonly UIColor GroupHeaderText = UIColor.FromRGB(70, 223, 189);
-        public static readonly UIColor HyperlinkText = UIColor.FromRGB(74, 197, 144);
+        public static readonly UIColor HyperlinkText = UIColor.FromRGB(106, 11, 193);
 
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
@@ -79,6 +79,9 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor NextEntity = UIColor.FromRGB(135, 135, 135);
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
+        public static readonly UIColor VenueCellThumbLabel = UIColor.FromRGB(106, 11, 193);
+        public static readonly UIColor VenueCellThumbLabelText = UIColor.FromRGB(255, 255, 255);
+        public static readonly UIFont VenueCellThumbLabelFont = UIFont.FromName(HelveticaLight, 22);
         public static readonly UIFont VenueCellTitleFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIFont VenueCellAddressFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(HelveticaRegular, 14);
@@ -87,7 +90,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont VenueShowCellFinishedEndTimeFont = UIFont.FromName(HelveticaLight, 11);
         public static readonly UIFont VenueShowCellFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIFont VenueShowDescriptionCellFont = UIFont.FromName(HelveticaLight, 14);
-        public static readonly UIFont VenueShowDetailsCellFont = UIFont.FromName(HelveticaLight, 16);
+        public static readonly UIFont VenueShowDetailsCellFont = UIFont.FromName(HelveticaLight, 15);
 
         public static readonly UIColor MapTint = UIColor.FromRGB(51, 51, 51);
         public static readonly UIColor MapPinText = UIColor.White;
