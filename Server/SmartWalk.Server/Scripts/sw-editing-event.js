@@ -18,6 +18,9 @@
     EventViewModelExtended.setupMultiday(self);
     EventViewModelExtended.setupSorting(self);
     EventViewModelExtended.setupDialogs(self);
+
+    self.uploadManager = new FileUploadManager(self, self.model.picture);
+    self.showUploadManagers = new Hashtable();
     
     self.venuesManager = new VmItemsManager(
         self.model.venues,
@@ -52,8 +55,6 @@
             itemView: self.settings.eventVenueView,
             itemEditView: self.settings.eventVenueEditView
         });
-
-    self.uploadManager = new FileUploadManager(self, self.model.picture);
 
     self.sortVenues();
 
@@ -321,9 +322,6 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
             return show;
         },
         {
-            initItem: function (show) {
-                show.uploadManager = new FileUploadManager(event, show.picture);
-            },
             setEditingItem: function (item) {
                  return event.venuesManager.setEditingItem(item);
             },
@@ -331,11 +329,19 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
                 return show.isEditing() ||
                     EventViewModelExtended.isTimeThisDay(show.startTime(), event, 0);
             },
-            beforeEdit: function () {
+            beforeEdit: function (show) {
                 event.venuesManager.cancelAll();
                 event.model.venues().forEach(function (otherVenue) {
                     otherVenue.showsManager.cancelAll();
                 });
+
+                var uploadManager = event.showUploadManagers.get(show);
+                if (!uploadManager) {
+                    uploadManager = new FileUploadManager(event, show.picture);
+                    event.showUploadManagers.put(show, uploadManager);
+                }
+
+                venue.showsManager.request = uploadManager.request;
             },
             beforeSave: function (show) {
                 if (!show.errors) {

@@ -126,9 +126,6 @@ namespace SmartWalk.Server.Services.EntityService
             if (entity.IsDeleted)
                 throw new InvalidOperationException("Can't edit deleted entity.");
 
-            entityVm.Picture = FileUtil.ProcessUploadedPicture(entity.Picture, entityVm.Picture, 
-                string.Format("entity/{0}", entityVm.Id), _storageProvider);
-
             ViewModelFactory.UpdateByViewModel(entity, entityVm);
 
             foreach (var contactVm in entityVm.Contacts)
@@ -171,6 +168,9 @@ namespace SmartWalk.Server.Services.EntityService
             {
                 _entityRepository.Create(entity);
             }
+
+            // handling uploaded pictures after event got an Id
+            ViewModelFactory.UpdateByViewModelPicture(entity, entityVm, _storageProvider);
 
             _entityRepository.Flush();
 

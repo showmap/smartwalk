@@ -157,7 +157,7 @@
 
 <script type="text/html" id="showItemTemplateEdit">
     <tr>
-        <td colspan="4" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow', fileUpload: { id: '#showFileupload', url: '@Url.Action("UploadImage", "File")', busyObject: $root, uploadManager: uploadManager, dropZone: '#showDropzonePanel' }">
+        <td colspan="4" class="editing-container" data-bind="fadeIn: 'slow', scroll: 'slow', fileUpload: { id: '#showFileupload', url: '@Url.Action("UploadImage", "File")', busyObject: $root, uploadManager: $root.showUploadManagers.get($data), dropZone: '#showDropzonePanel' }">
             <div class="well">
                 <div class="row">
                     <div class="col-sm-8">
@@ -202,7 +202,8 @@
                         @Html.Partial("../FileUpload", new ViewDataDictionary
 						{
 						    { "inputId", "showFileupload" },
-                            { "dropZoneId", "showDropzonePanel" }
+                            { "dropZoneId", "showDropzonePanel" },
+                            { "uploadManagerAccess", "showUploadManagers.get($data)" }
 						})
                     </div>
                 </div>

@@ -12,6 +12,8 @@
 
     var allowedActions = (AllowedActions)ViewData[ViewDataParams.AllowedActions];
     var formId = ViewData[ViewDataParams.EntityFormId] ?? "edit-entity-form";
+    var fileUploadId = Model.Type == (int)EntityType.Host ? "hostFileUpload" : "venueFileUpload";
+    var dropZoneId = Model.Type == (int)EntityType.Host ? "hostDropzonePanel" : "venueDropzonePanel";
     var entityTypeName = Model.Type == (int)EntityType.Host ? "Organizer" : "Venue";
     var entityController = Model.Type == (int)EntityType.Host ? "Host" : "Venue";
     var cancelAction = Model.Id == 0 
@@ -43,7 +45,11 @@
         
         <div class="row">
             <div class="col-sm-8">
-                @Html.Partial("../FileUpload")
+                @Html.Partial("../FileUpload", new ViewDataDictionary
+			    {
+				    { "inputId", fileUploadId },
+                    { "dropZoneId", dropZoneId }
+			    })
             </div>
         </div>
         
@@ -169,10 +175,10 @@
         ko.applyBindings(entityVm, document.getElementById("@formId"));
 
         sw.initFileUpload(
-            "#fileupload", 
+            "#@fileUploadId", 
             "@Url.Action("UploadImage", "File")", 
             entityVm, entityVm.uploadManager, 
-            "#dropzonePanel");
+            "#@dropZoneId");
 
     @if (Model.Type == EntityType.Venue)
     {

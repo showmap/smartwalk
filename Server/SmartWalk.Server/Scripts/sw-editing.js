@@ -183,6 +183,8 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     });
     
     // public
+
+    self.request = $.Deferred().resolve(); // an async request to wait before saving
     
     self.items = settings.filterItem
         ? ko.computed(function() {
@@ -205,6 +207,10 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         self._editItem(item, false);
     };
 
+    self.editItem = function (item) {
+        self._editItem(item, true);
+    };
+
     self._editItem = function (item, savePreviousData) {
         if (self._allItems.indexOf(item) < 0 ||
             self._editingItems.contains(item)) return;
@@ -224,10 +230,6 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         item.isEditing(true);
     };
 
-    self.editItem = function (item) {
-        self._editItem(item, true);
-    };
-
     self.deleteItem = function (item) {
         if (item.isEditing()) {
             cancelItem(item);
@@ -243,6 +245,8 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     self.cancelItem = function (item) {
         if (self._allItems.indexOf(item) < 0 ||
             !self._editingItems.contains(item)) return;
+
+        self.request.reject();
 
         if (self._previousItemData.containsKey(item)) {
             item.loadData(self._previousItemData.get(item));
@@ -268,7 +272,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
 
     self.saveItem = function (item) {
         if (self._allItems.indexOf(item) < 0 ||
-            !self._editingItems.contains(item)) return false;
+            !self._editingItems.contains(item)) return;
 
         if (settings.beforeSave) {
             settings.beforeSave(item);
@@ -276,23 +280,25 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         
         if (item.isValidating && item.isValidating()) {
             setTimeout(function () { self.saveItem(item); }, 50);
-            return false;
+            return;
         }
 
         if (!item.errors || item.errors().length == 0) {
-            self._previousItemData.remove(item);
-            self._editingItems.remove(item);
-
-            if (settings.afterSave) {
-                settings.afterSave(item);
-            }
-
-            item.isEditing(false);
-            return true;
+            self.request.done(function () { self._saveItem(item); });
         } else {
             item.errors.showAllMessages();
-            return false;
         }
+    };
+
+    self._saveItem = function (item) {
+        self._previousItemData.remove(item);
+        self._editingItems.remove(item);
+
+        if (settings.afterSave) {
+            settings.afterSave(item);
+        }
+
+        item.isEditing(false);
     };
 };
 
@@ -302,7 +308,7 @@ function FileUploadManager(viewModel, pictureHandler) {
     self._pictureData = null;
     self._picturePreview = ko.observable();
 
-    self.picturePreview = ko.computed(function() {
+    self.picturePreview = ko.computed(function () {
         return self._picturePreview() || pictureHandler();
     });
 
@@ -315,7 +321,7 @@ function FileUploadManager(viewModel, pictureHandler) {
 
     self.request = $.Deferred().resolve();
 
-    self.onPictureAdded = function(e, data) {
+    self.onPictureAdded = function (e, data) {
         self._picturePreview(undefined);
 
         if (data.files && data.files[0]) {
@@ -326,12 +332,12 @@ function FileUploadManager(viewModel, pictureHandler) {
         }
     };
 
-    self.onUploadPictureProgress = function(e, data) {
+    self.onUploadPictureProgress = function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10);
         self.pictureProgress(progress + "%");
     };
 
-    self.deletePicture = function() {
+    self.deletePicture = function () {
         pictureHandler(undefined);
         self._pictureData = null;
         self._picturePreview(undefined);
@@ -341,21 +347,21 @@ function FileUploadManager(viewModel, pictureHandler) {
         }
     };
 
-    self.savePicture = function() {
+    self.savePicture = function () {
         if (self._pictureData) {
             self.pictureProgress(null);
             self.isBusyUploading(true);
 
             self.request = self._pictureData.submit()
-                .done(function(result) {
+                .done(function (result) {
                     pictureHandler(result.fileName);
                     self._pictureData = null;
                     self._picturePreview(result.url);
                 })
-                .fail(function(errorResult) {
+                .fail(function (errorResult) {
                     viewModel.handleServerError(errorResult);
                 })
-                .always(function() {
+                .always(function () {
                     self.isBusyUploading(false);
                     self.request = $.Deferred().resolve();
                 });

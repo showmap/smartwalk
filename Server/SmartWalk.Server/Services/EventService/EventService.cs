@@ -152,12 +152,10 @@ namespace SmartWalk.Server.Services.EventService
                 && !Services.Authorizer.Authorize(Permissions.CreatePublicContent))
                 throw new SecurityException("Current user can not make public events.");
 
-            eventVm.Picture = FileUtil.ProcessUploadedPicture(eventMeta.Picture, eventVm.Picture,
-                string.Format("event/{0}", eventVm.Id), _storageProvider);
-
             ViewModelFactory.UpdateByViewModel(eventMeta, eventVm, host);
 
             var venues = CompressVenues(eventVm.Venues);
+            var showsDict = new Dictionary<ShowRecord, ShowVm>();
             foreach (var venueVm in venues)
             {
                 var venue = _entityRepository.Get(venueVm.Id);
@@ -192,6 +190,11 @@ namespace SmartWalk.Server.Services.EventService
                     {
                         show.EntityRecord = venue; // in case if shows moved to another venue
                         ViewModelFactory.UpdateByViewModel(show, showVm);
+
+                        if (!show.IsDeleted)
+                        {
+                            showsDict.Add(show, showVm);
+                        }
                     }
                 }
 
@@ -206,6 +209,9 @@ namespace SmartWalk.Server.Services.EventService
             {
                 _eventMetadataRepository.Create(eventMeta);
             }
+
+            // handling uploaded pictures after event got an Id
+            ViewModelFactory.UpdateByViewModelPicture(eventMeta, eventVm, showsDict, _storageProvider);
 
             _eventMetadataRepository.Flush();
 

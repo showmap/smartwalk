@@ -89,6 +89,17 @@ namespace SmartWalk.Server.Services.EntityService
             record.Description = detailVm != null ? detailVm.Description.TrimIt().StripTags() : null;
         }
 
+        public static void UpdateByViewModelPicture(EntityRecord record, EntityVm entityVm,
+            IStorageProvider storageProvider)
+        {
+            var previousPictureUrl = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+            if (previousPictureUrl != entityVm.Picture)
+            {
+                record.Picture = FileUtil.ProcessUploadedPicture(record.Picture, entityVm.Picture,
+                    string.Format("entity/{0}", record.Id), storageProvider);
+            }
+        }
+
         private static AddressVm CreateViewModel(AddressRecord record)
         {
             if (record == null) throw new ArgumentNullException("record");

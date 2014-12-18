@@ -63,31 +63,33 @@ namespace SmartWalk.Server.Utils
         }
 
         /// <summary>
-        /// Handles routine around uploaded pictures. Moves uploaded pictures into storage. Deletes previous pictures.
+        /// Handles routine around uploaded pictures. Moves uploaded pictures into Azure storage. Deletes previous pictures.
         /// </summary>
         public static string ProcessUploadedPicture(string previousPicture, string picture, 
             string storagePath, IStorageProvider storageProvider)
         {
             var result = previousPicture;
-            var previousPictureUrl = GetPictureUrl(previousPicture, storageProvider);
 
-            // if picture has a valid uploaded file name
-            if (previousPictureUrl != picture && picture != null && IsFileNameValid(picture))
+            if (picture != null)
             {
-                var uploadedStorage = GetUploadedImageStorage();
-                var uploadedFilePath = GetUploadedImagePath(picture);
-                using (var uploadedStream = uploadedStorage.OpenFile(uploadedFilePath, FileMode.Open))
+                // if picture has a valid uploaded file name
+                if (IsFileNameValid(picture))
                 {
-                    var storageFilePath = Path.Combine(storagePath, picture);
-                    storageProvider.SaveStream(storageFilePath, uploadedStream);
+                    var uploadedStorage = GetUploadedImageStorage();
+                    var uploadedFilePath = GetUploadedImagePath(picture);
+                    using (var uploadedStream = uploadedStorage.OpenFile(uploadedFilePath, FileMode.Open))
+                    {
+                        var storageFilePath = Path.Combine(storagePath, picture);
+                        storageProvider.SaveStream(storageFilePath, uploadedStream);
 
-                    result = storageFilePath;
-                    DeleteFile(previousPicture, storageProvider);
+                        result = storageFilePath;
+                        DeleteFile(previousPicture, storageProvider);
+                    }
+
+                    uploadedStorage.DeleteFile(uploadedFilePath);
                 }
-
-                uploadedStorage.DeleteFile(uploadedFilePath);
             }
-            else if (picture == null)
+            else
             {
                 result = null;
                 DeleteFile(previousPicture, storageProvider);

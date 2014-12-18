@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Orchard.FileSystems.Media;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
@@ -62,7 +64,6 @@ namespace SmartWalk.Server.Services.EventService
 
             record.EntityRecord = host;
             record.Title = eventVm.Title.TrimIt().StripTags();
-            record.Picture = eventVm.Picture.TrimIt().StripTags();
             record.Description = eventVm.Description.TrimIt().StripTags();
             record.StartTime = eventVm.StartDate.Value;
             record.EndTime = eventVm.EndDate;
@@ -80,10 +81,42 @@ namespace SmartWalk.Server.Services.EventService
             record.Description = showVm.Description.TrimIt().StripTags();
             record.StartTime = showVm.StartTime;
             record.EndTime = showVm.EndTime;
-            record.Picture = showVm.Picture.TrimIt().StripTags();
             record.DetailsUrl = showVm.DetailsUrl.TrimIt().StripTags();
 
             record.IsDeleted = showVm.Destroy;
+        }
+
+        public static void UpdateByViewModelPicture(EventMetadataRecord record, EventMetadataVm eventVm,
+            Dictionary<ShowRecord, ShowVm> shows, IStorageProvider storageProvider)
+        {
+            var previousPictureUrl = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+            if (previousPictureUrl != eventVm.Picture)
+            {
+                record.Picture = FileUtil.ProcessUploadedPicture(record.Picture, eventVm.Picture,
+                    string.Format("event/{0}", record.Id), storageProvider);
+            }
+
+            foreach (var showRec in record.ShowRecords
+                .Where(s => !s.IsReference && !s.IsDeleted)
+                .ToArray())
+            {
+                ShowVm showVm;
+                if (shows.TryGetValue(showRec, out showVm))
+                {
+                    UpdateByViewModelPicture(record, showRec, showVm, storageProvider);
+                }
+            }
+        }
+
+        private static void UpdateByViewModelPicture(EventMetadataRecord eventRec, ShowRecord record, 
+            ShowVm showVm, IStorageProvider storageProvider)
+        {
+            var previousPictureUrl = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+            if (previousPictureUrl != showVm.Picture)
+            {
+                record.Picture = FileUtil.ProcessUploadedPicture(record.Picture, showVm.Picture,
+                    string.Format("event/{0}/shows", eventRec.Id), storageProvider);
+            }
         }
     }
 }

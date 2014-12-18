@@ -1,14 +1,15 @@
 ﻿@{
     var inputId = ViewData["inputId"] ?? "fileupload";
     var dropZoneId = ViewData["dropZoneId"] ?? "dropzonePanel";
+    var uploadManager = ViewData["uploadManagerAccess"] ?? "uploadManager";
 }
             <div class="panel panel-default">
                 <div id="@dropZoneId" class="panel-body dropzone">
-                    <span class="image-preview-container" data-bind="visible: uploadManager.picturePreview() || uploadManager.isBusyUploading()">
-                        <img id="previewImg" class="image-preview" data-bind="attr: {src: uploadManager.picturePreview}"
+                    <span class="image-preview-container" data-bind="visible: $root.@(uploadManager).picturePreview() || $root.@(uploadManager).isBusyUploading()">
+                        <img id="previewImg" class="image-preview" data-bind="attr: {src: $root.@(uploadManager).picturePreview}"
                              alt="@T("Loading picture preview...")" />
                         <button type="button" class="action close"
-                                data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the picture?")')) uploadManager.deletePicture(); }">
+                                data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the picture?")')) $root.@(uploadManager).deletePicture(); }">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
@@ -23,7 +24,7 @@
                     <p class="text-muted">@T("... or drag and drop it on this panel")</p>
                         
                     <div id="progress" class="progress" style="display: none">
-                        <div class="progress-bar progress-bar-info" data-bind="style: {width: uploadManager.pictureProgress}"></div>
+                        <div class="progress-bar progress-bar-info" data-bind="style: {width: $root.@(uploadManager).pictureProgress}"></div>
                     </div>
                 </div>
             </div>
