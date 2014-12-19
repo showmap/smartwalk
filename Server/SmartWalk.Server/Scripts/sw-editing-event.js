@@ -78,7 +78,8 @@
 
         if (self.model.errors().length == 0) {
             self.isBusy(true); // explicitly setting busy in case if image is being uploaded
-            self.uploadManager.request().done(self._saveEvent);
+            self.request(self.uploadManager.request());
+            self.request().done(self._saveEvent);
         } else {
             self.model.errors.showAllMessages();
         }

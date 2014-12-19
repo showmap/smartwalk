@@ -9,7 +9,7 @@
                         <img id="previewImg" class="image-preview" data-bind="attr: {src: $root.@(uploadManager).picturePreview}"
                              alt="@T("Loading picture preview...")" />
                         <button type="button" class="action close"
-                                data-bind="enable: $root.isEnabled(), click: function() { if(confirm('@T("Are you sure you want to delete the picture?")')) $root.@(uploadManager).deletePicture(); }">
+                                data-bind="enable: $root.isEnabled() || $root.@(uploadManager).isBusyUploading(), click: function() { if(confirm('@T("Are you sure you want to delete the picture?")')) $root.@(uploadManager).deletePicture(); }">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
