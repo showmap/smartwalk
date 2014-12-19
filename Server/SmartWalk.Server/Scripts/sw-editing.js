@@ -142,6 +142,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     ///     beforeEdit: function(item) A handler to run some logic before an item is edited.
     ///     beforeSave: function(item) A handler to run some logic before an item is saved.
     ///     afterSave: function(item) A handler to run some logic after an item is saved.
+    ///     saveFailed: function(item) A handler to run some logic after if item saving failed.
     ///     afterDelete: function(item) A handler to run some logic after an item is deleted.
     ///     itemView: A string id of the item view template.
     ///     itemEditView: A string id of the item edit template.
@@ -184,7 +185,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
     
     // public
 
-    self.request = $.Deferred().resolve(); // an async request to wait before saving
+    self.request = ko.observable($.Deferred().resolve()); // an async request to wait before saving
     
     self.items = settings.filterItem
         ? ko.computed(function() {
@@ -246,7 +247,7 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         if (self._allItems.indexOf(item) < 0 ||
             !self._editingItems.contains(item)) return;
 
-        self.request.reject();
+        sw.cancelRequest(self.request());
 
         if (self._previousItemData.containsKey(item)) {
             item.loadData(self._previousItemData.get(item));
@@ -284,7 +285,12 @@ function VmItemsManager(allItems, createItemHandler, settings) {
         }
 
         if (!item.errors || item.errors().length == 0) {
-            self.request.done(function () { self._saveItem(item); });
+            self.request().done(function () { self._saveItem(item); })
+            .fail(function() {
+                if (settings.saveFailed) {
+                    settings.saveFailed(item);
+                }
+            });
         } else {
             item.errors.showAllMessages();
         }
@@ -319,7 +325,7 @@ function FileUploadManager(viewModel, pictureHandler) {
     self.pictureProgress = ko.observable();
     self.isBusyUploading = ko.observable(false);
 
-    self.request = $.Deferred().resolve();
+    self.request = ko.observable($.Deferred().resolve());
 
     self.onPictureAdded = function (e, data) {
         self._picturePreview(undefined);
@@ -341,10 +347,7 @@ function FileUploadManager(viewModel, pictureHandler) {
         pictureHandler(undefined);
         self._pictureData = null;
         self._picturePreview(undefined);
-
-        if (self.request && self.request.abort) {
-            self.request.abort();
-        }
+        sw.cancelRequest(self.request());
     };
 
     self.savePicture = function () {
@@ -352,7 +355,7 @@ function FileUploadManager(viewModel, pictureHandler) {
             self.pictureProgress(null);
             self.isBusyUploading(true);
 
-            self.request = self._pictureData.submit()
+            self.request(self._pictureData.submit()
                 .done(function (result) {
                     pictureHandler(result.fileName);
                     self._pictureData = null;
@@ -363,27 +366,29 @@ function FileUploadManager(viewModel, pictureHandler) {
                 })
                 .always(function () {
                     self.isBusyUploading(false);
-                    self.request = $.Deferred().resolve();
-                });
+                    self.request($.Deferred().resolve());
+                }));
         }
 
-        return self.request;
+        return self.request();
     };
 };
 
-sw.initFileUpload = function (id, url, busyObject, uploadManager, dropZone) {
+sw.initFileUpload = function (id, url, busyObject, uploadManager, dropZoneId) {
+    var progressId = dropZoneId + " .progress";
+
     $(id).fileupload({
         url: url,
         dataType: "json",
         autoUpload: false,
         maxNumberOfFiles: 1,
-        dropZone: dropZone,
+        dropZone: dropZoneId,
         add: uploadManager.onPictureAdded,
         start: function () {
-            $("#progress").toggle(true);
+            $(progressId).toggle(true);
         },
         stop: function () {
-            $("#progress").toggle(false);
+            $(progressId).toggle(false);
         },
         progressall: uploadManager.onUploadPictureProgress
     });

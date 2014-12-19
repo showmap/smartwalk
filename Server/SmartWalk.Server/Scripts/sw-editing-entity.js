@@ -74,7 +74,7 @@
         if (self.model.errors().length == 0) {
             self.isBusy(true); // explicitly setting busy in case if image is being uploaded
 
-            self.uploadManager.request.done(function() {
+            self.uploadManager.request().done(function() {
                 self._saveEntity(resultHandler);
             });
         } else {
@@ -85,7 +85,7 @@
     };
 
     self._saveEntity = function(resultHandler) {
-        self.request = sw.ajaxJsonRequest(
+        self.request(sw.ajaxJsonRequest(
                 self.model.toJSON(), self.settings.entitySaveUrl, self)
             .done(function(entityData) {
                 if (resultHandler && $.isFunction(resultHandler)) {
@@ -98,7 +98,7 @@
             })
             .fail(function(errorResult) {
                 self.handleServerError(errorResult);
-            });
+            }));
     };
     
     self.cancelEntity = function () {

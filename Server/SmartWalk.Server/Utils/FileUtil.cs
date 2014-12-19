@@ -77,16 +77,26 @@ namespace SmartWalk.Server.Utils
                 {
                     var uploadedStorage = GetUploadedImageStorage();
                     var uploadedFilePath = GetUploadedImagePath(picture);
-                    using (var uploadedStream = uploadedStorage.OpenFile(uploadedFilePath, FileMode.Open))
+                    if (uploadedStorage.FileExists(uploadedFilePath))
                     {
-                        var storageFilePath = Path.Combine(storagePath, picture);
-                        storageProvider.SaveStream(storageFilePath, uploadedStream);
+                        using (var uploadedStream = uploadedStorage.OpenFile(uploadedFilePath, 
+                            FileMode.Open, FileAccess.Read))
+                        {
+                            var storageFilePath = Path.Combine(storagePath, picture);
+                            storageProvider.SaveStream(storageFilePath, uploadedStream);
 
-                        result = storageFilePath;
-                        DeleteFile(previousPicture, storageProvider);
+                            result = storageFilePath;
+                            DeleteFile(previousPicture, storageProvider);
+                        }
+
+                        try
+                        {
+                            // trying delete, it may be being read by image downloading handler.
+                            uploadedStorage.DeleteFile(uploadedFilePath);
+                        }
+                        // ReSharper disable once EmptyGeneralCatchClause
+                        catch {}
                     }
-
-                    uploadedStorage.DeleteFile(uploadedFilePath);
                 }
             }
             else

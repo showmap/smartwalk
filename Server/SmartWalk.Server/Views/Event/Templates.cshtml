@@ -163,36 +163,36 @@
                     <div class="col-sm-8">
                         <div class="form-group" data-bind="validationElement: title">
                             <label for="titleTextInput">@T("Title"):</label>
-                            <input type="text" class="form-control" id="titleTextInput" data-bind="value: title">
+                            <input type="text" class="form-control" id="titleTextInput" data-bind="value: title, enable: $root.isEnabled">
                         </div>
 
                         <div class="form-group">
                             <label for="showDescriptionTextArea">@T("Description"):</label>
-                            <textarea class="form-control" id="showDescriptionTextArea" data-bind="value: description"></textarea>
+                            <textarea class="form-control" id="showDescriptionTextArea" data-bind="value: description, enable: $root.isEnabled"></textarea>
                         </div>
                     </div>
 
                     <div class="col-sm-2" data-bind="validationElement: startTime">
                         <div class="form-group">
                             <label for="showStartTimeInput">@T("Start Time"):</label><br />
-                            <input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }" />
+                            <input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: startTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }, enable: $root.isEnabled" />
                         </div>
 
                         <div class="form-group">
                             <label for="showStartDateInput">@T("Start Date"):</label><br />
-                            <input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.defaultDate }" />
+                            <input type="date" class="form-control" id="showStartDateInput" data-bind="datepicker: startTime, settings: { defaultDateAccessor: $root.defaultDate }, enable: $root.isEnabled" />
                         </div>
                     </div>
 
                     <div class="col-sm-2" data-bind="validationElement: endTime">
                         <div class="form-group">
                             <label for="showStartTimeInput">@T("End Time"):</label><br />
-                            <input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }" />
+                            <input type="time" class="form-control" id="showStartTimeInput" data-bind="timepicker: endTime, settings: { stepMinute: 1, defaultDateAccessor: $root.defaultDate }, enable: $root.isEnabled" />
                         </div>
 
                         <div class="form-group">
                             <label for="showEndDateInput">@T("End Date"):</label><br />
-                            <input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.defaultDate }" />
+                            <input type="date" class="form-control" id="showEndDateInput" data-bind="datepicker: endTime, settings: { defaultDateAccessor: $root.defaultDate }, enable: $root.isEnabled" />
                         </div>
                     </div>
                 </div>
@@ -212,14 +212,15 @@
                     <div class="col-sm-8">
                         <div class="form-group" data-bind="validationElement: detailsUrl">
                             <label for="detailsURLTextInput">@T("Details URL"):</label><br />
-                            <input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: detailsUrl" />
+                            <input type="text" class="form-control" id="detailsURLTextInput" data-bind="value: detailsUrl, enable: $root.isEnabled" />
                         </div>
                     </div>
                     <div class="col-sm-4 text-right">
                         <div class="form-group">
                             <label for="saveShowButton">&nbsp;</label><br />
+                            <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: $root.isBusy" />
                             <button type="button" class="btn btn-default" data-bind="click: function() {$parent.showsManager.cancelItem($data); }">@T("Cancel")</button>
-                            <button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$parent.showsManager.saveItem($data); } ">@T("Save Show")</button>
+                            <button type="button" class="btn btn-success" id="saveShowButton" data-bind="click: function() {$parent.showsManager.saveItem($data); }, enable: $root.isEnabled">@T("Save Show")</button>
                         </div>
                     </div>
                 </div>

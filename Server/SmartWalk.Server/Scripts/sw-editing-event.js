@@ -78,7 +78,7 @@
 
         if (self.model.errors().length == 0) {
             self.isBusy(true); // explicitly setting busy in case if image is being uploaded
-            self.uploadManager.request.done(self._saveEvent);
+            self.uploadManager.request().done(self._saveEvent);
         } else {
             self.model.errors.showAllMessages();
         }
@@ -87,7 +87,7 @@
     };
 
     self._saveEvent = function () {
-        self.request = sw.ajaxJsonRequest(
+        self.request(sw.ajaxJsonRequest(
                 self.model.toJSON(), self.settings.eventSaveUrl, self)
             .done(function (eventData) {
                 data = eventData;
@@ -96,7 +96,7 @@
             })
             .fail(function (errorResult) {
                 self.handleServerError(errorResult);
-            });
+            }));
     };
 
     self.cancelEvent = function () {
@@ -347,6 +347,14 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
                 if (!show.errors) {
                     EventViewModelExtended.setupShowValidation(show, event.model, event.settings);
                 }
+
+                event.isBusy(true);
+            },
+            afterSave: function() {
+                event.isBusy(false);
+            },
+            saveFailed: function () {
+                event.isBusy(false);
             },
             itemView: event.settings.showView,
             itemEditView: event.settings.showEditView

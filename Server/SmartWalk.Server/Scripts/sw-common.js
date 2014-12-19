@@ -75,6 +75,17 @@ sw.scaleImages = function(elements) {
     $(elements).find("img.scale").imageScale();
 };
 
+sw.cancelRequest = function (request) {
+    if (!request) return;
+
+    if (request.abort) {
+        request.abort();
+    }
+    else if (request.reject) {
+        request.reject();
+    }
+};
+
 
 // #########    B i n d i n g    H a n d l e r s     ################
 
@@ -158,15 +169,15 @@ sw.vm = {};
 ViewModelBase = function () {
     var self = this;
 
-    self.request = null;
+    self.request = ko.observable(null);
 
     self.isBusy = ko.observable(false).extend({ throttle: 1 });
     self.isEnabled = ko.computed(function () { return !self.isBusy(); });
 
     self.isBusy.subscribe(function (isBusy) {
-        if (!isBusy && self.request) {
-            self.request.abort();
-            self.request = undefined;
+        if (!isBusy && self.request()) {
+            sw.cancelRequest(self.request());
+            self.request(null);
         }
     });
 
