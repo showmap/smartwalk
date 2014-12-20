@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using Orchard.FileSystems.Media;
 using SmartWalk.Server.Records;
@@ -93,7 +95,8 @@ namespace SmartWalk.Server.Services.EventService
             if (previousPictureUrl != eventVm.Picture)
             {
                 record.Picture = FileUtil.ProcessUploadedPicture(record.Picture, eventVm.Picture,
-                    string.Format("event/{0}", record.Id), storageProvider);
+                    Path.Combine("event", record.Id.ToString(CultureInfo.InvariantCulture)), 
+                    storageProvider);
             }
 
             foreach (var showRec in record.ShowRecords
@@ -115,7 +118,8 @@ namespace SmartWalk.Server.Services.EventService
             if (previousPictureUrl != showVm.Picture)
             {
                 record.Picture = FileUtil.ProcessUploadedPicture(record.Picture, showVm.Picture,
-                    string.Format("event/{0}/shows", eventRec.Id), storageProvider);
+                    Path.Combine("event", eventRec.Id.ToString(CultureInfo.InvariantCulture), "shows"), 
+                    storageProvider);
             }
         }
     }

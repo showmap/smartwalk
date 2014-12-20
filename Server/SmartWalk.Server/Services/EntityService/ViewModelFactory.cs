@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using Orchard.FileSystems.Media;
 using SmartWalk.Server.Records;
@@ -96,7 +98,8 @@ namespace SmartWalk.Server.Services.EntityService
             if (previousPictureUrl != entityVm.Picture)
             {
                 record.Picture = FileUtil.ProcessUploadedPicture(record.Picture, entityVm.Picture,
-                    string.Format("entity/{0}", record.Id), storageProvider);
+                    Path.Combine("entity", record.Id.ToString(CultureInfo.InvariantCulture)),
+                    storageProvider);
             }
         }
 
