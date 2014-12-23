@@ -1,0 +1,10 @@
+﻿@using SmartWalk.Server.ViewModels
+@model AdminIndexVm
+@{
+    Layout.Title = T("SmartWalk Info");
+}
+
+<fieldset>
+    <legend>@T("Azure Storage Connection String:")</legend>
+    @Html.TextArea("Content", Model.AzureStorageConnection, new { @readonly = "readonly" })
+</fieldset>

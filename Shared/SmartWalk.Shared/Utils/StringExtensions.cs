@@ -84,7 +84,7 @@ namespace SmartWalk.Shared.Utils
         {
             Uri result;
             return Uri.TryCreate(text, UriKind.Absolute, out result) && 
-                result.Scheme.ToLowerInvariant().Contains("http");
+                result.Scheme.ToLowerInvariant().StartsWith("http");
         }
     }
 }

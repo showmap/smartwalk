@@ -1,0 +1,13 @@
+﻿@using SmartWalk.Server.ViewModels
+@{
+    Layout.Title = T("Import External Images");
+}
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <div>
+        <a class="add button primaryAction" href="@Url.Action("ImportImagesResult", new { type = ImportItemType.Venue})">@T("Import Venue images")</a>
+        <a class="add button primaryAction" href="@Url.Action("ImportImagesResult", new { type = ImportItemType.Host })">@T("Import Host images")</a>
+        <a class="add button primaryAction" href="@Url.Action("ImportImagesResult", new { type = ImportItemType.Event })">@T("Import Event images")</a>
+        <a class="add button primaryAction" href="@Url.Action("ImportImagesResult", new { type = ImportItemType.Show })">@T("Import Show images")</a>
+    </div>
+}

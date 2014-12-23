@@ -1,0 +1,9 @@
+﻿@{
+    Layout.Title = T("Import XML Data");
+}
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <div>
+        <a class="add button primaryAction" href="@Url.Action("ImportXmlDataAction")">@T("Import XML data")</a>
+    </div>
+}

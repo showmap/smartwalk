@@ -1,0 +1,39 @@
+﻿@using SmartWalk.Server.ViewModels
+@model AdminImportImagesVm
+@{
+    Layout.Title = T("Import External Images Result");
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col">@T("Success")</th>
+                <th scope="col">@T("Type")</th>
+                <th scope="col">@T("Id")</th>
+                <th scope="col">@T("Parent Id")</th>
+                <th scope="col">@T("Source")</th>
+                <th scope="col">@T("Target")</th>
+                <th scope="col">@T("Error")</th>
+            </tr>
+        </thead>
+        
+        @if (Model.Results != null)
+        {
+            foreach (var result in Model.Results)
+            {
+                <tr>
+                    <td>@result.IsSuccessful</td>
+                    <td>@result.ItemType.ToString()</td>
+                    <td>@result.ItemId</td>
+                    <td>@result.ItemParentId</td>
+                    <td>@result.SourceImageUrl</td>
+                    <td>@result.TargetStoragePath</td>
+                    <td>@result.Error</td>
+                </tr>
+            }
+        }
+    </table>
+    <span class="hint">@Model.Error</span>
+}

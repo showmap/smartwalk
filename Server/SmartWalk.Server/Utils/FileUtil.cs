@@ -47,9 +47,15 @@ namespace SmartWalk.Server.Utils
 
             while (result == null || storage.FileExists(GetUploadedImagePath(result)))
             {
-                result = Guid.NewGuid() + "." + fileExtension;
+                result = GenerateFileName(fileExtension);
             }
 
+            return result;
+        }
+
+        public static string GenerateFileName(string fileExtension)
+        {
+            var result = Guid.NewGuid() + "." + fileExtension;
             return result;
         }
 

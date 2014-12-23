@@ -36,9 +36,9 @@ namespace SmartWalk.Server.Controllers
             if (webImage != null)
             {
                 var bytes = webImage.GetBytes();
-                if (bytes.Length > 2000000) throw new InvalidOperationException("Too big");
+                if (bytes.Length > 5000000) throw new InvalidOperationException("Too big");
 
-                // TODO: To add validation of image dimensions
+                // TODO: To add validation of image dimensions 5MB, 4000x4000
 
                 var storage = FileUtil.GetUploadedImageStorage();
                 var fileName = FileUtil.GenerateUploadedFileName(storage, webImage.ImageFormat);

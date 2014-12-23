@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web.Helpers;
 using System.Xml;
 using System.Xml.Serialization;
-using JetBrains.Annotations;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.FileSystems.Media;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Models.XmlModel;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Utils;
+using SmartWalk.Server.ViewModels;
+using SmartWalk.Shared;
 using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Services.ImportService
@@ -20,9 +25,10 @@ namespace SmartWalk.Server.Services.ImportService
     [UsedImplicitly]
     public class ImportService : IImportService
     {
-        private const string XmlDataPath = "http://smartwalk.me/data/us/ca";
+        private const string XmlDataPath = "http://showmap.co/data/us/ca";
 
         private readonly IOrchardServices _orchardServices;
+        private readonly IStorageProvider _storageProvider;
 
         private readonly IRepository<AddressRecord> _addressRepository;
         private readonly IRepository<ContactRecord> _contactRepository;
@@ -34,6 +40,7 @@ namespace SmartWalk.Server.Services.ImportService
 
         public ImportService(
             IOrchardServices orchardServices,
+            IStorageProvider storageProvider,
             IRepository<AddressRecord> addressRepository, 
             IRepository<ContactRecord> contactRepository, 
             IRepository<EntityRecord> entityRepository, 
@@ -41,6 +48,7 @@ namespace SmartWalk.Server.Services.ImportService
             IRepository<ShowRecord> showRepository)
         {
             _orchardServices = orchardServices;
+            _storageProvider = storageProvider;
             _addressRepository = addressRepository;
             _contactRepository = contactRepository;
             _entityRepository = entityRepository;
@@ -48,19 +56,44 @@ namespace SmartWalk.Server.Services.ImportService
             _showRepository = showRepository;
         }
 
-        public void ImportXmlData(List<string> log)
+        public List<string> ImportXmlData()
         {
-            _log = log;
-            _log.Add(string.Format(
-                "Importing production XML data from {0} at {1}", 
-                XmlDataPath, 
-                DateTime.UtcNow));
+            _log = new List<string>
+                {
+                    string.Format(
+                        "Importing production XML data from {0} at {1}",
+                        XmlDataPath,
+                        DateTime.UtcNow)
+                };
 
             var location = ParseLocation("sfbay");
 
             ImportLocation(location);
 
+            var log = _log;
             _log = null;
+            return log;
+        }
+
+        public List<ImportImageResult> ImportImages(ImportItemType type)
+        {
+            switch (type)
+            {
+                case ImportItemType.Host:
+                    return ImportEntityImages(EntityType.Host);
+
+                case ImportItemType.Venue:
+                    return ImportEntityImages(EntityType.Venue);
+
+                case ImportItemType.Event:
+                    return ImportEventImages();
+
+                case ImportItemType.Show:
+                    return ImportShowImages();
+
+                default:
+                    return new List<ImportImageResult>();
+            }
         }
 
         #region XML parsing
@@ -161,7 +194,7 @@ namespace SmartWalk.Server.Services.ImportService
 
         #endregion
 
-        #region Importing
+        #region XML Data Importing
 
         private void ImportLocation(Location location)
         {
@@ -311,6 +344,7 @@ namespace SmartWalk.Server.Services.ImportService
                 .ToArray();
             foreach (var xmlAddress in xmlAddresses)
             {
+                // ReSharper disable once AccessToForEachVariableInClosure
                 var address = addresses.FirstOrDefault(addr =>
                     addr.Address == xmlAddress.Text);
                 if (address == null)
@@ -468,6 +502,150 @@ namespace SmartWalk.Server.Services.ImportService
                     _log.Add(string.Format("Reference show created"));                    
                 }
             }
+        }
+
+        #endregion
+
+        #region Image Importing
+
+        private List<ImportImageResult> ImportEntityImages(EntityType type)
+        {
+            var entities = _entityRepository
+                .Fetch(er =>
+                    er.Type == (byte)type &&
+                    !er.IsDeleted &&
+                    er.Picture != null)
+                .ToArray();
+
+            var result = new List<ImportImageResult>();
+
+            foreach (var entity in entities)
+            {
+                if (entity.Picture.IsWebUrl())
+                {
+                    var storagePath = Path.Combine("entity", 
+                        entity.Id.ToString(CultureInfo.InvariantCulture));
+
+                    var importResult = ImportImage(entity.Picture, storagePath);
+                    importResult.ItemId = entity.Id;
+                    importResult.ItemType = type == EntityType.Host
+                        ? ImportItemType.Host
+                        : ImportItemType.Venue;
+
+                    if (importResult.IsSuccessful)
+                    {
+                        entity.Picture = importResult.TargetStoragePath;
+                        _entityRepository.Flush();
+                    }
+
+                    result.Add(importResult);
+                }
+            }
+
+            return result;
+        }
+
+        private List<ImportImageResult> ImportEventImages()
+        {
+            var events = _eventMetadataRepository
+                .Fetch(em =>
+                    !em.IsDeleted &&
+                    em.Picture != null)
+                .ToArray();
+
+            var result = new List<ImportImageResult>();
+
+            foreach (var eventMeta in events)
+            {
+                if (eventMeta.Picture.IsWebUrl())
+                {
+                    var storagePath = Path.Combine("event",
+                        eventMeta.Id.ToString(CultureInfo.InvariantCulture));
+
+                    var importResult = ImportImage(eventMeta.Picture, storagePath);
+                    importResult.ItemId = eventMeta.Id;
+                    importResult.ItemType = ImportItemType.Event;
+
+                    if (importResult.IsSuccessful)
+                    {
+                        eventMeta.Picture = importResult.TargetStoragePath;
+                        _eventMetadataRepository.Flush();
+                    }
+
+                    result.Add(importResult);
+                }
+            }
+
+            return result;
+        }
+
+        private List<ImportImageResult> ImportShowImages()
+        {
+            var shows = _showRepository
+                .Fetch(s =>
+                    !s.IsDeleted &&
+                    s.Picture != null)
+                .ToArray();
+
+            var result = new List<ImportImageResult>();
+
+            foreach (var show in shows)
+            {
+                if (show.Picture.IsWebUrl())
+                {
+                    var storagePath = Path.Combine(
+                        "event",
+                        show.EventMetadataRecord.Id.ToString(CultureInfo.InvariantCulture),
+                        "shows");
+
+                    var importResult = ImportImage(show.Picture, storagePath);
+                    importResult.ItemId = show.Id;
+                    importResult.ItemType = ImportItemType.Show;
+
+                    if (importResult.IsSuccessful)
+                    {
+                        show.Picture = importResult.TargetStoragePath;
+                        _showRepository.Flush();
+                    }
+
+                    result.Add(importResult);
+                }
+            }
+
+            return result;
+        }
+
+        private ImportImageResult ImportImage(string url, string storagePath)
+        {
+            var result = new ImportImageResult { SourceImageUrl = url };
+
+            try
+            {
+                var imageRequest = WebRequest.Create(url);
+                var webImage = new WebImage(imageRequest.GetResponse().GetResponseStream());
+                if (webImage.Width > 4000 || webImage.Height > 4000)
+                {
+                    webImage.Resize(4000, 4000, true, true);
+                }
+
+                var picture = FileUtil.GenerateFileName(webImage.ImageFormat);
+                var storageFilePath = Path.Combine(storagePath, picture);
+
+                using (var stream = new MemoryStream(webImage.GetBytes()))
+                {
+                    _storageProvider.SaveStream(storageFilePath, stream);
+                }
+
+                result.IsSuccessful = true;
+                result.TargetStoragePath = storageFilePath;
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccessful = false;
+                result.Error = ex.Message;
+            }
+
+            return result;
         }
 
         #endregion

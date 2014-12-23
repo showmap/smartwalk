@@ -279,11 +279,14 @@
       <DependentUpon>jquery.iframe-transport.min.js</DependentUpon>
     </Content>
     <Content Include="Views\FileUpload.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\ImportImagesResult.cshtml" />
     <None Include="Views\ServerErrors.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Admin\ImportImages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Shared\SmartWalk.Shared\Properties\AssemblySharedInfo.cs">
@@ -292,6 +295,8 @@
     <Compile Include="..\SmartWalk.Server.Common\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Models\DataContracts\EventVenueDetail.cs" />
@@ -305,7 +310,6 @@
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HostController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
-    <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Extensions\CompressFilter.cs" />
     <Compile Include="Records\EventEntityDetailRecord.cs" />
     <Compile Include="Services\EntityService\EntityValidator.cs" />
@@ -329,6 +333,8 @@
     <Compile Include="Utils\ViewDataParams.cs" />
     <Compile Include="ViewModels\AddressMapVm.cs" />
     <Compile Include="Utils\AllowedActions.cs" />
+    <Compile Include="ViewModels\AdminImportImagesVm.cs" />
+    <Compile Include="ViewModels\AdminIndexVm.cs" />
     <Compile Include="ViewModels\ErrorResultVm.cs" />
     <Compile Include="ViewModels\EventEntityDetailVm.cs" />
     <Compile Include="ViewModels\SmartWalkUserVm.cs" />
@@ -400,7 +406,7 @@
     <Compile Include="ViewModels\ShowVm.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Tools\ImportXmlData.cshtml" />
+    <Content Include="Views\Admin\ImportXmlData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Event\List.cshtml" />
@@ -519,4 +525,5 @@
   <ItemGroup>
     <Content Include="Scripts\df-visible.jquery.json" />
   </ItemGroup>
+  <ItemGroup />
 </Project>
