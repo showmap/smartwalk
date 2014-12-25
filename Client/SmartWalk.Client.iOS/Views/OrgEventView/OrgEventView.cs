@@ -436,7 +436,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             navBarItems.Add(dayButtonItem);
 
             // Mode (List, Map, Combined) Button
-            _modeButton = ButtonBarUtil.Create(ThemeIcons.NavBarList, ThemeIcons.NavBarListLandscape, true);
+            _modeButton = ButtonBarUtil.Create(ThemeIcons.List, ThemeIcons.ListLandscape, true);
             _modeButton.TouchUpInside += OnModeButtonClicked;
 
             var modeButtonItem = new UIBarButtonItem();
@@ -461,7 +461,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeStyle()
         {
             MapFullscreenButton.IsSemiTransparent = true;
-            VenuesMapView.TintColor = Theme.MapTint;
+            VenuesMapView.TintColor = Theme.HeaderText;
         }
 
         private void OnModeButtonClicked(object sender, EventArgs e)
@@ -808,11 +808,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 case OrgEventViewMode.Combo:
                     _modeButton.Hidden = false;
-                    _modeButton.VerticalIcon = ThemeIcons.NavBarList;
-                    _modeButton.LandscapeIcon = ThemeIcons.NavBarListLandscape;
+                    _modeButton.VerticalIcon = ThemeIcons.List;
+                    _modeButton.LandscapeIcon = ThemeIcons.ListLandscape;
                     _modeButton.UpdateState();
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.Fullscreen;
+                    MapFullscreenButton.LandscapeIcon = ThemeIcons.FullscreenLandscape;
                     MapFullscreenButton.UpdateState();
 
                     VenuesAndShowsTableView.Hidden = false;
@@ -825,11 +826,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 case OrgEventViewMode.Map:
                     _modeButton.Hidden = false;
-                    _modeButton.VerticalIcon = ThemeIcons.NavBarList;
-                    _modeButton.LandscapeIcon = ThemeIcons.NavBarListLandscape;
+                    _modeButton.VerticalIcon = ThemeIcons.List;
+                    _modeButton.LandscapeIcon = ThemeIcons.ListLandscape;
                     _modeButton.UpdateState();
 
                     MapFullscreenButton.VerticalIcon = ThemeIcons.ExitFullscreen;
+                    MapFullscreenButton.LandscapeIcon = ThemeIcons.ExitFullscreenLandscape;
                     MapFullscreenButton.UpdateState();
 
                     VenuesAndShowsTableView.SetHidden(true, animated);
@@ -842,8 +844,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 case OrgEventViewMode.List:
                     _modeButton.Hidden = !HasData;
-                    _modeButton.VerticalIcon = ThemeIcons.NavBarMap;
-                    _modeButton.LandscapeIcon = ThemeIcons.NavBarMapLandscape;
+                    _modeButton.VerticalIcon = ThemeIcons.Map;
+                    _modeButton.LandscapeIcon = ThemeIcons.MapLandscape;
                     _modeButton.UpdateState();
 
                     if (HasData)

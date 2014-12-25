@@ -7,6 +7,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Controls;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -71,6 +72,30 @@ namespace SmartWalk.Client.iOS.Views.Common
             InitializeStyle();
         }
 
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            UpdateViewConstraints();
+            CloseButton.UpdateState();
+        }
+
+        // HACK: to trigger scrollview layoutSubviews on rotation
+        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillRotate(toInterfaceOrientation, duration);
+
+            ScrollView.SetNeedsLayout();
+        }
+
+        public override void WillAnimateRotation(UIInterfaceOrientation toInterfaceOrientation, double duration)
+        {
+            base.WillAnimateRotation(toInterfaceOrientation, duration);
+
+            UpdateViewConstraints();
+            CloseButton.UpdateState();
+        }
+
         public override bool PrefersStatusBarHidden()
         {
             return true;
@@ -107,14 +132,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        // HACK: to trigger scrollview layoutSubviews on rotation
-        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
-        {
-            base.WillRotate(toInterfaceOrientation, duration);
-
-            ScrollView.SetNeedsLayout();
-        }
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -124,6 +141,15 @@ namespace SmartWalk.Client.iOS.Views.Common
         partial void OnCloseButtonTouchUpInside(UIButton sender, UIEvent @event)
         {
             Hide();
+        }
+
+        private new void UpdateViewConstraints()
+        {
+            var size = ScreenUtil.IsVerticalOrientation 
+                ? ButtonBarButton.DefaultVerticalSize
+                : ButtonBarButton.DefaultLandscapeSize;
+            CloseButtonWidthConstraint.Constant = size.Width;
+            CloseButtonHeightConstraint.Constant = size.Height;
         }
 
         private void InitializeGestures()
@@ -175,7 +201,10 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            CloseButton.SetImage(ThemeIcons.CloseWhite, UIControlState.Normal);
+            CloseButton.IsSemiTransparent = true;
+            CloseButton.VerticalIcon = ThemeIcons.Close;
+            CloseButton.LandscapeIcon = ThemeIcons.CloseLandscape;
+            CloseButton.UpdateState();
         }
 
         private void ZoomTo()

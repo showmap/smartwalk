@@ -240,15 +240,15 @@ namespace SmartWalk.Client.iOS.Views.Common
             BottomToolbar.SetShadowImage(new UIImage(), UIToolbarPosition.Any);
             BottomToolbar.BarTintColor = UIColor.Clear;
 
-            var button = ButtonBarUtil.Create(ThemeIcons.BrowserBack, ThemeIcons.BrowserBackLandscape, true);
+            var button = ButtonBarUtil.Create(ThemeIcons.Back, ThemeIcons.BackLandscape, true);
             button.TouchUpInside += OnBackButtonClick;
             BackButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserForward, ThemeIcons.BrowserForwardLandscape, true);
+            button = ButtonBarUtil.Create(ThemeIcons.Forward, ThemeIcons.ForwardLandscape, true);
             button.TouchUpInside += OnForwardButtonClick;
             ForwardButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.BrowserRefresh, ThemeIcons.BrowserRefreshLandscape, true);
+            button = ButtonBarUtil.Create(ThemeIcons.Refresh, ThemeIcons.RefreshLandscape, true);
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
         }

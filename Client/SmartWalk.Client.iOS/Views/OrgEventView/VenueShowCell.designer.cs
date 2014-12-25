@@ -19,6 +19,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
+		MonoTouch.UIKit.UIButton DetailsButton { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UILabel DetailsLabel { get; set; }
 
 		[Outlet]
@@ -65,6 +68,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
+
+		[Action ("OnDetailsButtonClick:")]
+		partial void OnDetailsButtonClick (MonoTouch.Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -156,6 +162,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
+			}
+
+			if (DetailsButton != null) {
+				DetailsButton.Dispose ();
+				DetailsButton = null;
 			}
 		}
 	}

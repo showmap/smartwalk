@@ -54,7 +54,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         protected override void OnDataContextChanged()
         {
             ImageBackground.ImageUrl = DataContext != null ? DataContext.Picture : null;
-            ImageBackground.Title = DataContext != null ? DataContext.Title.ToUpper() : null;
+            ImageBackground.Title = DataContext != null ? DataContext.Title : null;
             ImageBackground.Subtitle = DataContext != null ? DataContext.GetDateString() : null;
         }
 

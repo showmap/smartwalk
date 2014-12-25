@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ImageFullscreenController">
             <connections>
-                <outlet property="CloseButton" destination="6" id="179"/>
+                <outlet property="CloseButton" destination="6" id="OVL-6S-TVa"/>
+                <outlet property="CloseButtonHeightConstraint" destination="aml-Mp-0ss" id="jr9-Tt-oRc"/>
+                <outlet property="CloseButtonWidthConstraint" destination="o2C-tN-SL6" id="JYv-VN-Var"/>
                 <outlet property="ImageView" destination="15" id="40"/>
                 <outlet property="ScrollView" destination="4" id="178"/>
                 <outlet property="view" destination="1" id="3"/>
@@ -20,16 +22,13 @@
             <subviews>
                 <view userInteractionEnabled="NO" alpha="0.89999997615814209" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.10000000149011612" maximumZoomScale="2" translatesAutoresizingMaskIntoConstraints="NO" id="4" customClass="ImageZoomScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="15" customClass="ProgressImageView">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         </imageView>
                     </subviews>
                     <constraints>
@@ -41,15 +40,14 @@
                         <constraint firstItem="15" firstAttribute="centerX" secondItem="4" secondAttribute="centerX" id="173"/>
                     </constraints>
                 </scrollView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6">
-                    <rect key="frame" x="274" y="2" width="44" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="Close" customClass="ButtonBarButton">
+                    <rect key="frame" x="269" y="7" width="44" height="44"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="44" id="180"/>
-                        <constraint firstAttribute="height" constant="44" id="183"/>
+                        <constraint firstAttribute="height" constant="44" id="aml-Mp-0ss"/>
+                        <constraint firstAttribute="width" constant="44" id="o2C-tN-SL6"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
-                    <state key="normal" title="X">
+                    <state key="normal">
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -66,13 +64,20 @@
                 <constraint firstItem="5" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="27"/>
                 <constraint firstItem="5" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="28"/>
                 <constraint firstItem="5" firstAttribute="top" secondItem="1" secondAttribute="top" id="30"/>
-                <constraint firstItem="6" firstAttribute="top" secondItem="1" secondAttribute="top" constant="2" id="148"/>
+                <constraint firstItem="6" firstAttribute="top" secondItem="1" secondAttribute="top" constant="7" id="148"/>
                 <constraint firstItem="4" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="174"/>
                 <constraint firstItem="4" firstAttribute="top" secondItem="1" secondAttribute="top" id="175"/>
                 <constraint firstItem="4" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="176"/>
                 <constraint firstItem="4" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="177"/>
-                <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="2" id="181"/>
+                <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="7" id="181"/>
             </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

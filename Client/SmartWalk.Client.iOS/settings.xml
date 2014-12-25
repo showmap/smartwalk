@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <settings>
     <testFlightToken>23af84a9-44e6-4716-996d-a4f5dd72d6ba</testFlightToken>
-    <serverHost>smartwalk.me</serverHost>
-    <debugServerHost>dev.smartwalk.me</debugServerHost>
+    <serverHost>showmap.co</serverHost>
+    <debugServerHost>dev.showmap.co</debugServerHost>
     <postponeTimeMinutes>5</postponeTimeMinutes>
     <cachesPath>../Library/Caches/</cachesPath>
     <caches>

@@ -124,7 +124,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
-            MapView.TintColor = Theme.MapTint;
+            MapView.TintColor = Theme.HeaderText;
 
             AddressLabel.Font = Theme.MapCellAddressFont;
             AddressLabel.TextColor = Theme.MapCellAddress;

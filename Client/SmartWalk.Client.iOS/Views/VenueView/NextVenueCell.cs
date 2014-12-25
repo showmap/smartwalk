@@ -86,10 +86,10 @@ namespace SmartWalk.Client.iOS.Views.VenueView
         {
             BackgroundColor = UIColor.Clear;
 
-            DownImageView.Image = ThemeIcons.NextEntity;
+            DownImageView.Image = ThemeIcons.DownLink;
 
             NextTitleLabel.Font = Theme.NextEntityFont;
-            NextTitleLabel.TextColor = Theme.NextEntity;
+            NextTitleLabel.TextColor = Theme.HyperlinkText;
         }
     }
 }

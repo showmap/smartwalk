@@ -55,7 +55,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             NavBarManager.Instance.SetTransparent(transparent, animated);
             UpdateViewTitle();
-            UpdateBackButtonState();
         }
 
         protected virtual void OnInitializeNavBarItems(List<UIBarButtonItem> navBarItems)
@@ -73,11 +72,11 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 NavigationItem.HidesBackButton = true;
 
-                _backButton = ButtonBarUtil.Create(ThemeIcons.NavBarBack, ThemeIcons.NavBarBackLandscape, true);
+                _backButton = ButtonBarUtil.Create(ThemeIcons.Back, ThemeIcons.BackLandscape, true);
                 _backButton.TouchUpInside += OnNavigationBackClick;
-                var backBarButton = new UIBarButtonItem(_backButton);
+                _backButton.UpdateState();
 
-                UpdateBackButtonState();
+                var backBarButton = new UIBarButtonItem(_backButton);
                 NavigationItem.SetLeftBarButtonItems(new [] { gap, backBarButton }, true);
             }
 
@@ -86,7 +85,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             // More (...) Button
             if (IsMoreButtonVisible)
             {
-                _moreButton = ButtonBarUtil.Create(ThemeIcons.NavBarMore, ThemeIcons.NavBarMoreLandscape, true);
+                _moreButton = ButtonBarUtil.Create(ThemeIcons.More, ThemeIcons.MoreLandscape, true);
                 _moreButton.TouchUpInside += OnMoreButtonClicked;
 
                 var moreBarButton = new UIBarButtonItem(_moreButton);
@@ -119,24 +118,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private void OnMoreButtonClicked(object sender, EventArgs e)
         {
             ShowActionSheet();
-        }
-
-        private void UpdateBackButtonState()
-        {
-            if (_backButton == null) return;
-
-            if (NavBarManager.Instance.IsTransparent)
-            {
-                _backButton.VerticalIcon = ThemeIcons.BrowserBack;
-                _backButton.LandscapeIcon = ThemeIcons.BrowserBackLandscape;
-            }
-            else
-            {
-                _backButton.VerticalIcon = ThemeIcons.NavBarBack;
-                _backButton.LandscapeIcon = ThemeIcons.NavBarBackLandscape;
-            }
-
-            _backButton.UpdateState();
         }
     }
 }

@@ -22,7 +22,7 @@
         public const string UnknownLocation = "Unknown Location";
         public const string OffLineMode = "Offline Mode";
         public const string Shows = "Shows";
-        public const string MoreInfo = "more info";
+        public const string MoreInformation = "More information";
 
         public const string Error = "Error";
         public const string NetworkError = "Network Error";

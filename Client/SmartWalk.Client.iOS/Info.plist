@@ -9,8 +9,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CFBundleDisplayName</key>
-	<string>SmartWalk</string>
 	<key>MinimumOSVersion</key>
 	<string>7.0</string>
 	<key>CFBundleIdentifier</key>
@@ -53,6 +51,8 @@
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>CFBundleVersion</key>
-	<string>7</string>
+	<string>9</string>
+	<key>CFBundleDisplayName</key>
+	<string>ShowMap</string>
 </dict>
 </plist>

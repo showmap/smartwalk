@@ -1,17 +1,3 @@
-SW-160 Native iOS time formatting
-SW-160 The layout of start/end time update
-SW-160 Data cache is increased to 10 days
-SW-160 Horizontal constraint is not reduced
-SW-160 Attempts to optimize Home view
-SW-160 Fixed bug of highlighting shows w/o endtime
-SW-160 Current property excluded from GA tracking
-SW-160 Restore scroll to top on next venue open
-SW-160 The bug with showing prev year events fixed
-SW-160 Bug with missing shows in Venue view fixed
-SW-160 Project renamed to SmartWalk to match app
-SW-160 The small bug with Entity cell state fixed
-SW-160 Bugs in Fullscreen mode were fixed
-SW-160 Don't scroll view on automatic refresh
-SW-160 Refactoring. Image height in Entity fixed
-SW-160 The bug with scroll to venue fixed
-SW-160 The bug with height of show cell fixed
+SW-160 Updating all app icons to newer version. Layout and color updates.
+SW-160 Make hyperlink and thumbs violet style
+SW-160 Better layout for show time. Now time labels have flexible width and show title takes all possible width.

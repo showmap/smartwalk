@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Threading;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;

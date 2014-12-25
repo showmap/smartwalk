@@ -4,38 +4,35 @@ namespace SmartWalk.Client.iOS.Resources
 {
     public static class ThemeIcons
     {
-        public static readonly UIImage NavBarBack = UIImage.FromFile("Icons/NavBarBack.png");
-        public static readonly UIImage NavBarBackLandscape = UIImage.FromFile("Icons/NavBarBackLandscape.png");
-        public static readonly UIImage NavBarList = UIImage.FromFile("Icons/NavBarList.png");
-        public static readonly UIImage NavBarListLandscape = UIImage.FromFile("Icons/NavBarListLandscape.png");
-        public static readonly UIImage NavBarMap = UIImage.FromFile("Icons/NavBarMap.png");
-        public static readonly UIImage NavBarMapLandscape = UIImage.FromFile("Icons/NavBarMapLandscape.png");
-        public static readonly UIImage NavBarMore = UIImage.FromFile("Icons/NavBarMore.png");
-        public static readonly UIImage NavBarMoreLandscape = UIImage.FromFile("Icons/NavBarMoreLandscape.png");
+        public static readonly UIImage Back = UIImage.FromFile("Icons/Back.png");
+        public static readonly UIImage BackLandscape = UIImage.FromFile("Icons/BackLandscape.png");
+        public static readonly UIImage Forward = UIImage.FromFile("Icons/Forward.png");
+        public static readonly UIImage ForwardLandscape = UIImage.FromFile("Icons/ForwardLandscape.png");
+        public static readonly UIImage List = UIImage.FromFile("Icons/List.png");
+        public static readonly UIImage ListLandscape = UIImage.FromFile("Icons/ListLandscape.png"); // Pixelated
+        public static readonly UIImage Map = UIImage.FromFile("Icons/Map.png");
+        public static readonly UIImage MapLandscape = UIImage.FromFile("Icons/MapLandscape.png");
+        public static readonly UIImage More = UIImage.FromFile("Icons/More.png");
+        public static readonly UIImage MoreLandscape = UIImage.FromFile("Icons/MoreLandscape.png"); // Missing
+        public static readonly UIImage Refresh = UIImage.FromFile("Icons/Refresh.png");
+        public static readonly UIImage RefreshLandscape = UIImage.FromFile("Icons/RefreshLandscape.png");
+        public static readonly UIImage Close = UIImage.FromFile("Icons/Close.png");
+        public static readonly UIImage CloseLandscape = UIImage.FromFile("Icons/CloseLandscape.png");
 
-        public static readonly UIImage ListOptions = UIImage.FromFile("Icons/ListOptions.png");
+        public static readonly UIImage ListOptions = UIImage.FromFile("Icons/ListOptions.png"); // 3x ?, maybe violet?
         public static readonly UIImage Fullscreen = UIImage.FromFile("Icons/Fullscreen.png");
         public static readonly UIImage ExitFullscreen = UIImage.FromFile("Icons/ExitFullscreen.png");
-        public static readonly UIImage MapPin = UIImage.FromFile("Icons/MapPin.png");
-        public static readonly UIImage SmallMap = UIImage.FromFile("Icons/SmallMap.png");
-        public static readonly UIImage GoRight = UIImage.FromFile("Icons/GoRight.png");
-        public static readonly UIImage DetailsBlack = UIImage.FromFile("Icons/DetailsBlack.png");
-        public static readonly UIImage NextEntity = UIImage.FromFile("Icons/NextEntity.png");
+        public static readonly UIImage FullscreenLandscape = UIImage.FromFile("Icons/FullscreenLandscape.png"); // Missing
+        public static readonly UIImage ExitFullscreenLandscape = UIImage.FromFile("Icons/ExitFullscreenLandscape.png"); // Missing
+        public static readonly UIImage MapPin = UIImage.FromFile("Icons/MapPin.png"); // 3x ?
+        public static readonly UIImage MapPinSmall = UIImage.FromFile("Icons/MapPinSmall.png"); // 3x ?
+        public static readonly UIImage Info = UIImage.FromFile("Icons/Info.png");
+        public static readonly UIImage ForwardLink = UIImage.FromFile("Icons/ForwardLink.png");
+        public static readonly UIImage DownLink = UIImage.FromFile("Icons/DownLink.png");
 
-        public static readonly UIImage CloseWhite = UIImage.FromFile("Icons/CloseWhite.png");
-        public static readonly UIImage CloseBlack = UIImage.FromFile("Icons/CloseBlack.png");
-
+        // Too big. Make just white? Background circle programmatically
         public static readonly UIImage ContactEmail = UIImage.FromFile("Icons/ContactEmail.png");
-        public static readonly UIImage ContactPhone = UIImage.FromFile("Icons/ContactPhone.png");
+        public static readonly UIImage ContactPhone = UIImage.FromFile("Icons/ContactPhone.png"); // Pixelated
         public static readonly UIImage ContactWeb = UIImage.FromFile("Icons/ContactWeb.png");
-
-        public static readonly UIImage BrowserBack = UIImage.FromFile("Icons/BrowserBack.png");
-        public static readonly UIImage BrowserBackLandscape = UIImage.FromFile("Icons/BrowserBackLandscape.png");
-        public static readonly UIImage BrowserForward = UIImage.FromFile("Icons/BrowserForward.png");
-        public static readonly UIImage BrowserForwardLandscape = UIImage.FromFile("Icons/BrowserForwardLandscape.png");
-        public static readonly UIImage BrowserRefresh = UIImage.FromFile("Icons/BrowserRefresh.png");
-        public static readonly UIImage BrowserRefreshLandscape = UIImage.FromFile("Icons/BrowserRefreshLandscape.png");
-        public static readonly UIImage BrowserMenu = UIImage.FromFile("Icons/BrowserMenu.png");
-        public static readonly UIImage BrowserMenuLandscape = UIImage.FromFile("Icons/BrowserMenuLandscape.png");
     }
 }

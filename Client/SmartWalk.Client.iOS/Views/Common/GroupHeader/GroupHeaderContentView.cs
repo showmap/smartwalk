@@ -30,7 +30,7 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
             TopSeparator.Color = Theme.CellSeparator;
 
             TitleLabel.Font = Theme.GroupHeaderTextFont;
-            TitleLabel.TextColor = Theme.GroupHeaderText;
+            TitleLabel.TextColor = Theme.HeaderText;
         }
     }
 }

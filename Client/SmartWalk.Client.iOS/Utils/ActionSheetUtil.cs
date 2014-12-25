@@ -22,7 +22,7 @@ namespace SmartWalk.Client.iOS.Utils
             var result = UIAlertController.Create(null, null, 
                 UIAlertControllerStyle.ActionSheet);
 
-            result.View.TintColor = Theme.ActionSheetText;
+            result.View.TintColor = Theme.HyperlinkText;
 
             return result;
         }
@@ -37,9 +37,9 @@ namespace SmartWalk.Client.iOS.Utils
                 var button = subview as UIButton;
                 if (button != null)
                 {
-                    button.SetTitleColor(Theme.ActionSheetText, UIControlState.Normal);
-                    button.SetTitleColor(Theme.ActionSheetText, UIControlState.Selected);
-                    button.SetTitleColor(Theme.ActionSheetText, UIControlState.Highlighted);
+                    button.SetTitleColor(Theme.HyperlinkText, UIControlState.Normal);
+                    button.SetTitleColor(Theme.HyperlinkText, UIControlState.Selected);
+                    button.SetTitleColor(Theme.HyperlinkText, UIControlState.Highlighted);
 
                     if (button.TitleLabel.Text == Localization.CancelButton)
                     {

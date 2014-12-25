@@ -36,7 +36,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static readonly float ShowTitleTextHeight = 
             ScreenUtil.CalculateTextHeight(300, "Showp", Theme.VenueShowCellFont);
         private static readonly float DetailsTextHeight = 
-            ScreenUtil.CalculateTextHeight(300, Localization.MoreInfo, Theme.VenueShowDetailsCellFont);
+            ScreenUtil.CalculateTextHeight(300, Localization.MoreInformation, Theme.VenueShowDetailsCellFont);
 
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
@@ -315,7 +315,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             DescriptionLabel.Text = DataContext != null ? DataContext.Description : null;
 
             DetailsLabel.Text = DataContext != null && DataContext.HasDetailsUrl()
-                ? Localization.MoreInfo : null;
+                ? Localization.MoreInformation : null;
 
             UpdateStatusStyle();
             UpateImageState();
@@ -373,10 +373,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     if (IsExpanded && DataContext.HasDetailsUrl())
                     {
                         ImageAndDetailsSpaceConstraint.Constant = VerticalGap;
+                        //DetailsButtonHeightConstraint.Constant = 16;
                     }
                     else
                     {
                         ImageAndDetailsSpaceConstraint.Constant = 0;
+                        //DetailsButtonHeightConstraint.Constant = 0;
                     }
                 },
                 animated);
@@ -414,6 +416,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var isDetailsHidden = !IsExpanded || !DataContext.HasDetailsUrl();
             DetailsLabel.SetHidden(isDetailsHidden, animated);
+            DetailsButton.SetHidden(isDetailsHidden, animated);
         }
 
         private float GetImageProportionalWidth()
@@ -457,18 +460,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 NumberOfTapsRequired = (uint)1
             };
 
-            var uITapGestureRecognizer = new UITapGestureRecognizer(() => 
-            {
-                var contact = new Contact {
-                    Type = ContactType.Url,
-                    ContactText = DataContext.DetailsUrl
-                };
-                if (NavigateDetailsLinkCommand != null && 
-                    NavigateDetailsLinkCommand.CanExecute(contact))
-                {
-                    NavigateDetailsLinkCommand.Execute(contact);
-                }
-            });
+            var uITapGestureRecognizer = new UITapGestureRecognizer(NavigateDetails);
             uITapGestureRecognizer.NumberOfTouchesRequired = (uint)1;
             uITapGestureRecognizer.NumberOfTapsRequired = (uint)1;
             _detailsTapGesture = uITapGestureRecognizer;
@@ -518,6 +510,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
             EndTimeLabel.TextColor = Theme.CellTextPassive;
+
+            DetailsButton.SetImage(ThemeIcons.Info, UIControlState.Normal);
 
             DetailsLabel.Font = Theme.VenueShowDetailsCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;
@@ -569,6 +563,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             return status == ShowStatus.Finished 
                 ? Theme.VenueShowCellFinishedEndTimeFont : Theme.VenueShowCellEndTimeFont;
+        }
+
+        partial void OnDetailsButtonClick(NSObject sender)
+        {
+            NavigateDetails();
+        }
+
+        private void NavigateDetails()
+        {
+            var contact = new Contact {
+                Type = ContactType.Url,
+                ContactText = DataContext.DetailsUrl
+            };
+            if (NavigateDetailsLinkCommand != null && 
+                NavigateDetailsLinkCommand.CanExecute(contact))
+            {
+                NavigateDetailsLinkCommand.Execute(contact);
+            }
         }
 
         private void UpdateBackgroundColor()

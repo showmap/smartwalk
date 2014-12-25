@@ -39,7 +39,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         protected override void OnInitialize()
         {
-            InitializeLabelsStyle();
+            InitializeStyle();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -57,7 +57,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                 : null;
         }
 
-        private void InitializeLabelsStyle()
+        private void InitializeStyle()
         {
             MonthLabel.Font = Theme.OrgEventMonthFont;
             MonthLabel.TextColor = Theme.CellTextHighlight;
@@ -67,6 +67,8 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
             EventTitleLabel.Font = Theme.OrgEventTitleFont;
             EventTitleLabel.TextColor = Theme.CellText;
+
+            CalendarView.BackgroundColor = Theme.HyperlinkText;
         }
     }
 }
