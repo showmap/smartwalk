@@ -26,16 +26,8 @@ namespace SmartWalk.Client.Core.Services
 
         public bool ShouldPostpone(string key)
         {
-            var result = true;
-
-            if (_memory.ContainsKey(key))
-            {
-                result = DateTime.Now - _memory[key] < PostponeTime;
-            }
-            else
-            {
-                _memory[key] = DateTime.Now;
-            }
+            var result = _memory.ContainsKey(key) &&
+                DateTime.Now - _memory[key] < PostponeTime;
 
             // invalidating key on postpone waiting's over
             if (!result)
@@ -43,7 +35,7 @@ namespace SmartWalk.Client.Core.Services
                 Invalidate(key);
             }
 
-            return result;
+            return result; 
         }
 
         public void Invalidate(string key)

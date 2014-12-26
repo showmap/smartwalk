@@ -148,7 +148,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override void Start()
         {
-            UpdateData(UpdateEventInfos, false);
+            UpdateData(UpdateEventInfos);
 
             base.Start();
         }
