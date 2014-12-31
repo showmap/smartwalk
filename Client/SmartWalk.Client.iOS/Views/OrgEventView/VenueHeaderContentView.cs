@@ -174,7 +174,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             AddressLabel.TextColor = Theme.CellTextPassive;
 
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
-            GoRightImageView.Image = ThemeIcons.ForwardLink;
+            GoRightImageView.Image = ThemeIcons.Forward;
+            GoRightImageView.TintColor = Theme.IconPassive;
         }
 
         partial void OnNavigateOnMapClick(UIButton sender)

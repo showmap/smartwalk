@@ -6,8 +6,10 @@ namespace SmartWalk.Client.iOS.Resources
     {
         public static readonly UIImage Back = UIImage.FromFile("Icons/Back.png");
         public static readonly UIImage BackLandscape = UIImage.FromFile("Icons/BackLandscape.png");
-        public static readonly UIImage Forward = UIImage.FromFile("Icons/Forward.png");
-        public static readonly UIImage ForwardLandscape = UIImage.FromFile("Icons/ForwardLandscape.png");
+        public static readonly UIImage Forward = UIImage.FromFile("Icons/Forward.png")
+            .ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate);
+        public static readonly UIImage ForwardLandscape = UIImage.FromFile("Icons/ForwardLandscape.png")
+            .ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate);
         public static readonly UIImage List = UIImage.FromFile("Icons/List.png");
         public static readonly UIImage ListLandscape = UIImage.FromFile("Icons/ListLandscape.png"); // Pixelated
         public static readonly UIImage Map = UIImage.FromFile("Icons/Map.png");
@@ -27,8 +29,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage MapPin = UIImage.FromFile("Icons/MapPin.png"); // 3x ?
         public static readonly UIImage MapPinSmall = UIImage.FromFile("Icons/MapPinSmall.png"); // 3x ?
         public static readonly UIImage Info = UIImage.FromFile("Icons/Info.png");
-        public static readonly UIImage ForwardLink = UIImage.FromFile("Icons/ForwardLink.png");
-        public static readonly UIImage DownLink = UIImage.FromFile("Icons/DownLink.png");
+        public static readonly UIImage DownLink = UIImage.FromFile("Icons/DownLink.png")
+            .ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate);
 
         // Too big. Make just white? Background circle programmatically
         public static readonly UIImage ContactEmail = UIImage.FromFile("Icons/ContactEmail.png");

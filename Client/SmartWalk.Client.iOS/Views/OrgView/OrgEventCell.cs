@@ -68,7 +68,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             EventTitleLabel.Font = Theme.OrgEventTitleFont;
             EventTitleLabel.TextColor = Theme.CellText;
 
-            CalendarView.BackgroundColor = Theme.HyperlinkText;
+            CalendarView.BackgroundColor = Theme.IconActive;
         }
     }
 }

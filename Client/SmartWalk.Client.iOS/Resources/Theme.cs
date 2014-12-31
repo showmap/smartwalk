@@ -14,6 +14,9 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage TransImage = UIImage.FromFile("Images/Trans.png");
         public static readonly UIImage SemiTransImage = UIImage.FromFile("Images/SemiTrans.png");
 
+        public static readonly UIColor IconPassive = UIColor.FromRGB(168, 168, 168);
+        public static readonly UIColor IconActive = UIColor.FromRGB(123, 0, 253);
+
         public static readonly UIColor NavBarBackground = UIColor.FromRGBA(61, 61, 61, 180);
         public static readonly UIColor NavBarText = UIColor.White;
         public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
@@ -67,7 +70,6 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor OrgEventActive = CellHighlight;
         public static readonly UIColor OrgEventPassive = UIColor.FromRGB(187, 187, 187);
 
-        public static readonly UIColor EntitySeparator = UIColor.FromRGBA(120, 120, 120, 127);
         public static readonly UIColor EntityDescription = UIColor.FromRGB(135, 135, 135);
         public static readonly UIFont EntityDescriptionFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIColor MapCellAddress = UIColor.FromRGB(38, 38, 38);
@@ -85,6 +87,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont VenueShowCellEndTimeFont = UIFont.FromName(HelveticaRegular, 11);
         public static readonly UIFont VenueShowCellFinishedEndTimeFont = UIFont.FromName(HelveticaLight, 11);
         public static readonly UIFont VenueShowCellFont = UIFont.FromName(HelveticaRegular, 16);
+        public static readonly UIFont VenueShowCellFinishedFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIFont VenueShowDescriptionCellFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowDetailsCellFont = UIFont.FromName(HelveticaLight, 15);
 
@@ -116,8 +119,8 @@ namespace SmartWalk.Client.iOS.Resources
 
             UIToolbar.Appearance.TintColor = Theme.NavBarText;
 
-            UISwitch.Appearance.OnTintColor = Theme.HyperlinkText;
-            UISwitch.Appearance.TintColor = Theme.HyperlinkText;
+            UISwitch.Appearance.OnTintColor = Theme.IconActive;
+            UISwitch.Appearance.TintColor = Theme.IconActive;
 
             UISegmentedControl.Appearance.SetTitleTextAttributes(
                 new UITextAttributes {
@@ -128,10 +131,10 @@ namespace SmartWalk.Client.iOS.Resources
             UISegmentedControl.Appearance.SetTitleTextAttributes(
                 new UITextAttributes {
                     Font = SegmentsTextFont,
-                    TextColor = Theme.HyperlinkText 
+                    TextColor = Theme.IconActive 
                 }, 
                 UIControlState.Normal);
-            UISegmentedControl.Appearance.TintColor = Theme.HyperlinkText;
+            UISegmentedControl.Appearance.TintColor = Theme.IconActive;
 
             var buttonLabelAp = UILabel.AppearanceWhenContainedIn(typeof(UIButton));
             buttonLabelAp.Font = ButtonTextFont;

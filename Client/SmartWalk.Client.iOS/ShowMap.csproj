@@ -452,7 +452,6 @@
     <BundleResource Include="Resources\Icons\Fullscreen.png" />
     <BundleResource Include="Resources\Icons\Fullscreen%402x.png" />
     <BundleResource Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-667h%402x.png" />
-    <BundleResource Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-960h%402x.png" />
     <BundleResource Include="Resources\Icons\Close.png" />
     <BundleResource Include="Resources\Icons\Close%402x.png" />
     <BundleResource Include="Resources\Icons\Close%403x.png" />
@@ -494,9 +493,6 @@
     <BundleResource Include="Resources\Icons\Refresh%403x.png" />
     <BundleResource Include="Resources\Icons\ExitFullscreen%403x.png" />
     <BundleResource Include="Resources\Icons\FullScreen%403x.png" />
-    <BundleResource Include="Resources\Icons\ForwardLink.png" />
-    <BundleResource Include="Resources\Icons\ForwardLink%402x.png" />
-    <BundleResource Include="Resources\Icons\ForwardLink%403x.png" />
     <BundleResource Include="Resources\Icons\DownLink.png" />
     <BundleResource Include="Resources\Icons\DownLink%402x.png" />
     <BundleResource Include="Resources\Icons\DownLink%403x.png" />
@@ -528,5 +524,6 @@
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-667%402x.png" />
   </ItemGroup>
 </Project>
