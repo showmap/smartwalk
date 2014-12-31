@@ -533,14 +533,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 case ShowStatus.NotStarted:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
+                    TitleLabel.Font = Theme.VenueShowCellFont;
                     break;
 
                 case ShowStatus.Started:
-                    TimeBackgroundView.BackgroundColor = Theme.HyperlinkText;
+                    TimeBackgroundView.BackgroundColor = Theme.HeaderText;
+                    TitleLabel.Font = Theme.VenueShowCellFont;
                     break;
 
                 case ShowStatus.Finished:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
+                    TitleLabel.Font = Theme.VenueShowCellFinishedFont;
                     break;
             }
 
