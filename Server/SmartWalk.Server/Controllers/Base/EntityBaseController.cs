@@ -1,12 +1,14 @@
 ﻿using System.Net;
 using System.Web.Mvc;
+using Orchard.MediaProcessing.Services;
 using Orchard.Themes;
 using SmartWalk.Server.Extensions;
-using SmartWalk.Server.Records;
 using SmartWalk.Server.Services.EntityService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
+using SmartWalk.Shared.DataContracts;
+using EntityType = SmartWalk.Server.Records.EntityType;
 
 namespace SmartWalk.Server.Controllers.Base
 {
@@ -14,14 +16,17 @@ namespace SmartWalk.Server.Controllers.Base
     public abstract class EntityBaseController : BaseController
     {
         private readonly IEntityService _entityService;
+        private readonly IImageProfileManager _imageProfileManager;
         private readonly EntityValidator _validator;
 
-        protected EntityBaseController(IEntityService entityService)
+        protected EntityBaseController(
+            IEntityService entityService,
+            IImageProfileManager imageProfileManager)
         {
             _entityService = entityService;
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
+            _imageProfileManager = imageProfileManager;
+            // ReSharper disable once DoNotCallOverridableMethodsInConstructor
             _validator = new EntityValidator(_entityService, EntityType, T);
-            // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         protected abstract EntityType EntityType { get; }
@@ -35,6 +40,8 @@ namespace SmartWalk.Server.Controllers.Base
             var result = _entityService.GetEntities(
                 display, EntityType, 0, 
                 ViewSettings.ItemsPerScrollPage);
+
+            FileUtil.ResizePictures(result, PictureSize.Medium, _imageProfileManager, Logger);
 
             var view = View(result);
             view.ViewData[ViewDataParams.ListParams] =
@@ -54,6 +61,7 @@ namespace SmartWalk.Server.Controllers.Base
             if (access == AccessType.Deny) return new HttpUnauthorizedResult();
 
             var result = _entityService.GetEntityById(entityId);
+            FileUtil.ResizePicture(result, PictureSize.Full, _imageProfileManager, Logger);
             if (result == null || result.Type != EntityType) return new HttpNotFoundResult();
 
             var view = View(result);
@@ -83,6 +91,7 @@ namespace SmartWalk.Server.Controllers.Base
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             var result = _entityService.GetEntityById(entityId);
+            FileUtil.ResizePicture(result, PictureSize.Small, _imageProfileManager, Logger);
             if (result == null || result.Type != EntityType) return new HttpNotFoundResult();
 
             var view = View(result);
@@ -121,6 +130,8 @@ namespace SmartWalk.Server.Controllers.Base
                 parameters.Display, EntityType, pageNumber,
                 ViewSettings.ItemsPerScrollPage,
                 false, query);
+
+            FileUtil.ResizePictures(result, PictureSize.Medium, _imageProfileManager, Logger);
 
             return Json(result);
         }

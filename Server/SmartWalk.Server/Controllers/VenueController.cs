@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Orchard.MediaProcessing.Services;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
 using SmartWalk.Server.Records;
@@ -13,8 +14,10 @@ namespace SmartWalk.Server.Controllers
     {
         private readonly IEntityService _entityService;
 
-        public VenueController(IEntityService entityService)
-            : base(entityService)
+        public VenueController(
+            IEntityService entityService,
+            IImageProfileManager imageProfileManager)
+            : base(entityService, imageProfileManager)
         {
             _entityService = entityService;
         }

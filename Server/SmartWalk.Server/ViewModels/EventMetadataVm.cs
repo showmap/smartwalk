@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Utils;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class EventMetadataVm
+    public class EventMetadataVm : IPicture
     {
         public EventMetadataVm()
         {

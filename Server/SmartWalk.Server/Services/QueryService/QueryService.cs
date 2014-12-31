@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
+using Orchard.FileSystems.Media;
+using Orchard.MediaProcessing.Services;
 using SmartWalk.Server.Records;
 using SmartWalk.Server.Resources;
 using SmartWalk.Shared;
@@ -25,6 +27,8 @@ namespace SmartWalk.Server.Services.QueryService
         private readonly IRepository<ShowRecord> _showRepository;
 
         private readonly ISessionLocator _sessionLocator;
+        private readonly IStorageProvider _storageProvider;
+        private readonly IImageProfileManager _imageProfileManager;
 
         public QueryService(
             IRepository<EventMetadataRecord> eventMetadataRepository,
@@ -32,12 +36,16 @@ namespace SmartWalk.Server.Services.QueryService
             ShellSettings shellSettings,
             IRepository<EntityRecord> entityRepository,
             IRepository<EventEntityDetailRecord> eventEntityDetailRepository,
-            IRepository<ShowRecord> showRepository)
+            IRepository<ShowRecord> showRepository,
+            IStorageProvider storageProvider,
+            IImageProfileManager imageProfileManager)
         {
             _eventMetadataRepository = eventMetadataRepository;
             _entityRepository = entityRepository;
             _eventEntityDetailRepository = eventEntityDetailRepository;
             _showRepository = showRepository;
+            _storageProvider = storageProvider;
+            _imageProfileManager = imageProfileManager;
 
             _sessionLocator = sessionLocator;
 
@@ -117,7 +125,8 @@ namespace SmartWalk.Server.Services.QueryService
                     .Take(DefaultEventsLimit)
                     .ToArray();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages,
+                        _storageProvider, select.PictureSize, _imageProfileManager))
                     .ToArray();
 
                 return dataContracts;
@@ -132,7 +141,8 @@ namespace SmartWalk.Server.Services.QueryService
                     results);
                 var records = sqlQuery.List<EventMetadataRecord>();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages,
+                        _storageProvider, select.PictureSize, _imageProfileManager))
                     .ToArray();
                 return dataContracts;
             }
@@ -146,7 +156,8 @@ namespace SmartWalk.Server.Services.QueryService
                     .Take(DefaultEntitiesLimit)
                     .ToArray();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields,
+                        _storageProvider, select.PictureSize, _imageProfileManager))
                     .ToArray();
                 return dataContracts;
             }
@@ -174,7 +185,8 @@ namespace SmartWalk.Server.Services.QueryService
                     .Take(DefaultShowsLimit)
                     .ToArray();
                 var dataContracts = records
-                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages))
+                    .Select(rec => DataContractsFactory.CreateDataContract(rec, select.Fields, storages,
+                        _storageProvider, select.PictureSize, _imageProfileManager))
                     .ToArray();
                 return dataContracts;
             }

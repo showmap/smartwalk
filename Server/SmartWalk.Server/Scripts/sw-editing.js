@@ -293,6 +293,10 @@ function VmItemsManager(allItems, createItemHandler, settings) {
             });
         } else {
             item.errors.showAllMessages();
+
+            if (settings.saveFailed) {
+                settings.saveFailed(item);
+            }
         }
     };
 

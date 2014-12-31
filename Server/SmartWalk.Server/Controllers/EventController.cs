@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Mvc;
+using Orchard.MediaProcessing.Services;
 using Orchard.Themes;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
@@ -9,6 +10,7 @@ using SmartWalk.Server.Services.EventService;
 using SmartWalk.Server.Utils;
 using SmartWalk.Server.ViewModels;
 using SmartWalk.Server.Views;
+using SmartWalk.Shared.DataContracts;
 
 namespace SmartWalk.Server.Controllers
 {
@@ -17,10 +19,14 @@ namespace SmartWalk.Server.Controllers
     {
         private readonly IEventService _eventService;
         private readonly EventValidator _validator;
+        private readonly IImageProfileManager _imageProfileManager;
 
-        public EventController(IEventService eventService)
+        public EventController(
+            IEventService eventService,
+            IImageProfileManager imageProfileManager)
         {
             _eventService = eventService;
+            _imageProfileManager = imageProfileManager;
             _validator = new EventValidator(T);
         }
 
@@ -34,6 +40,7 @@ namespace SmartWalk.Server.Controllers
 
             var parameters = new ListViewParametersVm { Display = display, Sort = sort };
             var result = GetEventVms(parameters);
+            ResizePictures(result);
 
             var view = View(result);
             view.ViewData[ViewDataParams.ListParams] = parameters;
@@ -53,6 +60,7 @@ namespace SmartWalk.Server.Controllers
 
             var eventDay = day != null ? Math.Max(day.Value - 1, 0) : 0;
             var result = _eventService.GetEventById(eventId, eventDay);
+            ResizePicture(result, PictureSize.Full);
             if (result == null) return new HttpNotFoundResult();
 
             var view = View(result);
@@ -83,6 +91,7 @@ namespace SmartWalk.Server.Controllers
             if (access != AccessType.AllowEdit) return new HttpUnauthorizedResult();
 
             var result = _eventService.GetEventById(eventId);
+            ResizePicture(result, PictureSize.Small);
             if (result == null) return new HttpNotFoundResult();
 
             var view = View(result);
@@ -117,6 +126,7 @@ namespace SmartWalk.Server.Controllers
         public ActionResult GetEvents(int pageNumber, string query, ListViewParametersVm parameters)
         {
             var result = GetEventVms(parameters, pageNumber, query);
+            ResizePictures(result);
             return Json(result);
         }
 
@@ -125,6 +135,7 @@ namespace SmartWalk.Server.Controllers
         public ActionResult GetEventsByEntity(int entityId)
         {
             var result = _eventService.GetEventsByEntity(entityId);
+            ResizePictures(result);
             return Json(result);
         }
 
@@ -143,7 +154,7 @@ namespace SmartWalk.Server.Controllers
             return Json(result);
         }
 
-        private IList<EventMetadataVm> GetEventVms(
+        private IEnumerable<EventMetadataVm> GetEventVms(
             ListViewParametersVm parameters, 
             int pageNumber = 0, 
             string query = null)
@@ -156,6 +167,32 @@ namespace SmartWalk.Server.Controllers
                 parameters.Sort == SortType.Date,
                 query);
             return result;
+        }
+
+        private void ResizePictures(IEnumerable<EventMetadataVm> events)
+        {
+            foreach (var eventMetaVm in events)
+            {
+                ResizePicture(eventMetaVm, PictureSize.Medium);
+            }
+        }
+
+        private void ResizePicture(EventMetadataVm eventMetaVm, PictureSize size)
+        {
+            FileUtil.ResizePicture(eventMetaVm, size, _imageProfileManager, Logger);
+            FileUtil.ResizePicture(eventMetaVm.Host, size, _imageProfileManager, Logger);
+
+            if (eventMetaVm.Venues == null) return;
+            foreach (var venueVm in eventMetaVm.Venues)
+            {
+                FileUtil.ResizePicture(venueVm, PictureSize.Small, _imageProfileManager, Logger);
+
+                if (venueVm.Shows == null) continue;
+                foreach (var showVm in venueVm.Shows)
+                {
+                    FileUtil.ResizePicture(showVm, PictureSize.Small, _imageProfileManager, Logger);
+                }
+            }
         }
     }
 }

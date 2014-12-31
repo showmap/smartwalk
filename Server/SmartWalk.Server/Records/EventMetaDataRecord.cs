@@ -6,7 +6,7 @@ using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Records
 {
-    public class EventMetadataRecord : IAccessRecord
+    public class EventMetadataRecord : IAccessRecord, IPicture
     {
         private IList<EventMappingRecord> _eventMappingRecords;
         private IList<ShowRecord> _showRecords;

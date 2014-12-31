@@ -349,7 +349,7 @@ EventViewModelExtended.initVenueViewModel = function (venue, event) {
                     EventViewModelExtended.setupShowValidation(show, event.model, event.settings);
                 }
 
-                event.isBusy(true);
+                event.isBusy(true); // explicitly setting busy in case if image is being uploaded
             },
             afterSave: function() {
                 event.isBusy(false);

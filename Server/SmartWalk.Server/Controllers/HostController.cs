@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Orchard;
+using Orchard.MediaProcessing.Services;
 using Orchard.Security;
 using SmartWalk.Server.Controllers.Base;
 using SmartWalk.Server.Extensions;
@@ -18,8 +19,9 @@ namespace SmartWalk.Server.Controllers
 
         public HostController(
             IEntityService entityService,
-            IOrchardServices orchardServices)
-            : base(entityService)
+            IOrchardServices orchardServices,
+            IImageProfileManager imageProfileManager)
+            : base(entityService, imageProfileManager)
         {
             _entityService = entityService;
             _authorizer = orchardServices.Authorizer;

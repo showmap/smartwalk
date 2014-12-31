@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Utils;
 using SmartWalk.Shared;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class EntityVm
+    public class EntityVm : IPicture
     {
         public EntityVm()
         {

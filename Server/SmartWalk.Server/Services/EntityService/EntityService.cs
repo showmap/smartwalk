@@ -50,7 +50,7 @@ namespace SmartWalk.Server.Services.EntityService
 
         public AccessType GetEntitiesAccess()
         {
-            var result = SecurityUtils.GetAccess(Services.Authorizer);
+            var result = SecurityUtil.GetAccess(Services.Authorizer);
             return result;
         }
 

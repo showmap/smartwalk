@@ -1,10 +1,11 @@
 ﻿using System;
 using Newtonsoft.Json;
+using SmartWalk.Server.Utils;
 using SmartWalk.Shared;
 
 namespace SmartWalk.Server.ViewModels
 {
-    public class ShowVm
+    public class ShowVm : IPicture
     {
         public int Id { get; set; }
         public string Title { get; set; }

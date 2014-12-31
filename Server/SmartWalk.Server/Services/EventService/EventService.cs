@@ -37,7 +37,7 @@ namespace SmartWalk.Server.Services.EventService
 
         public AccessType GetEventsAccess()
         {
-            var result = SecurityUtils.GetAccess(Services.Authorizer);
+            var result = SecurityUtil.GetAccess(Services.Authorizer);
             return result;
         }
 

@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
 using Orchard.FileSystems.Media;
+using Orchard.Logging;
+using Orchard.MediaProcessing.Services;
+using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Server.Utils
@@ -123,6 +127,47 @@ namespace SmartWalk.Server.Utils
         {
             Guid fileGuid;
             return Guid.TryParse(Path.GetFileNameWithoutExtension(fileName), out fileGuid);
+        }
+
+        public static void ResizePictures(IEnumerable<IPicture> pictures, PictureSize size,
+            IImageProfileManager imageProfileManager, ILogger logger = null)
+        {
+            if (pictures == null || size == PictureSize.Full) return;
+
+            foreach (var picture in pictures)
+            {
+                ResizePicture(picture, size, imageProfileManager, logger);
+            }
+        }
+
+        public static void ResizePicture(IPicture pictureModel, PictureSize size, 
+            IImageProfileManager imageProfileManager, ILogger logger = null)
+        {
+            if (pictureModel == null || size == PictureSize.Full) return;
+
+            pictureModel.Picture = GetResizedPicture(pictureModel.Picture, size, imageProfileManager, logger);
+        }
+
+        public static string GetResizedPicture(string picture, PictureSize size,
+            IImageProfileManager imageProfileManager, ILogger logger = null)
+        {
+            if (size == PictureSize.Full) return picture;
+
+            var result = picture;
+
+            try
+            {
+                result = imageProfileManager.GetImageProfileUrl(picture, size.ToString());
+            }
+            catch (Exception e)
+            {
+                if (logger != null)
+                {
+                    logger.Debug("Exception '{0}' on attempt to build a thumbnail for '{1}'.", e.Message, picture);
+                }
+            }
+
+            return result;
         }
 
         private static void DeleteFile(string fileName, IStorageProvider storageProvider)

@@ -60,6 +60,7 @@
     <Compile Include="Annotations.cs" />
     <Compile Include="DataContracts\CombineType.cs" />
     <Compile Include="DataContracts\IEventVenueDetail.cs" />
+    <Compile Include="DataContracts\PictureSize.cs" />
     <Compile Include="DataContracts\VenueOrderType.cs" />
     <Compile Include="DataContracts\VenueTitleFormatType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

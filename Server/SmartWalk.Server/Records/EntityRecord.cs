@@ -6,7 +6,7 @@ using SmartWalk.Shared;
 
 namespace SmartWalk.Server.Records
 {
-    public class EntityRecord : IAccessRecord
+    public class EntityRecord : IAccessRecord, IPicture
     {
         private IList<EntityMappingRecord> _entityMappingRecords;
         private IList<AddressRecord> _addressRecords;

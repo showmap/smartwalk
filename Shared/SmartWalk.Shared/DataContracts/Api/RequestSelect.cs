@@ -13,6 +13,8 @@ namespace SmartWalk.Shared.DataContracts.Api
         public RequestSelectWhere[] Where { get; set; }
         public RequestSelectSortBy[] SortBy { get; set; }
 
+        public PictureSize PictureSize { get; set; }
+
         public override int GetHashCode()
         {
             return 

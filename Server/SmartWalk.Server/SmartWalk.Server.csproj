@@ -78,6 +78,9 @@
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.MediaLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.MediaProcessing">
+      <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.MediaProcessing.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Roles, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.Roles.dll</HintPath>
@@ -317,7 +320,8 @@
     <Compile Include="Services\QueryService\GroupedEventsQueryFactory.cs" />
     <Compile Include="Utils\EnumConverterModelBinder.cs" />
     <Compile Include="Utils\FileUtil.cs" />
-    <Compile Include="Utils\SecurityUtils.cs" />
+    <Compile Include="Utils\IPicture.cs" />
+    <Compile Include="Utils\SecurityUtil.cs" />
     <Compile Include="Utils\SmartWalkRoles.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\SmartWalkUserParams.cs" />

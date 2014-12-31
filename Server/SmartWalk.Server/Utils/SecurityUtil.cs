@@ -15,7 +15,7 @@ namespace SmartWalk.Server.Utils
         SmartWalkUserRecord SmartWalkUserRecord { get; }
     }
 
-    public static class SecurityUtils
+    public static class SecurityUtil
     {
         public static AccessType GetAccess(IAuthorizer authorizer)
         {

@@ -12,6 +12,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.FileSystems.Media;
+using SmartWalk.Server.Controllers;
 using SmartWalk.Server.Models;
 using SmartWalk.Server.Models.XmlModel;
 using SmartWalk.Server.Records;
@@ -623,13 +624,10 @@ namespace SmartWalk.Server.Services.ImportService
             {
                 var imageRequest = WebRequest.Create(url);
                 var webImage = new WebImage(imageRequest.GetResponse().GetResponseStream());
-                if (webImage.Width > 4000 || webImage.Height > 4000)
-                {
-                    webImage.Resize(4000, 4000, true, true);
-                }
-
                 var picture = FileUtil.GenerateFileName(webImage.ImageFormat);
                 var storageFilePath = Path.Combine(storagePath, picture);
+
+                FileController.ResizeImage(webImage);
 
                 using (var stream = new MemoryStream(webImage.GetBytes()))
                 {

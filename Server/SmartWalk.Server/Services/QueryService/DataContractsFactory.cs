@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.FileSystems.Media;
+using Orchard.MediaProcessing.Services;
 using SmartWalk.Server.Models.DataContracts;
 using SmartWalk.Server.Records;
+using SmartWalk.Server.Utils;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 using CombineType = SmartWalk.Shared.DataContracts.CombineType;
@@ -17,7 +20,10 @@ namespace SmartWalk.Server.Services.QueryService
         public static EventMetadata CreateDataContract(
             EventMetadataRecord record,
             string[] fields,
-            string[] storages)
+            string[] storages,
+            IStorageProvider storageProvider,
+            PictureSize pictureSize,
+            IImageProfileManager imageProfileManager)
         {
             var result = new EventMetadata
                 {
@@ -44,7 +50,8 @@ namespace SmartWalk.Server.Services.QueryService
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataPicture))
                 {
-                    result.Picture = record.Picture;
+                    var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+                    result.Picture = FileUtil.GetResizedPicture(picture, pictureSize, imageProfileManager);
                 }
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataStartTime))
@@ -101,7 +108,10 @@ namespace SmartWalk.Server.Services.QueryService
 
         public static Entity CreateDataContract(
             EntityRecord record,
-            string[] fields)
+            string[] fields,
+            IStorageProvider storageProvider,
+            PictureSize pictureSize,
+            IImageProfileManager imageProfileManager)
         {
             var result = new Entity
                 {
@@ -127,7 +137,8 @@ namespace SmartWalk.Server.Services.QueryService
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityPicture))
                 {
-                    result.Picture = record.Picture;
+                    var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+                    result.Picture = FileUtil.GetResizedPicture(picture, pictureSize, imageProfileManager);
                 }
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityContacts))
@@ -176,7 +187,10 @@ namespace SmartWalk.Server.Services.QueryService
         public static Show CreateDataContract(
             ShowRecord record,
             string[] fields,
-            string[] storages)
+            string[] storages,
+            IStorageProvider storageProvider,
+            PictureSize pictureSize,
+            IImageProfileManager imageProfileManager)
         {
             var result = new Show
                 {
@@ -217,7 +231,8 @@ namespace SmartWalk.Server.Services.QueryService
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowPicture))
                 {
-                    result.Picture = record.Picture;
+                    var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+                    result.Picture = FileUtil.GetResizedPicture(picture, pictureSize, imageProfileManager);
                 }
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowDetailsUrl))

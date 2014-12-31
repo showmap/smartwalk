@@ -1,9 +1,10 @@
 ﻿using System;
 using Orchard.Data.Conventions;
+using SmartWalk.Server.Utils;
 
 namespace SmartWalk.Server.Records
 {
-    public class ShowRecord
+    public class ShowRecord : IPicture
     {
         public virtual int Id { get; set; }
         public virtual EntityRecord EntityRecord { get; set; }
