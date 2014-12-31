@@ -81,6 +81,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateViewConstraints(false); // to get a right golden-ratio in time
             UpdateNavBarState(animated);
             UpdateButtonsFrameOnRotation();
+            UpdateDayButtonState();
 
             if (_listSettingsView != null)
             {
@@ -887,7 +888,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (dateString != null)
             {
                 _dayButton.Hidden = false;
-                _dayButton.SetAttributedTitle(GetOrgEventDate(), UIControlState.Normal);
+                _dayButton.SetAttributedTitle(dateString, UIControlState.Normal);
             }
             else
             {
