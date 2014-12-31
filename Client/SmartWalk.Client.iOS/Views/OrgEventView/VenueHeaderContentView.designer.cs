@@ -9,8 +9,8 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    [Register ("VenueHeaderContentView")]
-    partial class VenueHeaderContentView
+	[Register ("VenueHeaderContentView")]
+	partial class VenueHeaderContentView
 	{
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
@@ -35,6 +35,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Outlet]
 		MonoTouch.UIKit.UIButton NavigateOnMapButton { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint PinTopGapConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint TitleLeftGapConstraint { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint TitleTopGapConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
@@ -87,6 +96,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TopSeparator != null) {
 				TopSeparator.Dispose ();
 				TopSeparator = null;
+			}
+
+			if (TitleLeftGapConstraint != null) {
+				TitleLeftGapConstraint.Dispose ();
+				TitleLeftGapConstraint = null;
+			}
+
+			if (TitleTopGapConstraint != null) {
+				TitleTopGapConstraint.Dispose ();
+				TitleTopGapConstraint = null;
+			}
+
+			if (PinTopGapConstraint != null) {
+				PinTopGapConstraint.Dispose ();
+				PinTopGapConstraint = null;
 			}
 		}
 	}

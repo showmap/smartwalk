@@ -104,6 +104,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _imageHelper.ImageUrl = DataContext != null 
                 ? DataContext.Info.Picture : null;
+
+            UpdateConstraintConstants();
+        }
+
+        private void UpdateConstraintConstants()
+        {
+            if (DataContext != null && DataContext.Info.HasAddressText())
+            {
+                TitleTopGapConstraint.Constant = 12;
+                TitleLeftGapConstraint.Constant = 75;
+                PinTopGapConstraint.Constant = 22;
+            }
+            else
+            {
+                TitleTopGapConstraint.Constant = 23;
+                TitleLeftGapConstraint.Constant = 90;
+                PinTopGapConstraint.Constant = 10;
+            }
         }
 
         private void InitializeGestures()

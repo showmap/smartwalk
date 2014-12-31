@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -43,7 +43,7 @@
                     </constraints>
                 </imageView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="Venue Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UkY-cD-CsE" userLabel="Title" customClass="CopyLabel">
-                    <rect key="frame" x="74" y="12" width="72.5" height="17"/>
+                    <rect key="frame" x="75" y="12" width="72.5" height="17"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -105,7 +105,7 @@
                 <constraint firstItem="prj-64-Tjh" firstAttribute="top" secondItem="1" secondAttribute="top" id="Uqq-zX-1Ja"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="UkY-cD-CsE" secondAttribute="trailing" priority="900" constant="29" id="WYG-lI-fNQ"/>
                 <constraint firstItem="TYG-yN-nra" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="90" id="cKb-R8-ddR"/>
-                <constraint firstItem="UkY-cD-CsE" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="74" id="fK2-7C-cK1"/>
+                <constraint firstItem="UkY-cD-CsE" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="75" id="fK2-7C-cK1"/>
                 <constraint firstAttribute="trailing" secondItem="QVS-aJ-Vym" secondAttribute="trailing" id="h3A-xB-piv"/>
                 <constraint firstItem="8Pk-2b-V2d" firstAttribute="top" secondItem="1" secondAttribute="top" constant="22" id="oia-ae-ymn"/>
                 <constraint firstAttribute="trailing" secondItem="trZ-gJ-tnq" secondAttribute="trailing" id="p7A-OW-6lZ"/>
@@ -124,6 +124,9 @@
                 <outlet property="LogoImageView" destination="prj-64-Tjh" id="vWd-c7-EqA"/>
                 <outlet property="NameLabel" destination="UkY-cD-CsE" id="wjE-Ox-nkY"/>
                 <outlet property="NavigateOnMapButton" destination="8Pk-2b-V2d" id="iEX-da-04l"/>
+                <outlet property="PinTopGapConstraint" destination="oia-ae-ymn" id="KWV-fm-5dY"/>
+                <outlet property="TitleLeftGapConstraint" destination="fK2-7C-cK1" id="c8S-bb-xqz"/>
+                <outlet property="TitleTopGapConstraint" destination="JXO-RW-786" id="aZp-eD-BA4"/>
                 <outlet property="TopSeparator" destination="trZ-gJ-tnq" id="FBV-oP-sZl"/>
             </connections>
         </view>
