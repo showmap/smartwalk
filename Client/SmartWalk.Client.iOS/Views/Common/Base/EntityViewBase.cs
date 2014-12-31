@@ -90,7 +90,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             SetDialogViewFullscreenFrame(_contactsView);
 
-            _contactsView.CloseCommand = contactsProvider.ShowHideContactsCommand;
+            _contactsView.CloseCommand = contactsProvider.HideContactsCommand;
             _contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
             _contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
             _contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;

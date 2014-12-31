@@ -62,12 +62,12 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override void OnInitializingActionSheet(List<string> titles)
         {
-            if (ViewModel.ShowDirectionsCommand.CanExecute(ViewModel.Entity))
+            if (ViewModel.ShowDirectionsCommand.CanExecute(null))
             {
                 titles.Add(Localization.NavigateInMaps);
             }
 
-            if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
+            if (ViewModel.ShowContactsCommand.CanExecute(null))
             {
                 titles.Add(Localization.ShowContactInfo);
             }
@@ -93,16 +93,16 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             switch (buttonTitle)
             {
                 case Localization.NavigateInMaps:
-                    if (ViewModel.ShowDirectionsCommand.CanExecute(ViewModel.Entity))
+                    if (ViewModel.ShowDirectionsCommand.CanExecute(null))
                     {
-                        ViewModel.ShowDirectionsCommand.Execute(ViewModel.Entity);
+                        ViewModel.ShowDirectionsCommand.Execute(null);
                     }
                     break;
 
                 case Localization.ShowContactInfo:
-                    if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
+                    if (ViewModel.ShowContactsCommand.CanExecute(null))
                     {
-                        ViewModel.ShowHideContactsCommand.Execute(ViewModel.Entity);
+                        ViewModel.ShowContactsCommand.Execute(null);
                     }
                     break;
 

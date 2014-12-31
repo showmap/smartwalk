@@ -51,7 +51,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 
         protected override void OnInitializingActionSheet(List<string> titles)
         {
-            if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
+            if (ViewModel.ShowContactsCommand.CanExecute(null))
             {
                 titles.Add(Localization.ShowContactInfo);
             }
@@ -72,9 +72,9 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             switch (buttonTitle)
             {
                 case Localization.ShowContactInfo:
-                    if (ViewModel.ShowHideContactsCommand.CanExecute(ViewModel.Entity))
+                    if (ViewModel.ShowContactsCommand.CanExecute(null))
                     {
-                        ViewModel.ShowHideContactsCommand.Execute(ViewModel.Entity);
+                        ViewModel.ShowContactsCommand.Execute(null);
                     }
                     break;
 

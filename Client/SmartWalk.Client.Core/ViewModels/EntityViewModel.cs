@@ -30,12 +30,13 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand _expandCollapseCommand;
         private MvxCommand _showNextEntityCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
-        private MvxCommand<Entity> _showHideContactsCommand;
+        private MvxCommand _showContactsCommand;
+        private MvxCommand _hideContactsCommand;
         private MvxCommand<Contact> _callPhoneCommand;
         private MvxCommand<Contact> _composeEmailCommand;
-        private MvxCommand<Entity> _showDirectionsCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand _navigateAddressesCommand;
+        private MvxCommand _showDirectionsCommand;
         private MvxCommand _copyLinkCommand;
         private MvxCommand _shareCommand;
 
@@ -196,28 +197,49 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public ICommand ShowHideContactsCommand
+        public ICommand ShowContactsCommand
         {
             get
             {
-                if (_showHideContactsCommand == null)
+                if (_showContactsCommand == null)
                 {
-                    _showHideContactsCommand = new MvxCommand<Entity>(
-                        entity => 
+                    _showContactsCommand = new MvxCommand(
+                        () =>
                         {
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
                                 Analytics.ActionTouch,
-                                entity != null 
-                                    ? Analytics.ActionLabelShowContacts
-                                    : Analytics.ActionLabelHideContacts);
+                                Analytics.ActionLabelShowContacts);
 
-                            CurrentContactsEntityInfo = entity;
+                            CurrentContactsEntityInfo = Entity;
                         },
-                        entity => entity == null || entity.HasContacts());
+                        () => Entity != null && Entity.HasContacts());
                 }
 
-                return _showHideContactsCommand;
+                return _showContactsCommand;
+            }
+        }
+
+        public ICommand HideContactsCommand
+        {
+            get
+            {
+                if (_hideContactsCommand == null)
+                {
+                    _hideContactsCommand = new MvxCommand(
+                        () =>
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelHideContacts);
+
+                            CurrentContactsEntityInfo = null;
+                        },
+                        () => CurrentContactsEntityInfo != null);
+                }
+
+                return _hideContactsCommand;
             }
         }
 
@@ -301,20 +323,18 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_showDirectionsCommand == null)
                 {
-                    _showDirectionsCommand = new MvxCommand<Entity>(
-                        entity =>
+                    _showDirectionsCommand = new MvxCommand(
+                        () =>
                             {
                                 _analyticsService.SendEvent(
                                     Analytics.CategoryUI,
                                     Analytics.ActionTouch,
                                     Analytics.ActionLabelShowDirections);
 
-                                var address = entity.Addresses.FirstOrDefault();
+                                var address = Entity.Addresses.FirstOrDefault();
                                 _environmentService.ShowDirections(address);
                             },
-                        entity => 
-                            entity != null &&
-                            entity.HasAddresses());
+                        () => Entity != null && Entity.HasAddresses());
                 }
 
                 return _showDirectionsCommand;
