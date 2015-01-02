@@ -1,3 +1,8 @@
-SW-160 Updating all app icons to newer version. Layout and color updates.
-SW-160 Make hyperlink and thumbs violet style
-SW-160 Better layout for show time. Now time labels have flexible width and show title takes all possible width.
+SW-160 The icons and layout updates before Release
+SW-160 The logic of postpone service was updated. First request is not postponed now
+SW-160 Hide Conctacts Action menu if not loaded. There was a bug with showing menu item even if venue isn't loaded yet
+SW-160 The Day button state is updated on rotation. When coming back from Venue view
+SW-160 Make show title light if it's finished. Update the started show rectangle color back to green
+SW-160 Splash screen and some icons were updated. Purple color usage was reduced.
+SW-160 The layout of venue cell if no address
+SW-160 Thumbnail sized integrated into API calls

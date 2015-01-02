@@ -15,7 +15,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="John Smith" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="15" userLabel="Title" customClass="CopyLabel">
-                        <rect key="frame" x="47" y="0.0" width="241" height="22"/>
+                        <rect key="frame" x="45" y="0.0" width="243" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="20"/>
                         </constraints>
@@ -24,7 +24,7 @@
                         <color key="highlightedColor" white="0.99252300609999999" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="415-887-8796" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="16" userLabel="Contact" customClass="CopyLabel">
-                        <rect key="frame" x="47" y="15" width="241" height="24"/>
+                        <rect key="frame" x="45" y="15" width="243" height="24"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="24" id="47"/>
                         </constraints>
@@ -32,10 +32,10 @@
                         <color key="highlightedColor" white="0.99252300609999999" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <imageView autoresizesSubviews="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="17">
-                        <rect key="frame" x="8" y="3" width="35" height="35"/>
+                        <rect key="frame" x="3" y="0.0" width="40" height="40"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="35" id="18"/>
-                            <constraint firstAttribute="height" constant="35" id="19"/>
+                            <constraint firstAttribute="width" constant="40" id="18"/>
+                            <constraint firstAttribute="height" constant="40" id="19"/>
                         </constraints>
                     </imageView>
                 </subviews>
@@ -43,9 +43,9 @@
             </view>
             <color key="backgroundColor" white="0.99252300609999999" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="17" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="8" id="135"/>
+                <constraint firstItem="17" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="3" id="135"/>
                 <constraint firstItem="16" firstAttribute="top" secondItem="2" secondAttribute="top" constant="15" id="185"/>
-                <constraint firstItem="16" firstAttribute="leading" secondItem="17" secondAttribute="trailing" constant="4" id="186"/>
+                <constraint firstItem="16" firstAttribute="leading" secondItem="17" secondAttribute="trailing" constant="2" id="186"/>
                 <constraint firstAttribute="trailing" secondItem="16" secondAttribute="trailing" constant="12" id="189"/>
                 <constraint firstItem="15" firstAttribute="leading" secondItem="16" secondAttribute="leading" id="200"/>
                 <constraint firstItem="15" firstAttribute="trailing" secondItem="16" secondAttribute="trailing" id="201"/>
