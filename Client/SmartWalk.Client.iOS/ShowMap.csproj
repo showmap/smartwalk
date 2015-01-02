@@ -114,12 +114,6 @@
     <Reference Include="GoogleAnalytics">
       <HintPath>..\..\..\smartwalk-binaries\Client\GAN\GoogleAnalytics.dll</HintPath>
     </Reference>
-    <Reference Include="Refractored.MvxPlugins.Settings.Touch">
-      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.4.0.1\lib\monotouch\Refractored.MvxPlugins.Settings.Touch.dll</HintPath>
-    </Reference>
-    <Reference Include="Refractored.MvxPlugins.Settings">
-      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.4.0.1\lib\monotouch\Refractored.MvxPlugins.Settings.dll</HintPath>
-    </Reference>
     <Reference Include="Cirrious.CrossCore.Touch">
       <HintPath>..\..\packages\MvvmCross.HotTuna.CrossCore.3.2.2\lib\MonoTouch\Cirrious.CrossCore.Touch.dll</HintPath>
     </Reference>
@@ -173,6 +167,12 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.7\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Refractored.MvxPlugins.Settings.Touch">
+      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.4.0.2\lib\monotouch\Refractored.MvxPlugins.Settings.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Refractored.MvxPlugins.Settings">
+      <HintPath>..\..\packages\Mvx.Plugins.Settings.1.4.0.2\lib\monotouch\Refractored.MvxPlugins.Settings.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
