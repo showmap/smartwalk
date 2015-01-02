@@ -14,6 +14,7 @@ namespace SmartWalk.Client.Core.Services
                         Offset = 0,
                         Fetch = 25,
                         Fields = new[] { "Host", "Title", "Picture", "StartTime" },
+                        PictureSize = PictureSize.Medium,
                         From = RequestSelectFromTables.GroupedEventMetadata,
                         As = "em",
                         SortBy = new[] {
@@ -33,6 +34,7 @@ namespace SmartWalk.Client.Core.Services
                     },
                     new RequestSelect {
                         Fields = new[] { "Name", "Picture" },
+                        PictureSize = PictureSize.Medium,
                         From = RequestSelectFromTables.Entity,
                         Where = new[] {
                             new RequestSelectWhere {
@@ -115,6 +117,7 @@ namespace SmartWalk.Client.Core.Services
                     },
                     new RequestSelect {
                         Fields = new[] { "Name", "Picture", "Addresses" },
+                        PictureSize = PictureSize.Small,
                         From = RequestSelectFromTables.Entity,
                         Where = new[] {
                             new RequestSelectWhere {
@@ -268,7 +271,7 @@ namespace SmartWalk.Client.Core.Services
                         }
                     },
                     new RequestSelect {
-                        Fields = new[] { "Host", "Title", "Picture", "StartTime" },
+                        Fields = new[] { "Host", "Title", "StartTime" },
                         From = RequestSelectFromTables.EventMetadata,
                         Where = new[] {
                             new RequestSelectWhere {
