@@ -38,7 +38,7 @@ namespace SmartWalk.Server
             // 3rd Party - Moment
 
             manifest.DefineScript("Moment")
-                .SetVersion("2.8.2")
+                .SetVersion("2.8.4")
                 .SetVersionUrl("moment.min.js", "moment.js");
 
             // 3rd Party - JsHashtable

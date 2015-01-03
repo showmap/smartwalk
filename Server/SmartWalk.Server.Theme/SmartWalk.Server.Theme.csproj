@@ -167,6 +167,7 @@
     <Content Include="Scripts\i18n\jquery-ui-timepicker-ro.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-ru.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-sk.js" />
+    <Content Include="Scripts\i18n\jquery-ui-timepicker-sl.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-sr-RS.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-sr-YU.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-sv.js" />
@@ -177,9 +178,9 @@
     <Content Include="Scripts\i18n\jquery-ui-timepicker-zh-CN.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-zh-TW.js" />
     <Content Include="packages.config" />
-    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
-    <Content Include="Scripts\jquery-2.1.1.js" />
-    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.3.js" />
+    <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\jquery-ui-sliderAccess.js" />
     <Content Include="Scripts\jquery-ui-sliderAccess.min.js">
       <DependentUpon>jquery-ui-sliderAccess.js</DependentUpon>
@@ -237,11 +238,11 @@
     <Content Include="Views\TimePickerLocalization.cshtml" />
     <Content Include="Views\OpenAuthLogOn.cshtml" />
     <Content Include="Views\OpenAuthRegister.cshtml" />
-    <Content Include="Scripts\jquery-2.1.1.min.map" />
     <Content Include="Views\Icons.cshtml" />
     <Content Include="Scripts\jquery-ui-sliderAccess.min.js.map">
       <DependentUpon>jquery-ui-sliderAccess.min.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\jquery-2.1.3.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\bootstrap-theme.css.map" />

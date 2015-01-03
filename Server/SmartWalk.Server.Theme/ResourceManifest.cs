@@ -19,23 +19,23 @@ namespace SmartWalk.Server.Theme
             // jQuery
 
             manifest.DefineScript("jQuery")
-                .SetVersion("2.1.1")
-                .SetVersionUrl("jquery-2.1.1.min.js", "jquery-2.1.1.js")
+                .SetVersion("2.1.3")
+                .SetVersionUrl("jquery-2.1.3.min.js", "jquery-2.1.3.js")
                 .SetCdn(
-                    "//code.jquery.com/jquery-2.1.1.min.js",
-                    "//code.jquery.com/jquery-2.1.1.js",
+                    "//code.jquery.com/jquery-2.1.3.min.js",
+                    "//code.jquery.com/jquery-2.1.3.js",
                     true);
 
             // HACK Using fake "9." prefix due to Orchard's isuse https://orchard.codeplex.com/workitem/20798
-            const string jQueryUIVersion = "9.1.11.1";
+            const string jQueryUIVersion = "9.1.11.2";
 
             manifest.DefineScript("jQueryUI")
                 .SetVersion(jQueryUIVersion)
                 .SetVersionUrl("jquery-ui.min.js", "jquery-ui.js")
                 .SetDependencies("jQuery")
                 .SetCdn(
-                    "//code.jquery.com/ui/1.11.1/jquery-ui.min.js",
-                    "//code.jquery.com/ui/1.11.1/jquery-ui.js", 
+                    "//code.jquery.com/ui/1.11.2/jquery-ui.min.js",
+                    "//code.jquery.com/ui/1.11.2/jquery-ui.js", 
                     true);
 
             manifest
@@ -65,32 +65,32 @@ namespace SmartWalk.Server.Theme
                 .SetDependencies("jQueryUI");
 
             manifest.DefineScript("jQueryUI.TimePicker")
-                .SetVersion("1.4.5")
+                .SetVersion("1.5.0")
                 .SetVersionUrl("jquery-ui-timepicker-addon.min.js", "jquery-ui-timepicker-addon.js")
                 .SetDependencies("jQueryUI", "jQueryUI.SliderAccess");
 
             manifest.DefineStyle("jQueryUI.TimePicker")
-                .SetVersion("1.4.5")
+                .SetVersion("1.5.0")
                 .SetVersionUrl("jquery-ui-timepicker-addon.min.css", "jquery-ui-timepicker-addon.css")
                 .SetDependencies("jQueryUI");
 
             // Bootstrap
 
             manifest.DefineStyle("Bootstrap")
-                .SetVersion("3.1.1")
+                .SetVersion("3.3.1")
                 .SetVersionUrl("bootstrap.min.css", "bootstrap.css")
-                .SetCdn("//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css");
+                .SetCdn("//netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css");
 
             manifest.DefineStyle("Bootstrap.Theme")
-                .SetVersion("3.1.1")
+                .SetVersion("3.3.1")
                 .SetVersionUrl("bootstrap-theme.min.css", "bootstrap-theme.css")
-                .SetCdn("//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css")
+                .SetCdn("//netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css")
                 .SetDependencies("Bootstrap");
 
             manifest.DefineScript("Bootstrap")
-                .SetVersion("3.1.1")
+                .SetVersion("3.3.1")
                 .SetVersionUrl("bootstrap.min.js", "bootstrap.js")
-                .SetCdn("//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
+                .SetCdn("//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
                 .SetDependencies("jQuery");
 
             // SmartWalk
