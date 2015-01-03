@@ -24,6 +24,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private ICommand _navigateWebSiteCommand;
 
         private NSObject _orientationObserver;
+        private bool _updateScheduled;
 
         public ContactsView(IntPtr handle) : base(handle)
         {
@@ -133,6 +134,17 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            if (_updateScheduled)
+            {
+                UpdateConstraintConstants();
+                _updateScheduled = false;
+            }
+        }
+
         protected override void OnInitialize()
         {
             base.OnInitialize();
@@ -182,6 +194,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void OnDeviceOrientationDidChange(NSNotification notification)
         {
+            if (Window == null)
+            {
+                _updateScheduled = true;
+                return;
+            }
+
             UpdateConstraintConstants();
         }
 

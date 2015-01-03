@@ -33,6 +33,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private UITapGestureRecognizer _descriptionTapGesture;
 
         private NSObject _orientationObserver;
+        private bool _updateScheduled;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
@@ -128,6 +129,17 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 DisposeHeaderImage();
                 DisposeMapCell();
                 DisposeOrientationObserver();
+            }
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            if (_updateScheduled)
+            {
+                UpdateConstraintConstants();
+                _updateScheduled = false;
             }
         }
 
@@ -256,13 +268,19 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             _orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(
                 UIDevice.OrientationDidChangeNotification,
-                DeviceOrientationDidChange);
+                OnDeviceOrientationDidChange);
 
             UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
         }
 
-        private void DeviceOrientationDidChange(NSNotification notification)
+        private void OnDeviceOrientationDidChange(NSNotification notification)
         {
+            if (Window == null)
+            {
+                _updateScheduled = true;
+                return;
+            }
+
             UpdateConstraintConstants();
         }
 
