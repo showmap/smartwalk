@@ -42,7 +42,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             set
             { 
                 SubtitleLabel.Text = value;
-                TitleBottomGapConstraint.Constant = value != null ? 3 : 10;
+                TitleBottomGapConstraint.Constant = value != null ? 3 : 7;
             }
         }
 
