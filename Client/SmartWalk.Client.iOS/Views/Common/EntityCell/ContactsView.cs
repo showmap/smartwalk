@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Input;
 using MonoTouch.Foundation;
@@ -176,12 +175,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             _orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(
                 UIDevice.OrientationDidChangeNotification,
-                DeviceOrientationDidChange);
+                OnDeviceOrientationDidChange);
 
             UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
         }
 
-        private void DeviceOrientationDidChange(NSNotification notification)
+        private void OnDeviceOrientationDidChange(NSNotification notification)
         {
             UpdateConstraintConstants();
         }

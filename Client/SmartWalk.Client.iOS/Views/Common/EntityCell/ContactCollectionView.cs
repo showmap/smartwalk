@@ -34,7 +34,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             var flowLayout = (UICollectionViewFlowLayout)CollectionViewLayout;
             var cellWidth = Frame.Width - flowLayout.SectionInset.Left - flowLayout.SectionInset.Right;
 
-            flowLayout.ItemSize = new SizeF(cellWidth, ContactCell.DefaultHeight);
+            var size = new SizeF(cellWidth, ContactCell.DefaultHeight);
+            if (flowLayout.ItemSize != size) {
+                flowLayout.ItemSize = size;
+                flowLayout.InvalidateLayout();
+            }
         }
     }
 }
