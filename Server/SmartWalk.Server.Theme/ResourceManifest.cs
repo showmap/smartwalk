@@ -61,7 +61,7 @@ namespace SmartWalk.Server.Theme
 
             manifest.DefineScript("jQueryUI.SliderAccess")
                 .SetVersion("0.3")
-                .SetVersionUrl("jquery-ui-sliderAccess.js")
+                .SetVersionUrl("jquery-ui-sliderAccess.min.js", "jquery-ui-sliderAccess.js")
                 .SetDependencies("jQueryUI");
 
             manifest.DefineScript("jQueryUI.TimePicker")

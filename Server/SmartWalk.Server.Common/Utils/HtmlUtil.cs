@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.Mvc;
+using Orchard.Settings;
 using Orchard.UI.Resources;
 
 namespace SmartWalk.Server.Common.Utils
@@ -27,7 +28,7 @@ namespace SmartWalk.Server.Common.Utils
         {
             var defaultSettings = new RequireSettings
                 {
-                    DebugMode = context.HttpContext.IsDebuggingEnabled,
+                    DebugMode = context.CurrentSite.ResourceDebugMode == ResourceDebugMode.Enabled,
                     Culture = context.CurrentCulture,
                 };
 
@@ -41,7 +42,7 @@ namespace SmartWalk.Server.Common.Utils
             var result = resource != null
                 ? resource.ResolveUrl(new RequireSettings
                     {
-                        DebugMode = context.HttpContext.IsDebuggingEnabled,
+                        DebugMode = context.CurrentSite.ResourceDebugMode == ResourceDebugMode.Enabled,
                         CdnMode = cdnMode
                     }, null)
                 : null;

@@ -20,7 +20,7 @@ namespace SmartWalk.Server
 
             manifest.DefineScript("ko.validation")
                 .SetVersion("1.0.2")
-                .SetVersionUrl("knockout.validation.js")
+                .SetVersionUrl("knockout.validation.min.js", "knockout.validation.js")
                 .SetDependencies("ko");
 
             manifest.DefineScript("ko.autocomplete")
@@ -142,11 +142,11 @@ namespace SmartWalk.Server
 
             manifest.DefineStyle("TextCollapse")
                 .SetVersion("1.0")
-                .SetVersionUrl("text-collapse.css");
+                .SetVersionUrl("text-collapse.min.css", "text-collapse.css");
 
             manifest.DefineScript("TextCollapse")
                 .SetVersion("1.0")
-                .SetVersionUrl("text-collapse.js")
+                .SetVersionUrl("text-collapse.min.js", "text-collapse.js")
                 .SetDependencies("jQuery");
 
             // 3rd Party - Image Scale

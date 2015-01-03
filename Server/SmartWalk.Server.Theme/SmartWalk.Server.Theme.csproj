@@ -181,6 +181,9 @@
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\jquery-ui-sliderAccess.js" />
+    <Content Include="Scripts\jquery-ui-sliderAccess.min.js">
+      <DependentUpon>jquery-ui-sliderAccess.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
     <Content Include="Scripts\jquery-ui-timepicker-addon.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
@@ -236,6 +239,9 @@
     <Content Include="Views\OpenAuthRegister.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
     <Content Include="Views\Icons.cshtml" />
+    <Content Include="Scripts\jquery-ui-sliderAccess.min.js.map">
+      <DependentUpon>jquery-ui-sliderAccess.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\bootstrap-theme.css.map" />

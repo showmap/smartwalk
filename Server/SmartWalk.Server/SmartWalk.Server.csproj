@@ -232,6 +232,9 @@
     </Content>
     <Content Include="Styles\text-collapse.css" />
     <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\text-collapse.min.css">
+      <DependentUpon>text-collapse.css</DependentUpon>
+    </Content>
     <Content Include="Styles\Web.config" />
     <Content Include="Module.txt" />
     <Content Include="Views\Event\Create.cshtml" />
