@@ -601,6 +601,7 @@ namespace SmartWalk.Server.Services.ImportService
 
                     var importResult = ImportImage(show.Picture, storagePath);
                     importResult.ItemId = show.Id;
+                    importResult.ItemParentId = show.EventMetadataRecord.Id;
                     importResult.ItemType = ImportItemType.Show;
 
                     if (importResult.IsSuccessful)
