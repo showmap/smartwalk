@@ -17,7 +17,7 @@
 
 <script type="text/html" id="entityItemTemplate">
     <tr class="venue-gap"></tr>
-    <!-- ko template: {name: $root.venuesManager.getItemView, afterRender: sw.scaleImages} -->    
+    <!-- ko template: {name: $root.venuesManager.getItemView, afterRender: function (elements) { sw.scaleImages(elements); sw.setTooltips(elements); }} -->    
     <!-- /ko -->
     <tr class="add-venue-show" data-bind="
         visible: !isEditing() && 

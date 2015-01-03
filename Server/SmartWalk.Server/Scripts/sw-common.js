@@ -16,7 +16,7 @@ if (!String.prototype.format) {
 
 if (typeof sw === "undefined") sw = {};
 
-sw.inherits = function(child, parent) {
+sw.inherits = function (child, parent) {
     var f = function() {};
     f.prototype = parent.prototype;
     child.prototype = new f();
@@ -26,7 +26,7 @@ sw.inherits = function(child, parent) {
     child.superClass_ = parent.prototype;
 };
 
-sw.attachVerticalScroll = function(callback) {
+sw.attachVerticalScroll = function (callback) {
     $(window).scroll(function(evt) {
         evt.preventDefault();
 
@@ -37,7 +37,7 @@ sw.attachVerticalScroll = function(callback) {
     });
 };
 
-sw.ajaxJsonRequest = function(jsonData, url, busyObject) {
+sw.ajaxJsonRequest = function (jsonData, url, busyObject) {
     var config = {
         async: true,
         url: url,
@@ -57,22 +57,26 @@ sw.ajaxJsonRequest = function(jsonData, url, busyObject) {
     return request;
 };
 
-sw.convertToLocal = function(date) {
+sw.convertToLocal = function (date) {
     var result = date
         ? new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
         : date;
     return result;
 };
 
-sw.convertToUTC = function(date) {
+sw.convertToUTC = function (date) {
     var result = date
         ? new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
         : date;
     return result;
 };
 
-sw.scaleImages = function(elements) {
+sw.scaleImages = function (elements) {
     $(elements).find("img.scale").imageScale();
+};
+
+sw.setTooltips = function (elements) {
+    $(elements).find("a.tooltip-container").tooltip();
 };
 
 sw.cancelRequest = function (request) {

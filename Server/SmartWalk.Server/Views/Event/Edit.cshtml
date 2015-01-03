@@ -196,7 +196,7 @@
 
 <script type="text/javascript">
     $(function() {
-        $("a").tooltip();
+        $("a.tooltip-container").tooltip();
 
         var data = @Html.Raw(JsonConvert.SerializeObject(Model, JsonNetResult.Settings));
 
