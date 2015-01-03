@@ -6,6 +6,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 
 namespace SmartWalk.Client.iOS.Services
@@ -53,7 +54,7 @@ namespace SmartWalk.Client.iOS.Services
 
         public void OpenURL(string url)
         {
-            using (var nsURL = new NSUrl(url))
+            using (var nsURL = url.ToNSUrl())
             {
                 if (UIApplication.SharedApplication.CanOpenUrl(nsURL))
                 {

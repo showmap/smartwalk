@@ -12,5 +12,14 @@ namespace SmartWalk.Client.iOS.Utils
             var activityViewController = new UIActivityViewController(activityItems, null);
             controller.PresentViewController(activityViewController, true, null);
         }
+
+        public static NSUrl ToNSUrl(this string url)
+        {
+            var str = new NSString(url)
+                .CreateStringByAddingPercentEncoding(
+                    NSUrlUtilities_NSCharacterSet.UrlQueryAllowedCharacterSet);
+            var result = new NSUrl(str);
+            return result;
+        }
     }
 }

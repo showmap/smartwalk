@@ -6,6 +6,7 @@ using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Services;
+using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Services
 {
@@ -46,7 +47,7 @@ namespace SmartWalk.Client.iOS.Services
                 newEvent.Location = string.Format("{0},{1}", orgEvent.Latitude, orgEvent.Longitude);
                 newEvent.Title = orgEvent.Title;
                 newEvent.Notes = orgEvent.Description;
-                newEvent.Url = new NSUrl(_configuration.GetEventUrl(orgEvent.Id));
+                newEvent.Url = _configuration.GetEventUrl(orgEvent.Id).ToNSUrl();
 
                 newEvent.Calendar = EventStore.DefaultCalendarForNewEvents;
 

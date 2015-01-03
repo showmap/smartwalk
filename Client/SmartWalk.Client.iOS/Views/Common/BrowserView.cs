@@ -180,7 +180,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             if (ViewModel.BrowserURL != null)
             {
-                var request = new NSUrlRequest(new NSUrl(ViewModel.BrowserURL));
+                var request = new NSUrlRequest(ViewModel.BrowserURL.ToNSUrl());
                 WebView.LoadRequest(request);
             }
         }
