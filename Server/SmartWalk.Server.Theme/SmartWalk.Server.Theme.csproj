@@ -115,6 +115,7 @@
     <Content Include="img\icons\apple-touch-icon-120x120.png" />
     <Content Include="img\icons\apple-touch-icon-144x144.png" />
     <Content Include="img\icons\apple-touch-icon-152x152.png" />
+    <Content Include="img\icons\apple-touch-icon-180x180.png" />
     <Content Include="img\icons\apple-touch-icon-57x57.png" />
     <Content Include="img\icons\apple-touch-icon-60x60.png" />
     <Content Include="img\icons\apple-touch-icon-72x72.png" />
@@ -124,7 +125,7 @@
     <Content Include="img\icons\browserconfig.xml" />
     <Content Include="img\icons\favicon-160x160.png" />
     <Content Include="img\icons\favicon-16x16.png" />
-    <Content Include="img\icons\favicon-196x196.png" />
+    <Content Include="img\icons\favicon-192x192.png" />
     <Content Include="img\icons\favicon-32x32.png" />
     <Content Include="img\icons\favicon-96x96.png" />
     <Content Include="img\icons\favicon.ico" />
