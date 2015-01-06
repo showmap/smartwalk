@@ -129,10 +129,10 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
-        public void SetTransparent(bool transparent, bool animated)
+        public void SetTransparentType(SemiTransparentType transparentType, bool animated)
         {
-            _navBar.SetTransparent(transparent, animated);
-            _navBar.IsItemSemiTransparent = transparent;
+            _navBar.SetTransparent(transparentType != SemiTransparentType.None, animated);
+            _navBar.ItemSemiTransparentType = transparentType;
         }
 
         private void Initialize()

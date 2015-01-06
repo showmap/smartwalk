@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             base.ViewWillAppear(animated);
 
             SetNavBarHidden(false, animated);
-            SetNavBarTransparent(true, animated);
+            SetNavBarTransparent(SemiTransparentType.Dark, animated);
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -51,9 +51,9 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             NavBarManager.Instance.SetHidden(hidden, animated);
         }
 
-        protected virtual void SetNavBarTransparent(bool transparent, bool animated)
+        protected virtual void SetNavBarTransparent(SemiTransparentType transparentType, bool animated)
         {
-            NavBarManager.Instance.SetTransparent(transparent, animated);
+            NavBarManager.Instance.SetTransparentType(transparentType, animated);
             UpdateViewTitle();
         }
 
@@ -72,7 +72,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 NavigationItem.HidesBackButton = true;
 
-                _backButton = ButtonBarUtil.Create(ThemeIcons.Back, ThemeIcons.BackLandscape, true);
+                _backButton = ButtonBarUtil.Create(
+                    ThemeIcons.Back, 
+                    ThemeIcons.BackLandscape, 
+                    SemiTransparentType.Dark);
                 _backButton.TouchUpInside += OnNavigationBackClick;
                 _backButton.UpdateState();
 
@@ -85,7 +88,10 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             // More (...) Button
             if (IsMoreButtonVisible)
             {
-                _moreButton = ButtonBarUtil.Create(ThemeIcons.More, ThemeIcons.MoreLandscape, true);
+                _moreButton = ButtonBarUtil.Create(
+                    ThemeIcons.More, 
+                    ThemeIcons.MoreLandscape, 
+                    SemiTransparentType.Dark);
                 _moreButton.TouchUpInside += OnMoreButtonClicked;
 
                 var moreBarButton = new UIBarButtonItem(_moreButton);

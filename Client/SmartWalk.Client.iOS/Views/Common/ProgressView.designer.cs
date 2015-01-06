@@ -13,6 +13,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 	partial class ProgressView
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIActivityIndicatorView ActivityIndicator { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UIView LoadingView { get; set; }
 
 		[Outlet]
@@ -28,14 +31,19 @@ namespace SmartWalk.Client.iOS.Views.Common
 				LoadingView = null;
 			}
 
+			if (NoDataLabel != null) {
+				NoDataLabel.Dispose ();
+				NoDataLabel = null;
+			}
+
 			if (ProgressLabel != null) {
 				ProgressLabel.Dispose ();
 				ProgressLabel = null;
 			}
 
-			if (NoDataLabel != null) {
-				NoDataLabel.Dispose ();
-				NoDataLabel = null;
+			if (ActivityIndicator != null) {
+				ActivityIndicator.Dispose ();
+				ActivityIndicator = null;
 			}
 		}
 	}

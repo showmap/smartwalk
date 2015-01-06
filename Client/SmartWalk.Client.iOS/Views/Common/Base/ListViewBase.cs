@@ -27,6 +27,11 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
+        protected ProgressView ProgressView
+        {
+            get { return _progressView; }
+        }
+
         private ListViewDecorator ListView 
         { 
             get

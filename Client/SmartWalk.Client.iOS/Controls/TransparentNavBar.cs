@@ -11,7 +11,7 @@ namespace SmartWalk.Client.iOS.Controls
     public class TransparentNavBar : UINavigationBar
     {
         private bool _isTransparent;
-        private bool _isItemSemiTransparent = true;
+        private SemiTransparentType _itemSemiTransparentType = SemiTransparentType.Dark;
 
         public TransparentNavBar()
         {
@@ -30,17 +30,17 @@ namespace SmartWalk.Client.iOS.Controls
             }
         }
 
-        public bool IsItemSemiTransparent
+        public SemiTransparentType ItemSemiTransparentType
         {
             get
             {
-                return _isItemSemiTransparent;
+                return _itemSemiTransparentType;
             }
             set
             {
-                if (_isItemSemiTransparent != value)
+                if (_itemSemiTransparentType != value)
                 {
-                    _isItemSemiTransparent = value;
+                    _itemSemiTransparentType = value;
                     UpdateItemsState();
                 }
             }
@@ -134,7 +134,8 @@ namespace SmartWalk.Client.iOS.Controls
             var buttons = ButtonBarUtil.GetButtonsFromBarItems(TopItem.GetNavItemBarItems());
             foreach (var button in buttons)
             {
-                button.IsSemiTransparent = IsItemSemiTransparent;
+                button.SemiTransparentType = ItemSemiTransparentType;
+                button.UpdateState();
             }
         }
 

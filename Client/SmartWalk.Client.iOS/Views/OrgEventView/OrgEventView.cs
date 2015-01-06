@@ -59,6 +59,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        private bool IsNavBarTransparent 
+        {
+            get 
+            {
+                return CurrentMode != OrgEventViewMode.List || !HasData;
+            }
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -427,7 +435,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.OnInitializeNavBarItems(navBarItems);
 
             // Day Button
-            _dayButton = ButtonBarUtil.Create(true);
+            _dayButton = ButtonBarUtil.Create(SemiTransparentType.Light);
             _dayButton.LineBreakMode = UILineBreakMode.WordWrap;
             _dayButton.TouchUpInside += OnDayButtonClicked;
 
@@ -437,7 +445,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             navBarItems.Add(dayButtonItem);
 
             // Mode (List, Map, Combined) Button
-            _modeButton = ButtonBarUtil.Create(ThemeIcons.List, ThemeIcons.ListLandscape, true);
+            _modeButton = ButtonBarUtil.Create(ThemeIcons.List, ThemeIcons.ListLandscape, SemiTransparentType.Light);
             _modeButton.TouchUpInside += OnModeButtonClicked;
 
             var modeButtonItem = new UIBarButtonItem();
@@ -461,7 +469,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
-            MapFullscreenButton.IsSemiTransparent = true;
+            MapFullscreenButton.SemiTransparentType = SemiTransparentType.Light;
+            MapFullscreenButton.UpdateState();
             VenuesMapView.TintColor = Theme.HeaderText;
         }
 
@@ -860,6 +869,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             UpdateNavBarState(animated);
+            UpdateDayButtonState();
             UpdateViewConstraints(animated);
             SetNeedStatusBarUpdate(animated);
 
@@ -872,13 +882,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateNavBarState(bool animated)
         {
-            if (CurrentMode == OrgEventViewMode.List && HasData)
+            if (IsNavBarTransparent)
             {
-                SetNavBarTransparent(false, animated);
+                SetNavBarTransparent(SemiTransparentType.Light, animated);
             }
             else
             {
-                SetNavBarTransparent(true, animated);
+                SetNavBarTransparent(SemiTransparentType.None, animated);
             }
         }
 
@@ -897,7 +907,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (ViewModel.IsMultiday)
             {
-                _dayButton.SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
+                _dayButton.SetBackgroundImage(Theme.HighlightImage, UIControlState.Highlighted);
 
                 if (ViewModel.CurrentDay == null)
                 {
@@ -920,6 +930,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.OrgEvent == null ||
                 !ViewModel.OrgEvent.StartTime.HasValue) return null;
 
+            var textColor = IsNavBarTransparent ? Theme.NavBarLightText : Theme.NavBarText;
             var result = new NSMutableAttributedString();
 
             result.Append(
@@ -930,7 +941,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ScreenUtil.IsVerticalOrientation
                         ? Theme.OrgEventMonthFont
                         : Theme.OrgEventMonthLandscapeFont,
-                    Theme.NavBarText,
+                    textColor,
                     null,
                     null,
                     new NSMutableParagraphStyle { 
@@ -947,7 +958,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         ScreenUtil.IsVerticalOrientation
                             ? Theme.OrgEventTwoDaysFont
                             : Theme.OrgEventTwoDaysLandscapeFont,
-                        Theme.NavBarText,
+                        textColor,
                         null,
                         null,
                         new NSMutableParagraphStyle { 
@@ -965,7 +976,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         ScreenUtil.IsVerticalOrientation
                             ? Theme.OrgEventDayFont
                             : Theme.OrgEventDayLandscapeFont,
-                        Theme.NavBarText,
+                        textColor,
                         null,
                         null,
                         new NSMutableParagraphStyle { 

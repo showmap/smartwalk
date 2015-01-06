@@ -21,7 +21,7 @@ namespace SmartWalk.Client.iOS.Controls
                 UIConstants.ToolBarHorizontalHeight);
 
         private UIImageView _iconImageView;
-        private bool _isSemiTransparent;
+        private SemiTransparentType _semiTransparent;
 
         public ButtonBarButton(IntPtr handle) : base(handle)
         {
@@ -36,13 +36,13 @@ namespace SmartWalk.Client.iOS.Controls
         public ButtonBarButton(
             UIImage verticalIcon,
             UIImage landscapeIcon,
-            bool isSemiTransparent = false) 
+            SemiTransparentType semiTransparentType = SemiTransparentType.None) 
             : this(
                 verticalIcon,
                 landscapeIcon,
                 DefaultVerticalSize,
                 DefaultLandscapeSize,
-                isSemiTransparent) 
+                semiTransparentType) 
         {
         }
 
@@ -51,7 +51,7 @@ namespace SmartWalk.Client.iOS.Controls
             UIImage landscapeIcon,
             SizeF? verticalSize,
             SizeF? landscapeSize,
-            bool isSemiTransparent = false)
+            SemiTransparentType semiTransparentType = SemiTransparentType.None)
                 : base(UIButtonType.Custom)
         {
             Initialize(
@@ -59,7 +59,7 @@ namespace SmartWalk.Client.iOS.Controls
                 landscapeIcon,
                 verticalSize,
                 landscapeSize,
-                isSemiTransparent);
+                semiTransparentType);
             UpdateState();
         }
 
@@ -68,25 +68,31 @@ namespace SmartWalk.Client.iOS.Controls
         public SizeF VerticalSize { get; set; }
         public SizeF LandscapeSize { get; set; }
 
-        public bool IsSemiTransparent
+        public SemiTransparentType SemiTransparentType
         {
             get
             {
-                return _isSemiTransparent;
+                return _semiTransparent;
             }
             set
             {
-                if (_isSemiTransparent != value)
+                if (_semiTransparent != value)
                 {
-                    _isSemiTransparent = value;
+                    _semiTransparent = value;
 
-                    if (_isSemiTransparent)
+                    switch (_semiTransparent)
                     {
-                        SetBackgroundImage(Theme.SemiTransImage, UIControlState.Normal);
-                    }
-                    else
-                    {
-                        SetBackgroundImage(null, UIControlState.Normal);
+                        case SemiTransparentType.Light:
+                            SetBackgroundImage(Theme.SemiTransWhiteImage, UIControlState.Normal);
+                            break;
+
+                        case SemiTransparentType.Dark:
+                            SetBackgroundImage(Theme.SemiTransImage, UIControlState.Normal);
+                            break;
+
+                        default:
+                            SetBackgroundImage(null, UIControlState.Normal);
+                            break;
                     }
                 }
             }
@@ -131,6 +137,21 @@ namespace SmartWalk.Client.iOS.Controls
                 }
             }
 
+            switch (SemiTransparentType)
+            {
+                case SemiTransparentType.Light:
+                    IconImageView.TintColor = Theme.NavBarLightText;
+                    break;
+
+                case SemiTransparentType.Dark:
+                    IconImageView.TintColor = Theme.NavBarText;
+                    break;
+
+                case SemiTransparentType.None:
+                    IconImageView.TintColor = Theme.NavBarText;
+                    break;
+            }
+
             UpdateMask();
         }
 
@@ -139,15 +160,15 @@ namespace SmartWalk.Client.iOS.Controls
             UIImage landscapeIcon,
             SizeF? verticalSize,
             SizeF? landscapeSize,
-            bool isSemiTransparent = false)
+            SemiTransparentType semiTransparentType = SemiTransparentType.None)
         {
             VerticalIcon = verticalIcon;
             LandscapeIcon = landscapeIcon;
             VerticalSize = verticalSize ?? DefaultVerticalSize;
             LandscapeSize = landscapeSize ?? DefaultLandscapeSize;
-            IsSemiTransparent = isSemiTransparent;
+            SemiTransparentType = semiTransparentType;
 
-            SetBackgroundImage(Theme.BlackImage, UIControlState.Highlighted);
+            SetBackgroundImage(Theme.HighlightImage, UIControlState.Highlighted);
         }
 
         private void UpdateMask()
@@ -160,5 +181,12 @@ namespace SmartWalk.Client.iOS.Controls
 
             Layer.Mask = mask;
         }
+    }
+
+    public enum SemiTransparentType
+    {
+        None,
+        Dark,
+        Light
     }
 }

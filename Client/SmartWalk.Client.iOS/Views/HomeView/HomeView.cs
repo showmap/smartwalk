@@ -5,6 +5,7 @@ using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
@@ -23,6 +24,11 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             get { return (HomeViewModel)base.ViewModel; }
         }
 
+        public override UIStatusBarStyle PreferredStatusBarStyle()
+        {
+            return UIStatusBarStyle.LightContent;
+        }
+
         private float CellProportionalHeight
         {
             get
@@ -39,6 +45,14 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
                 return (float)_cellProportionalHeight;
             }
+        }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            View.BackgroundColor = Theme.ViewBlack;
+            ProgressView.IndicatorStyle = UIActivityIndicatorViewStyle.White;
         }
 
         public override void ViewWillAppear(bool animated)

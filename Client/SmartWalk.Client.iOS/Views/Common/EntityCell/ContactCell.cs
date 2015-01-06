@@ -71,6 +71,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             ContactLabel.TextColor = Theme.CellText;
 
             IconView.Color = Theme.IconActive;
+            ContactIcon.TintColor = Theme.IconActive;
         }
     }
 }

@@ -201,7 +201,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            CloseButton.IsSemiTransparent = true;
+            CloseButton.SemiTransparentType = SemiTransparentType.Dark;
             CloseButton.VerticalIcon = ThemeIcons.Close;
             CloseButton.LandscapeIcon = ThemeIcons.CloseLandscape;
             CloseButton.UpdateState();

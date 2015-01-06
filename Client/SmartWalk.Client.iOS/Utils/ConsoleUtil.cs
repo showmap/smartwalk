@@ -10,5 +10,12 @@ namespace SmartWalk.Client.iOS.Utils
             Console.WriteLine("Disposed: {0} ({1})", obj.GetType().Name, obj.GetHashCode());
 #endif
         }
+
+        public static void Trace(string str, params object[] args)
+        {
+#if DEBUG
+            Console.WriteLine(str, args);
+#endif
+        }
     }
 }

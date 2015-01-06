@@ -481,7 +481,6 @@
     <BundleResource Include="Resources\Icons\List%403x.png" />
     <BundleResource Include="Resources\Icons\ListLandscape.png" />
     <BundleResource Include="Resources\Icons\ListLandscape%402x.png" />
-    <BundleResource Include="Resources\Icons\ListLandspace%403x.png" />
     <BundleResource Include="Resources\Icons\Map.png" />
     <BundleResource Include="Resources\Icons\Map%402x.png" />
     <BundleResource Include="Resources\Icons\Map%403x.png" />
@@ -493,7 +492,6 @@
     <BundleResource Include="Resources\Icons\More%403x.png" />
     <BundleResource Include="Resources\Icons\Refresh%403x.png" />
     <BundleResource Include="Resources\Icons\ExitFullscreen%403x.png" />
-    <BundleResource Include="Resources\Icons\FullScreen%403x.png" />
     <BundleResource Include="Resources\Icons\DownLink.png" />
     <BundleResource Include="Resources\Icons\DownLink%402x.png" />
     <BundleResource Include="Resources\Icons\DownLink%403x.png" />
@@ -505,16 +503,19 @@
     <BundleResource Include="Resources\Icons\ContactEmail%403x.png" />
     <BundleResource Include="Resources\Icons\ContactPhone%403x.png" />
     <BundleResource Include="Resources\Icons\ContactWeb%403x.png" />
-    <BundleResource Include="Resources\Icons\ExitFullScreenLandscape.png" />
-    <BundleResource Include="Resources\Icons\ExitFullScreenLandscape%402x.png" />
-    <BundleResource Include="Resources\Icons\ExitFullScreenLandscape%403x.png" />
-    <BundleResource Include="Resources\Icons\FullScreenLandscape.png" />
-    <BundleResource Include="Resources\Icons\FullScreenLandscape%402x.png" />
-    <BundleResource Include="Resources\Icons\FullScreenLandscape%403x.png" />
     <BundleResource Include="Resources\Icons\MapPin%403x.png" />
     <BundleResource Include="Resources\Icons\MoreLandscape.png" />
     <BundleResource Include="Resources\Icons\MoreLandscape%402x.png" />
     <BundleResource Include="Resources\Icons\MoreLandscape%403x.png" />
+    <BundleResource Include="Resources\Images\SemiTransWhite.png" />
+    <BundleResource Include="Resources\Icons\ExitFullscreenLandscape.png" />
+    <BundleResource Include="Resources\Icons\ExitFullscreenLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\ExitFullscreenLandscape%403x.png" />
+    <BundleResource Include="Resources\Icons\Fullscreen%403x.png" />
+    <BundleResource Include="Resources\Icons\FullscreenLandscape.png" />
+    <BundleResource Include="Resources\Icons\FullscreenLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\FullscreenLandscape%403x.png" />
+    <BundleResource Include="Resources\Icons\ListLandscape%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

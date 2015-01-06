@@ -10,9 +10,10 @@ namespace SmartWalk.Client.iOS.Resources
         private const string HelveticaRegular = "HelveticaNeue";
         private const string HelveticaLight = "HelveticaNeue-Light";
 
-        public static readonly UIImage BlackImage = UIImage.FromFile("Images/Black.png");
+        public static readonly UIImage HighlightImage = UIImage.FromFile("Images/Black.png");
         public static readonly UIImage TransImage = UIImage.FromFile("Images/Trans.png");
         public static readonly UIImage SemiTransImage = UIImage.FromFile("Images/SemiTrans.png");
+        public static readonly UIImage SemiTransWhiteImage = UIImage.FromFile("Images/SemiTransWhite.png");
 
         public static readonly UIColor IconPassive = UIColor.FromRGB(160, 160, 160);
         public static readonly UIColor IconVeryPassive = UIColor.FromRGB(205, 205, 205);
@@ -20,10 +21,12 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGBA(100, 31, 174, 180);
         public static readonly UIColor NavBarText = UIColor.White;
+        public static readonly UIColor NavBarLightText = UIColor.FromRGB(62, 24, 107);
         public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
         public static int NavBarPaddingCompensate = -9;
         public static int ToolBarPaddingCompensate = -16;
 
+        public static readonly UIColor ViewBlack = UIColor.FromRGB(8, 8, 8);
         public static readonly UIFont NoDataFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIFont LoadingFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIColor LoadingText = UIColor.FromRGB(170, 170, 170);
@@ -35,7 +38,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor SearchControl = UIColor.FromRGB(230, 230, 230);
 
         public static readonly UIColor CellBackground = UIColor.White;
-        public static readonly UIColor CellHighlight = UIColor.FromRGB(71, 71, 71);
+        public static readonly UIColor CellHighlight = UIColor.FromRGB(190, 190, 190);
         public static readonly UIColor CellSemiHighlight = UIColor.FromRGB(255, 255, 250);
         public static readonly UIColor CellSeparator = UIColor.FromRGB(234, 234, 234);
         public static readonly UIColor GroupCellBackground = UIColor.FromRGBA(255, 255, 255, 250);

@@ -9,6 +9,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Controls;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -240,15 +241,24 @@ namespace SmartWalk.Client.iOS.Views.Common
             BottomToolbar.SetShadowImage(new UIImage(), UIToolbarPosition.Any);
             BottomToolbar.BarTintColor = UIColor.Clear;
 
-            var button = ButtonBarUtil.Create(ThemeIcons.Back, ThemeIcons.BackLandscape, true);
+            var button = ButtonBarUtil.Create(
+                ThemeIcons.Back, 
+                ThemeIcons.BackLandscape, 
+                SemiTransparentType.Dark);
             button.TouchUpInside += OnBackButtonClick;
             BackButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.Forward, ThemeIcons.ForwardLandscape, true);
+            button = ButtonBarUtil.Create(
+                ThemeIcons.Forward, 
+                ThemeIcons.ForwardLandscape, 
+                SemiTransparentType.Dark);
             button.TouchUpInside += OnForwardButtonClick;
             ForwardButton.CustomView = button;
 
-            button = ButtonBarUtil.Create(ThemeIcons.Refresh, ThemeIcons.RefreshLandscape, true);
+            button = ButtonBarUtil.Create(
+                ThemeIcons.Refresh, 
+                ThemeIcons.RefreshLandscape, 
+                SemiTransparentType.Dark);
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
         }

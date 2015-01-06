@@ -29,6 +29,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             set { NoDataLabel.Hidden = !value; }
         }
 
+        public UIActivityIndicatorViewStyle IndicatorStyle
+        {
+            get { return ActivityIndicator.ActivityIndicatorViewStyle; }
+            set { ActivityIndicator.ActivityIndicatorViewStyle = value; }
+        }
+
         public static ProgressView Create()
         {
             return (ProgressView)Nib.Instantiate(null, null)[0];

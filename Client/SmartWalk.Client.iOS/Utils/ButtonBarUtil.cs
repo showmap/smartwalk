@@ -1,9 +1,8 @@
-using System;
 using System.Drawing;
-using MonoTouch.UIKit;
-using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Controls;
 using System.Linq;
+using MonoTouch.UIKit;
+using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -17,22 +16,22 @@ namespace SmartWalk.Client.iOS.Utils
         }
 
         public static ButtonBarButton Create(
-            bool isSemiTransparent = false)
+            SemiTransparentType semiTransparentType = SemiTransparentType.None)
         {
-            var button = new ButtonBarButton(null, null, isSemiTransparent);
+            var button = new ButtonBarButton(null, null, semiTransparentType);
             return button;
         }
 
         public static ButtonBarButton Create(
             UIImage verticalIcon,
             UIImage landscapeIcon,
-            bool isSemiTransparent = false)
+            SemiTransparentType semiTransparentType = SemiTransparentType.None)
         {
             var button = 
                 new ButtonBarButton(
                     verticalIcon, 
                     landscapeIcon, 
-                    isSemiTransparent);
+                    semiTransparentType);
             return button;
         }
 
@@ -41,14 +40,14 @@ namespace SmartWalk.Client.iOS.Utils
             UIImage landscapeIcon,
             SizeF? verticalSize,
             SizeF? landscapeSize,
-            bool isSemiTransparent = false)
+            SemiTransparentType semiTransparentType = SemiTransparentType.None)
         {
             var button = new ButtonBarButton(
                 verticalIcon,
                 landscapeIcon,
                 verticalSize,
                 landscapeSize,
-                isSemiTransparent);
+                semiTransparentType);
             return button;
         }
 
