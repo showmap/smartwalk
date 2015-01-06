@@ -12,7 +12,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         public static readonly UINib Nib = UINib.FromName("OrgEventCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("OrgEventCell");
 
-        public const float DefaultHeight = 44;
+        public const float DefaultHeight = 48;
 
         public OrgEventCell(IntPtr handle) : base(handle)
         {   
@@ -60,15 +60,15 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         private void InitializeStyle()
         {
             MonthLabel.Font = Theme.OrgEventMonthFont;
-            MonthLabel.TextColor = Theme.CellTextHighlight;
+            MonthLabel.TextColor = Theme.HyperlinkText;
 
             DayLabel.Font = Theme.OrgEventDayFont;
-            DayLabel.TextColor = Theme.CellTextHighlight;
+            DayLabel.TextColor = Theme.HyperlinkText;
 
             EventTitleLabel.Font = Theme.OrgEventTitleFont;
             EventTitleLabel.TextColor = Theme.CellText;
 
-            CalendarView.BackgroundColor = Theme.IconActive;
+            CalendarView.Color = Theme.IconActive;
         }
     }
 }

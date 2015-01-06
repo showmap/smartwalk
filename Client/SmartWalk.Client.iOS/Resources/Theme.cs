@@ -14,10 +14,10 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage TransImage = UIImage.FromFile("Images/Trans.png");
         public static readonly UIImage SemiTransImage = UIImage.FromFile("Images/SemiTrans.png");
 
-        public static readonly UIColor IconPassive = UIColor.FromRGB(168, 168, 168);
-        public static readonly UIColor IconActive = UIColor.FromRGB(123, 0, 253);
+        public static readonly UIColor IconPassive = UIColor.FromRGB(200, 200, 200);
+        public static readonly UIColor IconActive = UIColor.FromRGB(143, 44, 250);
 
-        public static readonly UIColor NavBarBackground = UIColor.FromRGBA(61, 61, 61, 180);
+        public static readonly UIColor NavBarBackground = UIColor.FromRGBA(100, 31, 174, 180);
         public static readonly UIColor NavBarText = UIColor.White;
         public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
         public static int NavBarPaddingCompensate = -9;
@@ -38,14 +38,13 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor CellSemiHighlight = UIColor.FromRGB(255, 255, 250);
         public static readonly UIColor CellSeparator = UIColor.FromRGB(234, 234, 234);
         public static readonly UIColor GroupCellBackground = UIColor.FromRGBA(255, 255, 255, 250);
-        public static readonly UIColor HeaderCellBackground = UIColor.FromRGB(246, 246, 246);
+        public static readonly UIColor HeaderCellBackground = UIColor.FromRGBA(251, 251, 251, 250);
 
         public static readonly UIColor CellText = UIColor.Black;
         public static readonly UIColor CellTextPassive = UIColor.FromRGB(153, 153, 153);
-        public static readonly UIColor CellTextHighlight = UIColor.White;
         public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
-        public static readonly UIColor HeaderText = UIColor.FromRGB(70, 224, 181);
-        public static readonly UIColor HyperlinkText = UIColor.FromRGB(123, 0, 253);
+        public static readonly UIColor HeaderText = UIColor.FromRGB(88, 226, 194);
+        public static readonly UIColor HyperlinkText = IconActive;
 
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
@@ -56,7 +55,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont BackgroundImageTitleTextFont = UIFont.FromName(HelveticaBold, 19);
         public static readonly UIFont BackgroundImageSubtitleTextFont = UIFont.FromName(HelveticaMedium, 16);
         public static readonly UIColor BackgroundImageTitleText = UIColor.White;
-        public static readonly UIColor BackgroundImageSubtitleText = UIColor.FromRGB(254, 209, 11);
+        public static readonly UIColor BackgroundImageSubtitleText = UIColor.FromRGB(255, 215, 51);
         public static readonly UIColor ImageGradient = UIColor.FromRGB(0, 0, 0);
         public static readonly UIColor DialogOutside = UIColor.FromRGBA(0, 0, 0, 200);
 
@@ -67,19 +66,16 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont OrgEventMonthFont = UIFont.FromName(HelveticaBold, 10);
         public static readonly UIFont OrgEventMonthLandscapeFont = UIFont.FromName(HelveticaBold, 8);
         public static readonly UIFont OrgEventTitleFont = UIFont.FromName(HelveticaRegular, 16);
-        public static readonly UIColor OrgEventActive = CellHighlight;
-        public static readonly UIColor OrgEventPassive = UIColor.FromRGB(187, 187, 187);
 
         public static readonly UIColor EntityDescription = UIColor.FromRGB(135, 135, 135);
         public static readonly UIFont EntityDescriptionFont = UIFont.FromName(HelveticaLight, 16);
+        public static readonly UIColor MapCell = UIColor.FromRGB(255, 248, 218);
         public static readonly UIColor MapCellAddress = UIColor.FromRGB(38, 38, 38);
         public static readonly UIFont MapCellAddressFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIFont NextEntityFont = UIFont.FromName(HelveticaLight, 15);
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
-        public static readonly UIColor VenueCellThumbLabel = UIColor.DarkGray;
-        public static readonly UIColor VenueCellThumbLabelText = UIColor.FromRGB(255, 255, 255);
-        public static readonly UIFont VenueCellThumbLabelFont = UIFont.FromName(HelveticaLight, 22);
+        public static readonly UIFont VenueCellThumbLabelFont = UIFont.FromName(HelveticaLight, 17);
         public static readonly UIFont VenueCellTitleFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIFont VenueCellAddressFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(HelveticaRegular, 14);

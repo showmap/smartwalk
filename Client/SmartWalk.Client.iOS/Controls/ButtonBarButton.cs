@@ -1,10 +1,10 @@
 using System;
 using System.Drawing;
+using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using MonoTouch.CoreAnimation;
 
 namespace SmartWalk.Client.iOS.Controls
 {
@@ -153,7 +153,6 @@ namespace SmartWalk.Client.iOS.Controls
         private void UpdateMask()
         {
             var path = UIBezierPath.FromOval(Bounds);
-
             var mask = new CAShapeLayer {
                 Frame = Bounds,
                 Path = path.CGPath

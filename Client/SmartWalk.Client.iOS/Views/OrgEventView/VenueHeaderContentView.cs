@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Input;
+using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common.Base.Cells;
-using SmartWalk.Client.iOS.Utils.MvvmCross;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.Utils;
+using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
+using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -113,13 +115,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (DataContext != null && DataContext.Info.HasAddressText())
             {
                 TitleTopGapConstraint.Constant = 12;
-                TitleLeftGapConstraint.Constant = 75;
+                TitleLeftGapConstraint.Constant = 6;
                 PinTopGapConstraint.Constant = 22;
             }
             else
             {
                 TitleTopGapConstraint.Constant = 23;
-                TitleLeftGapConstraint.Constant = 90;
+                TitleLeftGapConstraint.Constant = 20;
                 PinTopGapConstraint.Constant = 10;
             }
         }
@@ -181,9 +183,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             BottomSeparator.IsLineOnTop = true;
 
-            ImageLabelView.BackgroundColor = Theme.VenueCellThumbLabel;
             ImageLabel.Font = Theme.VenueCellThumbLabelFont;
-            ImageLabel.TextColor = Theme.VenueCellThumbLabelText;
+            ImageLabel.TextColor = Theme.HyperlinkText;
+
+            ImageLabelView.Color = Theme.IconActive;
+
+            const int maskWidth = 54;
+            const int maskGap = 5;
+            var path = UIBezierPath.FromOval(new RectangleF(0, 0, maskWidth, maskWidth));
+            var mask = new CAShapeLayer {
+                Frame = new RectangleF(maskGap, maskGap, 
+                    maskGap + maskWidth, 
+                    maskGap + maskWidth),
+                Path = path.CGPath
+            };
+
+            LogoImageView.Layer.Mask = mask;
 
             NameLabel.Font = Theme.VenueCellTitleFont;
             NameLabel.TextColor = Theme.CellText;

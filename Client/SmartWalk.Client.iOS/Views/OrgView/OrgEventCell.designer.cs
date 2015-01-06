@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 	partial class OrgEventCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView CalendarView { get; set; }
+		SmartWalk.Client.iOS.Controls.Circle CalendarView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UILabel DayLabel { get; set; }
@@ -34,14 +34,14 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 				CalendarView = null;
 			}
 
-			if (Separator != null) {
-				Separator.Dispose ();
-				Separator = null;
-			}
-
 			if (DayLabel != null) {
 				DayLabel.Dispose ();
 				DayLabel = null;
+			}
+
+			if (EventTitleLabel != null) {
+				EventTitleLabel.Dispose ();
+				EventTitleLabel = null;
 			}
 
 			if (MonthLabel != null) {
@@ -49,9 +49,9 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 				MonthLabel = null;
 			}
 
-			if (EventTitleLabel != null) {
-				EventTitleLabel.Dispose ();
-				EventTitleLabel = null;
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
 			}
 		}
 	}

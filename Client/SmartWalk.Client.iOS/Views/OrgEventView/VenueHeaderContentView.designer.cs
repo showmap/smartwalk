@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel ImageLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView ImageLabelView { get; set; }
+		SmartWalk.Client.iOS.Controls.Circle ImageLabelView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
@@ -93,9 +93,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				NavigateOnMapButton = null;
 			}
 
-			if (TopSeparator != null) {
-				TopSeparator.Dispose ();
-				TopSeparator = null;
+			if (PinTopGapConstraint != null) {
+				PinTopGapConstraint.Dispose ();
+				PinTopGapConstraint = null;
 			}
 
 			if (TitleLeftGapConstraint != null) {
@@ -108,9 +108,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				TitleTopGapConstraint = null;
 			}
 
-			if (PinTopGapConstraint != null) {
-				PinTopGapConstraint.Dispose ();
-				PinTopGapConstraint = null;
+			if (TopSeparator != null) {
+				TopSeparator.Dispose ();
+				TopSeparator = null;
 			}
 		}
 	}

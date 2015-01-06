@@ -128,6 +128,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
             AddressLabel.Font = Theme.MapCellAddressFont;
             AddressLabel.TextColor = Theme.MapCellAddress;
+
+            AddressContainer.BackgroundColor = Theme.MapCell;
         }
 
         private void InitializeGestures()
