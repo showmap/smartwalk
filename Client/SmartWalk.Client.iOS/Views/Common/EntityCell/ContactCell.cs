@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("ContactCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("ContactCell");
 
-        public const float DefaultHeight = 40;
+        public const float DefaultHeight = 44;
 
         public ContactCell(IntPtr handle) : base (handle)
         {
@@ -40,8 +40,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             TitleLabel.Text = DataContext != null ? DataContext.Title : null;
             ContactLabel.Text = DataContext != null ? DataContext.ContactText : null;
 
-            TitleHeightConstraint.Constant = DataContext != null && DataContext.Title != null ? 22 : 0;
-            ContactTopConstraint.Constant = DataContext != null && DataContext.Title != null ? 15 : 8;
+            ContactTopConstraint.Constant = DataContext != null && DataContext.Title != null ? 20 : 13;
             
             switch (DataContext.Type)
             {
@@ -66,10 +65,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private void InitializeStyle()
         {
             TitleLabel.Font = Theme.ContactTitleTextFont;
-            TitleLabel.TextColor = Theme.HyperlinkText;
+            TitleLabel.TextColor = Theme.CellTextPassive;
 
             ContactLabel.Font = Theme.ContactTextFont;
             ContactLabel.TextColor = Theme.CellText;
+
+            IconView.Color = Theme.IconActive;
         }
     }
 }

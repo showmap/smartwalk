@@ -14,7 +14,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage TransImage = UIImage.FromFile("Images/Trans.png");
         public static readonly UIImage SemiTransImage = UIImage.FromFile("Images/SemiTrans.png");
 
-        public static readonly UIColor IconPassive = UIColor.FromRGB(200, 200, 200);
+        public static readonly UIColor IconPassive = UIColor.FromRGB(160, 160, 160);
+        public static readonly UIColor IconVeryPassive = UIColor.FromRGB(205, 205, 205);
         public static readonly UIColor IconActive = UIColor.FromRGB(143, 44, 250);
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGBA(100, 31, 174, 180);
@@ -48,7 +49,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
         public static readonly UIFont ButtonTextLandscapeFont = UIFont.FromName(HelveticaLight, 13);
-        public static readonly UIFont SegmentsTextFont = UIFont.FromName(HelveticaMedium, 14);
+        public static readonly UIFont SegmentsTextFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont ContactTextFont = UIFont.FromName(HelveticaRegular, 16);
 

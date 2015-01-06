@@ -502,6 +502,19 @@
     <BundleResource Include="Resources\Icons\Info.png" />
     <BundleResource Include="Resources\Icons\Info%402x.png" />
     <BundleResource Include="Resources\Icons\Info%403x.png" />
+    <BundleResource Include="Resources\Icons\ContactEmail%403x.png" />
+    <BundleResource Include="Resources\Icons\ContactPhone%403x.png" />
+    <BundleResource Include="Resources\Icons\ContactWeb%403x.png" />
+    <BundleResource Include="Resources\Icons\ExitFullScreenLandscape.png" />
+    <BundleResource Include="Resources\Icons\ExitFullScreenLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\ExitFullScreenLandscape%403x.png" />
+    <BundleResource Include="Resources\Icons\FullScreenLandscape.png" />
+    <BundleResource Include="Resources\Icons\FullScreenLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\FullScreenLandscape%403x.png" />
+    <BundleResource Include="Resources\Icons\MapPin%403x.png" />
+    <BundleResource Include="Resources\Icons\MoreLandscape.png" />
+    <BundleResource Include="Resources\Icons\MoreLandscape%402x.png" />
+    <BundleResource Include="Resources\Icons\MoreLandscape%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

@@ -60,15 +60,15 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         private void InitializeStyle()
         {
             MonthLabel.Font = Theme.OrgEventMonthFont;
-            MonthLabel.TextColor = Theme.HyperlinkText;
+            MonthLabel.TextColor = Theme.CellTextPassive;
 
             DayLabel.Font = Theme.OrgEventDayFont;
-            DayLabel.TextColor = Theme.HyperlinkText;
+            DayLabel.TextColor = Theme.CellTextPassive;
 
             EventTitleLabel.Font = Theme.OrgEventTitleFont;
             EventTitleLabel.TextColor = Theme.CellText;
 
-            CalendarView.Color = Theme.IconActive;
+            CalendarView.Color = Theme.IconPassive;
         }
     }
 }

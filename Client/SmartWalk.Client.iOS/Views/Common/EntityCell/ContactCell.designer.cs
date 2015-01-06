@@ -9,50 +9,50 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
-    [Register ("ContactCell")]
-    partial class ContactCell
-    {
-        [Outlet]
-        MonoTouch.UIKit.UIImageView ContactIcon { get; set; }
+	[Register ("ContactCell")]
+	partial class ContactCell
+	{
+		[Outlet]
+		MonoTouch.UIKit.UIImageView ContactIcon { get; set; }
 
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.CopyLabel ContactLabel { get; set; }
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.CopyLabel ContactLabel { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.NSLayoutConstraint ContactTopConstraint { get; set; }
+		[Outlet]
+		MonoTouch.UIKit.NSLayoutConstraint ContactTopConstraint { get; set; }
 
-        [Outlet]
-        MonoTouch.UIKit.NSLayoutConstraint TitleHeightConstraint { get; set; }
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.Circle IconView { get; set; }
 
-        [Outlet]
-        SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (ContactIcon != null) {
-                ContactIcon.Dispose ();
-                ContactIcon = null;
-            }
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (ContactIcon != null) {
+				ContactIcon.Dispose ();
+				ContactIcon = null;
+			}
 
-            if (ContactLabel != null) {
-                ContactLabel.Dispose ();
-                ContactLabel = null;
-            }
+			if (ContactLabel != null) {
+				ContactLabel.Dispose ();
+				ContactLabel = null;
+			}
 
-            if (ContactTopConstraint != null) {
-                ContactTopConstraint.Dispose ();
-                ContactTopConstraint = null;
-            }
+			if (ContactTopConstraint != null) {
+				ContactTopConstraint.Dispose ();
+				ContactTopConstraint = null;
+			}
 
-            if (TitleHeightConstraint != null) {
-                TitleHeightConstraint.Dispose ();
-                TitleHeightConstraint = null;
-            }
+			if (TitleLabel != null) {
+				TitleLabel.Dispose ();
+				TitleLabel = null;
+			}
 
-            if (TitleLabel != null) {
-                TitleLabel.Dispose ();
-                TitleLabel = null;
-            }
-        }
-    }
+			if (IconView != null) {
+				IconView.Dispose ();
+				IconView = null;
+			}
+		}
+	}
 }

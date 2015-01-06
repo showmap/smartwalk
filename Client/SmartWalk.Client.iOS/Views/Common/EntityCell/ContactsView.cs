@@ -14,7 +14,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
     {
         public static readonly UINib Nib = UINib.FromName("ContactsView", NSBundle.MainBundle);
 
-        private const float Gap = 8;
         private const float DefaultPlaceholderMargin = 65;
         private const float DefaultPlaceholderLandscapeMargin = 55;
 
@@ -219,7 +218,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 var itemsCount = colletionSource.ItemsSource != null
                     ? colletionSource.ItemsSource.Cast<object>().Count()
                     : 0;
-                var collectionHeight = itemsCount * ContactCell.DefaultHeight + (itemsCount - 1) * Gap;
+                var collectionHeight = itemsCount * ContactCell.DefaultHeight;
                 var placeholderHeight = 
                     CollectionTopConstraint.Constant +
                     collectionHeight +

@@ -184,9 +184,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             BottomSeparator.IsLineOnTop = true;
 
             ImageLabel.Font = Theme.VenueCellThumbLabelFont;
-            ImageLabel.TextColor = Theme.HyperlinkText;
+            ImageLabel.TextColor = Theme.CellTextPassive;
 
-            ImageLabelView.Color = Theme.IconActive;
+            ImageLabelView.Color = Theme.IconPassive;
 
             const int maskWidth = 54;
             const int maskGap = 5;
@@ -208,7 +208,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
             GoRightImageView.Image = ThemeIcons.Forward;
-            GoRightImageView.TintColor = Theme.IconPassive;
+            GoRightImageView.TintColor = Theme.IconVeryPassive;
         }
 
         partial void OnNavigateOnMapClick(UIButton sender)
