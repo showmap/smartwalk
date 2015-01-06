@@ -78,7 +78,9 @@ namespace SmartWalk.Client.iOS.Utils.Map
                 if (CanShowCallout && CanShowDetails)
                 {
                     var detailButton = UIButton.FromType(UIButtonType.Custom);
-                    detailButton.Frame = new RectangleF(0, 0, 44, 44);
+                    detailButton.Frame = new RectangleF(0, 0, 32, 32);
+                    detailButton.ImageView.ContentMode = UIViewContentMode.Center;
+                    detailButton.ClipsToBounds = false;
                     detailButton.SetImage(ThemeIcons.Forward, UIControlState.Normal);
                     detailButton.TintColor = Theme.IconActive;
 
