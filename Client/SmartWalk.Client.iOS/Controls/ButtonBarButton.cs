@@ -84,14 +84,17 @@ namespace SmartWalk.Client.iOS.Controls
                     {
                         case SemiTransparentType.Light:
                             SetBackgroundImage(Theme.SemiTransWhiteImage, UIControlState.Normal);
+                            SetBackgroundImage(Theme.SemiTransWhiteImage, UIControlState.Disabled);
                             break;
 
                         case SemiTransparentType.Dark:
                             SetBackgroundImage(Theme.SemiTransImage, UIControlState.Normal);
+                            SetBackgroundImage(Theme.SemiTransImage, UIControlState.Disabled);
                             break;
 
                         default:
                             SetBackgroundImage(null, UIControlState.Normal);
+                            SetBackgroundImage(null, UIControlState.Disabled);
                             break;
                     }
                 }

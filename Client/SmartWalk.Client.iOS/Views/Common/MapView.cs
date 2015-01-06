@@ -8,6 +8,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Client.iOS.Controls;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -39,6 +40,13 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             UpdateViewTitle();
             SelectAnnotation();
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+            SetNavBarTransparent(SemiTransparentType.Light, animated);
         }
 
         protected override void OnInitializingActionSheet(List<string> titles)

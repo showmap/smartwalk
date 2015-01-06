@@ -8,6 +8,7 @@ using MonoTouch.CoreLocation;
 using MonoTouch.EventKit;
 using MonoTouch.EventKitUI;
 using MonoTouch.Foundation;
+using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -26,6 +27,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public partial class OrgEventView : ListViewBase
     {
+        private readonly MKMapSize MapMargin = new MKMapSize(3000, 3000);
+
         private OrgEventHeaderView _headerView;
         private UISearchDisplayController _searchDisplayController;
         private EKEventEditViewController _editCalEventController;
@@ -611,7 +614,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                             .Select(a => new VenueAnnotation(v, a))).ToArray();
                     var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
 
-                    VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), false);
+                    VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates, MapMargin), false);
                     VenuesMapView.AddAnnotations(annotations);
 
                     if (ViewModel.SelectedVenueOnMap != null)
@@ -663,7 +666,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 var annotations = VenuesMapView.Annotations.OfType<VenueAnnotation>();
                 var coordinates = MapUtil.GetAnnotationsCoordinates(annotations);
-                VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates), true);
+                VenuesMapView.SetRegion(MapUtil.CoordinateRegionForCoordinates(coordinates, MapMargin), true);
             }
         }
 
@@ -907,7 +910,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (ViewModel.IsMultiday)
             {
-                _dayButton.SetBackgroundImage(Theme.HighlightImage, UIControlState.Highlighted);
+                _dayButton.Enabled = true;
 
                 if (ViewModel.CurrentDay == null)
                 {
@@ -920,7 +923,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else
             {
-                _dayButton.SetBackgroundImage(null, UIControlState.Highlighted);
+                _dayButton.Enabled = false;
                 _dayButton.TitleEdgeInsets = UIEdgeInsets.Zero;
             }
         }

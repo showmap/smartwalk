@@ -506,12 +506,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             DescriptionLabel.TextColor = Theme.CellTextPassive;
 
             StartTimeLabel.Font = Theme.VenueShowCellTimeFont;
-            StartTimeLabel.TextColor = Theme.CellText;
+            StartTimeLabel.TextColor = Theme.CellTextPassive;
 
             EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
             EndTimeLabel.TextColor = Theme.CellTextPassive;
 
             DetailsButton.SetImage(ThemeIcons.Info, UIControlState.Normal);
+            DetailsButton.TintColor = Theme.IconActive;
 
             DetailsLabel.Font = Theme.VenueShowDetailsCellFont;
             DetailsLabel.TextColor = Theme.HyperlinkText;

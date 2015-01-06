@@ -45,11 +45,11 @@ namespace SmartWalk.Client.Core.Utils
             var endTime = show.EndTime ?? (nextShow != null ? nextShow.StartTime : null);
 
             var status = 
-                (startTime.HasValue && startTime.Value.Date != DateTime.Now.Date) ||
-                (!startTime.HasValue && endTime >= DateTime.Now) ||
-                !endTime.HasValue || endTime >= DateTime.Now
-                ? ShowStatus.NotStarted 
-                : ShowStatus.Finished;
+                endTime.HasValue &&
+                endTime.Value.Date == DateTime.Now.Date &&
+                endTime.Value < DateTime.Now
+                ? ShowStatus.Finished
+                : ShowStatus.NotStarted;
 
             if (startTime.HasValue &&
                 startTime.Value.Date == DateTime.Now.Date &&
