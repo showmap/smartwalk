@@ -516,6 +516,8 @@
     <BundleResource Include="Resources\Icons\FullscreenLandscape%402x.png" />
     <BundleResource Include="Resources\Icons\FullscreenLandscape%403x.png" />
     <BundleResource Include="Resources\Icons\ListLandscape%403x.png" />
+    <BundleResource Include="Resources\Icons\ListOptions%403x.png" />
+    <BundleResource Include="Resources\Icons\MapPinSmall%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />
