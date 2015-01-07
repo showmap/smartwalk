@@ -64,11 +64,11 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            NoDataLabel.Font = Theme.NoDataFont;
-            NoDataLabel.TextColor = Theme.LoadingText;
+            NoDataLabel.Font = Theme.ContentFont;
+            NoDataLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
-            ProgressLabel.Font = Theme.LoadingFont;
-            ProgressLabel.TextColor = Theme.LoadingText;
+            ProgressLabel.Font = Theme.ContentFont;
+            ProgressLabel.TextColor = ThemeColors.ContentLightTextPassive;
         }
     }
 }

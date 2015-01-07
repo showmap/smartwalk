@@ -17,7 +17,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public VenueHeaderView(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView { BackgroundColor = Theme.HeaderCellBackground };
+            BackgroundView = new UIView { BackgroundColor = ThemeColors.PanelBackgroundAlpha};
             ContentView = VenueHeaderContentView.Create();
             ContentView.BackgroundView = BackgroundView;
             Frame = ContentView.Bounds;

@@ -368,7 +368,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private void InitializeStyle()
         {
             DescriptionLabel.Font = Theme.EntityDescriptionFont;
-            DescriptionLabel.TextColor = Theme.EntityDescription;
+            DescriptionLabel.TextColor = ThemeColors.ContentLightTextPassive;
         }
     }
 }

@@ -154,7 +154,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         selectedAction();
                     }
-                });
+                }) {
+                    MinimumPressDuration = 0
+                };
 
             _cellTapGesture = new UITapGestureRecognizer(selectedAction);
 
@@ -183,19 +185,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             BottomSeparator.IsLineOnTop = true;
 
-            ImageLabel.Font = Theme.VenueCellThumbLabelFont;
-            ImageLabel.TextColor = Theme.VenueCellThumbLabel;
-            ImageLabelView.BackgroundColor = Theme.VenueCellThumb;
+            ImageLabel.Font = Theme.VenueThumbLabelFont;
+            ImageLabel.TextColor = ThemeColors.ContentDarkText;
+            ImageLabelView.BackgroundColor = ThemeColors.BorderLight;
 
-            NameLabel.Font = Theme.VenueCellTitleFont;
-            NameLabel.TextColor = Theme.CellText;
+            NameLabel.Font = Theme.ContentFont;
+            NameLabel.TextColor = ThemeColors.ContentLightText;
 
-            AddressLabel.Font = Theme.VenueCellAddressFont;
-            AddressLabel.TextColor = Theme.CellTextPassive;
+            AddressLabel.Font = Theme.VenueAddressFont;
+            AddressLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
             GoRightImageView.Image = ThemeIcons.Forward;
-            GoRightImageView.TintColor = Theme.IconVeryPassive;
+            GoRightImageView.TintColor = ThemeColors.BorderDark.ColorWithAlpha(0.9f);
         }
 
         partial void OnNavigateOnMapClick(UIButton sender)
@@ -211,11 +213,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (isSelected)
             {
-                BackgroundView.BackgroundColor = Theme.CellHighlight;
+                BackgroundView.BackgroundColor = ThemeColors.ContentLightHighlight;
             }
             else
             {
-                BackgroundView.BackgroundColor = Theme.HeaderCellBackground;
+                BackgroundView.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
             }
 
             NameLabel.Highlighted = isSelected;

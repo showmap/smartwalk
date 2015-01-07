@@ -79,10 +79,10 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
         private void InitializeStyle()
         {
-            BackgroundColor = Theme.ViewBlack;
+            BackgroundColor = ThemeColors.ContentDarkBackground;
 
             TitleLabel.Font = Theme.HomeHeaderFont;
-            TitleLabel.TextColor = Theme.NavBarText;
+            TitleLabel.TextColor = ThemeColors.ContentDarkText;
         }
 
         private void InitializeGestures()

@@ -34,9 +34,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const float BorderGap = 10f;
 
         private static readonly float ShowTitleTextHeight = 
-            ScreenUtil.CalculateTextHeight(300, "Showp", Theme.VenueShowCellFont);
+            ScreenUtil.CalculateTextHeight(300, "Showp", Theme.ContentFont);
         private static readonly float DetailsTextHeight = 
-            ScreenUtil.CalculateTextHeight(300, Localization.MoreInformation, Theme.VenueShowDetailsCellFont);
+            ScreenUtil.CalculateTextHeight(300, Localization.MoreInformation, Theme.VenueShowDetailsFont);
 
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
@@ -54,7 +54,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView { BackgroundColor = Theme.CellBackground };
+            BackgroundView = new UIView { BackgroundColor = ThemeColors.ContentLightBackground };
 
             _imageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
@@ -101,14 +101,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ? ScreenUtil.CalculateTextHeight(
                         GetTitleBlockWidth(frameWidth, show), 
                         show.Title, 
-                        Theme.VenueShowCellFont)
+                        Theme.ContentFont)
                     : 0;
 
                 var descriptionHeight = show.Description != null
                     ? ScreenUtil.CalculateTextHeight(
                         GetDescriptionBlockWidth(frameWidth), 
                         show.Description, 
-                        Theme.VenueShowDescriptionCellFont) + 
+                        Theme.VenueShowDescriptionFont) + 
                         (titleHeight > 0 ? TitleAndDescriptionGap : 0)
                     : 0;
 
@@ -499,23 +499,23 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
-            TitleLabel.Font = Theme.VenueShowCellFont;
-            TitleLabel.TextColor = Theme.CellText;
+            TitleLabel.Font = Theme.ContentFont;
+            TitleLabel.TextColor = ThemeColors.ContentLightText;
 
-            DescriptionLabel.Font = Theme.VenueShowDescriptionCellFont;
-            DescriptionLabel.TextColor = Theme.CellTextPassive;
+            DescriptionLabel.Font = Theme.VenueShowDescriptionFont;
+            DescriptionLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
-            StartTimeLabel.Font = Theme.VenueShowCellTimeFont;
-            StartTimeLabel.TextColor = Theme.CellTextPassive;
+            StartTimeLabel.Font = Theme.VenueShowTimeFont;
+            StartTimeLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
-            EndTimeLabel.Font = Theme.VenueShowCellTimeFont;
-            EndTimeLabel.TextColor = Theme.CellTextPassive;
+            EndTimeLabel.Font = Theme.VenueShowTimeFont;
+            EndTimeLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
             DetailsButton.SetImage(ThemeIcons.Info, UIControlState.Normal);
-            DetailsButton.TintColor = Theme.IconActive;
+            DetailsButton.TintColor = ThemeColors.Action;
 
-            DetailsLabel.Font = Theme.VenueShowDetailsCellFont;
-            DetailsLabel.TextColor = Theme.HyperlinkText;
+            DetailsLabel.Font = Theme.VenueShowDetailsFont;
+            DetailsLabel.TextColor = ThemeColors.Action;
 
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
             HeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);
@@ -534,17 +534,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 case ShowStatus.NotStarted:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
-                    TitleLabel.Font = Theme.VenueShowCellFont;
+                    TitleLabel.Font = Theme.ContentFont;
                     break;
 
                 case ShowStatus.Started:
-                    TimeBackgroundView.BackgroundColor = Theme.HeaderText;
-                    TitleLabel.Font = Theme.VenueShowCellFont;
+                    TimeBackgroundView.BackgroundColor = ThemeColors.Metadata;
+                    TitleLabel.Font = Theme.ContentFont;
                     break;
 
                 case ShowStatus.Finished:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
-                    TitleLabel.Font = Theme.VenueShowCellFinishedFont;
+                    TitleLabel.Font = Theme.VenueShowFinishedFont;
                     break;
             }
 
@@ -560,13 +560,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static UIFont GetShowStartTimeFont(ShowStatus status)
         {
             return status == ShowStatus.Finished 
-                ? Theme.VenueShowCellFinishedTimeFont : Theme.VenueShowCellTimeFont;
+                ? Theme.VenueShowFinishedTimeFont : Theme.VenueShowTimeFont;
         }
 
         private static UIFont GetShowEndTimeFont(ShowStatus status)
         {
             return status == ShowStatus.Finished 
-                ? Theme.VenueShowCellFinishedEndTimeFont : Theme.VenueShowCellEndTimeFont;
+                ? Theme.VenueShowFinishedEndTimeFont : Theme.VenueShowEndTimeFont;
         }
 
         partial void OnDetailsButtonClick(NSObject sender)
@@ -591,8 +591,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             BackgroundView.BackgroundColor = 
                 HeaderView != null || SubHeaderView != null
-                ? Theme.CellSemiHighlight 
-                : Theme.CellBackground;
+                    ? ThemeColors.SubPanelBackground.ColorWithAlpha(0.2f) 
+                    : ThemeColors.ContentLightBackground;
         }
     }
 }

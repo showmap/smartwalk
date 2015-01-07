@@ -115,7 +115,7 @@ namespace SmartWalk.Client.iOS.Controls
 
                 action = new Action(() =>
                 {
-                    BarTintColor = Theme.NavBarBackground;
+                    BarTintColor = ThemeColors.HeaderBackground;
                 });
             }
 

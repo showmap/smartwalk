@@ -65,13 +65,13 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private void InitializeStyle()
         {
             TitleLabel.Font = Theme.ContactTitleTextFont;
-            TitleLabel.TextColor = Theme.CellTextPassive;
+            TitleLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
-            ContactLabel.Font = Theme.ContactTextFont;
-            ContactLabel.TextColor = Theme.CellText;
+            ContactLabel.Font = Theme.ContentFont;
+            ContactLabel.TextColor = ThemeColors.ContentLightText;
 
-            IconView.Color = Theme.IconActive;
-            ContactIcon.TintColor = Theme.IconActive;
+            IconView.LineColor = ThemeColors.Action;
+            ContactIcon.TintColor = ThemeColors.Action;
         }
     }
 }

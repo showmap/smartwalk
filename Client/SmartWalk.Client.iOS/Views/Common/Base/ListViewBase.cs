@@ -213,7 +213,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private void InitializeRefreshControl()
         {
             var refreshControl = new UIRefreshControl {
-                TintColor = Theme.RefreshControl
+                TintColor = ThemeColors.BorderLight
             };
 
             refreshControl.Layer.ZPosition = -100; // HACK: Trying to put it behind table/collection header

@@ -68,7 +68,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static void SetPassiveStyle(this UISearchBar searchBar)
         {
             searchBar.BarStyle = UIBarStyle.Default;
-            searchBar.TintColor = Theme.SearchControl;
+            searchBar.TintColor = ThemeColors.BorderLight;
             searchBar.BarTintColor = null;
             searchBar.SearchBarStyle = UISearchBarStyle.Minimal;
         }
@@ -76,8 +76,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static void SetActiveStyle(this UISearchBar searchBar)
         {
             searchBar.BarStyle = UIBarStyle.Default;
-            searchBar.TintColor = Theme.SearchControl;
-            searchBar.BarTintColor = Theme.NavBarBackground;
+            searchBar.TintColor = ThemeColors.BorderLight;
+            searchBar.BarTintColor = ThemeColors.HeaderBackground;
             searchBar.SearchBarStyle = UISearchBarStyle.Prominent;
         }
     }

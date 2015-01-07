@@ -27,10 +27,8 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 
         protected override void OnInitialize()
         {
-            TopSeparator.Color = Theme.CellSeparator;
-
             TitleLabel.Font = Theme.GroupHeaderTextFont;
-            TitleLabel.TextColor = Theme.HeaderText;
+            TitleLabel.TextColor = ThemeColors.Metadata;
         }
     }
 }

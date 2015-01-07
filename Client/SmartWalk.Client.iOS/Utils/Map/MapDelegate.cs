@@ -66,7 +66,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
                 annotationView.RemoveSubviews();
 
                 var numberLabel = new UILabel { 
-                    TextColor = Theme.MapPinText,
+                    TextColor = ThemeColors.ContentDarkText,
                     Font = Theme.MapPinFont,
                     TextAlignment = UITextAlignment.Center,
                     BackgroundColor = UIColor.Clear,
@@ -82,7 +82,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
                     detailButton.ImageView.ContentMode = UIViewContentMode.Center;
                     detailButton.ClipsToBounds = false;
                     detailButton.SetImage(ThemeIcons.Forward, UIControlState.Normal);
-                    detailButton.TintColor = Theme.IconActive;
+                    detailButton.TintColor = ThemeColors.Action;
 
                     detailButton.TouchUpInside += (s, e) => 
                         {

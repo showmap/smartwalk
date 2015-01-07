@@ -7,6 +7,8 @@ namespace SmartWalk.Client.iOS.Utils
 {
     public static class ScreenUtil
     {
+        public static readonly float HairLine = 1 / (2 * UIScreen.MainScreen.Scale);
+
         public static bool IsVerticalOrientation
         {
             get

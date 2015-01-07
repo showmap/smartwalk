@@ -9,7 +9,7 @@ namespace SmartWalk.Client.iOS.Controls
     [Register("Line")]
     public class Line : UIView
     {
-        private UIColor _color = Theme.CellSeparator;
+        private UIColor _color = ThemeColors.BorderLight;
         private bool _isLineOnTop;
 
         public Line(IntPtr p) : base(p)
@@ -28,7 +28,7 @@ namespace SmartWalk.Client.iOS.Controls
                 if (_color != value)
                 {
                     _color = value;
-                    Draw(Bounds);
+                    SetNeedsDisplay();
                 }
             }
         }
@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS.Controls
                 if (_isLineOnTop != value)
                 {
                     _isLineOnTop = value;
-                    Draw(Bounds);
+                    SetNeedsDisplay();
                 }
             }
         }

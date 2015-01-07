@@ -170,16 +170,16 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
-            BackgroundView.BackgroundColor = Theme.DialogOutside;
+            BackgroundView.BackgroundColor = ThemeColors.ContentDarkBackground.ColorWithAlpha(200);
             PlaceholderView.Layer.CornerRadius = 6;
 
             CloseButton.Layer.BorderWidth = 1;
             CloseButton.Layer.CornerRadius = 4;
-            CloseButton.Layer.BorderColor = UIColor.Gray.CGColor;
+            CloseButton.Layer.BorderColor = ThemeColors.BorderLight.CGColor;
 
-            CloseButton.TouchDown += (sender, e) => CloseButton.BackgroundColor = UIColor.DarkGray;
-            CloseButton.TouchUpInside += (sender, e) => CloseButton.BackgroundColor = Theme.CellBackground;
-            CloseButton.TouchUpOutside += (sender, e) => CloseButton.BackgroundColor = Theme.CellBackground;
+            CloseButton.TouchDown += (sender, e) => CloseButton.BackgroundColor = ThemeColors.ContentLightHighlight;
+            CloseButton.TouchUpInside += (sender, e) => CloseButton.BackgroundColor = ThemeColors.ContentLightBackground;
+            CloseButton.TouchUpOutside += (sender, e) => CloseButton.BackgroundColor = ThemeColors.ContentLightBackground;
         }
 
         private void InitializeOrientationObserver()

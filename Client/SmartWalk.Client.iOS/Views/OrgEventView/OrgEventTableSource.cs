@@ -178,7 +178,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (headerView != null)
             {
-                headerView.BackgroundColor = Theme.HeaderCellBackground;
+                headerView.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
                 headerView.BackgroundView = headerView;
 
                 headerView.DataContext = _viewModel.OrgEvent.Venues.GetVenueByShow(show);
@@ -197,7 +197,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (subHeaderView != null)
             {
-                subHeaderView.BackgroundColor = Theme.GroupCellBackground;
+                subHeaderView.BackgroundColor = ThemeColors.ContentLightBackgroundAlpha;
 
                 subHeaderView.DataContext = show.StartTime.GetCurrentDayString();
             }

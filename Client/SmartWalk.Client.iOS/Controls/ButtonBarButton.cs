@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.iOS.Resources;
@@ -21,7 +20,9 @@ namespace SmartWalk.Client.iOS.Controls
                 UIConstants.ToolBarHorizontalHeight);
 
         private UIImageView _iconImageView;
-        private SemiTransparentType _semiTransparent;
+        private SemiTransparentType _semiTransparentType;
+
+        private Circle _background;
 
         public ButtonBarButton(IntPtr handle) : base(handle)
         {
@@ -72,31 +73,14 @@ namespace SmartWalk.Client.iOS.Controls
         {
             get
             {
-                return _semiTransparent;
+                return _semiTransparentType;
             }
             set
             {
-                if (_semiTransparent != value)
+                if (_semiTransparentType != value)
                 {
-                    _semiTransparent = value;
-
-                    switch (_semiTransparent)
-                    {
-                        case SemiTransparentType.Light:
-                            SetBackgroundImage(Theme.SemiTransWhiteImage, UIControlState.Normal);
-                            SetBackgroundImage(Theme.SemiTransWhiteImage, UIControlState.Disabled);
-                            break;
-
-                        case SemiTransparentType.Dark:
-                            SetBackgroundImage(Theme.SemiTransImage, UIControlState.Normal);
-                            SetBackgroundImage(Theme.SemiTransImage, UIControlState.Disabled);
-                            break;
-
-                        default:
-                            SetBackgroundImage(null, UIControlState.Normal);
-                            SetBackgroundImage(null, UIControlState.Disabled);
-                            break;
-                    }
+                    _semiTransparentType = value;
+                    UpdateBackgroundState();
                 }
             }
         }
@@ -140,22 +124,28 @@ namespace SmartWalk.Client.iOS.Controls
                 }
             }
 
+            _background.Frame = Bounds;
+
             switch (SemiTransparentType)
             {
                 case SemiTransparentType.Light:
-                    IconImageView.TintColor = Theme.NavBarLightText;
+                    IconImageView.TintColor = ThemeColors.ContentLightText;
                     break;
 
                 case SemiTransparentType.Dark:
-                    IconImageView.TintColor = Theme.NavBarText;
+                    IconImageView.TintColor = ThemeColors.ContentDarkText;
                     break;
 
                 case SemiTransparentType.None:
-                    IconImageView.TintColor = Theme.NavBarText;
+                    IconImageView.TintColor = ThemeColors.ContentDarkText;
                     break;
             }
+        }
 
-            UpdateMask();
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
         }
 
         private void Initialize(
@@ -165,24 +155,45 @@ namespace SmartWalk.Client.iOS.Controls
             SizeF? landscapeSize,
             SemiTransparentType semiTransparentType = SemiTransparentType.None)
         {
+            _background = new Circle {
+                UserInteractionEnabled = false
+            };
+            Add(_background);
+
             VerticalIcon = verticalIcon;
             LandscapeIcon = landscapeIcon;
             VerticalSize = verticalSize ?? DefaultVerticalSize;
             LandscapeSize = landscapeSize ?? DefaultLandscapeSize;
             SemiTransparentType = semiTransparentType;
 
-            SetBackgroundImage(Theme.HighlightImage, UIControlState.Highlighted);
+            TouchDown += (sender, e) => 
+                _background.FillColor = ThemeColors.ContentLightHighlight.ColorWithAlpha(0.58f);
+            TouchUpInside += (sender, e) => UpdateBackgroundState();
+            TouchUpOutside += (sender, e) => UpdateBackgroundState();
         }
 
-        private void UpdateMask()
+        private void UpdateBackgroundState()
         {
-            var path = UIBezierPath.FromOval(Bounds);
-            var mask = new CAShapeLayer {
-                Frame = Bounds,
-                Path = path.CGPath
-            };
+            switch (SemiTransparentType)
+            {
+                case SemiTransparentType.Light:
+                    _background.FillColor = ThemeColors.PanelBackgroundAlpha;
+                    _background.LineColor = ThemeColors.BorderDark.ColorWithAlpha(0.63f);
+                    _background.LineWidth = ScreenUtil.HairLine;
+                    break;
 
-            Layer.Mask = mask;
+                case SemiTransparentType.Dark:
+                    _background.FillColor = ThemeColors.ContentDarkBackground.ColorWithAlpha(0.35f);
+                    _background.LineColor = UIColor.Clear;
+                    _background.LineWidth = 0;
+                    break;
+
+                default:
+                    _background.FillColor = UIColor.Clear;
+                    _background.LineColor = UIColor.Clear;
+                    _background.LineWidth = 0;
+                    break;
+            }
         }
     }
 

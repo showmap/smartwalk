@@ -139,10 +139,10 @@ namespace SmartWalk.Client.iOS.Views.Common
         private void InitializeStyle()
         {
             TitleLabel.Font = Theme.BackgroundImageTitleTextFont;
-            TitleLabel.TextColor = Theme.BackgroundImageTitleText;
+            TitleLabel.TextColor = ThemeColors.ContentDarkText;
 
             SubtitleLabel.Font = Theme.BackgroundImageSubtitleTextFont;
-            SubtitleLabel.TextColor = Theme.BackgroundImageSubtitleText;
+            SubtitleLabel.TextColor = ThemeColors.Subtitle;
         }
 
         private void InitializeGradient()
@@ -152,8 +152,8 @@ namespace SmartWalk.Client.iOS.Views.Common
                 _bottomGradient = new CAGradientLayer {
                     Frame = BackgroundImage.Bounds,
                     Colors = new [] { 
-                        Theme.ImageGradient.ColorWithAlpha(0.25f).CGColor, 
-                        Theme.ImageGradient.ColorWithAlpha(0.8f).CGColor 
+                        ThemeColors.ContentDarkBackground.ColorWithAlpha(0.25f).CGColor, 
+                        ThemeColors.ContentDarkBackground.ColorWithAlpha(0.87f).CGColor 
                     },
                     Locations = new [] {
                         new NSNumber(0),

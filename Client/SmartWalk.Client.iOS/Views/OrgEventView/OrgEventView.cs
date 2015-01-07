@@ -474,7 +474,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             MapFullscreenButton.SemiTransparentType = SemiTransparentType.Light;
             MapFullscreenButton.UpdateState();
-            VenuesMapView.TintColor = Theme.HeaderText;
+
+            VenuesMapView.TintColor = ThemeColors.Metadata;
         }
 
         private void OnModeButtonClicked(object sender, EventArgs e)
@@ -933,7 +934,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.OrgEvent == null ||
                 !ViewModel.OrgEvent.StartTime.HasValue) return null;
 
-            var textColor = IsNavBarTransparent ? Theme.NavBarLightText : Theme.NavBarText;
+            var textColor = IsNavBarTransparent 
+                ? ThemeColors.ContentLightText 
+                : ThemeColors.ContentDarkText;
             var result = new NSMutableAttributedString();
 
             result.Append(

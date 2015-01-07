@@ -10,26 +10,48 @@ namespace SmartWalk.Client.iOS.Controls
     [Register("Circle")]
     public class Circle : UIView
     {
-        private UIColor _color = Theme.CellSeparator;
+        private UIColor _fillColor = UIColor.Clear;
+        private UIColor _lineColor = ThemeColors.BorderLight;
         private float _lineWidth = 1;
+
+        public Circle()
+        {
+            Initialize();
+        }
 
         public Circle(IntPtr p) : base(p)
         {
-            ContentMode = UIViewContentMode.Redraw;
+            Initialize();
         }
 
-        public UIColor Color
+        public UIColor FillColor
         {
             get
             {
-                return _color;
+                return _fillColor;
             }
             set
             {
-                if (_color != value)
+                if (_fillColor != value)
                 {
-                    _color = value;
-                    Draw(Bounds);
+                    _fillColor = value;
+                    SetNeedsDisplay();
+                }
+            }
+        }
+
+        public UIColor LineColor
+        {
+            get
+            {
+                return _lineColor;
+            }
+            set
+            {
+                if (_lineColor != value)
+                {
+                    _lineColor = value;
+                    SetNeedsDisplay();
                 }
             }
         }
@@ -42,10 +64,10 @@ namespace SmartWalk.Client.iOS.Controls
             }
             set
             {
-                if (_lineWidth.EqualsF(value))
+                if (!_lineWidth.EqualsF(value))
                 {
                     _lineWidth = value;
-                    Draw(Bounds);
+                    SetNeedsDisplay();
                 }
             }
         }
@@ -57,15 +79,35 @@ namespace SmartWalk.Client.iOS.Controls
             var context = UIGraphics.GetCurrentContext();
             if (context != null)
             {
-                context.SetStrokeColor(Color.CGColor);
-                context.SetLineWidth(LineWidth);
-                context.StrokeEllipseInRect(
-                    new RectangleF(
-                        LineWidth, 
-                        LineWidth, 
-                        Bounds.Width - 2 * LineWidth, 
-                        Bounds.Height - 2 * LineWidth));
+                if (FillColor != UIColor.Clear)
+                {
+                    context.SetFillColor(FillColor.CGColor);
+                    context.FillEllipseInRect(
+                        new RectangleF(
+                            LineWidth, 
+                            LineWidth, 
+                            Bounds.Width - 2 * LineWidth, 
+                            Bounds.Height - 2 * LineWidth));
+                }
+
+                if (LineColor != UIColor.Clear && !LineWidth.EqualsF(0))
+                {
+                    context.SetLineWidth(LineWidth);
+                    context.SetStrokeColor(LineColor.CGColor);
+                    context.StrokeEllipseInRect(
+                        new RectangleF(
+                            LineWidth, 
+                            LineWidth, 
+                            Bounds.Width - 2 * LineWidth, 
+                            Bounds.Height - 2 * LineWidth));
+                }
             }
+        }
+
+        private void Initialize()
+        {
+            ContentMode = UIViewContentMode.Redraw;
+            BackgroundColor = UIColor.Clear;
         }
     }
 }

@@ -150,7 +150,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            MapViewControl.TintColor = Theme.HeaderText;
+            MapViewControl.TintColor = ThemeColors.Metadata;
         }
     }
 }

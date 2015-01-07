@@ -51,7 +51,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = Theme.ViewBlack;
+            View.BackgroundColor = ThemeColors.ContentDarkBackground;
             ProgressView.IndicatorStyle = UIActivityIndicatorViewStyle.White;
         }
 

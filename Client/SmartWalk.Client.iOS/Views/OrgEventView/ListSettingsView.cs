@@ -95,16 +95,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             TopSeparator.IsLineOnTop = true;
 
-            PlaceholderView.BackgroundColor = Theme.HeaderCellBackground;
+            PlaceholderView.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
             PlaceholderView.Layer.ShadowColor = UIColor.Black.CGColor;
             PlaceholderView.Layer.ShadowOffset = new SizeF(0, 5);
             PlaceholderView.Layer.ShadowOpacity = 0.3f;
 
             GroupByLocationLabel.Font = Theme.OrgEventHeaderFont;
-            GroupByLocationLabel.TextColor = Theme.CellText;
+            GroupByLocationLabel.TextColor = ThemeColors.ContentLightText;
 
             SortByLabel.Font = Theme.OrgEventHeaderFont;
-            SortByLabel.TextColor = Theme.CellText;
+            SortByLabel.TextColor = ThemeColors.ContentLightText;
         }
 
         private void UpdateViewState(bool animated)

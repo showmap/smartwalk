@@ -124,12 +124,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private void InitializeStyle()
         {
-            MapView.TintColor = Theme.HeaderText;
+            MapView.TintColor = ThemeColors.Metadata;
 
-            AddressLabel.Font = Theme.MapCellAddressFont;
-            AddressLabel.TextColor = Theme.MapCellAddress;
+            AddressLabel.Font = Theme.EntityDescriptionFont;
+            AddressLabel.TextColor = ThemeColors.ContentLightText.ColorWithAlpha(0.8f);
 
-            AddressContainer.BackgroundColor = Theme.MapCell;
+            AddressContainer.BackgroundColor = ThemeColors.SubPanelBackground;
         }
 
         private void InitializeGestures()

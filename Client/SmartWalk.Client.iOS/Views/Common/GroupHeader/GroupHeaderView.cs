@@ -15,7 +15,7 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 
         public GroupHeaderView(IntPtr handle) : base(handle)
         {
-            BackgroundView = new UIView { BackgroundColor = Theme.GroupCellBackground };
+            BackgroundView = new UIView { BackgroundColor = ThemeColors.ContentLightBackgroundAlpha };
             ContentView = GroupHeaderContentView.Create();
             Frame = ContentView.Bounds;
             base.ContentView.RemoveSubviews();

@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
@@ -17,7 +18,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         public OrgEventCell(IntPtr handle) : base(handle)
         {   
             BackgroundView = new UIView { BackgroundColor = UIColor.White };
-            SelectedBackgroundView = new UIView { BackgroundColor = Theme.CellHighlight };
+            SelectedBackgroundView = new UIView { BackgroundColor = ThemeColors.ContentLightHighlight };
         }
 
         public static OrgEventCell Create()
@@ -60,15 +61,16 @@ namespace SmartWalk.Client.iOS.Views.OrgView
         private void InitializeStyle()
         {
             MonthLabel.Font = Theme.OrgEventMonthFont;
-            MonthLabel.TextColor = Theme.CellTextPassive;
+            MonthLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
             DayLabel.Font = Theme.OrgEventDayFont;
-            DayLabel.TextColor = Theme.CellTextPassive;
+            DayLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
-            EventTitleLabel.Font = Theme.OrgEventTitleFont;
-            EventTitleLabel.TextColor = Theme.CellText;
+            EventTitleLabel.Font = Theme.ContentFont;
+            EventTitleLabel.TextColor = ThemeColors.ContentLightText;
 
-            CalendarView.Color = Theme.IconPassive;
+            CalendarView.LineColor = ThemeColors.BorderDark;
+            CalendarView.LineWidth = ScreenUtil.HairLine;
         }
     }
 }
