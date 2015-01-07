@@ -115,13 +115,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (DataContext != null && DataContext.Info.HasAddressText())
             {
                 TitleTopGapConstraint.Constant = 12;
-                TitleLeftGapConstraint.Constant = 6;
+                TitleLeftGapConstraint.Constant = 8;
                 PinTopGapConstraint.Constant = 22;
             }
             else
             {
                 TitleTopGapConstraint.Constant = 23;
-                TitleLeftGapConstraint.Constant = 20;
+                TitleLeftGapConstraint.Constant = 22;
                 PinTopGapConstraint.Constant = 10;
             }
         }
@@ -184,21 +184,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             BottomSeparator.IsLineOnTop = true;
 
             ImageLabel.Font = Theme.VenueCellThumbLabelFont;
-            ImageLabel.TextColor = Theme.CellTextPassive;
-
-            ImageLabelView.Color = Theme.IconPassive;
-
-            const int maskWidth = 54;
-            const int maskGap = 5;
-            var path = UIBezierPath.FromOval(new RectangleF(0, 0, maskWidth, maskWidth));
-            var mask = new CAShapeLayer {
-                Frame = new RectangleF(maskGap, maskGap, 
-                    maskGap + maskWidth, 
-                    maskGap + maskWidth),
-                Path = path.CGPath
-            };
-
-            LogoImageView.Layer.Mask = mask;
+            ImageLabel.TextColor = Theme.VenueCellThumbLabel;
+            ImageLabelView.BackgroundColor = Theme.VenueCellThumb;
 
             NameLabel.Font = Theme.VenueCellTitleFont;
             NameLabel.TextColor = Theme.CellText;

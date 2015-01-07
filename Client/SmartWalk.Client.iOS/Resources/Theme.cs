@@ -11,7 +11,6 @@ namespace SmartWalk.Client.iOS.Resources
         private const string HelveticaLight = "HelveticaNeue-Light";
 
         public static readonly UIImage HighlightImage = UIImage.FromFile("Images/Black.png");
-        public static readonly UIImage TransImage = UIImage.FromFile("Images/Trans.png");
         public static readonly UIImage SemiTransImage = UIImage.FromFile("Images/SemiTrans.png");
         public static readonly UIImage SemiTransWhiteImage = UIImage.FromFile("Images/SemiTransWhite.png");
 
@@ -21,7 +20,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor NavBarBackground = UIColor.FromRGBA(100, 31, 174, 180);
         public static readonly UIColor NavBarText = UIColor.White;
-        public static readonly UIColor NavBarLightText = UIColor.FromRGB(62, 24, 107);
+        public static readonly UIColor NavBarLightText = UIColor.Black;
         public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
         public static int NavBarPaddingCompensate = -9;
         public static int ToolBarPaddingCompensate = -16;
@@ -80,6 +79,8 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIFont VenueCellThumbLabelFont = UIFont.FromName(HelveticaLight, 17);
+        public static readonly UIColor VenueCellThumbLabel = UIColor.White;
+        public static readonly UIColor VenueCellThumb = UIColor.FromRGB(234, 234, 234);
         public static readonly UIFont VenueCellTitleFont = UIFont.FromName(HelveticaRegular, 16);
         public static readonly UIFont VenueCellAddressFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowCellTimeFont = UIFont.FromName(HelveticaRegular, 14);
@@ -92,7 +93,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont VenueShowDetailsCellFont = UIFont.FromName(HelveticaLight, 15);
 
         public static readonly UIColor MapPinText = UIColor.White;
-        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaLight, 12);
+        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaRegular, 12);
         public static readonly PointF MapPinOffset = new PointF(0, -16);
         public static readonly PointF MapPinTextOffset = new PointF(1, 0);
 

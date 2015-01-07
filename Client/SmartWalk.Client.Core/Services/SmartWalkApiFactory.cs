@@ -59,7 +59,7 @@ namespace SmartWalk.Client.Core.Services
             var request = new Request {
                 Selects = new[] {
                     new RequestSelect {
-                        Fields = new[] { "Host", "StartTime", "EndTime", 
+                        Fields = new[] { "Title", "Host", "StartTime", "EndTime", 
                             "VenueOrderType", "VenueTitleFormatType", "Shows"
                         },
                         From = RequestSelectFromTables.EventMetadata,
@@ -69,6 +69,20 @@ namespace SmartWalk.Client.Core.Services
                                 Field = "Id",
                                 Operator = RequestSelectWhereOperators.EqualsTo,
                                 Value = id
+                            }
+                        }
+                    },
+                    new RequestSelect {
+                        Fields = new[] { "Name" },
+                        From = RequestSelectFromTables.Entity,
+                        Where = new[] {
+                            new RequestSelectWhere {
+                                Field = "Id",
+                                Operator = RequestSelectWhereOperators.EqualsTo,
+                                SelectValue = new RequestSelectWhereSelectValue {
+                                    Field = "Host.Id",
+                                    SelectName = "em"
+                                }
                             }
                         }
                     },

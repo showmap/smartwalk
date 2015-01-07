@@ -46,6 +46,19 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
+        protected override void UpdateViewTitle()
+        {
+            if (NavBarManager.Instance.IsTransparent)
+            {
+                NavigationItem.Title = string.Empty;
+            }
+            else
+            {
+
+                NavigationItem.Title = ViewTitle;
+            }
+        }
+
         protected virtual void SetNavBarHidden(bool hidden, bool animated)
         {
             NavBarManager.Instance.SetHidden(hidden, animated);

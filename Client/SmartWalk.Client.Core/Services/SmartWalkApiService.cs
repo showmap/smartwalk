@@ -79,23 +79,30 @@ namespace SmartWalk.Client.Core.Services
                     .Select(em => em.ToObject<EventMetadata>())
                     .FirstOrDefault();
 
-                var shows = response
+                var host = response
                     .Data
                     .Selects[1].Records
+                    .Cast<JObject>()
+                    .Select(em => em.ToObject<Entity>())
+                    .FirstOrDefault();
+
+                var shows = response
+                    .Data
+                    .Selects[2].Records
                     .Cast<JObject>()
                     .Select(s => s.ToObject<Show>())
                     .ToArray();
 
                 var venueDetails = response
                     .Data
-                    .Selects[2].Records
+                    .Selects[3].Records
                     .Cast<JObject>()
                     .Select(s => s.ToObject<EventVenueDetail>())
                     .ToArray();
 
                 var venues = response
                     .Data
-                    .Selects[3].Records
+                    .Selects[4].Records
                     .Cast<JObject>()
                     .Select(e =>
                         {
@@ -106,7 +113,7 @@ namespace SmartWalk.Client.Core.Services
                     .OrderBy(venueDetails, eventMetadata.VenueOrderType)
                     .ToArray();
 
-                var orgEvent = new OrgEvent(eventMetadata, null, venues);
+                var orgEvent = new OrgEvent(eventMetadata, host, venues);
 
                 result = new ApiResult<OrgEvent> {
                     Data = orgEvent,

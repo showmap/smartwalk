@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		MonoTouch.UIKit.UILabel ImageLabel { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Circle ImageLabelView { get; set; }
+		MonoTouch.UIKit.UIView ImageLabelView { get; set; }
 
 		[Outlet]
 		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
