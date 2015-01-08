@@ -1,7 +1,5 @@
-GOLDEN MASTER before Release v.1.6
+RELEASE BUILD v.1.6 Build 13 (lucky)
 
-SW-160 Remove obsolete files. Version info updated
-SW-160 Better layout for map callout
-SW-160 Fixing minor layout and state issues. Better disabled state for buttons in navbar. Details icon active color is set
-SW-160 The rest icons for 3x mode added
-SW-160 Refactoring and layout updates. Higher contact cell. Back to squate images for Venue cells. Event title is shown in NavBar whilte in List.
+SW-160 Back to the dark side with buttons over map :-/ Date subtitles are turquoise now. Hiding last show cell separator before date group header. Better gesture recongnizing of taps on venue cell or map pin button. Smaller show end time.
+SW-160 The bug with navigation back is fixed. There was a major sync problems between buttons in navigationbar and current view on swipe back gesture.
+SW-160 Darker color for refresh indicator
