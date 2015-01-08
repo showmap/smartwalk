@@ -55,7 +55,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             else
             {
 
-                NavigationItem.Title = ViewTitle;
+                NavigationItem.Title = ViewTitle ?? string.Empty;
             }
         }
 

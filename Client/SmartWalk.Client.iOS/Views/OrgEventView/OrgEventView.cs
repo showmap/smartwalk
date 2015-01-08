@@ -438,7 +438,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.OnInitializeNavBarItems(navBarItems);
 
             // Day Button
-            _dayButton = ButtonBarUtil.Create(SemiTransparentType.Light);
+            _dayButton = ButtonBarUtil.Create(SemiTransparentType.Dark);
             _dayButton.LineBreakMode = UILineBreakMode.WordWrap;
             _dayButton.TouchUpInside += OnDayButtonClicked;
 
@@ -448,7 +448,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             navBarItems.Add(dayButtonItem);
 
             // Mode (List, Map, Combined) Button
-            _modeButton = ButtonBarUtil.Create(ThemeIcons.List, ThemeIcons.ListLandscape, SemiTransparentType.Light);
+            _modeButton = ButtonBarUtil.Create(
+                ThemeIcons.List, 
+                ThemeIcons.ListLandscape, 
+                SemiTransparentType.Dark);
             _modeButton.TouchUpInside += OnModeButtonClicked;
 
             var modeButtonItem = new UIBarButtonItem();
@@ -472,7 +475,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
-            MapFullscreenButton.SemiTransparentType = SemiTransparentType.Light;
+            MapFullscreenButton.SemiTransparentType = SemiTransparentType.Dark;
             MapFullscreenButton.UpdateState();
 
             VenuesMapView.TintColor = ThemeColors.Metadata;
@@ -888,7 +891,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (IsNavBarTransparent)
             {
-                SetNavBarTransparent(SemiTransparentType.Light, animated);
+                SetNavBarTransparent(SemiTransparentType.Dark, animated);
             }
             else
             {
@@ -934,9 +937,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (ViewModel.OrgEvent == null ||
                 !ViewModel.OrgEvent.StartTime.HasValue) return null;
 
-            var textColor = IsNavBarTransparent 
-                ? ThemeColors.ContentLightText 
-                : ThemeColors.ContentDarkText;
+            var textColor = ThemeColors.ContentDarkText;
             var result = new NSMutableAttributedString();
 
             result.Append(

@@ -25,7 +25,6 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIColor Action = UIColor.FromRGB(143, 44, 250);
         public static readonly UIColor Metadata = UIColor.FromRGB(88, 226, 194);
-        public static readonly UIColor Subtitle = UIColor.FromRGB(255, 215, 51);
 
 
         public static readonly UIColor ContentLightBackgroundAlpha = ContentLightBackground.ColorWithAlpha(0.96f);

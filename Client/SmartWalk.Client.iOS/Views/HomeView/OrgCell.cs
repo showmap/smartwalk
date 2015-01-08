@@ -5,6 +5,7 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
@@ -49,6 +50,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         protected override void OnInitialize()
         {
             InitializeHeaderImage();
+            InitializeStyle();
         }
 
         protected override void OnDataContextChanged()
@@ -72,6 +74,11 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             ImageBackground.Dispose();
             Placeholder.Content = null;
+        }
+
+        private void InitializeStyle()
+        {
+            ImageBackground.BackgroundColor = ThemeColors.ContentLightHighlight;
         }
     }
 }

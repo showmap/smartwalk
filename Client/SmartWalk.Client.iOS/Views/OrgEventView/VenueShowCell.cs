@@ -350,7 +350,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             TimeTopConstraint.Constant = DataContext != null &&
                 (DataContext.StartTime.HasValue && DataContext.EndTime.HasValue)
-                    ? 9 : 14;
+                    ? 10 : 14;
 
             this.UpdateConstraint(() =>
                 {
@@ -373,12 +373,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     if (IsExpanded && DataContext.HasDetailsUrl())
                     {
                         ImageAndDetailsSpaceConstraint.Constant = VerticalGap;
-                        //DetailsButtonHeightConstraint.Constant = 16;
                     }
                     else
                     {
                         ImageAndDetailsSpaceConstraint.Constant = 0;
-                        //DetailsButtonHeightConstraint.Constant = 0;
                     }
                 },
                 animated);

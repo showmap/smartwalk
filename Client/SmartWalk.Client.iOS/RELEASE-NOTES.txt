@@ -1,7 +1,7 @@
-SW-160 Fixing contacts scroll and layout updates
-SW-160 Better bottom gap for image title
-SW-160 Bug with updating layout on rotation. If view is not on the screen now.
-SW-160 The bug with illegal chars in URL fixed. It caused the crash of the app on attempt to open those urls.
-SW-160 Design and layout updates. Circle icon for missing images in Venue cell. Circle icon for event date in OrgView. Circle mask for venue cell images. Lighter venue cell background
-SW-160 Icons were updated with missing files. Circle icons in Venue, Event and Contact cells were made passive. Constact cell refactoring and layout update.
-SW-160 Lighter buttons in NavBar for Event view. Fixing bugs in icon names.
+GOLDEN MASTER before Release v.1.6
+
+SW-160 Remove obsolete files. Version info updated
+SW-160 Better layout for map callout
+SW-160 Fixing minor layout and state issues. Better disabled state for buttons in navbar. Details icon active color is set
+SW-160 The rest icons for 3x mode added
+SW-160 Refactoring and layout updates. Higher contact cell. Back to squate images for Venue cells. Event title is shown in NavBar whilte in List.

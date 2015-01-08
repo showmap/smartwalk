@@ -46,7 +46,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.ViewWillAppear(animated);
 
-            SetNavBarTransparent(SemiTransparentType.Light, animated);
+            SetNavBarTransparent(SemiTransparentType.Dark, animated);
         }
 
         protected override void OnInitializingActionSheet(List<string> titles)

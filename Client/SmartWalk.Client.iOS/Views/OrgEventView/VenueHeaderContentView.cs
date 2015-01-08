@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Input;
-using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using SmartWalk.Client.Core.Model;
@@ -21,8 +20,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly MvxResizedImageViewLoader _imageHelper;
         private readonly AnimationDelay _animationDelay = new AnimationDelay();
 
-        private UITapGestureRecognizer _cellTapGesture;
         private UILongPressGestureRecognizer _cellPressGesture;
+        private UITapGestureRecognizer _mapTapGesture;
 
         public VenueHeaderContentView(IntPtr handle) : base(handle)
         {
@@ -128,23 +127,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeGestures()
         {
-            var selectedAction = new NSAction(() => 
+            _mapTapGesture = new UITapGestureRecognizer(() =>
                 {
-                    SetSelectedState(true);
-
-                    if (NavigateVenueCommand != null &&
-                        NavigateVenueCommand.CanExecute(DataContext))
+                    if (NavigateVenueOnMapCommand != null &&
+                        NavigateVenueOnMapCommand.CanExecute(DataContext))
                     {
-                        NavigateVenueCommand.Execute(DataContext);
+                        NavigateVenueOnMapCommand.Execute(DataContext);
                     }
-
-                    NSTimer.CreateScheduledTimer(
-                        TimeSpan.MinValue,
-                        () => SetSelectedState(false));
                 });
 
-            // TODO: fail if it's ended outside of the cell
-            _cellPressGesture = new UILongPressGestureRecognizer(rec => 
+            NavigateOnMapButton.AddGestureRecognizer(_mapTapGesture);
+
+            _cellPressGesture = new UILongPressGestureRecognizer(rec =>
                 {
                     if (rec.State == UIGestureRecognizerState.Began)
                     {
@@ -152,32 +146,37 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
                     else if (rec.State == UIGestureRecognizerState.Ended)
                     {
-                        selectedAction();
+                        SetSelectedState(false);
+
+                        if (Frame.IntersectsWith(new RectangleF(rec.LocationInView(this), SizeF.Empty)) &&
+                            NavigateVenueCommand != null &&
+                            NavigateVenueCommand.CanExecute(DataContext))
+                        {
+                            NavigateVenueCommand.Execute(DataContext);
+                        }
                     }
                 }) {
-                    MinimumPressDuration = 0
+                    MinimumPressDuration = 0.05
                 };
+            _cellPressGesture.RequireGestureRecognizerToFail(_mapTapGesture);
 
-            _cellTapGesture = new UITapGestureRecognizer(selectedAction);
-
-            AddGestureRecognizer(_cellTapGesture);
             AddGestureRecognizer(_cellPressGesture);
         }
 
         private void DisposeGestures()
         {
+            if (_mapTapGesture != null)
+            {
+                NavigateOnMapButton.RemoveGestureRecognizer(_mapTapGesture);
+                _mapTapGesture.Dispose();
+                _mapTapGesture = null;
+            }
+
             if (_cellPressGesture != null)
             {
                 RemoveGestureRecognizer(_cellPressGesture);
                 _cellPressGesture.Dispose();
                 _cellPressGesture = null;
-            }
-
-            if (_cellTapGesture != null)
-            {
-                RemoveGestureRecognizer(_cellTapGesture);
-                _cellTapGesture.Dispose();
-                _cellTapGesture = null;
             }
         }
 
@@ -198,15 +197,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
             GoRightImageView.Image = ThemeIcons.Forward;
             GoRightImageView.TintColor = ThemeColors.BorderDark.ColorWithAlpha(0.9f);
-        }
-
-        partial void OnNavigateOnMapClick(UIButton sender)
-        {
-            if (NavigateVenueOnMapCommand != null &&
-                NavigateVenueOnMapCommand.CanExecute(DataContext))
-            {
-                NavigateVenueOnMapCommand.Execute(DataContext);
-            }
         }
 
         private void SetSelectedState(bool isSelected)

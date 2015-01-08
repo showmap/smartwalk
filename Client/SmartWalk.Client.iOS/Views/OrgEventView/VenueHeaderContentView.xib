@@ -78,9 +78,6 @@
                     <state key="highlighted">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <connections>
-                        <action selector="OnNavigateOnMapClick:" destination="1" eventType="touchUpInside" id="GYK-5z-9xn"/>
-                    </connections>
                 </button>
                 <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="QVS-aJ-Vym" userLabel="BottomSeparator" customClass="Line">
                     <rect key="frame" x="0.0" y="64" width="320" height="1"/>
