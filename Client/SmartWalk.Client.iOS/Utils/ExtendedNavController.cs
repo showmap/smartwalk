@@ -12,18 +12,23 @@ namespace SmartWalk.Client.iOS.Utils
             WeakDelegate = this;
         }
 
+        private static UINavigationBar NavBar
+        {
+            get { return NavBarManager.Instance.NavBar; }
+        }
+
         public override void PushViewController(UIViewController viewController, bool animated)
         {
             base.PushViewController(viewController, animated);
 
-            NavBarManager.Instance.NavBar.PushNavigationItem(viewController.NavigationItem, animated);
+            NavBar.PushNavigationItem(viewController.NavigationItem, animated);
         }
 
         public override UIViewController PopViewControllerAnimated(bool animated)
         {
             var result = base.PopViewControllerAnimated(animated);
 
-            _poped = NavBarManager.Instance.NavBar.PopNavigationItemAnimated(animated);
+            _poped = NavBar.PopNavigationItemAnimated(animated);
 
             return result;
         }
@@ -41,8 +46,8 @@ namespace SmartWalk.Client.iOS.Utils
                 {
                     if (context.IsCancelled && _poped != null)
                     {
-                        NavBarManager.Instance.NavBar
-                            .PushNavigationItem(_poped, context.IsAnimated);
+                        NavBar.PushNavigationItem(_poped, context.IsAnimated);
+                        Maintenance();
                     }
 
                     _poped = null;
@@ -58,6 +63,15 @@ namespace SmartWalk.Client.iOS.Utils
         {
             InteractivePopGestureRecognizer.Enabled = true;
             InteractivePopGestureRecognizer.WeakDelegate = viewController;
+        }
+
+        // HACK: To remove the twicely added last item upon animation failure 
+        private static void Maintenance()
+        {
+            if (NavBar.TopItem == NavBar.BackItem)
+            {
+                NavBar.PopNavigationItemAnimated(false);
+            }
         }
     }
 }
