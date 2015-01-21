@@ -22,7 +22,7 @@ namespace SmartWalk.Server.Services.QueryService
             string[] fields,
             string[] storages,
             IStorageProvider storageProvider,
-            PictureSize pictureSize,
+            PictureSize? pictureSize,
             IImageProfileManager imageProfileManager)
         {
             var result = new EventMetadata
@@ -110,7 +110,7 @@ namespace SmartWalk.Server.Services.QueryService
             EntityRecord record,
             string[] fields,
             IStorageProvider storageProvider,
-            PictureSize pictureSize,
+            PictureSize? pictureSize,
             IImageProfileManager imageProfileManager)
         {
             var result = new Entity
@@ -189,7 +189,7 @@ namespace SmartWalk.Server.Services.QueryService
             string[] fields,
             string[] storages,
             IStorageProvider storageProvider,
-            PictureSize pictureSize,
+            PictureSize? pictureSize,
             IImageProfileManager imageProfileManager)
         {
             var result = new Show

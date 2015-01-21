@@ -129,10 +129,10 @@ namespace SmartWalk.Server.Utils
             return Guid.TryParse(Path.GetFileNameWithoutExtension(fileName), out fileGuid);
         }
 
-        public static void ResizePictures(IEnumerable<IPicture> pictures, PictureSize size,
+        public static void ResizePictures(IEnumerable<IPicture> pictures, PictureSize? size,
             IImageProfileManager imageProfileManager, ILogger logger = null)
         {
-            if (pictures == null || size == PictureSize.Full) return;
+            if (pictures == null || size == null || size == PictureSize.Full) return;
 
             foreach (var picture in pictures)
             {
@@ -140,18 +140,18 @@ namespace SmartWalk.Server.Utils
             }
         }
 
-        public static void ResizePicture(IPicture pictureModel, PictureSize size, 
+        public static void ResizePicture(IPicture pictureModel, PictureSize? size, 
             IImageProfileManager imageProfileManager, ILogger logger = null)
         {
-            if (pictureModel == null || size == PictureSize.Full) return;
+            if (pictureModel == null || size == null || size == PictureSize.Full) return;
 
             pictureModel.Picture = GetResizedPicture(pictureModel.Picture, size, imageProfileManager, logger);
         }
 
-        public static string GetResizedPicture(string picture, PictureSize size,
+        public static string GetResizedPicture(string picture, PictureSize? size,
             IImageProfileManager imageProfileManager, ILogger logger = null)
         {
-            if (size == PictureSize.Full) return picture;
+            if (size == null || size == PictureSize.Full) return picture;
 
             var result = picture;
 

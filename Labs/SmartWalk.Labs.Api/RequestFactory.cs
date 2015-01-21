@@ -29,11 +29,6 @@ namespace SmartWalk.Labs.Api
                                                 {
                                                     Field = "Longitude",
                                                     OfDistance = longitude
-                                                },
-                                            new RequestSelectSortBy
-                                                {
-                                                    Field = "startTime",
-                                                    IsDescending = true
                                                 }
                                         }
                                 },

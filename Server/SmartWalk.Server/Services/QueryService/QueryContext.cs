@@ -26,6 +26,7 @@ namespace SmartWalk.Server.Services.QueryService
 
             // TODO: To resolve EventMetadataRecord table name dynamicaly
             EventMetadataTable = "SmartWalk_Server_EventMetadataRecord";
+            EventMetadataView = "SmartWalk_Server_EventMetadataExtended";
 
             InitializeProperties();
         }
@@ -132,7 +133,7 @@ namespace SmartWalk.Server.Services.QueryService
         public string DbPrefix { get; private set; }
 
         public string EventMetadataTable { get; private set; }
-        public string EventMetadataTableAlias { get; private set; }
+        public string EventMetadataView { get; private set; }
 
         public string EventMetadataId { get; private set; }
         public string EventMetadataHost { get; private set; }

@@ -836,5 +836,28 @@ namespace SmartWalk.Server
 
             return 13;
         }
+
+        [UsedImplicitly]
+        public int UpdateFrom13()
+        {
+            var sSql = string.Format(
+                @"IF OBJECT_ID('{0}', 'V') IS NOT NULL DROP VIEW {0}",
+                GetFullTableName("EventMetadataExtended"));
+            SchemaBuilder.ExecuteSql(sSql);
+
+            sSql = string.Format(
+                @"CREATE VIEW {0}
+                AS
+                SELECT Id, EntityRecord_Id, SmartWalkUserRecord_Id, Title, Description, StartTime, EndTime, Picture, 
+                       Latitude, Longitude, CombineType, IsDeleted, DateCreated, 
+                       DateModified, Status, VenueOrderType, VenueTitleFormatType, 
+                       ISNULL(DATEDIFF(d, StartTime, GETUTCDATE()), 0) + ISNULL(DATEDIFF(d, EndTime, StartTime) / 2, 0) AS DaysTo
+                FROM {1}",
+                GetFullTableName("EventMetadataExtended"),
+                GetFullTableName("EventMetadataRecord"));
+            SchemaBuilder.ExecuteSql(sSql);
+
+            return 14;
+        }
     }
 }

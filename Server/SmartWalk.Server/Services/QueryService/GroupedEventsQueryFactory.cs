@@ -25,32 +25,65 @@ namespace SmartWalk.Server.Services.QueryService
 
             var eventMetadataTableName =
                 QueryContext.Instance.DbPrefix +
-                QueryContext.Instance.EventMetadataTable;
+                QueryContext.Instance.EventMetadataView;
+            var where = GetWhere(select);
 
             var result =
                 session.CreateSQLQuery(
                     string.Format(
-                        @"SELECT EMR.*
+                        @"SELECT *
                         FROM
-	                        (SELECT EMR.*, ROW_NUMBER() OVER ({3}) as Row
-                            FROM
-	                            (SELECT 
-		                            EntityRecord_Id AS HostId, MAX(StartTime) AS StartTime
-	                            FROM 
-		                            {0}
-                                {4}
-	                            GROUP BY EntityRecord_Id) EMRGroupped
-                            INNER JOIN
-	                            {0} EMR ON EMRGroupped.HostId = EMR.EntityRecord_Id AND EMRGroupped.StartTime = EMR.StartTime) EMR
-                        WHERE EMR.Row > {1} and EMR.Row <= {2}
-                        {5}",
+	                        (
+		                        SELECT 
+			                        EME.*, 
+			                        ROW_NUMBER() OVER ({1}) as Row
+		                        FROM
+                                (
+			                        SELECT HostGroups.HostId as HostId, MIN(EME.DaysTo) as DaysTo
+			                        FROM
+				                        (
+					                        SELECT EntityRecord_Id AS HostId, MIN(ABS(DaysTo)) AS DaysTo
+					                        FROM {0}
+					                        {2}
+					                        GROUP BY EntityRecord_Id
+				                        ) HostGroups 
+				                        INNER JOIN {0} EME
+				                        ON 
+					                        HostGroups.HostId = EME.EntityRecord_Id 
+					                        AND HostGroups.DaysTo = ABS(EME.DaysTo)
+			                        GROUP BY HostGroups.HostId
+		                        ) EMRGroupped
+		                        INNER JOIN {0} EME 
+		                        ON 
+			                        EMRGroupped.HostId = EME.EntityRecord_Id 
+			                        {3}
+			                        AND ((EMRGroupped.DaysTo = EME.DaysTo) 
+				                        OR (EME.StartTime IS NOT NULL
+					                        AND GETUTCDATE() - EMRGroupped.DaysTo - :range <= EME.StartTime AND EME.StartTime <= GETUTCDATE() - EMRGroupped.DaysTo + :range)
+				                        OR (EME.EndTime IS NOT NULL
+					                        AND GETUTCDATE() - EMRGroupped.DaysTo - :range <= EME.EndTime AND EME.EndTime <= GETUTCDATE() - EMRGroupped.DaysTo + :range)
+				                        OR (EME.StartTime IS NOT NULL AND EME.EndTime IS NOT NULL
+					                        AND EME.StartTime <= GETUTCDATE() - EMRGroupped.DaysTo - :range AND  GETUTCDATE() - EMRGroupped.DaysTo + :range <= EME.EndTime))
+	                        ) EMROut
+                        WHERE EMROut.Row > :offset and EMROut.Row <= :fetch
+                        ORDER BY
+	                        CASE -- Is Going On Now
+		                        WHEN ISNULL(EMROut.StartTime, GETUTCDATE()) - 1 <= GETUTCDATE() 
+			                        AND GETUTCDATE() <= ISNULL(EMROut.EndTime, ISNULL(EMROut.StartTime, GETUTCDATE())) + 1 
+		                        THEN -1 ELSE 1
+	                        END,
+	                        ABS(ISNULL(DATEDIFF(d, EMROut.StartTime, GETUTCDATE()), 0))",
                         eventMetadataTableName,
-                        select.Offset ?? 0,
-                        Math.Min(select.Fetch ?? QueryService.DefaultEventsLimit, 1000), // hard limit for one page size to 1000 events
                         GetRowNumberOrderBy(select, out latLong),
-                        GetWhere(select),
-                        GetOrderBy(select)))
-                       .AddEntity(typeof(EventMetadataRecord));
+                        where != string.Empty ? "WHERE " + where : string.Empty,
+                        where != string.Empty ? "AND " + where : string.Empty))
+                    .AddEntity(typeof(EventMetadataRecord));
+
+            result = 
+                (ISQLQuery)result
+                    .SetInt32("offset", select.Offset ?? 0)
+                    .SetInt32("fetch", Math.Min(select.Fetch ?? QueryService.DefaultEventsLimit, 1000)) // hard limit for one page size to 1000 events
+                    .SetInt32("range", 7);
 
             if (latLong != null)
             {
@@ -88,13 +121,13 @@ namespace SmartWalk.Server.Services.QueryService
             {
                 if (IsLatLongDistanceSorting(select.SortBy, out latLong))
                 {
-                    result = "ABS(EMR.Latitude - :lat) + ABS(EMR.Longitude - :long) ASC";
+                    result = "ABS(EME.Latitude - :lat) + ABS(EME.Longitude - :long) ASC";
                 }
             }
 
             return result != string.Empty
                 ? "ORDER BY " + result
-                : "ORDER BY EMR.Id";
+                : "ORDER BY EME.Id";
         }
 
         /// <summary>
@@ -122,7 +155,7 @@ namespace SmartWalk.Server.Services.QueryService
                     result +=
                         (result != string.Empty ? ", " : string.Empty) +
                         string.Format(
-                            "EMR.{0} {1}",
+                            "EMROut.{0} {1}",
                             sortBy.Field,
                             sortBy.IsDescending.HasValue &&
                             sortBy.IsDescending.Value
@@ -177,9 +210,7 @@ namespace SmartWalk.Server.Services.QueryService
                 }
             }
 
-            return result != string.Empty
-                ? "WHERE " + result
-                : string.Empty;
+            return result;
         }
 
         private static bool IsLatLongDistanceSorting(
