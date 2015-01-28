@@ -1,10 +1,10 @@
-﻿using System;
-using System.Drawing;
+using System;
+using CoreGraphics;
 using System.IO;
 using System.Threading.Tasks;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Plugins.DownloadCache;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.iOS.Services;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
@@ -68,7 +68,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             var sizeParamEndIndex = sizeParamIndex + MvxPlus.SizeParam.Length;
             var sizeParam = Url.Substring(sizeParamEndIndex, Url.Length - sizeParamEndIndex);
             var sizes = sizeParam.Split('>');
-            var size = new SizeF(float.Parse(sizes[0]), float.Parse(sizes[1]));
+            var size = new CGSize(float.Parse(sizes[0]), float.Parse(sizes[1]));
 
             var imageCache = MvxPlus.SafeGetImageCache();
 
@@ -81,8 +81,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
                     UIGraphics.BeginImageContextWithOptions(size, true, 1);
 
-                    image.Draw(new RectangleF(
-                        new PointF(
+                    image.Draw(new CGRect(
+                        new CGPoint(
                             -((scaledSize.Width - size.Width) / 2), 
                             -((scaledSize.Height - size.Height) / 2)),
                         scaledSize));
@@ -138,12 +138,12 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             }
         }
 
-        public static SizeF ResizeToFit(SizeF imageSize, SizeF frameSize)
+        public static CGSize ResizeToFit(CGSize imageSize, CGSize frameSize)
         {
             var widthScale = frameSize.Width / imageSize.Width;
             var heightScale = frameSize.Height / imageSize.Height;
-            var scale = Math.Max(widthScale, heightScale);
-            return new SizeF(imageSize.Width * scale, imageSize.Height * scale);
+            var scale = (nfloat)Math.Max(widthScale, heightScale);
+            return new CGSize(imageSize.Width * scale, imageSize.Height * scale);
         }
     }
 }

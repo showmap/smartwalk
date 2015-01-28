@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
@@ -13,40 +13,40 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 	partial class EntityCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DescriptionBottomConstraint { get; set; }
+		UIKit.NSLayoutConstraint DescriptionBottomConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DescriptionTopConstraint { get; set; }
+		UIKit.NSLayoutConstraint DescriptionTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Placeholder ImageCellPlaceholder { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
+		UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Placeholder MapCellPlaceholder { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapWidthConstraint { get; set; }
+		UIKit.NSLayoutConstraint MapWidthConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapXConstraint { get; set; }
+		UIKit.NSLayoutConstraint MapXConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapYConstraint { get; set; }
+		UIKit.NSLayoutConstraint MapYConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

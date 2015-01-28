@@ -1,4 +1,4 @@
-﻿using Cirrious.CrossCore.Platform;
+using Cirrious.CrossCore.Platform;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {

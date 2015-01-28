@@ -1,6 +1,6 @@
 using System;
 using Cirrious.CrossCore.Core;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;

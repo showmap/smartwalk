@@ -1,7 +1,7 @@
 using System;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
@@ -71,7 +71,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             _scrollToHideManager.ScrollFinished();
         }
 
-        public override float GetHeightForHeader(UITableView tableView, int section)
+        public override nfloat GetHeightForHeader(UITableView tableView, nint section)
         {
             return 
                 GroupItemsSource != null &&
@@ -80,7 +80,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
                         : 0f;
         }
 
-        public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var item = GetItemAt(indexPath);
 
@@ -99,22 +99,22 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             throw new Exception("There is an unsupported type in the list.");
         }
 
-        public override int NumberOfSections(UITableView tableView)
+        public override nint NumberOfSections(UITableView tableView)
         {
             return GroupItemsSource != null ? GroupItemsSource.Length : 0;
         }
 
-        public override int RowsInSection(UITableView tableview, int section)
+        public override nint RowsInSection(UITableView tableview, nint section)
         {
             return GroupItemsSource != null ? GroupItemsSource[section].Count : 0;
         }
 
-        public override string TitleForHeader(UITableView tableView, int section)
+        public override string TitleForHeader(UITableView tableView, nint section)
         {
             return null;
         }
 
-        public override UIView GetViewForHeader(UITableView tableView, int section)
+        public override UIView GetViewForHeader(UITableView tableView, nint section)
         {
             var dataContext = GroupItemsSource != null ? GroupItemsSource[section].Key : null;
             if (dataContext != null)

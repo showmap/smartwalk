@@ -1,11 +1,12 @@
-﻿using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using System;
+using Foundation;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
 {
     public class UITouchGestureRecognizer : UIGestureRecognizer
     {
-        public UITouchGestureRecognizer(NSAction handler) : base(handler)
+        public UITouchGestureRecognizer(Action handler) : base(handler)
         {
         }
 

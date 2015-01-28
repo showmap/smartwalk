@@ -1,17 +1,18 @@
-using System.Drawing;
+using System;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using MonoTouch.UIKit;
+using CoreGraphics;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using SmartWalk.Client.iOS.Resources;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
     public partial class HomeView : ListViewBase
     {
-        private float? _cellProportionalHeight;
+        private nfloat? _cellProportionalHeight;
 
         public HomeView()
         {
@@ -39,7 +40,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
                         ? View.Frame.Width : View.Frame.Height;
 
                     _cellProportionalHeight = ScreenUtil.GetProportionalHeight(
-                        new SizeF(OrgCell.DefaultWidth, OrgCell.DefaultHeight), 
+                        new CGSize(OrgCell.DefaultWidth, OrgCell.DefaultHeight), 
                         frameWidth);
                 }
 
@@ -114,7 +115,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             }
         }
 
-        private void UpdateLayoutSizes(UIInterfaceOrientation orientation, float frameWidth)
+        private void UpdateLayoutSizes(UIInterfaceOrientation orientation, nfloat frameWidth)
         {
             var flowLayout = (UICollectionViewFlowLayout)OrgCollectionView.CollectionViewLayout;
             var itemsInRow = ScreenUtil.GetIsVerticalOrientation(orientation) ? 1 : 2;
@@ -125,8 +126,8 @@ namespace SmartWalk.Client.iOS.Views.HomeView
                     flowLayout.SectionInset.Right -
                     flowLayout.MinimumInteritemSpacing * (itemsInRow - 1)) / itemsInRow;
 
-            flowLayout.ItemSize = new SizeF(cellWidth, CellProportionalHeight);
-            flowLayout.HeaderReferenceSize = new SizeF(
+            flowLayout.ItemSize = new CGSize(cellWidth, CellProportionalHeight);
+            flowLayout.HeaderReferenceSize = new CGSize(
                 frameWidth, 
                 HomeHeaderView.DefaultHeight);
             flowLayout.InvalidateLayout();

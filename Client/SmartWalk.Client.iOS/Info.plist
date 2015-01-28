@@ -37,7 +37,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6</string>
+	<string>1.7</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>XSLaunchImageAssets</key>
@@ -53,6 +53,6 @@
 	<key>CFBundleDisplayName</key>
 	<string>ShowMap</string>
 	<key>CFBundleVersion</key>
-	<string>13</string>
+	<string>1</string>
 </dict>
 </plist>

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Cirrious.CrossCore;
 using Cirrious.CrossCore.Core;
 using Cirrious.CrossCore.WeakSubscription;
 using Cirrious.MvvmCross.Binding;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross

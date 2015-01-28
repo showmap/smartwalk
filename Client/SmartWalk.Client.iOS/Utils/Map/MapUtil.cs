@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.AddressBook;
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
+using AddressBook;
+using CoreLocation;
+using Foundation;
+using MapKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.Resources;

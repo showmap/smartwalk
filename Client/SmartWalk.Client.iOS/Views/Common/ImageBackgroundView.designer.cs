@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
@@ -13,16 +13,16 @@ namespace SmartWalk.Client.iOS.Views.Common
 	partial class ImageBackgroundView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIImageView BackgroundImage { get; set; }
+		UIKit.UIImageView BackgroundImage { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIActivityIndicatorView ProgressView { get; set; }
+		UIKit.UIActivityIndicatorView ProgressView { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel SubtitleLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TitleBottomGapConstraint { get; set; }
+		UIKit.NSLayoutConstraint TitleBottomGapConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }

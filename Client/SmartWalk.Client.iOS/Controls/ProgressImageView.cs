@@ -1,6 +1,6 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Controls

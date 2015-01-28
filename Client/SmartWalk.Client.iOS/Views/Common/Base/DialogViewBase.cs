@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Windows.Input;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base

@@ -1,5 +1,5 @@
-﻿using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using UIKit;
+using Foundation;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -24,11 +24,11 @@ namespace SmartWalk.Client.iOS.Utils
             NavBar.PushNavigationItem(viewController.NavigationItem, animated);
         }
 
-        public override UIViewController PopViewControllerAnimated(bool animated)
+        public override UIViewController PopViewController(bool animated)
         {
-            var result = base.PopViewControllerAnimated(animated);
+            var result = base.PopViewController(animated);
 
-            _poped = NavBar.PopNavigationItemAnimated(animated);
+            _poped = NavBar.PopNavigationItem(animated);
 
             return result;
         }
@@ -70,7 +70,7 @@ namespace SmartWalk.Client.iOS.Utils
         {
             if (NavBar.TopItem == NavBar.BackItem)
             {
-                NavBar.PopNavigationItemAnimated(false);
+                NavBar.PopNavigationItem(false);
             }
         }
     }

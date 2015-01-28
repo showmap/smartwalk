@@ -1,5 +1,5 @@
-using System.Drawing;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Resources
 {
@@ -50,11 +50,11 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont VenueShowDetailsFont = UIFont.FromName(HelveticaLight, 15);
 
         public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaRegular, 12);
-        public static readonly PointF MapPinOffset = new PointF(0, -16);
-        public static readonly PointF MapPinTextOffset = new PointF(1, 0);
+        public static readonly CGPoint MapPinOffset = new CGPoint(0, -16);
+        public static readonly CGPoint MapPinTextOffset = new CGPoint(1, 0);
 
-        public static readonly SizeF DefaultImageSize = new SizeF(10, 10);
-        public static readonly SizeF ErrorImageSize = new SizeF(20, 20);
+        public static readonly CGSize DefaultImageSize = new CGSize(10, 10);
+        public static readonly CGSize ErrorImageSize = new CGSize(20, 20);
         public static readonly string DefaultImagePath = "res:Images/DefaultImage.png";
         public static readonly string ErrorImagePath = "res:Images/ErrorImage.png";
 

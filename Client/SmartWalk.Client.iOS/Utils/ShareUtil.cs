@@ -1,5 +1,5 @@
-﻿using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using UIKit;
+using Foundation;
 
 namespace SmartWalk.Client.iOS.Utils
 {

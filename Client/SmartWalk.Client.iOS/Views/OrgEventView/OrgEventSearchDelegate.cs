@@ -1,5 +1,5 @@
-using System.Drawing;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Utils;
 
@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UITableView _tableView;
         private OrgEventViewMode _previousMode;
         private bool _previousIsListOptVisible;
-        private PointF _previousOffset;
+        private CGPoint _previousOffset;
         private UIEdgeInsets _previousContentInset;
 
         public OrgEventSearchDelegate(UITableView tableView, OrgEventViewModel viewModel)

@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Windows.Input;
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
+using CoreLocation;
+using Foundation;
+using MapKit;
+using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.Utils;

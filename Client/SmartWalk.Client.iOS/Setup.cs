@@ -6,11 +6,11 @@ using Cirrious.MvvmCross.Plugins.DownloadCache;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
-using MonoTouch.UIKit;
 using SmartWalk.Client.Core;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
+using UIKit;
 
 namespace SmartWalk.Client.iOS
 {

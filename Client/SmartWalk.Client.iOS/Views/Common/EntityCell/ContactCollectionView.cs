@@ -1,7 +1,7 @@
 using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
         }
 
-        public ContactCollectionView(RectangleF frame, UICollectionViewLayout layout) : base(frame, layout)
+        public ContactCollectionView(CGRect frame, UICollectionViewLayout layout) : base(frame, layout)
         {
         }
 
@@ -34,7 +34,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             var flowLayout = (UICollectionViewFlowLayout)CollectionViewLayout;
             var cellWidth = Frame.Width - flowLayout.SectionInset.Left - flowLayout.SectionInset.Right;
 
-            var size = new SizeF(cellWidth, ContactCell.DefaultHeight);
+            var size = new CGSize(cellWidth, ContactCell.DefaultHeight);
             if (flowLayout.ItemSize != size) {
                 flowLayout.ItemSize = size;
                 flowLayout.InvalidateLayout();

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
@@ -131,7 +131,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void OnNavigationBackClick(object sender, EventArgs e)
         {
-            NavigationController.PopViewControllerAnimated(true);
+            NavigationController.PopViewController(true);
         }
 
         private void OnMoreButtonClicked(object sender, EventArgs e)

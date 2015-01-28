@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using System;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Resources;
 
@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        public override RectangleF Frame
+        public override CGRect Frame
         {
             set
             {
@@ -47,7 +47,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ConsoleUtil.LogDisposed(this);
         }
 
-        private RectangleF GetFixedFrame(RectangleF frame)
+        private CGRect GetFixedFrame(CGRect frame)
         {
             if (Superview != null && 
                 SearchBarStyle != UISearchBarStyle.Prominent)

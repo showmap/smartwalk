@@ -1,9 +1,9 @@
 using System;
-using System.Drawing;
+using CoreGraphics;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
@@ -209,7 +209,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void ZoomTo()
         {
-            if (ScrollView.MinimumZoomScale.EqualsF(ScrollView.MaximumZoomScale))
+            if (ScrollView.MinimumZoomScale.EqualsNF(ScrollView.MaximumZoomScale))
             {
                 return;
             }
@@ -240,17 +240,17 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        private RectangleF GetZoomRect(float scale, PointF center)
+        private CGRect GetZoomRect(nfloat scale, CGPoint center)
         {
-            var size = new SizeF(
+            var size = new CGSize(
                 ScrollView.Frame.Size.Width / scale,
                 ScrollView.Frame.Size.Height / scale);
 
-            var location = new PointF(
+            var location = new CGPoint(
                 center.X - (size.Width / 2.0f),
                 center.Y - (size.Height / 2.0f));
 
-            var result = new RectangleF(location, size);
+            var result = new CGRect(location, size);
             return result;
         }
     }
@@ -258,7 +258,7 @@ namespace SmartWalk.Client.iOS.Views.Common
     [Register("ImageZoomScrollView")]
     public class ImageZoomScrollView : UIScrollView
     {
-        private SizeF _lastBoundsSize;
+        private CGSize _lastBoundsSize;
 
         public ImageZoomScrollView(IntPtr handle) : base(handle)
         {
@@ -295,12 +295,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             var heightScale = Bounds.Size.Height / imageSize.Height;
 
             MinimumZoomScale = 
-                Math.Min(MaximumZoomScale, Math.Min(widthScale, heightScale));
+                (nfloat)Math.Min(MaximumZoomScale, Math.Min(widthScale, heightScale));
             SetZoomScale(MinimumZoomScale, false);
-            SetContentOffset(PointF.Empty, false);
+            SetContentOffset(CGPoint.Empty, false);
         }
 
-        private RectangleF GetCenteredImageFrame()
+        private CGRect GetCenteredImageFrame()
         {
             var imageFrame = ImageView.HasImage()
                 ? ImageView.Frame

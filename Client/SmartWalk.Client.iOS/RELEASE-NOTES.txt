@@ -1,5 +1,1 @@
-RELEASE BUILD v.1.6 Build 13 (lucky)
-
-SW-160 Back to the dark side with buttons over map :-/ Date subtitles are turquoise now. Hiding last show cell separator before date group header. Better gesture recongnizing of taps on venue cell or map pin button. Smaller show end time.
-SW-160 The bug with navigation back is fixed. There was a major sync problems between buttons in navigationbar and current view on swipe back gesture.
-SW-160 Darker color for refresh indicator
+Update to Xamarin Unified API

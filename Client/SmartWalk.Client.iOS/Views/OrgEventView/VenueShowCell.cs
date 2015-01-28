@@ -1,9 +1,9 @@
 using System;
-using System.Drawing;
+using CoreGraphics;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
@@ -82,7 +82,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         }
 
         public static float CalculateCellHeight(
-            float frameWidth, 
+            nfloat frameWidth, 
             bool isExpanded, 
             bool isHeaderVisible,
             bool isSubHeaderVisible, 
@@ -118,7 +118,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 cellHeight += Math.Max(
                     DefaultHeight, 
                     VerticalGap + titleHeight + descriptionHeight + 
-                    logoHeight + detailsHeight + VerticalGap); // if no text, we still show times
+                        logoHeight + detailsHeight + VerticalGap); // if no text, we still show times
 
                 return cellHeight;
             }
@@ -126,16 +126,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return DefaultHeight;
         }
 
-        private static float GetTitleBlockWidth(float frameWidth, Show show)
+        private static float GetTitleBlockWidth(nfloat frameWidth, Show show)
         {
             // - Left Border Gap - Time Block Width (inc. Right Border Gap)
-            return frameWidth - BorderGap - GetTimeBlockWidth(show);
+            return (float)(frameWidth - BorderGap - GetTimeBlockWidth(show));
         }
 
-        private static float GetDescriptionBlockWidth(float frameWidth)
+        private static float GetDescriptionBlockWidth(nfloat frameWidth)
         {
             // - Left Border Gap - Right Border Gap
-            return frameWidth - BorderGap - BorderGap;
+            return (float)(frameWidth - BorderGap - BorderGap);
         }
 
         private static float GetTimeBlockWidth(Show show)
@@ -516,7 +516,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             DetailsLabel.TextColor = ThemeColors.Action;
 
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
-            HeaderContainer.Layer.ShadowOffset = new SizeF(0, 2);
+            HeaderContainer.Layer.ShadowOffset = new CGSize(0, 2);
             HeaderContainer.Layer.ShadowOpacity = 0.1f;
         }
 
@@ -552,7 +552,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private static string GetShowTimeText(DateTime? time)
         {
-            return time.HasValue ? TimeFormatter.ToString(time.Value) : null;
+            return time.HasValue ? TimeFormatter.ToString((NSDate)time.Value) : null;
         }
 
         private static UIFont GetShowStartTimeFont(ShowStatus status)

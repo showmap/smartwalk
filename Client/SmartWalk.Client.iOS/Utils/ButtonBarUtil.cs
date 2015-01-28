@@ -1,6 +1,6 @@
-using System.Drawing;
+using CoreGraphics;
 using System.Linq;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 
@@ -38,8 +38,8 @@ namespace SmartWalk.Client.iOS.Utils
         public static ButtonBarButton Create(
             UIImage verticalIcon,
             UIImage landscapeIcon,
-            SizeF? verticalSize,
-            SizeF? landscapeSize,
+            CGSize? verticalSize,
+            CGSize? landscapeSize,
             SemiTransparentType semiTransparentType = SemiTransparentType.None)
         {
             var button = new ButtonBarButton(

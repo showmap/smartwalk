@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
@@ -91,7 +91,7 @@ namespace SmartWalk.Client.iOS.Utils
                             _navBar);
 
                     _navBarHeightConstraint = vertical
-                        .FirstOrDefault(c => c.Constant.EqualsF(NavBarHeight));
+                        .FirstOrDefault(c => c.Constant.EqualsNF(NavBarHeight));
 
                     constraints.AddRange(vertical);
 

@@ -1,8 +1,8 @@
-﻿using Cirrious.CrossCore;
+using Cirrious.CrossCore;
 using Cirrious.CrossCore.Exceptions;
 using Cirrious.MvvmCross.Plugins.DownloadCache;
 using Cirrious.MvvmCross.Plugins.DownloadCache.Touch;
-using MonoTouch.UIKit;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {
@@ -32,7 +32,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             var fileCache = new MvxImageCache<UIImage>(
                 fileDownloadCache, 
                 config.MaxInMemoryFiles, 
-                config.MaxInMemoryBytes);
+                config.MaxInMemoryBytes,
+                false);
             return fileCache;
         }
 
@@ -43,7 +44,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             var fileCache = new MvxResizedImageCache<UIImage>(
                 fileDownloadCache, 
                 config.MaxInMemoryFiles, 
-                config.MaxInMemoryBytes);
+                config.MaxInMemoryBytes,
+                false);
             return fileCache;
         }
 

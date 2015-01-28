@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
@@ -13,16 +13,16 @@ namespace SmartWalk.Client.iOS.Views.Common
 	partial class ProgressView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIActivityIndicatorView ActivityIndicator { get; set; }
+		UIKit.UIActivityIndicatorView ActivityIndicator { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView LoadingView { get; set; }
+		UIKit.UIView LoadingView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel NoDataLabel { get; set; }
+		UIKit.UILabel NoDataLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel ProgressLabel { get; set; }
+		UIKit.UILabel ProgressLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

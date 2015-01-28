@@ -1,6 +1,6 @@
 using System;
 using GoogleAnalytics;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Services;
 

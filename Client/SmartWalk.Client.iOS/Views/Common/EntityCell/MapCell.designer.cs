@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
@@ -13,19 +13,19 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 	partial class MapCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView AddressContainer { get; set; }
+		UIKit.UIView AddressContainer { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint AddressHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint AddressHeightConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView CoverView { get; set; }
+		UIKit.UIView CoverView { get; set; }
 
 		[Outlet]
-		MonoTouch.MapKit.MKMapView MapView { get; set; }
+		MapKit.MKMapView MapView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
+using CoreGraphics;
 using System.Linq;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Controls;
 
 namespace SmartWalk.Client.iOS.Utils
@@ -13,22 +13,22 @@ namespace SmartWalk.Client.iOS.Utils
         private static readonly Dictionary<WeakReference<UIScrollView>, NSTimer> _timers = 
             new Dictionary<WeakReference<UIScrollView>, NSTimer>();
 
-        public static float ActualContentOffset(this UIScrollView scrollView)
+        public static nfloat ActualContentOffset(this UIScrollView scrollView)
         {
             var result = scrollView.ContentOffset.Y + scrollView.ContentInset.Top;
             return result;
         }
 
-        public static void SetActualContentOffset(this UIScrollView scrollView, float height, bool animated)
+        public static void SetActualContentOffset(this UIScrollView scrollView, nfloat height, bool animated)
         {
             scrollView.SetContentOffset(
-                new PointF(0, height - scrollView.ContentInset.Top), 
+                new CGPoint(0, height - scrollView.ContentInset.Top), 
                 animated);
         }
 
         public static void ScrollOutHeader(
             UIScrollView scrollView, 
-            float headerHeight, 
+            nfloat headerHeight, 
             bool animated)
         {
             if (scrollView.ContentSize.Height > headerHeight)
@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS.Utils
 
         public static void ScrollOutHeaderAfterReload(
             UIScrollView scrollView, 
-            float headerHeight, 
+            nfloat headerHeight, 
             IListViewSource viewSource,
             bool animated)
         {
@@ -60,14 +60,14 @@ namespace SmartWalk.Client.iOS.Utils
                     _timers[newKey] = 
                         NSTimer.CreateRepeatingScheduledTimer(
                             TimeSpan.MinValue, 
-                            new NSAction(() =>
+                            t =>
                             {
                                 if (scrollView.ContentSize.Height > headerHeight)
                                 {
                                     ScrollOutHeader(scrollView, headerHeight, animated);
                                     DisposeTimer(newKey);
                                 }
-                            }));
+                            });
                 }
             }
             else
@@ -76,7 +76,7 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
-        public static void AdjustHeaderPosition(UIScrollView scrollView, float headerHeight, bool animation)
+        public static void AdjustHeaderPosition(UIScrollView scrollView, nfloat headerHeight, bool animation)
         {
             var scrollViewOffset = scrollView.ActualContentOffset();
             if (scrollViewOffset < 0 || scrollView.Decelerating) return;

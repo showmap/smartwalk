@@ -1,4 +1,4 @@
-﻿using Cirrious.MvvmCross.Plugins.DownloadCache;
+using Cirrious.MvvmCross.Plugins.DownloadCache;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {

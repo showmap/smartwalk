@@ -1,8 +1,8 @@
-﻿using Cirrious.CrossCore.Platform;
+using Cirrious.CrossCore.Platform;
 using Cirrious.MvvmCross.Touch.Views;
 using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Views.Common;

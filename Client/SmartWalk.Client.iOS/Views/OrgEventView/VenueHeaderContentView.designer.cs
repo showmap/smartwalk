@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -19,37 +19,37 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.Line BottomSeparator { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIImageView GoRightImageView { get; set; }
+		UIKit.UIImageView GoRightImageView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel ImageLabel { get; set; }
+		UIKit.UILabel ImageLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView ImageLabelView { get; set; }
+		UIKit.UIView ImageLabelView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIImageView LogoImageView { get; set; }
+		UIKit.UIImageView LogoImageView { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel NameLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton NavigateOnMapButton { get; set; }
+		UIKit.UIButton NavigateOnMapButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint PinTopGapConstraint { get; set; }
+		UIKit.NSLayoutConstraint PinTopGapConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TitleLeftGapConstraint { get; set; }
+		UIKit.NSLayoutConstraint TitleLeftGapConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TitleTopGapConstraint { get; set; }
+		UIKit.NSLayoutConstraint TitleTopGapConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
 
 		[Action ("OnNavigateOnMapClick:")]
-		partial void OnNavigateOnMapClick (MonoTouch.UIKit.UIButton sender);
+		partial void OnNavigateOnMapClick (UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

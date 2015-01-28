@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using System;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Controls
@@ -49,7 +49,7 @@ namespace SmartWalk.Client.iOS.Controls
             }
         }
 
-        public override void Draw(RectangleF rect)
+        public override void Draw(CGRect rect)
         {
             base.Draw(rect);
 
@@ -59,7 +59,7 @@ namespace SmartWalk.Client.iOS.Controls
                 var lineWidth = 1 / UIScreen.MainScreen.Scale;
 
                 context.SetFillColor(Color.CGColor);
-                context.FillRect(new RectangleF(0, IsLineOnTop ? 0 : 1 - lineWidth, rect.Width, lineWidth));
+                context.FillRect(new CGRect(0, IsLineOnTop ? 0 : 1 - lineWidth, rect.Width, lineWidth));
             }
         }
     }

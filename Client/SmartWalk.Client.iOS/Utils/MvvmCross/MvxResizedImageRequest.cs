@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Cirrious.CrossCore;
 using Cirrious.CrossCore.Core;
 

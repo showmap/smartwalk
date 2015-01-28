@@ -1,7 +1,7 @@
 using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Utils;
 
 namespace SmartWalk.Client.iOS.Controls
@@ -18,7 +18,7 @@ namespace SmartWalk.Client.iOS.Controls
         {
             base.LayoutSubviews();
 
-            if (ContentSize != SizeF.Empty)
+            if (ContentSize != CGSize.Empty)
             {
                 var contentSize = ContentSize;
                 contentSize.Width = Bounds.Size.Width;

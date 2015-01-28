@@ -1,8 +1,8 @@
 using System;
-using System.Drawing;
+using CoreGraphics;
 using System.Windows.Input;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 
@@ -53,7 +53,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public ICommand ShowOptionsCommand { get; set; }
 
-        public override RectangleF Frame
+        public override CGRect Frame
         {
             set
             {
@@ -86,18 +86,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     : 0;
 
             SearchBar.Frame = 
-                new RectangleF(
-                    PointF.Empty,
-                    new SizeF(
+                new CGRect(
+                    CGPoint.Empty,
+                    new CGSize(
                         Frame.Width - buttonWidth, 
                         DefaultHeight));
 
             OptionsButton.Frame = 
-                new RectangleF(
-                    new PointF(
+                new CGRect(
+                    new CGPoint(
                         Frame.Width - OptionsButtonWith,
                         0),
-                    new SizeF(
+                    new CGSize(
                         OptionsButtonWith,
                         DefaultHeight));
         }

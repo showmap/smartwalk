@@ -1,7 +1,7 @@
 using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 
@@ -10,12 +10,12 @@ namespace SmartWalk.Client.iOS.Controls
     [Register("ButtonBarButton")]
     public class ButtonBarButton : UIButton
     {
-        public static readonly SizeF DefaultVerticalSize = 
-            new SizeF(
+        public static readonly CGSize DefaultVerticalSize = 
+            new CGSize(
                 UIConstants.ToolBarVerticalHeight,
                 UIConstants.ToolBarVerticalHeight);
-        public static readonly SizeF DefaultLandscapeSize = 
-            new SizeF(
+        public static readonly CGSize DefaultLandscapeSize = 
+            new CGSize(
                 UIConstants.ToolBarHorizontalHeight, 
                 UIConstants.ToolBarHorizontalHeight);
 
@@ -50,8 +50,8 @@ namespace SmartWalk.Client.iOS.Controls
         public ButtonBarButton(
             UIImage verticalIcon,
             UIImage landscapeIcon,
-            SizeF? verticalSize,
-            SizeF? landscapeSize,
+            CGSize? verticalSize,
+            CGSize? landscapeSize,
             SemiTransparentType semiTransparentType = SemiTransparentType.None)
                 : base(UIButtonType.Custom)
         {
@@ -66,8 +66,8 @@ namespace SmartWalk.Client.iOS.Controls
 
         public UIImage VerticalIcon { get; set; }
         public UIImage LandscapeIcon { get; set; }
-        public SizeF VerticalSize { get; set; }
-        public SizeF LandscapeSize { get; set; }
+        public CGSize VerticalSize { get; set; }
+        public CGSize LandscapeSize { get; set; }
 
         public SemiTransparentType SemiTransparentType
         {
@@ -105,21 +105,21 @@ namespace SmartWalk.Client.iOS.Controls
 
             if (ScreenUtil.IsVerticalOrientation)
             {
-                Frame = new RectangleF(frame.Location, VerticalSize);
+                Frame = new CGRect(frame.Location, VerticalSize);
 
                 if (VerticalIcon != null || LandscapeIcon != null)
                 {
-                    IconImageView.Frame = new RectangleF(PointF.Empty, VerticalSize);
+                    IconImageView.Frame = new CGRect(CGPoint.Empty, VerticalSize);
                     IconImageView.Image = VerticalIcon;
                 }
             }
             else
             {
-                Frame = new RectangleF(frame.Location, LandscapeSize);
+                Frame = new CGRect(frame.Location, LandscapeSize);
 
                 if (VerticalIcon != null || LandscapeIcon != null)
                 {
-                    IconImageView.Frame = new RectangleF(PointF.Empty, LandscapeSize);
+                    IconImageView.Frame = new CGRect(CGPoint.Empty, LandscapeSize);
                     IconImageView.Image = LandscapeIcon ?? VerticalIcon;
                 }
             }
@@ -151,8 +151,8 @@ namespace SmartWalk.Client.iOS.Controls
         private void Initialize(
             UIImage verticalIcon,
             UIImage landscapeIcon,
-            SizeF? verticalSize,
-            SizeF? landscapeSize,
+            CGSize? verticalSize,
+            CGSize? landscapeSize,
             SemiTransparentType semiTransparentType = SemiTransparentType.None)
         {
             _background = new Circle {

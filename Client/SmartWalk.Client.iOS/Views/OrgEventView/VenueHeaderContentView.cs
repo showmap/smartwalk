@@ -1,8 +1,8 @@
-﻿using System;
-using System.Drawing;
+using System;
+using CoreGraphics;
 using System.Windows.Input;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.Utils;
@@ -148,7 +148,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         SetSelectedState(false);
 
-                        if (Frame.IntersectsWith(new RectangleF(rec.LocationInView(this), SizeF.Empty)) &&
+                        if (Frame.IntersectsWith(new CGRect(rec.LocationInView(this), CGSize.Empty)) &&
                             NavigateVenueCommand != null &&
                             NavigateVenueCommand.CanExecute(DataContext))
                         {

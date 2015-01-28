@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -13,40 +13,40 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class ListSettingsView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView BackgroundView { get; set; }
+		UIKit.UIView BackgroundView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ContainerHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint ContainerHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ContainerTopConstraint { get; set; }
+		UIKit.NSLayoutConstraint ContainerTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel GroupByLocationLabel { get; set; }
+		UIKit.UILabel GroupByLocationLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UISwitch GroupByLocationSwitch { get; set; }
+		UIKit.UISwitch GroupByLocationSwitch { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView PlaceholderView { get; set; }
+		UIKit.UIView PlaceholderView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel SortByLabel { get; set; }
+		UIKit.UILabel SortByLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView SortByPlaceholder { get; set; }
+		UIKit.UIView SortByPlaceholder { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UISegmentedControl SortBySegments { get; set; }
+		UIKit.UISegmentedControl SortBySegments { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
 
 		[Action ("OnGroupByLocationTouchUpInside:")]
-		partial void OnGroupByLocationTouchUpInside (MonoTouch.Foundation.NSObject sender);
+		partial void OnGroupByLocationTouchUpInside (Foundation.NSObject sender);
 
 		[Action ("OnSortBySegmentsValueChanged:")]
-		partial void OnSortBySegmentsValueChanged (MonoTouch.Foundation.NSObject sender);
+		partial void OnSortBySegmentsValueChanged (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

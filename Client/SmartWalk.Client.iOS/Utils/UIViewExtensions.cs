@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using MonoTouch.CoreAnimation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreAnimation;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Utils
@@ -46,7 +45,7 @@ namespace SmartWalk.Client.iOS.Utils
                     view,
                     duration,
                     UIViewAnimationOptions.TransitionCrossDissolve,
-                    new NSAction(() => view.Hidden = hidden),
+                    () => view.Hidden = hidden,
                     null);
             }
             else
@@ -69,8 +68,8 @@ namespace SmartWalk.Client.iOS.Utils
 
                     UIView.Animate(
                         UIConstants.AnimationDuration,
-                        new NSAction(() => view.Alpha = 0),
-                        new NSAction(() => {
+                        () => view.Alpha = 0,
+                        () => {
                             // checking if remove operation was cancelled already
                             if (cancelHandler == null || !cancelHandler())
                             {
@@ -81,7 +80,7 @@ namespace SmartWalk.Client.iOS.Utils
                             {
                                 view.Alpha = 1;
                             }
-                        }));
+                        });
                 }
                 else
                 {
@@ -102,7 +101,7 @@ namespace SmartWalk.Client.iOS.Utils
 
                     UIView.Animate(
                         UIConstants.AnimationDuration,
-                        new NSAction(() => subview.Alpha = 1));
+                        () => subview.Alpha = 1);
                 }
                 else
                 {
@@ -131,14 +130,14 @@ namespace SmartWalk.Client.iOS.Utils
         {
             CATransaction.Begin();
 
-            CATransaction.CompletionBlock = new NSAction(() => {
+            CATransaction.CompletionBlock = () => {
                 var tableSource = tableView.WeakDelegate as UITableViewSource;
                 if (tableSource != null)
                 {
                     // to run NavBar show logic, if table is at (0,0) offset
                     tableSource.DecelerationEnded(tableView);
                 }
-            });
+            };
 
             tableView.BeginUpdates();
             tableView.EndUpdates();

@@ -1,13 +1,13 @@
 using System;
-using System.Drawing;
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using CoreGraphics;
+using UIKit;
+using Foundation;
 
 namespace SmartWalk.Client.iOS.Utils
 {
     public static class ScreenUtil
     {
-        public static readonly float HairLine = 1 / (2 * UIScreen.MainScreen.Scale);
+        public static readonly float HairLine = 1 / (2 * (float)UIScreen.MainScreen.Scale);
 
         public static bool IsVerticalOrientation
         {
@@ -23,33 +23,33 @@ namespace SmartWalk.Client.iOS.Utils
                 orientation == UIInterfaceOrientation.PortraitUpsideDown;
         }
 
-        public static float GetGoldenRatio(float frameHeight)
+        public static float GetGoldenRatio(nfloat frameHeight)
         {
             var result = (float)Math.Ceiling(2 * (frameHeight / 5));
             return result;
         }
 
-        public static float GetProportionalHeight(SizeF defaultSize, float frameWidth)
+        public static float GetProportionalHeight(CGSize defaultSize, nfloat frameWidth)
         {
             var result = frameWidth * defaultSize.Height / defaultSize.Width;
-            return result;
+            return (float)result;
         }
 
-        public static float CalculateTextWidth(float frameHeight, string text, UIFont font)
+        public static float CalculateTextWidth(nfloat frameHeight, string text, UIFont font)
         {
-            return CalculateTextSize(new SizeF(float.MaxValue, frameHeight), text, font).Width;
+            return (float)CalculateTextSize(new CGSize(float.MaxValue, frameHeight), text, font).Width;
         }
 
-        public static float CalculateTextHeight(float frameWidth, string text, UIFont font)
+        public static float CalculateTextHeight(nfloat frameWidth, string text, UIFont font)
         {
-            return CalculateTextSize(new SizeF(frameWidth, float.MaxValue), text, font).Height;
+            return (float)CalculateTextSize(new CGSize(frameWidth, float.MaxValue), text, font).Height;
         }
 
-        public static SizeF CalculateTextSize(SizeF frame, string text, UIFont font)
+        public static CGSize CalculateTextSize(CGSize frame, string text, UIFont font)
         {
             if (!string.IsNullOrEmpty(text))
             {
-                RectangleF textSize;
+                CGRect textSize;
 
                 using (var ns = new NSString(text))
                 {
@@ -61,12 +61,12 @@ namespace SmartWalk.Client.iOS.Utils
                         null);
                 }
 
-                return new SizeF(
+                return new CGSize(
                     (float)Math.Ceiling(textSize.Width), 
                     (float)Math.Ceiling(textSize.Height));
             }
 
-            return SizeF.Empty;
+            return CGSize.Empty;
         }
     }
 }

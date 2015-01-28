@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Cirrious.CrossCore.Core;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
@@ -90,7 +90,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 UIView.Animate(
                     UIConstants.AnimationLongerDuration, 
-                    new NSAction(SetNeedsStatusBarAppearanceUpdate));
+                    SetNeedsStatusBarAppearanceUpdate);
             }
             else
             {

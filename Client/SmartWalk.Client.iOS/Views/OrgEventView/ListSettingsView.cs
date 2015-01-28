@@ -1,8 +1,8 @@
-﻿using System;
-using System.Drawing;
+using System;
+using CoreGraphics;
 using System.Windows.Input;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Views.Common.Base;
@@ -29,7 +29,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public ICommand GroupByLocationCommand { get; set; }
         public ICommand SortByCommand { get; set; }
 
-        public float MarginTop
+        public nfloat MarginTop
         {
             get { return ContainerTopConstraint.Constant; }
             set { ContainerTopConstraint.Constant = value; }
@@ -97,7 +97,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             PlaceholderView.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
             PlaceholderView.Layer.ShadowColor = UIColor.Black.CGColor;
-            PlaceholderView.Layer.ShadowOffset = new SizeF(0, 5);
+            PlaceholderView.Layer.ShadowOffset = new CGSize(0, 5);
             PlaceholderView.Layer.ShadowOpacity = 0.3f;
 
             GroupByLocationLabel.Font = Theme.OrgEventHeaderFont;

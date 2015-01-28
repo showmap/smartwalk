@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
@@ -172,7 +172,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             _indicatorView = new UIActivityIndicatorView(
                 UIActivityIndicatorViewStyle.Gray) 
             {
-                Frame = new RectangleF(0, 0, 40, 40)
+                Frame = new CGRect(0, 0, 40, 40)
             };
             ProgressButton.CustomView = _indicatorView;
         }

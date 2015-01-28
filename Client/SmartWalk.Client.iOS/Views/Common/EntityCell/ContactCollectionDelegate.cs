@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Windows.Input;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;

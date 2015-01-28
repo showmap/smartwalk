@@ -1,4 +1,4 @@
-﻿using Cirrious.MvvmCross.Plugins.DownloadCache;
+using Cirrious.MvvmCross.Plugins.DownloadCache;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {
@@ -7,8 +7,9 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
         public MvxResizedImageCache(
             IMvxFileDownloadCache fileDownloadCache, 
             int maxInMemoryFiles, 
-            int maxInMemoryBytes) 
-            : base(fileDownloadCache, maxInMemoryFiles, maxInMemoryBytes)
+            int maxInMemoryBytes,
+            bool disposeOnRemove) 
+            : base(fileDownloadCache, maxInMemoryFiles, maxInMemoryBytes, disposeOnRemove)
         {
         }
     }

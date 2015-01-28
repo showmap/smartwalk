@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Cirrious.MvvmCross.Plugins.File.Touch;
 using SmartWalk.Client.Core.Services;

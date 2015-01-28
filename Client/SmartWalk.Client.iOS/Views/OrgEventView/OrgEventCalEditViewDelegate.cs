@@ -1,5 +1,5 @@
-﻿using MonoTouch.EventKit;
-using MonoTouch.EventKitUI;
+using EventKit;
+using EventKitUI;
 using SmartWalk.Client.Core.ViewModels;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView

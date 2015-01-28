@@ -1,5 +1,5 @@
-﻿using MonoTouch.EventKitUI;
-using MonoTouch.UIKit;
+using EventKitUI;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Globalization;
 using Cirrious.CrossCore.Converters;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;

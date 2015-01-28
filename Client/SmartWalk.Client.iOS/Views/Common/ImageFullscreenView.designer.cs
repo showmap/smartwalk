@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
@@ -16,10 +16,10 @@ namespace SmartWalk.Client.iOS.Views.Common
 		SmartWalk.Client.iOS.Controls.ButtonBarButton CloseButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CloseButtonHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint CloseButtonHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CloseButtonWidthConstraint { get; set; }
+		UIKit.NSLayoutConstraint CloseButtonWidthConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.ProgressImageView ImageView { get; set; }
@@ -28,7 +28,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 		SmartWalk.Client.iOS.Views.Common.ImageZoomScrollView ScrollView { get; set; }
 
 		[Action ("OnCloseButtonTouchUpInside:forEvent:")]
-		partial void OnCloseButtonTouchUpInside (MonoTouch.UIKit.UIButton sender, MonoTouch.UIKit.UIEvent @event);
+		partial void OnCloseButtonTouchUpInside (UIKit.UIButton sender, UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{

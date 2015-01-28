@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.CoreLocation;
-using MonoTouch.MapKit;
+using CoreLocation;
+using MapKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;

@@ -1,6 +1,6 @@
 using System;
-using MonoTouch.CoreLocation;
-using MonoTouch.MapKit;
+using CoreLocation;
+using MapKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.iOS.Utils.Map;
 
@@ -12,6 +12,8 @@ namespace SmartWalk.Client.iOS.Utils.Map
         private readonly string _title;
         private readonly string _subTitle;
 
+        private CLLocationCoordinate2D _coordinate;
+
         public MapViewAnnotation(string pin, string title, Address address)
         {
             if (address == null) throw new ArgumentNullException("address");
@@ -20,12 +22,15 @@ namespace SmartWalk.Client.iOS.Utils.Map
             _title = title;
             _subTitle = address.AddressText;
 
-            Coordinate = new CLLocationCoordinate2D(
+            _coordinate = new CLLocationCoordinate2D(
                 address.Latitude,
                 address.Longitude);
         }
 
-        public override CLLocationCoordinate2D Coordinate { get; set; }
+        public override CLLocationCoordinate2D Coordinate
+        { 
+            get { return _coordinate; }
+        }
 
         public string Pin 
         {
@@ -45,6 +50,11 @@ namespace SmartWalk.Client.iOS.Utils.Map
         public virtual object DataContext
         {
             get { return null; }
+        }
+
+        public override void SetCoordinate(CLLocationCoordinate2D value)
+        {
+            _coordinate = value;
         }
     }
 }

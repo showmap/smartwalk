@@ -1,7 +1,7 @@
 using System;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
@@ -49,7 +49,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
             _scrollToHideManager.ScrollFinished();
         }
 
-        public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var item = GetItemAt(indexPath);
 

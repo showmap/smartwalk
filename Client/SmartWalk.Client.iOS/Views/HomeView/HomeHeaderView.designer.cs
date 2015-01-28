@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 	partial class HomeHeaderView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UILabel TitleLabel { get; set; }
+		UIKit.UILabel TitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

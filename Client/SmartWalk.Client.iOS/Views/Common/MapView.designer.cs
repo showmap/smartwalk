@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common
@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 	partial class MapView
 	{
 		[Outlet]
-		MonoTouch.MapKit.MKMapView MapViewControl { get; set; }
+		MapKit.MKMapView MapViewControl { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

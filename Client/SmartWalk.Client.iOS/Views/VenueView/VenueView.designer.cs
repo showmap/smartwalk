@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
@@ -13,10 +13,10 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 	partial class VenueView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
+		UIKit.UIView ProgressViewContainer { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
+		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.FixedTableView VenueShowsTableView { get; set; }

@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -13,64 +13,64 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class VenueShowCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
+		UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton DetailsButton { get; set; }
+		UIKit.UIButton DetailsButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel DetailsLabel { get; set; }
+		UIKit.UILabel DetailsLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel EndTimeLabel { get; set; }
+		UIKit.UILabel EndTimeLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView HeaderContainer { get; set; }
+		UIKit.UIView HeaderContainer { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
+		UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
+		UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel StartTimeLabel { get; set; }
+		UIKit.UILabel StartTimeLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView SubHeaderContainer { get; set; }
+		UIKit.UIView SubHeaderContainer { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint SubHeaderHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint SubHeaderHeightConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView TimeBackgroundView { get; set; }
+		UIKit.UIView TimeBackgroundView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TimeTopConstraint { get; set; }
+		UIKit.NSLayoutConstraint TimeTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TitleAndDescriptionSpaceConstraint { get; set; }
+		UIKit.NSLayoutConstraint TitleAndDescriptionSpaceConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
 
 		[Action ("OnDetailsButtonClick:")]
-		partial void OnDetailsButtonClick (MonoTouch.Foundation.NSObject sender);
+		partial void OnDetailsButtonClick (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

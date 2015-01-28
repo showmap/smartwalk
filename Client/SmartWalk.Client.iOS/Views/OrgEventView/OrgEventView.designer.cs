@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
@@ -13,10 +13,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class OrgEventView
 	{
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint FullscreenHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint FullscreenHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint FullscreenWidthConstraint { get; set; }
+		UIKit.NSLayoutConstraint FullscreenWidthConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line MapBottomSeparator { get; set; }
@@ -25,31 +25,31 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.ButtonBarButton MapFullscreenButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView MapPanel { get; set; }
+		UIKit.UIView MapPanel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint MapToTableConstraint { get; set; }
+		UIKit.NSLayoutConstraint MapToTableConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView ProgressViewContainer { get; set; }
+		UIKit.UIView ProgressViewContainer { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
+		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
 
 		[Outlet]
-		MonoTouch.MapKit.MKMapView VenuesMapView { get; set; }
+		MapKit.MKMapView VenuesMapView { get; set; }
 
 		[Action ("OnMapFullscreenTouchUpInside:")]
-		partial void OnMapFullscreenTouchUpInside (MonoTouch.Foundation.NSObject sender);
+		partial void OnMapFullscreenTouchUpInside (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{

@@ -1,8 +1,8 @@
 using System;
-using System.Drawing;
+using CoreGraphics;
 using System.Windows.Input;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Shared.Utils;
@@ -45,7 +45,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return (EntityCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static float CalculateCellHeight(SizeF frame, IEntityCellContext context)
+        public static float CalculateCellHeight(CGSize frame, IEntityCellContext context)
         {
             var textHeight = ScreenUtil.CalculateTextHeight(
                 frame.Width - Gap * 2, 
@@ -60,7 +60,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return result;
         }
 
-        private static float GetHeaderHeight(SizeF frame, Entity entity)
+        private static float GetHeaderHeight(CGSize frame, Entity entity)
         {
             if (ScreenUtil.IsVerticalOrientation)
             {
@@ -77,10 +77,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return goldenHeight;
         }
 
-        private static float GetImageVerticalHeight(float frameWidth)
+        private static float GetImageVerticalHeight(nfloat frameWidth)
         {
             var result = ScreenUtil.GetProportionalHeight(
-                new SizeF(DefaultImageVerticalWidth, DefaultImageVerticalHeight), frameWidth);
+                new CGSize(DefaultImageVerticalWidth, DefaultImageVerticalHeight), frameWidth);
             return (float)Math.Ceiling(result);
         }
 
@@ -241,12 +241,12 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
 
             // HACK: to make sure that Frames are updated (on first opening they aren't)
-            ImageCellPlaceholder.Frame = new RectangleF(
+            ImageCellPlaceholder.Frame = new CGRect(
                 0, 
                 0, 
                 ImageWidthConstraint.Constant,
                 ImageHeightConstraint.Constant);
-            MapCellPlaceholder.Frame = new RectangleF(
+            MapCellPlaceholder.Frame = new CGRect(
                 MapXConstraint.Constant,
                 MapYConstraint.Constant,
                 MapWidthConstraint.Constant,

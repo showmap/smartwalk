@@ -1,4 +1,4 @@
-﻿namespace SmartWalk.Client.iOS.Utils
+namespace SmartWalk.Client.iOS.Utils
 {
     public static class UIConstants
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Utils;

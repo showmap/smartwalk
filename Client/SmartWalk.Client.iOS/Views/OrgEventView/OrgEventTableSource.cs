@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Linq;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
@@ -81,7 +81,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             tableView.DeselectRow(indexPath, false);
         }
 
-        public override float GetHeightForHeader(UITableView tableView, int section)
+        public override nfloat GetHeightForHeader(UITableView tableView, nint section)
         {
             if (_viewModel.IsGroupedByLocation)
             {
@@ -97,7 +97,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return 0;
         }
 
-        public override float GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
         {
             var show = GetItemAt(indexPath);
             if (show != null && show.Id == Show.DayGroupId)
@@ -121,12 +121,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return VenueShowCell.DefaultHeight;
         }
 
-        public override int NumberOfSections(UITableView tableView)
+        public override nint NumberOfSections(UITableView tableView)
         {
             return ItemsSource != null ? ItemsSource.Length : 0;
         }
 
-        public override int RowsInSection(UITableView tableview, int section)
+        public override nint RowsInSection(UITableView tableview, nint section)
         {
             var emptyRow = IsSearchSource &&
                 section == NumberOfSections(tableview) - 1 ? 1 : 0; // empty row for search
@@ -138,12 +138,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         : 0) + emptyRow;
         }
 
-        public override string TitleForHeader(UITableView tableView, int section)
+        public override string TitleForHeader(UITableView tableView, nint section)
         {
             return null;
         }
 
-        public override UIView GetViewForHeader(UITableView tableView, int section)
+        public override UIView GetViewForHeader(UITableView tableView, nint section)
         {
             var venue = ItemsSource[section];
 
@@ -367,7 +367,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 return TableView != null && 
                         TableView.TableHeaderView != null
-                    ? TableView.TableHeaderView.Frame.Height 
+                    ? (float)TableView.TableHeaderView.Frame.Height 
                     : 0; 
             }
         }
@@ -414,7 +414,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ScrollOutHeader();
         }
 
-        public override int RowsInSection(UITableView tableview, int section)
+        public override nint RowsInSection(UITableView tableview, nint section)
         {
             return 0;
         }

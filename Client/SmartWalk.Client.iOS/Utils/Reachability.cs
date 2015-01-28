@@ -1,4 +1,4 @@
-using MonoTouch.SystemConfiguration;
+using SystemConfiguration;
 
 namespace SmartWalk.Client.iOS.Utils
 {

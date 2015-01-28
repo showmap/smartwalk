@@ -3,16 +3,13 @@ using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.ViewModels;
 using GoogleAnalytics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Services;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.Core.Services;
-#if ADHOC
-using MonoTouch.TestFlight;
-#endif
 
 namespace SmartWalk.Client.iOS
 {
@@ -29,10 +26,6 @@ namespace SmartWalk.Client.iOS
             UISynchronizationContext.Current = SynchronizationContext.Current;
 
             _settings = AppSettingsUtil.LoadSettings();
-
-#if ADHOC
-            InitializeTestFlight();
-#endif
 
             InitializeVersion();
             InitializeUserDefaults();
@@ -101,13 +94,6 @@ namespace SmartWalk.Client.iOS
         {
             NavBarManager.Instance.Layout();
         }
-
-#if ADHOC
-        private void InitializeTestFlight()
-        {
-            TestFlight.TakeOffThreadSafe(_settings.TestFlightToken);
-        }
-#endif
 
         private void InitializeVersion()
         {

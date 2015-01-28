@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.iOS.Utils
@@ -70,7 +70,7 @@ namespace SmartWalk.Client.iOS.Utils
 
         public void ScrollFinished()
         {
-            if (_scrollView.ContentOffset.Y.EqualsF(0))
+            if (_scrollView.ContentOffset.Y.EqualsNF(0))
             {
                 OnShowUI();
             }

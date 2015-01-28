@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using GoogleAnalytics;
-using MonoTouch.Foundation;
+using Foundation;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Services;
 

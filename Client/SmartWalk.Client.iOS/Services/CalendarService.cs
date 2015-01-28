@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using EventKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Services;
@@ -36,14 +36,14 @@ namespace SmartWalk.Client.iOS.Services
 
         public async Task<CalendarEvent> CreateNewEvent(OrgEvent orgEvent)
         {
-            var hasAccess = await EventStore.RequestAccessAsync(EKEntityType.Event);
-            if (hasAccess)
+            var result = await EventStore.RequestAccessAsync(EKEntityType.Event);
+            if (result.Item1 && result.Item2 == null)
             {
                 var newEvent = EKEvent.FromStore(EventStore);
 
                 newEvent.AllDay = true;
-                newEvent.StartDate = orgEvent.StartTime;
-                newEvent.EndDate = orgEvent.EndTime ?? orgEvent.StartTime;
+                newEvent.StartDate = (NSDate)orgEvent.StartTime;
+                newEvent.EndDate = (NSDate)(orgEvent.EndTime ?? orgEvent.StartTime);
                 newEvent.Location = string.Format("{0},{1}", orgEvent.Latitude, orgEvent.Longitude);
                 newEvent.Title = orgEvent.Title;
                 newEvent.Notes = orgEvent.Description;

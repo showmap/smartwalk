@@ -1,9 +1,9 @@
-﻿using System;
-using System.Drawing;
+using System;
+using CoreGraphics;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.CoreAnimation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreAnimation;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
@@ -76,7 +76,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        public override RectangleF Frame
+        public override CGRect Frame
         {
             get { return base.Frame; }
             set

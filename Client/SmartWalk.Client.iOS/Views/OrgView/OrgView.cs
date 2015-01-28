@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using MonoTouch.UIKit;
+using UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;

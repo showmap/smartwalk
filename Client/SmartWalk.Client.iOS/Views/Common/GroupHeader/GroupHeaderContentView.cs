@@ -1,6 +1,6 @@
-﻿using System;
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using System;
+using UIKit;
+using Foundation;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 using SmartWalk.Client.iOS.Resources;
 

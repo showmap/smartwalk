@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
@@ -16,13 +16,13 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 		SmartWalk.Client.iOS.Controls.Circle CalendarView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel DayLabel { get; set; }
+		UIKit.UILabel DayLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel EventTitleLabel { get; set; }
+		UIKit.UILabel EventTitleLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel MonthLabel { get; set; }
+		UIKit.UILabel MonthLabel { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }

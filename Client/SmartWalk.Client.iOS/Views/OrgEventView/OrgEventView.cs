@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using CoreGraphics;
 using System.Linq;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using MonoTouch.CoreLocation;
-using MonoTouch.EventKit;
-using MonoTouch.EventKitUI;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
+using CoreLocation;
+using EventKit;
+using EventKitUI;
+using Foundation;
+using MapKit;
+using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
@@ -774,7 +774,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private float GetListSettingsTopMargin()
+        private nfloat GetListSettingsTopMargin()
         {
             var headerLocation = 
                 View.ConvertPointFromView(
@@ -1045,7 +1045,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     previousOffset.Y + delta > 0)
                 {
                     tableView.SetContentOffset(
-                        new PointF(previousOffset.X, previousOffset.Y + delta), 
+                        new CGPoint(previousOffset.X, previousOffset.Y + delta), 
                         true);
                 }
             }
@@ -1069,7 +1069,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenuesAndShowsTableView.ContentInset;
 
                 VenuesAndShowsTableView.ContentOffset =
-                    new PointF(previousOffset.X, previousOffset.Y + delta);
+                    new CGPoint(previousOffset.X, previousOffset.Y + delta);
             }
             else 
             {

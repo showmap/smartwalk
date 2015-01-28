@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
@@ -13,13 +13,13 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 	partial class NextVenueCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView ContainerView { get; set; }
+		UIKit.UIView ContainerView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIImageView DownImageView { get; set; }
+		UIKit.UIImageView DownImageView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel NextTitleLabel { get; set; }
+		UIKit.UILabel NextTitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

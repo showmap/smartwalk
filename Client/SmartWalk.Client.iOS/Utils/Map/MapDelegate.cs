@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Drawing;
+using CoreGraphics;
 using System.Windows.Input;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
+using Foundation;
+using MapKit;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Controls;
@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
 
         public override MKAnnotationView GetViewForAnnotation(
             MKMapView mapView,
-            NSObject annotation)
+            IMKAnnotation annotation)
         {
             if (annotation is MKUserLocation)
             {
@@ -62,7 +62,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
                 annotationView.CanShowCallout = CanShowCallout;
                 annotationView.Image = ThemeIcons.MapPin;
                 annotationView.CenterOffset = Theme.MapPinOffset;
-                annotationView.CalloutOffset = new PointF(0, 0);
+                annotationView.CalloutOffset = new CGPoint(0, 0);
                 annotationView.RemoveSubviews();
 
                 var numberLabel = new UILabel { 
@@ -71,14 +71,14 @@ namespace SmartWalk.Client.iOS.Utils.Map
                     TextAlignment = UITextAlignment.Center,
                     BackgroundColor = UIColor.Clear,
                     Text = mapAnnotation.Pin,
-                    Frame = new RectangleF(Theme.MapPinTextOffset, new SizeF(25, 25))
+                    Frame = new CGRect(Theme.MapPinTextOffset, new CGSize(25, 25))
                 };
                 annotationView.AddSubview(numberLabel);
 
                 if (CanShowCallout && CanShowDetails)
                 {
                     var detailButton = UIButton.FromType(UIButtonType.Custom);
-                    detailButton.Frame = new RectangleF(0, 0, 32, 32);
+                    detailButton.Frame = new CGRect(0, 0, 32, 32);
                     detailButton.ImageView.ContentMode = UIViewContentMode.Center;
                     detailButton.ClipsToBounds = false;
                     detailButton.SetImage(ThemeIcons.Forward, UIControlState.Normal);

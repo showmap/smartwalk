@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml.Serialization;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 

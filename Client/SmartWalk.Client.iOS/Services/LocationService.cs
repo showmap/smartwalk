@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using MonoTouch.CoreLocation;
-using MonoTouch.UIKit;
+using CoreLocation;
+using UIKit;
 using Refractored.MvxPlugins.Settings;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Resources;

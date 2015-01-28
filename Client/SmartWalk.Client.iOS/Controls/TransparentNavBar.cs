@@ -1,8 +1,8 @@
-﻿using System;
-using System.Drawing;
+using System;
+using CoreGraphics;
 using System.Linq;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 
@@ -55,7 +55,7 @@ namespace SmartWalk.Client.iOS.Controls
             }
         }
 
-        public override UIView HitTest(PointF point, UIEvent uievent)
+        public override UIView HitTest(CGPoint point, UIEvent uievent)
         {
             if (IsTransparent)
             {
@@ -80,8 +80,8 @@ namespace SmartWalk.Client.iOS.Controls
 
                 foreach (var itemView in itemViews)
                 {
-                    var frame = new RectangleF(
-                        new PointF(itemView.Frame.X, Frame.Height - itemView.Frame.Height),
+                    var frame = new CGRect(
+                        new CGPoint(itemView.Frame.X, Frame.Height - itemView.Frame.Height),
                         itemView.Frame.Size);
                     itemView.Frame = frame;
                 }
@@ -121,7 +121,7 @@ namespace SmartWalk.Client.iOS.Controls
 
             if (animated)
             {
-                UIView.Animate(UIConstants.AnimationDuration, new NSAction(action));
+                UIView.Animate(UIConstants.AnimationDuration, action);
             }
             else
             {

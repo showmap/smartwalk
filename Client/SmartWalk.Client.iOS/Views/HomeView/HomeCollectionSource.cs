@@ -1,7 +1,7 @@
 using System;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
@@ -36,7 +36,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             }
         }
 
-        public override int NumberOfSections(UICollectionView collectionView)
+        public override nint NumberOfSections(UICollectionView collectionView)
         {
             return 1;
         }

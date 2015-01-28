@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
@@ -13,31 +13,31 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 	partial class ContactsView
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView BackgroundView { get; set; }
+		UIKit.UIView BackgroundView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton CloseButton { get; set; }
+		UIKit.UIButton CloseButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CollectionBottomConstraint { get; set; }
+		UIKit.NSLayoutConstraint CollectionBottomConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint CollectionTopConstraint { get; set; }
+		UIKit.NSLayoutConstraint CollectionTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UICollectionView CollectionView { get; set; }
+		UIKit.UICollectionView CollectionView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint PlaceholderBottomConstraint { get; set; }
+		UIKit.NSLayoutConstraint PlaceholderBottomConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.NSLayoutConstraint PlaceholderTopConstraint { get; set; }
+		UIKit.NSLayoutConstraint PlaceholderTopConstraint { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIView PlaceholderView { get; set; }
+		UIKit.UIView PlaceholderView { get; set; }
 
 		[Action ("OnCloseButtonClick:forEvent:")]
-		partial void OnCloseButtonClick (MonoTouch.Foundation.NSObject sender, MonoTouch.UIKit.UIEvent @event);
+		partial void OnCloseButtonClick (Foundation.NSObject sender, UIKit.UIEvent @event);
 		
 		void ReleaseDesignerOutlets ()
 		{

@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using System.Linq;
+using Foundation;
+using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
@@ -68,7 +68,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                     View.Add(_contactsView);
                     UIView.Animate(
                         UIConstants.AnimationDuration, 
-                        new NSAction(() => _contactsView.Alpha = 1));
+                        () => _contactsView.Alpha = 1);
                 }
 
                 _contactsView.Entity = entity;
@@ -77,8 +77,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 UIView.Animate(
                     UIConstants.AnimationDuration, 
-                    new NSAction(() => _contactsView.Alpha = 0),
-                    new NSAction(_contactsView.RemoveFromSuperview));
+                    () => _contactsView.Alpha = 0,
+                    _contactsView.RemoveFromSuperview);
 
                 DisposeContactsView();
             }
