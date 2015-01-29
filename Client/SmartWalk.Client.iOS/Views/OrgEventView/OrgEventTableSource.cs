@@ -59,7 +59,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             var venueNumber = ItemsSource.ToList().FindIndex(v => v.Info.Id == venue.Info.Id);
             return venueNumber >= 0 
-                ? NSIndexPath.FromRowSection(int.MaxValue, venueNumber)
+                ? NSIndexPath.FromRowSection(nint.MaxValue, venueNumber)
                 : null;
         }
 

@@ -23,6 +23,7 @@ namespace SmartWalk.Client.iOS.Utils
                 orientation == UIInterfaceOrientation.PortraitUpsideDown;
         }
 
+        // TODO: Maybe mandatory take Height from KeyWindow
         public static float GetGoldenRatio(nfloat frameHeight)
         {
             var result = (float)Math.Ceiling(2 * (frameHeight / 5));
@@ -37,12 +38,12 @@ namespace SmartWalk.Client.iOS.Utils
 
         public static float CalculateTextWidth(nfloat frameHeight, string text, UIFont font)
         {
-            return (float)CalculateTextSize(new CGSize(float.MaxValue, frameHeight), text, font).Width;
+            return (float)CalculateTextSize(new CGSize(nfloat.MaxValue, frameHeight), text, font).Width;
         }
 
         public static float CalculateTextHeight(nfloat frameWidth, string text, UIFont font)
         {
-            return (float)CalculateTextSize(new CGSize(frameWidth, float.MaxValue), text, font).Height;
+            return (float)CalculateTextSize(new CGSize(frameWidth, nfloat.MaxValue), text, font).Height;
         }
 
         public static CGSize CalculateTextSize(CGSize frame, string text, UIFont font)

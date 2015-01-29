@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 	partial class OrgView
 	{
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.FixedTableView OrgEventsTableView { get; set; }
+        UIKit.UITableView OrgEventsTableView { get; set; }
 
 		[Outlet]
 		UIKit.UIView ProgressViewContainer { get; set; }

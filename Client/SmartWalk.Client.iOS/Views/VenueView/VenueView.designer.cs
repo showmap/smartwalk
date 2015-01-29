@@ -19,7 +19,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.FixedTableView VenueShowsTableView { get; set; }
+        UIKit.UITableView VenueShowsTableView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

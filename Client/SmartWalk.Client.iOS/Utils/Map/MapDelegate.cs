@@ -1,20 +1,15 @@
-using System.Collections.Generic;
-using CoreGraphics;
 using System.Windows.Input;
-using Foundation;
+using CoreGraphics;
 using MapKit;
-using UIKit;
+using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
-using SmartWalk.Client.iOS.Controls;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils.Map
 {
     public class MapDelegate : MKMapViewDelegate
     {
-        private readonly List<MKAnnotationView> _viewLinksList = 
-            new List<MKAnnotationView>(); // to prevent GC
-
         private readonly string _annotationIdentifier = "BasicAnnotation";
 
         public MapDelegate()
@@ -49,11 +44,6 @@ namespace SmartWalk.Client.iOS.Utils.Map
             else
             {
                 annotationView.Annotation = annotation;
-            }
-
-            if (!_viewLinksList.Contains(annotationView))
-            {
-                _viewLinksList.Add(annotationView);
             }
 
             var mapAnnotation = annotation as IMapAnnotation;

@@ -43,7 +43,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.FixedTableView VenuesAndShowsTableView { get; set; }
+        UIKit.UITableView VenuesAndShowsTableView { get; set; }
 
 		[Outlet]
 		MapKit.MKMapView VenuesMapView { get; set; }

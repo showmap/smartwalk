@@ -27,13 +27,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public static readonly UINib Nib = UINib.FromName("EntityCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("EntityCell");
 
-        // HACK: Can't call to Superview due to memory leak
-        private WeakReference<UIView> _parentTableRef;
         private UITapGestureRecognizer _headerImageTapGesture;
         private UITapGestureRecognizer _descriptionTapGesture;
 
         private NSObject _orientationObserver;
-        private bool _updateScheduled;
+        private bool _updateConstraintsScheduled;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
@@ -47,16 +45,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         public static float CalculateCellHeight(CGSize frame, IEntityCellContext context)
         {
-            var textHeight = ScreenUtil.CalculateTextHeight(
-                frame.Width - Gap * 2, 
-                context.FullDescription(), 
-                Theme.EntityDescriptionFont);
+            var descriptionHeight = GetDescriptionHeight(frame.Width, context);
             var result = 
                 GetHeaderHeight(frame, context.Entity) + 
-                (!textHeight.EqualsF(0) ? Gap * 2 : 0) + 
-                (context.IsDescriptionExpanded ?
-                    textHeight 
-                    : Math.Min(textHeight, DefaultDescriptionTextHeight));
+                    descriptionHeight;
             return result;
         }
 
@@ -75,6 +67,19 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
             var goldenHeight = ScreenUtil.GetGoldenRatio(frame.Height);
             return goldenHeight;
+        }
+
+        private static float GetDescriptionHeight(nfloat frameWidth, IEntityCellContext context)
+        {
+            var textHeight = ScreenUtil.CalculateTextHeight(
+                frameWidth - Gap * 2, 
+                context.FullDescription(), 
+                Theme.EntityDescriptionFont);
+            var result = (!textHeight.EqualsF(0) ? Gap * 2 : 0) + 
+                (context.IsDescriptionExpanded ?
+                    textHeight 
+                    : Math.Min(textHeight, DefaultDescriptionTextHeight));
+            return result;
         }
 
         private static float GetImageVerticalHeight(nfloat frameWidth)
@@ -114,10 +119,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             base.WillMoveToSuperview(newsuper);
 
-            _parentTableRef = newsuper != null
-                ? new WeakReference<UIView>(newsuper)
-                : null;
-
             if (newsuper == null)
             {
                 ExpandCollapseCommand = null;
@@ -136,10 +137,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             base.LayoutSubviews();
 
-            if (_updateScheduled)
+            if (_updateConstraintsScheduled)
             {
                 UpdateConstraintConstants();
-                _updateScheduled = false;
+                _updateConstraintsScheduled = false;
             }
         }
 
@@ -174,21 +175,19 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 ? DataContext.Entity
                 : null;
 
-            UpdateConstraintConstants();
+            _updateConstraintsScheduled = true;
+            SetNeedsLayout();
         }
 
         private void UpdateConstraintConstants()
         {
-            UIView parentTable;
-            if (_parentTableRef == null || !_parentTableRef.TryGetTarget(out parentTable)) return;
+            var headerHeight = Bounds.Height - 
+                (DataContext != null ? GetDescriptionHeight(Bounds.Width, DataContext) : 0);
+            var imageVerticalHeight = GetImageVerticalHeight(Bounds.Width);
 
-            // HACK: getting frame of superview due to wrong size on rotation (height is content height)
-            var frame = parentTable.Superview.Frame;
-            var entity = DataContext != null ? DataContext.Entity : null;
-            var headerHeight = GetHeaderHeight(frame.Size, entity);
             HeaderHeightConstraint.Constant = headerHeight;
 
-            var imageVerticalHeight = GetImageVerticalHeight(frame.Width);
+            var entity = DataContext != null ? DataContext.Entity : null;
             if (entity != null)
             {
                 if (ScreenUtil.IsVerticalOrientation)
@@ -277,7 +276,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             if (Window == null)
             {
-                _updateScheduled = true;
+                _updateConstraintsScheduled = true;
                 return;
             }
 
