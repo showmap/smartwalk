@@ -1,6 +1,7 @@
 using System.Windows.Input;
 using CoreGraphics;
 using MapKit;
+using ObjCRuntime;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils.Map;
@@ -30,10 +31,7 @@ namespace SmartWalk.Client.iOS.Utils.Map
             MKMapView mapView,
             IMKAnnotation annotation)
         {
-            if (annotation is MKUserLocation)
-            {
-                return null;
-            }
+            if (IsUserLocation(annotation, mapView)) return null;
 
             var annotationView = mapView.DequeueReusableAnnotation(_annotationIdentifier);
             if (annotationView == null)
@@ -122,6 +120,12 @@ namespace SmartWalk.Client.iOS.Utils.Map
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
+        }
+
+        private static bool IsUserLocation(IMKAnnotation annotation, MKMapView mapView)
+        {
+            var userLocation = Runtime.GetNSObject(annotation.Handle) as MKUserLocation;
+            return userLocation != null && userLocation == mapView.UserLocation;
         }
     }
 }
