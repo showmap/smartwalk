@@ -42,8 +42,8 @@ namespace SmartWalk.Client.iOS.Services
                 var newEvent = EKEvent.FromStore(EventStore);
 
                 newEvent.AllDay = true;
-                newEvent.StartDate = (NSDate)orgEvent.StartTime;
-                newEvent.EndDate = (NSDate)(orgEvent.EndTime ?? orgEvent.StartTime);
+                newEvent.StartDate = orgEvent.StartTime.ToNSDate();
+                newEvent.EndDate = (orgEvent.EndTime ?? orgEvent.StartTime).ToNSDate();
                 newEvent.Location = string.Format("{0},{1}", orgEvent.Latitude, orgEvent.Longitude);
                 newEvent.Title = orgEvent.Title;
                 newEvent.Notes = orgEvent.Description;

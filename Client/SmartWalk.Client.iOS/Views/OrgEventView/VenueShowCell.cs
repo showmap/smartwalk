@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static readonly NSDateFormatter TimeFormatter = new NSDateFormatter {
             DateStyle = NSDateFormatterStyle.None,
             TimeStyle = NSDateFormatterStyle.Short,
-            TimeZone = NSTimeZone.FromName("UTC")
+            TimeZone = NSTimeZone.DefaultTimeZone
         };
 
         private const string Space = " ";
@@ -552,7 +552,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private static string GetShowTimeText(DateTime? time)
         {
-            return time.HasValue ? TimeFormatter.ToString((NSDate)time.Value) : null;
+            return time.HasValue ? TimeFormatter.ToString(time.Value.ToNSDate()) : null;
         }
 
         private static UIFont GetShowStartTimeFont(ShowStatus status)
