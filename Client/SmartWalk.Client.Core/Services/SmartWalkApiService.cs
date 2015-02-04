@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using SmartWalk.Shared.DataContracts;
-using SmartWalk.Shared.DataContracts.Api;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Shared.DataContracts;
+using SmartWalk.Shared.DataContracts.Api;
 
 namespace SmartWalk.Client.Core.Services
 {
@@ -36,18 +37,12 @@ namespace SmartWalk.Client.Core.Services
 
             if (response != null && response.Data != null)
             {
-                var eventMetadatas = response
-                    .Data
-                    .Selects[0].Records
-                    .Cast<JObject>()
-                    .Select(r => r.ToObject<EventMetadata>())
+                var eventMetadatas = response.Data
+                    .GetRecords<EventMetadata>(0)
                     .ToArray();
 
-                var hosts = response
-                    .Data
-                    .Selects[1].Records
-                    .Cast<JObject>()
-                    .Select(r => r.ToObject<Entity>())
+                var hosts = response.Data
+                    .GetRecords<Entity>(1)
                     .ToArray();
 
                 var orgEvents = eventMetadatas
@@ -72,42 +67,27 @@ namespace SmartWalk.Client.Core.Services
 
             if (response != null && response.Data != null)
             {
-                var eventMetadata = response
-                    .Data
-                    .Selects[0].Records
-                    .Cast<JObject>()
-                    .Select(em => em.ToObject<EventMetadata>())
+                var eventMetadata = response.Data
+                    .GetRecords<EventMetadata>(0)
                     .FirstOrDefault();
 
-                var host = response
-                    .Data
-                    .Selects[1].Records
-                    .Cast<JObject>()
-                    .Select(em => em.ToObject<Entity>())
+                var host = response.Data
+                    .GetRecords<Entity>(1)
                     .FirstOrDefault();
 
-                var shows = response
-                    .Data
-                    .Selects[2].Records
-                    .Cast<JObject>()
-                    .Select(s => s.ToObject<Show>())
+                var shows = response.Data
+                    .GetRecords<Show>(2)
                     .ToArray();
 
-                var venueDetails = response
-                    .Data
-                    .Selects[3].Records
-                    .Cast<JObject>()
-                    .Select(s => s.ToObject<EventVenueDetail>())
+                var venueDetails = response.Data
+                    .GetRecords<EventVenueDetail>(3)
                     .ToArray();
 
-                var venues = response
-                    .Data
-                    .Selects[4].Records
-                    .Cast<JObject>()
+                var venues = response.Data
+                    .GetRecords<Entity>(4)
                     .Select(e =>
                         {
-                            var entity = e.ToObject<Entity>();
-                            var venue = CreateVenue(entity, venueDetails, shows);
+                            var venue = CreateVenue(e, venueDetails, shows);
                             return venue;
                         })
                     .OrderBy(venueDetails, eventMetadata.VenueOrderType)
@@ -132,35 +112,23 @@ namespace SmartWalk.Client.Core.Services
 
             if (response != null && response.Data != null)
             {
-                var eventMetadata = response
-                    .Data
-                    .Selects[0].Records
-                    .Cast<JObject>()
-                    .Select(em => em.ToObject<EventMetadata>())
+                var eventMetadata = response.Data
+                    .GetRecords<EventMetadata>(0)
                     .FirstOrDefault();
 
-                var shows = response
-                    .Data
-                    .Selects[1].Records
-                    .Cast<JObject>()
-                    .Select(s => s.ToObject<Show>())
+                var shows = response.Data
+                    .GetRecords<Show>(1)
                     .ToArray();
 
-                var venueDetails = response
-                    .Data
-                    .Selects[2].Records
-                    .Cast<JObject>()
-                    .Select(s => s.ToObject<EventVenueDetail>())
+                var venueDetails = response.Data
+                    .GetRecords<EventVenueDetail>(2)
                     .ToArray();
 
-                var venues = response
-                    .Data
-                    .Selects[3].Records
-                    .Cast<JObject>()
+                var venues = response.Data
+                    .GetRecords<Entity>(3)
                     .Select(e =>
                         {
-                            var entity = e.ToObject<Entity>();
-                            var venue = CreateVenue(entity, venueDetails, shows);
+                            var venue = CreateVenue(e, venueDetails, shows);
                             return venue;
                         })
                     .OrderBy(venueDetails, eventMetadata.VenueOrderType)
@@ -183,18 +151,12 @@ namespace SmartWalk.Client.Core.Services
 
             if (response != null && response.Data != null)
             {
-                var eventMetadata = response
-                    .Data
-                    .Selects[0].Records
-                    .Cast<JObject>()
-                    .Select(em => em.ToObject<EventMetadata>())
+                var eventMetadata = response.Data
+                    .GetRecords<EventMetadata>(0)
                     .FirstOrDefault();
 
-                var host = response
-                    .Data
-                    .Selects[1].Records
-                    .Cast<JObject>()
-                    .Select(e => e.ToObject<Entity>())
+                var host = response.Data
+                    .GetRecords<Entity>(1)
                     .FirstOrDefault();
 
                 var orgEvent = new OrgEvent(eventMetadata, host);
@@ -214,20 +176,14 @@ namespace SmartWalk.Client.Core.Services
             var response = await GetResponse(request, source);
             var result = default(IApiResult<Org>);
 
-            if (response != null && response.Data != null)
+            if (response != null && response.Data != null && response.Data.Selects != null)
             {
-                var entity = response
-                    .Data
-                    .Selects[0].Records
-                    .Cast<JObject>()
-                    .Select(e => e.ToObject<Entity>())
+                var entity = response.Data
+                    .GetRecords<Entity>(0)
                     .FirstOrDefault();
 
-                var eventMetadatas = response
-                    .Data
-                    .Selects[1].Records
-                    .Cast<JObject>()
-                    .Select(r => r.ToObject<EventMetadata>())
+                var eventMetadatas = response.Data
+                    .GetRecords<EventMetadata>(1)
                     .ToArray();
 
                 if (entity != null)
@@ -319,6 +275,18 @@ namespace SmartWalk.Client.Core.Services
                 .ToArray();
             var result = new Org(entity) { OrgEvents = orgEvents };
             return result;
+        }
+    }
+
+    public static class SmartWalkApiExtensions
+    {
+        public static IEnumerable<T> GetRecords<T>(this Response response, int index)
+        {
+            return response.Selects != null && index < response.Selects.Length 
+                ? (response.Selects[index].Records
+                    .Cast<JObject>()
+                    .Select(jo => jo.ToObject<T>()) ?? Enumerable.Empty<T>()) 
+                    : Enumerable.Empty<T>();
         }
     }
 }
