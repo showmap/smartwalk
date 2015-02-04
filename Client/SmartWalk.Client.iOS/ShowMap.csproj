@@ -79,7 +79,6 @@
     <IpaPackageName>
     </IpaPackageName>
     <MtouchUseSGen>true</MtouchUseSGen>
-    <MtouchDebug>true</MtouchDebug>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <Optimize>true</Optimize>
