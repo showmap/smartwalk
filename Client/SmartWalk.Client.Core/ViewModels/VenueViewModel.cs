@@ -131,27 +131,7 @@ namespace SmartWalk.Client.Core.ViewModels
                         _parameters.VenueId = 0;
                     }
 
-                    if (ExpandedShow != null && 
-                        _venue != null &&
-                        _venue.Shows != null &&
-                        !_venue.Shows.Contains(ExpandedShow))
-                    {
-                        ExpandedShow = null;
-                    }
-
-                    if (_venue != null &&
-                        _venue.Shows != null && 
-                        _venue.Shows.Length == 1)
-                    {
-                        ExpandedShow = _venue.Shows[0];
-                    }
-
-                    /*if (_venue != null &&
-                        _venue.Shows == null || 
-                        _venue.Shows.Length == 0)
-                    {
-                        IsDescriptionExpanded = true;
-                    }*/
+                    ExpandedShow = null;
                 }
             }
         }
