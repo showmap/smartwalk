@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1552" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -7,24 +7,22 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" id="1" customClass="ImageBackgroundView">
+        <view clipsSubviews="YES" contentMode="scaleAspectFit" id="1" customClass="ImageBackgroundView">
             <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Eue-t7-Ebm">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Eue-t7-Ebm">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
-                <label opaque="NO" clipsSubviews="YES" contentMode="center" text="August 15th, 2014 - August 18th, 2014" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
+                <label autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="August 15th, 2014 - August 18th, 2014" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
                     <rect key="frame" x="20" y="286" width="280" height="18"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                     <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
-                <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.60000000000000009" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="fpk-Eh-ozz">
-                    <rect key="frame" x="150" y="150" width="20" height="20"/>
-                </activityIndicatorView>
-                <label opaque="NO" clipsSubviews="YES" contentMode="center" text="Mission Arts &amp; Performance Project" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
+                <label autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="Mission Arts &amp; Performance Project" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
                     <rect key="frame" x="20" y="238.5" width="280" height="44.5"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -32,6 +30,7 @@
                     <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
             </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Qrq-nK-B4N" secondAttribute="bottom" constant="16" id="3gd-KU-3j7"/>
                 <constraint firstAttribute="trailing" secondItem="ezd-AL-Mpz" secondAttribute="trailing" constant="20" symbolic="YES" id="5RM-2M-Epx"/>
@@ -39,19 +38,16 @@
                 <constraint firstItem="Qrq-nK-B4N" firstAttribute="top" secondItem="ezd-AL-Mpz" secondAttribute="bottom" constant="3" id="GHk-1a-lSe"/>
                 <constraint firstItem="ezd-AL-Mpz" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1" secondAttribute="top" constant="20" symbolic="YES" id="Lgt-T8-chl"/>
                 <constraint firstAttribute="trailing" secondItem="Qrq-nK-B4N" secondAttribute="trailing" constant="20" symbolic="YES" id="Trt-i2-C16"/>
-                <constraint firstAttribute="centerY" secondItem="fpk-Eh-ozz" secondAttribute="centerY" id="Za3-Js-kLw"/>
                 <constraint firstItem="Eue-t7-Ebm" firstAttribute="top" secondItem="1" secondAttribute="top" id="ckM-iU-Gt7"/>
                 <constraint firstItem="ezd-AL-Mpz" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="dHj-lu-IFy"/>
                 <constraint firstItem="Eue-t7-Ebm" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="jka-HU-eRf"/>
                 <constraint firstItem="Qrq-nK-B4N" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="sCU-qb-0N1"/>
                 <constraint firstAttribute="bottom" secondItem="Eue-t7-Ebm" secondAttribute="bottom" id="srA-0g-tJb"/>
-                <constraint firstAttribute="centerX" secondItem="fpk-Eh-ozz" secondAttribute="centerX" id="tfh-vv-hz6"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="BackgroundImage" destination="Eue-t7-Ebm" id="ft5-Hs-bAU"/>
-                <outlet property="ProgressView" destination="fpk-Eh-ozz" id="9WX-T3-awQ"/>
                 <outlet property="SubtitleLabel" destination="Qrq-nK-B4N" id="4bK-1Q-g6S"/>
                 <outlet property="TitleBottomGapConstraint" destination="GHk-1a-lSe" id="5GG-mx-rCe"/>
                 <outlet property="TitleLabel" destination="ezd-AL-Mpz" id="kv3-oa-djR"/>

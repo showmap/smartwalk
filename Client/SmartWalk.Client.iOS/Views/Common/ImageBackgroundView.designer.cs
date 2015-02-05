@@ -19,13 +19,13 @@ namespace SmartWalk.Client.iOS.Views.Common
 		UIKit.UIActivityIndicatorView ProgressView { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.CopyLabel SubtitleLabel { get; set; }
+        UIKit.UILabel SubtitleLabel { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint TitleBottomGapConstraint { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
+        UIKit.UILabel TitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

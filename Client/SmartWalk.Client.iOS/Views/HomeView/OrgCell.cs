@@ -43,13 +43,13 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
             if (newsuper == null)
             {
-                DisposeHeaderImage();
+                DisposeImageBackground();
             }
         }
 
         protected override void OnInitialize()
         {
-            InitializeHeaderImage();
+            InitializeImageBackground();
             InitializeStyle();
         }
 
@@ -60,7 +60,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             ImageBackground.Subtitle = DataContext != null ? DataContext.GetDateString() : null;
         }
 
-        private void InitializeHeaderImage()
+        private void InitializeImageBackground()
         {
             var view = ImageBackgroundView.Create();
             // Making sure that it has proper frame for loading a resized image
@@ -70,7 +70,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             ImageBackground.Initialize(true);
         }
 
-        private void DisposeHeaderImage()
+        private void DisposeImageBackground()
         {
             ImageBackground.Dispose();
             Placeholder.Content = null;

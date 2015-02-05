@@ -11,7 +11,7 @@
             <CacheFolderPath>../Library/Caches/Pictures.MvvmCross/</CacheFolderPath>
             <MaxFiles>500</MaxFiles>
             <MaxFileAgeDays>10</MaxFileAgeDays>
-            <MaxInMemoryBytes>1000000</MaxInMemoryBytes> <!-- 1 MB -->
+            <MaxInMemoryBytes>4000000</MaxInMemoryBytes> <!-- 4 MB -->
             <MaxInMemoryFiles>10</MaxInMemoryFiles>
         </cache>
         <cache>
@@ -19,7 +19,7 @@
             <CacheFolderPath>../Library/Caches/ResizedPictures.MvvmCross/</CacheFolderPath>
             <MaxFiles>1000</MaxFiles>
             <MaxFileAgeDays>10</MaxFileAgeDays>
-            <MaxInMemoryBytes>3000000</MaxInMemoryBytes> <!-- 3 MB -->
+            <MaxInMemoryBytes>6000000</MaxInMemoryBytes> <!-- 6 MB -->
             <MaxInMemoryFiles>30</MaxInMemoryFiles>
         </cache>
         <cache>

@@ -83,6 +83,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 
             TitleLabel.Font = Theme.HomeHeaderFont;
             TitleLabel.TextColor = ThemeColors.ContentDarkText;
+            TitleLabel.BackgroundColor = ThemeColors.ContentDarkBackground;
         }
 
         private void InitializeGestures()
