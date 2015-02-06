@@ -53,7 +53,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            NextTitleLabel.Text = DataContext != null ? DataContext.ToUpper() : null;
+            NextTitleLabel.Text = DataContext;
         }
 
         private void InitializeGestures()

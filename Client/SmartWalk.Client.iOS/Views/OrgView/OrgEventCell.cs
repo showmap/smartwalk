@@ -70,7 +70,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             EventTitleLabel.TextColor = ThemeColors.ContentLightText;
 
             CalendarView.LineColor = ThemeColors.BorderDark;
-            CalendarView.LineWidth = ScreenUtil.HairLine;
+            CalendarView.LineWidth = 1;
         }
     }
 }

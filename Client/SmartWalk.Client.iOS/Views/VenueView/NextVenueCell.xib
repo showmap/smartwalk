@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -10,7 +10,7 @@
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="NextVenueCell" rowHeight="100" id="2" customClass="NextVenueCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="101"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" tableViewCell="2" id="Dzh-az-Mo8">
+            <tableViewCellContentView key="contentView" clipsSubviews="YES" contentMode="center" tableViewCell="2" id="Dzh-az-Mo8">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -24,14 +24,15 @@
                                     <constraint firstAttribute="width" constant="44" id="zkX-to-4ns"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0O-mg-Nsv" userLabel="Next Title">
+                            <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h0O-mg-Nsv" userLabel="Next Title">
                                 <rect key="frame" x="54" y="20" width="42" height="20.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="h0O-mg-Nsv" firstAttribute="leading" secondItem="w50-Gx-wfb" secondAttribute="trailing" constant="10" id="9Yl-bQ-c8e"/>
                             <constraint firstItem="w50-Gx-wfb" firstAttribute="leading" secondItem="y4W-hZ-hB6" secondAttribute="leading" id="E7K-2s-QQQ"/>
@@ -41,6 +42,7 @@
                         </constraints>
                     </view>
                 </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 <constraints>
                     <constraint firstItem="y4W-hZ-hB6" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Dzh-az-Mo8" secondAttribute="leading" priority="900" constant="20" id="2Tn-ed-dPf"/>
                     <constraint firstItem="y4W-hZ-hB6" firstAttribute="top" secondItem="Dzh-az-Mo8" secondAttribute="top" priority="900" constant="20" id="FMT-dM-TjP"/>
@@ -49,6 +51,7 @@
                     <constraint firstAttribute="centerX" secondItem="y4W-hZ-hB6" secondAttribute="centerX" constant="10" id="zed-Ek-Rb7"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="ContainerView" destination="y4W-hZ-hB6" id="sh1-Ep-KNI"/>

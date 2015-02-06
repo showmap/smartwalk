@@ -205,7 +205,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
 
                     _headerView = value;
-                    UpdateBackgroundColor();
 
                     if (_headerView != null)
                     {
@@ -233,7 +232,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
 
                     _subHeaderView = value;
-                    UpdateBackgroundColor();
 
                     if (_subHeaderView != null)
                     {
@@ -518,6 +516,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             HeaderContainer.Layer.ShadowColor = UIColor.Black.CGColor;
             HeaderContainer.Layer.ShadowOffset = new CGSize(0, 2);
             HeaderContainer.Layer.ShadowOpacity = 0.1f;
+
+            BackgroundView.BackgroundColor = ThemeColors.ContentLightBackground;
         }
 
         private void UpdateStatusStyle()
@@ -583,14 +583,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 NavigateDetailsLinkCommand.Execute(contact);
             }
-        }
-
-        private void UpdateBackgroundColor()
-        {
-            BackgroundView.BackgroundColor = 
-                HeaderView != null || SubHeaderView != null
-                    ? ThemeColors.SubPanelBackground.ColorWithAlpha(0.2f) 
-                    : ThemeColors.ContentLightBackground;
         }
     }
 }

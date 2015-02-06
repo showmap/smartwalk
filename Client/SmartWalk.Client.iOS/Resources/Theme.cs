@@ -36,7 +36,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont OrgEventMonthLandscapeFont = UIFont.FromName(HelveticaBold, 8);
 
         public static readonly UIFont EntityDescriptionFont = UIFont.FromName(HelveticaLight, 16);
-        public static readonly UIFont NextEntityFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIFont NextEntityFont = UIFont.FromName(HelveticaLight, 16);
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIFont VenueThumbLabelFont = UIFont.FromName(HelveticaLight, 17);

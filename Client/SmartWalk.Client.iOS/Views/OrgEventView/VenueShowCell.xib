@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -28,39 +28,45 @@
                             <action selector="OnDetailsButtonClick:" destination="2" eventType="touchUpInside" id="SfD-fa-Fnm"/>
                         </connections>
                     </button>
-                    <label opaque="NO" clipsSubviews="YES" contentMode="left" verticalCompressionResistancePriority="400" text="More information" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
+                    <label clipsSubviews="YES" contentMode="left" verticalCompressionResistancePriority="400" text="More information" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
                         <rect key="frame" x="30" y="275" width="272" height="15"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                         <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <imageView clipsSubviews="YES" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
                         <rect key="frame" x="10" y="163" width="173" height="100"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="100" id="139"/>
                             <constraint firstAttribute="width" constant="173" id="173"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZg-8z-Khe" userLabel="Description" customClass="CopyLabel">
+                    <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZg-8z-Khe" userLabel="Description" customClass="CopyLabel">
                         <rect key="frame" x="10" y="33" width="292" height="18"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalCompressionResistancePriority="900" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
+                    <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalCompressionResistancePriority="900" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
                         <rect key="frame" x="280" y="8" width="31.5" height="17"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalCompressionResistancePriority="900" text="End" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="End">
+                    <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalCompressionResistancePriority="900" text="End" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="End">
                         <rect key="frame" x="280" y="24" width="31.5" height="13.5"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="500" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Title" customClass="CopyLabel">
+                    <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="500" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Title" customClass="CopyLabel">
                         <rect key="frame" x="10" y="12" width="265" height="18"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
