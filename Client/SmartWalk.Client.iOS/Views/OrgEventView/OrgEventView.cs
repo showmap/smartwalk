@@ -5,8 +5,6 @@ using System.Linq;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using CoreLocation;
-using EventKit;
-using EventKitUI;
 using Foundation;
 using MapKit;
 using UIKit;
@@ -31,7 +29,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private OrgEventHeaderView _headerView;
         private UISearchDisplayController _searchDisplayController;
-        private EKEventEditViewController _editCalEventController;
         private ListSettingsView _listSettingsView;
         private bool _isMapViewInitialized;
         private Show _previousExpandedShow;
@@ -293,20 +290,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 _previousExpandedShow = ViewModel.ExpandedShow;
             }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentCalendarEvent))
-            {
-                if (ViewModel.CurrentCalendarEvent != null)
-                {
-                    if (_editCalEventController == null)
-                    {
-                        InitializeCalEventViewController();
-                    }
-                }
-                else
-                {
-                    DisposeCalEventViewController();
-                }
-            }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsAvailable))
             {
                 UpdateTableHeaderState(HasData);
@@ -353,19 +336,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnInitializingActionSheet(List<string> titles)
         {
-            if (ViewModel.CreateEventCommand.CanExecute(null))
-            {
-                titles.Add(Localization.SaveToCalendar);
-            }
-
             if (ViewModel.NavigateOrgEventInfoCommand.CanExecute(null))
             {
-                titles.Add(Localization.ShowEventInfo);
+                titles.Add(Localization.EventInfo);
             }
 
             if (ViewModel.NavigateOrgCommand.CanExecute(null))
             {
-                titles.Add(Localization.ShowOrganizerInfo);
+                titles.Add(Localization.OrganizerInfo);
             }
 
             if (ViewModel.SwitchMapTypeCommand.CanExecute(null))
@@ -388,21 +366,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             switch (buttonTitle)
             {
-                case Localization.SaveToCalendar:
-                    if (ViewModel.CreateEventCommand.CanExecute(null))
-                    {
-                        ViewModel.CreateEventCommand.Execute(null);
-                    }
-                    break;
-
-                case Localization.ShowEventInfo:
+                case Localization.EventInfo:
                     if (ViewModel.NavigateOrgEventInfoCommand.CanExecute(null))
                     {
                         ViewModel.NavigateOrgEventInfoCommand.Execute(null);
                     }
                     break;
 
-                case Localization.ShowOrganizerInfo:
+                case Localization.OrganizerInfo:
                     if (ViewModel.NavigateOrgCommand.CanExecute(null))
                     {
                         ViewModel.NavigateOrgCommand.Execute(null);
@@ -722,29 +693,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.NavigateVenueCommand.CanExecute(venueAnnotation.Venue))
             {
                 ViewModel.NavigateVenueCommand.Execute(venueAnnotation.Venue);
-            }
-        }
-
-        private void InitializeCalEventViewController()
-        {
-            _editCalEventController = new OrgEventEditViewController();
-            _editCalEventController.EventStore = (EKEventStore)ViewModel.CurrentCalendarEvent.EventStore;
-            _editCalEventController.Event = (EKEvent)ViewModel.CurrentCalendarEvent.EventObj;
-
-            var viewDelegate = new OrgEventCalEditViewDelegate(ViewModel);
-            _editCalEventController.EditViewDelegate = viewDelegate;
-
-            PresentViewController(_editCalEventController, true, null);
-        }
-
-        private void DisposeCalEventViewController()
-        {
-            if (_editCalEventController != null)
-            {
-                _editCalEventController.DismissViewController(true, null);
-                _editCalEventController.EditViewDelegate = null;
-                _editCalEventController.Dispose();
-                _editCalEventController = null;
             }
         }
 

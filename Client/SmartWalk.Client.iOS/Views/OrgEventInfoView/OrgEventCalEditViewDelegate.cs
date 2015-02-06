@@ -2,13 +2,13 @@ using EventKit;
 using EventKitUI;
 using SmartWalk.Client.Core.ViewModels;
 
-namespace SmartWalk.Client.iOS.Views.OrgEventView
+namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 {
     public class OrgEventCalEditViewDelegate : EKEventEditViewDelegate
     {
-        private readonly OrgEventViewModel _viewModel;
+        private readonly OrgEventInfoViewModel _viewModel;
 
-        public OrgEventCalEditViewDelegate(OrgEventViewModel viewModel)
+        public OrgEventCalEditViewDelegate(OrgEventInfoViewModel viewModel)
         {
             _viewModel = viewModel;
         }

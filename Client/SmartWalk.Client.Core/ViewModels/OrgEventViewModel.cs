@@ -11,7 +11,6 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
-using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
@@ -27,7 +26,6 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly ISmartWalkApiService _apiService;
         private readonly IConfiguration _configuration;
         private readonly IAnalyticsService _analyticsService;
-        private readonly ICalendarService _calendarService;
         private readonly IExceptionPolicyService _exceptionPolicy;
 
         private OrgEvent _allDaysOrgEvent;
@@ -39,7 +37,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private Show _expandedShow;
         private Venue _selectedVenueOnMap;
         private string _currentFullscreenImage;
-        private CalendarEvent _currentCalendarEvent;
+
         private Parameters _parameters;
         private bool _isGroupedByLocation = true;
         private bool _isListOptionsShown;
@@ -66,9 +64,6 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<SortBy> _sortByCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand _switchMapTypeCommand;
-        private MvxCommand _createEventCommand;
-        private MvxCommand _saveEventCommand;
-        private MvxCommand _cancelEventCommand;
         private MvxCommand _copyLinkCommand;
         private MvxCommand _shareCommand;
 
@@ -77,7 +72,6 @@ namespace SmartWalk.Client.Core.ViewModels
             ISmartWalkApiService apiService,
             IConfiguration configuration,
             IAnalyticsService analyticsService,
-            ICalendarService calendarService,
             IExceptionPolicyService exceptionPolicy,
             IPostponeService postponeService) 
             : base(environmentService.Reachability, analyticsService, postponeService)
@@ -86,7 +80,7 @@ namespace SmartWalk.Client.Core.ViewModels
             _apiService = apiService;
             _configuration = configuration;
             _analyticsService = analyticsService;
-            _calendarService = calendarService;
+
             _exceptionPolicy = exceptionPolicy;
         }
 
@@ -285,21 +279,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public CalendarEvent CurrentCalendarEvent
-        {
-            get
-            {
-                return _currentCalendarEvent;
-            }
-            private set
-            {
-                if (!Equals(_currentCalendarEvent, value))
-                {
-                    _currentCalendarEvent = value;
-                    RaisePropertyChanged(() => CurrentCalendarEvent);
-                }
-            }
-        }
+
 
         public bool IsListOptionsAvailable
         {
@@ -855,119 +835,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _sortByCommand;
-            }
-        }
-
-        public ICommand CreateEventCommand
-        {
-            get
-            {
-                if (_createEventCommand == null)
-                {
-                    _createEventCommand = new MvxCommand(async () => 
-                        {
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                Analytics.ActionLabelCreateEvent);
-
-                            IsLoading = true;
-
-                            var eventInfo = default(OrgEvent);
-
-                            try
-                            {
-                                var result = await _apiService.GetOrgEventInfo(
-                                    OrgEvent.Id, 
-                                    DataSource.CacheOrServer);
-                                if (result != null) {
-                                    eventInfo = result.Data;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                _exceptionPolicy.Trace(ex);
-                            }
-                            
-                            if (eventInfo != null)
-                            {
-                                try
-                                {
-                                    CurrentCalendarEvent = 
-                                        await _calendarService.CreateNewEvent(eventInfo);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _exceptionPolicy.Trace(ex);
-                                }
-                            }
-                            else 
-                            {
-                                _environmentService.Alert(
-                                    Localization.OffLineMode, 
-                                    Localization.CantCompleteActionOffline);
-                            }
-
-                            IsLoading = false;
-                        },
-                        () => 
-                            OrgEvent != null &&
-                            OrgEvent.Id != 0);
-                }
-
-                return _createEventCommand;
-            }
-        }
-
-        public ICommand SaveEventCommand
-        {
-            get
-            {
-                if (_saveEventCommand == null)
-                {
-                    _saveEventCommand = new MvxCommand(() => 
-                        {
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                Analytics.ActionLabelSaveEvent);
-
-                            try
-                            {
-                                _calendarService.SaveEvent(CurrentCalendarEvent);
-                                CurrentCalendarEvent = null;
-                            }
-                            catch (Exception ex)
-                            {
-                                _exceptionPolicy.Trace(ex);
-                            }
-                        },
-                        () => CurrentCalendarEvent != null);
-                }
-
-                return _saveEventCommand;
-            }
-        }
-
-        public ICommand CancelEventCommand
-        {
-            get
-            {
-                if (_cancelEventCommand == null)
-                {
-                    _cancelEventCommand = new MvxCommand(() => 
-                        {
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                Analytics.ActionLabelCancelEvent);
-
-                            CurrentCalendarEvent = null;
-                        },
-                        () => CurrentCalendarEvent != null);
-                }
-
-                return _cancelEventCommand;
             }
         }
 

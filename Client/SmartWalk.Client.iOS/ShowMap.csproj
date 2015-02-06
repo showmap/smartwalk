@@ -336,7 +336,6 @@
     <Compile Include="Utils\MvvmCross\MvxResizedDynamicImageHelper.cs" />
     <Compile Include="Utils\MvvmCross\IMvxResizedImageHelper.cs" />
     <Compile Include="Utils\MvvmCross\MvxFastFileDownloadRequest.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventCalEditViewDelegate.cs" />
     <Compile Include="Views\OrgEventView\ListSettingsView.cs" />
     <Compile Include="Views\OrgEventView\ListSettingsView.designer.cs">
       <DependentUpon>ListSettingsView.cs</DependentUpon>
@@ -386,7 +385,6 @@
     <Compile Include="Views\Common\Base\Cells\TableHeaderBase.cs" />
     <Compile Include="Views\Common\Base\Cells\ContentViewBase.cs" />
     <Compile Include="Utils\ExtendedNavController.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventEditViewController.cs" />
     <Compile Include="Utils\AnimationDelay.cs" />
     <Compile Include="Views\Common\ImageBackgroundView.cs" />
     <Compile Include="Views\Common\ImageBackgroundView.designer.cs">
@@ -402,6 +400,8 @@
     <Compile Include="Bootstrap\EmailPluginBootstrap.cs" />
     <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
     <Compile Include="Utils\ObjectExtensions.cs" />
+    <Compile Include="Views\OrgEventInfoView\OrgEventCalEditViewDelegate.cs" />
+    <Compile Include="Views\OrgEventInfoView\OrgEventEditViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">

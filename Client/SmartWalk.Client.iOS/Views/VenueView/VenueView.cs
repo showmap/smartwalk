@@ -69,7 +69,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
             if (ViewModel.ShowContactsCommand.CanExecute(null))
             {
-                titles.Add(Localization.ShowContactInfo);
+                titles.Add(Localization.ContactInfo);
             }
 
             if (ViewModel.CopyAddressCommand.CanExecute(null))
@@ -99,7 +99,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                     }
                     break;
 
-                case Localization.ShowContactInfo:
+                case Localization.ContactInfo:
                     if (ViewModel.ShowContactsCommand.CanExecute(null))
                     {
                         ViewModel.ShowContactsCommand.Execute(null);
