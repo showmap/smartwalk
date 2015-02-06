@@ -20,7 +20,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-            UpdateLayoutSizes();
+
+            if (Frame.Width != 0 && Frame.Height != 0)
+            {
+                UpdateLayoutSizes();
+            }
         }
 
         protected override void Dispose(bool disposing)
