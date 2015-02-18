@@ -138,11 +138,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             NavigateOnMapButton.AddGestureRecognizer(_mapTapGesture);
 
+            var initLocation = default(CGPoint);
+
             _cellPressGesture = new UILongPressGestureRecognizer(rec =>
                 {
                     if (rec.State == UIGestureRecognizerState.Began)
                     {
                         SetSelectedState(true);
+                        initLocation = rec.LocationInView(
+                            UIApplication.SharedApplication.KeyWindow);
+                    }
+                    else if (rec.State == UIGestureRecognizerState.Changed) {
+                        var location = rec.LocationInView(
+                            UIApplication.SharedApplication.KeyWindow);
+                        var dx = location.X - initLocation.X;
+                        var dy = location.Y - initLocation.Y;
+                        if (Math.Sqrt(dx * dx + dy * dy) > 15)
+                        {
+                            SetSelectedState(false);
+                            rec.Enabled = false;
+                            rec.Enabled = true;
+                        }
                     }
                     else if (rec.State == UIGestureRecognizerState.Ended)
                     {
@@ -156,7 +172,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         }
                     }
                 }) {
-                    MinimumPressDuration = 0.05
+                    MinimumPressDuration = 0.05,
+                    Delegate = new TransientGestureDelegate()
                 };
             _cellPressGesture.RequireGestureRecognizerToFail(_mapTapGesture);
 
@@ -213,6 +230,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             NameLabel.Highlighted = isSelected;
             AddressLabel.Highlighted = isSelected;
             NavigateOnMapButton.Highlighted = isSelected;
+        }
+    }
+
+    public class TransientGestureDelegate : UIGestureRecognizerDelegate
+    {
+        public override bool ShouldRecognizeSimultaneously(
+            UIGestureRecognizer gestureRecognizer, 
+            UIGestureRecognizer otherGestureRecognizer)
+        {
+            return true;
         }
     }
 }
