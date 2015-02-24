@@ -285,7 +285,7 @@ namespace SmartWalk.Client.Core.Services
                         }
                     },
                     new RequestSelect {
-                        Fields = new[] { "Host", "Title", "StartTime" },
+                        Fields = new[] { "Host", "Title", "StartTime", "EndTime" },
                         From = RequestSelectFromTables.EventMetadata,
                         Where = new[] {
                             new RequestSelectWhere {

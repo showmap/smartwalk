@@ -16,13 +16,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 		SmartWalk.Client.iOS.Controls.Circle CalendarView { get; set; }
 
 		[Outlet]
-		UIKit.UILabel DayLabel { get; set; }
+		UIKit.UILabel DateLabel { get; set; }
 
 		[Outlet]
 		UIKit.UILabel EventTitleLabel { get; set; }
-
-		[Outlet]
-		UIKit.UILabel MonthLabel { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
@@ -34,24 +31,19 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 				CalendarView = null;
 			}
 
-			if (DayLabel != null) {
-				DayLabel.Dispose ();
-				DayLabel = null;
-			}
-
 			if (EventTitleLabel != null) {
 				EventTitleLabel.Dispose ();
 				EventTitleLabel = null;
 			}
 
-			if (MonthLabel != null) {
-				MonthLabel.Dispose ();
-				MonthLabel = null;
-			}
-
 			if (Separator != null) {
 				Separator.Dispose ();
 				Separator = null;
+			}
+
+			if (DateLabel != null) {
+				DateLabel.Dispose ();
+				DateLabel = null;
 			}
 		}
 	}

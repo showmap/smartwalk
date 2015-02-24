@@ -20,6 +20,7 @@ using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
+using SmartWalk.Client.iOS.Views.OrgView;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -849,98 +850,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateDayButtonState()
         {
-            var dateString = GetOrgEventDate();
-            if (dateString != null)
-            {
-                _dayButton.Hidden = false;
-                _dayButton.SetAttributedTitle(dateString, UIControlState.Normal);
-            }
-            else
-            {
-                _dayButton.Hidden = true;
-            }
+            var dateString = ViewModel.OrgEvent.GetOrgEventDateString(
+                ThemeColors.ContentDarkText,
+                ViewModel.CurrentDay,
+                ScreenUtil.IsVerticalOrientation);
 
-            if (ViewModel.IsMultiday)
-            {
-                _dayButton.Enabled = true;
+            _dayButton.SetAttributedTitle(dateString, UIControlState.Normal);
+            _dayButton.Hidden = dateString.Length <= 0;
+            _dayButton.Enabled = ViewModel.IsMultiday;
 
-                if (ViewModel.CurrentDay == null)
-                {
-                    _dayButton.TitleEdgeInsets = new UIEdgeInsets(-3, 0.5f, 0, 0);
-                }
-                else
-                {
-                    _dayButton.TitleEdgeInsets = UIEdgeInsets.Zero;
-                }
-            }
-            else
-            {
-                _dayButton.Enabled = false;
-                _dayButton.TitleEdgeInsets = UIEdgeInsets.Zero;
-            }
-        }
-
-        private NSAttributedString GetOrgEventDate()
-        {
-            if (ViewModel.OrgEvent == null ||
-                !ViewModel.OrgEvent.StartTime.HasValue) return null;
-
-            var textColor = ThemeColors.ContentDarkText;
-            var result = new NSMutableAttributedString();
-
-            result.Append(
-                new NSAttributedString(
-                    string.Format("{0:MMM}{1}", 
-                        ViewModel.OrgEvent.StartTime.Value,
-                        Environment.NewLine).ToUpper(),
-                    ScreenUtil.IsVerticalOrientation
-                        ? Theme.OrgEventMonthFont
-                        : Theme.OrgEventMonthLandscapeFont,
-                    textColor,
-                    null,
-                    null,
-                    new NSMutableParagraphStyle { 
-                        Alignment = UITextAlignment.Center
-                    }));
-
+            // adjust due to long date text 
             if (ViewModel.IsMultiday && ViewModel.CurrentDay == null)
             {
-                result.Append(
-                    new NSAttributedString(
-                        string.Format("{0}-{1}", 
-                            ViewModel.OrgEvent.StartTime.Value.Day,
-                            ViewModel.OrgEvent.EndTime.Value.Day),
-                        ScreenUtil.IsVerticalOrientation
-                            ? Theme.OrgEventTwoDaysFont
-                            : Theme.OrgEventTwoDaysLandscapeFont,
-                        textColor,
-                        null,
-                        null,
-                        new NSMutableParagraphStyle { 
-                            Alignment = UITextAlignment.Center,
-                            LineHeightMultiple = 0.85f
-                        }));
+                _dayButton.TitleEdgeInsets = new UIEdgeInsets(-3, 0.5f, 0, 0);
             }
             else
             {
-                result.Append(
-                    new NSAttributedString(
-                        string.Format("{0}", 
-                            ViewModel.OrgEvent.StartTime.Value
-                                .AddDays((ViewModel.CurrentDay ?? 1) - 1).Day),
-                        ScreenUtil.IsVerticalOrientation
-                            ? Theme.OrgEventDayFont
-                            : Theme.OrgEventDayLandscapeFont,
-                        textColor,
-                        null,
-                        null,
-                        new NSMutableParagraphStyle { 
-                            Alignment = UITextAlignment.Center,
-                            LineHeightMultiple = 0.85f
-                        }));
+                _dayButton.TitleEdgeInsets = UIEdgeInsets.Zero;
             }
-
-            return result;
         }
 
         private void UpdateTableViewOnShowExpanding(UITableView tableView)
