@@ -1,14 +1,15 @@
 using System;
 using System.Windows.Input;
-using UIKit;
+using Foundation;
 using SmartWalk.Client.iOS.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class DialogViewBase : UIView
     {
         private bool _isInitialized;
-        private UITouchGestureRecognizer _outsideTouchGesture;
+        private ImmediateTouchRecognizer _outsideTouchGesture;
 
         protected DialogViewBase(IntPtr handle) : base(handle)
         {
@@ -63,7 +64,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             if (_outsideTouchGesture == null)
             {
-                _outsideTouchGesture = new UITouchGestureRecognizer(CloseView);
+                _outsideTouchGesture = new ImmediateTouchRecognizer(CloseView);
                 OutsideAreaView.AddGestureRecognizer(_outsideTouchGesture);
             }
         }
@@ -76,6 +77,20 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 _outsideTouchGesture.Dispose();
                 _outsideTouchGesture = null;
             }
+        }
+    }
+
+    public class ImmediateTouchRecognizer : UIGestureRecognizer
+    {
+        public ImmediateTouchRecognizer(Action handler) : base(handler)
+        {
+        }
+
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+
+            State = UIGestureRecognizerState.Recognized;
         }
     }
 }

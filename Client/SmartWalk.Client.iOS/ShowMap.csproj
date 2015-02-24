@@ -347,7 +347,6 @@
     </Compile>
     <Compile Include="Utils\NavBarManager.cs" />
     <Compile Include="Views\Common\Base\ViewBase.cs" />
-    <Compile Include="Utils\UITouchGestureRecognizer.cs" />
     <Compile Include="Controls\CustomMKMap.cs" />
     <Compile Include="Views\HomeView\HomeHeaderView.cs" />
     <Compile Include="Views\HomeView\HomeHeaderView.designer.cs">
