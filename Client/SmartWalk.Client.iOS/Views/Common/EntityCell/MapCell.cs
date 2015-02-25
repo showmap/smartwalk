@@ -125,6 +125,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private void InitializeStyle()
         {
             MapView.TintColor = ThemeColors.Metadata;
+            var legalLabel = MapView.Subviews.OfType<UILabel>().FirstOrDefault();
+            if (legalLabel != null)
+            {
+                legalLabel.Hidden = true;
+            }
 
             AddressLabel.Font = Theme.EntityDescriptionFont;
             AddressLabel.TextColor = ThemeColors.ContentLightText.ColorWithAlpha(0.8f);
