@@ -32,6 +32,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const float TitleAndTimeGap = 5f;
         private const float TimeBorderGap = 8f;
         private const float BorderGap = 10f;
+        private const float DetailsTapAreaHeight = 50f;
 
         private static readonly float ShowTitleTextHeight = 
             ScreenUtil.CalculateTextHeight(300, "Showp", Theme.ContentFont);
@@ -45,9 +46,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private readonly AnimationDelay _animationDelay = new AnimationDelay();
         private readonly MvxImageViewLoader _imageHelper;
-        private UITapGestureRecognizer _imageTapGesture;
         private UITapGestureRecognizer _cellTapGesture;
-        private UITapGestureRecognizer _detailsTapGesture;
         private bool _isExpanded;
         private UIView _headerView;
         private UIView _subHeaderView;
@@ -434,39 +433,40 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeGestures()
         {
-            _cellTapGesture = new UITapGestureRecognizer(() => {
-                if (ExpandCollapseShowCommand != null &&
-                    ExpandCollapseShowCommand.CanExecute(DataContext))
+            _cellTapGesture = new UITapGestureRecognizer(rec => 
+            {
+                if (IsExpanded && DataContext.HasPicture() && 
+                    rec.LocatedInView(ThumbImageView))
                 {
-                    ExpandCollapseShowCommand.Execute(DataContext);
+                    if (ShowImageFullscreenCommand != null &&
+                        ShowImageFullscreenCommand.CanExecute(DataContext.Picture))
+                    {
+                        ShowImageFullscreenCommand.Execute(DataContext.Picture);
+                    }
                 }
+                else if (IsExpanded && DataContext.HasDetailsUrl() && 
+                        rec.LocatedInView(this, 
+                            new CGRect(0, Bounds.Height - DetailsTapAreaHeight, 
+                            DetailsLabel.Frame.X + DetailsLabel.Frame.Width + BorderGap, 
+                            DetailsTapAreaHeight)))
+                {
+                    NavigateDetails();
+                }
+                else
+                {
+                    if (ExpandCollapseShowCommand != null &&
+                        ExpandCollapseShowCommand.CanExecute(DataContext))
+                    {
+                        ExpandCollapseShowCommand.Execute(DataContext);
+                    }
+                }
+
             }) {
                 NumberOfTouchesRequired = (uint)1,
                 NumberOfTapsRequired = (uint)1
             };
-
-            _imageTapGesture = new UITapGestureRecognizer(() => {
-                if (ShowImageFullscreenCommand != null &&
-                    ShowImageFullscreenCommand.CanExecute(DataContext.Picture))
-                {
-                    ShowImageFullscreenCommand.Execute(DataContext.Picture);
-                }
-            }) {
-                NumberOfTouchesRequired = (uint)1,
-                NumberOfTapsRequired = (uint)1
-            };
-
-            var uITapGestureRecognizer = new UITapGestureRecognizer(NavigateDetails);
-            uITapGestureRecognizer.NumberOfTouchesRequired = (uint)1;
-            uITapGestureRecognizer.NumberOfTapsRequired = (uint)1;
-            _detailsTapGesture = uITapGestureRecognizer;
-
-            _cellTapGesture.RequireGestureRecognizerToFail(_imageTapGesture);
-            _cellTapGesture.RequireGestureRecognizerToFail(_detailsTapGesture);
 
             AddGestureRecognizer(_cellTapGesture);
-            ThumbImageView.AddGestureRecognizer(_imageTapGesture);
-            DetailsLabel.AddGestureRecognizer(_detailsTapGesture);
         }
 
         private void DisposeGestures()
@@ -476,20 +476,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 RemoveGestureRecognizer(_cellTapGesture);
                 _cellTapGesture.Dispose();
                 _cellTapGesture = null;
-            }
-
-            if (_imageTapGesture != null)
-            {
-                ThumbImageView.RemoveGestureRecognizer(_imageTapGesture);
-                _imageTapGesture.Dispose();
-                _imageTapGesture = null;
-            }
-
-            if (_detailsTapGesture != null)
-            {
-                DetailsLabel.RemoveGestureRecognizer(_detailsTapGesture);
-                _detailsTapGesture.Dispose();
-                _detailsTapGesture = null;
             }
         }
 

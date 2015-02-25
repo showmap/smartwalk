@@ -28,14 +28,14 @@
                             <action selector="OnDetailsButtonClick:" destination="2" eventType="touchUpInside" id="SfD-fa-Fnm"/>
                         </connections>
                     </button>
-                    <label clipsSubviews="YES" contentMode="left" verticalCompressionResistancePriority="400" text="More information" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
-                        <rect key="frame" x="30" y="275" width="272" height="15"/>
+                    <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="400" text="More information" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
+                        <rect key="frame" x="30" y="275" width="98" height="15"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                         <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <imageView clipsSubviews="YES" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
                         <rect key="frame" x="10" y="163" width="173" height="100"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -116,7 +116,7 @@
                     <constraint firstItem="592" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="UTs-ha-cCo"/>
                     <constraint firstAttribute="bottom" secondItem="592" secondAttribute="bottom" id="Z4Z-UY-RgZ"/>
                     <constraint firstAttribute="bottom" secondItem="K9o-xv-nfu" secondAttribute="bottom" id="ZUK-hY-8aQ"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="181" secondAttribute="trailing" priority="900" constant="10" id="brI-xG-IGi"/>
+                    <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="181" secondAttribute="trailing" priority="900" constant="10" id="brI-xG-IGi"/>
                     <constraint firstAttribute="bottom" secondItem="181" secondAttribute="bottom" constant="12" id="e9g-Hw-SsH"/>
                     <constraint firstItem="50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="eZg-8z-Khe" secondAttribute="bottom" priority="900" constant="12" id="f5C-H9-OZF"/>
                     <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="fLo-Av-da9"/>
