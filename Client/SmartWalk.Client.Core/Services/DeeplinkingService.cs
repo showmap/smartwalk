@@ -14,20 +14,19 @@ namespace SmartWalk.Client.Core.Services
             _viewPresenter = viewPresenter;
         }
 
-        public bool NavigateView(string link)
+        public bool NavigateView(Uri url)
         {
             var result = false;
 
-            if (string.IsNullOrWhiteSpace(link) ||
-                link.EqualsIgnoreCase("events"))
+            if (url == null || url.Segments.ContainsIgnoreCase("events/"))
             {
                 _viewPresenter.HideDialogs();
                 _viewPresenter.ShowRoot();
                 result = true;
             }
-            else if (link.IndexOf("event/", StringComparison.OrdinalIgnoreCase) >= 0)
+            else if (url.Segments.ContainsIgnoreCase("event/"))
             {
-                var id = GetId(link);
+                var id = GetId(url, "event/");
                 if (id > 0)
                 {
                     _viewPresenter.HideDialogs();
@@ -36,9 +35,9 @@ namespace SmartWalk.Client.Core.Services
                     result = true;
                 }
             }
-            else if (link.IndexOf("host/", StringComparison.OrdinalIgnoreCase) >= 0)
+            else if (url.Segments.ContainsIgnoreCase("organizer/"))
             {
-                var id = GetId(link);
+                var id = GetId(url, "organizer/");
                 if (id > 0)
                 {
                     _viewPresenter.HideDialogs();
@@ -51,13 +50,13 @@ namespace SmartWalk.Client.Core.Services
             return result;
         }
 
-        private static int GetId(string link)
+        private static int GetId(Uri url, string param)
         {
-            var parts = link.Split('/');
-            if (parts.Length == 2)
+            var paramIndex = Array.IndexOf(url.Segments, param);
+            if (url.Segments.Length > paramIndex + 1)
             {
                 int id; 
-                if (int.TryParse(parts[1], out id))
+                if (int.TryParse(url.Segments[paramIndex + 1], out id))
                 {
                     return id;
                 }

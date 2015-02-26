@@ -1,7 +1,9 @@
-﻿namespace SmartWalk.Client.Core.Services
+﻿using System;
+
+namespace SmartWalk.Client.Core.Services
 {
     public interface IDeeplinkingService
     {
-        bool NavigateView(string link);
+        bool NavigateView(Uri url);
     }
 }
