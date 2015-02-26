@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CoreAnimation;
 using UIKit;
 using SmartWalk.Client.iOS.Resources;
+using CoreGraphics;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -161,6 +162,15 @@ namespace SmartWalk.Client.iOS.Utils
             {
                 animationHandler();
             }
+        }
+
+        public static bool LocatedInView(this UIGestureRecognizer recognizer, 
+            UIView view, CGRect bounds = default(CGRect))
+        {
+            var viewBounds = bounds == CGRect.Empty ? view.Bounds : bounds;
+            var result = viewBounds.IntersectsWith(
+                new CGRect(recognizer.LocationInView(view), CGSize.Empty));
+            return result;
         }
     }
 }

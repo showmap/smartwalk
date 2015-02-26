@@ -451,6 +451,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             MapFullscreenButton.UpdateState();
 
             VenuesMapView.TintColor = ThemeColors.Metadata;
+            VenuesMapView.FixLegalLabel();
         }
 
         private void OnModeButtonClicked(object sender, EventArgs e)
