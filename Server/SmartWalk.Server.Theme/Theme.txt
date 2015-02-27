@@ -1,6 +1,6 @@
 Name: SmartWalk.Server.Theme
-Author: SmartWalk
-Website: http://smartwalk.me
-Description: Default SmartWalk Theme
-Version: 1.5
+Author: ShowMap
+Website: http://showmap.co/
+Description: Default ShowMap Theme
+Version: 1.7
 Tags:
