@@ -55,7 +55,7 @@
     }
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">@T("Sign in with a SmartWalk account")</h3>
+                <h3 class="panel-title">@T("Sign in with a {0} account", WorkContext.CurrentSite.SiteName)</h3>
             </div>
             <div class="panel-body">
             @using (Html.BeginFormAntiForgeryPost(

@@ -60,6 +60,7 @@
     </Reference>
     <Reference Include="NGM.OpenAuthentication">
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\NGM.OpenAuthentication.dll</HintPath>
+	  <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -77,9 +78,11 @@
     </Reference>
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.MediaLibrary.dll</HintPath>
+	  <Private>True</Private>
     </Reference>
     <Reference Include="Orchard.MediaProcessing">
       <HintPath>..\..\..\smartwalk-binaries\Server\Orchard\Orchard.MediaProcessing.dll</HintPath>
+	  <Private>True</Private>
     </Reference>
     <Reference Include="Orchard.Roles, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -2,7 +2,7 @@
 AntiForgery: enabled
 Author: SmartWalk
 Website: http://smartwalk.me
-Version: 1.5
+Version: 1.7
 OrchardVersion: 1.8
 Description: SW server impementation.
 Features:
