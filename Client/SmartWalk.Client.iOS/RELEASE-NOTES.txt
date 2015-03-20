@@ -1,1 +1,0 @@
-Getting ready for a new release notes. Meanwhile testing Bitbucket integration.

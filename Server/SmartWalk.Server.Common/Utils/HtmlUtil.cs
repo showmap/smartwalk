@@ -50,14 +50,15 @@ namespace SmartWalk.Server.Common.Utils
             return result;
         }
 
-        public static void SetiTunesMeta(this IOrchardViewPage page, string argument = null, params object[] args)
+        public static void SetiTunesMeta(this IOrchardViewPage page)
         {
-            var appArgument =
-                string.IsNullOrWhiteSpace(argument)
-                    ? string.Empty
-                    : string.Format(", app-argument={0}", string.Format(argument, args));
-
-            page.SetMeta("apple-itunes-app", string.Format("app-id={0}{1}", Settings.iTunesAppId, appArgument), null, null);
+            page.SetMeta(
+                "apple-itunes-app", 
+                string.Format("app-id={0}, app-argument={1}", 
+                    Settings.iTunesAppId, 
+                    page.WorkContext.HttpContext.Request.Url.ToString()), 
+                null, 
+                null);
         }
     }
 }

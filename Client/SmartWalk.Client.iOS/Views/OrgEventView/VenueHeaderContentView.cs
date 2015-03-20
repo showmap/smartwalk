@@ -164,7 +164,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         SetSelectedState(false);
 
-                        if (Frame.IntersectsWith(new CGRect(rec.LocationInView(this), CGSize.Empty)) &&
+                        if (rec.LocatedInView(this) &&
                             NavigateVenueCommand != null &&
                             NavigateVenueCommand.CanExecute(DataContext))
                         {

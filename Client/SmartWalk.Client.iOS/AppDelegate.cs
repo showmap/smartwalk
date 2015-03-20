@@ -1,15 +1,16 @@
+using System;
 using System.Threading;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.Touch.Platform;
 using Cirrious.MvvmCross.ViewModels;
-using GoogleAnalytics;
 using Foundation;
-using UIKit;
+using GoogleAnalytics;
+using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Services;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.Core.Services;
+using UIKit;
 
 namespace SmartWalk.Client.iOS
 {
@@ -60,8 +61,10 @@ namespace SmartWalk.Client.iOS
         public override bool OpenUrl(UIApplication application, NSUrl url, 
             string sourceApplication, NSObject annotation)
         {
+            var uri = url != null && !string.IsNullOrWhiteSpace(url.ToString()) 
+                ? new Uri(url.ToString()) : null;
             var service = Mvx.Resolve<IDeeplinkingService>();
-            return service.NavigateView(url.ToString());
+            return service.NavigateView(uri);
         }
 
         public override void DidEnterBackground(UIApplication application)
@@ -109,7 +112,7 @@ namespace SmartWalk.Client.iOS
         }
 
 #if ADHOC || APPSTORE
-        private void InitializeGAI()
+        private static void InitializeGAI()
         {
             EasyTracker.GetTracker();
             EasyTracker.Current.Config.ReportUncaughtExceptions = true;

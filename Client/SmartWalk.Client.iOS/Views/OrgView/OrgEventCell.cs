@@ -76,11 +76,12 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             var daysCount = DateTimeExtensions.DaysCount(orgEvent.StartTime, orgEvent.EndTime);
             var result = new NSMutableAttributedString();
 
+            var startDate = orgEvent.StartTime.Value.AddDays((currentDay ?? 1) - 1);
+            var endDate = orgEvent.EndTime.HasValue ? orgEvent.EndTime.Value : DateTime.MinValue;
+
             result.Append(
                 new NSAttributedString(
-                    string.Format("{0:MMM}{1}", 
-                        orgEvent.StartTime.Value,
-                        Environment.NewLine).ToUpper(),
+                    string.Format("{0:MMM}{1}", startDate, Environment.NewLine).ToUpper(),
                     isVertical
                         ? Theme.OrgEventMonthFont
                         : Theme.OrgEventMonthLandscapeFont,
@@ -95,9 +96,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             {
                 result.Append(
                     new NSAttributedString(
-                        string.Format("{0}-{1}", 
-                            orgEvent.StartTime.Value.Day,
-                            orgEvent.EndTime.Value.Day),
+                        string.Format("{0}-{1}", startDate.Day, endDate.Day),
                         isVertical
                             ? Theme.OrgEventTwoDaysFont
                             : Theme.OrgEventTwoDaysLandscapeFont,
@@ -113,8 +112,7 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             {
                 result.Append(
                     new NSAttributedString(
-                        string.Format("{0}", 
-                            orgEvent.StartTime.Value.AddDays((currentDay ?? 1) - 1).Day),
+                        string.Format("{0}", startDate.Day),
                         isVertical
                             ? Theme.OrgEventDayFont
                             : Theme.OrgEventDayLandscapeFont,

@@ -1,10 +1,7 @@
 @using Orchard.Mvc.Html;
 @using SmartWalk.Server.Common.Utils
 @{
-    if (Request.Path == "/")
-    {
-        this.SetiTunesMeta();
-    }
+    this.SetiTunesMeta();
     
     Html.Partial("Icons");
 

@@ -84,6 +84,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				DescriptionLabel = null;
 			}
 
+			if (DetailsButton != null) {
+				DetailsButton.Dispose ();
+				DetailsButton = null;
+			}
+
 			if (DetailsLabel != null) {
 				DetailsLabel.Dispose ();
 				DetailsLabel = null;
@@ -162,11 +167,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
-			}
-
-			if (DetailsButton != null) {
-				DetailsButton.Dispose ();
-				DetailsButton = null;
 			}
 		}
 	}

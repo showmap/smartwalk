@@ -7,6 +7,7 @@ using MapKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.Resources;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils.Map
 {
@@ -96,6 +97,19 @@ namespace SmartWalk.Client.iOS.Utils.Map
         {
             var result = string.Format(Localization.ChangeMapTo, mapType.GetNextMapType());
             return result;
+        }
+
+        // TODO: To remove this hack some day
+        /// <summary>
+        /// HACK: By some reason iOS 64 bit makes Legal label oversized. Reseting Font help to restore it.
+        /// </summary>
+        public static void FixLegalLabel(this MKMapView mapView)
+        {
+            var legalLabel = mapView.Subviews.OfType<UILabel>().FirstOrDefault();
+            if (legalLabel != null)
+            {
+                legalLabel.Font = legalLabel.Font;
+            }
         }
     }
 }
