@@ -12,7 +12,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
     public class MvxExtendedViewPresenter : MvxTouchViewPresenter, IMvxExtendedViewPresenter
     {
         public MvxExtendedViewPresenter(
-            UIApplicationDelegate applicationDelegate, 
+            IUIApplicationDelegate applicationDelegate, 
             UIWindow window) : base(applicationDelegate, window)
         {
         }
