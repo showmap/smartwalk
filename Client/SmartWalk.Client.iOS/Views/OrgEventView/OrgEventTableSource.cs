@@ -63,19 +63,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 : null;
         }
 
-        public bool GetIsCellHeaderVisibile()
-        {
-            return !_viewModel.IsGroupedByLocation;
-        }
-
-        public bool GetIsCellSubHeaderVisibile(Show show = null)
-        {
-            return !_viewModel.IsGroupedByLocation &&
-                _viewModel.SortBy == SortBy.Name && _viewModel.IsMultiday &&
-                !_viewModel.CurrentDay.HasValue &&
-                (show == null || show.StartTime.HasValue);
-        }
-
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             tableView.DeselectRow(indexPath, false);
@@ -109,12 +96,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 var isExpanded = Equals(_viewModel.ExpandedShow, show);
                 var height = 
-                    VenueShowCell.CalculateCellHeight(
-                        tableView.Frame.Width,
-                        isExpanded,
-                        isExpanded && GetIsCellHeaderVisibile(),
-                        isExpanded && GetIsCellSubHeaderVisibile(show),
-                        show);
+                    VenueShowCell.CalculateCellHeight(tableView.Frame.Width, isExpanded, show);
                 return height;
             }
 
@@ -170,41 +152,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return null;
         }
 
-        public UIView GetHeaderForShowCell(bool isCellExpanded, Show show)
-        {
-            var headerView = isCellExpanded && GetIsCellHeaderVisibile()
-                ? VenueHeaderContentView.Create()
-                : null;
-
-            if (headerView != null)
-            {
-                headerView.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
-                headerView.BackgroundView = headerView;
-
-                headerView.DataContext = _viewModel.OrgEvent.Venues.GetVenueByShow(show);
-                headerView.NavigateVenueCommand = _viewModel.NavigateVenueCommand;
-                headerView.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
-            }
-
-            return headerView;
-        }
-
-        public UIView GetSubHeaderForShowCell(bool isCellExpanded, Show show)
-        {
-            var subHeaderView = isCellExpanded && GetIsCellSubHeaderVisibile(show)
-                ? GroupHeaderContentView.Create()
-                : null;
-
-            if (subHeaderView != null)
-            {
-                subHeaderView.BackgroundColor = ThemeColors.ContentLightBackgroundAlpha;
-
-                subHeaderView.DataContext = show.StartTime.GetCurrentDayString();
-            }
-
-            return subHeaderView;
-        }
-
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
             var show = GetItemAt(indexPath);
@@ -231,11 +178,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 venueCell.DataContext = show;
-
-                var isExpanded = Equals(_viewModel.ExpandedShow, show);
-                venueCell.HeaderView = GetHeaderForShowCell(isExpanded, show);
-                venueCell.SubHeaderView = GetSubHeaderForShowCell(isExpanded, show);
-                venueCell.IsExpanded = isExpanded;
+                venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
 
                 venueCell.IsSeparatorVisible =
                     !IsLastInDayGroup(show, indexPath) && 

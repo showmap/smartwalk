@@ -32,7 +32,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UISearchDisplayController _searchDisplayController;
         private ListSettingsView _listSettingsView;
         private bool _isMapViewInitialized;
-        private Show _previousExpandedShow;
         private ButtonBarButton _modeButton;
         private ButtonBarButton _dayButton;
 
@@ -288,8 +287,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     UpdateTableViewOnShowExpanding(_searchDisplayController.SearchResultsTableView);
                 }
-
-                _previousExpandedShow = ViewModel.ExpandedShow;
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsAvailable))
             {
@@ -880,50 +877,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
             {
                 var isExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
-                cell.HeaderView = 
-                    tableSoure.GetHeaderForShowCell(isExpanded, cell.DataContext);
-                cell.SubHeaderView = 
-                    tableSoure.GetSubHeaderForShowCell(isExpanded, cell.DataContext);
                 cell.SetIsExpanded(isExpanded, true);
-            }
-
-            if (!ViewModel.IsGroupedByLocation)
-            {
-                var previousOffset = tableView.ContentOffset;
-
-                var previousIndex = _previousExpandedShow != null
-                    ? tableSoure.GetItemIndex(_previousExpandedShow)
-                    : null;
-
-                var currentIndex = ViewModel.ExpandedShow != null
-                    ? tableSoure.GetItemIndex(ViewModel.ExpandedShow)
-                    : null;
-
-                var headerHeight = 
-                    (tableSoure.GetIsCellHeaderVisibile() ? VenueHeaderView.DefaultHeight : 0) +
-                    (tableSoure.GetIsCellSubHeaderVisibile() ? GroupHeaderView.DefaultHeight : 0);
-
-                var previuosCellHeight = 
-                    previousIndex != null &&
-                    currentIndex != null &&
-                    previousIndex.Section < currentIndex.Section
-                        ? VenueShowCell.CalculateCellHeight(
-                            tableView.Frame.Width, true, false, false,
-                            _previousExpandedShow) + 25 // just a magic number, really
-                        : 0;
-
-                var delta = 
-                    (ViewModel.ExpandedShow != null ? 1 : -1) *
-                    headerHeight - previuosCellHeight;
-
-                // Compensating the shift created by expanded headers or previous cells
-                if (tableView.ScrollEnabled &&
-                    previousOffset.Y + delta > 0)
-                {
-                    tableView.SetContentOffset(
-                        new CGPoint(previousOffset.X, previousOffset.Y + delta), 
-                        true);
-                }
             }
 
             tableView.BeginUpdates();

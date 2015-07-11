@@ -28,12 +28,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.UILabel EndTimeLabel { get; set; }
 
 		[Outlet]
-		UIKit.UIView HeaderContainer { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
-
-		[Outlet]
 		UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
 
 		[Outlet]
@@ -47,12 +41,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Outlet]
 		UIKit.UILabel StartTimeLabel { get; set; }
-
-		[Outlet]
-		UIKit.UIView SubHeaderContainer { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint SubHeaderHeightConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
@@ -99,16 +87,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				EndTimeLabel = null;
 			}
 
-			if (HeaderContainer != null) {
-				HeaderContainer.Dispose ();
-				HeaderContainer = null;
-			}
-
-			if (HeaderHeightConstraint != null) {
-				HeaderHeightConstraint.Dispose ();
-				HeaderHeightConstraint = null;
-			}
-
 			if (ImageAndDetailsSpaceConstraint != null) {
 				ImageAndDetailsSpaceConstraint.Dispose ();
 				ImageAndDetailsSpaceConstraint = null;
@@ -132,16 +110,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (StartTimeLabel != null) {
 				StartTimeLabel.Dispose ();
 				StartTimeLabel = null;
-			}
-
-			if (SubHeaderContainer != null) {
-				SubHeaderContainer.Dispose ();
-				SubHeaderContainer = null;
-			}
-
-			if (SubHeaderHeightConstraint != null) {
-				SubHeaderHeightConstraint.Dispose ();
-				SubHeaderHeightConstraint = null;
 			}
 
 			if (ThumbImageView != null) {
