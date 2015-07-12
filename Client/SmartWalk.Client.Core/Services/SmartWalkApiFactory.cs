@@ -130,8 +130,7 @@ namespace SmartWalk.Client.Core.Services
                         }
                     },
                     new RequestSelect {
-                        Fields = new[] { "Name", "Picture", "Addresses" },
-                        PictureSize = PictureSize.Small,
+                        Fields = new[] { "Name", "Addresses" },
                         From = RequestSelectFromTables.Entity,
                         Where = new[] {
                             new RequestSelectWhere {

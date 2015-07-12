@@ -4,6 +4,7 @@ using CoreAnimation;
 using UIKit;
 using SmartWalk.Client.iOS.Resources;
 using CoreGraphics;
+using System.Drawing;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -171,6 +172,23 @@ namespace SmartWalk.Client.iOS.Utils
             var result = viewBounds.IntersectsWith(
                 new CGRect(recognizer.LocationInView(view), CGSize.Empty));
             return result;
+        }
+
+        public static void MakeRound(this UIView view)
+        {
+            var maskWidth = view.Frame.Width;
+            var maskHeight = view.Frame.Height;
+            const int maskGap = 0;
+
+            var path = UIBezierPath.FromOval(new CGRect(0, 0, maskWidth, maskHeight));
+            var mask = new CAShapeLayer {
+                Frame = new CGRect(maskGap, maskGap,
+                    maskGap + maskWidth, 
+                    maskGap + maskHeight),
+                Path = path.CGPath
+            };
+
+            view.Layer.Mask = mask;
         }
     }
 }

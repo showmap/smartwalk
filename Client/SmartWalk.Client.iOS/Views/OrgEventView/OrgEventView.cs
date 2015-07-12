@@ -9,7 +9,6 @@ using Foundation;
 using MapKit;
 using UIKit;
 using SmartWalk.Client.Core.Model;
-using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
@@ -18,7 +17,6 @@ using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
-using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 using SmartWalk.Client.iOS.Views.OrgView;
 

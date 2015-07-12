@@ -37,6 +37,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
 
 		[Outlet]
+		UIKit.NSLayoutConstraint LogoImageHeightConstraint { get; set; }
+
+		[Outlet]
+		UIKit.UIImageView LogoImageView { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint LogoImageWidthConstraint { get; set; }
+
+		[Outlet]
+		UIKit.UILabel LogoLabel { get; set; }
+
+		[Outlet]
+		UIKit.UIView LogoLabelView { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
@@ -100,6 +115,31 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (ImageWidthConstraint != null) {
 				ImageWidthConstraint.Dispose ();
 				ImageWidthConstraint = null;
+			}
+
+			if (LogoImageHeightConstraint != null) {
+				LogoImageHeightConstraint.Dispose ();
+				LogoImageHeightConstraint = null;
+			}
+
+			if (LogoImageView != null) {
+				LogoImageView.Dispose ();
+				LogoImageView = null;
+			}
+
+			if (LogoImageWidthConstraint != null) {
+				LogoImageWidthConstraint.Dispose ();
+				LogoImageWidthConstraint = null;
+			}
+
+			if (LogoLabel != null) {
+				LogoLabel.Dispose ();
+				LogoLabel = null;
+			}
+
+			if (LogoLabelView != null) {
+				LogoLabelView.Dispose ();
+				LogoLabelView = null;
 			}
 
 			if (Separator != null) {

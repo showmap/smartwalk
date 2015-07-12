@@ -40,8 +40,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont NextEntityFont = UIFont.FromName(HelveticaLight, 16);
 
         public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
-        public static readonly UIFont VenueThumbLabelFont = UIFont.FromName(HelveticaLight, 17);
         public static readonly UIFont VenueAddressFont = UIFont.FromName(HelveticaLight, 14);
+        public static readonly UIFont VenueShowLogoFont = UIFont.FromName(HelveticaLight, 17);
         public static readonly UIFont VenueShowTimeFont = UIFont.FromName(HelveticaRegular, 14);
         public static readonly UIFont VenueShowFinishedTimeFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowEndTimeFont = UIFont.FromName(HelveticaRegular, 10);

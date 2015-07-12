@@ -42,7 +42,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private bool _isGroupedByLocation = true;
         private bool _isListOptionsShown;
         private bool _isListOptionsAvailable;
-        private SortBy _sortBy = SortBy.Time;
+        private SortBy _sortBy = SortBy.Name;
         private Venue[] _searchResults;
         private Dictionary<SearchKey, string> _searchableTexts;
         private Venue[] _allShows;
@@ -108,6 +108,8 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _mode = value;
                     RaisePropertyChanged(() => Mode);
+
+                    IsGroupedByLocation = _mode != OrgEventViewMode.List;
                 }
             }
         }
@@ -278,8 +280,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
             }
         }
-
-
 
         public bool IsListOptionsAvailable
         {
@@ -763,6 +763,7 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        [Obsolete]
         public ICommand GroupByLocationCommand
         {
             get

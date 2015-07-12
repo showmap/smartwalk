@@ -5,13 +5,11 @@ using Foundation;
 using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
-using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
-using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -179,6 +177,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 venueCell.DataContext = show;
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
+                venueCell.IsLogoVisible = true; // TODO: To pass value from VM basing on logos availability
 
                 venueCell.IsSeparatorVisible =
                     !IsLastInDayGroup(show, indexPath) && 

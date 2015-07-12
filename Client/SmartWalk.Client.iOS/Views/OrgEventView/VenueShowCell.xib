@@ -16,7 +16,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ztH-tE-Jjf" userLabel="Info">
-                        <rect key="frame" x="10" y="276" width="16" height="16"/>
+                        <rect key="frame" x="54" y="276" width="16" height="16"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="16" id="IC7-ck-Dqd"/>
                             <constraint firstAttribute="height" constant="16" id="JHk-jd-YcX"/>
@@ -29,14 +29,14 @@
                         </connections>
                     </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="400" text="More information" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
-                        <rect key="frame" x="30" y="275" width="98" height="15"/>
+                        <rect key="frame" x="74" y="275" width="98" height="15"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                         <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="LogoImageView" customClass="ProgressImageView">
-                        <rect key="frame" x="10" y="163" width="173" height="100"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="Thumb Image" customClass="ProgressImageView">
+                        <rect key="frame" x="54" y="163" width="173" height="100"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="100" id="139"/>
@@ -44,7 +44,7 @@
                         </constraints>
                     </imageView>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZg-8z-Khe" userLabel="Description" customClass="CopyLabel">
-                        <rect key="frame" x="10" y="33" width="292" height="18"/>
+                        <rect key="frame" x="54" y="33" width="248" height="18"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -65,12 +65,35 @@
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="500" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Title" customClass="CopyLabel">
-                        <rect key="frame" x="10" y="12" width="265" height="18"/>
+                        <rect key="frame" x="54" y="12" width="221" height="18"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
+                    <view autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="yI1-bt-IQd" userLabel="Logo Label View">
+                        <rect key="frame" x="5" y="0.0" width="44" height="44"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="954-GK-xxD" userLabel="Logo Label">
+                                <rect key="frame" x="12" y="12" width="20.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="954-GK-xxD" secondAttribute="centerX" id="285-jW-gkp"/>
+                            <constraint firstAttribute="centerY" secondItem="954-GK-xxD" secondAttribute="centerY" id="T73-Sk-n6e"/>
+                        </constraints>
+                    </view>
+                    <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="7WH-je-xc3" userLabel="Logo Image">
+                        <rect key="frame" x="5" y="0.0" width="44" height="44"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="8SV-mf-TGk"/>
+                            <constraint firstAttribute="height" constant="44" id="fPs-0i-UUp"/>
+                        </constraints>
+                    </imageView>
                     <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="592" userLabel="Realtime">
                         <rect key="frame" x="0.0" y="8" width="5" height="294"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -88,8 +111,9 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" constant="8" id="0zo-RP-mTQ"/>
-                    <constraint firstItem="9" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" constant="10" id="DFg-T2-Ly1"/>
                     <constraint firstItem="9" firstAttribute="leading" secondItem="eZg-8z-Khe" secondAttribute="leading" id="Gjq-HX-BdO"/>
+                    <constraint firstItem="yI1-bt-IQd" firstAttribute="trailing" secondItem="7WH-je-xc3" secondAttribute="trailing" id="IgH-CT-fwL"/>
+                    <constraint firstItem="7WH-je-xc3" firstAttribute="leading" secondItem="yI1-bt-IQd" secondAttribute="leading" id="Jbx-LV-E0O"/>
                     <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="-1" id="KJp-hi-iCi"/>
                     <constraint firstItem="181" firstAttribute="top" secondItem="ztH-tE-Jjf" secondAttribute="top" constant="-1" id="Lmp-Mv-dGq"/>
                     <constraint firstAttribute="trailingMargin" secondItem="eZg-8z-Khe" secondAttribute="trailing" priority="900" constant="10" id="Q8x-s6-Qb4"/>
@@ -98,16 +122,21 @@
                     <constraint firstItem="592" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="UTs-ha-cCo"/>
                     <constraint firstAttribute="bottom" secondItem="592" secondAttribute="bottom" id="Z4Z-UY-RgZ"/>
                     <constraint firstAttribute="bottom" secondItem="K9o-xv-nfu" secondAttribute="bottom" id="ZUK-hY-8aQ"/>
+                    <constraint firstItem="9" firstAttribute="leading" secondItem="7WH-je-xc3" secondAttribute="trailing" constant="5" id="ZXf-OR-crA"/>
                     <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="181" secondAttribute="trailing" priority="900" constant="10" id="brI-xG-IGi"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="topMargin" id="brQ-4v-4aq"/>
                     <constraint firstItem="9" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="12" id="cT4-EK-5pJ"/>
+                    <constraint firstItem="yI1-bt-IQd" firstAttribute="top" secondItem="7WH-je-xc3" secondAttribute="top" id="dFe-Bt-QKi"/>
                     <constraint firstAttribute="bottom" secondItem="181" secondAttribute="bottom" constant="12" id="e9g-Hw-SsH"/>
                     <constraint firstItem="50" firstAttribute="top" relation="greaterThanOrEqual" secondItem="eZg-8z-Khe" secondAttribute="bottom" priority="900" constant="12" id="f5C-H9-OZF"/>
                     <constraint firstItem="K9o-xv-nfu" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="fLo-Av-da9"/>
                     <constraint firstItem="9" firstAttribute="leading" secondItem="ztH-tE-Jjf" secondAttribute="leading" id="j9n-Y2-w2H"/>
                     <constraint firstItem="6" firstAttribute="width" secondItem="3" secondAttribute="width" id="mRO-93-3Ot"/>
+                    <constraint firstItem="yI1-bt-IQd" firstAttribute="bottom" secondItem="7WH-je-xc3" secondAttribute="bottom" id="na0-jA-CGt"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6" secondAttribute="bottom" constant="3" id="ntX-rC-rmO"/>
+                    <constraint firstItem="7WH-je-xc3" firstAttribute="leading" secondItem="592" secondAttribute="trailing" id="oBC-z9-IuT"/>
                     <constraint firstItem="3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="8" id="paf-GI-3hU"/>
+                    <constraint firstItem="7WH-je-xc3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="tLF-pn-u7Y"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="top" secondItem="9" secondAttribute="bottom" priority="900" constant="3" id="tvp-dH-0ZU"/>
                     <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="8" id="viT-Fi-EmO"/>
                     <constraint firstItem="3" firstAttribute="leading" secondItem="9" secondAttribute="trailing" constant="5" id="y2f-W3-srI"/>
@@ -126,6 +155,11 @@
                 <outlet property="ImageAndDetailsSpaceConstraint" destination="H0t-fT-ezL" id="3e4-L4-wPc"/>
                 <outlet property="ImageHeightConstraint" destination="139" id="383"/>
                 <outlet property="ImageWidthConstraint" destination="173" id="387"/>
+                <outlet property="LogoImageHeightConstraint" destination="fPs-0i-UUp" id="6mg-10-TFg"/>
+                <outlet property="LogoImageView" destination="7WH-je-xc3" id="mGS-Z7-oF1"/>
+                <outlet property="LogoImageWidthConstraint" destination="8SV-mf-TGk" id="3PE-FC-YRt"/>
+                <outlet property="LogoLabel" destination="954-GK-xxD" id="TMG-sc-H4a"/>
+                <outlet property="LogoLabelView" destination="yI1-bt-IQd" id="vsr-O1-8TA"/>
                 <outlet property="Separator" destination="K9o-xv-nfu" id="7ox-7Q-xIt"/>
                 <outlet property="StartTimeLabel" destination="3" id="379"/>
                 <outlet property="ThumbImageView" destination="50" id="389"/>

@@ -1,17 +1,18 @@
 using System;
-using CoreGraphics;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
+using CoreGraphics;
 using Foundation;
-using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
-using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
-using SmartWalk.Client.iOS.Views.Common.GroupHeader;
+using SmartWalk.Shared.DataContracts;
+using SmartWalk.Shared.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -44,33 +45,51 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public static readonly float DefaultHeight = VerticalGap + ShowTitleTextHeight + VerticalGap;
 
-        private readonly AnimationDelay _animationDelay = new AnimationDelay();
-        private readonly MvxImageViewLoader _imageHelper;
+        private readonly AnimationDelay _thumbAnimationDelay = new AnimationDelay();
+        private readonly MvxImageViewLoader _thumbImageHelper;
+        private readonly MvxResizedImageViewLoader _logoImageHelper;
+        private readonly AnimationDelay _logoAnimationDelay = new AnimationDelay();
+
         private UITapGestureRecognizer _cellTapGesture;
         private bool _isExpanded;
+        private bool _isLogoVisible;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
             BackgroundView = new UIView { BackgroundColor = ThemeColors.ContentLightBackground };
 
-            _imageHelper = new MvxImageViewLoader(
+            _logoImageHelper = new MvxResizedImageViewLoader(
+                () => LogoImageView,
+                () => 
+                {
+                    if (LogoImageView != null && LogoImageView.ProgressEnded())
+                    {
+                        var noImage = !LogoImageView.HasImage();
+                        LogoImageView.SetHidden(noImage, _logoAnimationDelay.Animate);
+
+                        // showing abbr if image couldn't be loaded
+                        LogoLabelView.SetHidden(!noImage, false);
+                    }
+                });
+
+            _thumbImageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
                 () => 
                 {
-                    if (_imageHelper.ImageUrl != null && 
+                    if (_thumbImageHelper.ImageUrl != null && 
                         ThumbImageView.Image != null)
                     {
                         UpdateConstraintConstants(false);
 
-                        if (_animationDelay.Animate)
+                        if (_thumbAnimationDelay.Animate)
                         {
                             ThumbImageView.Hidden = true;
                             ThumbImageView.SetHidden(false, true);
                         }
                     }
                 });
-            _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
-            _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
+            _thumbImageHelper.DefaultImagePath = Theme.DefaultImagePath;
+            _thumbImageHelper.ErrorImagePath = Theme.ErrorImagePath;
         }
 
         public static VenueShowCell Create()
@@ -179,6 +198,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        public bool IsLogoVisible
+        {
+            get
+            {
+                return _isLogoVisible;
+            }
+            set
+            {
+                if (_isLogoVisible != value)
+                {
+                    _isLogoVisible = value;
+
+                    UpdateConstraintConstants(false);
+                    UpdateVisibility(false);
+
+                    if (_isLogoVisible)
+                    {
+                        UpdateLogoImageState();
+                    }
+                }
+            }
+        }
 
         public bool IsSeparatorVisible
         {
@@ -197,7 +238,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 if (_isExpanded)
                 {
-                    UpateImageState();
+                    UpdateThumbImageState();
                 }
             }
         }
@@ -207,6 +248,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.PrepareForReuse();
 
             IsExpanded = false;
+            IsLogoVisible = false;
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -231,10 +273,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            _animationDelay.Reset();
+            _logoAnimationDelay.Reset();
+            LogoImageView.Image = null;
+            _logoImageHelper.ImageUrl = null;
 
+            _thumbAnimationDelay.Reset();
             ThumbImageView.Image = null;
-            _imageHelper.ImageUrl = null;
+            _thumbImageHelper.ImageUrl = null;
+
+            LogoLabel.Text = DataContext.Title.GetAbbreviation(2);
 
             StartTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.StartTime) : null;
             EndTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.EndTime) : null;
@@ -246,13 +293,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ? Localization.MoreInformation : null;
 
             UpdateStatusStyle();
-            UpateImageState();
+            UpdateLogoImageState();
+            UpdateThumbImageState();
             UpdateConstraintConstants(false);
             UpdateVisibility(false);
         }
 
         private void UpdateConstraintConstants(bool animated)
         {
+            this.UpdateConstraint(() =>
+                {
+                    if (IsLogoVisible && !IsExpanded)
+                    {
+                        LogoImageWidthConstraint.Constant = 44;
+                    } 
+                    else
+                    {
+                        LogoImageWidthConstraint.Constant = 0;
+                    }
+                },
+                animated);
+
             if (IsExpanded &&
                 DataContext.Title != null &&
                 DataContext.Description != null)
@@ -298,24 +359,35 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 animated);
         }
 
-        private void UpateImageState()
+        private void UpdateLogoImageState()
+        {
+            var url = IsLogoVisible && DataContext != null 
+                ? DataContext.Picture : null;
+
+            _logoImageHelper.ImageUrl = url;
+        }
+
+        private void UpdateThumbImageState()
         {
             var url = IsExpanded && DataContext != null 
                 ? DataContext.Picture : null;
 
-            if (_imageHelper.ImageUrl != url)
+            if (_thumbImageHelper.ImageUrl != url)
             {
                 if (url != null)
                 {
                     ThumbImageView.StartProgress();
                 }
 
-                _imageHelper.ImageUrl = url;
+                _thumbImageHelper.ImageUrl = url;
             }
         }
 
         private void UpdateVisibility(bool animated)
         {
+            LogoImageView.SetHidden(IsExpanded || !IsLogoVisible || !DataContext.HasPicture(), animated);
+            LogoLabelView.SetHidden(IsExpanded || !IsLogoVisible || DataContext.HasPicture(), animated);
+
             var isDescriptionHidden = !IsExpanded || DataContext.Description == null;
             DescriptionLabel.SetHidden(isDescriptionHidden, animated);
 
@@ -329,7 +401,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private float GetImageProportionalWidth()
         {
-            if (_imageHelper.ImageUrl != null &&
+            if (_thumbImageHelper.ImageUrl != null &&
                 ThumbImageView.Image != null &&
                 IsExpanded)
             {
@@ -394,6 +466,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
+            LogoLabel.Font = Theme.VenueShowLogoFont;
+            LogoLabel.TextColor = ThemeColors.ContentDarkText;
+            LogoLabelView.BackgroundColor = ThemeColors.BorderLight;
+
+            LogoImageView.MakeRound();
+            LogoLabelView.MakeRound();
+
             TitleLabel.Font = Theme.ContentFont;
             TitleLabel.TextColor = ThemeColors.ContentLightText;
 
