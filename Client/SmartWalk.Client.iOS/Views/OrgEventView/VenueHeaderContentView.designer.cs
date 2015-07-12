@@ -13,22 +13,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class VenueHeaderContentView
 	{
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.CopyLabel AddressLabel { get; set; }
-
-		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line BottomSeparator { get; set; }
 
 		[Outlet]
 		UIKit.UIImageView GoRightImageView { get; set; }
-
-		[Outlet]
-		UIKit.UILabel ImageLabel { get; set; }
-
-		[Outlet]
-		UIKit.UIView ImageLabelView { get; set; }
-
-		[Outlet]
-		UIKit.UIImageView LogoImageView { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel NameLabel { get; set; }
@@ -37,27 +25,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.UIButton NavigateOnMapButton { get; set; }
 
 		[Outlet]
-		UIKit.NSLayoutConstraint PinTopGapConstraint { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint TitleLeftGapConstraint { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint TitleTopGapConstraint { get; set; }
-
-		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
-
-		[Action ("OnNavigateOnMapClick:")]
-		partial void OnNavigateOnMapClick (UIKit.UIButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (AddressLabel != null) {
-				AddressLabel.Dispose ();
-				AddressLabel = null;
-			}
-
 			if (BottomSeparator != null) {
 				BottomSeparator.Dispose ();
 				BottomSeparator = null;
@@ -68,21 +39,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				GoRightImageView = null;
 			}
 
-			if (ImageLabel != null) {
-				ImageLabel.Dispose ();
-				ImageLabel = null;
-			}
-
-			if (ImageLabelView != null) {
-				ImageLabelView.Dispose ();
-				ImageLabelView = null;
-			}
-
-			if (LogoImageView != null) {
-				LogoImageView.Dispose ();
-				LogoImageView = null;
-			}
-
 			if (NameLabel != null) {
 				NameLabel.Dispose ();
 				NameLabel = null;
@@ -91,21 +47,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (NavigateOnMapButton != null) {
 				NavigateOnMapButton.Dispose ();
 				NavigateOnMapButton = null;
-			}
-
-			if (PinTopGapConstraint != null) {
-				PinTopGapConstraint.Dispose ();
-				PinTopGapConstraint = null;
-			}
-
-			if (TitleLeftGapConstraint != null) {
-				TitleLeftGapConstraint.Dispose ();
-				TitleLeftGapConstraint = null;
-			}
-
-			if (TitleTopGapConstraint != null) {
-				TitleTopGapConstraint.Dispose ();
-				TitleTopGapConstraint = null;
 			}
 
 			if (TopSeparator != null) {

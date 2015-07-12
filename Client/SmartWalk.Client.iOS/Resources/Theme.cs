@@ -15,6 +15,7 @@ namespace SmartWalk.Client.iOS.Resources
 
         public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
         public static readonly UIFont ContentFont = UIFont.FromName(HelveticaRegular, 16);
+        public static readonly UIFont ContentMediumFont = UIFont.FromName(HelveticaMedium, 16);
         public static readonly UIFont ActionSheetFont = UIFont.FromName(HelveticaBold, 17);
         public static readonly UIFont ActionSheetCancelFont = UIFont.FromName(HelveticaBold, 18);
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);

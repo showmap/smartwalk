@@ -17,27 +17,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         public static readonly UINib Nib = UINib.FromName("VenueHeaderContentView", NSBundle.MainBundle);
 
-        private readonly MvxResizedImageViewLoader _imageHelper;
-        private readonly AnimationDelay _animationDelay = new AnimationDelay();
-
         private UILongPressGestureRecognizer _cellPressGesture;
         private UITapGestureRecognizer _mapTapGesture;
 
         public VenueHeaderContentView(IntPtr handle) : base(handle)
         {
-            _imageHelper = new MvxResizedImageViewLoader(
-                () => LogoImageView,
-                () => 
-                {
-                    if (LogoImageView != null && LogoImageView.ProgressEnded())
-                    {
-                        var noImage = !LogoImageView.HasImage();
-                        LogoImageView.SetHidden(noImage, _animationDelay.Animate);
-
-                        // showing abbr if image couldn't be loaded
-                        ImageLabelView.SetHidden(!noImage, false);
-                    }
-                });
         }
 
         public static VenueHeaderContentView Create()
@@ -77,52 +61,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            _animationDelay.Reset();
-
-            LogoImageView.Image = null;
-            _imageHelper.ImageUrl = null;
-
-            if (DataContext != null)
-            {
-                if (DataContext.Info.HasPicture())
-                {
-                    LogoImageView.Hidden = false;
-                    ImageLabelView.Hidden = true;
-                }
-                else
-                {
-                    LogoImageView.Hidden = true;
-                    ImageLabelView.Hidden = false;
-                }
-            }
-
             NameLabel.Text = DataContext.DisplayName();
-            ImageLabel.Text = DataContext.Info.Name.GetAbbreviation(2);
-
-            AddressLabel.Text = DataContext != null
-                ? DataContext.Info.GetAddressText()
-                : null;
-
-            _imageHelper.ImageUrl = DataContext != null 
-                ? DataContext.Info.Picture : null;
-
-            UpdateConstraintConstants();
-        }
-
-        private void UpdateConstraintConstants()
-        {
-            if (DataContext != null && DataContext.Info.HasAddressText())
-            {
-                TitleTopGapConstraint.Constant = 12;
-                TitleLeftGapConstraint.Constant = 8;
-                PinTopGapConstraint.Constant = 22;
-            }
-            else
-            {
-                TitleTopGapConstraint.Constant = 23;
-                TitleLeftGapConstraint.Constant = 22;
-                PinTopGapConstraint.Constant = 10;
-            }
         }
 
         private void InitializeGestures()
@@ -201,15 +140,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             BottomSeparator.IsLineOnTop = true;
 
-            ImageLabel.Font = Theme.VenueThumbLabelFont;
-            ImageLabel.TextColor = ThemeColors.ContentDarkText;
-            ImageLabelView.BackgroundColor = ThemeColors.BorderLight;
-
-            NameLabel.Font = Theme.ContentFont;
+            NameLabel.Font = Theme.ContentMediumFont;
             NameLabel.TextColor = ThemeColors.ContentLightText;
-
-            AddressLabel.Font = Theme.VenueAddressFont;
-            AddressLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
             GoRightImageView.Image = ThemeIcons.Forward;
@@ -228,7 +160,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             NameLabel.Highlighted = isSelected;
-            AddressLabel.Highlighted = isSelected;
             NavigateOnMapButton.Highlighted = isSelected;
         }
     }
