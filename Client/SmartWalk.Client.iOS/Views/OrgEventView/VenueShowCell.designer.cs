@@ -13,7 +13,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class VenueShowCell
 	{
 		[Outlet]
-		UIKit.NSLayoutConstraint DescriptionAndImageSpaceConstraint { get; set; }
+		UIKit.NSLayoutConstraint BottomBorderLeftConstraint { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint DescriptionAndDetailsSpaceConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel DescriptionLabel { get; set; }
@@ -28,37 +31,31 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.UILabel EndTimeLabel { get; set; }
 
 		[Outlet]
-		UIKit.NSLayoutConstraint ImageAndDetailsSpaceConstraint { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint LogoImageHeightConstraint { get; set; }
-
-		[Outlet]
-		UIKit.UIImageView LogoImageView { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint LogoImageWidthConstraint { get; set; }
-
-		[Outlet]
-		UIKit.UILabel LogoLabel { get; set; }
-
-		[Outlet]
-		UIKit.UIView LogoLabelView { get; set; }
-
-		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
 		UIKit.UILabel StartTimeLabel { get; set; }
 
 		[Outlet]
+		UIKit.NSLayoutConstraint ThumbHeightConstraint { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.ProgressImageView ThumbImageView { get; set; }
+
+		[Outlet]
+		UIKit.UILabel ThumbLabel { get; set; }
+
+		[Outlet]
+		UIKit.UIView ThumbLabelView { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint ThumbLeftConstraint { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint ThumbTopConstraint { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint ThumbWidthConstraint { get; set; }
 
 		[Outlet]
 		UIKit.UIView TimeBackgroundView { get; set; }
@@ -72,16 +69,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
 
+		[Outlet]
+		UIKit.NSLayoutConstraint TitleLeftConstraint { get; set; }
+
 		[Action ("OnDetailsButtonClick:")]
 		partial void OnDetailsButtonClick (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (DescriptionAndImageSpaceConstraint != null) {
-				DescriptionAndImageSpaceConstraint.Dispose ();
-				DescriptionAndImageSpaceConstraint = null;
-			}
-
 			if (DescriptionLabel != null) {
 				DescriptionLabel.Dispose ();
 				DescriptionLabel = null;
@@ -102,44 +97,44 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				EndTimeLabel = null;
 			}
 
-			if (ImageAndDetailsSpaceConstraint != null) {
-				ImageAndDetailsSpaceConstraint.Dispose ();
-				ImageAndDetailsSpaceConstraint = null;
+			if (ThumbWidthConstraint != null) {
+				ThumbWidthConstraint.Dispose ();
+				ThumbWidthConstraint = null;
 			}
 
-			if (ImageHeightConstraint != null) {
-				ImageHeightConstraint.Dispose ();
-				ImageHeightConstraint = null;
+			if (ThumbHeightConstraint != null) {
+				ThumbHeightConstraint.Dispose ();
+				ThumbHeightConstraint = null;
 			}
 
-			if (ImageWidthConstraint != null) {
-				ImageWidthConstraint.Dispose ();
-				ImageWidthConstraint = null;
+			if (ThumbTopConstraint != null) {
+				ThumbTopConstraint.Dispose ();
+				ThumbTopConstraint = null;
 			}
 
-			if (LogoImageHeightConstraint != null) {
-				LogoImageHeightConstraint.Dispose ();
-				LogoImageHeightConstraint = null;
+			if (ThumbLeftConstraint != null) {
+				ThumbLeftConstraint.Dispose ();
+				ThumbLeftConstraint = null;
 			}
 
-			if (LogoImageView != null) {
-				LogoImageView.Dispose ();
-				LogoImageView = null;
+			if (TitleLeftConstraint != null) {
+				TitleLeftConstraint.Dispose ();
+				TitleLeftConstraint = null;
 			}
 
-			if (LogoImageWidthConstraint != null) {
-				LogoImageWidthConstraint.Dispose ();
-				LogoImageWidthConstraint = null;
+			if (BottomBorderLeftConstraint != null) {
+				BottomBorderLeftConstraint.Dispose ();
+				BottomBorderLeftConstraint = null;
 			}
 
-			if (LogoLabel != null) {
-				LogoLabel.Dispose ();
-				LogoLabel = null;
+			if (ThumbLabel != null) {
+				ThumbLabel.Dispose ();
+				ThumbLabel = null;
 			}
 
-			if (LogoLabelView != null) {
-				LogoLabelView.Dispose ();
-				LogoLabelView = null;
+			if (ThumbLabelView != null) {
+				ThumbLabelView.Dispose ();
+				ThumbLabelView = null;
 			}
 
 			if (Separator != null) {
@@ -170,6 +165,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TitleAndDescriptionSpaceConstraint != null) {
 				TitleAndDescriptionSpaceConstraint.Dispose ();
 				TitleAndDescriptionSpaceConstraint = null;
+			}
+
+			if (DescriptionAndDetailsSpaceConstraint != null) {
+				DescriptionAndDetailsSpaceConstraint.Dispose ();
+				DescriptionAndDetailsSpaceConstraint = null;
 			}
 
 			if (TitleLabel != null) {

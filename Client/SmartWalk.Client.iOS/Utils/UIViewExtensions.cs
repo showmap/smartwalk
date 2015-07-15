@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using CoreAnimation;
-using UIKit;
-using SmartWalk.Client.iOS.Resources;
 using CoreGraphics;
-using System.Drawing;
+using SmartWalk.Client.iOS.Resources;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -147,21 +146,28 @@ namespace SmartWalk.Client.iOS.Utils
             CATransaction.Commit();
         }
 
-        public static void UpdateConstraint(this UIView view, Action animationHandler, bool animated)
+        public static void UpdateConstraint(this UIView view, 
+            Action animationHandler, bool animated, Action completion = null)
+        {
+            Animate(() =>
+                {
+                    animationHandler();
+                    view.LayoutIfNeeded();
+                },
+                animated,
+                completion);
+        }
+
+        public static void Animate(Action animation, bool animated, Action completion = null)
         {
             if (animated)
             {
-                UIView.Animate(
-                    UIConstants.AnimationDuration, 
-                    () =>
-                    {
-                        animationHandler();
-                        view.LayoutIfNeeded();
-                    });
+                UIView.Animate(UIConstants.AnimationDuration, animation, completion);
             }
             else
             {
-                animationHandler();
+                animation();
+                if (completion != null) completion();
             }
         }
 
@@ -174,21 +180,44 @@ namespace SmartWalk.Client.iOS.Utils
             return result;
         }
 
-        public static void MakeRound(this UIView view)
+        public static void MakeRound(this UIView view, CGSize? size = null)
         {
-            var maskWidth = view.Frame.Width;
-            var maskHeight = view.Frame.Height;
+            view.MakeMask(UIBezierPath.FromOval, size);
+        }
+
+        public static void MakeRect(this UIView view, CGSize? size = null)
+        {
+            view.MakeMask(UIBezierPath.FromRect, size);
+        }
+
+        private static void MakeMask(this UIView view, 
+            Func<CGRect, UIBezierPath> getPath, 
+            CGSize? size = null)
+        {
+            var maskWidth = !size.HasValue ? view.Frame.Width : size.Value.Width;
+            var maskHeight = !size.HasValue ? view.Frame.Height : size.Value.Height;
             const int maskGap = 0;
 
-            var path = UIBezierPath.FromOval(new CGRect(0, 0, maskWidth, maskHeight));
-            var mask = new CAShapeLayer {
-                Frame = new CGRect(maskGap, maskGap,
-                    maskGap + maskWidth, 
-                    maskGap + maskHeight),
-                Path = path.CGPath
-            };
+            var path = getPath(new CGRect(0, 0, maskWidth, maskHeight));
+            var frame = new CGRect(maskGap, maskGap,
+                maskGap + maskWidth,  
+                maskGap + maskHeight);
 
-            view.Layer.Mask = mask;
+            var maskLayer = view.Layer.Mask as CAShapeLayer;
+            if (maskLayer != null)
+            {
+                maskLayer.Frame = frame;
+                maskLayer.Path = path.CGPath;
+            }
+            else
+            {
+                var mask = new CAShapeLayer {
+                    Frame = frame,
+                    Path = path.CGPath
+                };
+
+                view.Layer.Mask = mask;
+            }
         }
     }
 }
