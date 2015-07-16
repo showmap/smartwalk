@@ -19,6 +19,7 @@ using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 using SmartWalk.Client.iOS.Views.OrgView;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -69,8 +70,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.ViewDidLoad();
 
-            ViewModel.ZoomSelectedVenue += OnZoomSelectedVenue;
-            ViewModel.ScrollSelectedVenue += OnScrollSelectedVenue;
+            ViewModel.ZoomToVenue += OnZoomToVenue;
+            ViewModel.ScrollToVenue += OnScrollToVenue;
+            ViewModel.ScrollToShow += OnScrollToShow;
 
             InitializeStyle();
 
@@ -101,8 +103,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (parent == null)
             {
-                ViewModel.ZoomSelectedVenue -= OnZoomSelectedVenue;
-                ViewModel.ScrollSelectedVenue -= OnScrollSelectedVenue;
+                ViewModel.ZoomToVenue -= OnZoomToVenue;
+                ViewModel.ScrollToVenue -= OnScrollToVenue;
 
                 DisposeToolBar();
                 DisposeTableHeader();
@@ -652,27 +654,39 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return annotation;
         }
 
-        private void OnZoomSelectedVenue(object sender, EventArgs e)
+        private void OnZoomToVenue(object sender, MvxValueEventArgs<Venue> e)
         {
-            if (ViewModel.SelectedVenueOnMap != null)
+            var annotation = GetAnnotationByVenue(ViewModel.SelectedVenueOnMap);
+
+            var shiftedCoord = annotation.Coordinate;
+            shiftedCoord.Latitude += 0.0008f;
+
+            VenuesMapView.SetRegion(
+                MapUtil.CoordinateRegionForCoordinates(shiftedCoord), true);
+        }
+
+        private void OnScrollToVenue(object sender, MvxValueEventArgs<Venue> e)
+        {
+            var tableSource = VenuesAndShowsTableView.WeakDelegate as OrgEventTableSource;
+            if (tableSource != null)
             {
-                var annotation = GetAnnotationByVenue(ViewModel.SelectedVenueOnMap);
-
-                var shiftedCoord = annotation.Coordinate;
-                shiftedCoord.Latitude += 0.0008f;
-
-                VenuesMapView.SetRegion(
-                    MapUtil.CoordinateRegionForCoordinates(shiftedCoord), true);
+                var index = tableSource.GetItemIndex(e.Value);
+                if (index != null)
+                {
+                    VenuesAndShowsTableView.ScrollToRow(
+                        index, 
+                        UITableViewScrollPosition.Top,
+                        true);
+                }
             }
         }
 
-        private void OnScrollSelectedVenue(object sender, EventArgs e)
+        private void OnScrollToShow(object sender, MvxValueEventArgs<Show> e)
         {
             var tableSource = VenuesAndShowsTableView.WeakDelegate as OrgEventTableSource;
-            if (tableSource != null &&
-                ViewModel.SelectedVenueOnMap != null)
+            if (tableSource != null)
             {
-                var index = tableSource.GetItemIndex(ViewModel.SelectedVenueOnMap);
+                var index = tableSource.GetItemIndex(e.Value);
                 if (index != null)
                 {
                     VenuesAndShowsTableView.ScrollToRow(

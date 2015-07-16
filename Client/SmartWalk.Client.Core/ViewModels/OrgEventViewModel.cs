@@ -85,8 +85,9 @@ namespace SmartWalk.Client.Core.ViewModels
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
-        public event EventHandler ZoomSelectedVenue;
-        public event EventHandler ScrollSelectedVenue;
+        public event EventHandler<MvxValueEventArgs<Venue>> ZoomToVenue;
+        public event EventHandler<MvxValueEventArgs<Venue>> ScrollToVenue;
+        public event EventHandler<MvxValueEventArgs<Show>> ScrollToShow;
 
         public override string Title
         {
@@ -110,6 +111,11 @@ namespace SmartWalk.Client.Core.ViewModels
                     RaisePropertyChanged(() => Mode);
 
                     IsGroupedByLocation = _mode != OrgEventViewMode.List;
+
+                    if (ScrollToShow != null && ExpandedShow != null)
+                    {
+                        ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
+                    }
                 }
             }
         }
@@ -350,6 +356,11 @@ namespace SmartWalk.Client.Core.ViewModels
 
                     RaisePropertyChanged(() => SortBy);
                     RaisePropertyChanged(() => ListItems);
+
+                    if (ScrollToShow != null && ExpandedShow != null)
+                    {
+                        ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
+                    }
                 }
             }
         }
@@ -679,9 +690,9 @@ namespace SmartWalk.Client.Core.ViewModels
 
                             SelectedVenueOnMap = venue;
 
-                            if (ScrollSelectedVenue != null)
+                            if (ScrollToVenue != null && venue != null)
                             {
-                                ScrollSelectedVenue(this, EventArgs.Empty);
+                                ScrollToVenue(this, new MvxValueEventArgs<Venue>(venue));
                             }
                         });
                 }
@@ -709,9 +720,9 @@ namespace SmartWalk.Client.Core.ViewModels
                             
                             SelectedVenueOnMap = venue;
 
-                            if (ZoomSelectedVenue != null)
+                            if (ZoomToVenue != null && venue != null)
                             {
-                                ZoomSelectedVenue(this, EventArgs.Empty);
+                                ZoomToVenue(this, new MvxValueEventArgs<Venue>(venue));
                             }
                         },
                         venue => venue != null);
