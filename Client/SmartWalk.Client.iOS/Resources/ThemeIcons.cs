@@ -29,6 +29,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage MapPinSmall = UIImage.FromFile("Icons/MapPinSmall.png"); // 3x ?
         public static readonly UIImage Info = Image("Icons/Info.png");
         public static readonly UIImage DownLink = Image("Icons/DownLink.png");
+        public static readonly UIImage Star = Image("Icons/Star.png");
+        public static readonly UIImage StarOutline = Image("Icons/StarOutline.png");
             
         public static readonly UIImage ContactEmail = Image("Icons/ContactEmail.png");
         public static readonly UIImage ContactPhone = Image("Icons/ContactPhone.png");

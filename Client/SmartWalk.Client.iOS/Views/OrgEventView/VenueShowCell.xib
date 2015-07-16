@@ -59,21 +59,36 @@
                         </state>
                     </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="900" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
-                        <rect key="frame" x="280" y="8" width="31.5" height="17"/>
+                        <rect key="frame" x="244.5" y="8" width="31.5" height="17"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="900" text="End" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="End">
-                        <rect key="frame" x="280" y="24" width="31.5" height="13.5"/>
+                        <rect key="frame" x="244.5" y="24" width="31.5" height="13.5"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HJ0-5h-aCH" userLabel="*">
+                        <rect key="frame" x="276" y="-1" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="nzk-bP-mGK"/>
+                            <constraint firstAttribute="height" constant="44" id="x7H-0l-onU"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                        <state key="normal">
+                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </state>
+                        <state key="highlighted">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="500" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Title" customClass="CopyLabel">
-                        <rect key="frame" x="50" y="12" width="225" height="18"/>
+                        <rect key="frame" x="50" y="12" width="189.5" height="18"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -117,7 +132,7 @@
                         </constraints>
                     </view>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Z4-zH-aRP" userLabel="Location" customClass="CopyLabel">
-                        <rect key="frame" x="24" y="35" width="251" height="18"/>
+                        <rect key="frame" x="24" y="35" width="215.5" height="18"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
@@ -126,16 +141,18 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" constant="8" id="0zo-RP-mTQ"/>
                     <constraint firstItem="i3H-aj-VWA" firstAttribute="centerY" secondItem="4Z4-zH-aRP" secondAttribute="centerY" id="6ij-37-YS2"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="leading" secondItem="592" secondAttribute="trailing" constant="5" id="7ix-TL-Ymo"/>
                     <constraint firstItem="ztH-tE-Jjf" firstAttribute="leading" secondItem="eZg-8z-Khe" secondAttribute="leading" id="92K-Fk-Pbf"/>
                     <constraint firstItem="181" firstAttribute="top" relation="greaterThanOrEqual" secondItem="eZg-8z-Khe" secondAttribute="bottom" priority="900" constant="12" id="B8M-XT-prq"/>
+                    <constraint firstItem="HJ0-5h-aCH" firstAttribute="leading" secondItem="3" secondAttribute="trailing" id="Eyk-rv-NKg"/>
                     <constraint firstItem="50" firstAttribute="leading" secondItem="yI1-bt-IQd" secondAttribute="leading" id="FTH-F8-VsB"/>
+                    <constraint firstAttribute="trailing" secondItem="HJ0-5h-aCH" secondAttribute="trailing" id="Fk0-C9-gur"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="leading" secondItem="i3H-aj-VWA" secondAttribute="leading" constant="18" id="KGa-0j-O5k"/>
                     <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="-1" id="KJp-hi-iCi"/>
                     <constraint firstItem="181" firstAttribute="top" secondItem="ztH-tE-Jjf" secondAttribute="top" constant="-1" id="Lmp-Mv-dGq"/>
                     <constraint firstItem="50" firstAttribute="top" secondItem="yI1-bt-IQd" secondAttribute="top" id="NPR-ae-ZLF"/>
+                    <constraint firstItem="HJ0-5h-aCH" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="-1" id="PPs-JX-8Yp"/>
                     <constraint firstAttribute="trailingMargin" secondItem="eZg-8z-Khe" secondAttribute="trailing" priority="900" constant="10" id="Q8x-s6-Qb4"/>
                     <constraint firstItem="9" firstAttribute="trailing" secondItem="4Z4-zH-aRP" secondAttribute="trailing" id="QNi-gn-dMe"/>
                     <constraint firstItem="50" firstAttribute="trailing" secondItem="yI1-bt-IQd" secondAttribute="trailing" id="Qxb-6g-GGq"/>
@@ -144,6 +161,7 @@
                     <constraint firstAttribute="trailing" secondItem="K9o-xv-nfu" secondAttribute="trailing" id="Saq-Ut-4Ls"/>
                     <constraint firstItem="181" firstAttribute="leading" secondItem="ztH-tE-Jjf" secondAttribute="trailing" constant="4" id="Tam-L3-LQ9"/>
                     <constraint firstItem="592" firstAttribute="leading" secondItem="auL-5q-RG9" secondAttribute="leading" id="UTs-ha-cCo"/>
+                    <constraint firstItem="HJ0-5h-aCH" firstAttribute="leading" secondItem="6" secondAttribute="trailing" id="WkA-Nn-arM"/>
                     <constraint firstAttribute="bottom" secondItem="592" secondAttribute="bottom" id="Z4Z-UY-RgZ"/>
                     <constraint firstAttribute="bottom" secondItem="K9o-xv-nfu" secondAttribute="bottom" id="ZUK-hY-8aQ"/>
                     <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="181" secondAttribute="trailing" priority="900" constant="10" id="brI-xG-IGi"/>
@@ -158,7 +176,6 @@
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6" secondAttribute="bottom" constant="3" id="ntX-rC-rmO"/>
                     <constraint firstItem="50" firstAttribute="bottom" secondItem="yI1-bt-IQd" secondAttribute="bottom" id="onR-Cc-HXR"/>
                     <constraint firstItem="3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="8" id="paf-GI-3hU"/>
-                    <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="8" id="viT-Fi-EmO"/>
                     <constraint firstItem="4Z4-zH-aRP" firstAttribute="top" secondItem="9" secondAttribute="bottom" priority="900" constant="5" id="xww-JG-rm7"/>
                     <constraint firstItem="3" firstAttribute="leading" secondItem="9" secondAttribute="trailing" constant="5" id="y2f-W3-srI"/>
                 </constraints>
@@ -174,6 +191,7 @@
                 <outlet property="LocationLabel" destination="4Z4-zH-aRP" id="qWh-B9-JxT"/>
                 <outlet property="NavigateOnMapButton" destination="i3H-aj-VWA" id="Aly-sZ-3Ns"/>
                 <outlet property="Separator" destination="K9o-xv-nfu" id="7ox-7Q-xIt"/>
+                <outlet property="StarButton" destination="HJ0-5h-aCH" id="2v2-7W-XkH"/>
                 <outlet property="StartTimeLabel" destination="3" id="379"/>
                 <outlet property="ThumbHeightConstraint" destination="139" id="ZQO-i4-zub"/>
                 <outlet property="ThumbImageView" destination="50" id="389"/>

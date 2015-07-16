@@ -43,6 +43,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
+		UIKit.UIButton StarButton { get; set; }
+
+		[Outlet]
 		UIKit.UILabel StartTimeLabel { get; set; }
 
 		[Outlet]
@@ -86,6 +89,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (BottomBorderLeftConstraint != null) {
+				BottomBorderLeftConstraint.Dispose ();
+				BottomBorderLeftConstraint = null;
+			}
+
+			if (DescriptionAndDetailsSpaceConstraint != null) {
+				DescriptionAndDetailsSpaceConstraint.Dispose ();
+				DescriptionAndDetailsSpaceConstraint = null;
+			}
+
 			if (DescriptionLabel != null) {
 				DescriptionLabel.Dispose ();
 				DescriptionLabel = null;
@@ -106,44 +119,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				EndTimeLabel = null;
 			}
 
-			if (ThumbWidthConstraint != null) {
-				ThumbWidthConstraint.Dispose ();
-				ThumbWidthConstraint = null;
+			if (LocationAndDescriptionConstraint != null) {
+				LocationAndDescriptionConstraint.Dispose ();
+				LocationAndDescriptionConstraint = null;
 			}
 
-			if (ThumbHeightConstraint != null) {
-				ThumbHeightConstraint.Dispose ();
-				ThumbHeightConstraint = null;
+			if (LocationLabel != null) {
+				LocationLabel.Dispose ();
+				LocationLabel = null;
 			}
 
-			if (ThumbTopConstraint != null) {
-				ThumbTopConstraint.Dispose ();
-				ThumbTopConstraint = null;
-			}
-
-			if (ThumbLeftConstraint != null) {
-				ThumbLeftConstraint.Dispose ();
-				ThumbLeftConstraint = null;
-			}
-
-			if (TitleLeftConstraint != null) {
-				TitleLeftConstraint.Dispose ();
-				TitleLeftConstraint = null;
-			}
-
-			if (BottomBorderLeftConstraint != null) {
-				BottomBorderLeftConstraint.Dispose ();
-				BottomBorderLeftConstraint = null;
-			}
-
-			if (ThumbLabel != null) {
-				ThumbLabel.Dispose ();
-				ThumbLabel = null;
-			}
-
-			if (ThumbLabelView != null) {
-				ThumbLabelView.Dispose ();
-				ThumbLabelView = null;
+			if (NavigateOnMapButton != null) {
+				NavigateOnMapButton.Dispose ();
+				NavigateOnMapButton = null;
 			}
 
 			if (Separator != null) {
@@ -156,9 +144,39 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				StartTimeLabel = null;
 			}
 
+			if (ThumbHeightConstraint != null) {
+				ThumbHeightConstraint.Dispose ();
+				ThumbHeightConstraint = null;
+			}
+
 			if (ThumbImageView != null) {
 				ThumbImageView.Dispose ();
 				ThumbImageView = null;
+			}
+
+			if (ThumbLabel != null) {
+				ThumbLabel.Dispose ();
+				ThumbLabel = null;
+			}
+
+			if (ThumbLabelView != null) {
+				ThumbLabelView.Dispose ();
+				ThumbLabelView = null;
+			}
+
+			if (ThumbLeftConstraint != null) {
+				ThumbLeftConstraint.Dispose ();
+				ThumbLeftConstraint = null;
+			}
+
+			if (ThumbTopConstraint != null) {
+				ThumbTopConstraint.Dispose ();
+				ThumbTopConstraint = null;
+			}
+
+			if (ThumbWidthConstraint != null) {
+				ThumbWidthConstraint.Dispose ();
+				ThumbWidthConstraint = null;
 			}
 
 			if (TimeBackgroundView != null) {
@@ -176,29 +194,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				TitleAndLocationConstraint = null;
 			}
 
-			if (LocationAndDescriptionConstraint != null) {
-				LocationAndDescriptionConstraint.Dispose ();
-				LocationAndDescriptionConstraint = null;
-			}
-
-			if (DescriptionAndDetailsSpaceConstraint != null) {
-				DescriptionAndDetailsSpaceConstraint.Dispose ();
-				DescriptionAndDetailsSpaceConstraint = null;
-			}
-
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
 			}
 
-			if (LocationLabel != null) {
-				LocationLabel.Dispose ();
-				LocationLabel = null;
+			if (TitleLeftConstraint != null) {
+				TitleLeftConstraint.Dispose ();
+				TitleLeftConstraint = null;
 			}
 
-			if (NavigateOnMapButton != null) {
-				NavigateOnMapButton.Dispose ();
-				NavigateOnMapButton = null;
+			if (StarButton != null) {
+				StarButton.Dispose ();
+				StarButton = null;
 			}
 		}
 	}

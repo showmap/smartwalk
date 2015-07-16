@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const float HorizontalGap = 5f;
         private const float VerticalGap = 12f;
         private const float TextGap = 5f;
-        private const float TimeBorderGap = 8f;
+        private const float TimeBorderGap = 44f;
         private const float BorderGap = 10f;
         private const float DetailsTapAreaHeight = 50f;
 
@@ -55,6 +55,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _mapTapGesture;
+        private UITapGestureRecognizer _starTapGesture;
         private bool _isExpanded;
         private bool _isLogoVisible;
 
@@ -472,6 +473,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 });
 
             NavigateOnMapButton.AddGestureRecognizer(_mapTapGesture);
+
+            _starTapGesture = new UITapGestureRecognizer(() =>
+                {
+                    StarButton.SetImage(ThemeIcons.Star, UIControlState.Normal);
+                    StarButton.TintColor = ThemeColors.Action;
+                });
+
+            StarButton.AddGestureRecognizer(_starTapGesture);
         }
 
         private void DisposeGestures()
@@ -489,6 +498,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 _mapTapGesture.Dispose();
                 _mapTapGesture = null;
             }
+
+            if (_starTapGesture != null)
+            {
+                StarButton.RemoveGestureRecognizer(_starTapGesture);
+                _starTapGesture.Dispose();
+                _starTapGesture = null;
+            }
         }
 
         private void InitializeStyle()
@@ -503,6 +519,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             TitleLabel.Font = Theme.ContentFont;
             TitleLabel.TextColor = ThemeColors.ContentLightText;
+
+            StarButton.SetImage(ThemeIcons.StarOutline, UIControlState.Normal);
+            StarButton.TintColor = ThemeColors.BorderLight;
 
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
             LocationLabel.Font = Theme.VenueShowDescriptionFont;

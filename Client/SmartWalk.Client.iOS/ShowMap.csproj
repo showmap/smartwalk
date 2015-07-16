@@ -520,6 +520,12 @@
     <BundleResource Include="Resources\Icons\ListLandscape%403x.png" />
     <BundleResource Include="Resources\Icons\ListOptions%403x.png" />
     <BundleResource Include="Resources\Icons\MapPinSmall%403x.png" />
+    <BundleResource Include="Resources\Icons\StarOutline.png" />
+    <BundleResource Include="Resources\Icons\StarOutline%402x.png" />
+    <BundleResource Include="Resources\Icons\StarOutline%403x.png" />
+    <BundleResource Include="Resources\Icons\Star.png" />
+    <BundleResource Include="Resources\Icons\Star%402x.png" />
+    <BundleResource Include="Resources\Icons\Star%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />
