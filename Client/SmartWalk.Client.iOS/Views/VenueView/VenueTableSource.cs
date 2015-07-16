@@ -168,7 +168,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
-                ((VenueShowCell)cell).DataContext = venueShow;
+                ((VenueShowCell)cell).DataContext = new VenueShowDataContext(venueShow);
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
                 ((VenueShowCell)cell).IsLogoVisible = true; // TODO: To pass value from VM basing on logos availability
                 ((VenueShowCell)cell).IsSeparatorVisible = 

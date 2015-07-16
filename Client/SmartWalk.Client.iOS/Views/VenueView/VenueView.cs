@@ -53,7 +53,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             {
                 foreach (var cell in VenueShowsTableView.VisibleCells.OfType<VenueShowCell>())
                 {
-                    cell.SetIsExpanded(Equals(cell.DataContext, ViewModel.ExpandedShow), true);
+                    cell.SetIsExpanded(Equals(cell.DataContext.Show, ViewModel.ExpandedShow), true);
                 }
 
                 VenueShowsTableView.UpdateLayout();

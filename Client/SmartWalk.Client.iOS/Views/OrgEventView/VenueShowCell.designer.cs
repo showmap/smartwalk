@@ -31,6 +31,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.UILabel EndTimeLabel { get; set; }
 
 		[Outlet]
+		UIKit.NSLayoutConstraint LocationAndDescriptionConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Controls.CopyLabel LocationLabel { get; set; }
+
+		[Outlet]
+		UIKit.UIButton NavigateOnMapButton { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
@@ -64,7 +73,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint TimeTopConstraint { get; set; }
 
 		[Outlet]
-		UIKit.NSLayoutConstraint TitleAndDescriptionSpaceConstraint { get; set; }
+		UIKit.NSLayoutConstraint TitleAndLocationConstraint { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.CopyLabel TitleLabel { get; set; }
@@ -162,9 +171,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				TimeTopConstraint = null;
 			}
 
-			if (TitleAndDescriptionSpaceConstraint != null) {
-				TitleAndDescriptionSpaceConstraint.Dispose ();
-				TitleAndDescriptionSpaceConstraint = null;
+			if (TitleAndLocationConstraint != null) {
+				TitleAndLocationConstraint.Dispose ();
+				TitleAndLocationConstraint = null;
+			}
+
+			if (LocationAndDescriptionConstraint != null) {
+				LocationAndDescriptionConstraint.Dispose ();
+				LocationAndDescriptionConstraint = null;
 			}
 
 			if (DescriptionAndDetailsSpaceConstraint != null) {
@@ -175,6 +189,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
+			}
+
+			if (LocationLabel != null) {
+				LocationLabel.Dispose ();
+				LocationLabel = null;
+			}
+
+			if (NavigateOnMapButton != null) {
+				NavigateOnMapButton.Dispose ();
+				NavigateOnMapButton = null;
 			}
 		}
 	}

@@ -1,15 +1,13 @@
 using System;
-using CoreGraphics;
 using System.Windows.Input;
+using CoreGraphics;
 using Foundation;
-using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.iOS.Utils.MvvmCross;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {

@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using CoreGraphics;
 using Foundation;
+using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
@@ -27,17 +28,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const string Space = " ";
         private const char M = 'm';
 
-        private const float ImageSmallSize = 40f;
-        private const float ImageHeight = 120f;
+        private const float ImageSmallHeight = 40f;
+        private const float ImageLargeHeight = 120f;
         private const float HorizontalGap = 5f;
         private const float VerticalGap = 12f;
-        private const float TitleAndDescriptionGap = 3f;
+        private const float TextGap = 5f;
         private const float TimeBorderGap = 8f;
         private const float BorderGap = 10f;
         private const float DetailsTapAreaHeight = 50f;
 
         private static readonly float ShowTitleTextHeight = 
             ScreenUtil.CalculateTextHeight(300, "Showp", Theme.ContentFont);
+        private static readonly float ShowLocationTextHeight = 
+            ScreenUtil.CalculateTextHeight(300, "Showp", Theme.VenueShowDescriptionFont);
         private static readonly float DetailsTextHeight = 
             ScreenUtil.CalculateTextHeight(300, Localization.MoreInformation, Theme.VenueShowDetailsFont);
 
@@ -51,6 +54,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly AnimationDelay _imageAnimationDelay = new AnimationDelay();
 
         private UITapGestureRecognizer _cellTapGesture;
+        private UITapGestureRecognizer _mapTapGesture;
         private bool _isExpanded;
         private bool _isLogoVisible;
 
@@ -91,17 +95,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return (VenueShowCell)Nib.Instantiate(null, null)[0];
         }
 
-        public static float CalculateCellHeight(
-            nfloat frameWidth, 
-            bool isExpanded,
-            Show show)
+        public static float CalculateCellHeight(nfloat frameWidth, bool isExpanded,
+            Show show, bool includeLocation = false)
         {
             if (isExpanded)
             {
                 var cellHeight = 0f;
-                var textHeight = GetTextBlocksHeight(frameWidth, show);
+                var textHeight = GetTextBlocksHeight(frameWidth, show, includeLocation);
 
-                var imageHeight = show.HasPicture() ? VerticalGap + ImageHeight : 0;
+                var imageHeight = show.HasPicture() ? VerticalGap + ImageLargeHeight : 0;
                 var detailsHeight = show.HasDetailsUrl() ? VerticalGap + DetailsTextHeight : 0;
 
                 // if no text, we still show times
@@ -113,7 +115,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return DefaultHeight;
         }
 
-        private static float GetTextBlocksHeight(nfloat frameWidth, Show show)
+        private static float GetTextBlocksHeight(nfloat frameWidth, Show show, bool includeLocation = false)
         {
             if (show == null) return 0;
 
@@ -124,15 +126,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     Theme.ContentFont)
                 : 0;
 
-            var descriptionHeight = show.Description != null
-                ? ScreenUtil.CalculateTextHeight(
-                    GetDescriptionBlockWidth(frameWidth), 
-                    show.Description, 
-                    Theme.VenueShowDescriptionFont) + 
-                (titleHeight > 0 ? TitleAndDescriptionGap : 0)
+            var locationHeight = includeLocation
+                ? (titleHeight > 0 ? TextGap : 0) + ShowLocationTextHeight
                 : 0;
 
-            var textHeight = VerticalGap + titleHeight + descriptionHeight;
+            var descriptionHeight = show.Description != null
+                ? (titleHeight > 0 ? TextGap : 0) + 
+                    ScreenUtil.CalculateTextHeight(
+                        GetDescriptionBlockWidth(frameWidth), 
+                        show.Description, 
+                        Theme.VenueShowDescriptionFont)
+                : 0;
+
+            var textHeight = VerticalGap + titleHeight + locationHeight + descriptionHeight;
             return textHeight;
         }
 
@@ -177,13 +183,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return result;
         }
 
-        public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand ExpandCollapseShowCommand { get; set; }
+        public ICommand NavigateVenueOnMapCommand { get; set; }
+        public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand NavigateDetailsLinkCommand { get; set; }
 
-        public new Show DataContext
+        public new VenueShowDataContext DataContext
         {
-            get { return (Show)base.DataContext; }
+            get { return (VenueShowDataContext)base.DataContext; }
             set { base.DataContext = value; }
         }
 
@@ -279,15 +286,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _largeImageHelper.ImageUrl = null;
             ThumbImageView.Image = null;
 
-            ThumbLabel.Text = DataContext.Title.GetAbbreviation(2);
+            ThumbLabel.Text = DataContext.Show.Title.GetAbbreviation(2);
 
-            StartTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.StartTime) : null;
-            EndTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.EndTime) : null;
+            StartTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.Show.StartTime) : null;
+            EndTimeLabel.Text = DataContext != null ? GetShowTimeText(DataContext.Show.EndTime) : null;
 
-            TitleLabel.Text = DataContext != null ? DataContext.Title : null;
-            DescriptionLabel.Text = DataContext != null ? DataContext.Description : null;
+            TitleLabel.Text = DataContext != null  ? DataContext.Show.Title : null;
+            LocationLabel.Text = DataContext != null && DataContext.Venue != null 
+                ? DataContext.Venue.DisplayName() : null;
+            DescriptionLabel.Text = DataContext != null ? DataContext.Show.Description : null;
 
-            DetailsLabel.Text = DataContext != null && DataContext.HasDetailsUrl()
+            DetailsLabel.Text = DataContext != null && DataContext.Show.HasDetailsUrl()
                 ? Localization.MoreInformation : null;
 
             UpdateStatusStyle();
@@ -300,26 +309,31 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateConstraintConstants(bool animated)
         {
             TimeTopConstraint.Constant = DataContext != null &&
-                (DataContext.StartTime.HasValue && DataContext.EndTime.HasValue)
+                (DataContext.Show.StartTime.HasValue && DataContext.Show.EndTime.HasValue)
                     ? 10 : 14;
 
             this.UpdateConstraint(() =>
                 {
-                    TitleLeftConstraint.Constant = HorizontalGap + (!IsExpanded && IsLogoVisible ? ImageSmallSize : 0);
+                    TitleLeftConstraint.Constant = HorizontalGap + (!IsExpanded && IsLogoVisible ? ImageSmallHeight : 0);
 
-                    TitleAndDescriptionSpaceConstraint.Constant = IsExpanded &&
-                    DataContext.Title != null && DataContext.Description != null 
-                            ? TitleAndDescriptionGap : 0;
+                    TitleAndLocationConstraint.Constant = IsExpanded &&
+                        DataContext.Show.Title != null && DataContext.Venue != null
+                            ? TextGap : 0;
+                    
+                    LocationAndDescriptionConstraint.Constant = IsExpanded &&
+                        DataContext.Show.Title != null && DataContext.Show.Description != null 
+                            ? TextGap : 0;
 
-                    var imageSpace = DataContext.HasPicture() ? VerticalGap + ImageHeight : 0;
-                    var detailsSpace = DataContext.HasDetailsUrl() ? VerticalGap : 0;
+                    var imageSpace = DataContext.Show.HasPicture() ? VerticalGap + ImageLargeHeight : 0;
+                    var detailsSpace = DataContext.Show.HasDetailsUrl() ? VerticalGap : 0;
                     DescriptionAndDetailsSpaceConstraint.Constant = IsExpanded ? imageSpace + detailsSpace : 0;
 
-                    if (IsExpanded && DataContext.HasPicture())
+                    if (IsExpanded && DataContext.Show.HasPicture())
                     {
-                        ThumbTopConstraint.Constant = GetTextBlocksHeight(Frame.Width, DataContext) + VerticalGap;
+                        ThumbTopConstraint.Constant = GetTextBlocksHeight(Frame.Width, DataContext.Show, 
+                            DataContext.Venue != null) + VerticalGap;
                         ThumbLeftConstraint.Constant = HorizontalGap;
-                        ThumbHeightConstraint.Constant = ImageHeight;
+                        ThumbHeightConstraint.Constant = ImageLargeHeight;
                         ThumbWidthConstraint.Constant = GetImageProportionalWidth();
 
                         ThumbImageView.MakeRect(new CGSize(
@@ -330,12 +344,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         ThumbTopConstraint.Constant = 2;
                         ThumbLeftConstraint.Constant = 0;
-                        ThumbHeightConstraint.Constant = ImageSmallSize;
-                        ThumbWidthConstraint.Constant = ImageSmallSize;
+                        ThumbHeightConstraint.Constant = ImageSmallHeight;
+                        ThumbWidthConstraint.Constant = ImageSmallHeight;
                     }
                     else
                     {
-                        ThumbHeightConstraint.Constant = ImageSmallSize;
+                        ThumbHeightConstraint.Constant = ImageSmallHeight;
                         ThumbWidthConstraint.Constant = 0;
                     }
 
@@ -355,7 +369,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateSmallImageState()
         {
             var url = IsLogoVisible && DataContext != null 
-                ? DataContext.Picture : null;
+                ? DataContext.Show.Picture : null;
 
             _smallImageHelper.ImageUrl = url;
         }
@@ -363,7 +377,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateLargeImageState()
         {
             var url = IsExpanded && DataContext != null 
-                ? DataContext.Picture : null;
+                ? DataContext.Show.Picture : null;
 
             if (_largeImageHelper.ImageUrl != url)
             {
@@ -378,13 +392,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateVisibility(bool animated)
         {
-            ThumbImageView.SetHidden(!IsLogoVisible || !DataContext.HasPicture(), animated);
-            ThumbLabelView.SetHidden(IsExpanded || !IsLogoVisible || DataContext.HasPicture(), animated);
+            if (DataContext == null) return;
 
-            var isDescriptionHidden = !IsExpanded || DataContext.Description == null;
+            ThumbImageView.SetHidden(!IsLogoVisible || !DataContext.Show.HasPicture(), animated);
+            ThumbLabelView.SetHidden(IsExpanded || !IsLogoVisible || DataContext.Show.HasPicture(), animated);
+
+            var isLocationHidden = !IsExpanded || DataContext.Venue == null;
+            NavigateOnMapButton.SetHidden(isLocationHidden, animated);
+            LocationLabel.SetHidden(isLocationHidden, animated);
+
+            var isDescriptionHidden = !IsExpanded || DataContext.Show.Description == null;
             DescriptionLabel.SetHidden(isDescriptionHidden, animated);
 
-            var isDetailsHidden = !IsExpanded || !DataContext.HasDetailsUrl();
+            var isDetailsHidden = !IsExpanded || !DataContext.Show.HasDetailsUrl();
             DetailsLabel.SetHidden(isDetailsHidden, animated);
             DetailsButton.SetHidden(isDetailsHidden, animated);
         }
@@ -392,14 +412,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private float GetImageProportionalWidth()
         {
             if (_largeImageHelper.ImageUrl != null &&
-                ThumbImageView.Image != null &&
+                ThumbImageView.HasImage() &&
                 IsExpanded)
             {
                 var imageSize = ThumbImageView.Image.Size;
 
                 var width = Math.Min(
-                    (float)(1.0 * imageSize.Width * ImageHeight / imageSize.Height),
-                    GetTitleBlockWidth(Frame.Width, DataContext));
+                    (float)(1.0 * imageSize.Width * ImageLargeHeight / imageSize.Height),
+                    GetTitleBlockWidth(Frame.Width, DataContext.Show));
                 return width;
             }
 
@@ -409,39 +429,49 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeGestures()
         {
             _cellTapGesture = new UITapGestureRecognizer(rec => 
-            {
-                if (IsExpanded && DataContext.HasPicture() && 
-                    rec.LocatedInView(ThumbImageView))
                 {
-                    if (ShowImageFullscreenCommand != null &&
-                        ShowImageFullscreenCommand.CanExecute(DataContext.Picture))
+                    if (IsExpanded && DataContext.Show.HasPicture() && 
+                            rec.LocatedInView(ThumbImageView))
                     {
-                        ShowImageFullscreenCommand.Execute(DataContext.Picture);
+                        if (ShowImageFullscreenCommand != null &&
+                            ShowImageFullscreenCommand.CanExecute(DataContext.Show.Picture))
+                        {
+                            ShowImageFullscreenCommand.Execute(DataContext.Show.Picture);
+                        }
                     }
-                }
-                else if (IsExpanded && DataContext.HasDetailsUrl() && 
-                        rec.LocatedInView(this, 
-                            new CGRect(0, Bounds.Height - DetailsTapAreaHeight, 
-                            DetailsLabel.Frame.X + DetailsLabel.Frame.Width + BorderGap, 
-                            DetailsTapAreaHeight)))
-                {
-                    NavigateDetails();
-                }
-                else
-                {
-                    if (ExpandCollapseShowCommand != null &&
-                        ExpandCollapseShowCommand.CanExecute(DataContext))
+                    else if (IsExpanded && DataContext.Show.HasDetailsUrl() && 
+                            rec.LocatedInView(this, 
+                                new CGRect(0, Bounds.Height - DetailsTapAreaHeight, 
+                                DetailsLabel.Frame.X + DetailsLabel.Frame.Width + BorderGap, 
+                                DetailsTapAreaHeight)))
                     {
-                        ExpandCollapseShowCommand.Execute(DataContext);
+                        NavigateDetails();
                     }
-                }
-
-            }) {
-                NumberOfTouchesRequired = (uint)1,
-                NumberOfTapsRequired = (uint)1
-            };
+                    else
+                    {
+                        if (ExpandCollapseShowCommand != null &&
+                            ExpandCollapseShowCommand.CanExecute(DataContext.Show))
+                        {
+                            ExpandCollapseShowCommand.Execute(DataContext.Show);
+                        }
+                    }
+                }) {
+                    NumberOfTouchesRequired = (uint)1,
+                    NumberOfTapsRequired = (uint)1
+                };
 
             AddGestureRecognizer(_cellTapGesture);
+
+            _mapTapGesture = new UITapGestureRecognizer(() =>
+                {
+                    if (NavigateVenueOnMapCommand != null &&
+                        NavigateVenueOnMapCommand.CanExecute(DataContext.Venue))
+                    {
+                        NavigateVenueOnMapCommand.Execute(DataContext.Venue);
+                    }
+                });
+
+            NavigateOnMapButton.AddGestureRecognizer(_mapTapGesture);
         }
 
         private void DisposeGestures()
@@ -451,6 +481,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 RemoveGestureRecognizer(_cellTapGesture);
                 _cellTapGesture.Dispose();
                 _cellTapGesture = null;
+            }
+
+            if (_mapTapGesture != null)
+            {
+                NavigateOnMapButton.RemoveGestureRecognizer(_mapTapGesture);
+                _mapTapGesture.Dispose();
+                _mapTapGesture = null;
             }
         }
 
@@ -466,6 +503,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             TitleLabel.Font = Theme.ContentFont;
             TitleLabel.TextColor = ThemeColors.ContentLightText;
+
+            NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
+            LocationLabel.Font = Theme.VenueShowDescriptionFont;
+            LocationLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
             DescriptionLabel.Font = Theme.VenueShowDescriptionFont;
             DescriptionLabel.TextColor = ThemeColors.ContentLightTextPassive;
@@ -493,7 +534,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return;
             }
 
-            switch (DataContext.Status)
+            switch (DataContext.Show.Status)
             {
                 case ShowStatus.NotStarted:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
@@ -511,8 +552,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     break;
             }
 
-            StartTimeLabel.Font = GetShowStartTimeFont(DataContext.Status);
-            EndTimeLabel.Font = GetShowEndTimeFont(DataContext.Status);
+            StartTimeLabel.Font = GetShowStartTimeFont(DataContext.Show.Status);
+            EndTimeLabel.Font = GetShowEndTimeFont(DataContext.Show.Status);
         }
 
         private static string GetShowTimeText(DateTime? time)
@@ -541,7 +582,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             var contact = new Contact {
                 Type = ContactType.Url,
-                ContactText = DataContext.DetailsUrl
+                ContactText = DataContext.Show.DetailsUrl
             };
             if (NavigateDetailsLinkCommand != null && 
                 NavigateDetailsLinkCommand.CanExecute(contact))
@@ -549,5 +590,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 NavigateDetailsLinkCommand.Execute(contact);
             }
         }
+    }
+
+    public class VenueShowDataContext
+    {
+        public VenueShowDataContext(Show show, Venue venue = null)
+        {
+            Venue = venue;
+            Show = show;
+        }
+        
+        public Venue Venue { get; private set; }
+        public Show Show { get; private set; }
     }
 }

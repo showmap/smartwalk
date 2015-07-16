@@ -874,7 +874,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
             {
-                var isExpanded = Equals(cell.DataContext, ViewModel.ExpandedShow);
+                var isExpanded = Equals(cell.DataContext.Show, ViewModel.ExpandedShow);
                 cell.SetIsExpanded(isExpanded, true);
             }
 

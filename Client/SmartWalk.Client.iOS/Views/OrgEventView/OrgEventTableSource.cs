@@ -10,6 +10,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -94,7 +95,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 var isExpanded = Equals(_viewModel.ExpandedShow, show);
                 var height = 
-                    VenueShowCell.CalculateCellHeight(tableView.Frame.Width, isExpanded, show);
+                    VenueShowCell.CalculateCellHeight(tableView.Frame.Width, isExpanded, 
+                        show, !_viewModel.IsGroupedByLocation);
                 return height;
             }
 
@@ -174,8 +176,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var venueCell = (VenueShowCell)cell;
                 venueCell.ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 venueCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
+                venueCell.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
-                venueCell.DataContext = show;
+                venueCell.DataContext = new VenueShowDataContext(show,
+                    _viewModel.IsGroupedByLocation ? null : _viewModel.OrgEvent.Venues.GetVenueByShow(show));
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
                 venueCell.IsLogoVisible = true; // TODO: To pass value from VM basing on logos availability
 
