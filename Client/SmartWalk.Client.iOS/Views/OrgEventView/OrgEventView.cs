@@ -883,15 +883,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateTableViewOnShowExpanding(UITableView tableView)
         {
             var tableSoure = tableView.WeakDataSource as OrgEventTableSource;
-            if (tableView.VisibleCells.Length == 0 ||
-                tableSoure == null) return;
+            if (tableView.VisibleCells.Length == 0 || tableSoure == null) return;
 
-            foreach (var cell in tableView.VisibleCells.OfType<VenueShowCell>())
-            {
-                var isExpanded = Equals(cell.DataContext.Show, ViewModel.ExpandedShow);
-                cell.SetIsExpanded(isExpanded, true);
-            }
-
+            tableView.ExpandShowCell(ViewModel.ExpandedShow);
             tableView.BeginUpdates();
             tableView.EndUpdates();
         }
@@ -923,6 +917,26 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateButtonsFrameOnRotation()
         {
             ButtonBarUtil.UpdateButtonsFrameOnRotation(new [] { MapFullscreenButton });
+        }
+    }
+
+    public static class ShowsTableViewExtensions
+    {
+        public static void ExpandShowCell(this UITableView tableView, Show show)
+        {
+            var showCells = tableView.VisibleCells.OfType<VenueShowCell>().ToArray();
+            foreach (var cell in showCells)
+            {
+                var isExpanded = Equals(cell.DataContext.Show, show);
+                var previousIsExpanded = cell.IsExpanded;
+                cell.SetIsExpanded(isExpanded, true);
+
+                var index = Array.IndexOf(showCells, cell);
+                if (isExpanded != previousIsExpanded && index > 0)
+                {
+                    showCells[index - 1].SetIsBeforeExpanded(isExpanded, true);
+                }
+            }
         }
     }
 }

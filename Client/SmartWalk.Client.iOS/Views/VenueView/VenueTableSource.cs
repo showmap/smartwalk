@@ -10,6 +10,7 @@ using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 using UIKit;
+using System.Collections.Generic;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
@@ -171,6 +172,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = new VenueShowDataContext(venueShow);
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
+                ((VenueShowCell)cell).IsBeforeExpanded = Equals(_viewModel.ExpandedShow, GetNextShow(item, indexPath));
                 ((VenueShowCell)cell).IsLogoVisible = _viewModel.Venue.ShowVenueShowLogos();
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
@@ -199,6 +201,14 @@ namespace SmartWalk.Client.iOS.Views.VenueView
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
+        }
+
+        private object GetNextShow(object show, NSIndexPath indexPath)
+        {
+            var shows = GroupItemsSource[indexPath.Section];
+            var index = shows.IndexOf(show);
+            var result = index < shows.Count - 1 ? shows[index + 1] : null;
+            return result;
         }
     }
 }

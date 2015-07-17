@@ -54,9 +54,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly MvxResizedImageViewLoader _smallImageHelper;
         private readonly AnimationDelay _imageAnimationDelay = new AnimationDelay();
 
+        private NSObject _orientationObserver;
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _mapTapGesture;
         private UITapGestureRecognizer _starTapGesture;
+        private bool _isBeforeExpanded;
         private bool _isExpanded;
         private bool _isLogoVisible;
         private bool _isTimeVisible = true;
@@ -202,14 +204,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public bool IsExpanded
         {
-            get
-            {
-                return _isExpanded;
-            }
-            set
-            {
-                SetIsExpanded(value, false);
-            }
+            get { return _isExpanded; }
+            set { SetIsExpanded(value, false); }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this cell is before expanded one and the bottom border should be full width.
+        /// </summary>
+        public bool IsBeforeExpanded
+        {
+            get { return _isBeforeExpanded; }
+            set { SetIsBeforeExpanded(value, false); }
         }
 
         public bool IsLogoVisible
@@ -276,11 +281,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        public void SetIsBeforeExpanded(bool isBeforeExpanded, bool animated)
+        {
+            if (_isBeforeExpanded != isBeforeExpanded)
+            {
+                _isBeforeExpanded = isBeforeExpanded;
+                UpdateConstraintConstants(animated);
+            }
+        }
+
         public override void PrepareForReuse()
         {
             base.PrepareForReuse();
 
             IsExpanded = false;
+            IsBeforeExpanded = false;
             IsLogoVisible = false;
             IsTimeVisible = true;
         }
@@ -296,12 +311,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 NavigateDetailsLinkCommand = null;
 
                 DisposeGestures();
+                DisposeOrientationObserver();
             }
         }
 
         protected override void OnInitialize()
         {
             InitializeGestures();
+            InitializeOrientationObserver();
             InitializeStyle();
         }
 
@@ -376,7 +393,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         ThumbWidthConstraint.Constant = 0;
                     }
 
-                    BottomBorderLeftConstraint.Constant = IsExpanded 
+                    BottomBorderLeftConstraint.Constant = IsExpanded || IsBeforeExpanded 
                         ? 0 : HorizontalGap + ThumbWidthConstraint.Constant + 
                             (IsLogoVisible ? HorizontalGap : 0) + HorizontalGap; 
                 },
@@ -530,6 +547,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 StarButton.RemoveGestureRecognizer(_starTapGesture);
                 _starTapGesture.Dispose();
                 _starTapGesture = null;
+            }
+        }
+
+        private void InitializeOrientationObserver()
+        {
+            _orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(
+                UIDevice.OrientationDidChangeNotification,
+                OnDeviceOrientationDidChange);
+
+            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
+        }
+
+        private void OnDeviceOrientationDidChange(NSNotification notification)
+        {
+            UpdateConstraintConstants(true);
+        }
+
+        private void DisposeOrientationObserver()
+        {
+            if (_orientationObserver != null)
+            {
+                NSNotificationCenter.DefaultCenter.RemoveObserver(_orientationObserver);
             }
         }
 

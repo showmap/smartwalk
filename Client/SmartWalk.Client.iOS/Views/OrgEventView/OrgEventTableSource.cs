@@ -192,6 +192,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.DataContext = new VenueShowDataContext(show,
                     _viewModel.IsGroupedByLocation ? null : _viewModel.OrgEvent.Venues.GetVenueByShow(show));
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
+                venueCell.IsBeforeExpanded = Equals(_viewModel.ExpandedShow, GetNextShow(show, indexPath));
                 venueCell.IsLogoVisible = _viewModel.OrgEvent.ShowVenueShowLogos();
                 venueCell.IsTimeVisible = ShowTime;
 
@@ -252,6 +253,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private bool IsInLastSection(NSIndexPath indexPath)
         {
             var result = indexPath.Section == ItemsSource.Length - 1;
+            return result;
+        }
+
+        private Show GetNextShow(Show show, NSIndexPath indexPath)
+        {
+            var shows = ItemsSource[indexPath.Section].Shows;
+            var index = Array.IndexOf(shows, show);
+            var result = index < shows.Length - 1 ? shows[index + 1] : null;
             return result;
         }
     }

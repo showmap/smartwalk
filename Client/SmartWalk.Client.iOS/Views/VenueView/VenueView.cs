@@ -51,11 +51,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.ExpandedShow))
             {
-                foreach (var cell in VenueShowsTableView.VisibleCells.OfType<VenueShowCell>())
-                {
-                    cell.SetIsExpanded(Equals(cell.DataContext.Show, ViewModel.ExpandedShow), true);
-                }
-
+                VenueShowsTableView.ExpandShowCell(ViewModel.ExpandedShow);
                 VenueShowsTableView.UpdateLayout();
             }
         }
