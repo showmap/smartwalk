@@ -1,14 +1,15 @@
 using System;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using Foundation;
-using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
@@ -170,7 +171,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).DataContext = new VenueShowDataContext(venueShow);
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
-                ((VenueShowCell)cell).IsLogoVisible = true; // TODO: To pass value from VM basing on logos availability
+                ((VenueShowCell)cell).IsLogoVisible = _viewModel.Venue.ShowVenueShowLogos();
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
                     indexPath.Section == GroupItemsSource.Length - 2; // assuming that last section is next-entity button

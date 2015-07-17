@@ -138,12 +138,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             BottomSeparator.IsLineOnTop = true;
 
-            NameLabel.Font = Theme.ContentMediumFont;
+            NameLabel.Font = Theme.VenueNameFont;
             NameLabel.TextColor = ThemeColors.ContentLightText;
 
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
             GoRightImageView.Image = ThemeIcons.Forward;
-            GoRightImageView.TintColor = ThemeColors.BorderDark.ColorWithAlpha(0.9f);
+            GoRightImageView.TintColor = ThemeColors.BorderLight;
         }
 
         private void SetSelectedState(bool isSelected)

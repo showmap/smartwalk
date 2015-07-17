@@ -28,13 +28,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private const string Space = " ";
         private const char M = 'm';
 
+        private const float HorizontalBorder = 10f;
+        private const float VerticalBorder = 15f;
         private const float ImageSmallHeight = 40f;
         private const float ImageLargeHeight = 120f;
         private const float HorizontalGap = 5f;
         private const float VerticalGap = 12f;
         private const float TextGap = 5f;
         private const float TimeBorderGap = 44f;
-        private const float BorderGap = 10f;
         private const float DetailsTapAreaHeight = 50f;
 
         private static readonly float ShowTitleTextHeight = 
@@ -47,7 +48,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public static readonly UINib Nib = UINib.FromName("VenueShowCell", NSBundle.MainBundle);
         public static readonly NSString Key = new NSString("VenueShowCell");
 
-        public static readonly float DefaultHeight = VerticalGap + ShowTitleTextHeight + VerticalGap;
+        public static readonly float DefaultHeight = VerticalBorder + ShowTitleTextHeight + VerticalBorder;
 
         private readonly MvxImageViewLoader _largeImageHelper;
         private readonly MvxResizedImageViewLoader _smallImageHelper;
@@ -105,11 +106,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var cellHeight = 0f;
                 var textHeight = GetTextBlocksHeight(frameWidth, show, showTime, includeLocation);
 
-                var imageHeight = show.HasPicture() ? VerticalGap + ImageLargeHeight : 0;
-                var detailsHeight = show.HasDetailsUrl() ? VerticalGap + DetailsTextHeight : 0;
+                var imageHeight = show.HasPicture() ? VerticalGap + ImageLargeHeight : 0f;
+                var detailsHeight = show.HasDetailsUrl() ? VerticalGap + DetailsTextHeight : 0f;
 
                 // if no text, we still show times
-                cellHeight += Math.Max(DefaultHeight, textHeight + imageHeight + detailsHeight + VerticalGap); 
+                cellHeight += Math.Max(DefaultHeight, textHeight + imageHeight + detailsHeight + VerticalBorder); 
 
                 return cellHeight;
             }
@@ -128,35 +129,35 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     GetTitleBlockWidth(frameWidth, show, showTime), 
                     show.Title, 
                     Theme.ContentFont)
-                : 0;
+                : 0f;
 
             var locationHeight = includeLocation
-                ? (titleHeight > 0 ? TextGap : 0) + ShowLocationTextHeight
-                : 0;
+                ? (titleHeight > 0 ? TextGap : 0f) + ShowLocationTextHeight
+                : 0f;
 
             var showDescription = GetShowDescription(show, !showTime);
             var descriptionHeight = 
                 showDescription != null
-                ? (titleHeight > 0 ? TextGap : 0) + ScreenUtil.CalculateTextHeight(
+                ? (titleHeight > 0 ? TextGap : 0f) + ScreenUtil.CalculateTextHeight(
                     GetDescriptionBlockWidth(frameWidth), 
                     showDescription, 
                     Theme.VenueShowDescriptionFont)
-                : 0;
+                : 0f;
 
-            var textHeight = VerticalGap + titleHeight + locationHeight + descriptionHeight;
+            var textHeight = VerticalBorder + titleHeight + locationHeight + descriptionHeight;
             return textHeight;
         }
 
         private static float GetTitleBlockWidth(nfloat frameWidth, Show show, bool showTime = true)
         {
             // - Left Border Gap - Time Block Width (inc. Right Border Gap)
-            return (float)(frameWidth - BorderGap - GetTimeBlockWidth(showTime ? show : null));
+            return (float)(frameWidth - HorizontalBorder - GetTimeBlockWidth(showTime ? show : null));
         }
 
         private static float GetDescriptionBlockWidth(nfloat frameWidth)
         {
             // - Left Border Gap - Right Border Gap
-            return (float)(frameWidth - BorderGap - BorderGap);
+            return (float)(frameWidth - HorizontalBorder - HorizontalBorder);
         }
 
         private static float GetTimeBlockWidth(Show show)
@@ -321,7 +322,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ? Localization.MoreInformation : null;
 
             UpdateTimeRelatedState();
-            UpdateStatusStyle();
             UpdateSmallImageState();
             UpdateLargeImageState();
             UpdateConstraintConstants(false);
@@ -332,11 +332,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             TimeTopConstraint.Constant = DataContext != null &&
                 (DataContext.Show.StartTime.HasValue && DataContext.Show.EndTime.HasValue)
-                    ? 10 : 14;
+                    ? 13 : 17;
 
             this.UpdateConstraint(() =>
                 {
-                    TitleLeftConstraint.Constant = HorizontalGap + (!IsExpanded && IsLogoVisible ? ImageSmallHeight : 0);
+                    TitleLeftConstraint.Constant = HorizontalGap + 
+                        (!IsExpanded && IsLogoVisible ? ImageSmallHeight + HorizontalGap : 0);
 
                     TitleAndLocationConstraint.Constant = IsExpanded &&
                         DataContext.Show.Title != null && DataContext.Venue != null
@@ -364,8 +365,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
                     else if (!IsExpanded && IsLogoVisible)
                     {
-                        ThumbTopConstraint.Constant = 2;
-                        ThumbLeftConstraint.Constant = 0;
+                        ThumbTopConstraint.Constant = 5;
+                        ThumbLeftConstraint.Constant = 2;
                         ThumbHeightConstraint.Constant = ImageSmallHeight;
                         ThumbWidthConstraint.Constant = ImageSmallHeight;
                     }
@@ -376,7 +377,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
 
                     BottomBorderLeftConstraint.Constant = IsExpanded 
-                        ? 0 : HorizontalGap + ThumbWidthConstraint.Constant + HorizontalGap; 
+                        ? 0 : HorizontalGap + ThumbWidthConstraint.Constant + 
+                            (IsLogoVisible ? HorizontalGap : 0) + HorizontalGap; 
                 },
                 animated,
                 () =>
@@ -467,7 +469,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     else if (IsExpanded && DataContext.Show.HasDetailsUrl() &&
                              rec.LocatedInView(this, 
                                  new CGRect(0, Bounds.Height - DetailsTapAreaHeight, 
-                                     DetailsLabel.Frame.X + DetailsLabel.Frame.Width + BorderGap, 
+                                     DetailsLabel.Frame.X + DetailsLabel.Frame.Width + HorizontalBorder, 
                                      DetailsTapAreaHeight)))
                     {
                         NavigateDetails();
@@ -576,11 +578,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             EndTimeLabel.Text = DataContext != null && IsTimeVisible 
                 ? GetShowTimeText(DataContext.Show.EndTime) : null;
 
-            DescriptionLabel.Text = DataContext != null ? GetShowDescription(DataContext.Show, !IsTimeVisible) : null;
-        }
+            DescriptionLabel.Text = DataContext != null 
+                ? GetShowDescription(DataContext.Show, !IsTimeVisible) : null;
 
-        private void UpdateStatusStyle()
-        {
             if (DataContext == null)
             {
                 TimeBackgroundView.BackgroundColor = UIColor.Clear;
@@ -601,7 +601,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 case ShowStatus.Finished:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
-                    TitleLabel.Font = Theme.VenueShowFinishedFont;
+                    TitleLabel.Font = IsTimeVisible ? Theme.VenueShowFinishedFont : Theme.ContentFont;
                     break;
             }
 

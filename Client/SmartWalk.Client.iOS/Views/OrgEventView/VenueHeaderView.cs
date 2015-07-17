@@ -13,7 +13,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         public static readonly NSString Key = new NSString("VenueHeaderContentView");
 
-        public const float DefaultHeight = 44;
+        public const float DefaultHeight = 36;
 
         public VenueHeaderView(IntPtr handle) : base(handle)
         {
