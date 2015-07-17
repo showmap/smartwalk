@@ -274,7 +274,7 @@ namespace SmartWalk.Client.Core.Utils
         public static string GetCurrentDayString(this DateTime date, string empty = null)
         {
             var result = date != DateTime.MinValue
-                ? string.Format("{0:ddd, d MMMM}", date)
+                ? string.Format("{0:ddd, d MMM}", date)
                 : empty;
             return result;
         }

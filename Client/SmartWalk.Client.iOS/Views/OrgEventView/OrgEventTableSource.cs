@@ -31,11 +31,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             get
             {
-                return
+                return 
                     !_viewModel.IsGroupedByLocation &&
                     _viewModel.IsMultiday &&
                     _viewModel.SortBy == SortBy.Time &&
                     !_viewModel.CurrentDay.HasValue;
+            }
+        }
+
+        private bool ShowTime
+        {
+            get
+            {
+                return 
+                    !_viewModel.IsMultiday ||
+                    _viewModel.IsGroupedByLocation ||
+                    _viewModel.SortBy == SortBy.Time;
             }
         }
 
@@ -96,7 +107,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var isExpanded = Equals(_viewModel.ExpandedShow, show);
                 var height = 
                     VenueShowCell.CalculateCellHeight(tableView.Frame.Width, isExpanded, 
-                        show, !_viewModel.IsGroupedByLocation);
+                        show, ShowTime, !_viewModel.IsGroupedByLocation);
                 return height;
             }
 
@@ -182,6 +193,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     _viewModel.IsGroupedByLocation ? null : _viewModel.OrgEvent.Venues.GetVenueByShow(show));
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
                 venueCell.IsLogoVisible = true; // TODO: To pass value from VM basing on logos availability
+                venueCell.IsTimeVisible = ShowTime;
 
                 venueCell.IsSeparatorVisible =
                     !IsLastInDayGroup(show, indexPath) && 
