@@ -10,7 +10,6 @@ using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Client.iOS.Views.Common.GroupHeader;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 using UIKit;
-using System.Collections.Generic;
 
 namespace SmartWalk.Client.iOS.Views.VenueView
 {
@@ -37,16 +36,16 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             get { return (GroupContainer[])ItemsSource;}
         }
 
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            TableView.DeselectRow(indexPath, false);
+        }
+
         public override void ReloadTableData()
         {
             base.ReloadTableData();
 
             _scrollToHideManager.Reset();
-        }
-
-        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
-        {
-            TableView.DeselectRow(indexPath, false);
         }
 
         public override void DraggingStarted(UIScrollView scrollView)

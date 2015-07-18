@@ -18,7 +18,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont ActionSheetFont = UIFont.FromName(HelveticaBold, 17);
         public static readonly UIFont ActionSheetCancelFont = UIFont.FromName(HelveticaBold, 18);
         public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
-        public static readonly UIFont SegmentsTextFont = UIFont.FromName(HelveticaLight, 14);
+        public static readonly UIFont SegmentsTextFont = UIFont.FromName(HelveticaLight, 12);
 
         public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
         public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
@@ -38,7 +38,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIFont EntityDescriptionFont = UIFont.FromName(HelveticaLight, 16);
         public static readonly UIFont NextEntityFont = UIFont.FromName(HelveticaLight, 16);
 
-        public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 16);
+        public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueNameFont = UIFont.FromName(HelveticaMedium, 14);
         public static readonly UIFont VenueAddressFont = UIFont.FromName(HelveticaLight, 14);
         public static readonly UIFont VenueShowLogoFont = UIFont.FromName(HelveticaLight, 17);
@@ -64,35 +64,22 @@ namespace SmartWalk.Client.iOS.Resources
             UINavigationBar.Appearance.BarTintColor = ThemeColors.HeaderBackground;
             UINavigationBar.Appearance.TintColor = ThemeColors.ContentDarkText;
 
-            UINavigationBar.Appearance.SetTitleTextAttributes(new UITextAttributes { 
-                Font = Theme.NavBarFont,
-                TextColor = ThemeColors.ContentDarkText,
-                TextShadowColor = UIColor.Clear,
-                TextShadowOffset = new UIOffset(0, 0)
-            });
+            UINavigationBar.Appearance.SetTitleTextAttributes(
+                new UITextAttributes { 
+                    Font = Theme.NavBarFont,
+                    TextColor = ThemeColors.ContentDarkText,
+                    TextShadowColor = UIColor.Clear,
+                    TextShadowOffset = new UIOffset(0, 0)
+                });
 
             UIBarButtonItem.Appearance
                 .SetBackButtonTitlePositionAdjustment(
-                    new UIOffset(0, -64), UIBarMetrics.Default);
+                new UIOffset(0, -64), UIBarMetrics.Default);
 
             UIToolbar.Appearance.TintColor = ThemeColors.ContentDarkText;
 
             UISwitch.Appearance.OnTintColor = ThemeColors.Action;
             UISwitch.Appearance.TintColor = ThemeColors.Action;
-
-            UISegmentedControl.Appearance.SetTitleTextAttributes(
-                new UITextAttributes {
-                    Font = SegmentsTextFont, 
-                    TextColor = UIColor.White 
-                }, 
-                UIControlState.Highlighted);
-            UISegmentedControl.Appearance.SetTitleTextAttributes(
-                new UITextAttributes {
-                    Font = SegmentsTextFont,
-                    TextColor = ThemeColors.Action 
-                }, 
-                UIControlState.Normal);
-            UISegmentedControl.Appearance.TintColor = ThemeColors.Action;
 
             var buttonLabelAp = UILabel.AppearanceWhenContainedIn(typeof(UIButton));
             buttonLabelAp.Font = ButtonTextFont;

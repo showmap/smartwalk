@@ -19,6 +19,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint FullscreenWidthConstraint { get; set; }
 
 		[Outlet]
+		SmartWalk.Client.iOS.Controls.Placeholder ListSettingsContainer { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint ListSettingsHeightConstraint { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint ListSettingsToTableConstraint { get; set; }
+
+		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line MapBottomSeparator { get; set; }
 
 		[Outlet]
@@ -31,7 +40,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.UIView MapPanel { get; set; }
 
 		[Outlet]
-		UIKit.NSLayoutConstraint MapToTableConstraint { get; set; }
+		UIKit.NSLayoutConstraint MapToListSettingsConstraint { get; set; }
 
 		[Outlet]
 		UIKit.UIView ProgressViewContainer { get; set; }
@@ -43,13 +52,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
 
 		[Outlet]
-        UIKit.UITableView VenuesAndShowsTableView { get; set; }
+		UIKit.UITableView VenuesAndShowsTableView { get; set; }
 
 		[Outlet]
 		MapKit.MKMapView VenuesMapView { get; set; }
 
 		[Action ("OnMapFullscreenTouchUpInside:")]
 		partial void OnMapFullscreenTouchUpInside (Foundation.NSObject sender);
+
+		[Action ("OnSortBySegmentsValueChanged:")]
+		partial void OnSortBySegmentsValueChanged (UIKit.UISegmentedControl sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -61,6 +73,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (FullscreenWidthConstraint != null) {
 				FullscreenWidthConstraint.Dispose ();
 				FullscreenWidthConstraint = null;
+			}
+
+			if (ListSettingsContainer != null) {
+				ListSettingsContainer.Dispose ();
+				ListSettingsContainer = null;
+			}
+
+			if (ListSettingsHeightConstraint != null) {
+				ListSettingsHeightConstraint.Dispose ();
+				ListSettingsHeightConstraint = null;
+			}
+
+			if (ListSettingsToTableConstraint != null) {
+				ListSettingsToTableConstraint.Dispose ();
+				ListSettingsToTableConstraint = null;
 			}
 
 			if (MapBottomSeparator != null) {
@@ -81,11 +108,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (MapPanel != null) {
 				MapPanel.Dispose ();
 				MapPanel = null;
-			}
-
-			if (MapToTableConstraint != null) {
-				MapToTableConstraint.Dispose ();
-				MapToTableConstraint = null;
 			}
 
 			if (ProgressViewContainer != null) {
@@ -111,6 +133,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (VenuesMapView != null) {
 				VenuesMapView.Dispose ();
 				VenuesMapView = null;
+			}
+
+			if (MapToListSettingsConstraint != null) {
+				MapToListSettingsConstraint.Dispose ();
+				MapToListSettingsConstraint = null;
 			}
 		}
 	}

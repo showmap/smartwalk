@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment version="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment version="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OrgEventView">
             <connections>
                 <outlet property="FullscreenHeightConstraint" destination="md5-ps-WtX" id="feX-rG-OhP"/>
                 <outlet property="FullscreenWidthConstraint" destination="MIn-AC-Za0" id="aMx-JS-yfq"/>
+                <outlet property="ListSettingsContainer" destination="gCQ-hX-bJo" id="VLV-IY-dLU"/>
+                <outlet property="ListSettingsHeightConstraint" destination="5nP-Pp-OPx" id="pE4-h2-I5h"/>
+                <outlet property="ListSettingsToTableConstraint" destination="Te7-XJ-0ES" id="C7N-Pe-tyf"/>
                 <outlet property="MapBottomSeparator" destination="gqO-ij-gFx" id="RhB-c2-QC5"/>
                 <outlet property="MapFullscreenButton" destination="wMm-c6-vk5" id="uXS-h6-EOi"/>
                 <outlet property="MapHeightConstraint" destination="3hL-Cg-ybC" id="0ee-pZ-d8g"/>
                 <outlet property="MapPanel" destination="4" id="hdN-eT-bnM"/>
-                <outlet property="MapToTableConstraint" destination="lvg-lY-AfJ" id="XVo-eu-opt"/>
+                <outlet property="MapToListSettingsConstraint" destination="MXn-UU-gPI" id="Jdx-Fo-QB9"/>
                 <outlet property="ProgressViewContainer" destination="45" id="57"/>
                 <outlet property="ProgressViewTopConstraint" destination="53" id="jLH-7i-74i"/>
-                <outlet property="TableHeightConstraint" destination="Dld-OR-tiz" id="hlX-95-arb"/>
+                <outlet property="TableHeightConstraint" destination="Dld-OR-tiz" id="PGV-3n-4Fj"/>
                 <outlet property="VenuesAndShowsTableView" destination="19" id="25"/>
                 <outlet property="VenuesMapView" destination="14" id="26"/>
                 <outlet property="view" destination="1" id="3"/>
@@ -28,13 +31,20 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="TableView">
-                    <rect key="frame" x="0.0" y="200" width="320" height="280"/>
+                    <rect key="frame" x="0.0" y="234" width="320" height="246"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="280" id="Dld-OR-tiz"/>
+                        <constraint firstAttribute="height" constant="246" id="Dld-OR-tiz"/>
                     </constraints>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                 </tableView>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gCQ-hX-bJo" userLabel="List Settings" customClass="Placeholder">
+                    <rect key="frame" x="0.0" y="200" width="320" height="34"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="34" id="5nP-Pp-OPx"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="MapView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
                     <subviews>
@@ -87,9 +97,12 @@
                 <constraint firstItem="45" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="55"/>
                 <constraint firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="0xY-e0-KvA"/>
                 <constraint firstItem="4" firstAttribute="top" secondItem="1" secondAttribute="top" id="6nm-IZ-IBN"/>
+                <constraint firstItem="gCQ-hX-bJo" firstAttribute="top" secondItem="4" secondAttribute="bottom" id="MXn-UU-gPI"/>
                 <constraint firstAttribute="bottom" secondItem="19" secondAttribute="bottom" id="OWn-XE-Zs1"/>
+                <constraint firstItem="19" firstAttribute="top" secondItem="gCQ-hX-bJo" secondAttribute="bottom" id="Te7-XJ-0ES"/>
                 <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" id="Ymj-AM-ibH"/>
-                <constraint firstItem="19" firstAttribute="top" secondItem="4" secondAttribute="bottom" id="lvg-lY-AfJ"/>
+                <constraint firstItem="gCQ-hX-bJo" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="bQ5-aC-uZc"/>
+                <constraint firstAttribute="trailing" secondItem="gCQ-hX-bJo" secondAttribute="trailing" id="dZI-en-b6L"/>
                 <constraint firstItem="4" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="n2i-EX-yuC"/>
                 <constraint firstItem="19" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="vft-IO-V4r"/>
             </constraints>

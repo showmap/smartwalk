@@ -526,6 +526,9 @@
     <BundleResource Include="Resources\Icons\Star.png" />
     <BundleResource Include="Resources\Icons\Star%402x.png" />
     <BundleResource Include="Resources\Icons\Star%403x.png" />
+    <BundleResource Include="Resources\Icons\StarSmall.png" />
+    <BundleResource Include="Resources\Icons\StarSmall%402x.png" />
+    <BundleResource Include="Resources\Icons\StarSmall%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.bundle\Root.plist" />

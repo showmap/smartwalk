@@ -1,21 +1,21 @@
 using System;
-using CoreGraphics;
 using System.Windows.Input;
 using Foundation;
-using UIKit;
+using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Resources;
-using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
-    public partial class ListSettingsView : DialogViewBase
+    public partial class ListSettingsView : UIView
     {
         public static readonly UINib Nib = UINib.FromName("ListSettingsView", NSBundle.MainBundle);
 
-        private const int DefaultHeight = 88;
-        private const int CollapsedHeight = 44;
+        private bool _isInitialized;
+
+        public const int DefaultHeight = 34;
 
         public ListSettingsView(IntPtr handle) : base(handle)
         {
@@ -26,30 +26,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return (ListSettingsView)Nib.Instantiate(null, null)[0];
         }
 
-        public ICommand GroupByLocationCommand { get; set; }
         public ICommand SortByCommand { get; set; }
-
-        public nfloat MarginTop
-        {
-            get { return ContainerTopConstraint.Constant; }
-            set { ContainerTopConstraint.Constant = value; }
-        }
-
-        public bool IsGroupByLocation
-        {
-            get { return GroupByLocationSwitch.On; }
-            set { GroupByLocationSwitch.On = value; }
-        }
 
         public SortBy SortBy
         {
-            get { return SortBySegments.SelectedSegment == 0 ? SortBy.Time : SortBy.Name; }
-            set { SortBySegments.SelectedSegment = (int)value; }
-        }
-
-        protected override UIView OutsideAreaView
-        {
-            get { return BackgroundView; }
+            get { return SortBySegments.SelectedSegment == 0 ? SortBy.Name : SortBy.Time; }
+            set { SortBySegments.SelectedSegment = value == SortBy.Name ? 0 : 1; }
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -58,28 +40,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (newsuper == null)
             {
-                GroupByLocationCommand = null;
                 SortByCommand = null;
             }
         }
 
-        protected override void OnInitialize()
+        public override void LayoutSubviews()
         {
-            base.OnInitialize();
-
-            InitializeStyle();
-            UpdateViewState(false);
-        }
-
-        partial void OnGroupByLocationTouchUpInside(NSObject sender)
-        {
-            if (GroupByLocationCommand != null &&
-                GroupByLocationCommand.CanExecute(IsGroupByLocation))
+            if (SortByLabel != null &&
+                !_isInitialized)
             {
-                GroupByLocationCommand.Execute(IsGroupByLocation);
+                SortByLabel.Text = Localization.SortBy;
+                // HACK: A space for a gap between start and caption
+                FavoritesButton.SetTitle(" " + Localization.Favorites, UIControlState.Normal);
+
+                InitializeStyle();
+                _isInitialized = true;
             }
 
-            UpdateViewState(true);
+            base.LayoutSubviews();
         }
 
         partial void OnSortBySegmentsValueChanged(NSObject sender)
@@ -93,73 +71,45 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
-            TopSeparator.IsLineOnTop = true;
+            BackgroundView.BarTintColor = ThemeColors.HeaderBackground.GetDarker(0.3f);
+            Separator.Color = ThemeColors.HeaderBackground.GetDarker(0.4f);
 
-            PlaceholderView.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
-            PlaceholderView.Layer.ShadowColor = UIColor.Black.CGColor;
-            PlaceholderView.Layer.ShadowOffset = new CGSize(0, 5);
-            PlaceholderView.Layer.ShadowOpacity = 0.3f;
-
-            GroupByLocationLabel.Font = Theme.OrgEventHeaderFont;
-            GroupByLocationLabel.TextColor = ThemeColors.ContentLightText;
+            var color = ThemeColors.ContentDarkText.ColorWithAlpha(0.95f);
 
             SortByLabel.Font = Theme.OrgEventHeaderFont;
-            SortByLabel.TextColor = ThemeColors.ContentLightText;
+            SortByLabel.TextColor = color;
+
+            SortBySegments.SetTitleTextAttributes(
+                new UITextAttributes {
+                    Font = Theme.SegmentsTextFont, 
+                    TextColor = color
+                }, 
+                UIControlState.Highlighted);
+            SortBySegments.SetTitleTextAttributes(
+                new UITextAttributes {
+                    Font = Theme.SegmentsTextFont,
+                    TextColor = color
+                }, 
+                UIControlState.Normal);
+            SortBySegments.TintColor = color;
+
+            FavoritesButton.Font = Theme.OrgEventHeaderFont;
+            FavoritesButton.SetTitleColor(color, UIControlState.Normal);
+            FavoritesButton.SetImage(ThemeIcons.StarSmall, UIControlState.Normal);
+            FavoritesButton.TintColor = color;
+            FavoritesButton.Layer.BorderWidth = 0.9f;
+            FavoritesButton.Layer.CornerRadius = 4;
+            FavoritesButton.Layer.BorderColor = color.CGColor;
+
+            FavoritesButton.TouchDown += (sender, e) => 
+                FavoritesButton.BackgroundColor = ThemeColors.ContentDarkText.ColorWithAlpha(0.2f);
+            FavoritesButton.TouchUpInside += (sender, e) => FavoritesButton.BackgroundColor = UIColor.Clear;
+            FavoritesButton.TouchUpOutside += (sender, e) => FavoritesButton.BackgroundColor = UIColor.Clear;
         }
 
-        private void UpdateViewState(bool animated)
+        partial void OnFavoritesClick(UIButton sender)
         {
-            if (!animated)
-            {
-                ContainerHeightConstraint.Constant = 
-                    IsGroupByLocation ? CollapsedHeight : DefaultHeight;
-                SortByPlaceholder.Hidden = IsGroupByLocation;
-                return;
-            }
-
-            if (IsGroupByLocation)
-            {
-                UIView.Transition(
-                    SortByPlaceholder, 
-                    UIConstants.AnimationDuration, 
-                    UIViewAnimationOptions.TransitionCrossDissolve,
-                    () => {},
-                    () => 
-                    {
-                        LayoutIfNeeded();
-                        UIView.Animate(
-                            UIConstants.AnimationDuration, 
-                            () =>
-                            {
-                                ContainerHeightConstraint.Constant = CollapsedHeight;
-                                LayoutIfNeeded();
-                            });
-                    });
-
-                SortByPlaceholder.Hidden = true;
-            }
-            else
-            {
-                LayoutIfNeeded();
-                UIView.Animate(
-                    UIConstants.AnimationDuration, 
-                    () =>
-                    {
-                        ContainerHeightConstraint.Constant = DefaultHeight;
-                        LayoutIfNeeded();
-                    },
-                    () =>
-                    {
-                        UIView.Transition(
-                            SortByPlaceholder, 
-                            UIConstants.AnimationDuration, 
-                            UIViewAnimationOptions.TransitionCrossDissolve,
-                            () => {},
-                            null);
-
-                        SortByPlaceholder.Hidden = false;
-                    });
-            }
+            
         }
     }
 }

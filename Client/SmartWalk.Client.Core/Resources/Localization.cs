@@ -23,6 +23,8 @@
         public const string OffLineMode = "Offline Mode";
         public const string Shows = "Shows";
         public const string MoreInformation = "More information";
+        public const string SortBy = "Sort by";
+        public const string Favorites = "Favorites";
 
         public const string Error = "Error";
         public const string NetworkError = "Network Error";

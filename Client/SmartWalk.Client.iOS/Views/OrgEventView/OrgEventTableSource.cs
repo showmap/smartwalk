@@ -19,13 +19,35 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static readonly NSString EmptyCellKey = new NSString("empty");
 
         private readonly OrgEventViewModel _viewModel;
+        private readonly OrgEventScrollToHideUIManager _scrollToHideManager;
 
-        public OrgEventTableSource(OrgEventViewModel viewModel)
+        public OrgEventTableSource(UITableView tableView, 
+            OrgEventViewModel viewModel, UIView listSettingsView = null)
         {
             _viewModel = viewModel;
+
+            if (listSettingsView != null)
+            {
+                _scrollToHideManager = new OrgEventScrollToHideUIManager(
+                    tableView, listSettingsView);
+            }
+
+            TableView = tableView;
         }
 
         public bool IsSearchSource { get; set; }
+
+        public bool IsScrollToHideActive
+        {
+            get { return _scrollToHideManager != null && _scrollToHideManager.IsActive; }
+            set
+            {
+                if (_scrollToHideManager != null)
+                {
+                    _scrollToHideManager.IsActive = value;
+                }
+            }
+        }
 
         private bool ShowVenueGroupHeader
         {
@@ -76,6 +98,62 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             tableView.DeselectRow(indexPath, false);
+        }
+
+        public override void ReloadTableData()
+        {
+            base.ReloadTableData();
+
+            if (_scrollToHideManager != null)
+            {
+                _scrollToHideManager.Reset();
+            }
+        }
+
+        public override void DraggingStarted(UIScrollView scrollView)
+        {
+            base.DraggingStarted(scrollView);
+
+            if (_scrollToHideManager != null)
+            {   
+                _scrollToHideManager.DraggingStarted();
+            }
+        }
+
+        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+        {
+            base.DraggingEnded(scrollView, willDecelerate);
+
+            if (_scrollToHideManager != null)
+            {
+                _scrollToHideManager.DraggingEnded();
+            }
+        }
+
+        public override void Scrolled(UIScrollView scrollView)
+        {
+            if (_scrollToHideManager != null)
+            {
+                _scrollToHideManager.Scrolled();
+            }
+        }
+
+        public override void ScrolledToTop(UIScrollView scrollView)
+        {
+            base.ScrolledToTop(scrollView);
+
+            if (_scrollToHideManager != null)
+            {
+                _scrollToHideManager.ScrolledToTop();
+            }
+        }
+
+        public override void DecelerationEnded(UIScrollView scrollView)
+        {
+            if (_scrollToHideManager != null)
+            {
+                _scrollToHideManager.ScrollFinished();
+            }
         }
 
         public override nfloat GetHeightForHeader(UITableView tableView, nint section)
@@ -339,7 +417,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        public void ReloadTableData()
+        public virtual void ReloadTableData()
         {
             TableView.ReloadData();
 
@@ -388,6 +466,41 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected virtual void OnTableViewReset(UITableView previousTableView, UITableView tableView)
         {
+        }
+    }
+
+    public class OrgEventScrollToHideUIManager : ScrollToHideUIManager
+    {
+        private readonly UIScrollView _scrollView;
+        private readonly UIView _listSettingsView;
+
+        public OrgEventScrollToHideUIManager(UIScrollView scrollView, UIView listSettingsView) : base(scrollView)
+        {
+            IsActive = true;
+            _scrollView = scrollView;
+            _listSettingsView = listSettingsView;
+        }
+
+        public bool IsActive { get; set; }
+
+        protected override void OnHideUI()
+        {
+            if (IsActive)
+            {
+                _scrollView.ContentInset = new UIEdgeInsets(
+                    NavBarManager.NavBarHeight, 0, 0, 0);
+                _listSettingsView.SetHidden(true, false);
+            }
+        }
+
+        protected override void OnShowUI()
+        {
+            if (IsActive)
+            {
+                _scrollView.ContentInset = new UIEdgeInsets(
+                    NavBarManager.NavBarHeight + ListSettingsView.DefaultHeight, 0, 0, 0);
+                _listSettingsView.SetHidden(false, false);
+            }
         }
     }
 }

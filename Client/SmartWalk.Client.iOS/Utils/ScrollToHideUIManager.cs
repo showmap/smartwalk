@@ -45,7 +45,7 @@ namespace SmartWalk.Client.iOS.Utils
             if (_isDragging && !IsCausedByRefreshControl())
             {
                 var delta = GetTresholdDelta();
-                if (delta == null || delta > 30)
+                if (delta == null || delta > 50)
                 {
                     _startOffsetY = null; // if show/hide started, forget about delta
 

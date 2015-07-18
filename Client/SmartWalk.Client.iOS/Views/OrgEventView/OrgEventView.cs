@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
-using CoreGraphics;
 using System.Linq;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
+using CoreGraphics;
 using CoreLocation;
 using Foundation;
 using MapKit;
-using UIKit;
 using SmartWalk.Client.Core.Model;
+using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
@@ -19,7 +18,8 @@ using SmartWalk.Client.iOS.Utils.Map;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 using SmartWalk.Client.iOS.Views.OrgView;
-using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Shared.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -75,8 +75,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ViewModel.ScrollToShow += OnScrollToShow;
 
             InitializeStyle();
+            InitializeListSettingsView();
 
-            UpdateTableViewInset();
             UpdateViewState(false);
             UpdateDayButtonState();
         }
@@ -90,11 +90,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateNavBarState(animated);
             UpdateButtonsFrameOnRotation();
             UpdateDayButtonState();
-
-            if (_listSettingsView != null)
-            {
-                SetDialogViewFullscreenFrame(_listSettingsView);
-            }
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -110,6 +105,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 DisposeTableHeader();
                 DisposeSearchDisplayController();
                 DisposeMapView();
+                DisposeListSettingsView();
             }
         }
 
@@ -123,18 +119,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateDayButtonState();
             UpdateViewConstraints(true);
             UpdateButtonsFrameOnRotation();
-
-            // hiding ListOptions on rotation
-            if (ViewModel.ShowHideListOptionsCommand.CanExecute(false))
-            {
-                ViewModel.ShowHideListOptionsCommand.Execute(false);
-            }
         }
 
         public override void UpdateViewConstraints()
         {
             base.UpdateViewConstraints();
 
+            UpdateTableViewInset();
             UpdateViewConstraints(false);
         }
 
@@ -181,7 +172,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         () => MapHeightConstraint.Constant = ScreenUtil.GetGoldenRatio(View.Frame.Height),
                         animated);
 
-                    MapToTableConstraint.Constant = -VenuesAndShowsTableView.ContentInset.Top;
+                    MapToListSettingsConstraint.Constant = 0;
+                    ListSettingsHeightConstraint.Constant = 0;
+                    ListSettingsToTableConstraint.Constant = -VenuesAndShowsTableView.ContentInset.Top;
                     break;
 
                 case OrgEventViewMode.Map:
@@ -196,7 +189,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         () => TableHeightConstraint.Constant = 0,
                         animated);
 
-                    MapToTableConstraint.Constant = 0;
+                    MapToListSettingsConstraint.Constant = 0;
+                    ListSettingsHeightConstraint.Constant = 0;
+                    ListSettingsToTableConstraint.Constant = 0;
                     break;
 
                 case OrgEventViewMode.List:
@@ -211,7 +206,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         () => MapHeightConstraint.Constant = 0,
                         animated);
 
-                    MapToTableConstraint.Constant = 0;
+                    MapToListSettingsConstraint.Constant = NavBarManager.NavBarHeight;
+                    ListSettingsHeightConstraint.Constant = ListSettingsView.DefaultHeight;
+                    ListSettingsToTableConstraint.Constant = -NavBarManager.NavBarHeight - ListSettingsView.DefaultHeight;
                     break;
             }
 
@@ -234,10 +231,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override IListViewSource CreateListViewSource()
         {
-            var tableSource = new OrgEventTableSource(ViewModel)
-                {
-                    TableView = VenuesAndShowsTableView
-                };
+            var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, ViewModel, ListSettingsContainer);
 
             this.CreateBinding(tableSource)
                 .For(ts => ts.ItemsSource)
@@ -263,7 +257,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.OrgEvent))
             {
-                UpdateTableViewInset();
                 UpdateDayButtonState();
                 UpdateViewState(false);
                 ReloadMap();
@@ -291,10 +284,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsAvailable))
             {
                 UpdateTableHeaderState(HasData);
-            }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsShown))
-            {
-                ShowHideListSettingsView(ViewModel.IsListOptionsShown);
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsMultiday) ||
                 propertyName == ViewModel.GetPropertyName(vm => vm.CurrentDay))
@@ -483,7 +472,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeTableHeader()
         {
             _headerView = OrgEventHeaderView.Create();
-            _headerView.ShowOptionsCommand = ViewModel.ShowHideListOptionsCommand;
 
             UpdateTableHeaderState(HasData);
 
@@ -515,10 +503,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _searchDisplayController.Delegate = 
                 new OrgEventSearchDelegate(VenuesAndShowsTableView, ViewModel);
 
-            var searchTableSource = new OrgEventTableSource(ViewModel)
+            var searchTableSource = new OrgEventTableSource(
+                    _searchDisplayController.SearchResultsTableView, ViewModel)
                 {
-                    IsSearchSource = true,
-                    TableView = _searchDisplayController.SearchResultsTableView
+                    IsSearchSource = true
                 };
 
             this.CreateBinding(searchTableSource)
@@ -707,74 +695,27 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private void ShowHideListSettingsView(bool isShown)
-        {
-            if (isShown)
-            {
-                _listSettingsView = View.Subviews.
-                    OfType<ListSettingsView>()
-                    .FirstOrDefault();
-                if (_listSettingsView == null)
-                {
-                    InitializeListSettingsView();
-                    View.Add(_listSettingsView, true);
-                }
-            }
-            else if (_listSettingsView != null)
-            {
-                _listSettingsView.RemoveFromSuperview(true);
-                DisposeListSettingsView();
-            }
-
-            var tableSoure = VenuesAndShowsTableView.WeakDataSource as HiddenHeaderTableSource<Venue>;
-            if (tableSoure != null)
-            {
-                tableSoure.IsAutohidingEnabled = !isShown;
-            }
-        }
-
-        private nfloat GetListSettingsTopMargin()
-        {
-            var headerLocation = 
-                View.ConvertPointFromView(
-                    _headerView.Frame.Location, 
-                    _headerView);
-                
-            var result = headerLocation.Y + _headerView.Frame.Height;
-            return result;
-        }
-
         private void InitializeListSettingsView()
         {
-            _listSettingsView = ListSettingsView.Create();
+            if (_listSettingsView == null)
+            {
+                _listSettingsView = ListSettingsView.Create();
+                _listSettingsView.Frame = ListSettingsContainer.Bounds;
+                ListSettingsContainer.Content = _listSettingsView;
 
-            SetDialogViewFullscreenFrame(_listSettingsView);
-            UpdateListSettingsView();
-
-            _listSettingsView.IsGroupByLocation = ViewModel.IsGroupedByLocation;
-            _listSettingsView.SortBy = ViewModel.SortBy;
-
-            _listSettingsView.Initialize();
-
-            _listSettingsView.GroupByLocationCommand = ViewModel.GroupByLocationCommand;
-            _listSettingsView.SortByCommand = ViewModel.SortByCommand;
-            _listSettingsView.CloseCommand = ViewModel.ShowHideListOptionsCommand;
-        }
-
-        private void UpdateListSettingsView()
-        {
-            _listSettingsView.MarginTop = GetListSettingsTopMargin();
+                _listSettingsView.SortBy = ViewModel.SortBy;
+                _listSettingsView.SortByCommand = ViewModel.SortByCommand;
+            }
         }
 
         private void DisposeListSettingsView()
         {
             if (_listSettingsView != null)
             {
-                _listSettingsView.GroupByLocationCommand = null;
                 _listSettingsView.SortByCommand = null;
-                _listSettingsView.CloseCommand = null;
                 _listSettingsView.Dispose();
                 _listSettingsView = null;
+                ListSettingsContainer.Content = null;
             }
         }
        
@@ -795,7 +736,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenuesAndShowsTableView.Hidden = false;
                     MapPanel.Hidden = false;
                     MapFullscreenButton.SetHidden(false, animated);
+                    ListSettingsContainer.SetHidden(true, animated);
 
+                    SetScrollToHideActive(false);
                     DeactivateSearchController();
                     InitializeMapView();
                     break;
@@ -813,7 +756,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenuesAndShowsTableView.SetHidden(true, animated);
                     MapPanel.Hidden = false;
                     MapFullscreenButton.SetHidden(false, animated);
+                    ListSettingsContainer.SetHidden(true, animated);
 
+                    SetScrollToHideActive(false);
                     DeactivateSearchController();
                     InitializeMapView();
                     break;
@@ -831,19 +776,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     MapPanel.SetHidden(true, animated);
                     MapFullscreenButton.SetHidden(true, animated);
+                    ListSettingsContainer.SetHidden(!HasData, animated);
+
+                    SetScrollToHideActive(true);
                     break;
             }
 
             UpdateNavBarState(animated);
             UpdateDayButtonState();
+            UpdateTableViewInset();
             UpdateViewConstraints(animated);
             SetNeedStatusBarUpdate(animated);
-
-            // hiding ListOptions on switching to any state
-            if (ViewModel.ShowHideListOptionsCommand.CanExecute(false))
-            {
-                ViewModel.ShowHideListOptionsCommand.Execute(false);
-            }
         }
 
         private void UpdateNavBarState(bool animated)
@@ -894,13 +837,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (IsInSearch) return;
 
-            if (HasData)
+            if (HasData && ViewModel.Mode == OrgEventViewMode.List)
             {
+                var topInset = NavBarManager.NavBarHeight + 
+                    (ListSettingsContainer.Hidden ? 0 : ListSettingsView.DefaultHeight);
                 var previousOffset = VenuesAndShowsTableView.ContentOffset;
-                var delta = VenuesAndShowsTableView.ContentInset.Top - NavBarManager.NavBarHeight;
+                var delta = VenuesAndShowsTableView.ContentInset.Top - topInset;
 
-                VenuesAndShowsTableView.ContentInset = 
-                    new UIEdgeInsets(NavBarManager.NavBarHeight, 0, 0, 0);
+                VenuesAndShowsTableView.ContentInset = new UIEdgeInsets(topInset, 0, 0, 0);
                 VenuesAndShowsTableView.ScrollIndicatorInsets =
                     VenuesAndShowsTableView.ContentInset;
 
@@ -917,6 +861,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateButtonsFrameOnRotation()
         {
             ButtonBarUtil.UpdateButtonsFrameOnRotation(new [] { MapFullscreenButton });
+        }
+
+        private void SetScrollToHideActive(bool isActive)
+        {
+            var tableSource = VenuesAndShowsTableView.Source as OrgEventTableSource;
+            if (tableSource != null)
+            {
+                tableSource.IsScrollToHideActive = isActive;
+            }
         }
     }
 

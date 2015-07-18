@@ -13,37 +13,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 	partial class ListSettingsView
 	{
 		[Outlet]
-		UIKit.UIView BackgroundView { get; set; }
+		UIKit.UIToolbar BackgroundView { get; set; }
 
 		[Outlet]
-		UIKit.NSLayoutConstraint ContainerHeightConstraint { get; set; }
+		UIKit.UIButton FavoritesButton { get; set; }
 
 		[Outlet]
-		UIKit.NSLayoutConstraint ContainerTopConstraint { get; set; }
-
-		[Outlet]
-		UIKit.UILabel GroupByLocationLabel { get; set; }
-
-		[Outlet]
-		UIKit.UISwitch GroupByLocationSwitch { get; set; }
-
-		[Outlet]
-		UIKit.UIView PlaceholderView { get; set; }
+		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
 		UIKit.UILabel SortByLabel { get; set; }
 
 		[Outlet]
-		UIKit.UIView SortByPlaceholder { get; set; }
-
-		[Outlet]
 		UIKit.UISegmentedControl SortBySegments { get; set; }
 
-		[Outlet]
-		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
-
-		[Action ("OnGroupByLocationTouchUpInside:")]
-		partial void OnGroupByLocationTouchUpInside (Foundation.NSObject sender);
+		[Action ("OnFavoritesClick:")]
+		partial void OnFavoritesClick (UIKit.UIButton sender);
 
 		[Action ("OnSortBySegmentsValueChanged:")]
 		partial void OnSortBySegmentsValueChanged (Foundation.NSObject sender);
@@ -55,29 +40,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				BackgroundView = null;
 			}
 
-			if (ContainerHeightConstraint != null) {
-				ContainerHeightConstraint.Dispose ();
-				ContainerHeightConstraint = null;
-			}
-
-			if (ContainerTopConstraint != null) {
-				ContainerTopConstraint.Dispose ();
-				ContainerTopConstraint = null;
-			}
-
-			if (GroupByLocationLabel != null) {
-				GroupByLocationLabel.Dispose ();
-				GroupByLocationLabel = null;
-			}
-
-			if (GroupByLocationSwitch != null) {
-				GroupByLocationSwitch.Dispose ();
-				GroupByLocationSwitch = null;
-			}
-
-			if (PlaceholderView != null) {
-				PlaceholderView.Dispose ();
-				PlaceholderView = null;
+			if (FavoritesButton != null) {
+				FavoritesButton.Dispose ();
+				FavoritesButton = null;
 			}
 
 			if (SortByLabel != null) {
@@ -85,19 +50,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				SortByLabel = null;
 			}
 
-			if (SortByPlaceholder != null) {
-				SortByPlaceholder.Dispose ();
-				SortByPlaceholder = null;
-			}
-
 			if (SortBySegments != null) {
 				SortBySegments.Dispose ();
 				SortBySegments = null;
 			}
 
-			if (TopSeparator != null) {
-				TopSeparator.Dispose ();
-				TopSeparator = null;
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
 			}
 		}
 	}

@@ -40,7 +40,6 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private Parameters _parameters;
         private bool _isGroupedByLocation = true;
-        private bool _isListOptionsShown;
         private bool _isListOptionsAvailable;
         private SortBy _sortBy = SortBy.Name;
         private Venue[] _searchResults;
@@ -60,7 +59,6 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<bool?> _groupByLocationCommand;
-        private MvxCommand<bool?> _showHideListOptionsCommand;
         private MvxCommand<SortBy> _sortByCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand _switchMapTypeCommand;
@@ -299,22 +297,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _isListOptionsAvailable = value;
                     RaisePropertyChanged(() => IsListOptionsAvailable);
-                }
-            }
-        }
-
-        public bool IsListOptionsShown
-        {
-            get
-            {
-                return _isListOptionsShown;
-            }
-            private set
-            {
-                if (_isListOptionsShown != value)
-                {
-                    _isListOptionsShown = value;
-                    RaisePropertyChanged(() => IsListOptionsShown);
                 }
             }
         }
@@ -796,33 +778,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _groupByLocationCommand;
-            }
-        }
-
-        public ICommand ShowHideListOptionsCommand
-        {
-            get
-            {
-                if (_showHideListOptionsCommand == null)
-                {
-                    _showHideListOptionsCommand = new MvxCommand<bool?>(
-                        on => 
-                        { 
-                            var isShown = on.HasValue && on.Value;
-
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                isShown
-                                    ? Analytics.ActionLabelShowListOptions
-                                    : Analytics.ActionLabelHideListOptions);
-
-                            IsListOptionsShown = isShown;
-                        },
-                        on => !IsLoading);
-                }
-
-                return _showHideListOptionsCommand;
             }
         }
 
