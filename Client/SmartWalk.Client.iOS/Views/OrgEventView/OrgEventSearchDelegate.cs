@@ -1,25 +1,21 @@
-using CoreGraphics;
-using UIKit;
+using System;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public class OrgEventSearchDelegate : UISearchDisplayDelegate
     {
-        private readonly OrgEventHeaderView _headerView;
         private readonly OrgEventViewModel _viewModel;
 
-        private UITableView _tableView;
-        private OrgEventViewMode _previousMode;
-        private bool _previousIsListOptVisible;
-        private CGPoint _previousOffset;
-        private UIEdgeInsets _previousContentInset;
+        private OrgEventViewMode? _previousMode;
 
-        public OrgEventSearchDelegate(UITableView tableView, OrgEventViewModel viewModel)
+        public event EventHandler BeginSearch;
+        public event EventHandler EndSearch;
+
+        public OrgEventSearchDelegate(OrgEventViewModel viewModel)
         {
-            _tableView = tableView;
-            _headerView = (OrgEventHeaderView)tableView.TableHeaderView;
             _viewModel = viewModel;
         }
 
@@ -39,18 +35,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             NavBarManager.Instance.SetHidden(true, false);
 
-            _previousOffset = _tableView.ContentOffset;
-            _previousContentInset = _tableView.ContentInset;
-            _tableView.ContentInset = UIEdgeInsets.Zero;
+            if (BeginSearch != null)
+            {
+                BeginSearch(this, EventArgs.Empty);
+            }
 
-            if (_viewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
+            if (_viewModel.Mode != OrgEventViewMode.List &&
+                _viewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
             {
                 _previousMode = _viewModel.Mode;
                 _viewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
             }
 
-            _previousIsListOptVisible = _headerView.IsListOptionsVisible;
-            _headerView.IsListOptionsVisible = false;
             controller.SearchBar.SetActiveStyle();
         }
 
@@ -60,15 +56,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void DidEndSearch(UISearchDisplayController controller)
         {
-            _tableView.ContentInset = _previousContentInset;
-            _tableView.ContentOffset = _previousOffset;
+            if (EndSearch != null)
+            {
+                EndSearch(this, EventArgs.Empty);
+            }
 
-            _headerView.IsListOptionsVisible = _previousIsListOptVisible;
             controller.SearchBar.SetPassiveStyle();
 
-            if (_viewModel.SwitchModeCommand.CanExecute(_previousMode))
+            if (_previousMode.HasValue &&
+                _viewModel.SwitchModeCommand.CanExecute(_previousMode.Value))
             {
-                _viewModel.SwitchModeCommand.Execute(_previousMode);
+                _viewModel.SwitchModeCommand.Execute(_previousMode.Value);
+                _previousMode = null;
             }
 
             NavBarManager.Instance.SetHidden(false, true);

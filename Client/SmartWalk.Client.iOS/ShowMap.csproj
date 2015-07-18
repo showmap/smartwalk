@@ -263,10 +263,6 @@
       <DependentUpon>VenueShowCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\OrgEventView\OrgEventSearchDelegate.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventHeaderView.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventHeaderView.designer.cs">
-      <DependentUpon>OrgEventHeaderView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Common\ImageFullscreenView.cs" />
     <Compile Include="Views\Common\ImageFullscreenView.designer.cs">
       <DependentUpon>ImageFullscreenView.cs</DependentUpon>
@@ -379,7 +375,6 @@
     <Compile Include="Views\Common\Base\NavBarViewBase.cs" />
     <Compile Include="Controls\TransparentNavBar.cs" />
     <Compile Include="Views\OrgEventView\OrgEventSearchDisplayController.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventSearchBar.cs" />
     <Compile Include="Views\Common\Base\Cells\CollectionCellBase.cs" />
     <Compile Include="Views\Common\Base\Cells\TableCellBase.cs" />
     <Compile Include="Views\Common\Base\Cells\TableHeaderBase.cs" />
@@ -422,7 +417,6 @@
     <InterfaceDefinition Include="Views\OrgView\OrgEventCell.xib" />
     <InterfaceDefinition Include="Views\Common\EntityCell\EntityCell.xib" />
     <InterfaceDefinition Include="Views\OrgEventView\VenueShowCell.xib" />
-    <InterfaceDefinition Include="Views\OrgEventView\OrgEventHeaderView.xib" />
     <InterfaceDefinition Include="Views\Common\ImageFullscreenView.xib" />
     <InterfaceDefinition Include="Views\Common\BrowserView.xib" />
     <InterfaceDefinition Include="Views\Common\ProgressView.xib" />

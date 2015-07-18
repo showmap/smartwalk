@@ -49,6 +49,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 
 		[Outlet]
+		UIKit.UISearchBar SearchBar { get; set; }
+
+		[Outlet]
 		UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
 
 		[Outlet]
@@ -110,6 +113,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				MapPanel = null;
 			}
 
+			if (MapToListSettingsConstraint != null) {
+				MapToListSettingsConstraint.Dispose ();
+				MapToListSettingsConstraint = null;
+			}
+
 			if (ProgressViewContainer != null) {
 				ProgressViewContainer.Dispose ();
 				ProgressViewContainer = null;
@@ -135,9 +143,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				VenuesMapView = null;
 			}
 
-			if (MapToListSettingsConstraint != null) {
-				MapToListSettingsConstraint.Dispose ();
-				MapToListSettingsConstraint = null;
+			if (SearchBar != null) {
+				SearchBar.Dispose ();
+				SearchBar = null;
 			}
 		}
 	}

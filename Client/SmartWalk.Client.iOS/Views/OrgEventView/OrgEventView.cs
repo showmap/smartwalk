@@ -27,7 +27,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         private readonly MKMapSize MapMargin = new MKMapSize(3000, 3000);
 
-        private OrgEventHeaderView _headerView;
         private UISearchDisplayController _searchDisplayController;
         private ListSettingsView _listSettingsView;
         private bool _isMapViewInitialized;
@@ -102,7 +101,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.ScrollToVenue -= OnScrollToVenue;
 
                 DisposeToolBar();
-                DisposeTableHeader();
                 DisposeSearchDisplayController();
                 DisposeMapView();
                 DisposeListSettingsView();
@@ -281,10 +279,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     UpdateTableViewOnShowExpanding(_searchDisplayController.SearchResultsTableView);
                 }
             }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsListOptionsAvailable))
-            {
-                UpdateTableHeaderState(HasData);
-            }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsMultiday) ||
                 propertyName == ViewModel.GetPropertyName(vm => vm.CurrentDay))
             {
@@ -296,7 +290,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.OnViewModelRefreshed(hasData, pullToRefresh);
 
-            UpdateTableHeaderState(hasData);
             UpdateTableViewInset();
         }
 
@@ -316,8 +309,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         // set header before items source is passed to table
         // for easier header auto-hiding
         protected override void OnBeforeSetListViewSource()
-        {   
-            InitializeTableHeader();
+        {
             InitializeSearchDisplayController();
         }
 
@@ -438,6 +430,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             VenuesMapView.TintColor = ThemeColors.Metadata;
             VenuesMapView.FixLegalLabel();
+
+            SearchBar.SetPassiveStyle();
+            SearchBar.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
         }
 
         private void OnModeButtonClicked(object sender, EventArgs e)
@@ -469,40 +464,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private void InitializeTableHeader()
-        {
-            _headerView = OrgEventHeaderView.Create();
-
-            UpdateTableHeaderState(HasData);
-
-            VenuesAndShowsTableView.TableHeaderView = _headerView;
-        }
-
-        private void DisposeTableHeader()
-        {
-            if (_headerView != null)
-            {
-                _headerView.Dispose();
-                _headerView = null;
-            }
-        }
-
-        private void UpdateTableHeaderState(bool hasData)
-        {
-            if (_headerView != null)
-            {
-                _headerView.IsListOptionsVisible = ViewModel.IsListOptionsAvailable;
-                _headerView.SetHidden(!hasData, false);
-            }
-        }
-
         private void InitializeSearchDisplayController()
         {
             _searchDisplayController = 
-                new OrgEventSearchDisplayController(_headerView.SearchBarControl, this);
-            _searchDisplayController.Delegate = 
-                new OrgEventSearchDelegate(VenuesAndShowsTableView, ViewModel);
+                new OrgEventSearchDisplayController(SearchBar, this);
 
+            var searchDelegate = new OrgEventSearchDelegate(ViewModel);
+            searchDelegate.BeginSearch += (sender, e) => UpdateViewState(true);
+            searchDelegate.EndSearch += (sender, e) => UpdateViewState(true);
+            _searchDisplayController.Delegate = searchDelegate;
+            
             var searchTableSource = new OrgEventTableSource(
                     _searchDisplayController.SearchResultsTableView, ViewModel)
                 {
@@ -644,6 +615,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void OnZoomToVenue(object sender, MvxValueEventArgs<Venue> e)
         {
+            DeactivateSearchController();
+
             var annotation = GetAnnotationByVenue(ViewModel.SelectedVenueOnMap);
 
             var shiftedCoord = annotation.Coordinate;
@@ -739,7 +712,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ListSettingsContainer.SetHidden(true, animated);
 
                     SetScrollToHideActive(false);
-                    DeactivateSearchController();
                     InitializeMapView();
                     break;
 
@@ -759,7 +731,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     ListSettingsContainer.SetHidden(true, animated);
 
                     SetScrollToHideActive(false);
-                    DeactivateSearchController();
                     InitializeMapView();
                     break;
 
@@ -776,9 +747,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     MapPanel.SetHidden(true, animated);
                     MapFullscreenButton.SetHidden(true, animated);
-                    ListSettingsContainer.SetHidden(!HasData, animated);
+                    ListSettingsContainer.SetHidden(!HasData || IsInSearch, animated);
 
-                    SetScrollToHideActive(true);
+                    SetScrollToHideActive(!IsInSearch);
                     break;
             }
 
@@ -835,9 +806,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateTableViewInset()
         {
-            if (IsInSearch) return;
-
-            if (HasData && ViewModel.Mode == OrgEventViewMode.List)
+            if (HasData && !IsInSearch && ViewModel.Mode == OrgEventViewMode.List)
             {
                 var topInset = NavBarManager.NavBarHeight + 
                     (ListSettingsContainer.Hidden ? 0 : ListSettingsView.DefaultHeight);
@@ -890,6 +859,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     showCells[index - 1].SetIsBeforeExpanded(isExpanded, true);
                 }
             }
+        }
+    }
+
+    public static class OrgEventSearchBarExtensions
+    {
+        public static void SetPassiveStyle(this UISearchBar searchBar)
+        {
+            searchBar.BarStyle = UIBarStyle.Default;
+            searchBar.TintColor = ThemeColors.BorderLight;
+            searchBar.BarTintColor = null;
+            searchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+        }
+
+        public static void SetActiveStyle(this UISearchBar searchBar)
+        {
+            searchBar.BarStyle = UIBarStyle.Default;
+            searchBar.TintColor = ThemeColors.BorderLight;
+            searchBar.BarTintColor = ThemeColors.HeaderBackground;
+            searchBar.SearchBarStyle = UISearchBarStyle.Prominent;
         }
     }
 }

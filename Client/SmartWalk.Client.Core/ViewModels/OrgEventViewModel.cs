@@ -40,7 +40,6 @@ namespace SmartWalk.Client.Core.ViewModels
 
         private Parameters _parameters;
         private bool _isGroupedByLocation = true;
-        private bool _isListOptionsAvailable;
         private SortBy _sortBy = SortBy.Name;
         private Venue[] _searchResults;
         private Dictionary<SearchKey, string> _searchableTexts;
@@ -151,13 +150,13 @@ namespace SmartWalk.Client.Core.ViewModels
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => Title);
 
-                    IsListOptionsAvailable = 
+                    /*IsListOptionsAvailable = 
                         _orgEvent != null &&
                         _orgEvent.Venues != null &&
                         _orgEvent.Venues
                             .Any(v => 
                                 v.Shows != null && 
-                                v.Shows.Length > 0);
+                                v.Shows.Length > 0);*/
                 }
             }
         }
@@ -281,22 +280,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _currentFullscreenImage = value;
                     RaisePropertyChanged(() => CurrentFullscreenImage);
-                }
-            }
-        }
-
-        public bool IsListOptionsAvailable
-        {
-            get
-            {
-                return _isListOptionsAvailable;
-            }
-            private set
-            {
-                if (_isListOptionsAvailable != value)
-                {
-                    _isListOptionsAvailable = value;
-                    RaisePropertyChanged(() => IsListOptionsAvailable);
                 }
             }
         }
