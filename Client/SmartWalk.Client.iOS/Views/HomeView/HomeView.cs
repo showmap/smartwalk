@@ -102,16 +102,16 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             return collectionSource;
         }
 
-        protected override void ScrollViewToTop()
+        protected override void ScrollViewToTop(bool animated)
         {
             var collectionDelegate = OrgCollectionView.WeakDelegate as HomeCollectionDelegate;
             if (collectionDelegate != null)
             {
-                collectionDelegate.ScrollOutHeader();
+                collectionDelegate.ScrollOutHeader(animated);
             }
             else
             {
-                base.ScrollViewToTop();
+                base.ScrollViewToTop(animated);
             }
         }
 

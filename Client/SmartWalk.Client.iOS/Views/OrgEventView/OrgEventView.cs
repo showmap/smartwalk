@@ -91,6 +91,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateDayButtonState();
         }
 
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            // TODO: To keep the search active but to fix bugs:
+            // navbar is messed-up on navigating to venue view and back while in search
+            // search should be active if we come back from image full-screen view
+            if (IsInSearch)
+            {
+                DeactivateSearchController();
+            }
+        }
+
         public override void DidMoveToParentViewController(UIViewController parent)
         {
             base.DidMoveToParentViewController(parent);
@@ -204,9 +217,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         () => MapHeightConstraint.Constant = 0,
                         animated);
 
-                    MapToListSettingsConstraint.Constant = NavBarManager.NavBarHeight;
-                    ListSettingsHeightConstraint.Constant = ListSettingsView.DefaultHeight;
-                    ListSettingsToTableConstraint.Constant = -NavBarManager.NavBarHeight - ListSettingsView.DefaultHeight;
+                    if (IsInSearch)
+                    {
+                        MapToListSettingsConstraint.Constant = 0;
+                        ListSettingsHeightConstraint.Constant = 0;
+                        ListSettingsToTableConstraint.Constant = 0;
+                    }
+                    else
+                    {
+                        MapToListSettingsConstraint.Constant = NavBarManager.NavBarHeight;
+                        ListSettingsHeightConstraint.Constant = ListSettingsView.DefaultHeight;
+                        ListSettingsToTableConstraint.Constant = -NavBarManager.NavBarHeight - ListSettingsView.DefaultHeight;
+                    }
                     break;
             }
 
@@ -247,6 +269,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
                 UpdateViewState(true);
+
+                if (!ViewModel.IsInSearch)
+                {
+                    ScrollViewToTop(false);
+                }
+            }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
+            {
+                ScrollViewToTop(false);
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentMapType))
             {
@@ -293,16 +324,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateTableViewInset();
         }
 
-        protected override void ScrollViewToTop()
+        protected override void ScrollViewToTop(bool animated)
         {
             var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
             if (tableSource != null)
             {
-                tableSource.ScrollOutHeader();
+                tableSource.ScrollOutHeader(animated);
             }
             else
             {
-                base.ScrollViewToTop();
+                base.ScrollViewToTop(animated);
             }
         }
 
@@ -432,7 +463,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             VenuesMapView.FixLegalLabel();
 
             SearchBar.BarStyle = UIBarStyle.Default;
-            SearchBar.TintColor = ThemeColors.BorderLight;
+            SearchBar.TintColor = ThemeColors.ContentLightText;
             SearchBar.BarTintColor = null;
             SearchBar.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
             SearchBar.SetPassiveStyle();
@@ -475,6 +506,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             var searchDelegate = new OrgEventSearchDelegate(ViewModel);
             searchDelegate.BeginSearch += (sender, e) =>
                 {   
+                    // HACK: to compensate status bar during search bar presenting and animation
                     EdgesForExtendedLayout = UIRectEdge.Top;
                     UpdateViewState(false);
                 };
@@ -482,6 +514,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 {
                     EdgesForExtendedLayout = UIRectEdge.None;
                     UpdateViewState(false);
+                    // keeping searchbar visible after search ended
+                    VenuesAndShowsTableView.SetActualContentOffset(0, false);
                 };
             _searchDisplayController.Delegate = searchDelegate;
             
@@ -817,24 +851,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateTableViewInset()
         {
-            if (HasData && ViewModel.Mode == OrgEventViewMode.List)
+            if (HasData && !IsInSearch && ViewModel.Mode == OrgEventViewMode.List)
             {
                 var topInset = NavBarManager.NavBarHeight + 
                     (ListSettingsContainer.Hidden ? 0 : ListSettingsView.DefaultHeight);
-                var previousOffset = VenuesAndShowsTableView.ContentOffset;
-                var delta = VenuesAndShowsTableView.ContentInset.Top - topInset;
 
                 VenuesAndShowsTableView.ContentInset = new UIEdgeInsets(topInset, 0, 0, 0);
-                VenuesAndShowsTableView.ScrollIndicatorInsets =
-                    VenuesAndShowsTableView.ContentInset;
-
-                VenuesAndShowsTableView.ContentOffset =
-                    new CGPoint(previousOffset.X, previousOffset.Y + delta);
+                VenuesAndShowsTableView.ScrollIndicatorInsets = VenuesAndShowsTableView.ContentInset;
             }
             else 
             {
                 VenuesAndShowsTableView.ContentInset = UIEdgeInsets.Zero;
                 VenuesAndShowsTableView.ScrollIndicatorInsets = UIEdgeInsets.Zero;
+            }
+
+            // HACK: For smooth animation of search bar
+            if (IsInSearch)
+            {
+                VenuesAndShowsTableView.SetActualContentOffset(-UIConstants.StatusBarHeight, false);
             }
         }
 

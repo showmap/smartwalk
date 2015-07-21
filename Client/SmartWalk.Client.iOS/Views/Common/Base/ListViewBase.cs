@@ -133,13 +133,13 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         {
             if (hasData && pullToRefresh)
             {
-                ScrollViewToTop();
+                ScrollViewToTop(true);
             }
         }
 
-        protected virtual void ScrollViewToTop()
+        protected virtual void ScrollViewToTop(bool animated)
         {
-            ListView.View.SetActualContentOffset(0, true);
+            ListView.View.SetActualContentOffset(0, animated);
 
             if (ListView != null &&
                 ListView.Source != null)
@@ -188,7 +188,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeGesture()
         {
-            _viewTapGesture = new UITapGestureRecognizer(ScrollViewToTop) {
+            _viewTapGesture = new UITapGestureRecognizer(() => ScrollViewToTop(true)) {
                 Delegate = new ListViewTapGestureDelegate()
             };
 

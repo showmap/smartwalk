@@ -48,12 +48,12 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             collectionView.DeselectItem(indexPath, false);
         }
 
-        public void ScrollOutHeader()
+        public void ScrollOutHeader(bool animated)
         {
             ScrollUtil.ScrollOutHeader(
                 _collectionView, 
                 HomeHeaderView.DefaultHeight, 
-                _isTouched);
+                _isTouched || animated);
         }
 
         public override void DraggingStarted(UIScrollView scrollView)

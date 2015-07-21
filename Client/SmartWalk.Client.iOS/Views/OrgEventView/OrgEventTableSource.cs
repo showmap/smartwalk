@@ -431,14 +431,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        public void ScrollOutHeader()
+        public void ScrollOutHeader(bool animated)
         {
             if (IsAutohidingEnabled)
             {
                 ScrollUtil.ScrollOutHeader(
                     TableView, 
                     HeaderHeight, 
-                    _isTouched);
+                    _isTouched || animated);
             }
         }
 
@@ -456,7 +456,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void ScrolledToTop(UIScrollView scrollView)
         {
-            ScrollOutHeader();
+            ScrollOutHeader(true);
         }
 
         public override nint RowsInSection(UITableView tableview, nint section)
