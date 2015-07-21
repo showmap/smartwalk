@@ -16,37 +16,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public class OrgEventTableSource : HiddenHeaderTableSource<Venue>
     {
-        private static readonly NSString EmptyCellKey = new NSString("empty");
-
         private readonly OrgEventViewModel _viewModel;
-        private readonly OrgEventScrollToHideUIManager _scrollToHideManager;
+        private readonly ScrollToHideUIManager _scrollToHideManager;
 
         public OrgEventTableSource(UITableView tableView, 
-            OrgEventViewModel viewModel, UIView listSettingsView = null)
+            OrgEventViewModel viewModel, ScrollToHideUIManager scrollToHideManager = null)
         {
             _viewModel = viewModel;
-
-            if (listSettingsView != null)
-            {
-                _scrollToHideManager = new OrgEventScrollToHideUIManager(
-                    tableView, listSettingsView);
-            }
-
             TableView = tableView;
-        }
-
-        public bool IsSearchSource { get; set; }
-
-        public bool IsScrollToHideActive
-        {
-            get { return _scrollToHideManager != null && _scrollToHideManager.IsActive; }
-            set
-            {
-                if (_scrollToHideManager != null)
-                {
-                    _scrollToHideManager.IsActive = value;
-                }
-            }
+            _scrollToHideManager = scrollToHideManager;
         }
 
         private bool ShowVenueGroupHeader
@@ -199,14 +177,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override nint RowsInSection(UITableView tableview, nint section)
         {
-            var emptyRow = IsSearchSource &&
-                section == NumberOfSections(tableview) - 1 ? 1 : 0; // empty row for search
-
             return 
                 (ItemsSource != null &&
                     ItemsSource[section].Shows != null 
                         ? ItemsSource[section].Shows.Length 
-                        : 0) + emptyRow;
+                        : 0);
         }
 
         public override string TitleForHeader(UITableView tableView, nint section)
@@ -244,14 +219,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
             var show = GetItemAt(indexPath);
-
-            if (IsSearchSource && show == null)
-            {
-                var emptyCell = tableView.DequeueReusableCell(EmptyCellKey, indexPath);
-                emptyCell.SelectionStyle = UITableViewCellSelectionStyle.None;
-                return emptyCell;
-            }
-
             var cell = default(UITableViewCell);
 
             if (show != null && show.Id == Show.DayGroupId)
@@ -288,7 +255,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
                 tableView.RegisterClassForHeaderFooterViewReuse(typeof(GroupHeaderView), GroupHeaderView.Key);
-                tableView.RegisterClassForCellReuse(typeof(UITableViewCell), EmptyCellKey);
                 tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
                 tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             }

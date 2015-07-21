@@ -49,8 +49,7 @@ namespace SmartWalk.Client.iOS
             var startup = Mvx.Resolve<IMvxAppStart>();
             startup.Start();
 
-            ((UINavigationController)AppDelegate.Window.RootViewController)
-                .NavigationBarHidden = true;
+            NavBarManager.Instance.SetNativeHidden(true, false);
             NavBarManager.Instance.SetHidden(false, false);
 
             Window.MakeKeyAndVisible();

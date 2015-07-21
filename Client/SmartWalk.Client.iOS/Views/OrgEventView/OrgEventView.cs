@@ -28,6 +28,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly MKMapSize MapMargin = new MKMapSize(3000, 3000);
 
         private UISearchDisplayController _searchDisplayController;
+        private OrgEventScrollToHideUIManager _scrollToHideManager;
         private ListSettingsView _listSettingsView;
         private bool _isMapViewInitialized;
         private ButtonBarButton _modeButton;
@@ -89,19 +90,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateNavBarState(animated);
             UpdateButtonsFrameOnRotation();
             UpdateDayButtonState();
-        }
-
-        public override void ViewWillDisappear(bool animated)
-        {
-            base.ViewWillDisappear(animated);
-
-            // TODO: To keep the search active but to fix bugs:
-            // navbar is messed-up on navigating to venue view and back while in search
-            // search should be active if we come back from image full-screen view
-            if (IsInSearch)
-            {
-                DeactivateSearchController();
-            }
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -251,7 +239,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override IListViewSource CreateListViewSource()
         {
-            var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, ViewModel, ListSettingsContainer);
+            _scrollToHideManager = new OrgEventScrollToHideUIManager(
+                VenuesAndShowsTableView, ListSettingsContainer);
+
+            var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, ViewModel, _scrollToHideManager);
 
             this.CreateBinding(tableSource)
                 .For(ts => ts.ItemsSource)
@@ -501,7 +492,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void InitializeSearchDisplayController()
         {
             _searchDisplayController = 
-                new OrgEventSearchDisplayController(SearchBar, this);
+                new UISearchDisplayController(SearchBar, this);
 
             var searchDelegate = new OrgEventSearchDelegate(ViewModel);
             searchDelegate.BeginSearch += (sender, e) =>
@@ -519,11 +510,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 };
             _searchDisplayController.Delegate = searchDelegate;
             
-            var searchTableSource = new OrgEventTableSource(
-                    _searchDisplayController.SearchResultsTableView, ViewModel)
-                {
-                    IsSearchSource = true
-                };
+            var searchTableSource = 
+                new OrgEventTableSource(
+                    _searchDisplayController.SearchResultsTableView, ViewModel);
 
             this.CreateBinding(searchTableSource)
                 .For(ts => ts.ItemsSource)
@@ -756,7 +745,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapFullscreenButton.SetHidden(false, animated);
                     ListSettingsContainer.SetHidden(true, animated);
 
-                    SetScrollToHideActive(false);
+                    _scrollToHideManager.IsActive = false;
                     InitializeMapView();
                     break;
 
@@ -775,7 +764,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapFullscreenButton.SetHidden(false, animated);
                     ListSettingsContainer.SetHidden(true, animated);
 
-                    SetScrollToHideActive(false);
+                    _scrollToHideManager.IsActive = false;
                     InitializeMapView();
                     break;
 
@@ -794,7 +783,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapFullscreenButton.SetHidden(true, animated);
                     ListSettingsContainer.SetHidden(!HasData || IsInSearch, animated);
 
-                    SetScrollToHideActive(!IsInSearch);
+                    _scrollToHideManager.IsActive = !IsInSearch;
                     break;
             }
 
@@ -875,15 +864,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateButtonsFrameOnRotation()
         {
             ButtonBarUtil.UpdateButtonsFrameOnRotation(new [] { MapFullscreenButton });
-        }
-
-        private void SetScrollToHideActive(bool isActive)
-        {
-            var tableSource = VenuesAndShowsTableView.Source as OrgEventTableSource;
-            if (tableSource != null)
-            {
-                tableSource.IsScrollToHideActive = isActive;
-            }
         }
     }
 

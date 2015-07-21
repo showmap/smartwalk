@@ -374,7 +374,6 @@
     <Compile Include="Utils\ScrollToHideUIManager.cs" />
     <Compile Include="Views\Common\Base\NavBarViewBase.cs" />
     <Compile Include="Controls\TransparentNavBar.cs" />
-    <Compile Include="Views\OrgEventView\OrgEventSearchDisplayController.cs" />
     <Compile Include="Views\Common\Base\Cells\CollectionCellBase.cs" />
     <Compile Include="Views\Common\Base\Cells\TableCellBase.cs" />
     <Compile Include="Views\Common\Base\Cells\TableHeaderBase.cs" />
