@@ -1,6 +1,7 @@
 ﻿using System;
 using Foundation;
 using UIKit;
+using CoreGraphics;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -52,6 +53,17 @@ namespace SmartWalk.Client.iOS.Utils
         public static UIColor GetDarker(this UIColor color, float amount = 0.25f)
         {
             return color.GetColorWithBrightness(1 - amount);
+        }
+
+        public static UIImage ToImage(this UIColor color)
+        {
+            UIGraphics.BeginImageContextWithOptions(new CGSize(1, 1), false, 0);
+            color.SetFill();
+            UIGraphics.RectFill(new CGRect(0, 0, 1, 1));
+            var image = UIGraphics.GetImageFromCurrentImageContext();
+            UIGraphics.EndImageContext();
+
+            return image;
         }
 
         private static UIColor GetColorWithBrightness(this UIColor color, float amount)

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.ViewModels;
-using SmartWalk.Shared.DataContracts;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Constants;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
@@ -15,6 +13,8 @@ using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
+using SmartWalk.Shared.DataContracts;
+using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -39,13 +39,15 @@ namespace SmartWalk.Client.Core.ViewModels
         private string _currentFullscreenImage;
 
         private Parameters _parameters;
-        private bool _isGroupedByLocation = true;
         private SortBy _sortBy = SortBy.Name;
         private Venue[] _searchResults;
         private Dictionary<SearchKey, string> _searchableTexts;
         private Venue[] _allShows;
         private Venue[] _allSearchShows;
+        private OrgEventViewMode? _beforeSearchMode;
 
+        private MvxCommand _beginSearchCommand;
+        private MvxCommand _endSearchCommand;
         private MvxCommand<string> _searchCommand;
         private MvxCommand<Show> _expandCollapseShowCommand;
         private MvxCommand<OrgEventViewMode?> _switchModeCommand;
@@ -57,7 +59,6 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Venue> _selectVenueOnMapCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
         private MvxCommand<Contact> _navigateWebLinkCommand;
-        private MvxCommand<bool?> _groupByLocationCommand;
         private MvxCommand<SortBy> _sortByCommand;
         private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand _switchMapTypeCommand;
@@ -106,8 +107,8 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _mode = value;
                     RaisePropertyChanged(() => Mode);
-
-                    IsGroupedByLocation = _mode != OrgEventViewMode.List;
+                    RaisePropertyChanged(() => ListItems);
+                    RaisePropertyChanged(() => SearchListItems);
 
                     if (ScrollToShow != null && ExpandedShow != null)
                     {
@@ -288,17 +289,9 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             get
             {
-                return _isGroupedByLocation;
-            }
-            private set
-            {
-                if (_isGroupedByLocation != value)
-                {
-                    _isGroupedByLocation = value;
-                    RaisePropertyChanged(() => IsGroupedByLocation);
-                    RaisePropertyChanged(() => ListItems);
-                    RaisePropertyChanged(() => SearchListItems);
-                }
+                return Mode != OrgEventViewMode.List || 
+                    (IsInSearch && _beforeSearchMode.HasValue && 
+                        _beforeSearchMode.Value != OrgEventViewMode.List);
             }
         }
 
@@ -319,14 +312,78 @@ namespace SmartWalk.Client.Core.ViewModels
                         _allShows = GetAllShowsSortBy(_allShows[0].Shows);
                     }
 
+                    if (_allSearchShows != null)
+                    {
+                        _allSearchShows = GetAllShowsSortBy(_allSearchShows[0].Shows);
+                    }
+
                     RaisePropertyChanged(() => SortBy);
                     RaisePropertyChanged(() => ListItems);
+                    RaisePropertyChanged(() => SearchListItems);
 
                     if (ScrollToShow != null && ExpandedShow != null)
                     {
                         ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
                     }
                 }
+            }
+        }
+
+        public bool IsInSearch { get; private set; }
+
+        public ICommand BeginSearchCommand
+        {
+            get
+            {
+                if (_beginSearchCommand == null)
+                {
+                    _beginSearchCommand = new MvxCommand(() => 
+                        {
+                            IsInSearch = true;
+
+                            if (Mode != OrgEventViewMode.List)
+                            {
+                                _beforeSearchMode = Mode;
+                                Mode = OrgEventViewMode.List;
+                            }
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelBeginSearch);
+                        },
+                        () => !IsInSearch && SearchableTexts != null);
+                }
+
+                return _beginSearchCommand;
+            }
+        }
+
+        public ICommand EndSearchCommand
+        {
+            get
+            {
+                if (_endSearchCommand == null)
+                {
+                    _endSearchCommand = new MvxCommand(() => 
+                        {
+                            if (_beforeSearchMode.HasValue)
+                            {
+                                Mode = _beforeSearchMode.Value;
+                                _beforeSearchMode = null;
+                            }
+
+                            IsInSearch = false;
+
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelEndSearch);
+                        },
+                        () => IsInSearch);
+                }
+
+                return _endSearchCommand;
             }
         }
 
@@ -736,31 +793,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _showFullscreenImageCommand;
-            }
-        }
-
-        [Obsolete]
-        public ICommand GroupByLocationCommand
-        {
-            get
-            {
-                if (_groupByLocationCommand == null)
-                {
-                    _groupByLocationCommand = new MvxCommand<bool?>(
-                        groupBy => { 
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                (bool)groupBy 
-                                    ? Analytics.ActionLabelTurnOnGroupByLocation
-                                    : Analytics.ActionLabelTurnOffGroupByLocation);
-
-                            IsGroupedByLocation = (bool)groupBy;
-                        },
-                        groupBy => groupBy.HasValue);
-                }
-
-                return _groupByLocationCommand;
             }
         }
 

@@ -9,8 +9,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         private readonly OrgEventViewModel _viewModel;
 
-        private OrgEventViewMode? _previousMode;
-
         public event EventHandler BeginSearch;
         public event EventHandler EndSearch;
 
@@ -34,24 +32,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public override void WillBeginSearch(UISearchDisplayController controller)
         {
             NavBarManager.Instance.SetHidden(true, false);
+            NavBarManager.Instance.SetNativeHidden(false, false);
+
+            controller.SearchBar.SetActiveStyle();
 
             if (BeginSearch != null)
             {
                 BeginSearch(this, EventArgs.Empty);
             }
 
-            if (_viewModel.Mode != OrgEventViewMode.List &&
-                _viewModel.SwitchModeCommand.CanExecute(OrgEventViewMode.List))
+            if (_viewModel.BeginSearchCommand.CanExecute(null))
             {
-                _previousMode = _viewModel.Mode;
-                _viewModel.SwitchModeCommand.Execute(OrgEventViewMode.List);
+                _viewModel.BeginSearchCommand.Execute(null);
             }
-
-            controller.SearchBar.SetActiveStyle();
-        }
-
-        public override void WillEndSearch(UISearchDisplayController controller)
-        {
         }
 
         public override void DidEndSearch(UISearchDisplayController controller)
@@ -61,16 +54,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 EndSearch(this, EventArgs.Empty);
             }
 
-            controller.SearchBar.SetPassiveStyle();
-
-            if (_previousMode.HasValue &&
-                _viewModel.SwitchModeCommand.CanExecute(_previousMode.Value))
+            if (_viewModel.EndSearchCommand.CanExecute(null))
             {
-                _viewModel.SwitchModeCommand.Execute(_previousMode.Value);
-                _previousMode = null;
+                _viewModel.EndSearchCommand.Execute(null);
             }
 
-            NavBarManager.Instance.SetHidden(false, true);
+            controller.SearchBar.SetPassiveStyle();
+
+            NavBarManager.Instance.SetNativeHidden(true, false);
+            NavBarManager.Instance.SetHidden(false, false);
+            NavBarManager.Instance.RefreshContent(false);
         }
 
         public override void WillShowSearchResults(UISearchDisplayController controller, UITableView tableView)
@@ -84,6 +77,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
+        }
+    }
+
+    public static class OrgEventSearchBarExtensions
+    {
+        public static void SetPassiveStyle(this UISearchBar searchBar)
+        {
+            searchBar.SearchBarStyle = UISearchBarStyle.Minimal;
+        }
+
+        public static void SetActiveStyle(this UISearchBar searchBar)
+        {
+            searchBar.SearchBarStyle = UISearchBarStyle.Prominent;
         }
     }
 }

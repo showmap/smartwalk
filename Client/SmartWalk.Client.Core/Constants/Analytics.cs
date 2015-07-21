@@ -8,6 +8,8 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionPull = "pull";
 
         public static readonly string ActionLabelRefresh = "refresh";
+        public static readonly string ActionLabelBeginSearch = "search-begin";
+        public static readonly string ActionLabelEndSearch = "switch-end";
         public static readonly string ActionLabelSearchInEvent = "search-in-event";
         public static readonly string ActionLabelCallPhone = "call-phone";
         public static readonly string ActionLabelComposeEmail = "compose-email";
@@ -32,8 +34,6 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionLabelDeselectVenueOnMap = "deselect-venue-on-map";
         public static readonly string ActionLabelSortShowsByTime = "sort-shows-by-time";
         public static readonly string ActionLabelSortShowsByTitle = "sort-shows-by-title";
-        public static readonly string ActionLabelTurnOnGroupByLocation = "turn-on-groupbylocation";
-        public static readonly string ActionLabelTurnOffGroupByLocation = "turn-off-groupbylocation";
         public static readonly string ActionLabelCreateEvent = "create-event";
         public static readonly string ActionLabelSaveEvent = "save-event";
         public static readonly string ActionLabelCancelEvent = "cancel-event";

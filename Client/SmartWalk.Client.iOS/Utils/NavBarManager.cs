@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UIKit;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -129,19 +128,26 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
+        public void SetNativeHidden(bool hidden, bool animated)
+        {
+            NavController.SetNavigationBarHidden(hidden, animated);
+        }
+
         public void SetTransparentType(SemiTransparentType transparentType, bool animated)
         {
-            _navBar.SetTransparent(transparentType != SemiTransparentType.None, animated);
             _navBar.ItemSemiTransparentType = transparentType;
+            _navBar.SetTransparent(transparentType != SemiTransparentType.None, animated);
+        }
+
+        public void RefreshContent(bool animated)
+        {
+            var item = NavBar.PopNavigationItem(animated);
+            NavBar.PushNavigationItem(item, animated);
         }
 
         private void Initialize()
         {
-            _navBar = new TransparentNavBar
-                {
-                    IsTransparent = true,
-                };
-
+            _navBar = new TransparentNavBar { IsTransparent = true };
             _navBar.TranslatesAutoresizingMaskIntoConstraints = false;
         }
 

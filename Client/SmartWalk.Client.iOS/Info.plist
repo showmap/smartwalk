@@ -15,27 +15,6 @@
 	<string>me.smartwalk.ios</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleBlackOpaque</string>
-	<key>UIStatusBarTintParameters</key>
-	<dict>
-		<key>UINavigationBar</key>
-		<dict>
-			<key>Style</key>
-			<string>UIBarStyleDefault</string>
-			<key>Translucent</key>
-			<false/>
-			<key>TintColor</key>
-			<dict>
-				<key>Red</key>
-				<real>0.2</real>
-				<key>Green</key>
-				<real>0.2</real>
-				<key>Blue</key>
-				<real>0.2</real>
-			</dict>
-		</dict>
-	</dict>
 	<key>CFBundleShortVersionString</key>
 	<string>1.7</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>

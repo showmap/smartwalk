@@ -129,7 +129,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override UIStatusBarStyle PreferredStatusBarStyle()
         {
-            if (CurrentMode == OrgEventViewMode.List && HasData)
+            if (CurrentMode == OrgEventViewMode.List && HasData && !IsInSearch)
             {
                 return UIStatusBarStyle.LightContent;
             }
@@ -139,7 +139,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override bool PrefersStatusBarHidden()
         {
-            return IsInSearch;
+            return false;
         }
 
         protected override void SetNavBarHidden(bool hidden, bool animated)
@@ -172,7 +172,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     MapToListSettingsConstraint.Constant = 0;
                     ListSettingsHeightConstraint.Constant = 0;
-                    ListSettingsToTableConstraint.Constant = -VenuesAndShowsTableView.ContentInset.Top;
+                    ListSettingsToTableConstraint.Constant = 0;
                     break;
 
                 case OrgEventViewMode.Map:
@@ -431,8 +431,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             VenuesMapView.TintColor = ThemeColors.Metadata;
             VenuesMapView.FixLegalLabel();
 
-            SearchBar.SetPassiveStyle();
+            SearchBar.BarStyle = UIBarStyle.Default;
+            SearchBar.TintColor = ThemeColors.BorderLight;
+            SearchBar.BarTintColor = null;
             SearchBar.BackgroundColor = ThemeColors.PanelBackgroundAlpha;
+            SearchBar.SetPassiveStyle();
         }
 
         private void OnModeButtonClicked(object sender, EventArgs e)
@@ -470,8 +473,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 new OrgEventSearchDisplayController(SearchBar, this);
 
             var searchDelegate = new OrgEventSearchDelegate(ViewModel);
-            searchDelegate.BeginSearch += (sender, e) => UpdateViewState(true);
-            searchDelegate.EndSearch += (sender, e) => UpdateViewState(true);
+            searchDelegate.BeginSearch += (sender, e) =>
+                {   
+                    EdgesForExtendedLayout = UIRectEdge.Top;
+                    UpdateViewState(false);
+                };
+            searchDelegate.EndSearch += (sender, e) =>
+                {
+                    EdgesForExtendedLayout = UIRectEdge.None;
+                    UpdateViewState(false);
+                };
             _searchDisplayController.Delegate = searchDelegate;
             
             var searchTableSource = new OrgEventTableSource(
@@ -806,7 +817,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateTableViewInset()
         {
-            if (HasData && !IsInSearch && ViewModel.Mode == OrgEventViewMode.List)
+            if (HasData && ViewModel.Mode == OrgEventViewMode.List)
             {
                 var topInset = NavBarManager.NavBarHeight + 
                     (ListSettingsContainer.Hidden ? 0 : ListSettingsView.DefaultHeight);
@@ -859,25 +870,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     showCells[index - 1].SetIsBeforeExpanded(isExpanded, true);
                 }
             }
-        }
-    }
-
-    public static class OrgEventSearchBarExtensions
-    {
-        public static void SetPassiveStyle(this UISearchBar searchBar)
-        {
-            searchBar.BarStyle = UIBarStyle.Default;
-            searchBar.TintColor = ThemeColors.BorderLight;
-            searchBar.BarTintColor = null;
-            searchBar.SearchBarStyle = UISearchBarStyle.Minimal;
-        }
-
-        public static void SetActiveStyle(this UISearchBar searchBar)
-        {
-            searchBar.BarStyle = UIBarStyle.Default;
-            searchBar.TintColor = ThemeColors.BorderLight;
-            searchBar.BarTintColor = ThemeColors.HeaderBackground;
-            searchBar.SearchBarStyle = UISearchBarStyle.Prominent;
         }
     }
 }
