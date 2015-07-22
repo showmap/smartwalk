@@ -1,11 +1,11 @@
 using System.Linq;
-using Foundation;
-using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
+using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.EntityCell;
 using SmartWalk.Shared.Utils;
-using SmartWalk.Client.iOS.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -21,6 +21,8 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 SetDialogViewFullscreenFrame(_contactsView);
             }
+
+            SetNavBarTransparent(SemiTransparentType.Dark, animated);
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)

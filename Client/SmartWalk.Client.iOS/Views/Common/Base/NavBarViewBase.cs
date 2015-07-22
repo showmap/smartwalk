@@ -33,7 +33,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             base.ViewWillAppear(animated);
 
             SetNavBarHidden(false, animated);
-            SetNavBarTransparent(SemiTransparentType.Dark, animated);
+            SetNavBarTransparent(SemiTransparentType.Light, animated);
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -88,7 +88,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 _backButton = ButtonBarUtil.Create(
                     ThemeIcons.Back, 
                     ThemeIcons.BackLandscape, 
-                    SemiTransparentType.Dark);
+                    SemiTransparentType.Light);
                 _backButton.TouchUpInside += OnNavigationBackClick;
                 _backButton.UpdateState();
 
@@ -104,7 +104,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 _moreButton = ButtonBarUtil.Create(
                     ThemeIcons.More, 
                     ThemeIcons.MoreLandscape, 
-                    SemiTransparentType.Dark);
+                    SemiTransparentType.Light);
                 _moreButton.TouchUpInside += OnMoreButtonClicked;
 
                 var moreBarButton = new UIBarButtonItem(_moreButton);

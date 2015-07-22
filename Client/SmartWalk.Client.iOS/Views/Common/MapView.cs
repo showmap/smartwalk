@@ -42,13 +42,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             SelectAnnotation();
         }
 
-        public override void ViewWillAppear(bool animated)
-        {
-            base.ViewWillAppear(animated);
-
-            SetNavBarTransparent(SemiTransparentType.Dark, animated);
-        }
-
         protected override void OnInitializingActionSheet(List<string> titles)
         {
             if (ViewModel.ShowDirectionsCommand.CanExecute(null))

@@ -67,6 +67,11 @@ namespace SmartWalk.Client.iOS.Utils
             get { return _navBar.IsTransparent; }
         }
 
+        public SemiTransparentType SemiTransparentType
+        {
+            get { return _navBar.ItemSemiTransparentType; }
+        }
+
         private NSLayoutConstraint[] NavBarConstraints
         {
             get

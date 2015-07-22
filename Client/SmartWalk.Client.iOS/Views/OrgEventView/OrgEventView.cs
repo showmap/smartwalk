@@ -431,7 +431,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.OnInitializeNavBarItems(navBarItems);
 
             // Day Button
-            _dayButton = ButtonBarUtil.Create(SemiTransparentType.Dark);
+            _dayButton = ButtonBarUtil.Create(SemiTransparentType.Light);
             _dayButton.LineBreakMode = UILineBreakMode.WordWrap;
             _dayButton.TouchUpInside += OnDayButtonClicked;
 
@@ -444,7 +444,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _modeButton = ButtonBarUtil.Create(
                 ThemeIcons.List, 
                 ThemeIcons.ListLandscape, 
-                SemiTransparentType.Dark);
+                SemiTransparentType.Light);
             _modeButton.TouchUpInside += OnModeButtonClicked;
 
             var modeButtonItem = new UIBarButtonItem();
@@ -468,7 +468,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
-            MapFullscreenButton.SemiTransparentType = SemiTransparentType.Dark;
+            MapFullscreenButton.SemiTransparentType = SemiTransparentType.Light;
             MapFullscreenButton.UpdateState();
 
             VenuesMapView.TintColor = ThemeColors.Metadata;
@@ -832,7 +832,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (IsNavBarTransparent)
             {
-                SetNavBarTransparent(SemiTransparentType.Dark, animated);
+                SetNavBarTransparent(SemiTransparentType.Light, animated);
             }
             else
             {
@@ -843,7 +843,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateDayButtonState()
         {
             var dateString = ViewModel.OrgEvent.GetOrgEventDateString(
-                ThemeColors.ContentDarkText,
+                NavBarManager.Instance.SemiTransparentType == SemiTransparentType.None
+                    ? ThemeColors.ContentDarkText
+                    : ThemeColors.ContentLightText,
                 ViewModel.CurrentDay,
                 ScreenUtil.IsVerticalOrientation);
 

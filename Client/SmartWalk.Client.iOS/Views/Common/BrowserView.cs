@@ -244,21 +244,21 @@ namespace SmartWalk.Client.iOS.Views.Common
             var button = ButtonBarUtil.Create(
                 ThemeIcons.Back, 
                 ThemeIcons.BackLandscape, 
-                SemiTransparentType.Dark);
+                SemiTransparentType.Light);
             button.TouchUpInside += OnBackButtonClick;
             BackButton.CustomView = button;
 
             button = ButtonBarUtil.Create(
                 ThemeIcons.Forward, 
                 ThemeIcons.ForwardLandscape, 
-                SemiTransparentType.Dark);
+                SemiTransparentType.Light);
             button.TouchUpInside += OnForwardButtonClick;
             ForwardButton.CustomView = button;
 
             button = ButtonBarUtil.Create(
                 ThemeIcons.Refresh, 
                 ThemeIcons.RefreshLandscape, 
-                SemiTransparentType.Dark);
+                SemiTransparentType.Light);
             button.TouchUpInside += OnRefreshButtonClick;
             RefreshButton.CustomView = button;
         }

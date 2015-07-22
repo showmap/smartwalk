@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using Cirrious.MvvmCross.Binding.BindingContext;
-using UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base;
+using SmartWalk.Shared.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgView
 {

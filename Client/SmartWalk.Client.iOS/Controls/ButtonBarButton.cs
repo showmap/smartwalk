@@ -158,6 +158,11 @@ namespace SmartWalk.Client.iOS.Controls
             _background = new Circle {
                 UserInteractionEnabled = false
             };
+
+            _background.Layer.ShadowColor = ThemeColors.ContentDarkBackground.CGColor;
+            _background.Layer.ShadowOpacity = 0.15f;
+            _background.Layer.ShadowOffset = new CGSize(2, 2);
+
             Add(_background);
 
             VerticalIcon = verticalIcon;

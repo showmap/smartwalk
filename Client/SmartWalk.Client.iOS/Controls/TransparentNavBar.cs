@@ -1,7 +1,6 @@
 using System;
 using CoreGraphics;
 using System.Linq;
-using Foundation;
 using UIKit;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
@@ -11,7 +10,7 @@ namespace SmartWalk.Client.iOS.Controls
     public class TransparentNavBar : UINavigationBar
     {
         private bool _isTransparent;
-        private SemiTransparentType _itemSemiTransparentType = SemiTransparentType.Dark;
+        private SemiTransparentType _itemSemiTransparentType = SemiTransparentType.Light;
 
         public TransparentNavBar()
         {
