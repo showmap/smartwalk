@@ -110,7 +110,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
 
-                    if (ScrollToShow != null && ExpandedShow != null)
+                    if (ScrollToShow != null && !IsInSearch && ExpandedShow != null)
                     {
                         ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
                     }
@@ -321,7 +321,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
 
-                    if (ScrollToShow != null && ExpandedShow != null)
+                    if (ScrollToShow != null && !IsInSearch && ExpandedShow != null)
                     {
                         ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
                     }
@@ -374,6 +374,7 @@ namespace SmartWalk.Client.Core.ViewModels
                             }
 
                             IsInSearch = false;
+                            SearchResults = null;
 
                             _analyticsService.SendEvent(
                                 Analytics.CategoryUI,
@@ -438,7 +439,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 ? searchResults.ToArray() 
                                 : null;
                         },
-                        query => SearchableTexts != null);
+                        query => IsInSearch && SearchableTexts != null);
                 }
 
                 return _searchCommand;

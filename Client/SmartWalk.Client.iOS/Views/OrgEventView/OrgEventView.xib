@@ -20,6 +20,8 @@
                 <outlet property="ProgressViewContainer" destination="45" id="57"/>
                 <outlet property="ProgressViewTopConstraint" destination="53" id="jLH-7i-74i"/>
                 <outlet property="SearchBar" destination="20F-Ip-Ciy" id="tw0-tu-iom"/>
+                <outlet property="SearchTableTopConstraint" destination="k4E-D8-PGB" id="bIS-5q-tyl"/>
+                <outlet property="SearchTableView" destination="I5X-mn-S14" id="jys-d2-ocs"/>
                 <outlet property="TableHeightConstraint" destination="Dld-OR-tiz" id="PGV-3n-4Fj"/>
                 <outlet property="VenuesAndShowsTableView" destination="19" id="25"/>
                 <outlet property="VenuesMapView" destination="14" id="26"/>
@@ -31,7 +33,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="19" userLabel="TableView">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="19">
                     <rect key="frame" x="0.0" y="234" width="320" height="246"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -51,7 +53,7 @@
                         <constraint firstAttribute="height" constant="34" id="5nP-Pp-OPx"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="MapView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="Map View">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
                     <subviews>
                         <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="14" customClass="CustomMKMapView">
@@ -90,6 +92,11 @@
                         <constraint firstAttribute="trailing" secondItem="wMm-c6-vk5" secondAttribute="trailing" constant="7" id="yYM-1u-4F8"/>
                     </constraints>
                 </view>
+                <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="I5X-mn-S14" userLabel="Search Table View">
+                    <rect key="frame" x="0.0" y="278" width="320" height="202"/>
+                    <color key="backgroundColor" red="0.5" green="0.5" blue="0.5" alpha="0.25" colorSpace="calibratedRGB"/>
+                    <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                </tableView>
                 <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="45" userLabel="Progress View">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -103,13 +110,17 @@
                 <constraint firstItem="45" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="55"/>
                 <constraint firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="0xY-e0-KvA"/>
                 <constraint firstItem="4" firstAttribute="top" secondItem="1" secondAttribute="top" id="6nm-IZ-IBN"/>
+                <constraint firstAttribute="bottom" secondItem="I5X-mn-S14" secondAttribute="bottom" id="EWw-YM-Fu1"/>
+                <constraint firstItem="I5X-mn-S14" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="LDQ-ee-RpS"/>
                 <constraint firstItem="gCQ-hX-bJo" firstAttribute="top" secondItem="4" secondAttribute="bottom" id="MXn-UU-gPI"/>
                 <constraint firstAttribute="bottom" secondItem="19" secondAttribute="bottom" id="OWn-XE-Zs1"/>
                 <constraint firstItem="19" firstAttribute="top" secondItem="gCQ-hX-bJo" secondAttribute="bottom" id="Te7-XJ-0ES"/>
                 <constraint firstAttribute="trailing" secondItem="19" secondAttribute="trailing" id="Ymj-AM-ibH"/>
                 <constraint firstItem="gCQ-hX-bJo" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="bQ5-aC-uZc"/>
                 <constraint firstAttribute="trailing" secondItem="gCQ-hX-bJo" secondAttribute="trailing" id="dZI-en-b6L"/>
+                <constraint firstItem="19" firstAttribute="top" secondItem="I5X-mn-S14" secondAttribute="top" constant="-44" id="k4E-D8-PGB"/>
                 <constraint firstItem="4" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="n2i-EX-yuC"/>
+                <constraint firstAttribute="trailing" secondItem="I5X-mn-S14" secondAttribute="trailing" id="qqO-vL-Ce3"/>
                 <constraint firstItem="19" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="vft-IO-V4r"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

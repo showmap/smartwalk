@@ -25,6 +25,7 @@
         public const string MoreInformation = "More information";
         public const string OrderBy = "Order by";
         public const string Favorites = "Favorites";
+        public const string Search = "Search";
 
         public const string Error = "Error";
         public const string NetworkError = "Network Error";

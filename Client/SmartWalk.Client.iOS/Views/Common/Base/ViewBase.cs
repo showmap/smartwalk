@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Cirrious.CrossCore.Core;
-using Foundation;
 using UIKit;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
@@ -188,7 +188,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeStyle()
         {
-            View.BackgroundColor = UIColor.White;
+            View.BackgroundColor = ThemeColors.ContentLightBackground;
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

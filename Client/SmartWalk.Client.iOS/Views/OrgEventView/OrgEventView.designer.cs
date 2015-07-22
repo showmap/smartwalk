@@ -52,6 +52,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.UISearchBar SearchBar { get; set; }
 
 		[Outlet]
+		UIKit.NSLayoutConstraint SearchTableTopConstraint { get; set; }
+
+		[Outlet]
+		UIKit.UITableView SearchTableView { get; set; }
+
+		[Outlet]
 		UIKit.NSLayoutConstraint TableHeightConstraint { get; set; }
 
 		[Outlet]
@@ -62,9 +68,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Action ("OnMapFullscreenTouchUpInside:")]
 		partial void OnMapFullscreenTouchUpInside (Foundation.NSObject sender);
-
-		[Action ("OnSortBySegmentsValueChanged:")]
-		partial void OnSortBySegmentsValueChanged (UIKit.UISegmentedControl sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -128,9 +131,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				ProgressViewTopConstraint = null;
 			}
 
+			if (SearchBar != null) {
+				SearchBar.Dispose ();
+				SearchBar = null;
+			}
+
+			if (SearchTableView != null) {
+				SearchTableView.Dispose ();
+				SearchTableView = null;
+			}
+
 			if (TableHeightConstraint != null) {
 				TableHeightConstraint.Dispose ();
 				TableHeightConstraint = null;
+			}
+
+			if (SearchTableTopConstraint != null) {
+				SearchTableTopConstraint.Dispose ();
+				SearchTableTopConstraint = null;
 			}
 
 			if (VenuesAndShowsTableView != null) {
@@ -141,11 +159,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (VenuesMapView != null) {
 				VenuesMapView.Dispose ();
 				VenuesMapView = null;
-			}
-
-			if (SearchBar != null) {
-				SearchBar.Dispose ();
-				SearchBar = null;
 			}
 		}
 	}

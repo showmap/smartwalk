@@ -139,12 +139,6 @@ namespace SmartWalk.Client.iOS.Utils
             _navBar.SetTransparent(transparentType != SemiTransparentType.None, animated);
         }
 
-        public void RefreshContent(bool animated)
-        {
-            var item = NavBar.PopNavigationItem(animated);
-            NavBar.PushNavigationItem(item, animated);
-        }
-
         private void Initialize()
         {
             _navBar = new TransparentNavBar { IsTransparent = true };

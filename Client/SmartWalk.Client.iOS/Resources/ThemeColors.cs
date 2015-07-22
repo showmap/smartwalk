@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIColor BorderDark = Twilight;
 
         public static readonly UIColor HeaderBackground = UIColor.FromRGB(100, 31, 174);
-        public static readonly UIColor PanelBackground = UIColor.FromRGB(251, 251, 251);
+        public static readonly UIColor PanelBackground = UIColor.FromRGB(248, 248, 248);
         public static readonly UIColor SubPanelBackground = UIColor.FromRGB(255, 248, 218);
 
         public static readonly UIColor Action = UIColor.FromRGB(143, 44, 250);
