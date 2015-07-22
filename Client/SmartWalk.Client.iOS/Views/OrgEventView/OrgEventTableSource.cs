@@ -20,11 +20,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly ScrollToHideUIManager _scrollToHideManager;
 
         public OrgEventTableSource(UITableView tableView, 
-            OrgEventViewModel viewModel, ScrollToHideUIManager scrollToHideManager = null)
+            OrgEventViewModel viewModel, 
+            ScrollToHideUIManager scrollToHideManager = null) : base(tableView)
         {
             _viewModel = viewModel;
-            TableView = tableView;
             _scrollToHideManager = scrollToHideManager;
+
+            tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
+            tableView.RegisterClassForHeaderFooterViewReuse(typeof(GroupHeaderView), GroupHeaderView.Key);
+            tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
+            tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
         private bool ShowVenueGroupHeader
@@ -249,17 +254,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return cell;
         }
 
-        protected override void OnTableViewReset(UITableView previousTableView, UITableView tableView)
-        {
-            if (tableView != null)
-            {
-                tableView.RegisterClassForHeaderFooterViewReuse(typeof(VenueHeaderView), VenueHeaderView.Key);
-                tableView.RegisterClassForHeaderFooterViewReuse(typeof(GroupHeaderView), GroupHeaderView.Key);
-                tableView.RegisterClassForCellReuse(typeof(DayHeaderCell), DayHeaderCell.Key);
-                tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -314,33 +308,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     /// </summary>
     public abstract class HiddenHeaderTableSource<T> : UITableViewSource, IListViewSource
     {
-        private UITableView _tableView;
+        private readonly UITableView _tableView;
         private T[] _itemsSource;
         private bool _isTouched;
 
-        protected HiddenHeaderTableSource()
+        protected HiddenHeaderTableSource(UITableView tableView)
         {
+            _tableView = tableView;
             IsAutohidingEnabled = true;
         }
 
         public bool IsAutohidingEnabled { get; set; }
-
-        public UITableView TableView
-        {
-            get
-            {
-                return _tableView;
-            }
-            set
-            {
-                if (_tableView != value)
-                {
-                    var previousTable = _tableView;
-                    _tableView = value;
-                    OnTableViewReset(previousTable, _tableView);
-                }
-            }
-        }
 
         public T[] ItemsSource
         {
@@ -367,8 +345,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             get
             {
-                return TableView.TableHeaderView == null ||
-                    TableView.ActualContentOffset() >= HeaderHeight;
+                return _tableView.TableHeaderView == null ||
+                    _tableView.ActualContentOffset() >= HeaderHeight;
             }
         }
 
@@ -376,21 +354,21 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             get
             {
-                return TableView != null && 
-                        TableView.TableHeaderView != null
-                    ? (float)TableView.TableHeaderView.Frame.Height 
+                return _tableView != null && 
+                    _tableView.TableHeaderView != null
+                    ? (float)_tableView.TableHeaderView.Frame.Height 
                     : 0; 
             }
         }
 
         public virtual void ReloadTableData()
         {
-            TableView.ReloadData();
+            _tableView.ReloadData();
 
             if (IsAutohidingEnabled && !IsHeaderViewHidden)
             {
                 ScrollUtil.ScrollOutHeaderAfterReload(
-                    TableView, 
+                    _tableView, 
                     HeaderHeight, 
                     this, 
                     _isTouched);
@@ -402,7 +380,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (IsAutohidingEnabled)
             {
                 ScrollUtil.ScrollOutHeader(
-                    TableView, 
+                    _tableView, 
                     HeaderHeight, 
                     _isTouched || animated);
             }
@@ -429,21 +407,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             return 0;
         }
-
-        protected virtual void OnTableViewReset(UITableView previousTableView, UITableView tableView)
-        {
-        }
     }
 
     public class OrgEventScrollToHideUIManager : ScrollToHideUIManager
     {
-        private readonly UIScrollView _scrollView;
+        private readonly UITableView _tableView;
         private readonly UIView _listSettingsView;
 
-        public OrgEventScrollToHideUIManager(UIScrollView scrollView, UIView listSettingsView) : base(scrollView)
+        public OrgEventScrollToHideUIManager(UITableView tableView, UIView listSettingsView) 
+            : base(tableView, tableView.TableHeaderView.Frame.Height)
         {
             IsActive = true;
-            _scrollView = scrollView;
+            _tableView = tableView;
             _listSettingsView = listSettingsView;
         }
 
@@ -453,7 +428,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (IsActive)
             {
-                _scrollView.ContentInset = new UIEdgeInsets(
+                _tableView.ContentInset = new UIEdgeInsets(
                     NavBarManager.NavBarHeight, 0, 0, 0);
                 _listSettingsView.SetHidden(true, false);
             }
@@ -462,8 +437,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         protected override void OnShowUI()
         {
             if (IsActive)
-            {
-                _scrollView.ContentInset = new UIEdgeInsets(
+            { 
+                _tableView.ContentInset = new UIEdgeInsets(
                     NavBarManager.NavBarHeight + ListSettingsView.DefaultHeight, 0, 0, 0);
                 _listSettingsView.SetHidden(false, false);
             }

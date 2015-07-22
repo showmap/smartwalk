@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using UIKit;
 using SmartWalk.Shared.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -9,14 +9,27 @@ namespace SmartWalk.Client.iOS.Utils
     {
         private readonly UIScrollView _scrollView;
         private readonly double? _refreshControlHeight;
+        private readonly double _topGap;
 
         private double? _startOffsetY;
         private double? _lastOffsetY;
+        private int _lastActionDirection;
         private bool _isDragging;
 
-        public ScrollToHideUIManager(UIScrollView scrollView)
+        private nfloat OffsetY
+        {
+            get { return _scrollView.ContentOffset.Y; }
+        }
+
+        private bool AtTop
+        {
+            get { return Math.Abs(_scrollView.ActualContentOffset() - _topGap) < 2; }
+        }
+
+        public ScrollToHideUIManager(UIScrollView scrollView, double topGap = 0)
         {
             _scrollView = scrollView;
+            _topGap = topGap;
 
             var refreshControl = _scrollView.Subviews
                 .OfType<UIRefreshControl>()
@@ -29,7 +42,7 @@ namespace SmartWalk.Client.iOS.Utils
         public void DraggingStarted()
         {
             _isDragging = true;
-            _startOffsetY = _scrollView.ContentOffset.Y;
+            _startOffsetY = OffsetY;
         }
 
         public void DraggingEnded()
@@ -37,6 +50,7 @@ namespace SmartWalk.Client.iOS.Utils
             _isDragging = false;
             _startOffsetY = null;
             _lastOffsetY = null;
+            _lastActionDirection = 0;
         }
 
         public void Scrolled()
@@ -44,22 +58,34 @@ namespace SmartWalk.Client.iOS.Utils
             // only if it's being dragged by user
             if (_isDragging && !IsCausedByRefreshControl())
             {
-                var delta = GetTresholdDelta();
-                if (delta == null || delta > 50)
-                {
-                    _startOffsetY = null; // if show/hide started, forget about delta
+                var direction = _lastOffsetY.HasValue 
+                    ? Math.Sign(_lastOffsetY.Value - OffsetY)
+                    : 0;
 
-                    if (_lastOffsetY > _scrollView.ContentOffset.Y)
+                var delta = _startOffsetY.HasValue 
+                    ? _startOffsetY.Value - OffsetY 
+                    : (double?)null;
+                
+                if (direction > 0 ? delta > 50 : delta < -50)
+                {
+                    _startOffsetY = OffsetY;
+
+                    if (direction != _lastActionDirection)
                     {
-                        OnShowUI();
-                    }
-                    else if (_lastOffsetY < _scrollView.ContentOffset.Y)
-                    {
-                        OnHideUI();
+                        _lastActionDirection = direction;
+
+                        if (_lastOffsetY > OffsetY)
+                        {
+                            OnShowUI();
+                        }
+                        else if (_lastOffsetY < OffsetY)
+                        {
+                            OnHideUI();
+                        }
                     }
                 }
 
-                _lastOffsetY = _scrollView.ContentOffset.Y;
+                _lastOffsetY = OffsetY;
             }
         }
 
@@ -70,7 +96,7 @@ namespace SmartWalk.Client.iOS.Utils
 
         public void ScrollFinished()
         {
-            if (_scrollView.ContentOffset.Y.EqualsNF(0))
+            if (AtTop)
             {
                 OnShowUI();
             }
@@ -78,6 +104,7 @@ namespace SmartWalk.Client.iOS.Utils
 
         public void Reset()
         {
+            DraggingEnded();
             OnShowUI();
         }
 
@@ -91,19 +118,11 @@ namespace SmartWalk.Client.iOS.Utils
             NavBarManager.Instance.SetHidden(false, true);
         }
 
-        // Gets a little treshold delta before show/hide UI is starting
-        private double? GetTresholdDelta()
-        {
-            return _startOffsetY.HasValue
-                ? Math.Abs(Math.Abs(_startOffsetY.Value) - Math.Abs(_scrollView.ContentOffset.Y))
-                : (double?)null;
-        }
-
         // HACK: skip Scrolled() caused by Pull-To-Refresh when offset.Y == refreshControl.Height
         private bool IsCausedByRefreshControl()
         {
             return _refreshControlHeight.HasValue && 
-                _refreshControlHeight.Value.EqualsF(Math.Abs(_scrollView.ContentOffset.Y));
+                _refreshControlHeight.Value.EqualsF(Math.Abs(OffsetY));
         }
     }
 }

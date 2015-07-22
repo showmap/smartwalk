@@ -18,7 +18,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
         private readonly VenueViewModel _viewModel;
         private readonly ScrollToHideUIManager _scrollToHideManager;
 
-        public VenueTableSource(UITableView tableView, VenueViewModel viewModel)
+        public VenueTableSource(UITableView tableView, VenueViewModel viewModel, 
+            ScrollToHideUIManager scrollToHideManager)
             : base(tableView)
         {
             _viewModel = viewModel;
@@ -28,7 +29,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
             tableView.RegisterNibForCellReuse(NextVenueCell.Nib, NextVenueCell.Key);
 
-            _scrollToHideManager = new ScrollToHideUIManager(tableView);
+            _scrollToHideManager = scrollToHideManager;
         }
 
         public GroupContainer[] GroupItemsSource

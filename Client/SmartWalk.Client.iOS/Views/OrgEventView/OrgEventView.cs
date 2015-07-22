@@ -341,18 +341,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.OnViewModelRefreshed(hasData, pullToRefresh);
 
             UpdateTableViewInset();
-        }
 
-        protected override void ScrollViewToTop(bool animated)
-        {
-            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
-            if (tableSource != null)
+            if (pullToRefresh)
             {
-                tableSource.ScrollOutHeader(animated);
-            }
-            else
-            {
-                base.ScrollViewToTop(animated);
+                _scrollToHideManager.Reset();
             }
         }
 
