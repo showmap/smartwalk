@@ -32,6 +32,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private bool _isMapViewInitialized;
         private ButtonBarButton _modeButton;
         private ButtonBarButton _dayButton;
+        private UIBarButtonItem _dayButtonItem;
+        private UIBarButtonItem _modeButtonItem;     
         private UITapGestureRecognizer _searchTableTapGesture;
 
         public new OrgEventViewModel ViewModel
@@ -427,10 +429,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _dayButton.LineBreakMode = UILineBreakMode.WordWrap;
             _dayButton.TouchUpInside += OnDayButtonClicked;
 
-            var dayButtonItem = new UIBarButtonItem();
-            dayButtonItem.CustomView = _dayButton;
+            _dayButtonItem = new UIBarButtonItem();
+            _dayButtonItem.CustomView = _dayButton;
 
-            navBarItems.Add(dayButtonItem);
+            navBarItems.Add(_dayButtonItem);
 
             // Mode (List, Map, Combined) Button
             _modeButton = ButtonBarUtil.Create(
@@ -439,10 +441,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 SemiTransparentType.Light);
             _modeButton.TouchUpInside += OnModeButtonClicked;
 
-            var modeButtonItem = new UIBarButtonItem();
-            modeButtonItem.CustomView = _modeButton;
+            _modeButtonItem = new UIBarButtonItem();
+            _modeButtonItem.CustomView = _modeButton;
 
-            navBarItems.Add(modeButtonItem);
+            navBarItems.Add(_modeButtonItem);
         }
 
         private void DisposeToolBar()
@@ -805,6 +807,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             UpdateNavBarState(animated);
+            UpdateNavBarItemsState();
             UpdateDayButtonState();
             UpdateTableViewInset();
             UpdateViewConstraints(animated);
@@ -832,6 +835,30 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        private void UpdateNavBarItemsState()
+        {
+            if (!HasData) return;
+
+            var items = NavigationItem.RightBarButtonItems.ToList();
+            if (!ViewModel.SwitchModeCommand.CanExecute(null))
+            {
+                if (items.IndexOf(_modeButtonItem) >= 0)
+                {
+                    items.Remove(_modeButtonItem);
+                    NavigationItem.SetRightBarButtonItems(items.ToArray(), false);
+                }
+            }
+            else
+            {
+                if (items.IndexOf(_modeButtonItem) < 0)
+                {
+                    var dayIndex = items.IndexOf(_dayButtonItem);
+                    items.Insert(dayIndex, _modeButtonItem);
+                    NavigationItem.SetRightBarButtonItems(items.ToArray(), false);
+                }
+            }
+        }
+
         private void UpdateDayButtonState()
         {
             var dateString = ViewModel.OrgEvent.GetOrgEventDateString(
@@ -843,7 +870,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _dayButton.SetAttributedTitle(dateString, UIControlState.Normal);
             _dayButton.Hidden = dateString.Length <= 0;
-            _dayButton.Enabled = ViewModel.IsMultiday;
+            _dayButton.Enabled = ViewModel.SetCurrentDayCommand.CanExecute(null);
 
             // adjust due to long date text 
             if (ViewModel.IsMultiday && ViewModel.CurrentDay == null)

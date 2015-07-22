@@ -32,7 +32,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             tableView.RegisterNibForCellReuse(VenueShowCell.Nib, VenueShowCell.Key);
         }
 
-        private bool ShowVenueGroupHeader
+        private bool ShowDayGroupHeader
         {
             get
             {
@@ -51,7 +51,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return 
                     !_viewModel.IsMultiday ||
                     _viewModel.IsGroupedByLocation ||
-                    _viewModel.SortBy == SortBy.Time;
+                    _viewModel.SortBy == SortBy.Time ||
+                    _viewModel.CurrentDay.HasValue;
             }
         }
 
@@ -147,7 +148,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             var venue = ItemsSource[section];
-            if (ShowVenueGroupHeader && venue.Info.Name != null)
+            if (ShowDayGroupHeader && venue.Info.Name != null)
             {
                 return GroupHeaderView.DefaultHeight;
             }
@@ -209,7 +210,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return headerView;
             }
 
-            if (ShowVenueGroupHeader && venue.Info.Name != null)
+            if (ShowDayGroupHeader && venue.Info.Name != null)
             {
                 var groupView = (GroupHeaderView)tableView.DequeueReusableHeaderFooterView(GroupHeaderView.Key);
 

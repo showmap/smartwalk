@@ -150,14 +150,6 @@ namespace SmartWalk.Client.Core.ViewModels
                     RaisePropertyChanged(() => OrgEvent);
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => Title);
-
-                    /*IsListOptionsAvailable = 
-                        _orgEvent != null &&
-                        _orgEvent.Venues != null &&
-                        _orgEvent.Venues
-                            .Any(v => 
-                                v.Shows != null && 
-                                v.Shows.Length > 0);*/
                 }
             }
         }
@@ -510,7 +502,8 @@ namespace SmartWalk.Client.Core.ViewModels
                                     : (Mode == OrgEventViewMode.Map
                                         ? Analytics.ActionLabelSwitchToMap
                                         : Analytics.ActionLabelSwitchToCombo));
-                        });
+                        },
+                        mode => mode.HasValue && mode.Value != OrgEventViewMode.List || AnyShows);
                 }
 
                 return _switchModeCommand;
@@ -943,6 +936,21 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _searchableTexts;
+            }
+        }
+
+        private bool AnyShows
+        {
+            get
+            { 
+                var result = 
+                    _orgEvent != null &&
+                    _orgEvent.Venues != null &&
+                    _orgEvent.Venues
+                    .Any(v => 
+                        v.Shows != null &&
+                        v.Shows.Length > 0);
+                return result; 
             }
         }
 

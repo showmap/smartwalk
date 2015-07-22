@@ -160,7 +160,7 @@ namespace SmartWalk.Client.iOS.Controls
             };
 
             _background.Layer.ShadowColor = ThemeColors.ContentDarkBackground.CGColor;
-            _background.Layer.ShadowOpacity = 0.15f;
+            _background.Layer.ShadowOpacity = 0.13f;
             _background.Layer.ShadowOffset = new CGSize(2, 2);
 
             Add(_background);
