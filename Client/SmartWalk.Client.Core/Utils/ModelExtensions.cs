@@ -5,6 +5,7 @@ using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
+using SmartWalk.Client.Core.ViewModels;
 
 namespace SmartWalk.Client.Core.Utils
 {
@@ -411,7 +412,10 @@ namespace SmartWalk.Client.Core.Utils
                         Shows = shows
                             .GroupBy(show => show.Title)
                             .Select(g => g.Count() > 1 
-                                ? new GroupedShow(g.ToArray()) : g.First())
+                                ? new GroupedShow(g
+                                    .OrderBy(v => v, new ShowComparer(SortBy.Time))
+                                    .ToArray()) 
+                                : g.First())
                             .ToArray()
                     }
                 };
