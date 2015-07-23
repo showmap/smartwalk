@@ -315,6 +315,24 @@ namespace SmartWalk.Client.Core.Utils
             return null;
         }
 
+        public static Venue[] GetVenuesByGroupedShow(this Venue[] venues, GroupedShow groupedShow)
+        {
+            if (venues != null && groupedShow != null)
+            {
+                var venueIds = groupedShow.Venue
+                    .Where(r => r.Storage == Storage.SmartWalk)
+                    .Select(r => r.Id)
+                    .ToArray();
+                
+                return 
+                    venues
+                        .Where(v => venueIds.Contains(v.Info.Id))
+                        .ToArray();
+            }
+
+            return null;
+        }
+
         public static Tuple<DateTime?, DateTime?> GetOrgEventRange(this OrgEvent orgEvent)
         {
             var result = orgEvent != null && orgEvent.StartTime.HasValue
@@ -385,10 +403,24 @@ namespace SmartWalk.Client.Core.Utils
             return result.ToArray();
         }
 
+        public static Venue[] GroupTitleDuplicates(this Show[] shows)
+        {
+            var result = 
+                new [] {
+                    new Venue(new Entity(), null) {
+                        Shows = shows
+                            .GroupBy(show => show.Title)
+                            .Select(g => g.Count() > 1 
+                                ? new GroupedShow(g.ToArray()) : g.First())
+                            .ToArray()
+                    }
+                };
+            return result;
+        }
+
         private static Show GetDayGroupShow(DateTime day, Reference[] venue)
         {
-            return new Show 
-            {
+            return new Show {
                 Id = Show.DayGroupId,
                 StartTime = day,
                 Venue = venue

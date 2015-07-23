@@ -5,6 +5,7 @@ using Cirrious.CrossCore.Converters;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels;
+using SmartWalk.Client.Core.Model.DataContracts;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -27,8 +28,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                             new Venue(v.Info, v.Description) {
                                 Number = v.Number,
                                 Shows = v.Shows.GroupByDayShow()
-                            })
+                        })
                         .ToArray();
+                }
+                else if (viewModel.SortBy == SortBy.Name && result.Length > 0)
+                {
+                    var fooVenue = result[0]; // expecting foo venue that holds all shows
+                    result = fooVenue.Shows.GroupTitleDuplicates();
                 }
                 else if (viewModel.SortBy == SortBy.Time && result.Length > 0)
                 {

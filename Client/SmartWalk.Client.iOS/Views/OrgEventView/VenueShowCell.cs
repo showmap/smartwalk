@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using CoreGraphics;
@@ -332,8 +333,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ThumbLabel.Text = DataContext.Show.Title.GetAbbreviation(2);
 
             TitleLabel.Text = DataContext != null  ? DataContext.Show.Title : null;
-            LocationLabel.Text = DataContext != null && DataContext.Venue != null 
-                ? DataContext.Venue.DisplayName() : null;
+            LocationLabel.Text = DataContext != null ? DataContext.GetLocationString() : null;
 
             DetailsLabel.Text = DataContext != null && DataContext.Show.HasDetailsUrl()
                 ? Localization.MoreInformation : null;
@@ -353,7 +353,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         (!IsExpanded && IsLogoVisible ? ImageSmallHeight + HorizontalGap : 0);
 
                     TitleAndLocationConstraint.Constant = IsExpanded &&
-                        DataContext.Show.Title != null && DataContext.Venue != null
+                        DataContext.Show.Title != null && DataContext.IsLocationAvailable
                             ? TextGap : 0;
                     
                     LocationAndDescriptionConstraint.Constant = IsExpanded &&
@@ -367,7 +367,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     if (IsExpanded && DataContext.Show.HasPicture())
                     {
                         ThumbTopConstraint.Constant = GetTextBlocksHeight(Frame.Width, DataContext.Show, 
-                            IsTimeVisible, DataContext.Venue != null) + VerticalGap;
+                            IsTimeVisible, DataContext.IsLocationAvailable) + VerticalGap;
                         ThumbLeftConstraint.Constant = HorizontalGap;
                         ThumbHeightConstraint.Constant = ImageLargeHeight;
                         ThumbWidthConstraint.Constant = GetImageProportionalWidth();
@@ -439,7 +439,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             EndTimeLabel.TextColor = IsExpanded ? ThemeColors.ContentLightTextPassive : ThemeColors.BorderLight;
 
-            var isLocationHidden = !IsExpanded || DataContext.Venue == null;
+            var isLocationHidden = !IsExpanded || !DataContext.IsLocationAvailable;
             NavigateOnMapButton.SetHidden(isLocationHidden, animated);
             LocationLabel.SetHidden(isLocationHidden, animated);
 
@@ -507,9 +507,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _mapTapGesture = new UITapGestureRecognizer(() =>
                 {
                     if (NavigateVenueOnMapCommand != null &&
-                        NavigateVenueOnMapCommand.CanExecute(DataContext.Venue))
+                        NavigateVenueOnMapCommand.CanExecute(DataContext.TargetVenue))
                     {
-                        NavigateVenueOnMapCommand.Execute(DataContext.Venue);
+                        NavigateVenueOnMapCommand.Execute(DataContext.TargetVenue);
                     }
                 });
 
@@ -665,15 +665,41 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private static string GetShowDescription(Show show, bool includeTime)
         {
-            var result = includeTime 
-                ? (show.StartTime ?? show.EndTime).GetCurrentDayString() + "   " +
+            var result = default(string);
+
+            if (includeTime)
+            {
+                var groupedShow = show as GroupedShow;
+                if (groupedShow != null)
+                {
+                    result = groupedShow.Shows.Aggregate(string.Empty, 
+                        (prev, s) => prev + (prev != string.Empty ? Environment.NewLine : string.Empty) +
+                        GetShowDateTimeString(s));
+                }
+                else
+                {
+                    result = GetShowDateTimeString(show);
+                }
+            }
+
+            var breakString = result != null && show.Description != null 
+                ? Environment.NewLine + Environment.NewLine : null;
+            
+            return result + breakString + show.Description;
+        }
+
+        private static string GetShowDateTimeString(Show show)
+        {
+            var result = default(string);
+
+            if (show.StartTime.HasValue || show.EndTime.HasValue)
+            {
+                result = (show.StartTime ?? show.EndTime).GetCurrentDayString() + "   " +
                          GetShowTimeText(show.StartTime) +
                          (show.StartTime.HasValue && show.EndTime.HasValue ? " - " : string.Empty) +
-                         GetShowTimeText(show.EndTime) +
-                         ((show.StartTime.HasValue || show.EndTime.HasValue) && show.Description != null 
-                    ? Environment.NewLine + Environment.NewLine : string.Empty) +
-                         show.Description
-                : show.Description;
+                         GetShowTimeText(show.EndTime);
+            }
+
             return result;
         }
 
@@ -698,13 +724,56 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
     public class VenueShowDataContext
     {
-        public VenueShowDataContext(Show show, Venue venue = null)
+        public VenueShowDataContext(Show show, 
+            OrgEvent orgEvent = null, bool IsGroupedByLocation = false)
         {
-            Venue = venue;
+            if (!IsGroupedByLocation && orgEvent != null)
+            {
+                var groupedShow = show as GroupedShow;
+                if (groupedShow != null)
+                {
+                    Venues = orgEvent.Venues.GetVenuesByGroupedShow(groupedShow);
+                }
+                else
+                {
+                    Venue = orgEvent.Venues.GetVenueByShow(show);
+                }
+            }
+
             Show = show;
         }
         
         public Venue Venue { get; private set; }
+        public Venue[] Venues { get; private set; }
         public Show Show { get; private set; }
+
+        public bool IsLocationAvailable
+        {
+            get { return TargetVenue != null; }
+        }
+
+        public Venue TargetVenue
+        {
+            get { return Venue ?? (Venues != null ? Venues.FirstOrDefault() : null); }
+        }
+
+        public string GetLocationString()
+        {
+            var result = default(string);
+
+            if (Venue != null)
+            {
+                result = Venue.DisplayName();
+            }
+
+            if (Venues != null)
+            {
+                result = Venues.Aggregate(string.Empty, 
+                    (prev, v) => prev + 
+                    (prev != string.Empty ? ", " : string.Empty) + v.DisplayName());
+            }
+
+            return result;
+        }
     }
 }

@@ -240,8 +240,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 venueCell.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
-                venueCell.DataContext = new VenueShowDataContext(show,
-                    _viewModel.IsGroupedByLocation ? null : _viewModel.OrgEvent.Venues.GetVenueByShow(show));
+                venueCell.DataContext = new VenueShowDataContext(show, 
+                    _viewModel.OrgEvent, _viewModel.IsGroupedByLocation);
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
                 venueCell.IsBeforeExpanded = Equals(_viewModel.ExpandedShow, GetNextShow(show, indexPath));
                 venueCell.IsLogoVisible = _viewModel.OrgEvent.ShowVenueShowLogos();
