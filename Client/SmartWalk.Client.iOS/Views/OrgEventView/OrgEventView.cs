@@ -95,16 +95,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateDayButtonState();
         }
 
-        public override void ViewDidAppear(bool animated)
-        {
-            base.ViewDidAppear(animated);
-
-            if (IsInSearch)
-            {
-                SearchBar.BecomeFirstResponder();
-            }
-        }
-
         public override void DidMoveToParentViewController(UIViewController parent)
         {
             base.DidMoveToParentViewController(parent);
@@ -270,7 +260,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _scrollToHideManager = new OrgEventScrollToHideUIManager(
                 VenuesAndShowsTableView, ListSettingsContainer);
 
-            var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, ViewModel, _scrollToHideManager);
+            var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, 
+                ViewModel, _scrollToHideManager);
 
             this.CreateBinding(tableSource)
                 .For(ts => ts.ItemsSource)

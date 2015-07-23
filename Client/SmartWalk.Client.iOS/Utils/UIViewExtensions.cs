@@ -30,11 +30,18 @@ namespace SmartWalk.Client.iOS.Utils
             }
         }
 
-        public static bool IsChildOf<T>(this UIView view)
+        public static bool IsChildOf<T>(this UIView view) where T : UIView
         {
             return view.Superview != null &&
                 (view.Superview is T || 
                     view.Superview.IsChildOf<T>());
+        }
+
+        public static T ParentOfType<T>(this UIView view) where T : UIView
+        {
+            return view.Superview == null 
+                ? null 
+                : view.Superview is T ? (T)view.Superview : view.Superview.ParentOfType<T>();
         }
 
         public static void SetHidden(this UIView view, bool hidden, bool animated, 

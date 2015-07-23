@@ -92,7 +92,7 @@
                         <constraint firstAttribute="trailing" secondItem="wMm-c6-vk5" secondAttribute="trailing" constant="7" id="yYM-1u-4F8"/>
                     </constraints>
                 </view>
-                <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="I5X-mn-S14" userLabel="Search Table View">
+                <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="I5X-mn-S14" userLabel="Search Table View">
                     <rect key="frame" x="0.0" y="278" width="320" height="202"/>
                     <color key="backgroundColor" red="0.5" green="0.5" blue="0.5" alpha="0.25" colorSpace="calibratedRGB"/>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
