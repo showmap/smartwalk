@@ -347,10 +347,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateConstraintConstants(bool animated)
         {
-            TimeTopConstraint.Constant = DataContext != null &&
-                (DataContext.Show.StartTime.HasValue && DataContext.Show.EndTime.HasValue)
-                    ? 13 : 17;
-
             this.UpdateConstraint(() =>
                 {
                     TitleLeftConstraint.Constant = HorizontalGap + 
@@ -440,6 +436,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             StartTimeLabel.SetHidden(!IsTimeVisible, animated);
             EndTimeLabel.SetHidden(!IsTimeVisible, animated);
+
+            EndTimeLabel.TextColor = IsExpanded ? ThemeColors.ContentLightTextPassive : ThemeColors.BorderLight;
 
             var isLocationHidden = !IsExpanded || DataContext.Venue == null;
             NavigateOnMapButton.SetHidden(isLocationHidden, animated);
@@ -599,7 +597,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             StartTimeLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
             EndTimeLabel.Font = Theme.VenueShowTimeFont;
-            EndTimeLabel.TextColor = ThemeColors.ContentLightTextPassive;
+            EndTimeLabel.TextColor = ThemeColors.BorderLight;
 
             DetailsButton.SetImage(ThemeIcons.Info, UIControlState.Normal);
             DetailsButton.TintColor = ThemeColors.Action;
