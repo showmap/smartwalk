@@ -59,7 +59,7 @@
                         </state>
                     </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="900" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
-                        <rect key="frame" x="244" y="16" width="31.5" height="17"/>
+                        <rect key="frame" x="244" y="17" width="31.5" height="17"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -149,7 +149,7 @@
                     <constraint firstItem="50" firstAttribute="leading" secondItem="yI1-bt-IQd" secondAttribute="leading" id="FTH-F8-VsB"/>
                     <constraint firstAttribute="trailing" secondItem="HJ0-5h-aCH" secondAttribute="trailing" id="Fk0-C9-gur"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="leading" secondItem="i3H-aj-VWA" secondAttribute="leading" constant="18" id="KGa-0j-O5k"/>
-                    <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="-1" id="KJp-hi-iCi"/>
+                    <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="-2" id="KJp-hi-iCi"/>
                     <constraint firstItem="181" firstAttribute="top" secondItem="ztH-tE-Jjf" secondAttribute="top" constant="-1" id="Lmp-Mv-dGq"/>
                     <constraint firstItem="50" firstAttribute="top" secondItem="yI1-bt-IQd" secondAttribute="top" id="NPR-ae-ZLF"/>
                     <constraint firstItem="HJ0-5h-aCH" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="2" id="PPs-JX-8Yp"/>
@@ -174,7 +174,7 @@
                     <constraint firstItem="6" firstAttribute="width" secondItem="3" secondAttribute="width" id="mRO-93-3Ot"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6" secondAttribute="bottom" constant="3" id="ntX-rC-rmO"/>
                     <constraint firstItem="50" firstAttribute="bottom" secondItem="yI1-bt-IQd" secondAttribute="bottom" id="onR-Cc-HXR"/>
-                    <constraint firstItem="3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="16" id="paf-GI-3hU"/>
+                    <constraint firstItem="3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="17" id="paf-GI-3hU"/>
                     <constraint firstItem="4Z4-zH-aRP" firstAttribute="top" secondItem="9" secondAttribute="bottom" priority="900" constant="5" id="xww-JG-rm7"/>
                     <constraint firstItem="3" firstAttribute="leading" secondItem="9" secondAttribute="trailing" constant="5" id="y2f-W3-srI"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="yEX-Ke-t91"/>
