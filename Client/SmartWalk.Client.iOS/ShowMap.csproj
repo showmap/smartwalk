@@ -396,6 +396,7 @@
     <Compile Include="Bootstrap\EmailPluginBootstrap.cs" />
     <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
     <Compile Include="Views\OrgEventView\OrgEventSearchBarDelegate.cs" />
+    <Compile Include="Views\OrgEventView\VenueShowDataContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">

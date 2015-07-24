@@ -19,8 +19,7 @@ using SmartWalk.Shared.Utils;
 namespace SmartWalk.Client.Core.ViewModels
 {
     public class OrgEventViewModel : RefreshableViewModel, 
-        IFullscreenImageProvider, 
-        IShareableViewModel
+        IFullscreenImageProvider, IShareableViewModel, IFavoritesAware
     {
         private readonly IEnvironmentService _environmentService;
         private readonly ISmartWalkApiService _apiService;
@@ -37,7 +36,6 @@ namespace SmartWalk.Client.Core.ViewModels
         private Show _expandedShow;
         private Venue _selectedVenueOnMap;
         private string _currentFullscreenImage;
-
         private Parameters _parameters;
         private SortBy _sortBy = SortBy.Name;
         private Venue[] _searchResults;
@@ -45,6 +43,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private Venue[] _allShows;
         private Venue[] _allSearchShows;
         private OrgEventViewMode? _beforeSearchMode;
+        private bool _showOnlyFavorites;
 
         private MvxCommand _beginSearchCommand;
         private MvxCommand _endSearchCommand;
@@ -64,6 +63,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand _switchMapTypeCommand;
         private MvxCommand _copyLinkCommand;
         private MvxCommand _shareCommand;
+        private MvxCommand<bool> _showOnlyFavoritesCommand;
 
         public OrgEventViewModel(
             IEnvironmentService environmentService,
@@ -80,6 +80,7 @@ namespace SmartWalk.Client.Core.ViewModels
             _analyticsService = analyticsService;
 
             _exceptionPolicy = exceptionPolicy;
+            FavoritesManager = new FavoritesShowManager(analyticsService);
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
@@ -89,18 +90,14 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public override string Title
         {
-            get
-            {
-                return OrgEvent != null ? OrgEvent.Title : null;
-            }
+            get { return OrgEvent != null ? OrgEvent.Title : null; }
         }
+
+        public FavoritesShowManager FavoritesManager { get; private set; }
 
         public OrgEventViewMode Mode
         {
-            get
-            {
-                return _mode;
-            }
+            get { return _mode; }
             private set
             {
                 if (_mode != value)
@@ -110,20 +107,14 @@ namespace SmartWalk.Client.Core.ViewModels
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
 
-                    if (ScrollToShow != null && !IsInSearch && ExpandedShow != null)
-                    {
-                        ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
-                    }
+                    RaiseScrollToShow();
                 }
             }
         }
 
         public MapType CurrentMapType
         {
-            get
-            {
-                return _currentMapType;
-            }
+            get { return _currentMapType; }
             private set
             {
                 if (_currentMapType != value)
@@ -136,10 +127,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public OrgEvent OrgEvent
         {
-            get
-            {
-                return _orgEvent;
-            }
+            get { return _orgEvent; }
             private set
             {
                 if (!Equals(_orgEvent, value))
@@ -149,6 +137,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     _searchableTexts = null;
                     RaisePropertyChanged(() => OrgEvent);
                     RaisePropertyChanged(() => ListItems);
+                    RaisePropertyChanged(() => SearchListItems);
                     RaisePropertyChanged(() => Title);
                 }
             }
@@ -156,8 +145,8 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public Venue[] ListItems
         {
-            get
-            {
+            get 
+            { 
                 return IsGroupedByLocation 
                     ? (OrgEvent != null ? OrgEvent.Venues : null)
                     : AllShows; 
@@ -166,10 +155,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public Venue[] SearchResults
         {
-            get
-            {
-                return _searchResults;
-            }
+            get { return _searchResults; }
             private set
             {
                 if (!_searchResults.EnumerableEquals(value))
@@ -184,18 +170,12 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public Venue[] SearchListItems
         {
-            get
-            {
-                return IsGroupedByLocation ? SearchResults : AllSearchShows; 
-            }
+            get { return IsGroupedByLocation ? SearchResults : AllSearchShows; }
         }
 
         public int? CurrentDay
         {
-            get
-            {
-                return _currentDay;
-            }
+            get { return _currentDay; }
             private set
             {
                 if (_currentDay != value)
@@ -209,10 +189,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public int DaysCount
         {
-            get
-            {
-                return _daysCount;
-            }
+            get { return _daysCount; }
             private set
             {
                 if (_daysCount != value)
@@ -231,10 +208,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public Show ExpandedShow
         {
-            get
-            {
-                return _expandedShow;
-            }
+            get { return _expandedShow; }
             private set
             {
                 if (!Equals(_expandedShow, value))
@@ -247,10 +221,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public Venue SelectedVenueOnMap
         {
-            get
-            {
-                return _selectedVenueOnMap;
-            }
+            get { return _selectedVenueOnMap; }
             private set
             {
                 if (!Equals(_selectedVenueOnMap, value))
@@ -263,10 +234,7 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public string CurrentFullscreenImage
         {
-            get
-            {
-                return _currentFullscreenImage;
-            }
+            get { return _currentFullscreenImage; }
             private set
             {
                 if (_currentFullscreenImage != value)
@@ -289,34 +257,38 @@ namespace SmartWalk.Client.Core.ViewModels
 
         public SortBy SortBy
         {
-            get
-            {
-                return _sortBy;
-            }
+            get { return _sortBy; }
             private set
             {
                 if (_sortBy != value)
                 {
                     _sortBy = value;
 
-                    if (_allShows != null)
-                    {
-                        _allShows = GetAllShowsSortBy(_allShows[0].Shows);
-                    }
-
-                    if (_allSearchShows != null)
-                    {
-                        _allSearchShows = GetAllShowsSortBy(_allSearchShows[0].Shows);
-                    }
-
+                    ResetAllShows();
                     RaisePropertyChanged(() => SortBy);
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
 
-                    if (ScrollToShow != null && !IsInSearch && ExpandedShow != null)
-                    {
-                        ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
-                    }
+                    RaiseScrollToShow();
+                }
+            }
+        }
+
+        public bool ShowOnlyFavorites
+        {
+            get { return _showOnlyFavorites; }
+            private set
+            {
+                if (_showOnlyFavorites != value)
+                {
+                    _showOnlyFavorites = value;
+
+                    ResetAllShows();
+                    RaisePropertyChanged(() => ShowOnlyFavorites);
+                    RaisePropertyChanged(() => ListItems);
+                    RaisePropertyChanged(() => SearchListItems);
+
+                    RaiseScrollToShow();
                 }
             }
         }
@@ -814,6 +786,31 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
+        public ICommand ShowOnlyFavoritesCommand
+        {
+            get
+            {
+                if (_showOnlyFavoritesCommand == null)
+                {
+                    _showOnlyFavoritesCommand = new MvxCommand<bool>(
+                        showOnly =>
+                        { 
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                showOnly
+                                    ? Analytics.ActionLabelOnlyFavoriteOn
+                                    : Analytics.ActionLabelOnlyFavoriteOff);
+
+                            ShowOnlyFavorites = showOnly;
+                        },
+                        showOnly => showOnly != ShowOnlyFavorites);
+                }
+
+                return _showOnlyFavoritesCommand;
+            }
+        }
+
         public ICommand CopyLinkCommand
         {
             get
@@ -883,7 +880,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     var shows = OrgEvent.Venues
                         .SelectMany(v => v.Shows ?? new Show[] { })
                         .ToArray();
-                    _allShows = GetAllShowsSortBy(shows);
+                    _allShows = GetAllShows(shows);
                 }
 
                 return _allShows;
@@ -900,7 +897,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     var shows = SearchResults
                         .SelectMany(v => v.Shows ?? new Show[] { })
                         .ToArray();
-                    _allSearchShows = GetAllShowsSortBy(shows);
+                    _allSearchShows = GetAllShows(shows);
                 }
 
                 return _allSearchShows;
@@ -1115,18 +1112,33 @@ namespace SmartWalk.Client.Core.ViewModels
             return 0;
         }
 
-        private Venue[] GetAllShowsSortBy(Show[] shows)
+        private Venue[] GetAllShows(Show[] shows)
         {
             var result = 
                 new [] {
                     new Venue(new Entity(), null) 
                     {
                         Shows = shows
-                            .OrderBy(v => v, new ShowComparer(SortBy))
+                            .Where(s => !ShowOnlyFavorites || FavoritesManager.IsShowFavorite(s))
+                            .OrderBy(s => s, new ShowComparer(SortBy))
                             .ToArray()
                     }
                 };
             return result;
+        }
+
+        private void ResetAllShows()
+        {
+            _allShows = null;
+            _allSearchShows = null;
+        }
+
+        private void RaiseScrollToShow()
+        {
+            if (ScrollToShow != null && !IsInSearch && ExpandedShow != null)
+            {
+                ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
+            }
         }
 
         public class Parameters : ParametersBase

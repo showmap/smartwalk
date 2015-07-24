@@ -23,10 +23,16 @@ namespace SmartWalk.Client.iOS.Views.Common
             set { LoadingView.Hidden = !value; }
         }
 
-        public bool IsDataUnavailable
+        public bool IsMessageVisible
         {
-            get { return !NoDataLabel.Hidden; }
-            set { NoDataLabel.Hidden = !value; }
+            get { return !MessageLabel.Hidden; }
+            set { MessageLabel.Hidden = !value; }
+        }
+
+        public string MessageText
+        {
+            get { return MessageLabel.Text; }
+            set { MessageLabel.Text = value; }
         }
 
         public UIActivityIndicatorViewStyle IndicatorStyle
@@ -42,11 +48,11 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         public override void LayoutSubviews()
         {
-            if (NoDataLabel != null && 
+            if (MessageLabel != null && 
                 ProgressLabel != null &&
                 !_isInitialized)
             {
-                NoDataLabel.Text = Localization.NoContentAvailable;
+                MessageLabel.Text = Localization.NoContentAvailable;
                 ProgressLabel.Text = Localization.Loading + "...";
 
                 InitializeStyle();
@@ -64,8 +70,8 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeStyle()
         {
-            NoDataLabel.Font = Theme.ContentFont;
-            NoDataLabel.TextColor = ThemeColors.ContentLightTextPassive;
+            MessageLabel.Font = Theme.ContentFont;
+            MessageLabel.TextColor = ThemeColors.ContentLightTextPassive;
 
             ProgressLabel.Font = Theme.ContentFont;
             ProgressLabel.TextColor = ThemeColors.ContentLightTextPassive;

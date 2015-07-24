@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        private bool ShowTime
+        private bool ShowTimeVisible
         {
             get
             {
@@ -169,7 +169,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var isExpanded = Equals(_viewModel.ExpandedShow, show);
                 var height = 
                     VenueShowCell.CalculateCellHeight(tableView.Frame.Width, isExpanded, 
-                        show, ShowTime, !_viewModel.IsGroupedByLocation);
+                        show, ShowTimeVisible, !_viewModel.IsGroupedByLocation);
                 return height;
             }
 
@@ -240,13 +240,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 venueCell.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
-                venueCell.DataContext = new VenueShowDataContext(show, 
-                    _viewModel.OrgEvent, _viewModel.IsGroupedByLocation);
+                venueCell.SetFavoriteCommand = _viewModel.FavoritesManager.SetFavoriteShowCommand;
+                venueCell.UnsetFavoriteCommand = _viewModel.FavoritesManager.UnsetFavoriteShowCommand;
+                venueCell.DataContext = new VenueShowDataContext(show, _viewModel.FavoritesManager, 
+                    _viewModel.OrgEvent.ShowVenueShowLogos(),
+                    _viewModel.OrgEvent, 
+                    _viewModel.IsGroupedByLocation, ShowTimeVisible);
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
                 venueCell.IsBeforeExpanded = Equals(_viewModel.ExpandedShow, GetNextShow(show, indexPath));
-                venueCell.IsLogoVisible = _viewModel.OrgEvent.ShowVenueShowLogos();
-                venueCell.IsTimeVisible = ShowTime;
-
                 venueCell.IsSeparatorVisible =
                     !IsLastInDayGroup(show, indexPath) && 
                     (IsInLastSection(indexPath) || !IsLastInSection(indexPath));

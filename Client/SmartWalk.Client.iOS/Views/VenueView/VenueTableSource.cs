@@ -170,10 +170,12 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
                 ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
-                ((VenueShowCell)cell).DataContext = new VenueShowDataContext(venueShow);
+                ((VenueShowCell)cell).SetFavoriteCommand = _viewModel.FavoritesManager.SetFavoriteShowCommand;
+                ((VenueShowCell)cell).UnsetFavoriteCommand = _viewModel.FavoritesManager.UnsetFavoriteShowCommand;
+                ((VenueShowCell)cell).DataContext = new VenueShowDataContext(venueShow, 
+                    _viewModel.FavoritesManager, _viewModel.Venue.ShowVenueShowLogos());
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
                 ((VenueShowCell)cell).IsBeforeExpanded = Equals(_viewModel.ExpandedShow, GetNextShow(item, indexPath));
-                ((VenueShowCell)cell).IsLogoVisible = _viewModel.Venue.ShowVenueShowLogos();
                 ((VenueShowCell)cell).IsSeparatorVisible = 
                     indexPath.Row < GroupItemsSource[indexPath.Section].Count - 1 ||
                     indexPath.Section == GroupItemsSource.Length - 2; // assuming that last section is next-entity button

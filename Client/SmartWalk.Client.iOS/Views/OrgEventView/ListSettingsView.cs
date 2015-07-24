@@ -12,8 +12,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     public partial class ListSettingsView : UIView
     {
         public static readonly UINib Nib = UINib.FromName("ListSettingsView", NSBundle.MainBundle);
+        private static readonly UIColor Light = ThemeColors.ContentDarkText.ColorWithAlpha(0.95f);
+        private static readonly UIColor Background = ThemeColors.HeaderBackground.GetDarker(0.3f);
 
         private bool _isInitialized;
+        private bool _showOnlyFavotires;
 
         public const int DefaultHeight = 34;
 
@@ -27,11 +30,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         }
 
         public ICommand SortByCommand { get; set; }
+        public ICommand ShowOnlyFavoritesCommand { get; set; }
 
         public SortBy SortBy
         {
             get { return SortBySegments.SelectedSegment == 0 ? SortBy.Name : SortBy.Time; }
             set { SortBySegments.SelectedSegment = value == SortBy.Name ? 0 : 1; }
+        }
+
+        public bool ShowOnlyFavotires
+        {
+            get { return _showOnlyFavotires; }
+            set 
+            {
+                if (_showOnlyFavotires != value)
+                {
+                    _showOnlyFavotires = value;
+                    UpdateFavoritesState();
+                }
+            }
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -71,45 +88,64 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
-            BackgroundView.BarTintColor = ThemeColors.HeaderBackground.GetDarker(0.3f);
+            BackgroundView.BarTintColor = Background;
             Separator.Color = ThemeColors.HeaderBackground.GetDarker(0.4f);
 
-            var color = ThemeColors.ContentDarkText.ColorWithAlpha(0.95f);
-
             SortByLabel.Font = Theme.OrgEventHeaderFont;
-            SortByLabel.TextColor = color;
+            SortByLabel.TextColor = Light;
 
             SortBySegments.SetTitleTextAttributes(
                 new UITextAttributes {
                     Font = Theme.SegmentsTextFont, 
-                    TextColor = color
+                    TextColor = Light
                 }, 
                 UIControlState.Highlighted);
             SortBySegments.SetTitleTextAttributes(
                 new UITextAttributes {
                     Font = Theme.SegmentsTextFont,
-                    TextColor = color
+                    TextColor = Light
                 }, 
                 UIControlState.Normal);
-            SortBySegments.TintColor = color;
+            SortBySegments.TintColor = Light;
 
             FavoritesButton.Font = Theme.OrgEventHeaderFont;
-            FavoritesButton.SetTitleColor(color, UIControlState.Normal);
+            FavoritesButton.SetTitleColor(Light, UIControlState.Normal);
             FavoritesButton.SetImage(ThemeIcons.StarSmall, UIControlState.Normal);
-            FavoritesButton.TintColor = color;
+            FavoritesButton.TintColor = Light;
             FavoritesButton.Layer.BorderWidth = 0.9f;
             FavoritesButton.Layer.CornerRadius = 4;
-            FavoritesButton.Layer.BorderColor = color.CGColor;
+            FavoritesButton.Layer.BorderColor = Light.CGColor;
 
             FavoritesButton.TouchDown += (sender, e) => 
-                FavoritesButton.BackgroundColor = ThemeColors.ContentDarkText.ColorWithAlpha(0.2f);
-            FavoritesButton.TouchUpInside += (sender, e) => FavoritesButton.BackgroundColor = UIColor.Clear;
-            FavoritesButton.TouchUpOutside += (sender, e) => FavoritesButton.BackgroundColor = UIColor.Clear;
+                FavoritesButton.BackgroundColor = ThemeColors.ContentLightBackground.ColorWithAlpha(0.2f);
+            FavoritesButton.TouchUpInside += (sender, e) => UpdateFavoritesState();
+            FavoritesButton.TouchUpOutside += (sender, e) => UpdateFavoritesState();
         }
 
         partial void OnFavoritesClick(UIButton sender)
         {
-            
+            ShowOnlyFavotires = !ShowOnlyFavotires;
+
+            if (ShowOnlyFavoritesCommand.CanExecute(ShowOnlyFavotires))
+            {
+                ShowOnlyFavoritesCommand.Execute(ShowOnlyFavotires);
+            }
+        }
+
+        private void UpdateFavoritesState()
+        {
+            if (ShowOnlyFavotires)
+            {
+                FavoritesButton.SetTitleColor(Background, UIControlState.Normal);
+                FavoritesButton.TintColor = Background;
+                FavoritesButton.BackgroundColor = Light;
+            }
+            else
+            {
+                FavoritesButton.SetTitleColor(Light, UIControlState.Normal);
+                FavoritesButton.TintColor = Light;
+                FavoritesButton.BackgroundColor = UIColor.Clear;
+            }
         }
     }
 }

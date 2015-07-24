@@ -279,6 +279,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
                 UpdateViewState(true);
+                UpdateFavoritesUnavailableState();
 
                 if (!ViewModel.IsInSearch)
                 {
@@ -326,6 +327,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SearchListItems))
             {
                 UpdateSearchTableViewState();
+            }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.ShowOnlyFavorites))
+            {
+                UpdateFavoritesUnavailableState();
             }
         }
 
@@ -535,6 +540,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 : ThemeColors.ContentDarkBackground.ColorWithAlpha(0.3f);
         }
 
+        private void UpdateFavoritesUnavailableState()
+        {
+            if (ViewModel.Mode == OrgEventViewMode.List &&
+                ViewModel.ShowOnlyFavorites &&
+                ViewModel.ListItems != null &&
+                ViewModel.ListItems.Length > 0 &&
+                ViewModel.ListItems[0].Shows.Length == 0)
+            {
+                UpdateMessageState(true, Localization.FavoritesUnavailable);
+            }
+            else
+            {
+                UpdateMessageState(false);
+            }
+        }
+
         private void InitializeGestures()
         {
             _searchTableTapGesture = new UITapGestureRecognizer(() =>
@@ -724,6 +745,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 _listSettingsView.SortBy = ViewModel.SortBy;
                 _listSettingsView.SortByCommand = ViewModel.SortByCommand;
+                _listSettingsView.ShowOnlyFavoritesCommand = ViewModel.ShowOnlyFavoritesCommand;
+                _listSettingsView.ShowOnlyFavotires = ViewModel.ShowOnlyFavorites;
             }
         }
 
@@ -793,7 +816,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapFullscreenButton.SetHidden(true, animated);
                     var listSettingsHidden = !HasData || IsInSearch;
                     ListSettingsContainer.SetHidden(listSettingsHidden, animated && !listSettingsHidden);
-                    _scrollToHideManager.IsActive = !IsInSearch;
+                    _scrollToHideManager.IsActive = !IsInSearch && HasData;
+                    SearchBar.Hidden = !HasData;
                     break;
             }
 

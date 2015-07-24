@@ -111,6 +111,8 @@
     <Compile Include="ViewModels\Interfaces\ITitleAware.cs" />
     <Compile Include="Model\DataContracts\EventVenueDetail.cs" />
     <Compile Include="Model\GroupedShow.cs" />
+    <Compile Include="ViewModels\Common\FavoritesShowManager.cs" />
+    <Compile Include="ViewModels\Interfaces\IFavoritesAware.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

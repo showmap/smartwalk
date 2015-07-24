@@ -61,8 +61,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UITapGestureRecognizer _starTapGesture;
         private bool _isBeforeExpanded;
         private bool _isExpanded;
-        private bool _isLogoVisible;
-        private bool _isTimeVisible = true;
 
         public VenueShowCell(IntPtr handle) : base(handle)
         {
@@ -196,6 +194,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         public ICommand NavigateVenueOnMapCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand NavigateDetailsLinkCommand { get; set; }
+        public ICommand SetFavoriteCommand { get; set; }
+        public ICommand UnsetFavoriteCommand { get; set; }
 
         public new VenueShowDataContext DataContext
         {
@@ -216,48 +216,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             get { return _isBeforeExpanded; }
             set { SetIsBeforeExpanded(value, false); }
-        }
-
-        public bool IsLogoVisible
-        {
-            get
-            {
-                return _isLogoVisible;
-            }
-            set
-            {
-                if (_isLogoVisible != value)
-                {
-                    _isLogoVisible = value;
-
-                    UpdateConstraintConstants(false);
-                    UpdateVisibility(false);
-
-                    if (_isLogoVisible)
-                    {
-                        UpdateSmallImageState();
-                    }
-                }
-            }
-        }
-
-        public bool IsTimeVisible
-        {
-            get
-            {
-                return _isTimeVisible;
-            }
-            set
-            {
-                if (_isTimeVisible != value)
-                {
-                    _isTimeVisible = value;
-
-                    UpdateTimeRelatedState();
-                    UpdateConstraintConstants(false);
-                    UpdateVisibility(false);
-                }
-            }
         }
 
         public bool IsSeparatorVisible
@@ -297,8 +255,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             IsExpanded = false;
             IsBeforeExpanded = false;
-            IsLogoVisible = false;
-            IsTimeVisible = true;
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -307,6 +263,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (newsuper == null)
             {
+                DataContext = null;
                 ExpandCollapseShowCommand = null;
                 ShowImageFullscreenCommand = null;
                 NavigateDetailsLinkCommand = null;
@@ -330,34 +287,35 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _largeImageHelper.ImageUrl = null;
             ThumbImageView.Image = null;
 
-            ThumbLabel.Text = DataContext.Show.Title.GetAbbreviation(2);
-
+            ThumbLabel.Text = DataContext != null ? DataContext.Show.Title.GetAbbreviation(2) : null;
             TitleLabel.Text = DataContext != null  ? DataContext.Show.Title : null;
             LocationLabel.Text = DataContext != null ? DataContext.GetLocationString() : null;
-
             DetailsLabel.Text = DataContext != null && DataContext.Show.HasDetailsUrl()
                 ? Localization.MoreInformation : null;
 
             UpdateTimeRelatedState();
             UpdateSmallImageState();
             UpdateLargeImageState();
+            UpdateFavoriteState();
             UpdateConstraintConstants(false);
             UpdateVisibility(false);
         }
 
         private void UpdateConstraintConstants(bool animated)
         {
+            if (DataContext == null) return;
+
             this.UpdateConstraint(() =>
                 {
                     TitleLeftConstraint.Constant = HorizontalGap + 
-                        (!IsExpanded && IsLogoVisible ? ImageSmallHeight + HorizontalGap : 0);
+                        (!IsExpanded && DataContext.IsLogoVisible ? ImageSmallHeight + HorizontalGap : 0);
 
                     TitleAndLocationConstraint.Constant = IsExpanded &&
                         DataContext.Show.Title != null && DataContext.IsLocationAvailable
                             ? TextGap : 0;
                     
                     LocationAndDescriptionConstraint.Constant = IsExpanded &&
-                        DataContext.Show.Title != null && GetShowDescription(DataContext.Show, !IsTimeVisible) != null 
+                        DataContext.Show.Title != null && GetShowDescription(DataContext.Show, !DataContext.IsTimeVisible) != null 
                             ? TextGap : 0;
 
                     var imageSpace = DataContext.Show.HasPicture() ? VerticalGap + ImageLargeHeight : 0;
@@ -367,7 +325,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     if (IsExpanded && DataContext.Show.HasPicture())
                     {
                         ThumbTopConstraint.Constant = GetTextBlocksHeight(Frame.Width, DataContext.Show, 
-                            IsTimeVisible, DataContext.IsLocationAvailable) + VerticalGap;
+                            DataContext.IsTimeVisible, DataContext.IsLocationAvailable) + VerticalGap;
                         ThumbLeftConstraint.Constant = HorizontalGap;
                         ThumbHeightConstraint.Constant = ImageLargeHeight;
                         ThumbWidthConstraint.Constant = GetImageProportionalWidth();
@@ -376,7 +334,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                             ThumbWidthConstraint.Constant, 
                             ThumbHeightConstraint.Constant));
                     }
-                    else if (!IsExpanded && IsLogoVisible)
+                    else if (!IsExpanded && DataContext.IsLogoVisible)
                     {
                         ThumbTopConstraint.Constant = 5;
                         ThumbLeftConstraint.Constant = 2;
@@ -391,7 +349,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     BottomBorderLeftConstraint.Constant = IsExpanded || IsBeforeExpanded 
                         ? 0 : HorizontalGap + ThumbWidthConstraint.Constant + 
-                            (IsLogoVisible ? HorizontalGap : 0) + HorizontalGap; 
+                            (DataContext.IsLogoVisible ? HorizontalGap : 0) + HorizontalGap; 
                 },
                 animated,
                 () =>
@@ -405,7 +363,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateSmallImageState()
         {
-            var url = IsLogoVisible && DataContext != null 
+            var url = DataContext != null && DataContext.IsLogoVisible
                 ? DataContext.Show.Picture : null;
 
             _smallImageHelper.ImageUrl = url;
@@ -431,11 +389,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (DataContext == null) return;
 
-            ThumbImageView.SetHidden(!IsLogoVisible || !DataContext.Show.HasPicture(), animated);
-            ThumbLabelView.SetHidden(IsExpanded || !IsLogoVisible || DataContext.Show.HasPicture(), animated);
+            ThumbImageView.SetHidden(!DataContext.IsLogoVisible || !DataContext.Show.HasPicture(), animated);
+            ThumbLabelView.SetHidden(IsExpanded || !DataContext.IsLogoVisible || DataContext.Show.HasPicture(), animated);
 
-            StartTimeLabel.SetHidden(!IsTimeVisible, animated);
-            EndTimeLabel.SetHidden(!IsTimeVisible, animated);
+            StartTimeLabel.SetHidden(!DataContext.IsTimeVisible, animated);
+            EndTimeLabel.SetHidden(!DataContext.IsTimeVisible, animated);
 
             EndTimeLabel.TextColor = IsExpanded ? ThemeColors.ContentLightTextPassive : ThemeColors.BorderLight;
 
@@ -443,12 +401,26 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             NavigateOnMapButton.SetHidden(isLocationHidden, animated);
             LocationLabel.SetHidden(isLocationHidden, animated);
 
-            var isDescriptionHidden = !IsExpanded || GetShowDescription(DataContext.Show, !IsTimeVisible) == null;
+            var isDescriptionHidden = !IsExpanded || GetShowDescription(DataContext.Show, !DataContext.IsTimeVisible) == null;
             DescriptionLabel.SetHidden(isDescriptionHidden, animated);
 
             var isDetailsHidden = !IsExpanded || !DataContext.Show.HasDetailsUrl();
             DetailsLabel.SetHidden(isDetailsHidden, animated);
             DetailsButton.SetHidden(isDetailsHidden, animated);
+        }
+
+        private void UpdateFavoriteState()
+        {
+            if (DataContext != null && DataContext.IsFavorite)
+            {
+                StarButton.SetImage(ThemeIcons.Star, UIControlState.Normal);
+                StarButton.TintColor = ThemeColors.Action;
+            }
+            else
+            {
+                StarButton.SetImage(ThemeIcons.StarOutline, UIControlState.Normal);
+                StarButton.TintColor = ThemeColors.BorderLight;
+            }
         }
 
         private float GetImageProportionalWidth()
@@ -517,8 +489,26 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _starTapGesture = new UITapGestureRecognizer(() =>
                 {
-                    StarButton.SetImage(ThemeIcons.Star, UIControlState.Normal);
-                    StarButton.TintColor = ThemeColors.Action;
+                    if (DataContext != null)
+                    {
+                        DataContext.IsFavorite = !DataContext.IsFavorite;
+                        UpdateFavoriteState();
+
+                        if (DataContext.IsFavorite)
+                        {
+                            if (SetFavoriteCommand.CanExecute(DataContext.Show))
+                            {
+                                SetFavoriteCommand.Execute(DataContext.Show);
+                            }
+                        }
+                        else 
+                        {
+                            if (UnsetFavoriteCommand.CanExecute(DataContext.Show))
+                            {
+                                UnsetFavoriteCommand.Execute(DataContext.Show);
+                            }
+                        }
+                    }
                 });
 
             StarButton.AddGestureRecognizer(_starTapGesture);
@@ -583,9 +573,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             TitleLabel.Font = Theme.ContentFont;
             TitleLabel.TextColor = ThemeColors.ContentLightText;
 
-            StarButton.SetImage(ThemeIcons.StarOutline, UIControlState.Normal);
-            StarButton.TintColor = ThemeColors.BorderLight;
-
             NavigateOnMapButton.SetImage(ThemeIcons.MapPinSmall, UIControlState.Normal);
             LocationLabel.Font = Theme.VenueShowDescriptionFont;
             LocationLabel.TextColor = ThemeColors.ContentLightTextPassive;
@@ -610,13 +597,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateTimeRelatedState()
         {
-            StartTimeLabel.Text = DataContext != null && IsTimeVisible 
+            StartTimeLabel.Text = DataContext != null && DataContext.IsTimeVisible 
                 ? GetShowTimeText(DataContext.Show.StartTime) : null;
-            EndTimeLabel.Text = DataContext != null && IsTimeVisible 
+            EndTimeLabel.Text = DataContext != null && DataContext.IsTimeVisible 
                 ? GetShowTimeText(DataContext.Show.EndTime) : null;
 
             DescriptionLabel.Text = DataContext != null 
-                ? GetShowDescription(DataContext.Show, !IsTimeVisible) : null;
+                ? GetShowDescription(DataContext.Show, !DataContext.IsTimeVisible) : null;
 
             if (DataContext == null)
             {
@@ -638,7 +625,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 case ShowStatus.Finished:
                     TimeBackgroundView.BackgroundColor = UIColor.Clear;
-                    TitleLabel.Font = IsTimeVisible ? Theme.VenueShowFinishedFont : Theme.ContentFont;
+                    TitleLabel.Font = DataContext.IsTimeVisible 
+                        ? Theme.VenueShowFinishedFont : Theme.ContentFont;
                     break;
             }
 
@@ -719,61 +707,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 NavigateDetailsLinkCommand.Execute(contact);
             }
-        }
-    }
-
-    public class VenueShowDataContext
-    {
-        public VenueShowDataContext(Show show, 
-            OrgEvent orgEvent = null, bool IsGroupedByLocation = false)
-        {
-            if (!IsGroupedByLocation && orgEvent != null)
-            {
-                var groupedShow = show as GroupedShow;
-                if (groupedShow != null)
-                {
-                    Venues = orgEvent.Venues.GetVenuesByGroupedShow(groupedShow);
-                }
-                else
-                {
-                    Venue = orgEvent.Venues.GetVenueByShow(show);
-                }
-            }
-
-            Show = show;
-        }
-        
-        public Venue Venue { get; private set; }
-        public Venue[] Venues { get; private set; }
-        public Show Show { get; private set; }
-
-        public bool IsLocationAvailable
-        {
-            get { return TargetVenue != null; }
-        }
-
-        public Venue TargetVenue
-        {
-            get { return Venue ?? (Venues != null ? Venues.FirstOrDefault() : null); }
-        }
-
-        public string GetLocationString()
-        {
-            var result = default(string);
-
-            if (Venue != null)
-            {
-                result = Venue.DisplayName();
-            }
-
-            if (Venues != null)
-            {
-                result = Venues.Aggregate(string.Empty, 
-                    (prev, v) => prev + 
-                    (prev != string.Empty ? ", " : string.Empty) + v.DisplayName());
-            }
-
-            return result;
         }
     }
 }

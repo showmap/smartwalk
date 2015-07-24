@@ -422,6 +422,16 @@ namespace SmartWalk.Client.Core.Utils
             return result;
         }
 
+        public static int[] GetShowIds(this Show show)
+        {
+            if (show == null) return new int[]{};
+
+            var result = show is GroupedShow 
+                ? ((GroupedShow)show).Shows.Select(s => s.Id).ToArray() 
+                : new [] {show.Id};
+            return result;
+        }
+
         private static Show GetDayGroupShow(DateTime day, Reference[] venue)
         {
             return new Show {

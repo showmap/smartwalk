@@ -19,31 +19,31 @@ namespace SmartWalk.Client.iOS.Views.Common
 		UIKit.UIView LoadingView { get; set; }
 
 		[Outlet]
-		UIKit.UILabel NoDataLabel { get; set; }
+		UIKit.UILabel MessageLabel { get; set; }
 
 		[Outlet]
 		UIKit.UILabel ProgressLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ActivityIndicator != null) {
+				ActivityIndicator.Dispose ();
+				ActivityIndicator = null;
+			}
+
 			if (LoadingView != null) {
 				LoadingView.Dispose ();
 				LoadingView = null;
 			}
 
-			if (NoDataLabel != null) {
-				NoDataLabel.Dispose ();
-				NoDataLabel = null;
+			if (MessageLabel != null) {
+				MessageLabel.Dispose ();
+				MessageLabel = null;
 			}
 
 			if (ProgressLabel != null) {
 				ProgressLabel.Dispose ();
 				ProgressLabel = null;
-			}
-
-			if (ActivityIndicator != null) {
-				ActivityIndicator.Dispose ();
-				ActivityIndicator = null;
 			}
 		}
 	}

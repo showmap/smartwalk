@@ -9,11 +9,12 @@ using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
-    public class VenueViewModel : EntityViewModel
+    public class VenueViewModel : EntityViewModel, IFavoritesAware
     {
         private readonly IEnvironmentService _environmentService;
         private readonly ISmartWalkApiService _apiService;
@@ -45,6 +46,8 @@ namespace SmartWalk.Client.Core.ViewModels
             _apiService = apiService;
             _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
+
+            FavoritesManager = new FavoritesShowManager(analyticsService);
         }
 
         public override string Title
@@ -64,6 +67,8 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             get { return null; }
         }
+
+        public FavoritesShowManager FavoritesManager { get; private set; }
 
         public OrgEvent OrgEvent
         {

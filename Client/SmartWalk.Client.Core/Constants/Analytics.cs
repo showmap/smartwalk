@@ -34,6 +34,10 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionLabelDeselectVenueOnMap = "deselect-venue-on-map";
         public static readonly string ActionLabelSortShowsByTime = "sort-shows-by-time";
         public static readonly string ActionLabelSortShowsByTitle = "sort-shows-by-title";
+        public static readonly string ActionLabelSetFavoriteShow = "set-favorite-show";
+        public static readonly string ActionLabelUnsetFavoriteShow = "unset-favorite-show";
+        public static readonly string ActionLabelOnlyFavoriteOn = "only-favorites-on";
+        public static readonly string ActionLabelOnlyFavoriteOff = "only-favorites-off";
         public static readonly string ActionLabelCreateEvent = "create-event";
         public static readonly string ActionLabelSaveEvent = "save-event";
         public static readonly string ActionLabelCancelEvent = "cancel-event";
