@@ -134,18 +134,22 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateFavoritesState()
         {
-            if (ShowOnlyFavotires)
-            {
-                FavoritesButton.SetTitleColor(Background, UIControlState.Normal);
-                FavoritesButton.TintColor = Background;
-                FavoritesButton.BackgroundColor = Light;
-            }
-            else
-            {
-                FavoritesButton.SetTitleColor(Light, UIControlState.Normal);
-                FavoritesButton.TintColor = Light;
-                FavoritesButton.BackgroundColor = UIColor.Clear;
-            }
+            UIView.Animate(UIConstants.AnimationDuration,
+                () =>
+                {
+                    if (ShowOnlyFavotires)
+                    {
+                        FavoritesButton.SetTitleColor(Background, UIControlState.Normal);
+                        FavoritesButton.TintColor = Background;
+                        FavoritesButton.BackgroundColor = Light;
+                    }
+                    else
+                    {
+                        FavoritesButton.SetTitleColor(Light, UIControlState.Normal);
+                        FavoritesButton.TintColor = Light;
+                        FavoritesButton.BackgroundColor = UIColor.Clear;
+                    }
+                });
         }
     }
 }
