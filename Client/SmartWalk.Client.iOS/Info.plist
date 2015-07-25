@@ -15,8 +15,6 @@
 	<string>me.smartwalk.ios</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
-	<key>CFBundleShortVersionString</key>
-	<string>1.7</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>XSLaunchImageAssets</key>
@@ -31,7 +29,9 @@
 	<true/>
 	<key>CFBundleDisplayName</key>
 	<string>ShowMap</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.0</string>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>1</string>
 </dict>
 </plist>
