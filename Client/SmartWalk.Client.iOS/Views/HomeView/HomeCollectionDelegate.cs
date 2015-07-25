@@ -53,7 +53,7 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             ScrollUtil.ScrollOutHeader(
                 _collectionView, 
                 HomeHeaderView.DefaultHeight, 
-                _isTouched || animated);
+                _isTouched && animated);
         }
 
         public override void DraggingStarted(UIScrollView scrollView)

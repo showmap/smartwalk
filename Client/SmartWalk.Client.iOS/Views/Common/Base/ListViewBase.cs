@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cirrious.CrossCore.Core;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
@@ -7,11 +8,14 @@ using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Shared.Utils;
 using UIKit;
+using System.Linq;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ListViewBase : NavBarViewBase
     {
+        private readonly List<string> _messages = new List<string>();
+
         private ListViewDecorator _listView;
         private UIView _progressViewContainer;
         private ProgressView _progressView;
@@ -180,10 +184,19 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
         }
 
-        protected void UpdateMessageState(bool visible, string text = null)
+        protected void UpdateMessageState(string text, bool visible)
         {
-            _progressView.MessageText = visible ? text : null;
-            _progressView.IsMessageVisible = visible;
+            if (visible && !_messages.Contains(text))
+            {
+                _messages.Add(text);
+            }
+            else if (!visible && _messages.Contains(text))
+            {
+                _messages.Remove(text);
+            }
+
+            _progressView.MessageText = _messages.FirstOrDefault();
+            _progressView.IsMessageVisible = _messages.Count > 0;
         }
 
         private void InitializeProgressView()
@@ -250,7 +263,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 ListView.RefreshControl.EndRefreshing();
             }
 
-            UpdateMessageState(!e.Value, Localization.NoContentAvailable);
+            UpdateMessageState(Localization.NoContentAvailable, !e.Value);
             OnViewModelRefreshed(e.Value, pullToRefresh);
         }
 
@@ -270,7 +283,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             {
                 if (!HasListData)
                 {
-                    UpdateMessageState(false);
+                    UpdateMessageState(Localization.NoContentAvailable, false);
                     _progressView.IsLoading = true;
                 }
 
@@ -278,7 +291,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             }
             else
             {
-                UpdateMessageState(!HasListData, Localization.NoContentAvailable);
+                UpdateMessageState(Localization.NoContentAvailable, !HasListData);
                 _progressView.IsLoading = false;
 
                 OnLoadedViewStateUpdate();

@@ -384,7 +384,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ScrollUtil.ScrollOutHeader(
                     _tableView, 
                     HeaderHeight, 
-                    _isTouched || animated);
+                    _isTouched && animated);
             }
         }
 

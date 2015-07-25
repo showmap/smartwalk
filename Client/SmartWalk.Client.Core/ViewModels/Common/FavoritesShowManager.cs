@@ -23,6 +23,8 @@ namespace SmartWalk.Client.Core.ViewModels.Common
             _analyticsService = analyticsService;
         }
 
+        public event EventHandler FavoritesUpdated;
+
         public ICommand SetFavoriteShowCommand
         {
             get
@@ -32,6 +34,7 @@ namespace SmartWalk.Client.Core.ViewModels.Common
                     _setFavoriteShowCommand = new MvxCommand<Show>(show => 
                         {
                             var showIds = show.GetShowIds();
+                            var updated = false;
 
                             foreach(var showId in showIds)
                             {
@@ -44,6 +47,12 @@ namespace SmartWalk.Client.Core.ViewModels.Common
                                 if (!_favoriteShows.Contains(showId))
                                 {
                                     _favoriteShows.Add(showId);
+                                    updated = true;
+                                }
+
+                                if (updated && FavoritesUpdated != null)
+                                {
+                                    FavoritesUpdated(this, EventArgs.Empty);
                                 }
                             }
                         },
@@ -63,6 +72,7 @@ namespace SmartWalk.Client.Core.ViewModels.Common
                     _unsetFavoriteShowCommand = new MvxCommand<Show>(show => 
                         {
                             var showIds = show.GetShowIds();
+                            var updated = false;
 
                             foreach(var showId in showIds)
                             {
@@ -75,6 +85,12 @@ namespace SmartWalk.Client.Core.ViewModels.Common
                                 if (_favoriteShows.Contains(showId))
                                 {
                                     _favoriteShows.Remove(showId);
+                                    updated = true;
+                                }
+
+                                if (updated && FavoritesUpdated != null)
+                                {
+                                    FavoritesUpdated(this, EventArgs.Empty);
                                 }
                             }
                         },

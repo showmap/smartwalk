@@ -13,50 +13,28 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         private readonly OrgEventViewModel _viewModel;
 
-        public event EventHandler SearchBegan;
-        public event EventHandler SearchEnded;
-
-        public OrgEventSearchBarDelegate(OrgEventViewModel viewModel)
+        public OrgEventSearchBarDelegate(UISearchBar searchBar, OrgEventViewModel viewModel)
         {
             _viewModel = viewModel;
-        }
-
-        public void BeginSearch(UISearchBar searchBar)
-        {
-            NavBarManager.Instance.SetHidden(true, false);
-
-            searchBar.SetActiveStyle();
-
-            if (_viewModel.BeginSearchCommand.CanExecute(null))
-            {
-                _viewModel.BeginSearchCommand.Execute(null);
-            }
-
-            if (SearchBegan != null)
-            {
-                SearchBegan(this, EventArgs.Empty);
-            }
-        }
-
-        public void EndSearch(UISearchBar searchBar)
-        {
-            searchBar.ResignFirstResponder();
-            searchBar.Text = null;
-            searchBar.SetPassiveStyle();
-
-            NavBarManager.Instance.SetHidden(false, true);
-
-            if (_viewModel.EndSearchCommand.CanExecute(null))
-            {
-                _viewModel.EndSearchCommand.Execute(null);
-            }
-
-            if (SearchEnded != null)
-            {
-                SearchEnded(this, EventArgs.Empty);
-            }
-
-            RemoveSearchButtonObserver(searchBar);
+            _viewModel.PropertyChanged += (sender, e) => 
+                {
+                    if (e.PropertyName == _viewModel.GetPropertyName(p => p.IsInSearch))
+                    {
+                        if (_viewModel.IsInSearch)
+                        {
+                            NavBarManager.Instance.SetHidden(true, false);
+                            searchBar.SetActiveStyle();
+                        }
+                        else
+                        {
+                            searchBar.ResignFirstResponder();
+                            searchBar.Text = null;
+                            searchBar.SetPassiveStyle();
+                            RemoveSearchButtonObserver(searchBar);
+                            NavBarManager.Instance.SetHidden(false, true);
+                        }
+                    }
+                };
         }
 
         public override void TextChanged(UISearchBar searchBar, string searchText)
@@ -69,7 +47,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void OnEditingStarted(UISearchBar searchBar)
         {
-            BeginSearch(searchBar);
+            if (_viewModel.BeginSearchCommand.CanExecute(null))
+            {
+                _viewModel.BeginSearchCommand.Execute(null);
+            }
         }
 
         public override void OnEditingStopped(UISearchBar searchBar)
@@ -83,7 +64,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public override void CancelButtonClicked(UISearchBar searchBar)
         {
-            EndSearch(searchBar);
+            if (_viewModel.EndSearchCommand.CanExecute(null))
+            {
+                _viewModel.EndSearchCommand.Execute(null);
+            }
         }
 
         public override void ObserveValue(NSString keyPath, NSObject ofObject, 

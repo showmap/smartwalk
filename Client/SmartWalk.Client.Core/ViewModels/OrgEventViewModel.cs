@@ -44,6 +44,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private Venue[] _allSearchShows;
         private OrgEventViewMode? _beforeSearchMode;
         private bool _showOnlyFavorites;
+        private bool _isInSearch;
 
         private MvxCommand _beginSearchCommand;
         private MvxCommand _endSearchCommand;
@@ -81,12 +82,12 @@ namespace SmartWalk.Client.Core.ViewModels
 
             _exceptionPolicy = exceptionPolicy;
             FavoritesManager = new FavoritesShowManager(analyticsService);
+            FavoritesManager.FavoritesUpdated += (sender, e) => ResetAllShows();
         }
 
         public event EventHandler<MvxValueEventArgs<string>> Share;
         public event EventHandler<MvxValueEventArgs<Venue>> ZoomToVenue;
         public event EventHandler<MvxValueEventArgs<Venue>> ScrollToVenue;
-        public event EventHandler<MvxValueEventArgs<Show>> ScrollToShow;
 
         public override string Title
         {
@@ -103,11 +104,10 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_mode != value)
                 {
                     _mode = value;
+                    _expandedShow = null;
                     RaisePropertyChanged(() => Mode);
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
-
-                    RaiseScrollToShow();
                 }
             }
         }
@@ -133,8 +133,8 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (!Equals(_orgEvent, value))
                 {
                     _orgEvent = value;
-                    _allShows = null;
                     _searchableTexts = null;
+                    ResetAllShows();
                     RaisePropertyChanged(() => OrgEvent);
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
@@ -263,13 +263,11 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_sortBy != value)
                 {
                     _sortBy = value;
-
+                    _expandedShow = null;
                     ResetAllShows();
                     RaisePropertyChanged(() => SortBy);
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
-
-                    RaiseScrollToShow();
                 }
             }
         }
@@ -282,18 +280,28 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_showOnlyFavorites != value)
                 {
                     _showOnlyFavorites = value;
-
+                    _expandedShow = null;
                     ResetAllShows();
                     RaisePropertyChanged(() => ShowOnlyFavorites);
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);
-
-                    RaiseScrollToShow();
                 }
             }
         }
 
-        public bool IsInSearch { get; private set; }
+        public bool IsInSearch
+        {
+            get { return _isInSearch; }
+            private set 
+            { 
+                if (_isInSearch != value)
+                {
+                    _isInSearch = value;
+                    RaisePropertyChanged(() => IsInSearch);
+                    RaisePropertyChanged(() => ListItems);
+                }
+            }
+        }
 
         public ICommand BeginSearchCommand
         {
@@ -704,6 +712,7 @@ namespace SmartWalk.Client.Core.ViewModels
                                 Analytics.ActionLabelNavigateVenueOnMap,
                                 venue.Info.Id);
 
+                            var previousMode = Mode;
                             Mode = OrgEventViewMode.Combo;
                             
                             SelectedVenueOnMap = venue;
@@ -711,6 +720,12 @@ namespace SmartWalk.Client.Core.ViewModels
                             if (ZoomToVenue != null && venue != null)
                             {
                                 ZoomToVenue(this, new MvxValueEventArgs<Venue>(venue));
+                            }
+
+                            // if navigation is from show cell location
+                            if (ScrollToVenue != null && venue != null && previousMode == OrgEventViewMode.List)
+                            {
+                                ScrollToVenue(this, new MvxValueEventArgs<Venue>(venue));
                             }
                         },
                         venue => venue != null);
@@ -1131,14 +1146,6 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _allShows = null;
             _allSearchShows = null;
-        }
-
-        private void RaiseScrollToShow()
-        {
-            if (ScrollToShow != null && !IsInSearch && ExpandedShow != null)
-            {
-                ScrollToShow(this, new MvxValueEventArgs<Show>(ExpandedShow));
-            }
         }
 
         public class Parameters : ParametersBase

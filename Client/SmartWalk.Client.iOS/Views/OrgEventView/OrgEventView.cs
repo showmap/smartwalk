@@ -35,6 +35,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UIBarButtonItem _dayButtonItem;
         private UIBarButtonItem _modeButtonItem;     
         private UITapGestureRecognizer _searchTableTapGesture;
+        private bool _isAnimating;
+        private event EventHandler AnimationFinished;
 
         public new OrgEventViewModel ViewModel
         {
@@ -73,7 +75,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             ViewModel.ZoomToVenue += OnZoomToVenue;
             ViewModel.ScrollToVenue += OnScrollToVenue;
-            ViewModel.ScrollToShow += OnScrollToShow;
 
             InitializeStyle();
             InitializeListSettingsView();
@@ -160,6 +161,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateViewConstraints(bool animated)
         {
+            _isAnimating = animated;
+            var animationFinish = new Action(() =>
+                {
+                    _isAnimating = false;
+                    if (AnimationFinished != null) AnimationFinished(this, EventArgs.Empty);
+                });
+
             switch (CurrentMode)
             {
                 case OrgEventViewMode.Combo:
@@ -177,7 +185,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     View.UpdateConstraint(
                         () => MapHeightConstraint.Constant = ScreenUtil.GetGoldenRatio(View.Frame.Height),
-                        animated);
+                        animated, animationFinish);
 
                     MapToListSettingsConstraint.Constant = 0;
                     ListSettingsHeightConstraint.Constant = 0;
@@ -195,7 +203,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                     View.UpdateConstraint(
                         () => TableHeightConstraint.Constant = 0,
-                        animated);
+                        animated, animationFinish);
 
                     MapToListSettingsConstraint.Constant = 0;
                     ListSettingsHeightConstraint.Constant = 0;
@@ -234,7 +242,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                                     ListSettingsView.DefaultHeight;
                             }
                         },
-                        animated);
+                        animated, animationFinish);
                     break;
             }
 
@@ -278,16 +286,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
-                UpdateViewState(true);
-                UpdateFavoritesUnavailableState();
-
                 if (!ViewModel.IsInSearch)
                 {
                     ScrollViewToTop(false);
                 }
+
+                UpdateViewState(true);
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
             {
+                UpdateFavoritesUnavailableState();
                 ScrollViewToTop(false);
             }
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentMapType))
@@ -331,6 +339,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             else if (propertyName == ViewModel.GetPropertyName(vm => vm.ShowOnlyFavorites))
             {
                 UpdateFavoritesUnavailableState();
+                ScrollViewToTop(false);
+            }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.IsInSearch))
+            {
+                var isInSearch = ViewModel.IsInSearch;
+                UpdateViewState(true);
+                InvokeAfterAnimation(() => {
+                    if (!isInSearch)
+                    {
+                        // keeping searchbar visible after search ended
+                        VenuesAndShowsTableView.SetActualContentOffset(0, false);
+                    }
+                });
             }
         }
 
@@ -343,6 +364,19 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (pullToRefresh)
             {
                 _scrollToHideManager.Reset();
+            }
+        }
+
+        protected override void ScrollViewToTop(bool animated)
+        {
+            var tableSource = VenuesAndShowsTableView.Source as HiddenHeaderTableSource<Venue>;
+            if (tableSource != null)
+            {
+                tableSource.ScrollOutHeader(animated);
+            }
+            else
+            {
+                base.ScrollViewToTop(animated);
             }
         }
 
@@ -456,6 +490,24 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        private void InvokeAfterAnimation(Action action)
+        {
+            var animationFinished = default(EventHandler);
+            animationFinished = (s, e) => {
+                AnimationFinished -= animationFinished;
+                action();
+            };
+
+            if (_isAnimating)
+            {
+                AnimationFinished += animationFinished;
+            }
+            else
+            {
+                action();
+            }
+        }
+
         private void InitializeStyle()
         {
             MapFullscreenButton.SemiTransparentType = SemiTransparentType.Light;
@@ -502,14 +554,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeSearch()
         {
-            var searchBarDelegate = new OrgEventSearchBarDelegate(ViewModel);
-            searchBarDelegate.SearchBegan += (sender, e) => UpdateViewState(true);
-            searchBarDelegate.SearchEnded += (sender, e) =>
-                {
-                    UpdateViewState(true);
-                    // keeping searchbar visible after search ended
-                    VenuesAndShowsTableView.SetActualContentOffset(0, false);
-                };
+            var searchBarDelegate = new OrgEventSearchBarDelegate(SearchBar, ViewModel);
             SearchBar.Delegate = searchBarDelegate;
             
             var searchTableSource = 
@@ -526,10 +571,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void EndSearch()
         {
-            var searchDelegate = SearchBar.WeakDelegate as OrgEventSearchBarDelegate;
-            if (searchDelegate != null)
+            if (ViewModel.EndSearchCommand.CanExecute(null))
             {
-                searchDelegate.EndSearch(SearchBar);
+                ViewModel.EndSearchCommand.Execute(null);
             }
         }
 
@@ -548,11 +592,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.ListItems.Length > 0 &&
                 ViewModel.ListItems[0].Shows.Length == 0)
             {
-                UpdateMessageState(true, Localization.FavoritesUnavailable);
+                UpdateMessageState(Localization.FavoritesUnavailable, true);
             }
             else
             {
-                UpdateMessageState(false);
+                UpdateMessageState(Localization.FavoritesUnavailable, false);
             }
         }
 
@@ -560,7 +604,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             _searchTableTapGesture = new UITapGestureRecognizer(() =>
                 {
-                    if (IsInSearch && ViewModel.SearchListItems == null)
+                    if (ViewModel.SearchListItems == null)
                     {
                         EndSearch();
                     }
@@ -695,26 +739,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void OnScrollToVenue(object sender, MvxValueEventArgs<Venue> e)
         {
-            var tableSource = VenuesAndShowsTableView.WeakDelegate as OrgEventTableSource;
-            if (tableSource != null)
-            {
-                var index = tableSource.GetItemIndex(e.Value);
-                if (index != null)
-                {
-                    VenuesAndShowsTableView.ScrollToRow(
-                        index, 
-                        UITableViewScrollPosition.Top,
-                        true);
-                }
-            }
+            InvokeAfterAnimation(() => ScrollToVenue(e.Value));
         }
 
-        private void OnScrollToShow(object sender, MvxValueEventArgs<Show> e)
+        private void ScrollToVenue(Venue venue)
         {
             var tableSource = VenuesAndShowsTableView.WeakDelegate as OrgEventTableSource;
             if (tableSource != null)
             {
-                var index = tableSource.GetItemIndex(e.Value);
+                var index = tableSource.GetItemIndex(venue);
                 if (index != null)
                 {
                     VenuesAndShowsTableView.ScrollToRow(
@@ -817,7 +850,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     var listSettingsHidden = !HasData || IsInSearch;
                     ListSettingsContainer.SetHidden(listSettingsHidden, animated && !listSettingsHidden);
                     _scrollToHideManager.IsActive = !IsInSearch && HasData;
-                    SearchBar.Hidden = !HasData;
                     break;
             }
 
@@ -827,7 +859,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateTableViewInset();
             UpdateViewConstraints(animated);
             UpdateSearchTableViewState();
+            UpdateFavoritesUnavailableState();
 
+            SearchBar.Hidden = !HasData;
             SearchTableView.SetHidden(!IsInSearch, animated);
             SearchTableView.ScrollsToTop = IsInSearch;
             VenuesAndShowsTableView.ScrollsToTop = !IsInSearch;
