@@ -187,6 +187,11 @@ namespace SmartWalk.Client.Core.Utils
             return show != null && show.Picture != null;
         }
 
+        public static bool HasPictures(this Show show)
+        {
+            return show != null && show.Pictures != null;
+        }
+
         public static bool HasDetailsUrl(this Show show)
         {
             return show != null && show.DetailsUrl != null;

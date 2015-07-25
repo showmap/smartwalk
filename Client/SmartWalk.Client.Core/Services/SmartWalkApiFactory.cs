@@ -90,7 +90,7 @@ namespace SmartWalk.Client.Core.Services
                         Fields = new[] {
                             "Venue", "IsReference", "Title",
                             "Description", "StartTime", "EndTime",
-                            "Picture", "DetailsUrl"
+                            "Pictures", "DetailsUrl"
                         },
                         From = RequestSelectFromTables.Show,
                         As = "s",
@@ -208,7 +208,7 @@ namespace SmartWalk.Client.Core.Services
                         Fields = new[] {
                             "Venue", "IsReference", "Title",
                             "Description", "StartTime", "EndTime",
-                            "Picture", "DetailsUrl"
+                            "Pictures", "DetailsUrl"
                         },
                         From = RequestSelectFromTables.Show,
                         As = "s",

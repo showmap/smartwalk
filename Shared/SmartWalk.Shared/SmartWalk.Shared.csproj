@@ -95,6 +95,7 @@
     <Compile Include="Utils\HashCode.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\ObjectExtensions.cs" />
+    <Compile Include="DataContracts\Pictures.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

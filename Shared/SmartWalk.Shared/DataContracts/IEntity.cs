@@ -7,6 +7,7 @@ namespace SmartWalk.Shared.DataContracts
         string Name { get; set; }
         string Description { get; set; }
         string Picture { get; set; }
+        Pictures Pictures { get; set; }
         IContact[] Contacts { get; set; }
         IAddress[] Addresses { get; set; }
     }

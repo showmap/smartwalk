@@ -11,6 +11,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
         public string Title { get; set; }
         public string Description { get; set; }
         public string Picture { get; set; }
+        public Pictures Pictures { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public double? Latitude { get; set; }

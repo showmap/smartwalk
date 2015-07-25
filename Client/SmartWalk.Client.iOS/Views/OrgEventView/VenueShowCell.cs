@@ -108,7 +108,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 var cellHeight = 0f;
                 var textHeight = GetTextBlocksHeight(frameWidth, show, showTime, includeLocation);
 
-                var imageHeight = show.HasPicture() ? VerticalGap + ImageLargeHeight : 0f;
+                var imageHeight = show.HasPictures() ? VerticalGap + ImageLargeHeight : 0f;
                 var detailsHeight = show.HasDetailsUrl() ? VerticalGap + DetailsTextHeight : 0f;
 
                 // if no text, we still show times
@@ -331,11 +331,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         DataContext.Show.Title != null && GetShowDescription(DataContext.Show, !DataContext.IsTimeVisible) != null 
                             ? TextGap : 0;
 
-                    var imageSpace = DataContext.Show.HasPicture() ? VerticalGap + ImageLargeHeight : 0;
+                    var imageSpace = DataContext.Show.HasPictures() ? VerticalGap + ImageLargeHeight : 0;
                     var detailsSpace = DataContext.Show.HasDetailsUrl() ? VerticalGap : 0;
                     DescriptionAndDetailsSpaceConstraint.Constant = IsExpanded ? imageSpace + detailsSpace : 0;
 
-                    if (IsExpanded && DataContext.Show.HasPicture())
+                    if (IsExpanded && DataContext.Show.HasPictures())
                     {
                         ThumbTopConstraint.Constant = GetTextBlocksHeight(Frame.Width, DataContext.Show, 
                             DataContext.IsTimeVisible, DataContext.IsLocationAvailable) + VerticalGap;
@@ -376,16 +376,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void UpdateSmallImageState()
         {
-            var url = DataContext != null && DataContext.IsLogoVisible
-                ? DataContext.Show.Picture : null;
+            var url = DataContext != null && DataContext.IsLogoVisible &&
+                DataContext.Show.Pictures != null
+                ? DataContext.Show.Pictures.Small : null;
 
             _smallImageHelper.ImageUrl = url;
         }
 
         private void UpdateLargeImageState()
         {
-            var url = IsExpanded && DataContext != null 
-                ? DataContext.Show.Picture : null;
+            var url = IsExpanded && DataContext != null &&
+                DataContext.Show.Pictures != null
+                ? DataContext.Show.Pictures.Medium : null;
 
             if (_largeImageHelper.ImageUrl != url)
             {
@@ -402,8 +404,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (DataContext == null) return;
 
-            ThumbImageView.SetHidden(!DataContext.IsLogoVisible || !DataContext.Show.HasPicture(), animated);
-            ThumbLabelView.SetHidden(IsExpanded || !DataContext.IsLogoVisible || DataContext.Show.HasPicture(), animated);
+            ThumbImageView.SetHidden(!DataContext.IsLogoVisible || !DataContext.Show.HasPictures(), animated);
+            ThumbLabelView.SetHidden(IsExpanded || !DataContext.IsLogoVisible || DataContext.Show.HasPictures(), animated);
 
             StartTimeLabel.SetHidden(!DataContext.IsTimeVisible, animated);
             EndTimeLabel.SetHidden(!DataContext.IsTimeVisible, animated);
@@ -457,13 +459,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             _cellTapGesture = new UITapGestureRecognizer(rec =>
                 {
-                    if (IsExpanded && DataContext.Show.HasPicture() &&
+                    if (IsExpanded && DataContext.Show.HasPictures() &&
                         rec.LocatedInView(ThumbImageView))
                     {
                         if (ShowImageFullscreenCommand != null &&
-                            ShowImageFullscreenCommand.CanExecute(DataContext.Show.Picture))
+                            ShowImageFullscreenCommand.CanExecute(DataContext.Show.Pictures.Full))
                         {
-                            ShowImageFullscreenCommand.Execute(DataContext.Show.Picture);
+                            ShowImageFullscreenCommand.Execute(DataContext.Show.Pictures.Full);
                         }
                     }
                     else if (IsExpanded && DataContext.Show.HasDetailsUrl() &&

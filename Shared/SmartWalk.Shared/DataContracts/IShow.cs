@@ -18,6 +18,7 @@ namespace SmartWalk.Shared.DataContracts
         DateTime? StartTime { get; set; }
         DateTime? EndTime { get; set; }
         string Picture { get; set; }
+        Pictures Pictures { get; set; }
         string DetailsUrl { get; set; }
     }
 }
