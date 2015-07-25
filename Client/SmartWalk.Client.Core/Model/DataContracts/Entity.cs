@@ -34,6 +34,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
                     Name == en.Name &&
                     Description == en.Description &&
                     Picture == en.Picture &&
+                    Pictures == en.Pictures &&
                     Contacts.EnumerableEquals(en.Contacts) &&
                     Addresses.EnumerableEquals(en.Addresses);
             }
@@ -49,6 +50,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
                     .CombineHashCodeOrDefault(Name)
                     .CombineHashCodeOrDefault(Description)
                     .CombineHashCodeOrDefault(Picture)
+                    .CombineHashCodeOrDefault(Pictures)
                     .CombineHashCodeOrDefault(Contacts)
                     .CombineHashCodeOrDefault(Addresses);
         }

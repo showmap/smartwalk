@@ -269,14 +269,14 @@ namespace SmartWalk.Client.Core.Utils
         {
             var result = orgEvent != null && orgEvent.Venues
                 .SelectMany(v => v.Shows ?? new Show[] { })
-                .Any(s => s.Picture != null);
+                .Any(s => s.Pictures != null && s.Pictures.Small != null);
             return result;
         }
 
         public static bool ShowVenueShowLogos(this Venue venue)
         {
             var result = venue != null && venue.Shows != null &&
-                venue.Shows.Any(s => s.Picture != null);
+                venue.Shows.Any(s => s.Pictures != null && s.Pictures.Small != null);
             return result;
         }
 

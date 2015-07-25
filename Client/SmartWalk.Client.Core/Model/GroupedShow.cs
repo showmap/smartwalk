@@ -17,6 +17,7 @@ namespace SmartWalk.Client.Core.Model
             Title = anyShow.Title;
             Description = anyShow.Description;
             Picture = anyShow.Picture;
+            Pictures = anyShow.Pictures;
             DetailsUrl = anyShow.DetailsUrl;
         }
     }

@@ -42,6 +42,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
                     StartTime == show.StartTime &&
                     EndTime == show.EndTime &&
                     Picture == show.Picture &&
+                    Pictures == show.Pictures &&
                     DetailsUrl == show.DetailsUrl;
             }
 
@@ -57,9 +58,9 @@ namespace SmartWalk.Client.Core.Model.DataContracts
                     .CombineHashCodeOrDefault(Title)
                     .CombineHashCodeOrDefault(Description)
                     .CombineHashCodeOrDefault(Picture)
+                    .CombineHashCodeOrDefault(Pictures)
                     .CombineHashCode(StartTime)
                     .CombineHashCode(EndTime)
-                    .CombineHashCodeOrDefault(Picture)
                     .CombineHashCodeOrDefault(DetailsUrl);
         }
 

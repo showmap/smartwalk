@@ -43,6 +43,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
                     Title == em.Title &&
                     Description == em.Description &&
                     Picture == em.Picture &&
+                    Pictures == em.Pictures &&
                     StartTime == em.StartTime &&
                     EndTime == em.EndTime &&
                     Latitude == em.Latitude &&
@@ -62,6 +63,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
                     .CombineHashCodeOrDefault(Title)
                     .CombineHashCodeOrDefault(Description)
                     .CombineHashCodeOrDefault(Picture)
+                    .CombineHashCodeOrDefault(Pictures)
                     .CombineHashCode(StartTime)
                     .CombineHashCode(EndTime)
                     .CombineHashCode(Latitude)
