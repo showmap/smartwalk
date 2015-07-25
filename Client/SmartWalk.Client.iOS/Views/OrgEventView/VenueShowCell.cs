@@ -56,6 +56,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly AnimationDelay _imageAnimationDelay = new AnimationDelay();
 
         private NSObject _orientationObserver;
+        private bool _updateConstraintsScheduled;
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _mapTapGesture;
         private UITapGestureRecognizer _starTapGesture;
@@ -273,6 +274,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            if (_updateConstraintsScheduled)
+            {
+                UpdateConstraintConstants(false);
+                _updateConstraintsScheduled = false;
+            }
+        }
+
         protected override void OnInitialize()
         {
             InitializeGestures();
@@ -297,8 +309,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateSmallImageState();
             UpdateLargeImageState();
             UpdateFavoriteState();
-            UpdateConstraintConstants(false);
             UpdateVisibility(false);
+            _updateConstraintsScheduled = true;
+            SetNeedsLayout();
         }
 
         private void UpdateConstraintConstants(bool animated)
@@ -549,6 +562,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void OnDeviceOrientationDidChange(NSNotification notification)
         {
+            if (Window == null)
+            {
+                _updateConstraintsScheduled = true;
+                return;
+            }
+                
             UpdateConstraintConstants(true);
         }
 
