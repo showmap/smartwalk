@@ -54,6 +54,12 @@ namespace SmartWalk.Server.Services.QueryService
                     result.Picture = FileUtil.GetResizedPicture(picture, pictureSize, imageProfileManager);
                 }
 
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataPictures))
+                {
+                    var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+                    result.Pictures = FileUtil.GetResizedPictures(picture, imageProfileManager);
+                }
+
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EventMetadataStartTime))
                 {
                     result.StartTime = record.StartTime;
@@ -139,6 +145,12 @@ namespace SmartWalk.Server.Services.QueryService
                 {
                     var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
                     result.Picture = FileUtil.GetResizedPicture(picture, pictureSize, imageProfileManager);
+                }
+
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityPictures))
+                {
+                    var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+                    result.Pictures = FileUtil.GetResizedPictures(picture, imageProfileManager);
                 }
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.EntityContacts))
@@ -233,6 +245,12 @@ namespace SmartWalk.Server.Services.QueryService
                 {
                     var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
                     result.Picture = FileUtil.GetResizedPicture(picture, pictureSize, imageProfileManager);
+                }
+
+                if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowPictures))
+                {
+                    var picture = FileUtil.GetPictureUrl(record.Picture, storageProvider);
+                    result.Pictures = FileUtil.GetResizedPictures(picture, imageProfileManager);
                 }
 
                 if (fields.ContainsIgnoreCase(QueryContext.Instance.ShowDetailsUrl))

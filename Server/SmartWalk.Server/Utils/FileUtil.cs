@@ -170,6 +170,24 @@ namespace SmartWalk.Server.Utils
             return result;
         }
 
+        public static Pictures GetResizedPictures(string picture, 
+            IImageProfileManager imageProfileManager, ILogger logger = null)
+        {
+            var result = default(Pictures);
+
+            if (picture != null)
+            {
+                result = new Pictures
+                {
+                    Small = GetResizedPicture(picture, PictureSize.Small, imageProfileManager, logger),
+                    Medium = GetResizedPicture(picture, PictureSize.Medium, imageProfileManager, logger),
+                    Full = picture
+                };
+            }
+
+            return result;
+        }
+
         private static void DeleteFile(string fileName, IStorageProvider storageProvider)
         {
             // if previous picture is in media storage then delete it

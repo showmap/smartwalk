@@ -9,6 +9,7 @@ namespace SmartWalk.Server.Models.DataContracts
         public string Name { get; set; }
         public string Description { get; set; }
         public string Picture { get; set; }
+        public Pictures Pictures { get; set; }
         public IContact[] Contacts { get; set; }
         public IAddress[] Addresses { get; set; }
     }

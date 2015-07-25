@@ -34,7 +34,7 @@ namespace SmartWalk.Server.Services.QueryService
         private void InitializeProperties()
         {
             EventMetadataId =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.Id).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.Id).Name;
             EventMetadataHost =
                 Reflection<EventMetadata>.GetProperty(p => p.Host).Name;
             EventMetadataIsDeleted =
@@ -44,25 +44,27 @@ namespace SmartWalk.Server.Services.QueryService
             EventMetadataEntityRecord =
                 Reflection<EventMetadataRecord>.GetProperty(p => p.EntityRecord).Name;
             EventMetadataTitle =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.Title).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.Title).Name;
             EventMetadataDescription =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.Description).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.Description).Name;
             EventMetadataPicture =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.Picture).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.Picture).Name;
+            EventMetadataPictures =
+                Reflection<EventMetadata>.GetProperty(p => p.Pictures).Name;
             EventMetadataStartTime =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.StartTime).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.StartTime).Name;
             EventMetadataEndTime =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.EndTime).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.EndTime).Name;
             EventMetadataLatitude =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.Latitude).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.Latitude).Name;
             EventMetadataLongitude =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.Longitude).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.Longitude).Name;
             EventMetadataCombineType =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.CombineType).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.CombineType).Name;
             EventMetadataVenueOrderType =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.VenueOrderType).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.VenueOrderType).Name;
             EventMetadataVenueTitleFormatType =
-                Reflection<EventMetadataRecord>.GetProperty(p => p.VenueTitleFormatType).Name;
+                Reflection<EventMetadata>.GetProperty(p => p.VenueTitleFormatType).Name;
             EventMetadataShows =
                 Reflection<EventMetadata>.GetProperty(p => p.Shows).Name;
 
@@ -92,6 +94,8 @@ namespace SmartWalk.Server.Services.QueryService
                 Reflection<Entity>.GetProperty(p => p.Description).Name;
             EntityPicture =
                 Reflection<Entity>.GetProperty(p => p.Picture).Name;
+            EntityPictures =
+                Reflection<Entity>.GetProperty(p => p.Pictures).Name;
             EntityContacts =
                 Reflection<Entity>.GetProperty(p => p.Contacts).Name;
             EntityAddresses =
@@ -126,6 +130,8 @@ namespace SmartWalk.Server.Services.QueryService
                 Reflection<Show>.GetProperty(p => p.EndTime).Name;
             ShowPicture =
                 Reflection<Show>.GetProperty(p => p.Picture).Name;
+            ShowPictures =
+                Reflection<Show>.GetProperty(p => p.Pictures).Name;
             ShowDetailsUrl =
                 Reflection<Show>.GetProperty(p => p.DetailsUrl).Name;
         }
@@ -144,6 +150,7 @@ namespace SmartWalk.Server.Services.QueryService
         public string EventMetadataTitle { get; private set; }
         public string EventMetadataDescription { get; private set; }
         public string EventMetadataPicture { get; private set; }
+        public string EventMetadataPictures { get; private set; }
         public string EventMetadataStartTime { get; private set; }
         public string EventMetadataEndTime { get; private set; }
         public string EventMetadataLatitude { get; private set; }
@@ -158,6 +165,7 @@ namespace SmartWalk.Server.Services.QueryService
         public string EntityName { get; private set; }
         public string EntityDescription { get; private set; }
         public string EntityPicture { get; private set; }
+        public string EntityPictures { get; private set; }
         public string EntityContacts { get; private set; }
         public string EntityAddresses { get; private set; }
 
@@ -176,6 +184,7 @@ namespace SmartWalk.Server.Services.QueryService
         public string ShowStartTime { get; private set; }
         public string ShowEndTime { get; private set; }
         public string ShowPicture { get; private set; }
+        public string ShowPictures { get; private set; }
         public string ShowDetailsUrl { get; private set; }
     }
 }

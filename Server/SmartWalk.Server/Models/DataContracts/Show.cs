@@ -13,6 +13,7 @@ namespace SmartWalk.Server.Models.DataContracts
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public string Picture { get; set; }
+        public Pictures Pictures { get; set; }
         public string DetailsUrl { get; set; }
     }
 }

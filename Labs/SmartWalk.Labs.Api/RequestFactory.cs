@@ -18,6 +18,7 @@ namespace SmartWalk.Labs.Api
                                     Fields = new[] {"host", "title", "picture", "startTime", "latitude", "longitude"},
                                     From = RequestSelectFromTables.GroupedEventMetadata.ToLowerInvariant(),
                                     As = "em",
+                                    PictureSize = PictureSize.Medium,
                                     SortBy = new[]
                                         {
                                             new RequestSelectSortBy
@@ -36,6 +37,7 @@ namespace SmartWalk.Labs.Api
                                 {
                                     Fields = new[] {"name", "picture"},
                                     From = RequestSelectFromTables.Entity,
+                                    PictureSize = PictureSize.Medium,
                                     Where = new[]
                                         {
                                             new RequestSelectWhere
@@ -85,7 +87,7 @@ namespace SmartWalk.Labs.Api
                                         {
                                             "Venue", "IsReference", "Title",
                                             "Description", "StartTime", "EndTime",
-                                            "Picture", "DetailsUrl"
+                                            "Pictures", "DetailsUrl"
                                         },
                                     From = RequestSelectFromTables.Show,
                                     As = "s",
