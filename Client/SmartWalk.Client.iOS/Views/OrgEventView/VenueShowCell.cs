@@ -509,18 +509,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         DataContext.IsFavorite = !DataContext.IsFavorite;
                         UpdateFavoriteState();
 
+                        var tuple = new Tuple<int, Show>(DataContext.OrgEventId, DataContext.Show);
+
                         if (DataContext.IsFavorite)
                         {
-                            if (SetFavoriteCommand.CanExecute(DataContext.Show))
+                            if (SetFavoriteCommand.CanExecute(tuple))
                             {
-                                SetFavoriteCommand.Execute(DataContext.Show);
+                                SetFavoriteCommand.Execute(tuple);
                             }
                         }
                         else 
                         {
-                            if (UnsetFavoriteCommand.CanExecute(DataContext.Show))
+                            if (UnsetFavoriteCommand.CanExecute(tuple))
                             {
-                                UnsetFavoriteCommand.Execute(DataContext.Show);
+                                UnsetFavoriteCommand.Execute(tuple);
                             }
                         }
                     }

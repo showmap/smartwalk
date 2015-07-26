@@ -11,11 +11,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         public VenueShowDataContext(Show show, 
             FavoritesShowManager favoritesManager,
+            OrgEvent orgEvent,
             bool isLogoVisible = true,
-            OrgEvent orgEvent = null,
             bool isGroupedByLocation = true,
             bool isTimeVisible = true)
         {
+            if (show == null) throw new ArgumentNullException("show");
+            if (favoritesManager == null) throw new ArgumentNullException("favoritesManager");
+            if (orgEvent == null) throw new ArgumentNullException("orgEvent");
+
+            OrgEventId = orgEvent.Id;
+
             if (!isGroupedByLocation && orgEvent != null)
             {
                 var groupedShow = show as GroupedShow;
@@ -31,11 +37,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             Show = show;
 
-            IsFavorite = favoritesManager.IsShowFavorite(show);
+            IsFavorite = favoritesManager.IsShowFavorite(orgEvent.Id, show);
             IsLogoVisible = isLogoVisible;
             IsTimeVisible = isTimeVisible;
         }
 
+        public int OrgEventId { get; private set; }
         public Venue Venue { get; private set; }
         public Venue[] Venues { get; private set; }
         public Show Show { get; private set; }

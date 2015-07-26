@@ -7,6 +7,7 @@ namespace SmartWalk.Client.Core.Services
     {
         string Host { get; }
         string Api { get; }
+        string DocumentsPath { get; }
         ICacheConfiguration CacheConfig { get; }
         TimeSpan PostponeTime { get; }
 

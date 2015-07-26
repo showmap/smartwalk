@@ -173,7 +173,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
                 ((VenueShowCell)cell).SetFavoriteCommand = _viewModel.FavoritesManager.SetFavoriteShowCommand;
                 ((VenueShowCell)cell).UnsetFavoriteCommand = _viewModel.FavoritesManager.UnsetFavoriteShowCommand;
                 ((VenueShowCell)cell).DataContext = new VenueShowDataContext(venueShow, 
-                    _viewModel.FavoritesManager, _viewModel.Venue.ShowVenueShowLogos());
+                    _viewModel.FavoritesManager, _viewModel.OrgEvent, _viewModel.Venue.ShowVenueShowLogos());
                 ((VenueShowCell)cell).IsExpanded = Equals(_viewModel.ExpandedShow, item);
                 ((VenueShowCell)cell).IsBeforeExpanded = Equals(_viewModel.ExpandedShow, GetNextShow(item, indexPath));
                 ((VenueShowCell)cell).IsSeparatorVisible = 

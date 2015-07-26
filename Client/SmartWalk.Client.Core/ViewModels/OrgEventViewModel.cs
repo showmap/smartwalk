@@ -72,7 +72,8 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             IAnalyticsService analyticsService,
             IExceptionPolicyService exceptionPolicy,
-            IPostponeService postponeService) 
+            IPostponeService postponeService,
+            IFavoritesService favoritesService) 
             : base(environmentService.Reachability, analyticsService, postponeService)
         {
             _environmentService = environmentService;
@@ -81,7 +82,8 @@ namespace SmartWalk.Client.Core.ViewModels
             _analyticsService = analyticsService;
 
             _exceptionPolicy = exceptionPolicy;
-            FavoritesManager = new FavoritesShowManager(analyticsService);
+
+            FavoritesManager = new FavoritesShowManager(favoritesService, analyticsService);
             FavoritesManager.FavoritesUpdated += (sender, e) => ResetAllShows();
         }
 
@@ -1134,7 +1136,7 @@ namespace SmartWalk.Client.Core.ViewModels
                     new Venue(new Entity(), null) 
                     {
                         Shows = shows
-                            .Where(s => !ShowOnlyFavorites || FavoritesManager.IsShowFavorite(s))
+                            .Where(s => !ShowOnlyFavorites || FavoritesManager.IsShowFavorite(OrgEvent.Id, s))
                             .OrderBy(s => s, new ShowComparer(SortBy))
                             .ToArray()
                     }

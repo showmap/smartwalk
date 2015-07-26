@@ -242,9 +242,8 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 venueCell.SetFavoriteCommand = _viewModel.FavoritesManager.SetFavoriteShowCommand;
                 venueCell.UnsetFavoriteCommand = _viewModel.FavoritesManager.UnsetFavoriteShowCommand;
-                venueCell.DataContext = new VenueShowDataContext(show, _viewModel.FavoritesManager, 
+                venueCell.DataContext = new VenueShowDataContext(show, _viewModel.FavoritesManager, _viewModel.OrgEvent,
                     _viewModel.OrgEvent.ShowVenueShowLogos(),
-                    _viewModel.OrgEvent, 
                     _viewModel.IsGroupedByLocation, ShowTimeVisible);
                 venueCell.IsExpanded = Equals(_viewModel.ExpandedShow, show);
                 venueCell.IsBeforeExpanded = Equals(_viewModel.ExpandedShow, GetNextShow(show, indexPath));

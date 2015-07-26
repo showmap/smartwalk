@@ -35,7 +35,8 @@ namespace SmartWalk.Client.Core.ViewModels
             ISmartWalkApiService apiService, 
             IAnalyticsService analyticsService,
             IExceptionPolicyService exceptionPolicy,
-            IPostponeService postponeService) : 
+            IPostponeService postponeService,
+            IFavoritesService favoritesService) : 
                 base(
                     configuration,
                     environmentService,
@@ -47,7 +48,7 @@ namespace SmartWalk.Client.Core.ViewModels
             _analyticsService = analyticsService;
             _exceptionPolicy = exceptionPolicy;
 
-            FavoritesManager = new FavoritesShowManager(analyticsService);
+            FavoritesManager = new FavoritesShowManager(favoritesService, analyticsService);
         }
 
         public override string Title

@@ -113,6 +113,11 @@
     <Compile Include="Model\GroupedShow.cs" />
     <Compile Include="ViewModels\Common\FavoritesShowManager.cs" />
     <Compile Include="ViewModels\Interfaces\IFavoritesAware.cs" />
+    <Compile Include="Model\Favorites.cs" />
+    <Compile Include="Services\IFavoritesService.cs" />
+    <Compile Include="Services\FavoritesService.cs" />
+    <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\IFileService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

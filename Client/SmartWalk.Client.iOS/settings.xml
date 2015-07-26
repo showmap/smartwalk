@@ -4,6 +4,7 @@
     <serverHost>showmap.co</serverHost>
     <debugServerHost>showmap.co</debugServerHost>
     <postponeTimeMinutes>5</postponeTimeMinutes>
+    <documentsPath>../Documents/</documentsPath>
     <cachesPath>../Library/Caches/</cachesPath>
     <caches>
         <cache>

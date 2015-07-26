@@ -22,10 +22,7 @@ namespace SmartWalk.Client.iOS.Utils
         [XmlElement("postponeTimeMinutes")]
         public int PostponeTimeMinutes
         {
-            get
-            {
-                return _postponeTimeMinutes;
-            }
+            get { return _postponeTimeMinutes; }
             set
             {
                 _postponeTimeMinutes = value;
@@ -37,6 +34,9 @@ namespace SmartWalk.Client.iOS.Utils
 
         [XmlElement("cachesPath")]
         public string CachesPath { get;set; }
+
+        [XmlElement("documentsPath")]
+        public string DocumentsPath { get;set; }
 
         [XmlArray("caches")]
         [XmlArrayItem("cache")]
