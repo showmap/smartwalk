@@ -35,6 +35,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private UIBarButtonItem _dayButtonItem;
         private UIBarButtonItem _modeButtonItem;     
         private UITapGestureRecognizer _searchTableTapGesture;
+        private bool _favoritesInvalidated;
         private bool _isAnimating;
         private event EventHandler AnimationFinished;
 
@@ -75,6 +76,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             ViewModel.ZoomToVenue += OnZoomToVenue;
             ViewModel.ScrollToVenue += OnScrollToVenue;
+            ViewModel.FavoritesManager.FavoritesUpdated += OnFavoritesUpdated;
 
             InitializeStyle();
             InitializeListSettingsView();
@@ -94,6 +96,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateNavBarState(animated);
             UpdateButtonsFrameOnRotation();
             UpdateDayButtonState();
+            UpdateFavories();
         }
 
         public override void DidMoveToParentViewController(UIViewController parent)
@@ -104,6 +107,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 ViewModel.ZoomToVenue -= OnZoomToVenue;
                 ViewModel.ScrollToVenue -= OnScrollToVenue;
+                ViewModel.FavoritesManager.FavoritesUpdated -= OnFavoritesUpdated;
 
                 DisposeToolBar();
                 DisposeMapView();
@@ -286,6 +290,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
             {
+                UpdateTableViewInset();
                 if (!ViewModel.IsInSearch)
                 {
                     ScrollViewToTop(false);
@@ -758,6 +763,29 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
+        private void OnFavoritesUpdated(object sender, EventArgs e)
+        {
+            // if favories updated in venue view
+            if (View.Window == null)
+            {
+                _favoritesInvalidated = true;
+            }
+        }
+
+        private void UpdateFavories()
+        {
+            if (_favoritesInvalidated)
+            {
+                _favoritesInvalidated = false;
+
+                var tableSource = VenuesAndShowsTableView.WeakDelegate as OrgEventTableSource;
+                if (tableSource != null)
+                {
+                    tableSource.ReloadTableData(false);
+                }
+            }
+        }
+
         private void OnMapDelegateDetailsClick(object sender, MvxValueEventArgs<IMapAnnotation> e)
         {
             var venueAnnotation = e.Value as VenueAnnotation;
@@ -947,7 +975,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (HasData && !IsInSearch && ViewModel.Mode == OrgEventViewMode.List)
             {
                 var topInset = NavBarManager.NavBarHeight + 
-                    (ListSettingsContainer.Hidden ? 0 : ListSettingsView.DefaultHeight);
+                    (!HasData ? 0 : ListSettingsView.DefaultHeight);
 
                 VenuesAndShowsTableView.ContentInset = new UIEdgeInsets(topInset, 0, 0, 0);
                 VenuesAndShowsTableView.ScrollIndicatorInsets = VenuesAndShowsTableView.ContentInset;

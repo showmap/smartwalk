@@ -84,9 +84,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             tableView.DeselectRow(indexPath, false);
         }
 
-        public override void ReloadTableData()
+        public override void ReloadTableData(bool hideHeader = true)
         {
-            base.ReloadTableData();
+            base.ReloadTableData(hideHeader);
 
             if (_scrollToHideManager != null)
             {
@@ -316,10 +316,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         protected HiddenHeaderTableSource(UITableView tableView)
         {
             _tableView = tableView;
-            IsAutohidingEnabled = true;
         }
-
-        public bool IsAutohidingEnabled { get; set; }
 
         public T[] ItemsSource
         {
@@ -331,8 +328,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 if (!_itemsSource.EnumerableEquals(value))
                 {
+                    var firstTime = _itemsSource == null;
                     _itemsSource = value;
-                    ReloadTableData();
+                    ReloadTableData(firstTime);
                 }
             }
         }
@@ -362,11 +360,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        public virtual void ReloadTableData()
+        public virtual void ReloadTableData(bool hideHeader = true)
         {
             _tableView.ReloadData();
 
-            if (IsAutohidingEnabled && !IsHeaderViewHidden)
+            if (hideHeader && !IsHeaderViewHidden)
             {
                 ScrollUtil.ScrollOutHeaderAfterReload(
                     _tableView, 
@@ -378,13 +376,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public void ScrollOutHeader(bool animated)
         {
-            if (IsAutohidingEnabled)
-            {
-                ScrollUtil.ScrollOutHeader(
-                    _tableView, 
-                    HeaderHeight, 
-                    _isTouched && animated);
-            }
+            ScrollUtil.ScrollOutHeader(
+                _tableView, 
+                HeaderHeight, 
+                _isTouched && animated);
         }
 
         public override void DraggingStarted(UIScrollView scrollView)
