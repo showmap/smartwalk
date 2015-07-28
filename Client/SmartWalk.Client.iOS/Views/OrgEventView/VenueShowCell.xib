@@ -57,6 +57,9 @@
                         <state key="highlighted">
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
+                        <connections>
+                            <action selector="OnNavigateOnMapClick:" destination="2" eventType="touchUpInside" id="68t-Tl-al3"/>
+                        </connections>
                     </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="900" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
                         <rect key="frame" x="244" y="17" width="31.5" height="17"/>
@@ -87,8 +90,8 @@
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
                     </button>
-                    <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="600" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="400" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Z4-zH-aRP" userLabel="Location" customClass="CopyLabel">
-                        <rect key="frame" x="24" y="38" width="215.5" height="18"/>
+                    <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" verticalHuggingPriority="600" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="400" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Z4-zH-aRP" userLabel="Location" customClass="CopyLabel">
+                        <rect key="frame" x="24" y="38" width="59.5" height="18"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
@@ -154,7 +157,7 @@
                     <constraint firstItem="50" firstAttribute="top" secondItem="yI1-bt-IQd" secondAttribute="top" id="NPR-ae-ZLF"/>
                     <constraint firstItem="HJ0-5h-aCH" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="2" id="PPs-JX-8Yp"/>
                     <constraint firstAttribute="trailingMargin" secondItem="eZg-8z-Khe" secondAttribute="trailing" priority="900" constant="10" id="Q8x-s6-Qb4"/>
-                    <constraint firstItem="9" firstAttribute="trailing" secondItem="4Z4-zH-aRP" secondAttribute="trailing" id="QNi-gn-dMe"/>
+                    <constraint firstItem="9" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="4Z4-zH-aRP" secondAttribute="trailing" priority="900" id="QNi-gn-dMe"/>
                     <constraint firstItem="50" firstAttribute="trailing" secondItem="yI1-bt-IQd" secondAttribute="trailing" id="Qxb-6g-GGq"/>
                     <constraint firstItem="50" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="5" id="S1J-YA-WDp"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="top" secondItem="4Z4-zH-aRP" secondAttribute="bottom" priority="900" constant="5" id="STG-PZ-IjI"/>

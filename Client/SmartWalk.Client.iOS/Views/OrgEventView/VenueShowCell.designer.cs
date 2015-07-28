@@ -86,6 +86,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
 		[Action ("OnDetailsButtonClick:")]
 		partial void OnDetailsButtonClick (Foundation.NSObject sender);
+
+		[Action ("OnNavigateOnMapClick:")]
+		partial void OnNavigateOnMapClick (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -137,6 +140,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (Separator != null) {
 				Separator.Dispose ();
 				Separator = null;
+			}
+
+			if (StarButton != null) {
+				StarButton.Dispose ();
+				StarButton = null;
 			}
 
 			if (StartTimeLabel != null) {
@@ -202,11 +210,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TitleLeftConstraint != null) {
 				TitleLeftConstraint.Dispose ();
 				TitleLeftConstraint = null;
-			}
-
-			if (StarButton != null) {
-				StarButton.Dispose ();
-				StarButton = null;
 			}
 		}
 	}

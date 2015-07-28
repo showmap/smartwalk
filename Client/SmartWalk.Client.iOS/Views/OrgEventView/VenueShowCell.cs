@@ -58,7 +58,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private NSObject _orientationObserver;
         private bool _updateConstraintsScheduled;
         private UITapGestureRecognizer _cellTapGesture;
-        private UITapGestureRecognizer _mapTapGesture;
         private UITapGestureRecognizer _starTapGesture;
         private bool _isBeforeExpanded;
         private bool _isExpanded;
@@ -476,6 +475,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     {
                         NavigateDetails();
                     }
+                    else if (IsExpanded && DataContext.IsLocationAvailable &&
+                        rec.LocatedInView(this, 
+                            new CGRect(0, LocationLabel.Frame.Y - VerticalBorder, 
+                                LocationLabel.Frame.X + LocationLabel.Frame.Width + HorizontalBorder, 
+                                DetailsTapAreaHeight)))
+                    {
+                        if (NavigateVenueOnMapCommand != null &&
+                            NavigateVenueOnMapCommand.CanExecute(DataContext.TargetVenue))
+                        {
+                            NavigateVenueOnMapCommand.Execute(DataContext.TargetVenue);
+                        }
+                    }
                     else
                     {
                         if (ExpandCollapseShowCommand != null &&
@@ -490,17 +501,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             };
 
             AddGestureRecognizer(_cellTapGesture);
-
-            _mapTapGesture = new UITapGestureRecognizer(() =>
-                {
-                    if (NavigateVenueOnMapCommand != null &&
-                        NavigateVenueOnMapCommand.CanExecute(DataContext.TargetVenue))
-                    {
-                        NavigateVenueOnMapCommand.Execute(DataContext.TargetVenue);
-                    }
-                });
-
-            NavigateOnMapButton.AddGestureRecognizer(_mapTapGesture);
 
             _starTapGesture = new UITapGestureRecognizer(() =>
                 {
@@ -538,13 +538,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 RemoveGestureRecognizer(_cellTapGesture);
                 _cellTapGesture.Dispose();
                 _cellTapGesture = null;
-            }
-
-            if (_mapTapGesture != null)
-            {
-                NavigateOnMapButton.RemoveGestureRecognizer(_mapTapGesture);
-                _mapTapGesture.Dispose();
-                _mapTapGesture = null;
             }
 
             if (_starTapGesture != null)
@@ -712,6 +705,15 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
 
             return result;
+        }
+
+        partial void OnNavigateOnMapClick(NSObject sender)
+        {
+            if (NavigateVenueOnMapCommand != null &&
+                NavigateVenueOnMapCommand.CanExecute(DataContext.TargetVenue))
+            {
+                NavigateVenueOnMapCommand.Execute(DataContext.TargetVenue);
+            }
         }
 
         partial void OnDetailsButtonClick(NSObject sender)

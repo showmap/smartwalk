@@ -66,6 +66,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (SortByLabel != null &&
                 !_isInitialized)
             {
+                SortBySegments.SetTitle(Localization.Name, 0);
+                SortBySegments.SetTitle(Localization.Time, 1);
+
                 SortByLabel.Text = Localization.OrderBy;
                 // HACK: A space for a gap between start and caption
                 FavoritesButton.SetTitle(" " + Localization.Favorites, UIControlState.Normal);
@@ -96,13 +99,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             SortBySegments.SetTitleTextAttributes(
                 new UITextAttributes {
-                    Font = Theme.SegmentsTextFont, 
+                    Font = Theme.OrgEventHeaderFont, 
                     TextColor = Light
                 }, 
                 UIControlState.Highlighted);
             SortBySegments.SetTitleTextAttributes(
                 new UITextAttributes {
-                    Font = Theme.SegmentsTextFont,
+                    Font = Theme.OrgEventHeaderFont,
                     TextColor = Light
                 }, 
                 UIControlState.Normal);

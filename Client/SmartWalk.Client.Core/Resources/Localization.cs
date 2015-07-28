@@ -24,6 +24,8 @@
         public const string Shows = "Shows";
         public const string MoreInformation = "More information";
         public const string OrderBy = "Order by";
+        public const string Name = "Name";
+        public const string Time = "Time";
         public const string Favorites = "Favorites";
         public const string Search = "Search";
 
