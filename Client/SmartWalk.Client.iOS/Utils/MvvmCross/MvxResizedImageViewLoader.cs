@@ -3,8 +3,8 @@ using Cirrious.CrossCore;
 using Cirrious.CrossCore.Core;
 using Cirrious.CrossCore.WeakSubscription;
 using Cirrious.MvvmCross.Binding;
-using UIKit;
 using SmartWalk.Client.iOS.Resources;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {
@@ -45,6 +45,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             DefaultImagePath = Theme.DefaultImagePath;
             ErrorImagePath = Theme.ErrorImagePath;
         }
+
+        public bool UseRoundClip { get; set; }
 
         ~MvxResizedImageViewLoader()
         {
@@ -108,14 +110,15 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             }
         }
 
-        private static string GetImageUrlWithDimensions(string imageUrl, UIView view)
+        private string GetImageUrlWithDimensions(string imageUrl, UIView view)
         {
             var dimensions = view != null && !view.Frame.IsEmpty
                 ? string.Format(
-                    "{0}{1}>{2}",
+                    "{0}{1}>{2}{3}",
                     MvxPlus.SizeParam,
                     (int)Math.Ceiling(view.Frame.Width * UIScreen.MainScreen.Scale), 
-                    (int)Math.Ceiling(view.Frame.Height * UIScreen.MainScreen.Scale))
+                    (int)Math.Ceiling(view.Frame.Height * UIScreen.MainScreen.Scale),
+                    UseRoundClip ? string.Format(">{0}>{1}", MvxPlus.ClipParam, "true") : string.Empty)
                 : string.Empty;
             return imageUrl + dimensions;
         }

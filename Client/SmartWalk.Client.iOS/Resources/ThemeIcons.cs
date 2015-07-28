@@ -37,6 +37,8 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage ContactPhone = Image("Icons/ContactPhone.png");
         public static readonly UIImage ContactWeb = Image("Icons/ContactWeb.png");
 
+        public static readonly UIImage Circle = Image("Images/Circle.png");
+
         private static UIImage Image(string path)
         {
             var image = UIImage.FromFile(path);

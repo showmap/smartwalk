@@ -69,6 +69,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             var sizeParam = Url.Substring(sizeParamEndIndex, Url.Length - sizeParamEndIndex);
             var sizes = sizeParam.Split('>');
             var size = new CGSize(float.Parse(sizes[0]), float.Parse(sizes[1]));
+            var useClipMask = sizes.Length >= 4 && sizes[2] == MvxPlus.ClipParam && sizes[3] == "true";
 
             var imageCache = MvxPlus.SafeGetImageCache();
 
@@ -76,24 +77,30 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
                 originalUrl, 
                 image =>
                 RunSyncOrAsyncWithLock(() =>
-                {
-                    var scaledSize = ResizeToFit(image.Size, size);
+                    {
+                        var scaledSize = ResizeToFit(image.Size, size);
 
-                    UIGraphics.BeginImageContextWithOptions(size, true, 1);
+                        UIGraphics.BeginImageContextWithOptions(size, !useClipMask, 1);
 
-                    image.Draw(new CGRect(
-                        new CGPoint(
-                            -((scaledSize.Width - size.Width) / 2), 
-                            -((scaledSize.Height - size.Height) / 2)),
-                        scaledSize));
+                        if (useClipMask)
+                        {
+                            var path = UIBezierPath.FromOval(new CGRect(CGPoint.Empty, size));
+                            path.AddClip();
+                        }
 
-                    var resizedImage = UIGraphics.GetImageFromCurrentImageContext();
+                        image.Draw(new CGRect(
+                                new CGPoint(
+                                    -((scaledSize.Width - size.Width) / 2), 
+                                    -((scaledSize.Height - size.Height) / 2)),
+                                scaledSize));
 
-                    UIGraphics.EndImageContext();
+                        var resizedImage = UIGraphics.GetImageFromCurrentImageContext();
 
-                    var stream = resizedImage.AsJPEG(0.86f).AsStream();
-                    HandleSuccess(stream);
-                }),
+                        UIGraphics.EndImageContext();
+
+                        var stream = resizedImage.AsJPEG(0.86f).AsStream();
+                        HandleSuccess(stream);
+                    }),
                 FireDownloadFailed);
         }
 

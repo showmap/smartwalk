@@ -105,6 +105,14 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="Thumb Image" customClass="ProgressImageView">
+                        <rect key="frame" x="8" y="5" width="40" height="40"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="139"/>
+                            <constraint firstAttribute="width" constant="40" id="173"/>
+                        </constraints>
+                    </imageView>
                     <view autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="yI1-bt-IQd" userLabel="Thumb Label View">
                         <rect key="frame" x="8" y="5" width="40" height="40"/>
                         <subviews>
@@ -120,14 +128,6 @@
                             <constraint firstAttribute="centerY" secondItem="954-GK-xxD" secondAttribute="centerY" id="T73-Sk-n6e"/>
                         </constraints>
                     </view>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="Thumb Image" customClass="ProgressImageView">
-                        <rect key="frame" x="8" y="5" width="40" height="40"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="40" id="139"/>
-                            <constraint firstAttribute="width" constant="40" id="173"/>
-                        </constraints>
-                    </imageView>
                     <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="592" userLabel="Realtime">
                         <rect key="frame" x="0.0" y="0.0" width="5" height="302"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

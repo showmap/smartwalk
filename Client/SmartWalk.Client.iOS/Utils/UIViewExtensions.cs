@@ -128,7 +128,8 @@ namespace SmartWalk.Client.iOS.Utils
 
         public static bool HasImage(this UIImageView imageView)
         {
-            var result = imageView.Image != null &&
+            var result = imageView != null &&
+                imageView.Image != null &&
                 imageView.Image.Size != Theme.DefaultImageSize &&
                 imageView.Image.Size != Theme.ErrorImageSize;
             return result;

@@ -51,9 +51,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public static readonly float DefaultHeight = VerticalBorder + ShowTitleTextHeight + VerticalBorder;
 
-        private readonly MvxImageViewLoader _largeImageHelper;
         private readonly MvxResizedImageViewLoader _smallImageHelper;
-        private readonly AnimationDelay _imageAnimationDelay = new AnimationDelay();
+        private readonly MvxImageViewLoader _largeImageHelper;
+        private readonly AnimationDelay _smallImageAnimationDelay = new AnimationDelay();
+        private readonly AnimationDelay _largeImageAnimationDelay = new AnimationDelay();
 
         private NSObject _orientationObserver;
         private bool _updateConstraintsScheduled;
@@ -70,23 +71,32 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 () => ThumbImageView,
                 () => 
                 {
-                    if (ThumbImageView != null && ThumbImageView.ProgressEnded())
+                    if (_smallImageHelper != null &&
+                        _smallImageHelper.ImageUrl != null && 
+                        ThumbImageView.ProgressEnded())
                     {
-                        var noImage = !ThumbImageView.HasImage();
-                        ThumbImageView.SetHidden(noImage, _imageAnimationDelay.Animate);
-
-                        // showing abbr if image couldn't be loaded
-                        ThumbLabelView.SetHidden(!noImage, false);
+                        if (ThumbImageView.HasImage())
+                        {
+                            ThumbImageView.SetHidden(false, _smallImageAnimationDelay.Animate);
+                        }
+                        else 
+                        {
+                            // showing abbr if image couldn't be loaded
+                            ThumbImageView.Image = ThemeIcons.Circle;
+                            ThumbLabelView.SetHidden(false, false);
+                        }
                     }
-                });
+                }) { UseRoundClip = true };
 
             _largeImageHelper = new MvxImageViewLoader(
                 () => ThumbImageView, 
                 () => 
                 {
-                    if (_largeImageHelper.ImageUrl != null && 
-                        ThumbImageView.Image != null)
+                    if (_largeImageHelper != null &&
+                        _largeImageHelper.ImageUrl != null && 
+                        ThumbImageView.HasImage())
                     {
+                        ThumbImageView.SetHidden(false, _largeImageAnimationDelay.Animate);
                         UpdateConstraintConstants(false);
                     }
                 });
@@ -235,7 +245,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
                 if (_isExpanded)
                 {
+                    _largeImageHelper.ImageUrl = null;
+                    _largeImageAnimationDelay.Reset();
                     UpdateLargeImageState();
+                }
+                else
+                {
+                    _smallImageHelper.ImageUrl = null;
+                    UpdateSmallImageState();
                 }
             }
         }
@@ -293,10 +310,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
         {
-            _imageAnimationDelay.Reset();
+            _smallImageAnimationDelay.Reset();
             _smallImageHelper.ImageUrl = null;
             _largeImageHelper.ImageUrl = null;
             ThumbImageView.Image = null;
+
+            if (DataContext != null &&
+                DataContext.IsLogoVisible && !DataContext.Show.HasPictures())
+            {
+                ThumbImageView.Image = ThemeIcons.Circle;
+            }
 
             ThumbLabel.Text = DataContext != null ? DataContext.Show.Title.GetAbbreviation(2) : null;
             TitleLabel.Text = DataContext != null  ? DataContext.Show.Title : null;
@@ -341,10 +364,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         ThumbLeftConstraint.Constant = HorizontalGap;
                         ThumbHeightConstraint.Constant = ImageLargeHeight;
                         ThumbWidthConstraint.Constant = GetImageProportionalWidth();
-
-                        ThumbImageView.MakeRect(new CGSize(
-                            ThumbWidthConstraint.Constant, 
-                            ThumbHeightConstraint.Constant));
                     }
                     else if (!IsExpanded && DataContext.IsLogoVisible)
                     {
@@ -363,14 +382,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         ? 0 : HorizontalGap + ThumbWidthConstraint.Constant + 
                             (DataContext.IsLogoVisible ? HorizontalGap : 0) + HorizontalGap; 
                 },
-                animated,
-                () =>
-                    {
-                        if (!IsExpanded)
-                        {
-                            ThumbImageView.MakeRound();
-                        }
-                    });
+                animated);
         }
 
         private void UpdateSmallImageState()
@@ -403,7 +415,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             if (DataContext == null) return;
 
-            ThumbImageView.SetHidden(!DataContext.IsLogoVisible || !DataContext.Show.HasPictures(), animated);
+            ThumbImageView.SetHidden(!DataContext.IsLogoVisible, animated);
             ThumbLabelView.SetHidden(IsExpanded || !DataContext.IsLogoVisible || DataContext.Show.HasPictures(), animated);
 
             StartTimeLabel.SetHidden(!DataContext.IsTimeVisible, animated);
@@ -477,9 +489,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
                     else if (IsExpanded && DataContext.IsLocationAvailable &&
                         rec.LocatedInView(this, 
-                            new CGRect(0, LocationLabel.Frame.Y - VerticalBorder, 
+                            new CGRect(0, LocationLabel.Frame.Y, 
                                 LocationLabel.Frame.X + LocationLabel.Frame.Width + HorizontalBorder, 
-                                DetailsTapAreaHeight)))
+                                LocationLabel.Frame.Height)))
                     {
                         if (NavigateVenueOnMapCommand != null &&
                             NavigateVenueOnMapCommand.CanExecute(DataContext.TargetVenue))
@@ -578,13 +590,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeStyle()
         {
-            ThumbImageView.MakeRound();
+            ThumbImageView.TintColor = ThemeColors.BorderLight;
 
             ThumbLabel.Font = Theme.VenueShowLogoFont;
             ThumbLabel.TextColor = ThemeColors.ContentDarkText;
-
-            ThumbLabelView.MakeRound();
-            ThumbLabelView.BackgroundColor = ThemeColors.BorderLight;
 
             TitleLabel.Font = Theme.ContentFont;
             TitleLabel.TextColor = ThemeColors.ContentLightText;
