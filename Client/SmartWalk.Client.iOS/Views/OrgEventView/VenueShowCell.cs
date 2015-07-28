@@ -135,7 +135,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (show == null) return 0;
 
             var titleHeight = 
-                show.Title != null
+                !string.IsNullOrWhiteSpace(show.Title)
                 ? ScreenUtil.CalculateTextHeight(
                     GetTitleBlockWidth(frameWidth, show, showTime), 
                     show.Title, 
@@ -148,7 +148,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             var showDescription = GetShowDescription(show, !showTime);
             var descriptionHeight = 
-                showDescription != null
+                !string.IsNullOrWhiteSpace(showDescription)
                 ? (titleHeight > 0 ? TextGap : 0f) + ScreenUtil.CalculateTextHeight(
                     GetDescriptionBlockWidth(frameWidth), 
                     showDescription, 
@@ -346,11 +346,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         (!IsExpanded && DataContext.IsLogoVisible ? ImageSmallHeight + HorizontalGap : 0);
 
                     TitleAndLocationConstraint.Constant = IsExpanded &&
-                        DataContext.Show.Title != null && DataContext.IsLocationAvailable
+                        !string.IsNullOrWhiteSpace(DataContext.Show.Title) && DataContext.IsLocationAvailable
                             ? TextGap : 0;
                     
                     LocationAndDescriptionConstraint.Constant = IsExpanded &&
-                        DataContext.Show.Title != null && GetShowDescription(DataContext.Show, !DataContext.IsTimeVisible) != null 
+                        !string.IsNullOrWhiteSpace(DataContext.Show.Title) && 
+                        !string.IsNullOrWhiteSpace(GetShowDescription(DataContext.Show, !DataContext.IsTimeVisible)) 
                             ? TextGap : 0;
 
                     var imageSpace = DataContext.Show.HasPictures() ? VerticalGap + ImageLargeHeight : 0;
@@ -695,7 +696,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 }
             }
 
-            var breakString = result != null && show.Description != null 
+            var breakString = result != null && !string.IsNullOrWhiteSpace(show.Description) 
                 ? Environment.NewLine + Environment.NewLine : null;
             
             return result + breakString + show.Description;
