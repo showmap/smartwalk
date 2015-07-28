@@ -131,8 +131,13 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 
         protected override void OnViewModelRefreshed(bool hasData, bool pullToRefresh)
         {
-            // forcing to scroll page to top when next venue is requested
             base.OnViewModelRefreshed(hasData, true);
+
+            // forcing to scroll page to top when next venue is requested
+            if (hasData && !pullToRefresh)
+            {
+                ScrollViewToTop(true);
+            }
 
             if (pullToRefresh)
             {

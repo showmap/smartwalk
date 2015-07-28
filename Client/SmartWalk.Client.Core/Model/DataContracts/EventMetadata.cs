@@ -37,19 +37,20 @@ namespace SmartWalk.Client.Core.Model.DataContracts
             var em = obj as EventMetadata;
             if (em != null)
             {
-                return 
+                var result = 
                     Id == em.Id &&
                     Host.EnumerableEquals(em.Host) &&
                     Title == em.Title &&
                     Description == em.Description &&
                     Picture == em.Picture &&
-                    Pictures == em.Pictures &&
+                    Equals(Pictures, em.Pictures) &&
                     StartTime == em.StartTime &&
                     EndTime == em.EndTime &&
                     Latitude == em.Latitude &&
                     Longitude == em.Longitude &&
                     CombineType == em.CombineType &&
                     Shows.EnumerableEquals(em.Shows);
+                return result;
             }
 
             return false;

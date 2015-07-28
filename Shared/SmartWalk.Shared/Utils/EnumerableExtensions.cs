@@ -9,8 +9,9 @@ namespace SmartWalk.Shared.Utils
             this IEnumerable<T> enumerable1, 
             IEnumerable<T> enumerable2)
         {
-            return Equals(enumerable1, enumerable2) || 
+            var result = Equals(enumerable1, enumerable2) || 
                 (enumerable1 != null && enumerable2 != null && enumerable1.SequenceEqual(enumerable2));
+            return result;
         }
     }
 }

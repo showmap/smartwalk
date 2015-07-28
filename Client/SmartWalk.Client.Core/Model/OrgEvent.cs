@@ -113,9 +113,10 @@ namespace SmartWalk.Client.Core.Model
             var oe = obj as OrgEvent;
             if (oe != null)
             {
-                return Equals(_eventMetadata, oe._eventMetadata) &&
+                var result = Equals(_eventMetadata, oe._eventMetadata) &&
                     Equals(_host, oe._host) &&
                     _venues.EnumerableEquals(oe._venues);
+                return result;
             }
 
             return false;

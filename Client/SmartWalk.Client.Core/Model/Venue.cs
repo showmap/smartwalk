@@ -23,9 +23,10 @@ namespace SmartWalk.Client.Core.Model
             var venue = obj as Venue;
             if (venue != null)
             {
-                return Equals(Info, venue.Info) &&
+                var result = Equals(Info, venue.Info) &&
                     Shows.EnumerableEquals(venue.Shows) &&
                     Description == venue.Description;
+                return result;
             }
 
             return false;

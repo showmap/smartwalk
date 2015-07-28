@@ -29,14 +29,15 @@ namespace SmartWalk.Client.Core.Model.DataContracts
             var en = obj as Entity;
             if (en != null)
             {
-                return Id == en.Id &&
+                var result = Id == en.Id &&
                     Type == en.Type &&
                     Name == en.Name &&
                     Description == en.Description &&
                     Picture == en.Picture &&
-                    Pictures == en.Pictures &&
+                    Equals(Pictures, en.Pictures) &&
                     Contacts.EnumerableEquals(en.Contacts) &&
                     Addresses.EnumerableEquals(en.Addresses);
+                return result;
             }
 
             return false;

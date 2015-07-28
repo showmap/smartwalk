@@ -34,7 +34,7 @@ namespace SmartWalk.Client.Core.Model.DataContracts
             var show = obj as Show;
             if (show != null)
             {
-                return Id == show.Id &&
+                var result = Id == show.Id &&
                     Venue.EnumerableEquals(show.Venue) &&
                     IsReference == show.IsReference &&
                     Title == show.Title &&
@@ -42,8 +42,9 @@ namespace SmartWalk.Client.Core.Model.DataContracts
                     StartTime == show.StartTime &&
                     EndTime == show.EndTime &&
                     Picture == show.Picture &&
-                    Pictures == show.Pictures &&
+                    Equals(Pictures, show.Pictures) &&
                     DetailsUrl == show.DetailsUrl;
+                return result;
             }
 
             return false;

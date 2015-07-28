@@ -136,10 +136,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected virtual void OnViewModelRefreshed(bool hasData, bool pullToRefresh)
         {
-            if (hasData && pullToRefresh)
-            {
-                ScrollViewToTop(true);
-            }
         }
 
         protected virtual void ScrollViewToTop(bool animated)
