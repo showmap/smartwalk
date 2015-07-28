@@ -7,7 +7,7 @@ using Foundation;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Services;
 
-namespace SmartWalk.Client.iOS.Utils
+namespace SmartWalk.Client.iOS.Utils.Settings
 {
     public static class AppSettingsUtil
     {

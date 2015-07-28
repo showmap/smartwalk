@@ -2,7 +2,7 @@ using System;
 using System.Xml.Serialization;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 
-namespace SmartWalk.Client.iOS.Utils
+namespace SmartWalk.Client.iOS.Utils.Settings
 {
     [Serializable]
     [XmlRoot(ElementName = "settings")]

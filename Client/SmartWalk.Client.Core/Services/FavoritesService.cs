@@ -5,12 +5,14 @@ namespace SmartWalk.Client.Core.Services
 {
     public class FavoritesService : IFavoritesService
     {
-        private const string FavoritesDocument = "Favorites.json";
+        public const string FavoritesFileName = "Favorites.json";
         
         private readonly IConfiguration _configuration;
         private readonly IMvxExtendedFileStore _fileStore;
         private readonly IFileService _fileService;
         private readonly string _docFolderPath;
+
+        private Favorites _lastSavedFavorites;
 
         public FavoritesService(
             IConfiguration configuration, 
@@ -27,7 +29,9 @@ namespace SmartWalk.Client.Core.Services
 
         public Favorites LoadFavorites()
         {
-            var result = _fileService.GetFileObject<Favorites>(_docFolderPath, FavoritesDocument);
+            if (_lastSavedFavorites != null) return _lastSavedFavorites;
+
+            var result = _fileService.GetFileObject<Favorites>(_docFolderPath, FavoritesFileName);
 
             if (result == null)
             {
@@ -40,7 +44,8 @@ namespace SmartWalk.Client.Core.Services
         public void SaveFavorites(Favorites favorites)
         {
             favorites.LastUpdated = DateTime.UtcNow;
-            _fileService.SetFileObject(_docFolderPath, FavoritesDocument, favorites);
+            _fileService.SetFileObject(_docFolderPath, FavoritesFileName, favorites);
+            _lastSavedFavorites = favorites;
 
             if (FavoritesUpdated != null)
             {

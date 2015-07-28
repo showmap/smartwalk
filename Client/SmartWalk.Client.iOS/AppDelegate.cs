@@ -10,6 +10,7 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Services;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Utils.Settings;
 using UIKit;
 
 namespace SmartWalk.Client.iOS
@@ -53,6 +54,8 @@ namespace SmartWalk.Client.iOS
             NavBarManager.Instance.SetHidden(false, false);
 
             Window.MakeKeyAndVisible();
+
+            Mvx.Resolve<ICloudService>();
             
             return true;
         }

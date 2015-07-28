@@ -8,9 +8,10 @@ using Cirrious.MvvmCross.Touch.Views.Presenters;
 using Cirrious.MvvmCross.ViewModels;
 using SmartWalk.Client.Core;
 using SmartWalk.Client.Core.Services;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
+using SmartWalk.Client.iOS.Utils.Settings;
 using UIKit;
+using SmartWalk.Client.iOS.Services;
 
 namespace SmartWalk.Client.iOS
 {

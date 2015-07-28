@@ -217,6 +217,8 @@
     <Folder Include="Views\OrgEventInfoView\" />
     <Folder Include="Views\Common\Base\Cells\" />
     <Folder Include="Bootstrap\" />
+    <Folder Include="Utils\Settings\" />
+    <Folder Include="Utils\iCloud\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -368,11 +370,8 @@
     </Compile>
     <Compile Include="Views\OrgEventView\OrgEventTableSourceConverter.cs" />
     <Compile Include="Views\OrgEventView\DayHeaderCell.cs" />
-    <Compile Include="Utils\SettingKeys.cs" />
     <Compile Include="Views\Common\Base\ActiveAwareViewBase.cs" />
     <Compile Include="Utils\UIConstants.cs" />
-    <Compile Include="Utils\AppSettings.cs" />
-    <Compile Include="Utils\AppSettingsUtil.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\AnalyticsService.cs" />
     <Compile Include="Utils\MvvmCross\MvxExtendedFileStore.cs" />
@@ -407,6 +406,12 @@
     <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
     <Compile Include="Views\OrgEventView\OrgEventSearchBarDelegate.cs" />
     <Compile Include="Views\OrgEventView\VenueShowDataContext.cs" />
+    <Compile Include="Utils\Settings\AppSettings.cs" />
+    <Compile Include="Utils\Settings\AppSettingsUtil.cs" />
+    <Compile Include="Utils\Settings\SettingKeys.cs" />
+    <Compile Include="Utils\iCloud\FavoritesDocument.cs" />
+    <Compile Include="Services\CloudService.cs" />
+    <Compile Include="Services\ICloudService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">
