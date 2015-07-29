@@ -75,8 +75,9 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HJ0-5h-aCH" userLabel="*">
+                    <button clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HJ0-5h-aCH" userLabel="*">
                         <rect key="frame" x="276" y="2" width="44" height="44"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="nzk-bP-mGK"/>
                             <constraint firstAttribute="height" constant="44" id="x7H-0l-onU"/>
@@ -113,21 +114,6 @@
                             <constraint firstAttribute="width" constant="40" id="173"/>
                         </constraints>
                     </imageView>
-                    <view autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="yI1-bt-IQd" userLabel="Thumb Label View">
-                        <rect key="frame" x="8" y="5" width="40" height="40"/>
-                        <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="954-GK-xxD" userLabel="Thumb Label">
-                                <rect key="frame" x="10" y="10" width="20.5" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <constraints>
-                            <constraint firstAttribute="centerX" secondItem="954-GK-xxD" secondAttribute="centerX" id="285-jW-gkp"/>
-                            <constraint firstAttribute="centerY" secondItem="954-GK-xxD" secondAttribute="centerY" id="T73-Sk-n6e"/>
-                        </constraints>
-                    </view>
                     <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="592" userLabel="Realtime">
                         <rect key="frame" x="0.0" y="0.0" width="5" height="302"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -142,23 +128,27 @@
                             <constraint firstAttribute="height" constant="1" id="leb-9w-1Ar"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="954-GK-xxD" userLabel="Thumb Label">
+                        <rect key="frame" x="18" y="15" width="20.5" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="50" firstAttribute="centerY" secondItem="954-GK-xxD" secondAttribute="centerY" id="4Gg-Kh-U94"/>
                     <constraint firstItem="i3H-aj-VWA" firstAttribute="centerY" secondItem="4Z4-zH-aRP" secondAttribute="centerY" id="6ij-37-YS2"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="leading" secondItem="592" secondAttribute="trailing" constant="5" id="7ix-TL-Ymo"/>
                     <constraint firstItem="ztH-tE-Jjf" firstAttribute="leading" secondItem="eZg-8z-Khe" secondAttribute="leading" id="92K-Fk-Pbf"/>
                     <constraint firstItem="181" firstAttribute="top" relation="greaterThanOrEqual" secondItem="eZg-8z-Khe" secondAttribute="bottom" priority="900" constant="12" id="B8M-XT-prq"/>
                     <constraint firstItem="HJ0-5h-aCH" firstAttribute="leading" secondItem="3" secondAttribute="trailing" id="Eyk-rv-NKg"/>
-                    <constraint firstItem="50" firstAttribute="leading" secondItem="yI1-bt-IQd" secondAttribute="leading" id="FTH-F8-VsB"/>
                     <constraint firstAttribute="trailing" secondItem="HJ0-5h-aCH" secondAttribute="trailing" id="Fk0-C9-gur"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="leading" secondItem="i3H-aj-VWA" secondAttribute="leading" constant="18" id="KGa-0j-O5k"/>
                     <constraint firstItem="6" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="-2" id="KJp-hi-iCi"/>
                     <constraint firstItem="181" firstAttribute="top" secondItem="ztH-tE-Jjf" secondAttribute="top" constant="-1" id="Lmp-Mv-dGq"/>
-                    <constraint firstItem="50" firstAttribute="top" secondItem="yI1-bt-IQd" secondAttribute="top" id="NPR-ae-ZLF"/>
                     <constraint firstItem="HJ0-5h-aCH" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="2" id="PPs-JX-8Yp"/>
                     <constraint firstAttribute="trailingMargin" secondItem="eZg-8z-Khe" secondAttribute="trailing" priority="900" constant="10" id="Q8x-s6-Qb4"/>
                     <constraint firstItem="9" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="4Z4-zH-aRP" secondAttribute="trailing" priority="900" id="QNi-gn-dMe"/>
-                    <constraint firstItem="50" firstAttribute="trailing" secondItem="yI1-bt-IQd" secondAttribute="trailing" id="Qxb-6g-GGq"/>
                     <constraint firstItem="50" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="5" id="S1J-YA-WDp"/>
                     <constraint firstItem="eZg-8z-Khe" firstAttribute="top" secondItem="4Z4-zH-aRP" secondAttribute="bottom" priority="900" constant="5" id="STG-PZ-IjI"/>
                     <constraint firstAttribute="trailing" secondItem="K9o-xv-nfu" secondAttribute="trailing" id="Saq-Ut-4Ls"/>
@@ -176,8 +166,8 @@
                     <constraint firstItem="50" firstAttribute="leading" secondItem="592" secondAttribute="trailing" constant="3" id="mML-No-LvR"/>
                     <constraint firstItem="6" firstAttribute="width" secondItem="3" secondAttribute="width" id="mRO-93-3Ot"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6" secondAttribute="bottom" constant="3" id="ntX-rC-rmO"/>
-                    <constraint firstItem="50" firstAttribute="bottom" secondItem="yI1-bt-IQd" secondAttribute="bottom" id="onR-Cc-HXR"/>
                     <constraint firstItem="3" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" constant="17" id="paf-GI-3hU"/>
+                    <constraint firstItem="50" firstAttribute="centerX" secondItem="954-GK-xxD" secondAttribute="centerX" id="uP2-M2-Jns"/>
                     <constraint firstItem="4Z4-zH-aRP" firstAttribute="top" secondItem="9" secondAttribute="bottom" priority="900" constant="5" id="xww-JG-rm7"/>
                     <constraint firstItem="3" firstAttribute="leading" secondItem="9" secondAttribute="trailing" constant="5" id="y2f-W3-srI"/>
                     <constraint firstItem="592" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="yEX-Ke-t91"/>
@@ -199,7 +189,6 @@
                 <outlet property="ThumbHeightConstraint" destination="139" id="ZQO-i4-zub"/>
                 <outlet property="ThumbImageView" destination="50" id="389"/>
                 <outlet property="ThumbLabel" destination="954-GK-xxD" id="aSg-h9-BQL"/>
-                <outlet property="ThumbLabelView" destination="yI1-bt-IQd" id="IyV-if-5dA"/>
                 <outlet property="ThumbLeftConstraint" destination="mML-No-LvR" id="4gs-YN-hoi"/>
                 <outlet property="ThumbTopConstraint" destination="S1J-YA-WDp" id="WZY-5M-T8d"/>
                 <outlet property="ThumbWidthConstraint" destination="173" id="wx4-Wa-3sU"/>

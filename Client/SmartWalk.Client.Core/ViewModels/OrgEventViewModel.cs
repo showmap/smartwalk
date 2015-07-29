@@ -639,7 +639,8 @@ namespace SmartWalk.Client.Core.ViewModels
                         () => 
                             _parameters != null &&
                             OrgEvent != null &&
-                            OrgEvent.Id != 0);
+                            OrgEvent.Id != 0 &&
+                            !string.IsNullOrWhiteSpace(OrgEvent.Description));
                 }
 
                 return _navigateOrgEventInfoCommand;

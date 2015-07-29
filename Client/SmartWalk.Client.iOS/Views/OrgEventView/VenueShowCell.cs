@@ -83,7 +83,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                         {
                             // showing abbr if image couldn't be loaded
                             ThumbImageView.Image = ThemeIcons.Circle;
-                            ThumbLabelView.SetHidden(false, false);
+                            ThumbLabel.SetHidden(false, false);
                         }
                     }
                 }) { UseRoundClip = true };
@@ -417,7 +417,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (DataContext == null) return;
 
             ThumbImageView.SetHidden(!DataContext.IsLogoVisible, animated);
-            ThumbLabelView.SetHidden(IsExpanded || !DataContext.IsLogoVisible || DataContext.Show.HasPictures(), animated);
+            ThumbLabel.SetHidden(IsExpanded || !DataContext.IsLogoVisible || DataContext.Show.HasPictures(), animated);
 
             StartTimeLabel.SetHidden(!DataContext.IsTimeVisible, animated);
             EndTimeLabel.SetHidden(!DataContext.IsTimeVisible, animated);
