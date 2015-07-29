@@ -464,7 +464,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 return width;
             }
 
-            return 150f;
+            return ImageLargeHeight;
         }
 
         private void InitializeGestures()
