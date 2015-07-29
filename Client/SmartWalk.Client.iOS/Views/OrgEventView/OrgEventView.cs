@@ -893,6 +893,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             SearchTableView.SetHidden(!IsInSearch, animated);
             SearchTableView.ScrollsToTop = IsInSearch;
             VenuesAndShowsTableView.ScrollsToTop = !IsInSearch;
+            VenuesAndShowsTableView.ScrollEnabled = !IsInSearch;
             View.BackgroundColor = IsInSearch 
                 ? ThemeColors.PanelBackground 
                 : ThemeColors.ContentLightBackground;
