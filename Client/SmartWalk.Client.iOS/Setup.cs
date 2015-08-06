@@ -11,13 +11,13 @@ using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 using SmartWalk.Client.iOS.Utils.Settings;
 using UIKit;
-using SmartWalk.Client.iOS.Services;
 
 namespace SmartWalk.Client.iOS
 {
     public class Setup : MvxTouchSetup
     {
         private readonly AppSettings _settings;
+        private readonly string _clientVersion;
 
         private CacheConfiguration _picsCacheConfig;
         private CacheConfiguration _resizedPicsCacheConfig;
@@ -26,10 +26,12 @@ namespace SmartWalk.Client.iOS
         public Setup(
             MvxApplicationDelegate appDelegate, 
             UIWindow window,
-            AppSettings settings)
+            AppSettings settings,
+            string clientVersion)
             : base(appDelegate, window)
         {
             _settings = settings;
+            _clientVersion = clientVersion;
         }
 
         protected override IMvxApplication CreateApp()
@@ -44,7 +46,7 @@ namespace SmartWalk.Client.iOS
 
             Mvx.RegisterSingleton<IConfiguration>(
                 new Configuration(host, _settings.DocumentsPath, 
-                    _settings.PostponeTime, _dataCacheConfig));
+                    _settings.PostponeTime, _dataCacheConfig, _clientVersion));
 
             CreatableTypes()
                 .EndingWith("Service")

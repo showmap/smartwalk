@@ -44,7 +44,7 @@ namespace SmartWalk.Client.iOS
 
             Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-            var setup = new Setup(this, Window, _settings);
+            var setup = new Setup(this, Window, _settings, _version);
             setup.Initialize();
 
             var startup = Mvx.Resolve<IMvxAppStart>();

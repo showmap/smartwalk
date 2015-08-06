@@ -18,15 +18,18 @@ namespace SmartWalk.Client.Core.Services
         private readonly IHttpService _httpService;
         private readonly ICacheService _cacheService;
         private readonly IReachabilityService _reachabilityService;
+        private readonly IConfiguration _configuration;
 
         public SmartWalkApiService(
             IHttpService httpService,
             ICacheService cacheService,
-            IReachabilityService reachabilityService)
+            IReachabilityService reachabilityService,
+            IConfiguration configuration)
         {
             _httpService = httpService;
             _cacheService = cacheService;
             _reachabilityService = reachabilityService;
+            _configuration = configuration;
         }
 
         public async Task<IApiResult<OrgEvent[]>> GetOrgEvents(Location location, DataSource source)
@@ -218,6 +221,8 @@ namespace SmartWalk.Client.Core.Services
 
             if (isConnected && (result == null || result.Data == null))
             {
+                request.ClientVersion = _configuration.ClientVersion;
+
                 var response = await _httpService.Get<Response>(request);
                 if (response != null)
                 {

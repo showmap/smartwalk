@@ -9,6 +9,8 @@ namespace SmartWalk.Shared.DataContracts.Api
 
         public string[] Storages { get; set; }
 
+        public string ClientVersion { get; set; }
+
         public override int GetHashCode()
         {
             return 

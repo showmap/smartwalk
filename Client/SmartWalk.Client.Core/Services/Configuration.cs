@@ -11,7 +11,8 @@ namespace SmartWalk.Client.Core.Services
         private const string VenueFormat = "http://{0}/venue/{1}";
 
         public Configuration(string host, string documentsPath, 
-            TimeSpan postponeTime, ICacheConfiguration cacheConfig)
+            TimeSpan postponeTime, ICacheConfiguration cacheConfig,
+            string clientVersion)
         {
             if (host == null) throw new ArgumentNullException("host");
             if (documentsPath == null) throw new ArgumentNullException("documentsPath");
@@ -22,6 +23,7 @@ namespace SmartWalk.Client.Core.Services
             DocumentsPath = documentsPath;
             PostponeTime = postponeTime;
             CacheConfig = cacheConfig;
+            ClientVersion = clientVersion;
         }
 
         public string Host { get; private set; }
@@ -29,6 +31,7 @@ namespace SmartWalk.Client.Core.Services
         public string DocumentsPath { get; private set; }
         public ICacheConfiguration CacheConfig { get; private set; }
         public TimeSpan PostponeTime { get; private set; }
+        public string ClientVersion { get; private set; }
 
         public string GetEventUrl(int eventId)
         {
