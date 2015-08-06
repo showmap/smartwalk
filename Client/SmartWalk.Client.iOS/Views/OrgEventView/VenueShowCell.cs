@@ -23,7 +23,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static readonly NSDateFormatter TimeFormatter = new NSDateFormatter {
             DateStyle = NSDateFormatterStyle.None,
             TimeStyle = NSDateFormatterStyle.Short,
-            TimeZone = NSTimeZone.DefaultTimeZone
+            TimeZone = NSTimeZone.FromAbbreviation("UTC")
         };
 
         private const string Space = " ";

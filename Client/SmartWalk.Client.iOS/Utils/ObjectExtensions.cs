@@ -1,15 +1,12 @@
 ﻿using System;
+using CoreGraphics;
 using Foundation;
 using UIKit;
-using CoreGraphics;
 
 namespace SmartWalk.Client.iOS.Utils
 {
     public static class ObjectExtensions
     {
-        private static readonly DateTime _reference = 
-            TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(2001, 1, 1, 0, 0, 0));
-
         public static bool EqualsNF(this nfloat left, nfloat right)
         {
             return Math.Abs(left - right) < SmartWalk.Shared.Utils.ObjectExtensions.Epsilon;
@@ -32,12 +29,20 @@ namespace SmartWalk.Client.iOS.Utils
 
         public static DateTime ToDateTime(this NSDate date)
         {
-            return _reference.AddSeconds(date.SecondsSinceReferenceDate);
+            var secs = date.SecondsSinceReferenceDate;
+            if (secs < -63113904000) return DateTime.MinValue;
+            if (secs > 252423993599) return DateTime.MaxValue;
+            return (DateTime) date;
         }
 
         public static NSDate ToNSDate(this DateTime date)
         {
-            return NSDate.FromTimeIntervalSinceReferenceDate((date - _reference).TotalSeconds);
+            if (date.Kind == DateTimeKind.Unspecified)
+            {
+                date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
+            }
+
+            return (NSDate)date;
         }
 
         public static NSDate ToNSDate(this DateTime? date)
