@@ -295,11 +295,42 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\ImportImagesResult.cshtml" />
     <None Include="Views\ServerErrors.cshtml" />
+    <Content Include="Views\Static\Root\css\animate.min.css" />
+    <Content Include="Views\Static\Root\css\bootstrap.min.css" />
+    <Content Include="Views\Static\Root\css\creative.css" />
+    <Content Include="Views\Static\Root\css\sw-override.css" />
+    <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Views\Static\Root\img\app.png" />
+    <Content Include="Views\Static\Root\img\editor.png" />
+    <Content Include="Views\Static\Root\img\header.jpg" />
+    <Content Include="Views\Static\Root\img\icons\email.svg" />
+    <Content Include="Views\Static\Root\img\icons\fb.svg" />
+    <Content Include="Views\Static\Root\img\icons\phone.svg" />
+    <Content Include="Views\Static\Root\img\icons\tw.svg" />
+    <Content Include="Views\Static\Root\img\portfolio\1.jpg" />
+    <Content Include="Views\Static\Root\img\portfolio\2.jpg" />
+    <Content Include="Views\Static\Root\img\portfolio\3.jpg" />
+    <Content Include="Views\Static\Root\img\portfolio\4.jpg" />
+    <Content Include="Views\Static\Root\img\portfolio\5.jpg" />
+    <Content Include="Views\Static\Root\img\portfolio\6.jpg" />
+    <Content Include="Views\Static\Root\index.html" />
+    <Content Include="Views\Static\Root\js\bootstrap.min.js" />
+    <Content Include="Views\Static\Root\js\cbpAnimatedHeader.js" />
+    <Content Include="Views\Static\Root\js\classie.js" />
+    <Content Include="Views\Static\Root\js\creative.js" />
+    <Content Include="Views\Static\Root\js\jquery.easing.min.js" />
+    <Content Include="Views\Static\Root\js\jquery.fittext.js" />
+    <Content Include="Views\Static\Root\js\jquery.js" />
+    <Content Include="Views\Static\Root\js\wow.min.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Admin\ImportImages.cshtml" />
+    <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Shared\SmartWalk.Shared\Properties\AssemblySharedInfo.cs">
@@ -312,6 +343,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\StaticController.cs" />
     <Compile Include="Models\DataContracts\EventVenueDetail.cs" />
     <Compile Include="Providers\CultureSelector.cs" />
     <Compile Include="Providers\JsonDotNetValueProviderFactory.cs" />

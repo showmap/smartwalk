@@ -403,6 +403,68 @@ namespace SmartWalk.Server {
                         },
                         new MvcRouteHandler())
                 },
+
+                // INDEX PAGE
+
+                
+                new RouteDescriptor {
+                    Priority = 0,
+                    Route = new Route(
+                        "",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Static"},
+                            {"action", "Root"},
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 0,
+                    Route = new Route(
+                        "{folderName}/{fileName}",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Static"},
+                            {"action", "Root"},
+                            {"folderName", "{folderName}"},
+                            {"fileName", "{fileName}"},
+                        },
+                        new RouteValueDictionary {
+                            {"folderName", @"(css|fonts|img|js)"},
+                        },
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 0,
+                    Route = new Route(
+                        "{folderName}/{subFolderName}/{fileName}",
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"},
+                            {"controller", "Static"},
+                            {"action", "Root"},
+                            {"folderName", "{folderName}"},
+                            {"subFolderName", "{subFolderName}"},
+                            {"fileName", "{fileName}"},
+                        },
+                        new RouteValueDictionary {
+                            {"folderName", @"(css|fonts|img|js)"},
+                            {"subFolderName", @"(icons|portfolio)"},
+                        },
+                        new RouteValueDictionary {
+                            {"area", "SmartWalk.Server"}
+                        },
+                        new MvcRouteHandler())
+                },
+
+                // UTILS
+
                 // A walkaround for previous xml data of version 1.0
                 new RouteDescriptor {
                     Priority = 1,
