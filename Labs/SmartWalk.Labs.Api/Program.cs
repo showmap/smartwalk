@@ -23,6 +23,7 @@ namespace SmartWalk.Labs.Api
             Console.WriteLine("\nHome View");
 
             var homeViewRequest = RequestFactory.CreateHomeViewRequest(37.757671, -122.408406);
+            homeViewRequest.ClientVersion = "2.0.0";
             var json = JsonConvert.SerializeObject(
                 homeViewRequest,
                 new JsonSerializerSettings
@@ -69,6 +70,7 @@ namespace SmartWalk.Labs.Api
 
             Console.WriteLine("\nEvent View");
             var eventViewRequest = RequestFactory.CreateEventViewRequest(eventId);
+            eventViewRequest.ClientVersion = "2.0.0";
             json = JsonConvert.SerializeObject(
                 eventViewRequest,
                 new JsonSerializerSettings
@@ -98,6 +100,7 @@ namespace SmartWalk.Labs.Api
 
             Console.WriteLine("\nVenues View");
             var venueViewRequest = RequestFactory.CreateVenuesViewRequest(eventId);
+            venueViewRequest.ClientVersion = "2.0.0";
             json = JsonConvert.SerializeObject(
                 venueViewRequest,
                 new JsonSerializerSettings
@@ -127,6 +130,7 @@ namespace SmartWalk.Labs.Api
 
             Console.WriteLine("\nHost View");
             var hostViewRequest = RequestFactory.CreateHostViewRequest(hostId);
+            hostViewRequest.ClientVersion = "2.0.0";
             json = JsonConvert.SerializeObject(
                 hostViewRequest,
                 new JsonSerializerSettings

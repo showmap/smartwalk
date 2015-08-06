@@ -29,6 +29,7 @@ namespace SmartWalk.Server.Services.QueryService
         private readonly ISessionLocator _sessionLocator;
         private readonly IStorageProvider _storageProvider;
         private readonly IImageProfileManager _imageProfileManager;
+        private readonly QueryMigrations _migrations;
 
         public QueryService(
             IRepository<EventMetadataRecord> eventMetadataRepository,
@@ -50,6 +51,8 @@ namespace SmartWalk.Server.Services.QueryService
             _sessionLocator = sessionLocator;
 
             QueryContext.InstantiateContext(shellSettings);
+
+            _migrations = new QueryMigrations();
         }
 
         public Response ExecuteRequestQuery(Request request)
@@ -94,7 +97,7 @@ namespace SmartWalk.Server.Services.QueryService
                 }
             }
 
-            return new Response
+            var response = new Response
                 {
                     Selects = resultSelects
                         .Select(kvp =>
@@ -106,6 +109,10 @@ namespace SmartWalk.Server.Services.QueryService
                                     })
                         .ToArray()
                 };
+
+            _migrations.Migrate(request, response);
+
+            return response;
         }
 
         // ReSharper disable CoVariantArrayConversion
