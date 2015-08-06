@@ -1,24 +1,25 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using Orchard.Themes;
-using SmartWalk.Server.Extensions;
 
 namespace SmartWalk.Server.Controllers
 {
-    [HandleError, Themed]
+    [HandleError]
     public class StaticController : Controller
     {
         private readonly static string ModuleName = Assembly.GetExecutingAssembly().GetName().Name;
         private readonly static string ModulePath = HostingEnvironment.MapPath(@"~/Modules/" + ModuleName);
         private readonly static string RootPath = Path.Combine(ModulePath, "Views/Static/Root/"); 
 
-        [CompressFilter]
         public ActionResult Root(string folderName = null, string subFolderName = null, string fileName = null)
         {
+            HttpContext.Response.Cache.SetExpires(DateTime.Now.AddDays(10));
+            HttpContext.Response.Cache.SetCacheability(HttpCacheability.Public);
+
             var file = default(string);
             folderName = StripSlashes(folderName);
             subFolderName = StripSlashes(subFolderName);
