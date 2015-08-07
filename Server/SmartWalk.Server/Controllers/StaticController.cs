@@ -17,8 +17,9 @@ namespace SmartWalk.Server.Controllers
 
         public ActionResult Root(string folderName = null, string subFolderName = null, string fileName = null)
         {
-            HttpContext.Response.Cache.SetExpires(DateTime.Now.AddDays(10));
-            HttpContext.Response.Cache.SetCacheability(HttpCacheability.Public);
+            Response.Cache.SetExpires(DateTime.Now.AddDays(10));
+            Response.Cache.SetCacheability(HttpCacheability.Public);
+            Response.Cache.SetLastModified(DateTime.Now);
 
             var file = default(string);
             folderName = StripSlashes(folderName);
