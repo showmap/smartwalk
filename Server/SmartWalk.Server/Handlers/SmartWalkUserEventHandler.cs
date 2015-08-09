@@ -102,5 +102,13 @@ namespace SmartWalk.Server.Handlers
         public void Approved(IUser user)
         {
         }
+
+        public void LoggingIn(string userNameOrEmail, string password)
+        {
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password)
+        {
+        }
     }
 }

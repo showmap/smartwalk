@@ -19,11 +19,11 @@ namespace SmartWalk.Server.Theme
             // jQuery
 
             manifest.DefineScript("jQuery")
-                .SetVersion("2.1.3")
-                .SetVersionUrl("jquery-2.1.3.min.js", "jquery-2.1.3.js")
+                .SetVersion("2.1.4")
+                .SetVersionUrl("jquery-2.1.4.min.js", "jquery-2.1.4.js")
                 .SetCdn(
-                    "//code.jquery.com/jquery-2.1.3.min.js",
-                    "//code.jquery.com/jquery-2.1.3.js",
+                    "//code.jquery.com/jquery-2.1.4.min.js",
+                    "//code.jquery.com/jquery-2.1.4.js",
                     true);
 
             // HACK Using fake "9." prefix due to Orchard's isuse https://orchard.codeplex.com/workitem/20798

@@ -1,2 +1,3 @@
-mklink /j C:\Work\Orchard\src\Orchard.Web\Modules\SmartWalk.Server C:\Git\smartwalk\Server\SmartWalk.Server
-mklink /j C:\Work\Orchard\src\Orchard.Web\Themes\SmartWalk.Server.Theme C:\Git\smartwalk\Server\SmartWalk.Server.Theme
+mklink /j C:\Work\Orchard-1.9.1\src\Orchard.Web\Modules\SmartWalk.Server C:\Git\smartwalk\Server\SmartWalk.Server
+mklink /j C:\Work\Orchard-1.9.1\src\Orchard.Web\Themes\SmartWalk.Server.Theme C:\Git\smartwalk\Server\SmartWalk.Server.Theme
+mklink /j C:\Work\Orchard-1.9.1\src\Orchard.Web\Modules\NGM.OpenAuthentication C:\Git\NGM.OpenAuthentication

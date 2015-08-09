@@ -15,8 +15,8 @@ namespace SmartWalk.Server
             // KnockoutJS
 
             manifest.DefineScript("ko")
-                .SetVersion("3.2.0")
-                .SetVersionUrl("knockout-3.2.0.js", "knockout-3.2.0.debug.js");
+                .SetVersion("3.3.0")
+                .SetVersionUrl("knockout-3.3.0.js", "knockout-3.3.0.debug.js");
 
             manifest.DefineScript("ko.validation")
                 .SetVersion("1.0.2")
@@ -38,7 +38,7 @@ namespace SmartWalk.Server
             // 3rd Party - Moment
 
             manifest.DefineScript("Moment")
-                .SetVersion("2.8.4")
+                .SetVersion("2.10.6")
                 .SetVersionUrl("moment.min.js", "moment.js");
 
             // 3rd Party - JsHashtable
