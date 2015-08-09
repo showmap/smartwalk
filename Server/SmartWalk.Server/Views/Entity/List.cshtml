@@ -33,7 +33,7 @@
         @if (allowedActions.CanCreate) {
             <div class="col-xs-4">
                 <form action="@Url.Action("Create")">
-                    <button type="submit" class="btn btn-primary">@T("Create {0}{1}{2}", "<span class=\"hidden-xs\">", entityTypeName, "</span>")</button>
+                    <button type="submit" class="btn btn-primary">@HtmlUtil.AdaptiveCapture("Create", entityTypeName)</button>
                 </form>                
             </div>
         }
@@ -103,7 +103,7 @@
             {
                 <p class="text-muted">@T("You do not have any created {0} yet. Please start with creating a new one.", @entityTypesName.ToLower())</p>
                 <form action="@Url.Action("Create")">
-                    <button type="submit" class="btn btn-primary">@T("Create {0}", entityTypeName)</button>
+                    <button type="submit" class="btn btn-primary">@HtmlUtil.AdaptiveCapture("Create", entityTypeName)</button>
                 </form>
             }
             else

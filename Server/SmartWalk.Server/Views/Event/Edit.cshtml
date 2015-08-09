@@ -3,6 +3,7 @@
 @using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Records
+@using SmartWalk.Server.Common.Utils
 @model EventMetadataVm
 @{
     Style.Require("jQueryUI");
@@ -44,7 +45,7 @@
         </div>
         <div class="col-xs-4 text-right">
             <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
-            <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
+            <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@HtmlUtil.AdaptiveCapture("Save", "Event")</button>
         </div>
     </div>
 
@@ -80,7 +81,7 @@
                         validationTag: model.host,
                         enable: isEnabled" />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost, enable: isEnabled">@T("Create")<span class="hidden-xs"> @T("Organizer")</span>...</button>
+                        <button type="button" class="btn btn-default" id="createOrganizerButton" data-bind="click: createHost, enable: isEnabled">@HtmlUtil.AdaptiveCapture("Create", "Organizer")</button>
                     </span>
                 </div>
             </div>
@@ -164,14 +165,14 @@
         using (Html.BeginForm("Delete", "Event", FormMethod.Get))
         {
             <input type="hidden" name="eventId" value="@Model.Id" />
-            <button type="submit" class="btn btn-danger" data-bind="enable: isEnabled" onclick="return confirm('@T("Are you shure you wish to delete this event?")')">@T("Delete") <span class="hidden-xs">@T("Event")</span></button>
+            <button type="submit" class="btn btn-danger" data-bind="enable: isEnabled" onclick="return confirm('@T("Are you shure you wish to delete this event?")')">@HtmlUtil.AdaptiveCapture("Delete", "Event")</button>
         }
     }
         </div>
         <div class="col-xs-8 text-right">
             <img class="loading" src='@Href("../../Images/loading.gif")' width="16" height="16" alt="Loading..." data-bind="fadeVisible: isBusy" />
             <button type="button" class="btn btn-default" data-bind="click: cancelEvent">@T("Cancel")</button>
-            <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@T("Save") <span class="hidden-xs">@T("Event")</span></button>
+            <button type="button" class="btn btn-success" data-bind="click: saveEvent, enable: isEnabled">@HtmlUtil.AdaptiveCapture("Save", "Event")</button>
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using Orchard;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.UI.Resources;
@@ -59,6 +60,16 @@ namespace SmartWalk.Server.Common.Utils
                     page.WorkContext.HttpContext.Request.Url.ToString()), 
                 null, 
                 null);
+        }
+
+        public static LocalizedString AdaptiveCapture(string caption, string extension)
+        {
+            var result = NullLocalizer.Instance("{0}{1} {2}{3}",
+                caption,
+                new HtmlString("<span class=\"hidden-xs\">"),
+                extension,
+                new HtmlString("</span>"));
+            return result;
         }
     }
 }

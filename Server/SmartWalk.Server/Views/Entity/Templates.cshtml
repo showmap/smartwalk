@@ -1,4 +1,5 @@
-﻿@{
+﻿@using SmartWalk.Server.Common.Utils
+@{
     Script.Require("ko.autocomplete").AtFoot();
     
     // var imagePath = Href("../../Images/leaflet");
@@ -64,7 +65,7 @@
                 <div class="text-right">
                     <div class="form-group">
                         <button type="button" class="btn btn-default" data-bind="click: function () { $root.addressesManager.cancelItem($data) }">@T("Cancel")</button>
-                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.addressesManager.saveItem($data) }">@T("Save Address")</button>
+                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.addressesManager.saveItem($data) }">@HtmlUtil.AdaptiveCapture("Save", "Address")</button>
                     </div>
                 </div>
             </div>
@@ -112,7 +113,7 @@
                 <div class="text-right">
                     <div class="form-group">
                         <button type="button" class="btn btn-default" data-bind="click: function () { $root.contactsManager.cancelItem($data) }">@T("Cancel")</button>
-                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.contactsManager.saveItem($data) }">@T("Save Contact")</button>
+                        <button type="button" class="btn btn-success" data-bind="click: function () { $root.contactsManager.saveItem($data) }">@HtmlUtil.AdaptiveCapture("Save", "Contact")</button>
                     </div>
                 </div>
             </div>

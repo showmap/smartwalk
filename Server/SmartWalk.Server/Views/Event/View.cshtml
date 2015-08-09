@@ -4,6 +4,7 @@
 @using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Utils
 @using SmartWalk.Shared.Utils
+@using SmartWalk.Server.Common.Utils
 @model EventMetadataVm
 @{
     Style.Require("SmartWalk");
@@ -28,7 +29,7 @@
             <h2>
             @if (allowedActions.CanEdit)
             {
-                <a class="btn" href="@editAction">@T("Edit Event")</a>
+                <a class="btn" href="@editAction">@HtmlUtil.AdaptiveCapture("Edit", "Event")</a>
             }    
                 @Model.DisplayName()
             </h2>

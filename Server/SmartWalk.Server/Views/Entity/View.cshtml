@@ -3,6 +3,7 @@
 @using SmartWalk.Server.ViewModels
 @using System.Text.RegularExpressions
 @using SmartWalk.Shared.Utils
+@using SmartWalk.Server.Common.Utils
 @model EntityVm
 @{
     Style.Require("SmartWalk");
@@ -25,7 +26,7 @@
             <h2>
             @if (allowedActions.CanEdit)
             {
-                <a class="btn" href='@Url.Action("Edit")'>@T("Edit " + entityTypeName)</a>
+                <a class="btn" href='@Url.Action("Edit")'>@HtmlUtil.AdaptiveCapture("Edit", entityTypeName)</a>
             }
                 @Model.Name
             </h2>

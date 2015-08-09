@@ -2,6 +2,7 @@
 @using SmartWalk.Server.Utils
 @using SmartWalk.Server.ViewModels
 @using SmartWalk.Server.Records
+@using SmartWalk.Server.Common.Utils
 @model EntityVm
 @{
     Style.Require("SmartWalk");
@@ -20,8 +21,8 @@
         ? Url.Action("List", entityController, new {display = DisplayType.My}) 
         : Url.Action("View", entityController, new { entityId = @Model.Id });
     var actionCaption = Model.Id == 0 
-        ? T("Add <span class=\"hidden-xs\">" + entityTypeName + "</span>") 
-        : T("Save <span class=\"hidden-xs\">" + entityTypeName + "</span>");
+        ? HtmlUtil.AdaptiveCapture("Add", entityTypeName)
+        : HtmlUtil.AdaptiveCapture("Save", entityTypeName);
 }
 
     <div id="@formId">
@@ -106,7 +107,7 @@
         @if (Model.Id != 0) {
             using(Html.BeginForm("Delete", null, FormMethod.Get)) {
                 <input type="hidden" name="entityId" value="@Model.Id" />
-                <button type="submit" class="btn btn-danger" @{if (!allowedActions.CanDelete) { <text>disabled="disabled"</text> } else { <text>data-bind="enable: isEnabled"</text> } } onclick="return confirm('@T("Are you sure you want to delete this " + entityTypeName.ToLower() + "?")')">@T("Delete <span class=\"hidden-xs\">" + entityTypeName + "</span>")</button>
+                <button type="submit" class="btn btn-danger" @{if (!allowedActions.CanDelete) { <text>disabled="disabled"</text> } else { <text>data-bind="enable: isEnabled"</text> } } onclick="return confirm('@T("Are you sure you want to delete this " + entityTypeName.ToLower() + "?")')">@HtmlUtil.AdaptiveCapture("Delete", entityTypeName)</button>
             if (!allowedActions.CanDelete) { <a class="tooltip-container to-button" href="javascript: void(0)" rel="tooltip" data-placement="right" title='@("Can't delete this " + entityTypeName + " because it has linked events.")'><span class="glyphicon glyphicon-exclamation-sign text-danger"></span></a> }
             }
         }
