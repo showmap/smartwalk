@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Orchard.MediaProcessing.Services;
@@ -39,7 +40,7 @@ namespace SmartWalk.Server.Controllers
             if (access == AccessType.Deny) return new HttpUnauthorizedResult();
 
             var parameters = new ListViewParametersVm { Display = display, Sort = sort };
-            var result = GetEventVms(parameters);
+            var result = GetEventVms(parameters).ToArray();
             ResizePictures(result);
 
             var view = View(result);

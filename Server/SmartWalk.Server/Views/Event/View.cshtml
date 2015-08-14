@@ -9,12 +9,14 @@
 @{
     Style.Require("SmartWalk");
     Style.Require("TextCollapse");
+    Style.Require("AddThisEvent");
 
     Script.Require("AddThisEvent").AtFoot();
     Script.Require("ImageScale").AtFoot();
     Script.Require("TextCollapse").AtFoot();
     Script.Require("SmartWalk.AntiForgery").AtFoot();
 
+    WorkContext.Layout.Body.Classes.Add("extended-edge");
     Html.AppendTitleParts(Model.DisplayName(), Convert.ToString(T("Event")));
 
     var allowedActions = (AllowedActions)ViewData[ViewDataParams.AllowedActions];
@@ -49,17 +51,17 @@
                 <a href="@Request.RawUrl" title="Add to Calendar" class="addthisevent" data-track="_gaq.push(['_trackEvent','AddThisEvent','click','ate-calendar'])">
                     Add to Calendar
 @* ReSharper disable UnknownCssClass *@
-                    <span class="_start">@Model.StartDate.ToString("G", CultureInfo.InvariantCulture)</span>
-                    <span class="_end">@Model.EndDate.ToString("G", CultureInfo.InvariantCulture)</span>
+                    <span class="start">@Model.StartDate.ToString("G", CultureInfo.InvariantCulture)</span>
+                    <span class="end">@Model.EndDate.ToString("G", CultureInfo.InvariantCulture)</span>
                     @*<span class="_zonecode">6</span>*@
-                    <span class="_summary">@Model.DisplayName()</span>
-                    <span class="_description">@Model.Description</span>
-                    <span class="_location">@Model.Latitude,@Model.Longitude</span>
-                    <span class="_organizer">@Model.Host.Name</span>
-                    <span class="_organizer_email">@Model.Host.Contacts.Where(c => c.Type == (int)ContactType.Email).Select(c => c.Contact).FirstOrDefault()</span>
+                    <span class="title">@Model.DisplayName()</span>
+                    <span class="description">@Model.Description</span>
+                    <span class="location">@Model.Latitude,@Model.Longitude</span>
+                    <span class="organizer">@Model.Host.Name</span>
+                    <span class="organizer_email">@Model.Host.Contacts.Where(c => c.Type == (int)ContactType.Email).Select(c => c.Contact).FirstOrDefault()</span>
                     @*<span class="_facebook_event"></span>*@
-                    <span class="_all_day_event">true</span>
-                    <span class="_date_format">@CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern.ToUpperInvariant()</span>
+                    <span class="all_day_event">true</span>
+                    <span class="date_format">@CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern.ToUpperInvariant()</span>
 @* ReSharper restore UnknownCssClass *@
                 </a>
             </div>
@@ -141,15 +143,15 @@
 @using (Script.Foot())
 {
 <script type="text/javascript">
-    $(function () {        
+    $(function () {
         $("img.scale").imageScale();
         $("p.description").textCollapse();
-        
+
         if (addthisevent) {
             addthisevent.settings({
                 license: "@Settings.AddThisEventLicense",
                 mouse: false,
-                css: true,
+                css: false,
                 outlook: { show: true, text: "Outlook Calendar" },
                 google: { show: true, text: "Google Calendar" },
                 yahoo: { show: true, text: "Yahoo Calendar" },

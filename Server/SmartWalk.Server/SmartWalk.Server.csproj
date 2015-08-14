@@ -232,6 +232,17 @@
     <Content Include="Scripts\text-collapse.min.js">
       <DependentUpon>text-collapse.js</DependentUpon>
     </Content>
+    <Content Include="Styles\addthisevent.theme2.css" />
+    <Content Include="Styles\addthisevent.theme2.min.css">
+      <DependentUpon>addthisevent.theme2.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\gfx\dropdown-apple-t1.png" />
+    <Content Include="Styles\gfx\dropdown-facebook-t1.png" />
+    <Content Include="Styles\gfx\dropdown-google-t1.png" />
+    <Content Include="Styles\gfx\dropdown-outlook-t1.png" />
+    <Content Include="Styles\gfx\dropdown-yahoo-t1.png" />
+    <Content Include="Styles\gfx\icon-calendar-t1.png" />
+    <Content Include="Styles\gfx\icon-calendar-t1.svg" />
     <Content Include="Styles\jquery.fileupload.css" />
     <Content Include="Styles\jquery.fileupload.min.css">
       <DependentUpon>jquery.fileupload.css</DependentUpon>
@@ -298,6 +309,9 @@
     <Content Include="Views\FileUpload.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\ImportImagesResult.cshtml" />
+    <Content Include="Styles\addthisevent.theme2.min.css.gz">
+      <DependentUpon>addthisevent.theme2.min.css</DependentUpon>
+    </Content>
     <None Include="Views\ServerErrors.cshtml" />
     <Content Include="Views\Static\Root\css\animate.min.css" />
     <Content Include="Views\Static\Root\css\bootstrap.min.css" />

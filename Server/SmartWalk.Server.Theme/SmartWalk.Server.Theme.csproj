@@ -114,9 +114,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\animate.css" />
+    <Content Include="Content\animate.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="img\bg2x.png" />
-    <Content Include="img\bg.png" />
     <Content Include="img\fb-login.png" />
     <Content Include="img\icons\apple-touch-icon-114x114.png" />
     <Content Include="img\icons\apple-touch-icon-120x120.png" />
@@ -143,6 +143,10 @@
     <Content Include="img\icons\mstile-70x70.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\creative.js" />
+    <Content Include="Scripts\creative.min.js">
+      <DependentUpon>creative.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.min.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-af.js" />
@@ -186,6 +190,12 @@
     <Content Include="Scripts\i18n\jquery-ui-timepicker-zh-CN.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-zh-TW.js" />
     <Content Include="packages.config" />
+    <Content Include="Scripts\creative.min.js.gz">
+      <DependentUpon>creative.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\creative.min.js.map">
+      <DependentUpon>creative.min.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -197,10 +207,27 @@
     <Content Include="Scripts\jquery-ui-timepicker-addon.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.easing.1.3.js" />
+    <Content Include="Scripts\jquery.easing.1.3.min.js">
+      <DependentUpon>jquery.easing.1.3.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.fittext.js" />
+    <Content Include="Scripts\jquery.fittext.min.js">
+      <DependentUpon>jquery.fittext.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\wow.js" />
+    <Content Include="Scripts\wow.min.js" />
     <Content Include="Styles\bootstrap-theme.css" />
     <Content Include="Styles\bootstrap-theme.min.css" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\creative-override.min.css">
+      <DependentUpon>creative-override.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\creative.css" />
+    <Content Include="Styles\creative.min.css">
+      <DependentUpon>creative.css</DependentUpon>
+    </Content>
     <Content Include="Styles\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Styles\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="Styles\images\ui-bg_flat_10_000000_40x100.png" />
@@ -223,6 +250,7 @@
     <Content Include="Styles\jquery-ui.structure.min.css" />
     <Content Include="Styles\jquery-ui.theme.css" />
     <Content Include="Styles\jquery-ui.theme.min.css" />
+    <Content Include="Styles\creative-override.css" />
     <Content Include="Styles\sw-theme.css" />
     <Content Include="Styles\sw-theme.min.css">
       <DependentUpon>sw-theme.css</DependentUpon>
@@ -249,6 +277,24 @@
     <Content Include="Views\Icons.cshtml" />
     <Content Include="Scripts\jquery-ui-sliderAccess.min.js.map">
       <DependentUpon>jquery-ui-sliderAccess.min.js</DependentUpon>
+    </Content>
+    <Content Include="Styles\creative.min.css.gz">
+      <DependentUpon>creative.min.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\creative-override.min.css.gz">
+      <DependentUpon>creative-override.min.css</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.easing.1.3.min.js.gz">
+      <DependentUpon>jquery.easing.1.3.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.easing.1.3.min.js.map">
+      <DependentUpon>jquery.easing.1.3.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.fittext.min.js.gz">
+      <DependentUpon>jquery.fittext.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.fittext.min.js.map">
+      <DependentUpon>jquery.fittext.min.js</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Orchard;
@@ -54,10 +56,8 @@ namespace SmartWalk.Server.Common.Utils
         public static void SetiTunesMeta(this IOrchardViewPage page)
         {
             page.SetMeta(
-                "apple-itunes-app", 
-                string.Format("app-id={0}, app-argument={1}", 
-                    Settings.iTunesAppId, 
-                    page.WorkContext.HttpContext.Request.Url.ToString()), 
+                "apple-itunes-app",
+                $"app-id={Settings.iTunesAppId}, app-argument={page.WorkContext.HttpContext.Request.Url}", 
                 null, 
                 null);
         }
@@ -69,6 +69,13 @@ namespace SmartWalk.Server.Common.Utils
                 new HtmlString("<span class=\"hidden-xs\">"),
                 extension,
                 new HtmlString("</span>"));
+            return result;
+        }
+
+        public static string ToCssClasses(this IEnumerable<string> classes)
+        {
+            var result = classes.Aggregate(string.Empty, 
+                (s, i) => s + (s != string.Empty ? " " : string.Empty) + i);
             return result;
         }
     }

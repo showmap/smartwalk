@@ -159,7 +159,11 @@ namespace SmartWalk.Server
             // 3rd Party - Add This Event
 
             manifest.DefineScript("AddThisEvent")
-                .SetCdn("http://js.addthisevent.com/atemay.js");            
+                .SetCdn("http://addthisevent.com/libs/1.6.0/ate.min.js");
+
+            manifest.DefineStyle("AddThisEvent")
+                .SetVersion("1.6")
+                .SetVersionUrl("addthisevent.theme2.min.css", "addthisevent.theme2.css");
         }
     }
 }

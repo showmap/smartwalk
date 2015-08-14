@@ -11,9 +11,15 @@
 
     WorkContext.Layout.Header.Add(New.Branding(), "0"); // Site name and link to the home page
     WorkContext.Layout.Footer.Add(New.BadgeOfHonor(), "5"); // Powered by SmartWalk
-    WorkContext.Layout.Navigation.Add(New.User(), "5"); // Login and dashboard links
 
-}<div class="navbar navbar-inverse" role="navigation">
+    // Login and dashboard links
+    var menu = Enumerable.FirstOrDefault(WorkContext.Layout.Navigation.Items) ?? WorkContext.Layout.Navigation;
+    if (menu != null)
+    {
+        menu.Content.Add(New.User(), "5");
+    }
+
+}<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -27,13 +33,13 @@
             }
             </div>
 
-            <div id="main-menu" class="collapse navbar-collapse" >
+            <div id="main-menu" class="collapse navbar-collapse navbar-right">
             @if (Model.Navigation != null) {
                 @Display(Model.Navigation)
             }
             </div>
         </div>
-    </div>
+    </nav>
 
     <div class="container content" role="main">
         @if (Model.BeforeMain != null) {

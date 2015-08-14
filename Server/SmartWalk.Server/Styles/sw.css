@@ -340,12 +340,11 @@ textarea {
 }
 
 .page-header-image .header {
-    margin-top: -15px;
 	min-height: 350px;
 }
 
 .page-header-image {
-    margin: 0 -15px 0 -15px;
+    margin: -75px -15px 0 -15px;
 }
 
 .bg-image-container .header img {
@@ -377,6 +376,7 @@ textarea {
 }
 
 .bg-image-container .header h2 {
+    padding-top: 75px;
 	margin-bottom: 150px;
 }
 
@@ -455,9 +455,7 @@ textarea {
     border: 1px solid #ffffff;
     border-radius: 4px;
     background: #666;
-    background: rgba(255, 255, 255, 0.2) 
-        url(http://addthisevent.com/gfx/icon-calendar-t1.png) 
-        no-repeat 9px 50%;
+    background: rgba(255, 255, 255, 0.2);
     color: #fff !important;
     font-weight: normal;
 }
@@ -587,6 +585,16 @@ td.editing-container {
 
 .event-days-picker li a.selected {
     background-color: #ffd800;
+}
+
+/* HACK: To fix datetime text in IE */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    input[type="month"] {
+        line-height: 1.4285;
+    }
 }
 
 .dropzone {

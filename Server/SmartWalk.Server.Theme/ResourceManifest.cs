@@ -26,11 +26,8 @@ namespace SmartWalk.Server.Theme
                     "//code.jquery.com/jquery-2.1.4.js",
                     true);
 
-            // HACK Using fake "9." prefix due to Orchard's isuse https://orchard.codeplex.com/workitem/20798
-            const string jQueryUIVersion = "9.1.11.2";
-
             manifest.DefineScript("jQueryUI")
-                .SetVersion(jQueryUIVersion)
+                .SetVersion("1.11.2")
                 .SetVersionUrl("jquery-ui.min.js", "jquery-ui.js")
                 .SetDependencies("jQuery")
                 .SetCdn(
@@ -40,20 +37,20 @@ namespace SmartWalk.Server.Theme
 
             manifest
                 .DefineStyle("jQueryUI")
-                .SetVersion(jQueryUIVersion)
+                .SetVersion("1.11.2")
                 .SetVersionUrl("jquery-ui.min.css", "jquery-ui.css");
 
             #region jQueryUI is not used
 
             manifest
                 .DefineStyle("jQueryUI.Structure")
-                .SetVersion(jQueryUIVersion)
+                .SetVersion("1.11.2")
                 .SetVersionUrl("jquery-ui.structure.min.css", "jquery-ui.structure.css")
                 .SetDependencies("jQueryUI");
 
             manifest
                 .DefineStyle("jQueryUI.Theme")
-                .SetVersion(jQueryUIVersion)
+                .SetVersion("1.11.2")
                 .SetVersionUrl("jquery-ui.theme.min.css", "jquery-ui.theme.css")
                 .SetDependencies("jQueryUI.Structure", "jQueryUI");
 
@@ -74,6 +71,16 @@ namespace SmartWalk.Server.Theme
                 .SetVersionUrl("jquery-ui-timepicker-addon.min.css", "jquery-ui-timepicker-addon.css")
                 .SetDependencies("jQueryUI");
 
+            manifest.DefineScript("jQuery.Easing")
+                .SetVersion("1.3.0")
+                .SetVersionUrl("jquery.easing.1.3.min.js", "jquery.easing.1.3.js")
+                .SetDependencies("jQuery");
+
+            manifest.DefineScript("jQuery.FitText")
+                .SetVersion("1.2.0")
+                .SetVersionUrl("jquery.fittext.min.js", "jquery.fittext.js")
+                .SetDependencies("jQuery");
+
             // Bootstrap
 
             manifest.DefineStyle("Bootstrap")
@@ -93,12 +100,39 @@ namespace SmartWalk.Server.Theme
                 .SetCdn("//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
                 .SetDependencies("jQuery");
 
+            // Animate
+
+            manifest.DefineStyle("Animate")
+                .SetVersion("3.3.0")
+                .SetVersionUrl("../Content/animate.min.css", "../Content/animate.css");
+
+            // Creative
+
+            manifest.DefineStyle("Creative.Theme")
+                .SetVersion("1.0.1")
+                .SetVersionUrl("creative.min.css", "creative.css")
+                .SetDependencies("Bootstrap", "Animate");
+
+            manifest.DefineStyle("Creative.Theme.Override")
+                .SetVersion("1.0.1")
+                .SetVersionUrl("creative-override.min.css", "creative-override.css")
+                .SetDependencies("Creative.Theme");
+
+            manifest.DefineScript("WOW")
+                .SetVersion("1.1.2")
+                .SetVersionUrl("wow.min.js", "wow.js");
+
+            manifest.DefineScript("Creative.Theme")
+                .SetVersion("1.0.1")
+                .SetVersionUrl("creative.min.js", "creative.js")
+                .SetDependencies("jQuery", "jQuery.Easing", "jQuery.FitText", "WOW", "Bootstrap");
+
             // SmartWalk
 
             manifest.DefineStyle("SmartWalk.Theme")
                 .SetVersion(VersionUtil.CurrentVersion)
                 .SetVersionUrl("sw-theme.min.css", "sw-theme.css")
-                .SetDependencies("Bootstrap.Theme");
+                .SetDependencies("Creative.Theme.Override");
         }
     }
 }

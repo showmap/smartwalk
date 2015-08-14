@@ -1,27 +1,10 @@
 body {
-    background: url("../img/bg.png") repeat;
-}
-
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (     -o-min-device-pixel-ratio: 2/1),
-only screen and (        min-device-pixel-ratio: 2),
-only screen and (                min-resolution: 192dpi),
-only screen and (                min-resolution: 2dppx)
-{
-    body {
-        background: url("../img/bg2x.png") repeat;
-    }
-}
-
-.navbar {
-	border-radius: 0;
-    margin-bottom: 0;
+    background-color: #f5f5f5;
 }
 
 .container.content {
-    padding: 15px;
+    padding-top: 75px;
+    padding-bottom: 15px;
     background-color: #ffffff;
 }
 
