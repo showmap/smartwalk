@@ -13,7 +13,12 @@ namespace SmartWalk.Server.Controllers
     {
         private readonly static string ModuleName = Assembly.GetExecutingAssembly().GetName().Name;
         private readonly static string ModulePath = HostingEnvironment.MapPath(@"~/Modules/" + ModuleName);
-        private readonly static string RootPath = Path.Combine(ModulePath, "Views/Static/Root/"); 
+        private readonly static string RootPath = Path.Combine(ModulePath, "Views/Static/Root/");
+
+        public ActionResult Index()
+        {
+            return View();
+        }
 
         public ActionResult Root(string folderName = null, string subFolderName = null, string fileName = null)
         {
@@ -21,7 +26,7 @@ namespace SmartWalk.Server.Controllers
             Response.Cache.SetCacheability(HttpCacheability.Public);
             Response.Cache.SetLastModified(DateTime.Now);
 
-            var file = default(string);
+            string file;
             folderName = StripSlashes(folderName);
             subFolderName = StripSlashes(subFolderName);
             fileName = StripSlashes(fileName);
@@ -39,14 +44,12 @@ namespace SmartWalk.Server.Controllers
             {
                 return File(file, MimeMapping.GetMimeMapping(file));
             }
-            else
-            {
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return new EmptyResult();
-            }
+
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            return new EmptyResult();
         }
 
-        private string StripSlashes(string path)
+        private static string StripSlashes(string path)
         {
             if (path != null)
             {

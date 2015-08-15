@@ -349,6 +349,7 @@
     <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Views\Static\Root\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\Static\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Shared\SmartWalk.Shared\Properties\AssemblySharedInfo.cs">

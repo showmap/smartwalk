@@ -414,7 +414,7 @@ namespace SmartWalk.Server {
                         new RouteValueDictionary {
                             {"area", "SmartWalk.Server"},
                             {"controller", "Static"},
-                            {"action", "Root"},
+                            {"action", "Index"},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
