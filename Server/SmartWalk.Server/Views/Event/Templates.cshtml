@@ -46,11 +46,6 @@
     <tr class="venue">
         <td colspan="4" data-bind="click: function() { if ($root.isEnabled()) $root.venuesManager.editItem($data) }">
             <div class="clearfix">
-                <a class="bg-image">
-                    <img class="scale" data-scale="best-fill" data-align="center" data-bind="attr: {src: picture }" alt="" />
-                    <span class="abbr" data-bind="text: abbreviation()"></span>
-                </a>
-
                 <div class="venue-actions">
                     <button type="button" class="action close" data-bind="
                             enable: $root.isEnabled(), 
