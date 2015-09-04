@@ -28,11 +28,11 @@
     <MtouchI18n>
     </MtouchI18n>
     <MtouchArch>i386</MtouchArch>
-    <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchFastDev>true</MtouchFastDev>
     <MtouchLink>None</MtouchLink>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchUseSGen>true</MtouchUseSGen>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
@@ -293,7 +293,6 @@
     <Compile Include="Views\Common\MapView.designer.cs">
       <DependentUpon>MapView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Placeholder.cs" />
     <Compile Include="Views\Common\EntityCell\ContactsView.cs" />
     <Compile Include="Views\Common\EntityCell\ContactsView.designer.cs">
       <DependentUpon>ContactsView.cs</DependentUpon>
@@ -414,6 +413,7 @@
     <Compile Include="Utils\iCloud\FavoritesDocument.cs" />
     <Compile Include="Services\CloudService.cs" />
     <Compile Include="Services\ICloudService.cs" />
+    <Compile Include="Controls\Gradient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">

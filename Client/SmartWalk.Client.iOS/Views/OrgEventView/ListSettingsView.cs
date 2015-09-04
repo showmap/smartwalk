@@ -15,18 +15,16 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private static readonly UIColor Light = ThemeColors.ContentDarkText.ColorWithAlpha(0.95f);
         private static readonly UIColor Background = ThemeColors.HeaderBackground.GetDarker(0.3f);
 
-        private bool _isInitialized;
         private bool _showOnlyFavotires;
 
         public const int DefaultHeight = 34;
 
         public ListSettingsView(IntPtr handle) : base(handle)
         {
-        }
-
-        public static ListSettingsView Create()
-        {
-            return (ListSettingsView)Nib.Instantiate(null, null)[0];
+            ContentView = (UIView)Nib.Instantiate(this, null)[0];
+            ContentView.Frame = Bounds;
+            ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
+            Add(ContentView);
         }
 
         public ICommand SortByCommand { get; set; }
@@ -61,23 +59,18 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        public override void LayoutSubviews()
+        public override void AwakeFromNib()
         {
-            if (SortByLabel != null &&
-                !_isInitialized)
-            {
-                SortBySegments.SetTitle(Localization.Name, 0);
-                SortBySegments.SetTitle(Localization.Time, 1);
+            base.AwakeFromNib();
 
-                SortByLabel.Text = Localization.OrderBy;
-                // HACK: A space for a gap between start and caption
-                FavoritesButton.SetTitle(" " + Localization.Favorites, UIControlState.Normal);
+            SortBySegments.SetTitle(Localization.Name, 0);
+            SortBySegments.SetTitle(Localization.Time, 1);
 
-                InitializeStyle();
-                _isInitialized = true;
-            }
+            SortByLabel.Text = Localization.OrderBy;
+            // HACK: A space for a gap between start and caption
+            FavoritesButton.SetTitle(" " + Localization.Favorites, UIControlState.Normal);
 
-            base.LayoutSubviews();
+            InitializeStyle();
         }
 
         partial void OnSortBySegmentsValueChanged(NSObject sender)

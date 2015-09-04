@@ -25,8 +25,10 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
             TitleLabel.Text = text != null ? text.ToUpper() : null;
         }
 
-        protected override void OnInitialize()
+        public override void AwakeFromNib()
         {
+            base.AwakeFromNib();
+
             TitleLabel.Font = Theme.GroupHeaderTextFont;
             TitleLabel.TextColor = ThemeColors.Metadata;
         }

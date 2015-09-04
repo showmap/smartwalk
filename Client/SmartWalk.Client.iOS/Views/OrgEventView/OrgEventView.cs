@@ -28,7 +28,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly MKMapSize MapMargin = new MKMapSize(3000, 3000);
 
         private OrgEventScrollToHideUIManager _scrollToHideManager;
-        private ListSettingsView _listSettingsView;
         private bool _isMapViewInitialized;
         private ButtonBarButton _modeButton;
         private ButtonBarButton _dayButton;
@@ -270,7 +269,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         protected override IListViewSource CreateListViewSource()
         {
             _scrollToHideManager = new OrgEventScrollToHideUIManager(
-                VenuesAndShowsTableView, ListSettingsContainer);
+                VenuesAndShowsTableView, ListSettingsView);
 
             var tableSource = new OrgEventTableSource(VenuesAndShowsTableView, 
                 ViewModel, _scrollToHideManager);
@@ -798,28 +797,17 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void InitializeListSettingsView()
         {
-            if (_listSettingsView == null)
-            {
-                _listSettingsView = ListSettingsView.Create();
-                _listSettingsView.Frame = ListSettingsContainer.Bounds;
-                ListSettingsContainer.Content = _listSettingsView;
-
-                _listSettingsView.SortBy = ViewModel.SortBy;
-                _listSettingsView.SortByCommand = ViewModel.SortByCommand;
-                _listSettingsView.ShowOnlyFavoritesCommand = ViewModel.ShowOnlyFavoritesCommand;
-                _listSettingsView.ShowOnlyFavotires = ViewModel.ShowOnlyFavorites;
-            }
+            ListSettingsView.SortBy = ViewModel.SortBy;
+            ListSettingsView.SortByCommand = ViewModel.SortByCommand;
+            ListSettingsView.ShowOnlyFavoritesCommand = ViewModel.ShowOnlyFavoritesCommand;
+            ListSettingsView.ShowOnlyFavotires = ViewModel.ShowOnlyFavorites;
         }
 
         private void DisposeListSettingsView()
         {
-            if (_listSettingsView != null)
-            {
-                _listSettingsView.SortByCommand = null;
-                _listSettingsView.Dispose();
-                _listSettingsView = null;
-                ListSettingsContainer.Content = null;
-            }
+            ListSettingsView.SortByCommand = null;
+            ListSettingsView.ShowOnlyFavoritesCommand = null;
+            ListSettingsView.Dispose();
         }
        
         private void UpdateViewState(bool animated)
@@ -839,7 +827,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenuesAndShowsTableView.Hidden = false;
                     MapPanel.Hidden = false;
                     MapFullscreenButton.SetHidden(false, animated);
-                    ListSettingsContainer.Hidden = true;
+                    ListSettingsView.Hidden = true;
                     _scrollToHideManager.IsActive = false;
                     InitializeMapView();
                     break;
@@ -857,7 +845,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     VenuesAndShowsTableView.SetHidden(true, animated);
                     MapPanel.Hidden = false;
                     MapFullscreenButton.SetHidden(false, animated);
-                    ListSettingsContainer.Hidden = true;
+                    ListSettingsView.Hidden = true;
                     _scrollToHideManager.IsActive = false;
                     InitializeMapView();
                     break;
@@ -876,7 +864,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     MapPanel.SetHidden(true, animated);
                     MapFullscreenButton.SetHidden(true, animated);
                     var listSettingsHidden = !HasData || IsInSearch;
-                    ListSettingsContainer.SetHidden(listSettingsHidden, animated && !listSettingsHidden);
+                    ListSettingsView.SetHidden(listSettingsHidden, animated && !listSettingsHidden);
                     _scrollToHideManager.IsActive = !IsInSearch && HasData;
                     break;
             }

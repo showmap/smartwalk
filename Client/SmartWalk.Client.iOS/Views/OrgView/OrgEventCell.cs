@@ -38,8 +38,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             set { Separator.Hidden = !value; }
         }
 
-        protected override void OnInitialize()
+        public override void AwakeFromNib()
         {
+            base.AwakeFromNib();
+
             InitializeStyle();
         }
 

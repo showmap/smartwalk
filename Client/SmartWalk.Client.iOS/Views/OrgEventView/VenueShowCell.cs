@@ -301,8 +301,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             }
         }
 
-        protected override void OnInitialize()
+        public override void AwakeFromNib()
         {
+            base.AwakeFromNib();
+
             InitializeGestures();
             InitializeOrientationObserver();
             InitializeStyle();

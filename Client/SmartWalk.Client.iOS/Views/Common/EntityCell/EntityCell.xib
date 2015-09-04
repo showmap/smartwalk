@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -17,7 +17,7 @@
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="999" userLabel="HeaderPlaceholder">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" userLabel="Map Placeholder" customClass="Placeholder">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1016" userLabel="MapCell" customClass="MapCell">
                                 <rect key="frame" x="0.0" y="160" width="320" height="80"/>
                                 <color key="backgroundColor" red="1" green="0.97254901959999995" blue="0.81568627449999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -25,7 +25,7 @@
                                     <constraint firstAttribute="width" constant="320" id="1032"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" userLabel="Image Placeholder" customClass="Placeholder">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1011" userLabel="ImageBackground" customClass="ImageBackgroundView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="160"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -69,10 +69,10 @@
                 <outlet property="DescriptionLabel" destination="19" id="45"/>
                 <outlet property="DescriptionTopConstraint" destination="DQK-qT-KNl" id="SYM-5n-K2N"/>
                 <outlet property="HeaderHeightConstraint" destination="1033" id="1035"/>
-                <outlet property="ImageCellPlaceholder" destination="1011" id="1050"/>
+                <outlet property="ImageBackground" destination="1011" id="eb9-FA-Zmy"/>
                 <outlet property="ImageHeightConstraint" destination="1029" id="1036"/>
                 <outlet property="ImageWidthConstraint" destination="1031" id="1037"/>
-                <outlet property="MapCellPlaceholder" destination="1016" id="1051"/>
+                <outlet property="MapCell" destination="1016" id="vWf-Yv-Odp"/>
                 <outlet property="MapHeightConstraint" destination="1030" id="1049"/>
                 <outlet property="MapWidthConstraint" destination="1032" id="1039"/>
                 <outlet property="MapXConstraint" destination="1024" id="1040"/>

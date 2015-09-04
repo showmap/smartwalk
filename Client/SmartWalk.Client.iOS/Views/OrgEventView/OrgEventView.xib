@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -9,9 +9,9 @@
             <connections>
                 <outlet property="FullscreenHeightConstraint" destination="md5-ps-WtX" id="feX-rG-OhP"/>
                 <outlet property="FullscreenWidthConstraint" destination="MIn-AC-Za0" id="aMx-JS-yfq"/>
-                <outlet property="ListSettingsContainer" destination="gCQ-hX-bJo" id="VLV-IY-dLU"/>
                 <outlet property="ListSettingsHeightConstraint" destination="5nP-Pp-OPx" id="pE4-h2-I5h"/>
                 <outlet property="ListSettingsToTableConstraint" destination="Te7-XJ-0ES" id="C7N-Pe-tyf"/>
+                <outlet property="ListSettingsView" destination="gCQ-hX-bJo" id="nf9-Zs-d2t"/>
                 <outlet property="MapBottomSeparator" destination="gqO-ij-gFx" id="RhB-c2-QC5"/>
                 <outlet property="MapFullscreenButton" destination="wMm-c6-vk5" id="uXS-h6-EOi"/>
                 <outlet property="MapHeightConstraint" destination="3hL-Cg-ybC" id="0ee-pZ-d8g"/>
@@ -46,7 +46,7 @@
                         <textInputTraits key="textInputTraits"/>
                     </searchBar>
                 </tableView>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gCQ-hX-bJo" userLabel="List Settings" customClass="Placeholder">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gCQ-hX-bJo" userLabel="List Settings" customClass="ListSettingsView">
                     <rect key="frame" x="0.0" y="200" width="320" height="34"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>

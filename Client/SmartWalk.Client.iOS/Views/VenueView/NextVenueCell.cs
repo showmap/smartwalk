@@ -45,8 +45,10 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             }
         }
 
-        protected override void OnInitialize()
+        public override void AwakeFromNib()
         {
+            base.AwakeFromNib();
+
             InitializeGestures();
             InitializeStyle();
         }

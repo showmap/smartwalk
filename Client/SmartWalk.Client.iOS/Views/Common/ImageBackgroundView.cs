@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Cirrious.MvvmCross.Binding.Touch.Views;
-using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using SmartWalk.Client.iOS.Resources;
@@ -14,26 +12,23 @@ namespace SmartWalk.Client.iOS.Views.Common
     public partial class ImageBackgroundView : UIView
     {
         public static readonly UINib Nib = UINib.FromName("ImageBackgroundView", NSBundle.MainBundle);
-        private static readonly ImageCache Cache = new ImageCache();
 
         private readonly AnimationDelay _animationDelay = new AnimationDelay();
 
         private MvxImageViewLoader _imageHelper;
         private MvxResizedImageViewLoader _resizedImageHelper;
-        private CAGradientLayer _bottomGradient;
 
         private string _imageUrl;
-        private bool _resizeImage;
-        private bool _useCache;
 
         public ImageBackgroundView(IntPtr handle) : base(handle)
         {
+            ContentView = (UIView)Nib.Instantiate(this, null)[0];
+            ContentView.Frame = Bounds;
+            ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
+            Add(ContentView);
         }
 
-        public static ImageBackgroundView Create()
-        {
-            return (ImageBackgroundView)Nib.Instantiate(null, null)[0];
-        }
+        public bool ResizeImage { get; set; }
 
         public string Title
         {
@@ -57,13 +52,13 @@ namespace SmartWalk.Client.iOS.Views.Common
             set
             {
                 _imageUrl = value;
-                BackgroundImage.Image = _useCache ? Cache.GetImage(_imageUrl) : null;
+                BackgroundImage.Image = null;
 
                 if (BackgroundImage.Image == null)
                 {
                     _animationDelay.Reset();
 
-                    if (_resizeImage)
+                    if (ResizeImage)
                     {
                         _resizedImageHelper.ImageUrl = _imageUrl;
                     }
@@ -104,10 +99,9 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        public void Initialize(bool resizeImage = false, bool useCache = false)
+        public override void AwakeFromNib()
         {
-            _resizeImage = resizeImage;
-            _useCache = useCache;
+            base.AwakeFromNib();
 
             // removing design values set in markup
             TitleLabel.Text = null;
@@ -115,17 +109,6 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             InitializeImageHelper();
             InitializeStyle();
-            InitializeGradient();
-        }
-
-        public override void LayoutSubviews()
-        {
-            base.LayoutSubviews();
-
-            if (_bottomGradient != null)
-            {
-                _bottomGradient.Frame = BackgroundImage.Bounds;
-            }
         }
 
         protected override void Dispose(bool disposing)
@@ -136,7 +119,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeImageHelper()
         {
-            if (_resizeImage)
+            if (ResizeImage)
             {
                 _resizedImageHelper = 
                     new MvxResizedImageViewLoader(() => BackgroundImage, OnImageChanged);
@@ -161,74 +144,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             BackgroundImage.BackgroundColor = BackgroundColor;
         }
 
-        private void InitializeGradient()
-        {
-            if (_bottomGradient == null)
-            {
-                _bottomGradient = new CAGradientLayer {
-                    Frame = BackgroundImage.Bounds,
-                    Colors = new [] { 
-                        ThemeColors.ContentDarkBackground.ColorWithAlpha(0.2f).CGColor, 
-                        ThemeColors.ContentDarkBackground.ColorWithAlpha(0.8f).CGColor 
-                    },
-                    Locations = new [] {
-                        new NSNumber(0),
-                        new NSNumber(1)
-                    },
-                    ShouldRasterize = true,
-                    RasterizationScale = UIScreen.MainScreen.Scale
-                };
-
-                BackgroundImage.Layer.InsertSublayer(_bottomGradient, 0);
-            }
-        }
-
         private void OnImageChanged()
         {
-            if (_useCache && BackgroundImage.HasImage())
-            {
-                Cache.CacheImage(ImageUrl, BackgroundImage.Image);
-            }
-
             if (BackgroundImage.HasImage() && _animationDelay.Animate)
             {
                 BackgroundImage.Hidden = true;
                 BackgroundImage.SetHidden(false, true);
-            }
-        }
-
-        private class ImageCache
-        {
-            private readonly Dictionary<string, WeakReference<UIImage>> _cache = 
-                new Dictionary<string, WeakReference<UIImage>>();
-
-            public UIImage GetImage(string url)
-            {
-                if (_cache.ContainsKey(url))
-                {
-                    UIImage result;
-
-                    if (_cache[url].TryGetTarget(out result))
-                    {
-                        return result;
-                    }
-
-                    _cache.Remove(url);
-                }
-
-                return null;
-            }
-
-            public void CacheImage(string url, UIImage image)
-            {
-                if (_cache.ContainsKey(url))
-                {
-                    _cache[url].SetTarget(image);
-                }
-                else
-                {
-                    _cache[url] = new WeakReference<UIImage>(image);
-                }
             }
         }
     }

@@ -3,7 +3,6 @@ using Foundation;
 using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
-using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 using SmartWalk.Client.iOS.Resources;
 
@@ -27,14 +26,12 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             set { base.DataContext = value; }
         }
 
-        private ImageBackgroundView ImageBackground
+        public override void AwakeFromNib()
         {
-            get { return (ImageBackgroundView)Placeholder.Content; }
-        }
+            base.AwakeFromNib();
 
-        public static OrgCell Create()
-        {
-            return (OrgCell)Nib.Instantiate(null, null)[0];
+            ImageBackground.ResizeImage = true;
+            InitializeStyle();
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -47,12 +44,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             }
         }
 
-        protected override void OnInitialize()
-        {
-            InitializeImageBackground();
-            InitializeStyle();
-        }
-
         protected override void OnDataContextChanged()
         {
             ImageBackground.ImageUrl = DataContext != null ? DataContext.Picture : null;
@@ -60,20 +51,9 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             ImageBackground.Subtitle = DataContext != null ? DataContext.GetDateString() : null;
         }
 
-        private void InitializeImageBackground()
-        {
-            var view = ImageBackgroundView.Create();
-            // Making sure that it has proper frame for loading a resized image
-            view.Frame = Bounds;
-
-            Placeholder.Content = view;
-            ImageBackground.Initialize(true);
-        }
-
         private void DisposeImageBackground()
         {
             ImageBackground.Dispose();
-            Placeholder.Content = null;
         }
 
         private void InitializeStyle()

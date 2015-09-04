@@ -25,7 +25,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 		UIKit.NSLayoutConstraint HeaderHeightConstraint { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Placeholder ImageCellPlaceholder { get; set; }
+		SmartWalk.Client.iOS.Views.Common.ImageBackgroundView ImageBackground { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint ImageHeightConstraint { get; set; }
@@ -34,7 +34,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 		UIKit.NSLayoutConstraint ImageWidthConstraint { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Placeholder MapCellPlaceholder { get; set; }
+		SmartWalk.Client.iOS.Views.Common.EntityCell.MapCell MapCell { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint MapHeightConstraint { get; set; }
@@ -70,9 +70,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 				HeaderHeightConstraint = null;
 			}
 
-			if (ImageCellPlaceholder != null) {
-				ImageCellPlaceholder.Dispose ();
-				ImageCellPlaceholder = null;
+			if (ImageBackground != null) {
+				ImageBackground.Dispose ();
+				ImageBackground = null;
 			}
 
 			if (ImageHeightConstraint != null) {
@@ -85,9 +85,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 				ImageWidthConstraint = null;
 			}
 
-			if (MapCellPlaceholder != null) {
-				MapCellPlaceholder.Dispose ();
-				MapCellPlaceholder = null;
+			if (MapCell != null) {
+				MapCell.Dispose ();
+				MapCell = null;
 			}
 
 			if (MapHeightConstraint != null) {

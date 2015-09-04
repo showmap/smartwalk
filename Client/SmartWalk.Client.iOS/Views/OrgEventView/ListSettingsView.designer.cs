@@ -16,6 +16,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.UIToolbar BackgroundView { get; set; }
 
 		[Outlet]
+		UIKit.UIView ContentView { get; set; }
+
+		[Outlet]
 		UIKit.UIButton FavoritesButton { get; set; }
 
 		[Outlet]
@@ -35,6 +38,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ContentView != null) {
+				ContentView.Dispose ();
+				ContentView = null;
+			}
+
 			if (BackgroundView != null) {
 				BackgroundView.Dispose ();
 				BackgroundView = null;
@@ -45,6 +53,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				FavoritesButton = null;
 			}
 
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
+			}
+
 			if (SortByLabel != null) {
 				SortByLabel.Dispose ();
 				SortByLabel = null;
@@ -53,11 +66,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (SortBySegments != null) {
 				SortBySegments.Dispose ();
 				SortBySegments = null;
-			}
-
-			if (Separator != null) {
-				Separator.Dispose ();
-				Separator = null;
 			}
 		}
 	}

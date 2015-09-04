@@ -26,6 +26,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         public MapCell(IntPtr handle) : base (handle)
         {
+            ContentView = (UIView)Nib.Instantiate(this, null)[0];
+            ContentView.Frame = Bounds;
+            ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
+            Add(ContentView);
         }
 
         public new Entity DataContext
@@ -35,11 +39,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         }
 
         public ICommand NavigateAddressesCommand { get; set; }
-
-        public static MapCell Create()
-        {
-            return (MapCell)Nib.Instantiate(null, null)[0];
-        }
 
         public override void WillMoveToSuperview(UIView newsuper)
         {
@@ -70,8 +69,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        protected override void OnInitialize()
+        public override void AwakeFromNib()
         {
+            base.AwakeFromNib();
+
             InitializeStyle();
             InitializeGestures();
 

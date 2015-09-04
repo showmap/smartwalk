@@ -19,13 +19,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint FullscreenWidthConstraint { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Placeholder ListSettingsContainer { get; set; }
-
-		[Outlet]
 		UIKit.NSLayoutConstraint ListSettingsHeightConstraint { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint ListSettingsToTableConstraint { get; set; }
+
+		[Outlet]
+		SmartWalk.Client.iOS.Views.OrgEventView.ListSettingsView ListSettingsView { get; set; }
 
 		[Outlet]
 		SmartWalk.Client.iOS.Controls.Line MapBottomSeparator { get; set; }
@@ -81,9 +81,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				FullscreenWidthConstraint = null;
 			}
 
-			if (ListSettingsContainer != null) {
-				ListSettingsContainer.Dispose ();
-				ListSettingsContainer = null;
+			if (ListSettingsView != null) {
+				ListSettingsView.Dispose ();
+				ListSettingsView = null;
 			}
 
 			if (ListSettingsHeightConstraint != null) {
@@ -136,6 +136,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				SearchBar = null;
 			}
 
+			if (SearchTableTopConstraint != null) {
+				SearchTableTopConstraint.Dispose ();
+				SearchTableTopConstraint = null;
+			}
+
 			if (SearchTableView != null) {
 				SearchTableView.Dispose ();
 				SearchTableView = null;
@@ -144,11 +149,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (TableHeightConstraint != null) {
 				TableHeightConstraint.Dispose ();
 				TableHeightConstraint = null;
-			}
-
-			if (SearchTableTopConstraint != null) {
-				SearchTableTopConstraint.Dispose ();
-				SearchTableTopConstraint = null;
 			}
 
 			if (VenuesAndShowsTableView != null) {

@@ -30,8 +30,9 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             return (ContactCell)Nib.Instantiate(null, null)[0];
         }
 
-        protected override void OnInitialize()
+        public override void AwakeFromNib()
         {
+            base.AwakeFromNib();
             InitializeStyle();
         }
 

@@ -6,7 +6,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base.Cells
 {
     public abstract class TableCellBase : UITableViewCell
     {
-        private bool _isInitialized;
         private object _dataContext;
 
         protected TableCellBase(IntPtr handle) : base(handle) 
@@ -24,20 +23,9 @@ namespace SmartWalk.Client.iOS.Views.Common.Base.Cells
                 {
                     var previousContext = _dataContext;
                     _dataContext = value;
-
-                    if (!_isInitialized)
-                    {
-                        OnInitialize();
-                        _isInitialized = true;
-                    }
-
                     OnDataContextChanged(previousContext, _dataContext);
                 }
             }
-        }
-
-        protected virtual void OnInitialize()
-        {
         }
 
         protected virtual void OnDataContextChanged(object previousContext, object newContext)

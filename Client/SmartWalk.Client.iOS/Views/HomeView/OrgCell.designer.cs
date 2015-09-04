@@ -13,13 +13,13 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 	partial class OrgCell
 	{
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Placeholder Placeholder { get; set; }
+		SmartWalk.Client.iOS.Views.Common.ImageBackgroundView ImageBackground { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (Placeholder != null) {
-				Placeholder.Dispose ();
-				Placeholder = null;
+			if (ImageBackground != null) {
+				ImageBackground.Dispose ();
+				ImageBackground = null;
 			}
 		}
 	}

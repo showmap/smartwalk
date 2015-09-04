@@ -16,27 +16,27 @@ namespace SmartWalk.Client.iOS.Views.Common
 		UIKit.UIImageView BackgroundImage { get; set; }
 
 		[Outlet]
-		UIKit.UIActivityIndicatorView ProgressView { get; set; }
+		UIKit.UIView ContentView { get; set; }
 
 		[Outlet]
-        UIKit.UILabel SubtitleLabel { get; set; }
+		UIKit.UILabel SubtitleLabel { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint TitleBottomGapConstraint { get; set; }
 
 		[Outlet]
-        UIKit.UILabel TitleLabel { get; set; }
+		UIKit.UILabel TitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ContentView != null) {
+				ContentView.Dispose ();
+				ContentView = null;
+			}
+
 			if (BackgroundImage != null) {
 				BackgroundImage.Dispose ();
 				BackgroundImage = null;
-			}
-
-			if (ProgressView != null) {
-				ProgressView.Dispose ();
-				ProgressView = null;
 			}
 
 			if (SubtitleLabel != null) {

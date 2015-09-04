@@ -32,6 +32,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private NSObject _orientationObserver;
         private bool _updateConstraintsScheduled;
+        private ICommand _navigateAddressesCommand;
 
         public EntityCell(IntPtr handle) : base(handle)
         {
@@ -92,7 +93,16 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         public ICommand ExpandCollapseCommand { get; set; }
         public ICommand ShowImageFullscreenCommand { get; set; }
         public ICommand NavigateWebSiteCommand { get; set; }
-        public ICommand NavigateAddressesCommand { get; set; }
+
+        public ICommand NavigateAddressesCommand
+        {
+            get { return _navigateAddressesCommand; }
+            set 
+            {
+                _navigateAddressesCommand = value;
+                InitializeMapCell();
+            }
+        }
 
         public new IEntityCellContext DataContext
         {
@@ -103,16 +113,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private Entity DataContextEntity
         {
             get { return DataContext != null ? DataContext.Entity : null; }
-        }
-
-        private ImageBackgroundView ImageBackground
-        {
-            get { return (ImageBackgroundView)ImageCellPlaceholder.Content; }
-        }
-
-        private MapCell MapCell
-        {
-            get { return (MapCell)MapCellPlaceholder.Content; }
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -127,9 +127,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 NavigateAddressesCommand = null;
 
                 DisposeGestures();
-                DisposeHeaderImage();
                 DisposeMapCell();
                 DisposeOrientationObserver();
+
+                ImageBackground.Dispose();
             }
         }
 
@@ -144,10 +145,11 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        protected override void OnInitialize()
+        public override void AwakeFromNib()
         {
+            base.AwakeFromNib();
+
             InitializeStyle();
-            InitializeHeaderImage();
             InitializeMapCell();
             InitializeGestures();
             InitializeOrientationObserver();
@@ -239,18 +241,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 MapHeightConstraint.Constant = 0;
             }
 
-            // HACK: to make sure that Frames are updated (on first opening they aren't)
-            ImageCellPlaceholder.Frame = new CGRect(
-                0, 
-                0, 
-                ImageWidthConstraint.Constant,
-                ImageHeightConstraint.Constant);
-            MapCellPlaceholder.Frame = new CGRect(
-                MapXConstraint.Constant,
-                MapYConstraint.Constant,
-                MapWidthConstraint.Constant,
-                MapHeightConstraint.Constant);
-
             if (DataContext != null && DataContext.FullDescription() != null)
             {
                 DescriptionTopConstraint.Constant = Gap;
@@ -337,31 +327,15 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        private void InitializeHeaderImage()
-        {
-            ImageCellPlaceholder.Content = ImageBackgroundView.Create();
-            ImageBackground.Initialize();
-        }
-
-        private void DisposeHeaderImage()
-        {
-            ImageBackground.Dispose();
-            ImageCellPlaceholder.Content = null;
-        }
-
         private void InitializeMapCell()
         {
-            MapCellPlaceholder.Content = MapCell.Create();
-
             MapCell.NavigateAddressesCommand = NavigateAddressesCommand;
         }
 
         private void DisposeMapCell()
         {
             MapCell.NavigateAddressesCommand = null;
-
             MapCell.Dispose();
-            MapCellPlaceholder.Content = null;
         }
 
         private void InitializeStyle()
