@@ -1,3 +1,4 @@
+using System;
 using CoreGraphics;
 using UIKit;
 
@@ -5,51 +6,46 @@ namespace SmartWalk.Client.iOS.Resources
 {
     public static class Theme
     {
-        private const string HelveticaBold = "HelveticaNeue-Bold";
-        private const string HelveticaMedium = "HelveticaNeue-Medium";
-        private const string HelveticaRegular = "HelveticaNeue";
-        private const string HelveticaLight = "HelveticaNeue-Light";
-
         public static int NavBarPaddingCompensate = -9;
         public static int ToolBarPaddingCompensate = -16;
 
-        public static readonly UIFont NavBarFont = UIFont.FromName(HelveticaBold, 15);
-        public static readonly UIFont ContentFont = UIFont.FromName(HelveticaRegular, 16);
-        public static readonly UIFont ActionSheetFont = UIFont.FromName(HelveticaBold, 17);
-        public static readonly UIFont ActionSheetCancelFont = UIFont.FromName(HelveticaBold, 18);
-        public static readonly UIFont ButtonTextFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIFont NavBarFont = SystemFontOfSize(15, FontWeight.Bold);
+        public static readonly UIFont ContentFont = SystemFontOfSize(16, FontWeight.Regular);
+        public static readonly UIFont ActionSheetFont = SystemFontOfSize(17, FontWeight.Bold);
+        public static readonly UIFont ActionSheetCancelFont = SystemFontOfSize(18, FontWeight.Bold);
+        public static readonly UIFont ButtonTextFont = SystemFontOfSize(15, FontWeight.Light);
 
-        public static readonly UIFont GroupHeaderTextFont = UIFont.FromName(HelveticaMedium, 13);
-        public static readonly UIFont ContactTitleTextFont = UIFont.FromName(HelveticaLight, 14);
+        public static readonly UIFont GroupHeaderTextFont = SystemFontOfSize(13, FontWeight.Medium);
+        public static readonly UIFont ContactTitleTextFont = SystemFontOfSize(14, FontWeight.Light);
 
-        public static readonly UIFont BackgroundImageTitleTextFont = UIFont.FromName(HelveticaBold, 19);
-        public static readonly UIFont BackgroundImageSubtitleTextFont = UIFont.FromName(HelveticaMedium, 16);
+        public static readonly UIFont BackgroundImageTitleTextFont = SystemFontOfSize(19, FontWeight.Bold);
+        public static readonly UIFont BackgroundImageSubtitleTextFont = SystemFontOfSize(16, FontWeight.Medium);
 
-        public static readonly UIFont HomeHeaderFont = UIFont.FromName(HelveticaBold, 15);
+        public static readonly UIFont HomeHeaderFont = SystemFontOfSize(15, FontWeight.Bold);
 
-        public static readonly UIFont OrgEventDayFont = UIFont.FromName(HelveticaLight, 18);
-        public static readonly UIFont OrgEventDayLandscapeFont = UIFont.FromName(HelveticaLight, 15);
-        public static readonly UIFont OrgEventTwoDaysFont = UIFont.FromName(HelveticaLight, 14);
-        public static readonly UIFont OrgEventTwoDaysLandscapeFont = UIFont.FromName(HelveticaLight, 11.5f);
-        public static readonly UIFont OrgEventMonthFont = UIFont.FromName(HelveticaBold, 10);
-        public static readonly UIFont OrgEventMonthLandscapeFont = UIFont.FromName(HelveticaBold, 8);
+        public static readonly UIFont OrgEventDayFont = SystemFontOfSize(18, FontWeight.Light);
+        public static readonly UIFont OrgEventDayLandscapeFont = SystemFontOfSize(15, FontWeight.Light);
+        public static readonly UIFont OrgEventTwoDaysFont = SystemFontOfSize(14, FontWeight.Light);
+        public static readonly UIFont OrgEventTwoDaysLandscapeFont = SystemFontOfSize(11.5f, FontWeight.Light);
+        public static readonly UIFont OrgEventMonthFont = SystemFontOfSize(10, FontWeight.Bold);
+        public static readonly UIFont OrgEventMonthLandscapeFont = SystemFontOfSize(8, FontWeight.Bold);
 
-        public static readonly UIFont EntityDescriptionFont = UIFont.FromName(HelveticaLight, 16);
-        public static readonly UIFont NextEntityFont = UIFont.FromName(HelveticaLight, 16);
+        public static readonly UIFont EntityDescriptionFont = SystemFontOfSize(16, FontWeight.Light);
+        public static readonly UIFont NextEntityFont = SystemFontOfSize(16, FontWeight.Light);
 
-        public static readonly UIFont OrgEventHeaderFont = UIFont.FromName(HelveticaLight, 14);
-        public static readonly UIFont VenueNameFont = UIFont.FromName(HelveticaMedium, 14);
-        public static readonly UIFont VenueAddressFont = UIFont.FromName(HelveticaLight, 14);
-        public static readonly UIFont VenueShowLogoFont = UIFont.FromName(HelveticaLight, 17);
-        public static readonly UIFont VenueShowTimeFont = UIFont.FromName(HelveticaRegular, 14);
-        public static readonly UIFont VenueShowFinishedTimeFont = UIFont.FromName(HelveticaLight, 14);
-        public static readonly UIFont VenueShowEndTimeFont = UIFont.FromName(HelveticaRegular, 10);
-        public static readonly UIFont VenueShowFinishedEndTimeFont = UIFont.FromName(HelveticaLight, 10);
-        public static readonly UIFont VenueShowFinishedFont = UIFont.FromName(HelveticaLight, 16);
-        public static readonly UIFont VenueShowDescriptionFont = UIFont.FromName(HelveticaLight, 14);
-        public static readonly UIFont VenueShowDetailsFont = UIFont.FromName(HelveticaLight, 15);
+        public static readonly UIFont OrgEventHeaderFont = SystemFontOfSize(14, FontWeight.Light);
+        public static readonly UIFont VenueNameFont = SystemFontOfSize(14, FontWeight.Medium);
+        public static readonly UIFont VenueAddressFont = SystemFontOfSize(14, FontWeight.Light);
+        public static readonly UIFont VenueShowLogoFont = SystemFontOfSize(17, FontWeight.Light);
+        public static readonly UIFont VenueShowTimeFont = SystemFontOfSize(14, FontWeight.Regular);
+        public static readonly UIFont VenueShowFinishedTimeFont = SystemFontOfSize(14, FontWeight.Light);
+        public static readonly UIFont VenueShowEndTimeFont = SystemFontOfSize(10, FontWeight.Regular);
+        public static readonly UIFont VenueShowFinishedEndTimeFont = SystemFontOfSize(10, FontWeight.Light);
+        public static readonly UIFont VenueShowFinishedFont = SystemFontOfSize(16, FontWeight.Light);
+        public static readonly UIFont VenueShowDescriptionFont = SystemFontOfSize(14, FontWeight.Light);
+        public static readonly UIFont VenueShowDetailsFont = SystemFontOfSize(15, FontWeight.Light);
 
-        public static readonly UIFont MapPinFont = UIFont.FromName(HelveticaRegular, 12);
+        public static readonly UIFont MapPinFont = SystemFontOfSize(12, FontWeight.Regular);
         public static readonly CGPoint MapPinOffset = new CGPoint(0, -16);
         public static readonly CGPoint MapPinTextOffset = new CGPoint(1, 0);
 
@@ -83,6 +79,62 @@ namespace SmartWalk.Client.iOS.Resources
             var buttonLabelAp = UILabel.AppearanceWhenContainedIn(typeof(UIButton));
             buttonLabelAp.Font = ButtonTextFont;
             buttonLabelAp.TextColor = ThemeColors.ContentLightText;
+        }
+
+        private static UIFont SystemFontOfSize(nfloat size, FontWeight weight)
+        {
+            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 2))
+            {
+                return UIFont.SystemFontOfSize(size, GetUIFontWeight(weight));
+            }
+            else
+            {
+                return UIFont.FromName(GetFontName(weight), size);
+            }
+        }
+
+        private static UIFontWeight GetUIFontWeight(FontWeight weight) 
+        {
+            switch (weight) 
+            {
+                case FontWeight.Bold:
+                    return UIFontWeight.Bold;
+
+                case FontWeight.Medium:
+                    return UIFontWeight.Medium;
+
+                case FontWeight.Light:
+                    return UIFontWeight.Light;
+
+                default:
+                    return UIFontWeight.Regular;
+            }
+        }
+
+        private static string GetFontName(FontWeight weight) 
+        {
+            switch (weight) 
+            {
+                case FontWeight.Bold:
+                    return "HelveticaNeue-Bold";
+
+                case FontWeight.Medium:
+                    return "HelveticaNeue-Medium";
+
+                case FontWeight.Light:
+                    return "HelveticaNeue-Light";
+
+                default:
+                    return "HelveticaNeue";
+            }
+        }
+
+        private enum FontWeight
+        {
+            Light,
+            Regular,
+            Medium,
+            Bold
         }
     }
 }
