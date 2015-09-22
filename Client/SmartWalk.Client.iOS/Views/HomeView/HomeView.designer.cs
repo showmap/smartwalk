@@ -13,10 +13,10 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 	partial class HomeView
 	{
 		[Outlet]
-        UIKit.UICollectionView OrgCollectionView { get; set; }
+		UIKit.UICollectionView OrgCollectionView { get; set; }
 
 		[Outlet]
-		UIKit.UIView ProgressViewContainer { get; set; }
+		SmartWalk.Client.iOS.Views.Common.ProgressView ProgressView { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
@@ -28,14 +28,14 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 				OrgCollectionView = null;
 			}
 
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
-			}
-
 			if (ProgressViewTopConstraint != null) {
 				ProgressViewTopConstraint.Dispose ();
 				ProgressViewTopConstraint = null;
+			}
+
+			if (ProgressView != null) {
+				ProgressView.Dispose ();
+				ProgressView = null;
 			}
 		}
 	}

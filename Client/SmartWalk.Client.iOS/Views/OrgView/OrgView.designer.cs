@@ -13,10 +13,10 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 	partial class OrgView
 	{
 		[Outlet]
-        UIKit.UITableView OrgEventsTableView { get; set; }
+		UIKit.UITableView OrgEventsTableView { get; set; }
 
 		[Outlet]
-		UIKit.UIView ProgressViewContainer { get; set; }
+		SmartWalk.Client.iOS.Views.Common.ProgressView ProgressView { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
@@ -28,14 +28,14 @@ namespace SmartWalk.Client.iOS.Views.OrgView
 				OrgEventsTableView = null;
 			}
 
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
-			}
-
 			if (ProgressViewTopConstraint != null) {
 				ProgressViewTopConstraint.Dispose ();
 				ProgressViewTopConstraint = null;
+			}
+
+			if (ProgressView != null) {
+				ProgressView.Dispose ();
+				ProgressView = null;
 			}
 		}
 	}

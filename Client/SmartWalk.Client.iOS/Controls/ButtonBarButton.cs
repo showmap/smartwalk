@@ -53,7 +53,7 @@ namespace SmartWalk.Client.iOS.Controls
             CGSize? verticalSize,
             CGSize? landscapeSize,
             SemiTransparentType semiTransparentType = SemiTransparentType.None)
-                : base(UIButtonType.Custom)
+                : base()
         {
             Initialize(
                 verticalIcon, 

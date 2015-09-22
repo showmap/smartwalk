@@ -11,10 +11,12 @@ namespace SmartWalk.Client.iOS.Views.Common
     {
         public static readonly UINib Nib = UINib.FromName("ProgressView", NSBundle.MainBundle);
 
-        private bool _isInitialized;
-
         public ProgressView(IntPtr handle) : base(handle)
         {
+            ContentView = (UIView)Nib.Instantiate(this, null)[0];
+            ContentView.Frame = Bounds;
+            ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
+            Add(ContentView);
         }
 
         public bool IsLoading
@@ -41,25 +43,14 @@ namespace SmartWalk.Client.iOS.Views.Common
             set { ActivityIndicator.ActivityIndicatorViewStyle = value; }
         }
 
-        public static ProgressView Create()
+        public override void AwakeFromNib()
         {
-            return (ProgressView)Nib.Instantiate(null, null)[0];
-        }
+            base.AwakeFromNib();
 
-        public override void LayoutSubviews()
-        {
-            if (MessageLabel != null && 
-                ProgressLabel != null &&
-                !_isInitialized)
-            {
-                MessageLabel.Text = Localization.NoContentAvailable;
-                ProgressLabel.Text = Localization.Loading + "...";
+            MessageLabel.Text = Localization.NoContentAvailable;
+            ProgressLabel.Text = Localization.Loading + "...";
 
-                InitializeStyle();
-                _isInitialized = true;
-            }
-
-            base.LayoutSubviews();
+            InitializeStyle();
         }
 
         protected override void Dispose(bool disposing)

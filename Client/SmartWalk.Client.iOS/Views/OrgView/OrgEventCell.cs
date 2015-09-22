@@ -21,11 +21,6 @@ namespace SmartWalk.Client.iOS.Views.OrgView
             SelectedBackgroundView = new UIView { BackgroundColor = ThemeColors.ContentLightHighlight };
         }
 
-        public static OrgEventCell Create()
-        {
-            return (OrgEventCell)Nib.Instantiate(null, null)[0];
-        }
-
         public new OrgEvent DataContext
         {
             get { return (OrgEvent)base.DataContext; }

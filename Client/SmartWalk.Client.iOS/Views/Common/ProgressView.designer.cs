@@ -16,6 +16,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 		UIKit.UIActivityIndicatorView ActivityIndicator { get; set; }
 
 		[Outlet]
+		UIKit.UIView ContentView { get; set; }
+
+		[Outlet]
 		UIKit.UIView LoadingView { get; set; }
 
 		[Outlet]
@@ -26,6 +29,11 @@ namespace SmartWalk.Client.iOS.Views.Common
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ContentView != null) {
+				ContentView.Dispose ();
+				ContentView = null;
+			}
+
 			if (ActivityIndicator != null) {
 				ActivityIndicator.Dispose ();
 				ActivityIndicator = null;

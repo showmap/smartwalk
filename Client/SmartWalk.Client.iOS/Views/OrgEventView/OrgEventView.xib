@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OrgEventView">
@@ -17,7 +17,7 @@
                 <outlet property="MapHeightConstraint" destination="3hL-Cg-ybC" id="0ee-pZ-d8g"/>
                 <outlet property="MapPanel" destination="4" id="hdN-eT-bnM"/>
                 <outlet property="MapToListSettingsConstraint" destination="MXn-UU-gPI" id="Jdx-Fo-QB9"/>
-                <outlet property="ProgressViewContainer" destination="45" id="57"/>
+                <outlet property="ProgressView" destination="45" id="kjr-1J-k32"/>
                 <outlet property="ProgressViewTopConstraint" destination="53" id="jLH-7i-74i"/>
                 <outlet property="SearchBar" destination="20F-Ip-Ciy" id="tw0-tu-iom"/>
                 <outlet property="SearchTableTopConstraint" destination="k4E-D8-PGB" id="bIS-5q-tyl"/>
@@ -97,7 +97,7 @@
                     <color key="backgroundColor" red="0.5" green="0.5" blue="0.5" alpha="0.25" colorSpace="calibratedRGB"/>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                 </tableView>
-                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="45" userLabel="Progress View">
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="45" userLabel="Progress View" customClass="ProgressView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
@@ -127,9 +127,4 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>

@@ -5,6 +5,7 @@ using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using UIKit;
 
@@ -75,9 +76,9 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             return ListViewDecorator.Create(OrgCollectionView);
         }
 
-        protected override UIView GetProgressViewContainer()
+        protected override ProgressView GetProgressView()
         { 
-            return ProgressViewContainer;  
+            return ProgressView;  
         }
 
         protected override void InitializeListView()

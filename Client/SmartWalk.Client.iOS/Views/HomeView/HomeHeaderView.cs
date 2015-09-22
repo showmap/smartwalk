@@ -40,11 +40,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             set { BindingContext.DataContext = value; }
         }
 
-        public static HomeHeaderView Create()
-        {
-            return (HomeHeaderView)Nib.Instantiate(null, null)[0];
-        }
-
         public void Initialize()
         {
             this.CreateBinding(TitleLabel)

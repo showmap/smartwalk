@@ -25,11 +25,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             set { base.DataContext = value; }
         }
 
-        public static ContactCell Create()
-        {
-            return (ContactCell)Nib.Instantiate(null, null)[0];
-        }
-
         public override void AwakeFromNib()
         {
             base.AwakeFromNib();

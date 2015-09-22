@@ -13,29 +13,29 @@ namespace SmartWalk.Client.iOS.Views.VenueView
 	partial class VenueView
 	{
 		[Outlet]
-		UIKit.UIView ProgressViewContainer { get; set; }
+		SmartWalk.Client.iOS.Views.Common.ProgressView ProgressView { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 
 		[Outlet]
-        UIKit.UITableView VenueShowsTableView { get; set; }
+		UIKit.UITableView VenueShowsTableView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
-			}
-
-			if (VenueShowsTableView != null) {
-				VenueShowsTableView.Dispose ();
-				VenueShowsTableView = null;
+			if (ProgressView != null) {
+				ProgressView.Dispose ();
+				ProgressView = null;
 			}
 
 			if (ProgressViewTopConstraint != null) {
 				ProgressViewTopConstraint.Dispose ();
 				ProgressViewTopConstraint = null;
+			}
+
+			if (VenueShowsTableView != null) {
+				VenueShowsTableView.Dispose ();
+				VenueShowsTableView = null;
 			}
 		}
 	}

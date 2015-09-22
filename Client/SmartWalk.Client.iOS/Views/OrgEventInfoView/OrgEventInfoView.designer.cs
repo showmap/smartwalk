@@ -9,28 +9,28 @@ using System.CodeDom.Compiler;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 {
-    [Register ("OrgEventInfoView")]
-    partial class OrgEventInfoView
+	[Register ("OrgEventInfoView")]
+	partial class OrgEventInfoView
 	{
 		[Outlet]
-        UIKit.UITableView OrgEventInfoTableView { get; set; }
+		UIKit.UITableView OrgEventInfoTableView { get; set; }
 
 		[Outlet]
-		UIKit.UIView ProgressViewContainer { get; set; }
+		SmartWalk.Client.iOS.Views.Common.ProgressView ProgressView { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-            if (OrgEventInfoTableView != null) {
-                OrgEventInfoTableView.Dispose ();
-                OrgEventInfoTableView = null;
+			if (OrgEventInfoTableView != null) {
+				OrgEventInfoTableView.Dispose ();
+				OrgEventInfoTableView = null;
 			}
 
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
+			if (ProgressView != null) {
+				ProgressView.Dispose ();
+				ProgressView = null;
 			}
 
 			if (ProgressViewTopConstraint != null) {

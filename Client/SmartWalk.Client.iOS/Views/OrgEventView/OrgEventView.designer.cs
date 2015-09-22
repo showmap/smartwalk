@@ -43,7 +43,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		UIKit.NSLayoutConstraint MapToListSettingsConstraint { get; set; }
 
 		[Outlet]
-		UIKit.UIView ProgressViewContainer { get; set; }
+		SmartWalk.Client.iOS.Views.Common.ProgressView ProgressView { get; set; }
 
 		[Outlet]
 		UIKit.NSLayoutConstraint ProgressViewTopConstraint { get; set; }
@@ -71,6 +71,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ProgressView != null) {
+				ProgressView.Dispose ();
+				ProgressView = null;
+			}
+
 			if (FullscreenHeightConstraint != null) {
 				FullscreenHeightConstraint.Dispose ();
 				FullscreenHeightConstraint = null;
@@ -81,11 +86,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 				FullscreenWidthConstraint = null;
 			}
 
-			if (ListSettingsView != null) {
-				ListSettingsView.Dispose ();
-				ListSettingsView = null;
-			}
-
 			if (ListSettingsHeightConstraint != null) {
 				ListSettingsHeightConstraint.Dispose ();
 				ListSettingsHeightConstraint = null;
@@ -94,6 +94,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (ListSettingsToTableConstraint != null) {
 				ListSettingsToTableConstraint.Dispose ();
 				ListSettingsToTableConstraint = null;
+			}
+
+			if (ListSettingsView != null) {
+				ListSettingsView.Dispose ();
+				ListSettingsView = null;
 			}
 
 			if (MapBottomSeparator != null) {
@@ -119,11 +124,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 			if (MapToListSettingsConstraint != null) {
 				MapToListSettingsConstraint.Dispose ();
 				MapToListSettingsConstraint = null;
-			}
-
-			if (ProgressViewContainer != null) {
-				ProgressViewContainer.Dispose ();
-				ProgressViewContainer = null;
 			}
 
 			if (ProgressViewTopConstraint != null) {

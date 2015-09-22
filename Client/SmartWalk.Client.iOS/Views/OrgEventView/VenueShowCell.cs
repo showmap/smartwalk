@@ -104,11 +104,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             _largeImageHelper.ErrorImagePath = Theme.ErrorImagePath;
         }
 
-        public static VenueShowCell Create()
-        {
-            return (VenueShowCell)Nib.Instantiate(null, null)[0];
-        }
-
         public static float CalculateCellHeight(nfloat frameWidth, bool isExpanded,
             Show show, bool showTime = true, bool includeLocation = false)
         {

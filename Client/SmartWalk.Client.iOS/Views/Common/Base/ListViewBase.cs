@@ -17,7 +17,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
         private readonly List<string> _messages = new List<string>();
 
         private ListViewDecorator _listView;
-        private UIView _progressViewContainer;
         private ProgressView _progressView;
         private IListViewSource _listViewSource;
         private UITapGestureRecognizer _viewTapGesture;
@@ -30,11 +29,6 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                     ViewModel is IProgressViewModel &&
                     ((IProgressViewModel)ViewModel).IsLoading;
             }
-        }
-
-        protected ProgressView ProgressView
-        {
-            get { return _progressView; }
         }
 
         private ListViewDecorator ListView 
@@ -118,7 +112,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         protected abstract ListViewDecorator GetListView();
 
-        protected abstract UIView GetProgressViewContainer();
+        protected abstract ProgressView GetProgressView();
 
         protected virtual void InitializeListView()
         {
@@ -197,9 +191,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void InitializeProgressView()
         {
-            _progressViewContainer = GetProgressViewContainer();
-            _progressView = ProgressView.Create();
-            _progressViewContainer.AddSubview(_progressView);
+            _progressView = GetProgressView();
         }
 
         private void InitializeGesture()

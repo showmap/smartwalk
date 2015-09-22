@@ -15,6 +15,7 @@ using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.Map;
+using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Client.iOS.Views.OrgEventView;
 using SmartWalk.Client.iOS.Views.OrgView;
@@ -261,9 +262,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return ListViewDecorator.Create(VenuesAndShowsTableView);  
         }
 
-        protected override UIView GetProgressViewContainer()
+        protected override ProgressView GetProgressView()
         { 
-            return ProgressViewContainer;  
+            return ProgressView;  
         }
 
         protected override IListViewSource CreateListViewSource()

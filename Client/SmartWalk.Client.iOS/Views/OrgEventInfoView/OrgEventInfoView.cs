@@ -1,13 +1,14 @@
 using Cirrious.MvvmCross.Binding.BindingContext;
-using UIKit;
 using EventKit;
 using EventKitUI;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Client.iOS.Views.Common;
 using SmartWalk.Client.iOS.Views.Common.Base;
 using SmartWalk.Shared.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
 {
@@ -25,9 +26,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
             return ListViewDecorator.Create(OrgEventInfoTableView);  
         }
 
-        protected override UIView GetProgressViewContainer()
+        protected override ProgressView GetProgressView()
         { 
-            return ProgressViewContainer;
+            return ProgressView;
         }
 
         protected override IListViewSource CreateListViewSource()

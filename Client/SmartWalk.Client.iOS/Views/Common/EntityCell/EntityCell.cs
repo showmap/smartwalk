@@ -39,11 +39,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             BackgroundView = new UIView { BackgroundColor = UIColor.White };
         }
 
-        public static EntityCell Create()
-        {
-            return (EntityCell)Nib.Instantiate(null, null)[0];
-        }
-
         public static float CalculateCellHeight(CGSize frame, IEntityCellContext context)
         {
             var descriptionHeight = GetDescriptionHeight(frame.Width, context);
