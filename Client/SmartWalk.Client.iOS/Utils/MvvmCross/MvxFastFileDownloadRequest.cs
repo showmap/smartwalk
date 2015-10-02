@@ -6,6 +6,8 @@ using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Plugins.DownloadCache;
 using UIKit;
 using SmartWalk.Client.iOS.Services;
+using SmartWalk.Client.iOS.Resources;
+using Foundation;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {
@@ -67,9 +69,10 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             var originalUrl = Url.Substring(0, sizeParamIndex);
             var sizeParamEndIndex = sizeParamIndex + MvxPlus.SizeParam.Length;
             var sizeParam = Url.Substring(sizeParamEndIndex, Url.Length - sizeParamEndIndex);
-            var sizes = sizeParam.Split('>');
-            var size = new CGSize(float.Parse(sizes[0]), float.Parse(sizes[1]));
-            var useClipMask = sizes.Length >= 4 && sizes[2] == MvxPlus.ClipParam && sizes[3] == "true";
+            var parameters = sizeParam.Split('>');
+            var size = new CGSize(float.Parse(parameters[0]), float.Parse(parameters[1]));
+            var useClipMask = GetParamValue(parameters, MvxPlus.ClipParam) == "true";
+            var useGradient = GetParamValue(parameters, MvxPlus.GradientParam) == "true";
 
             var imageCache = MvxPlus.SafeGetImageCache();
 
@@ -82,6 +85,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
                         UIGraphics.BeginImageContextWithOptions(size, !useClipMask, 1);
 
+                        // oval clip
                         if (useClipMask)
                         {
                             var path = UIBezierPath.FromOval(new CGRect(CGPoint.Empty, size));
@@ -93,6 +97,22 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
                                     -((scaledSize.Width - size.Width) / 2), 
                                     -((scaledSize.Height - size.Height) / 2)),
                                 scaledSize));
+
+                        // gradient
+                        if (useGradient)
+                        {
+                            var colorspace = CGColorSpace.CreateDeviceRGB();
+                            var gradient = new CGGradient(colorspace,
+                                new [] {
+                                    ThemeColors.ContentDarkBackground.ColorWithAlpha(0.2f).CGColor, 
+                                    ThemeColors.ContentDarkBackground.ColorWithAlpha(0.8f).CGColor
+                                },
+                                new nfloat[] { 0f, 1f });
+
+                            UIGraphics.GetCurrentContext().DrawLinearGradient(gradient, 
+                                CGPoint.Empty, new CGPoint(0, size.Height), CGGradientDrawingOptions.None);
+
+                        }
 
                         var resizedImage = UIGraphics.GetImageFromCurrentImageContext();
 
@@ -151,6 +171,17 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             var heightScale = frameSize.Height / imageSize.Height;
             var scale = (nfloat)Math.Max(widthScale, heightScale);
             return new CGSize(imageSize.Width * scale, imageSize.Height * scale);
+        }
+
+        private static string GetParamValue(string[] parameters, string key) 
+        {
+            var i = Array.IndexOf(parameters, key);
+            if (i >= 0 && i + 1 < parameters.Length)
+            {
+                return parameters[i + 1];
+            }
+
+            return null;
         }
     }
 }

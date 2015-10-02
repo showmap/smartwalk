@@ -13,10 +13,10 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 	partial class GroupHeaderContentView
 	{
 		[Outlet]
-		UIKit.UILabel TitleLabel { get; set; }
+		SmartWalk.Client.iOS.Controls.Line Separator { get; set; }
 
 		[Outlet]
-		SmartWalk.Client.iOS.Controls.Line TopSeparator { get; set; }
+		UIKit.UILabel TitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -25,9 +25,9 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
 				TitleLabel = null;
 			}
 
-			if (TopSeparator != null) {
-				TopSeparator.Dispose ();
-				TopSeparator = null;
+			if (Separator != null) {
+				Separator.Dispose ();
+				Separator = null;
 			}
 		}
 	}

@@ -24,12 +24,8 @@
                     <animations/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
-                <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="wNg-mB-Ixb" userLabel="Gradient" customClass="Gradient">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
-                    <animations/>
-                </view>
                 <label autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="center" text="August 15th, 2014 - August 18th, 2014" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
-                    <rect key="frame" x="20" y="287" width="280" height="18"/>
+                    <rect key="frame" x="32" y="287" width="255.5" height="18"/>
                     <animations/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -37,7 +33,7 @@
                     <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
                 <label autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="center" text="Mission Arts &amp; Performance Project" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-AL-Mpz" userLabel="Title Label" customClass="CopyLabel">
-                    <rect key="frame" x="20" y="239.5" width="280" height="44.5"/>
+                    <rect key="frame" x="39" y="239" width="242" height="44.5"/>
                     <animations/>
                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -49,20 +45,18 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Qrq-nK-B4N" secondAttribute="bottom" constant="15" id="3gd-KU-3j7"/>
-                <constraint firstAttribute="trailing" secondItem="ezd-AL-Mpz" secondAttribute="trailing" constant="20" symbolic="YES" id="5RM-2M-Epx"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ezd-AL-Mpz" secondAttribute="trailing" constant="20" symbolic="YES" id="5RM-2M-Epx"/>
                 <constraint firstAttribute="trailing" secondItem="Eue-t7-Ebm" secondAttribute="trailing" id="5zE-1a-oQk"/>
                 <constraint firstItem="Qrq-nK-B4N" firstAttribute="top" secondItem="ezd-AL-Mpz" secondAttribute="bottom" constant="3" id="GHk-1a-lSe"/>
                 <constraint firstItem="ezd-AL-Mpz" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1" secondAttribute="top" constant="20" symbolic="YES" id="Lgt-T8-chl"/>
-                <constraint firstAttribute="trailing" secondItem="Qrq-nK-B4N" secondAttribute="trailing" constant="20" symbolic="YES" id="Trt-i2-C16"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Qrq-nK-B4N" secondAttribute="trailing" constant="20" symbolic="YES" id="Trt-i2-C16"/>
                 <constraint firstItem="Eue-t7-Ebm" firstAttribute="top" secondItem="1" secondAttribute="top" id="ckM-iU-Gt7"/>
-                <constraint firstItem="ezd-AL-Mpz" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="dHj-lu-IFy"/>
-                <constraint firstItem="wNg-mB-Ixb" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="eBZ-40-2YD"/>
-                <constraint firstAttribute="bottom" secondItem="wNg-mB-Ixb" secondAttribute="bottom" id="epV-Og-0ex"/>
-                <constraint firstAttribute="trailing" secondItem="wNg-mB-Ixb" secondAttribute="trailing" id="ijD-9L-qBJ"/>
+                <constraint firstItem="ezd-AL-Mpz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="dHj-lu-IFy"/>
+                <constraint firstItem="ezd-AL-Mpz" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="ipn-Sc-vGs"/>
                 <constraint firstItem="Eue-t7-Ebm" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="jka-HU-eRf"/>
-                <constraint firstItem="Qrq-nK-B4N" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="sCU-qb-0N1"/>
+                <constraint firstItem="Qrq-nK-B4N" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="sCU-qb-0N1"/>
                 <constraint firstAttribute="bottom" secondItem="Eue-t7-Ebm" secondAttribute="bottom" id="srA-0g-tJb"/>
-                <constraint firstItem="wNg-mB-Ixb" firstAttribute="top" secondItem="1" secondAttribute="top" id="xNC-La-9sH"/>
+                <constraint firstItem="Qrq-nK-B4N" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="uzJ-22-f2P"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

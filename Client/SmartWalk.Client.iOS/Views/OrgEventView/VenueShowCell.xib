@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
@@ -17,6 +17,7 @@
                 <subviews>
                     <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ztH-tE-Jjf" userLabel="Info">
                         <rect key="frame" x="10" y="273" width="16" height="16"/>
+                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="16" id="IC7-ck-Dqd"/>
                             <constraint firstAttribute="height" constant="16" id="JHk-jd-YcX"/>
@@ -30,6 +31,7 @@
                     </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="600" verticalCompressionResistancePriority="400" text="More information" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" userLabel="More info">
                         <rect key="frame" x="30" y="272" width="98" height="15"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                         <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -38,6 +40,7 @@
                     </label>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalCompressionResistancePriority="250" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZg-8z-Khe" userLabel="Description" customClass="CopyLabel">
                         <rect key="frame" x="10" y="61" width="292" height="18"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -45,6 +48,7 @@
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i3H-aj-VWA" userLabel="@">
                         <rect key="frame" x="-8" y="25" width="44" height="44"/>
+                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="PyY-OL-Elx"/>
                             <constraint firstAttribute="height" constant="44" id="vMS-vG-c3W"/>
@@ -63,6 +67,7 @@
                     </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="900" text="Start" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Start">
                         <rect key="frame" x="244" y="17" width="31.5" height="17"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -70,13 +75,15 @@
                     </label>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="900" text="End" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6" userLabel="End">
                         <rect key="frame" x="244" y="32" width="31.5" height="13.5"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
-                    <button clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HJ0-5h-aCH" userLabel="*">
+                    <button clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HJ0-5h-aCH" userLabel="*">
                         <rect key="frame" x="276" y="2" width="44" height="44"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="nzk-bP-mGK"/>
@@ -93,6 +100,7 @@
                     </button>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" verticalHuggingPriority="600" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="400" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Z4-zH-aRP" userLabel="Location" customClass="CopyLabel">
                         <rect key="frame" x="24" y="38" width="59.5" height="18"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
@@ -101,6 +109,7 @@
                     </label>
                     <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" verticalCompressionResistancePriority="500" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9" userLabel="Title" customClass="CopyLabel">
                         <rect key="frame" x="55" y="15" width="184.5" height="18"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -108,6 +117,7 @@
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="50" userLabel="Thumb Image" customClass="ProgressImageView">
                         <rect key="frame" x="8" y="5" width="40" height="40"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="139"/>
@@ -116,6 +126,7 @@
                     </imageView>
                     <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="592" userLabel="Realtime">
                         <rect key="frame" x="0.0" y="0.0" width="5" height="302"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="5" id="626"/>
@@ -123,6 +134,7 @@
                     </view>
                     <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K9o-xv-nfu" userLabel="Separator" customClass="Line">
                         <rect key="frame" x="55" y="301" width="265" height="1"/>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="leb-9w-1Ar"/>
@@ -130,11 +142,13 @@
                     </view>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="VT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="954-GK-xxD" userLabel="Thumb Label">
                         <rect key="frame" x="18" y="15" width="20.5" height="20.5"/>
+                        <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <animations/>
                 <constraints>
                     <constraint firstItem="50" firstAttribute="centerY" secondItem="954-GK-xxD" secondAttribute="centerY" id="4Gg-Kh-U94"/>
                     <constraint firstItem="i3H-aj-VWA" firstAttribute="centerY" secondItem="4Z4-zH-aRP" secondAttribute="centerY" id="6ij-37-YS2"/>
@@ -173,6 +187,7 @@
                     <constraint firstItem="592" firstAttribute="top" secondItem="auL-5q-RG9" secondAttribute="top" id="yEX-Ke-t91"/>
                 </constraints>
             </tableViewCellContentView>
+            <animations/>
             <connections>
                 <outlet property="BottomBorderLeftConstraint" destination="fLo-Av-da9" id="eAf-Hh-lhn"/>
                 <outlet property="DescriptionAndDetailsSpaceConstraint" destination="B8M-XT-prq" id="yhd-kw-iTX"/>

@@ -4,7 +4,6 @@ using UIKit;
 using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
-using SmartWalk.Client.iOS.Resources;
 
 namespace SmartWalk.Client.iOS.Views.HomeView
 {
@@ -24,14 +23,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         {
             get { return (OrgEvent)base.DataContext; }
             set { base.DataContext = value; }
-        }
-
-        public override void AwakeFromNib()
-        {
-            base.AwakeFromNib();
-
-            ImageBackground.ResizeImage = true;
-            InitializeStyle();
         }
 
         public override void WillMoveToSuperview(UIView newsuper)
@@ -54,11 +45,6 @@ namespace SmartWalk.Client.iOS.Views.HomeView
         private void DisposeImageBackground()
         {
             ImageBackground.Dispose();
-        }
-
-        private void InitializeStyle()
-        {
-            ImageBackground.BackgroundColor = ThemeColors.ContentLightHighlight;
         }
     }
 }

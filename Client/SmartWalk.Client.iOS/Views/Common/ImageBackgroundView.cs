@@ -1,5 +1,4 @@
 using System;
-using Cirrious.MvvmCross.Binding.Touch.Views;
 using CoreGraphics;
 using Foundation;
 using SmartWalk.Client.iOS.Resources;
@@ -14,11 +13,9 @@ namespace SmartWalk.Client.iOS.Views.Common
         public static readonly UINib Nib = UINib.FromName("ImageBackgroundView", NSBundle.MainBundle);
 
         private readonly AnimationDelay _animationDelay = new AnimationDelay();
-
-        private MvxImageViewLoader _imageHelper;
         private MvxResizedImageViewLoader _resizedImageHelper;
-
         private string _imageUrl;
+        private bool _updateImageScheduled;
 
         public ImageBackgroundView(IntPtr handle) : base(handle)
         {
@@ -27,8 +24,6 @@ namespace SmartWalk.Client.iOS.Views.Common
             ContentView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
             Add(ContentView);
         }
-
-        public bool ResizeImage { get; set; }
 
         public string Title
         {
@@ -47,21 +42,12 @@ namespace SmartWalk.Client.iOS.Views.Common
             get { return _imageUrl; }
             set
             {
-                _imageUrl = value;
-                BackgroundImage.Image = null;
-
-                if (BackgroundImage.Image == null)
+                if (_imageUrl != value)
                 {
-                    _animationDelay.Reset();
-
-                    if (ResizeImage)
-                    {
-                        _resizedImageHelper.ImageUrl = _imageUrl;
-                    }
-                    else
-                    {
-                        _imageHelper.ImageUrl = _imageUrl;
-                    }
+                    _imageUrl = value;
+                    BackgroundImage.Image = null;
+                    _updateImageScheduled = true;
+                    SetNeedsLayout();
                 }
             }
         }
@@ -107,6 +93,22 @@ namespace SmartWalk.Client.iOS.Views.Common
             InitializeStyle();
         }
 
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            if (_updateImageScheduled)
+            {
+                if (BackgroundImage.Image == null)
+                {
+                    _animationDelay.Reset();
+                    _resizedImageHelper.ImageUrl = _imageUrl;
+                }
+
+                _updateImageScheduled = false;
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -115,18 +117,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 
         private void InitializeImageHelper()
         {
-            if (ResizeImage)
-            {
-                _resizedImageHelper = 
-                    new MvxResizedImageViewLoader(() => BackgroundImage, OnImageChanged);
-            }
-            else
-            {
-                _imageHelper = 
-                    new MvxImageViewLoader(() => BackgroundImage, OnImageChanged);
-                _imageHelper.DefaultImagePath = Theme.DefaultImagePath;
-                _imageHelper.ErrorImagePath = Theme.ErrorImagePath;
-            }
+            _resizedImageHelper = 
+                new MvxResizedImageViewLoader(() => BackgroundImage, OnImageChanged, () => Bounds) 
+                    { UseGradient = true };
         }
 
         private void InitializeStyle()
@@ -137,7 +130,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             SubtitleLabel.Font = Theme.BackgroundImageSubtitleTextFont;
             SubtitleLabel.TextColor = ThemeColors.Metadata;
 
-            BackgroundImage.BackgroundColor = BackgroundColor;
+            BackgroundColor = ThemeColors.ContentDarkBackground.GetLighter();
         }
 
         private void OnImageChanged()

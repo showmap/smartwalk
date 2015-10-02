@@ -1,5 +1,6 @@
 using UIKit;
 using SmartWalk.Client.iOS.Utils;
+using CoreGraphics;
 
 namespace SmartWalk.Client.iOS.Resources
 {
@@ -29,8 +30,10 @@ namespace SmartWalk.Client.iOS.Resources
         public static readonly UIImage MapPinSmall = UIImage.FromFile("Icons/MapPinSmall.png"); // 3x ?
         public static readonly UIImage Info = Image("Icons/Info.png");
         public static readonly UIImage DownLink = Image("Icons/DownLink.png");
-        public static readonly UIImage Star = Image("Icons/Star.png");
-        public static readonly UIImage StarOutline = Image("Icons/StarOutline.png");
+        public static readonly UIImage Star = Image("Icons/Star.png", 
+            ThemeColors.Action, ThemeColors.ContentLightBackground);
+        public static readonly UIImage StarOutline = Image("Icons/StarOutline.png", 
+            ThemeColors.BorderLight, ThemeColors.ContentLightBackground);
         public static readonly UIImage StarSmall = Image("Icons/StarSmall.png");
             
         public static readonly UIImage ContactEmail = Image("Icons/ContactEmail.png");
@@ -45,6 +48,34 @@ namespace SmartWalk.Client.iOS.Resources
             if (image != null)
             {
                 var result = image.ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate);
+                return result;
+            }
+
+            ConsoleUtil.Trace("Failed to load '{0}' image.", path);
+            return null;
+        }
+
+        private static UIImage Image(string path, UIColor fillColor, UIColor backgroundColor)
+        {
+            var image = UIImage.FromFile(path);
+            if (image != null)
+            {
+                var rect = new CGRect(CGPoint.Empty, image.Size);
+                UIGraphics.BeginImageContextWithOptions(image.Size, true, UIScreen.MainScreen.Scale);
+
+                UIGraphics.GetCurrentContext().SetFillColor(backgroundColor.CGColor);
+                UIGraphics.GetCurrentContext().FillRect(rect);
+
+                UIGraphics.GetCurrentContext().ClipToMask(rect, image.CGImage);
+                UIGraphics.GetCurrentContext().SetFillColor(fillColor.CGColor);
+                UIGraphics.GetCurrentContext().FillRect(rect);
+
+                var img = UIGraphics.GetImageFromCurrentImageContext();
+                var result = new UIImage(img.CGImage, 
+                    UIScreen.MainScreen.Scale, UIImageOrientation.DownMirrored);
+
+                UIGraphics.EndImageContext();
+
                 return result;
             }
 

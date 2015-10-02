@@ -3,6 +3,7 @@ using Cirrious.CrossCore;
 using Cirrious.CrossCore.Core;
 using Cirrious.CrossCore.WeakSubscription;
 using Cirrious.MvvmCross.Binding;
+using CoreGraphics;
 using SmartWalk.Client.iOS.Resources;
 using UIKit;
 
@@ -11,6 +12,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
     public class MvxResizedImageViewLoader : IDisposable
     {
         private readonly Func<UIImageView> _imageViewAccess;
+        private readonly Func<CGRect> _imageFrameAccess;
         private readonly IMvxResizedImageHelper<UIImage> _imageHelper;
         private readonly Action<UIImage> _imageSetAction;
 
@@ -20,9 +22,11 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
         public MvxResizedImageViewLoader(
             Func<UIImageView> imageViewAccess, 
-            Action afterImageChangeAction = null)
+            Action afterImageChangeAction = null,
+            Func<CGRect> imageFrameAccess = null)
         {
             _imageViewAccess = imageViewAccess;
+            _imageFrameAccess = imageFrameAccess;
             _imageSetAction = image =>
                 {
                     OnImage(imageViewAccess(), image);
@@ -47,6 +51,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
         }
 
         public bool UseRoundClip { get; set; }
+        public bool UseGradient { get; set; }
 
         ~MvxResizedImageViewLoader()
         {
@@ -86,7 +91,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             { 
                 _imageUrl = value;
                 _imageHelper.ImageUrl = 
-                    GetImageUrlWithDimensions(_imageUrl, _imageViewAccess());
+                    GetImageUrlWithDimensions(_imageUrl, 
+                        (_imageFrameAccess ?? (() => _imageViewAccess().Frame))());
             }
         }
 
@@ -110,15 +116,16 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             }
         }
 
-        private string GetImageUrlWithDimensions(string imageUrl, UIView view)
+        private string GetImageUrlWithDimensions(string imageUrl, CGRect rect)
         {
-            var dimensions = view != null && !view.Frame.IsEmpty
+            var dimensions = !rect.IsEmpty
                 ? string.Format(
-                    "{0}{1}>{2}{3}",
+                    "{0}{1}>{2}{3}{4}",
                     MvxPlus.SizeParam,
-                    (int)Math.Ceiling(view.Frame.Width * UIScreen.MainScreen.Scale), 
-                    (int)Math.Ceiling(view.Frame.Height * UIScreen.MainScreen.Scale),
-                    UseRoundClip ? string.Format(">{0}>{1}", MvxPlus.ClipParam, "true") : string.Empty)
+                    (int)Math.Ceiling(rect.Width * UIScreen.MainScreen.Scale), 
+                    (int)Math.Ceiling(rect.Height * UIScreen.MainScreen.Scale),
+                    UseRoundClip ? string.Format(">{0}>{1}", MvxPlus.ClipParam, "true") : string.Empty,
+                    UseGradient ? string.Format(">{0}>{1}", MvxPlus.GradientParam, "true") : string.Empty)
                 : string.Empty;
             return imageUrl + dimensions;
         }

@@ -13,6 +13,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
     {
         public static string SizeParam = "#size>";
         public static string ClipParam = "clip";
+        public static string GradientParam = "gradient";
 
         public static IMvxImageCache<UIImage> SafeGetImageCache()
         {

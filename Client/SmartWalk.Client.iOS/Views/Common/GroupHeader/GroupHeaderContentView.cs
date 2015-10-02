@@ -14,6 +14,11 @@ namespace SmartWalk.Client.iOS.Views.Common.GroupHeader
         {
         }
 
+        public UIColor SeparatorBackgroundColor {
+            get { return Separator.BackgroundColor; }
+            set { Separator.BackgroundColor = value; }
+        }
+
         public static GroupHeaderContentView Create()
         {
             return (GroupHeaderContentView)Nib.Instantiate(null, null)[0];

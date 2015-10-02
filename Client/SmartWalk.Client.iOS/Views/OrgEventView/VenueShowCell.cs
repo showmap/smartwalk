@@ -438,12 +438,12 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             if (DataContext != null && DataContext.IsFavorite)
             {
                 StarButton.SetImage(ThemeIcons.Star, UIControlState.Normal);
-                StarButton.TintColor = ThemeColors.Action;
+                //StarButton.TintColor = ThemeColors.Action;
             }
             else
             {
                 StarButton.SetImage(ThemeIcons.StarOutline, UIControlState.Normal);
-                StarButton.TintColor = ThemeColors.BorderLight;
+                //StarButton.TintColor = ThemeColors.BorderLight;
             }
         }
 
@@ -587,7 +587,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         }
 
         private void InitializeStyle()
-        {
+        {   
             ThumbImageView.TintColor = ThemeColors.BorderLight;
 
             ThumbLabel.Font = Theme.VenueShowLogoFont;
@@ -615,6 +615,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             DetailsLabel.Font = Theme.VenueShowDetailsFont;
             DetailsLabel.TextColor = ThemeColors.Action;
 
+            Separator.BackgroundColor = ThemeColors.ContentLightBackground;
             BackgroundView.BackgroundColor = ThemeColors.ContentLightBackground;
         }
 
