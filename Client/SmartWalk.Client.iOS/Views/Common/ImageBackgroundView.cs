@@ -39,11 +39,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         public string Subtitle
         {
             get { return SubtitleLabel.Text; }
-            set
-            { 
-                SubtitleLabel.Text = value;
-                TitleBottomGapConstraint.Constant = value != null ? 3 : 7;
-            }
+            set { SubtitleLabel.Text = value; }
         }
 
         public string ImageUrl
