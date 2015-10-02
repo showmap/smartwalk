@@ -4,7 +4,6 @@ using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using Foundation;
 using UIKit;
-using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Controls;
@@ -172,7 +171,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             ScrollView.AddGestureRecognizer(_singleTapRecognizer);
             ScrollView.AddGestureRecognizer(_doubleTapRecognizer);
-            ScrollView.AddGestureRecognizer(_swipeRecognizer);
+            View.AddGestureRecognizer(_swipeRecognizer);
         }
 
         private void DisposeGestures()
@@ -193,7 +192,7 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             if (_swipeRecognizer != null)
             {
-                ScrollView.RemoveGestureRecognizer(_swipeRecognizer);
+                View.RemoveGestureRecognizer(_swipeRecognizer);
                 _swipeRecognizer.Dispose();
                 _swipeRecognizer = null;
             }
