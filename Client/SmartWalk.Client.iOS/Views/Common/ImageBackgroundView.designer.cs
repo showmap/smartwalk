@@ -19,6 +19,9 @@ namespace SmartWalk.Client.iOS.Views.Common
 		UIKit.UIView ContentView { get; set; }
 
 		[Outlet]
+		SmartWalk.Client.iOS.Controls.Gradient Gradient { get; set; }
+
+		[Outlet]
 		UIKit.UILabel SubtitleLabel { get; set; }
 
 		[Outlet]
@@ -29,14 +32,14 @@ namespace SmartWalk.Client.iOS.Views.Common
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ContentView != null) {
-				ContentView.Dispose ();
-				ContentView = null;
-			}
-
 			if (BackgroundImage != null) {
 				BackgroundImage.Dispose ();
 				BackgroundImage = null;
+			}
+
+			if (ContentView != null) {
+				ContentView.Dispose ();
+				ContentView = null;
 			}
 
 			if (SubtitleLabel != null) {
@@ -52,6 +55,11 @@ namespace SmartWalk.Client.iOS.Views.Common
 			if (TitleLabel != null) {
 				TitleLabel.Dispose ();
 				TitleLabel = null;
+			}
+
+			if (Gradient != null) {
+				Gradient.Dispose ();
+				Gradient = null;
 			}
 		}
 	}

@@ -48,6 +48,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                     BackgroundImage.Image = null;
                     _updateImageScheduled = true;
                     SetNeedsLayout();
+                    UpdateGradientState();
                 }
             }
         }
@@ -130,16 +131,23 @@ namespace SmartWalk.Client.iOS.Views.Common
             SubtitleLabel.Font = Theme.BackgroundImageSubtitleTextFont;
             SubtitleLabel.TextColor = ThemeColors.Metadata;
 
-            BackgroundColor = ThemeColors.ContentDarkBackground.GetLighter();
+            BackgroundColor = ThemeColors.ContentLightHighlight;
         }
 
         private void OnImageChanged()
         {
+            UpdateGradientState();
+
             if (BackgroundImage.HasImage() && _animationDelay.Animate)
             {
                 BackgroundImage.Hidden = true;
                 BackgroundImage.SetHidden(false, true);
             }
+        }
+
+        private void UpdateGradientState()
+        {
+            Gradient.Hidden = BackgroundImage.HasImage();
         }
     }
 }

@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="BackgroundImage" destination="Eue-t7-Ebm" id="5hy-86-W7o"/>
                 <outlet property="ContentView" destination="1" id="7Wy-cd-Dg0"/>
+                <outlet property="Gradient" destination="M9a-Gx-hqO" id="3QP-EA-6Lq"/>
                 <outlet property="SubtitleLabel" destination="Qrq-nK-B4N" id="KMS-Hv-0Nr"/>
                 <outlet property="TitleBottomGapConstraint" destination="3gd-KU-3j7" id="Umq-id-wpY"/>
                 <outlet property="TitleLabel" destination="ezd-AL-Mpz" id="sZ7-rZ-goH"/>
@@ -22,8 +23,11 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Eue-t7-Ebm">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                     <animations/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
+                <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M9a-Gx-hqO" customClass="Gradient">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                    <animations/>
+                </view>
                 <label autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="center" text="August 15th, 2014 - August 18th, 2014" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qrq-nK-B4N" userLabel="Subtitle Label" customClass="CopyLabel">
                     <rect key="frame" x="32" y="287" width="255.5" height="18"/>
                     <animations/>
@@ -51,12 +55,16 @@
                 <constraint firstItem="ezd-AL-Mpz" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1" secondAttribute="top" constant="20" symbolic="YES" id="Lgt-T8-chl"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Qrq-nK-B4N" secondAttribute="trailing" constant="20" symbolic="YES" id="Trt-i2-C16"/>
                 <constraint firstItem="Eue-t7-Ebm" firstAttribute="top" secondItem="1" secondAttribute="top" id="ckM-iU-Gt7"/>
+                <constraint firstAttribute="trailing" secondItem="M9a-Gx-hqO" secondAttribute="trailing" id="d2d-v3-4iU"/>
                 <constraint firstItem="ezd-AL-Mpz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="dHj-lu-IFy"/>
                 <constraint firstItem="ezd-AL-Mpz" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="ipn-Sc-vGs"/>
+                <constraint firstItem="M9a-Gx-hqO" firstAttribute="top" secondItem="1" secondAttribute="top" id="jeG-7a-MRt"/>
                 <constraint firstItem="Eue-t7-Ebm" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="jka-HU-eRf"/>
                 <constraint firstItem="Qrq-nK-B4N" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="sCU-qb-0N1"/>
+                <constraint firstAttribute="bottom" secondItem="M9a-Gx-hqO" secondAttribute="bottom" id="spW-nx-Lpa"/>
                 <constraint firstAttribute="bottom" secondItem="Eue-t7-Ebm" secondAttribute="bottom" id="srA-0g-tJb"/>
                 <constraint firstItem="Qrq-nK-B4N" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="uzJ-22-f2P"/>
+                <constraint firstItem="M9a-Gx-hqO" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="xGW-l8-pXX"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

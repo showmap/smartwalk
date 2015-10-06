@@ -7,14 +7,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" reuseIdentifier="OrgCell" id="2" customClass="OrgCell">
+        <collectionViewCell clipsSubviews="YES" contentMode="scaleAspectFit" reuseIdentifier="OrgCell" id="2" customClass="OrgCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5fa-7d-Xyc" userLabel="ImageBackground" customClass="ImageBackgroundView">
+                    <view clipsSubviews="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5fa-7d-Xyc" userLabel="ImageBackground" customClass="ImageBackgroundView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
                         <animations/>
                     </view>
