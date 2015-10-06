@@ -389,7 +389,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 DataContext.Show.Pictures != null
                 ? DataContext.Show.Pictures.Small : null;
 
-            Task.Run(() => _smallImageHelper.ImageUrl = url);
+            _smallImageHelper.ImageUrl = url;
         }
 
         private void UpdateLargeImageState()

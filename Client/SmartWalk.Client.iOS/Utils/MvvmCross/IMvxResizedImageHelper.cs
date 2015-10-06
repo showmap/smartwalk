@@ -1,5 +1,4 @@
 using Cirrious.CrossCore.Platform;
-using ImageState = Cirrious.MvvmCross.Plugins.DownloadCache.MvxDynamicImageHelper<UIKit.UIImage>.ImageState;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {

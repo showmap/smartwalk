@@ -6,7 +6,6 @@ using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 using UIKit;
-using ImageState = Cirrious.MvvmCross.Plugins.DownloadCache.MvxDynamicImageHelper<UIKit.UIImage>.ImageState;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -104,7 +103,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                 if (BackgroundImage.Image == null && _imageUrl != null)
                 {
                     _animationDelay.Reset();
-                    Task.Run(() => _resizedImageHelper.ImageUrl = _imageUrl);
+                    _resizedImageHelper.ImageUrl = _imageUrl;
                 }
 
                 _updateImageScheduled = false;

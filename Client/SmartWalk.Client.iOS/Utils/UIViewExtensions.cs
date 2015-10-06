@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using CoreAnimation;
 using CoreGraphics;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils.MvvmCross;
 using UIKit;
-using ImageState = Cirrious.MvvmCross.Plugins.DownloadCache.MvxDynamicImageHelper<UIKit.UIImage>.ImageState;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -122,14 +122,15 @@ namespace SmartWalk.Client.iOS.Utils
         // Default image is shown during loading
         public static bool ProgressEnded(this UIImageView imageView)
         {
-            var result = imageView.Image == null ||
-                imageView.Image.Size != Theme.DefaultImageSize;
+            var result = imageView != null && (imageView.Image == null ||
+                imageView.Image.Size != Theme.DefaultImageSize);
             return result;
         }
 
         public static bool ProgressEnded(this UIImageView imageView, ImageState state)
         {
-            var result = state != ImageState.DefaultShown;
+            var result = imageView != null && imageView.Image != null &&
+                state != ImageState.DefaultShown;
             return result;
         }
 

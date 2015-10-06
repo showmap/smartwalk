@@ -414,6 +414,7 @@
     <Compile Include="Services\CloudService.cs" />
     <Compile Include="Services\ICloudService.cs" />
     <Compile Include="Controls\Gradient.cs" />
+    <Compile Include="Utils\MvvmCross\ImageState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">
