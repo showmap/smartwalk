@@ -4,17 +4,17 @@ using Cirrious.CrossCore.Core;
 using Cirrious.CrossCore.WeakSubscription;
 using Cirrious.MvvmCross.Binding;
 using CoreGraphics;
-using SmartWalk.Client.iOS.Resources;
 using UIKit;
+using ImageState = Cirrious.MvvmCross.Plugins.DownloadCache.MvxDynamicImageHelper<UIKit.UIImage>.ImageState;
 
 namespace SmartWalk.Client.iOS.Utils.MvvmCross
 {
     public class MvxResizedImageViewLoader : IDisposable
     {
-        private readonly Func<UIImageView> _imageViewAccess;
+        private readonly nfloat ScreenScale = UIScreen.MainScreen.Scale;
         private readonly Func<CGRect> _imageFrameAccess;
         private readonly IMvxResizedImageHelper<UIImage> _imageHelper;
-        private readonly Action<UIImage> _imageSetAction;
+        private readonly Action<UIImage, ImageState> _imageSetAction;
 
         private IDisposable _subscription;
 
@@ -22,18 +22,18 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
         public MvxResizedImageViewLoader(
             Func<UIImageView> imageViewAccess, 
-            Action afterImageChangeAction = null,
-            Func<CGRect> imageFrameAccess = null)
+            Func<CGRect> imageFrameAccess,
+            Action<ImageState> afterImageChangeAction = null)
         {
-            _imageViewAccess = imageViewAccess;
             _imageFrameAccess = imageFrameAccess;
-            _imageSetAction = image =>
+            _imageSetAction = (image, state) =>
                 {
                     OnImage(imageViewAccess(), image);
 
                     if (afterImageChangeAction != null)
                     {
-                        afterImageChangeAction();
+                        UIApplication.SharedApplication
+                            .InvokeOnMainThread(() => afterImageChangeAction(state));
                     }
                 };
 
@@ -45,9 +45,6 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
             var eventInfo = _imageHelper.GetType().GetEvent("ImageChanged");
             _subscription = eventInfo.WeakSubscribe<UIImage>(_imageHelper, ImageHelperOnImageChanged);
-
-            DefaultImagePath = Theme.DefaultImagePath;
-            ErrorImagePath = Theme.ErrorImagePath;
         }
 
         public bool UseRoundClip { get; set; }
@@ -69,7 +66,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             object sender, 
             MvxValueEventArgs<UIImage> mvxValueEventArgs)
         {
-            _imageSetAction(mvxValueEventArgs.Value);
+            var helper = (IMvxResizedImageHelper<UIImage>)sender;
+            _imageSetAction(mvxValueEventArgs.Value, helper.CurrentImageState);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -89,10 +87,12 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             get { return _imageUrl; }
             set 
             { 
-                _imageUrl = value;
-                _imageHelper.ImageUrl = 
-                    GetImageUrlWithDimensions(_imageUrl, 
-                        (_imageFrameAccess ?? (() => _imageViewAccess().Frame))());
+                if (_imageUrl != value)
+                {
+                    _imageUrl = value;
+                    _imageHelper.ImageUrl = 
+                        GetImageUrlWithDimensions(_imageUrl, _imageFrameAccess());
+                }
             }
         }
 
@@ -122,8 +122,8 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
                 ? string.Format(
                     "{0}{1}>{2}{3}{4}",
                     MvxPlus.SizeParam,
-                    (int)Math.Ceiling(rect.Width * UIScreen.MainScreen.Scale), 
-                    (int)Math.Ceiling(rect.Height * UIScreen.MainScreen.Scale),
+                    (int)Math.Ceiling(rect.Width * ScreenScale), 
+                    (int)Math.Ceiling(rect.Height * ScreenScale),
                     UseRoundClip ? string.Format(">{0}>{1}", MvxPlus.ClipParam, "true") : string.Empty,
                     UseGradient ? string.Format(">{0}>{1}", MvxPlus.GradientParam, "true") : string.Empty)
                 : string.Empty;

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using CoreGraphics;
@@ -69,13 +70,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
             _smallImageHelper = new MvxResizedImageViewLoader(
                 () => ThumbImageView,
-                () => 
+                () => ThumbImageView.Bounds,
+                state => 
                 {
-                    if (_smallImageHelper != null &&
-                        _smallImageHelper.ImageUrl != null && 
-                        ThumbImageView.ProgressEnded())
+                    if (_smallImageHelper.ImageUrl != null && 
+                        ThumbImageView.ProgressEnded(state))
                     {
-                        if (ThumbImageView.HasImage())
+                        if (ThumbImageView.HasImage(state))
                         {
                             ThumbImageView.SetHidden(false, _smallImageAnimationDelay.Animate);
                         }
@@ -92,8 +93,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 () => ThumbImageView, 
                 () => 
                 {
-                    if (_largeImageHelper != null &&
-                        _largeImageHelper.ImageUrl != null && 
+                    if (_largeImageHelper.ImageUrl != null && 
                         ThumbImageView.HasImage())
                     {
                         ThumbImageView.SetHidden(false, _largeImageAnimationDelay.Animate);
@@ -389,7 +389,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 DataContext.Show.Pictures != null
                 ? DataContext.Show.Pictures.Small : null;
 
-            _smallImageHelper.ImageUrl = url;
+            Task.Run(() => _smallImageHelper.ImageUrl = url);
         }
 
         private void UpdateLargeImageState()

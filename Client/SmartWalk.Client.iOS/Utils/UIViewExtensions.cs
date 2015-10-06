@@ -4,6 +4,7 @@ using CoreAnimation;
 using CoreGraphics;
 using SmartWalk.Client.iOS.Resources;
 using UIKit;
+using ImageState = Cirrious.MvvmCross.Plugins.DownloadCache.MvxDynamicImageHelper<UIKit.UIImage>.ImageState;
 
 namespace SmartWalk.Client.iOS.Utils
 {
@@ -126,12 +127,27 @@ namespace SmartWalk.Client.iOS.Utils
             return result;
         }
 
+        public static bool ProgressEnded(this UIImageView imageView, ImageState state)
+        {
+            var result = state != ImageState.DefaultShown;
+            return result;
+        }
+
         public static bool HasImage(this UIImageView imageView)
         {
             var result = imageView != null &&
                 imageView.Image != null &&
                 imageView.Image.Size != Theme.DefaultImageSize &&
                 imageView.Image.Size != Theme.ErrorImageSize;
+            return result;
+        }
+
+        public static bool HasImage(this UIImageView imageView, ImageState state)
+        {
+            var result = imageView != null &&
+                imageView.Image != null &&
+                state != ImageState.DefaultShown &&
+                state != ImageState.ErrorShown;
             return result;
         }
 

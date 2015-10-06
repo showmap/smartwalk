@@ -19,6 +19,11 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
         private string _imageUrl;
 
+        public ImageState CurrentImageState
+        {
+            get { return _currentImageState; }
+        }
+
         public string DefaultImagePath
         {
             get { return _defaultImagePath; }

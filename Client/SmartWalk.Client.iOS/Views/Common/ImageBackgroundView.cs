@@ -1,10 +1,12 @@
 using System;
+using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 using UIKit;
+using ImageState = Cirrious.MvvmCross.Plugins.DownloadCache.MvxDynamicImageHelper<UIKit.UIImage>.ImageState;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
@@ -48,7 +50,6 @@ namespace SmartWalk.Client.iOS.Views.Common
                     BackgroundImage.Image = null;
                     _updateImageScheduled = true;
                     SetNeedsLayout();
-                    UpdateGradientState();
                 }
             }
         }
@@ -100,10 +101,10 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             if (_updateImageScheduled)
             {
-                if (BackgroundImage.Image == null)
+                if (BackgroundImage.Image == null && _imageUrl != null)
                 {
                     _animationDelay.Reset();
-                    _resizedImageHelper.ImageUrl = _imageUrl;
+                    Task.Run(() => _resizedImageHelper.ImageUrl = _imageUrl);
                 }
 
                 _updateImageScheduled = false;
@@ -119,7 +120,7 @@ namespace SmartWalk.Client.iOS.Views.Common
         private void InitializeImageHelper()
         {
             _resizedImageHelper = 
-                new MvxResizedImageViewLoader(() => BackgroundImage, OnImageChanged, () => Bounds) 
+                new MvxResizedImageViewLoader(() => BackgroundImage, () => Bounds, OnImageChanged) 
                     { UseGradient = true };
         }
 
@@ -134,20 +135,17 @@ namespace SmartWalk.Client.iOS.Views.Common
             BackgroundColor = ThemeColors.ContentLightHighlight;
         }
 
-        private void OnImageChanged()
+        private void OnImageChanged(ImageState state)
         {
-            UpdateGradientState();
+            var hasImage = BackgroundImage.HasImage(state);
 
-            if (BackgroundImage.HasImage() && _animationDelay.Animate)
+            Gradient.Hidden = hasImage;
+
+            if (hasImage && _animationDelay.Animate)
             {
                 BackgroundImage.Hidden = true;
                 BackgroundImage.SetHidden(false, true);
             }
-        }
-
-        private void UpdateGradientState()
-        {
-            Gradient.Hidden = BackgroundImage.HasImage();
         }
     }
 }
