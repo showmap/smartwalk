@@ -35,7 +35,7 @@ namespace SmartWalk.Client.Core.Services
         public async Task<IApiResult<OrgEvent[]>> GetOrgEvents(Location location, DataSource source)
         {
             var request = SmartWalkApiFactory.CreateOrgEventsRequest(location);
-            var response = await GetResponse(request, source);
+            var response = await GetResponse(request, source, false);
             var result = default(IApiResult<OrgEvent[]>);
 
             if (response != null && response.Data != null)
@@ -203,7 +203,8 @@ namespace SmartWalk.Client.Core.Services
             return result;
         }
 
-        private async Task<ApiResult<Response>> GetResponse(Request request, DataSource source)
+        private async Task<ApiResult<Response>> GetResponse(
+            Request request, DataSource source, bool deleteIfOld = true)
         {
             var result = default(ApiResult<Response>);
             var key = GenerateKey(request);
@@ -214,7 +215,7 @@ namespace SmartWalk.Client.Core.Services
             if (!isConnected || source != DataSource.Server)
             {
                 result = new ApiResult<Response> { 
-                    Data = _cacheService.GetObject<Response>(key), 
+                    Data = _cacheService.GetObject<Response>(key, deleteIfOld), 
                     Source = DataSource.Cache
                 };
             }

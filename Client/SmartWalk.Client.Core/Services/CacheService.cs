@@ -24,15 +24,17 @@ namespace SmartWalk.Client.Core.Services
             _cacheFolderPath = _fileStore.NativePath(
                 _configuration.CacheConfig.CacheFolderPath);
 
-            Task.Run(() => _fileService.CleanUpOldFiles(_cacheFolderPath, 
+            // to keep Home view data accessible after long delay
+            // TODO: think about how to exclude Home view requests
+            /*Task.Run(() => _fileService.CleanUpOldFiles(_cacheFolderPath, 
                     _configuration.CacheConfig.MaxFileAge))
-                .ContinueWithThrow();
+                .ContinueWithThrow();*/
         }
 
-        public string GetString(string key)
+        public string GetString(string key, bool deleteIfOld = true)
         {
             return _fileService.GetFileString(_cacheFolderPath, key + CacheFileExt, 
-                true, _configuration.CacheConfig.MaxFileAge);
+                deleteIfOld, _configuration.CacheConfig.MaxFileAge);
         }
 
         public void SetString(string key, string value)
@@ -45,10 +47,10 @@ namespace SmartWalk.Client.Core.Services
             _fileService.InvalidateFileString(_cacheFolderPath, key + CacheFileExt);
         }
 
-        public T GetObject<T>(string key)
+        public T GetObject<T>(string key, bool deleteIfOld = true)
         {
             return _fileService.GetFileObject<T>(_cacheFolderPath, key + CacheFileExt, 
-                true, _configuration.CacheConfig.MaxFileAge);
+                deleteIfOld, _configuration.CacheConfig.MaxFileAge);
         }
 
         public void SetObject<T>(string key, T obj)

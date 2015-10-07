@@ -2,9 +2,9 @@ namespace SmartWalk.Client.Core.Services
 {
     public interface ICacheService
     {
-        string GetString(string key);
+        string GetString(string key, bool deleteIfOld = true);
 
-        T GetObject<T>(string key);
+        T GetObject<T>(string key, bool deleteIfOld = true);
 
         void SetString(string key, string value);
 
