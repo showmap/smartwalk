@@ -119,6 +119,7 @@
     <Compile Include="Services\IFileService.cs" />
     <Compile Include="ViewModels\Common\ModalProviderViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IModalProviderViewModel.cs" />
+    <Compile Include="Utils\ValueChangedEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

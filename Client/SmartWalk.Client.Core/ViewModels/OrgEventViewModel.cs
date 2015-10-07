@@ -92,6 +92,7 @@ namespace SmartWalk.Client.Core.ViewModels
         public event EventHandler<MvxValueEventArgs<string>> Share;
         public event EventHandler<MvxValueEventArgs<Venue>> ZoomToVenue;
         public event EventHandler<MvxValueEventArgs<Venue>> ScrollToVenue;
+        public event EventHandler<ValueChangedEventArgs<OrgEventViewMode>> ModeChanged;
 
         public override string Title
         {
@@ -107,8 +108,16 @@ namespace SmartWalk.Client.Core.ViewModels
             {
                 if (_mode != value)
                 {
+                    var previousMode = _mode;
                     _mode = value;
                     _expandedShow = null;
+
+                    if (ModeChanged != null)
+                    {
+                        ModeChanged(this, 
+                            new ValueChangedEventArgs<OrgEventViewMode>(previousMode, _mode));
+                    }
+
                     RaisePropertyChanged(() => Mode);
                     RaisePropertyChanged(() => ListItems);
                     RaisePropertyChanged(() => SearchListItems);

@@ -23,6 +23,7 @@ using SmartWalk.Client.iOS.Views.OrgEventView;
 using SmartWalk.Client.iOS.Views.OrgView;
 using SmartWalk.Shared.Utils;
 using UIKit;
+using SmartWalk.Client.Core.Utils;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -80,6 +81,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             ViewModel.ZoomToVenue += OnZoomToVenue;
             ViewModel.ScrollToVenue += OnScrollToVenue;
             ViewModel.FavoritesManager.FavoritesUpdated += OnFavoritesUpdated;
+            ViewModel.ModeChanged += OnModeChanged;
 
             InitializeStyle();
             InitializeListSettingsView();
@@ -111,6 +113,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ViewModel.ZoomToVenue -= OnZoomToVenue;
                 ViewModel.ScrollToVenue -= OnScrollToVenue;
                 ViewModel.FavoritesManager.FavoritesUpdated -= OnFavoritesUpdated;
+                ViewModel.ModeChanged -= OnModeChanged;
 
                 DisposeToolBar();
                 DisposeMapView();
@@ -287,21 +290,25 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             return tableSource;
         }
 
+        private void OnModeChanged(object sender, ValueChangedEventArgs<OrgEventViewMode> e)
+        {
+            UpdateTableViewInset();
+
+            if (!ViewModel.IsInSearch && 
+                (e.PreviousValue == OrgEventViewMode.List || 
+                    e.Value == OrgEventViewMode.List))
+            {
+                ScrollViewToTop(false);
+            }
+
+            UpdateViewState(true);
+        }
+
         protected override void OnViewModelPropertyChanged(string propertyName)
         {
             base.OnViewModelPropertyChanged(propertyName);
 
-            if (propertyName == ViewModel.GetPropertyName(vm => vm.Mode))
-            {
-                UpdateTableViewInset();
-                if (!ViewModel.IsInSearch)
-                {
-                    ScrollViewToTop(false);
-                }
-
-                UpdateViewState(true);
-            }
-            else if (propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
+            if (propertyName == ViewModel.GetPropertyName(vm => vm.SortBy))
             {
                 UpdateFavoritesUnavailableState();
                 ScrollViewToTop(false);
