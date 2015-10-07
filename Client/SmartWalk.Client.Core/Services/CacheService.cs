@@ -24,11 +24,9 @@ namespace SmartWalk.Client.Core.Services
             _cacheFolderPath = _fileStore.NativePath(
                 _configuration.CacheConfig.CacheFolderPath);
 
-            // to keep Home view data accessible after long delay
-            // TODO: think about how to exclude Home view requests
-            /*Task.Run(() => _fileService.CleanUpOldFiles(_cacheFolderPath, 
-                    _configuration.CacheConfig.MaxFileAge))
-                .ContinueWithThrow();*/
+            // cleaning old stuff, 2 months expiration
+            Task.Run(() => _fileService.CleanUpOldFiles(_cacheFolderPath, TimeSpan.FromDays(60)))
+                .ContinueWithThrow();
         }
 
         public string GetString(string key, bool deleteIfOld = true)
