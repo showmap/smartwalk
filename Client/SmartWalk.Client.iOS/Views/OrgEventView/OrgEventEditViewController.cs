@@ -1,7 +1,7 @@
 using EventKitUI;
 using UIKit;
 
-namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
+namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
     public class OrgEventEditViewController : EKEventEditViewController
     {

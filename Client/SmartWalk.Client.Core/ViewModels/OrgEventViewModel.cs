@@ -14,6 +14,7 @@ using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Shared.Utils;
+using SmartWalk.Client.Core.Resources;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
@@ -23,6 +24,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private readonly ISmartWalkApiService _apiService;
         private readonly IConfiguration _configuration;
         private readonly IAnalyticsService _analyticsService;
+        private readonly ICalendarService _calendarService;
         private readonly IExceptionPolicyService _exceptionPolicy;
 
         private OrgEvent _allDaysOrgEvent;
@@ -42,7 +44,11 @@ namespace SmartWalk.Client.Core.ViewModels
         private OrgEventViewMode? _beforeSearchMode;
         private bool _showOnlyFavorites;
         private bool _isInSearch;
+        private CalendarEvent _currentCalendarEvent;
 
+        private MvxCommand _createEventCommand;
+        private MvxCommand _saveEventCommand;
+        private MvxCommand _cancelEventCommand;
         private MvxCommand _beginSearchCommand;
         private MvxCommand _endSearchCommand;
         private MvxCommand<string> _searchCommand;
@@ -67,6 +73,7 @@ namespace SmartWalk.Client.Core.ViewModels
             IConfiguration configuration,
             IAnalyticsService analyticsService,
             IExceptionPolicyService exceptionPolicy,
+            ICalendarService calendarService,
             IPostponeService postponeService,
             IFavoritesService favoritesService) 
             : base(environmentService.Reachability, analyticsService, postponeService)
@@ -75,7 +82,7 @@ namespace SmartWalk.Client.Core.ViewModels
             _apiService = apiService;
             _configuration = configuration;
             _analyticsService = analyticsService;
-
+            _calendarService = calendarService;
             _exceptionPolicy = exceptionPolicy;
 
             FavoritesManager = new FavoritesShowManager(favoritesService, analyticsService);
@@ -284,6 +291,115 @@ namespace SmartWalk.Client.Core.ViewModels
                     RaisePropertyChanged(() => IsInSearch);
                     RaisePropertyChanged(() => ListItems);
                 }
+            }
+        }
+
+        public CalendarEvent CurrentCalendarEvent
+        {
+            get
+            {
+                return _currentCalendarEvent;
+            }
+            private set
+            {
+                if (!Equals(_currentCalendarEvent, value))
+                {
+                    _currentCalendarEvent = value;
+                    RaisePropertyChanged(() => CurrentCalendarEvent);
+                }
+            }
+        }
+
+        public ICommand CreateEventCommand
+        {
+            get
+            {
+                if (_createEventCommand == null)
+                {
+                    _createEventCommand = new MvxCommand(async () => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCreateEvent);
+
+                            if (OrgEvent != null)
+                            {
+                                try
+                                {
+                                    CurrentCalendarEvent = 
+                                        await _calendarService.CreateNewEvent(OrgEvent);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _exceptionPolicy.Trace(ex);
+                                }
+                            }
+                            else 
+                            {
+                                _environmentService.Alert(
+                                    Localization.OffLineMode, 
+                                    Localization.CantCompleteActionOffline);
+                            }
+                        },
+                        () => 
+                        OrgEvent != null &&
+                        OrgEvent.Id != 0);
+                }
+
+                return _createEventCommand;
+            }
+        }
+
+        public ICommand SaveEventCommand
+        {
+            get
+            {
+                if (_saveEventCommand == null)
+                {
+                    _saveEventCommand = new MvxCommand(() => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelSaveEvent);
+
+                            try
+                            {
+                                _calendarService.SaveEvent(CurrentCalendarEvent);
+                                CurrentCalendarEvent = null;
+                            }
+                            catch (Exception ex)
+                            {
+                                _exceptionPolicy.Trace(ex);
+                            }
+                        },
+                        () => CurrentCalendarEvent != null);
+                }
+
+                return _saveEventCommand;
+            }
+        }
+
+        public ICommand CancelEventCommand
+        {
+            get
+            {
+                if (_cancelEventCommand == null)
+                {
+                    _cancelEventCommand = new MvxCommand(() => 
+                        {
+                            _analyticsService.SendEvent(
+                                Analytics.CategoryUI,
+                                Analytics.ActionTouch,
+                                Analytics.ActionLabelCancelEvent);
+
+                            CurrentCalendarEvent = null;
+                        },
+                        () => CurrentCalendarEvent != null);
+                }
+
+                return _cancelEventCommand;
             }
         }
 

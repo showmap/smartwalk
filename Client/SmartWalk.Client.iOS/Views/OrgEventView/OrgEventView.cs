@@ -5,6 +5,8 @@ using Cirrious.CrossCore.Core;
 using Cirrious.MvvmCross.Binding.BindingContext;
 using CoreGraphics;
 using CoreLocation;
+using EventKit;
+using EventKitUI;
 using Foundation;
 using MapKit;
 using SmartWalk.Client.Core.Model;
@@ -28,6 +30,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
     {
         private readonly MKMapSize MapMargin = new MKMapSize(3000, 3000);
 
+        private EKEventEditViewController _editCalEventController;
         private OrgEventScrollToHideUIManager _scrollToHideManager;
         private bool _isMapViewInitialized;
         private ButtonBarButton _modeButton;
@@ -358,6 +361,20 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     }
                 });
             }
+            else if (propertyName == ViewModel.GetPropertyName(vm => vm.CurrentCalendarEvent))
+            {
+                if (ViewModel.CurrentCalendarEvent != null)
+                {
+                    if (_editCalEventController == null)
+                    {
+                        InitializeCalEventViewController();
+                    }
+                }
+                else
+                {
+                    DisposeCalEventViewController();
+                }
+            }
         }
 
         protected override void OnViewModelRefreshed(bool hasData, bool pullToRefresh)
@@ -387,6 +404,11 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         protected override void OnInitializingActionSheet(List<string> titles)
         {
+            if (ViewModel.CreateEventCommand.CanExecute(null))
+            {
+                titles.Add(Localization.AddToCalendar);
+            }
+
             if (ViewModel.NavigateOrgEventInfoCommand.CanExecute(null))
             {
                 titles.Add(Localization.EventInfo);
@@ -417,6 +439,13 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             switch (buttonTitle)
             {
+                case Localization.AddToCalendar:
+                    if (ViewModel.CreateEventCommand.CanExecute(null))
+                    {
+                        ViewModel.CreateEventCommand.Execute(null);
+                    }
+                    break;
+
                 case Localization.EventInfo:
                     if (ViewModel.NavigateOrgEventInfoCommand.CanExecute(null))
                     {
@@ -980,6 +1009,29 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private void UpdateButtonsFrameOnRotation()
         {
             ButtonBarUtil.UpdateButtonsFrameOnRotation(new [] { MapFullscreenButton });
+        }
+
+        private void InitializeCalEventViewController()
+        {
+            _editCalEventController = new OrgEventEditViewController();
+            _editCalEventController.EventStore = (EKEventStore)ViewModel.CurrentCalendarEvent.EventStore;
+            _editCalEventController.Event = (EKEvent)ViewModel.CurrentCalendarEvent.EventObj;
+
+            var viewDelegate = new OrgEventCalEditViewDelegate(ViewModel);
+            _editCalEventController.EditViewDelegate = viewDelegate;
+
+            PresentViewController(_editCalEventController, true, null);
+        }
+
+        private void DisposeCalEventViewController()
+        {
+            if (_editCalEventController != null)
+            {
+                _editCalEventController.DismissViewController(true, null);
+                _editCalEventController.EditViewDelegate = null;
+                _editCalEventController.Dispose();
+                _editCalEventController = null;
+            }
         }
     }
 
