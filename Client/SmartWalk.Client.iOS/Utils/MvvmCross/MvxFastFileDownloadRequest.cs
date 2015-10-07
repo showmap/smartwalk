@@ -79,7 +79,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             imageCache.RequestImage(
                 originalUrl, 
                 image =>
-                RunSyncOrAsyncWithLock(() =>
+                RunAsyncWithLock(() =>
                     {
                         var scaledSize = ResizeToFit(image.Size, size);
 

@@ -48,7 +48,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
                     error(args.Value);
                 };
 
-            RunSyncOrAsyncWithLock(
+            RunAsyncWithLock(
                 () =>
                 {
                     _queuedRequests.Enqueue(request);
@@ -62,7 +62,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
 
         private void OnRequestFinished(MvxFastFileDownloadRequest request)
         {
-            RunSyncOrAsyncWithLock(
+            RunAsyncWithLock(
                 () =>
                 {
                     _currentRequests.Remove(request);
@@ -78,7 +78,7 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
         {
             if (_currentRequests.Count >= _maxConcurrentDownloads) return;
 
-            RunSyncOrAsyncWithLock(
+            RunAsyncWithLock(
                 () =>
                 {
                     if (_currentRequests.Count >= _maxConcurrentDownloads) return;
