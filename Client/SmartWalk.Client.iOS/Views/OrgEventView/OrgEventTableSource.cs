@@ -236,10 +236,9 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
                 var venueCell = (VenueShowCell)cell;
-                venueCell.ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
+                venueCell.ShowHideModalViewCommand = _viewModel.ShowHideModalViewCommand;
                 venueCell.ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
                 venueCell.NavigateVenueOnMapCommand = _viewModel.NavigateVenueOnMapCommand;
-                venueCell.NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 venueCell.SetFavoriteCommand = _viewModel.FavoritesManager.SetFavoriteShowCommand;
                 venueCell.UnsetFavoriteCommand = _viewModel.FavoritesManager.UnsetFavoriteShowCommand;
                 venueCell.DataContext = new VenueShowDataContext(show, _viewModel.FavoritesManager, _viewModel.OrgEvent,

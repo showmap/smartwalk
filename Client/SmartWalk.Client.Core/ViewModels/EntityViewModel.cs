@@ -14,9 +14,7 @@ using SmartWalk.Client.Core.ViewModels.Interfaces;
 namespace SmartWalk.Client.Core.ViewModels
 {
     public abstract class EntityViewModel : RefreshableViewModel, 
-        IFullscreenImageProvider,
-        IContactsEntityProvider,
-        IShareableViewModel
+        IContactsEntityProvider, IShareableViewModel
     {
         private readonly IConfiguration _configuration;
         private readonly IAnalyticsService _analyticsService;
@@ -25,16 +23,13 @@ namespace SmartWalk.Client.Core.ViewModels
         private Entity _entity;
         private bool _isDescriptionExpanded;
         private Entity _currentContactsEntityInfo;
-        private string _currentFullscreenImage;
 
         private MvxCommand _expandCollapseCommand;
         private MvxCommand _showNextEntityCommand;
-        private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand _showContactsCommand;
         private MvxCommand _hideContactsCommand;
         private MvxCommand<Contact> _callPhoneCommand;
         private MvxCommand<Contact> _composeEmailCommand;
-        private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand _navigateAddressesCommand;
         private MvxCommand _showDirectionsCommand;
         private MvxCommand _copyLinkCommand;
@@ -97,22 +92,6 @@ namespace SmartWalk.Client.Core.ViewModels
             }
         }
 
-        public string CurrentFullscreenImage
-        {
-            get
-            {
-                return _currentFullscreenImage;
-            }
-            private set
-            {
-                if (_currentFullscreenImage != value)
-                {
-                    _currentFullscreenImage = value;
-                    RaisePropertyChanged(() => CurrentFullscreenImage);
-                }
-            }
-        }
-
         public Entity CurrentContactsEntityInfo
         {
             get
@@ -171,29 +150,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _showNextEntityCommand;
-            }
-        }
-
-        public ICommand ShowHideFullscreenImageCommand
-        {
-            get
-            {
-                if (_showFullscreenImageCommand == null)
-                {
-                    _showFullscreenImageCommand = new MvxCommand<string>(
-                        image => {
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                image != null
-                                    ? Analytics.ActionLabelShowFullscreenImage
-                                    : Analytics.ActionLabelHideFullscreenImage);
-
-                            CurrentFullscreenImage = image;
-                        });
-                }
-
-                return _showFullscreenImageCommand;
             }
         }
 
@@ -292,28 +248,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _composeEmailCommand;
-            }
-        }
-
-        public ICommand NavigateWebLinkCommand
-        {
-            get
-            {
-                if (_navigateWebLinkCommand == null)
-                {
-                    _navigateWebLinkCommand = new MvxCommand<Contact>(
-                        contact => ShowViewModel<BrowserViewModel>(
-                            new BrowserViewModel.Parameters {  
-                                URL = contact.ContactText,
-                                Location = InitParameters.Location
-                            }),
-                        contact => 
-                            contact != null &&
-                            contact.Type == SmartWalk.Shared.DataContracts.ContactType.Url &&
-                            contact.ContactText != null);
-                }
-
-                return _navigateWebLinkCommand;
             }
         }
 

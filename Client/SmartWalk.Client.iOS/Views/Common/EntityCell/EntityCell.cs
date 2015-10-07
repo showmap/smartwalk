@@ -9,6 +9,7 @@ using SmartWalk.Shared.Utils;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -86,8 +87,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         }
 
         public ICommand ExpandCollapseCommand { get; set; }
-        public ICommand ShowImageFullscreenCommand { get; set; }
-        public ICommand NavigateWebSiteCommand { get; set; }
+        public ICommand ShowHideModalViewCommand { get; set; }
 
         public ICommand NavigateAddressesCommand
         {
@@ -117,8 +117,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             if (newsuper == null)
             {
                 ExpandCollapseCommand = null;
-                ShowImageFullscreenCommand = null;
-                NavigateWebSiteCommand = null;
+                ShowHideModalViewCommand = null;
                 NavigateAddressesCommand = null;
 
                 DisposeGestures();
@@ -279,10 +278,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private void InitializeGestures()
         {
             _headerImageTapGesture = new UITapGestureRecognizer(() => {
-                if (ShowImageFullscreenCommand != null &&
-                    ShowImageFullscreenCommand.CanExecute(ImageBackground.ImageUrl))
+                var context = new ModalViewContext(
+                    ModalViewKind.FullscreenImage, 
+                    ImageBackground.ImageUrl);
+                
+                if (ShowHideModalViewCommand != null &&
+                    ShowHideModalViewCommand.CanExecute(context))
                 {
-                    ShowImageFullscreenCommand.Execute(ImageBackground.ImageUrl);
+                    ShowHideModalViewCommand.Execute(context);
                 }
             }) {
                 NumberOfTouchesRequired = (uint)1,

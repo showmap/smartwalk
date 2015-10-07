@@ -1,16 +1,17 @@
 using System;
-using CoreGraphics;
 using System.Linq;
 using Cirrious.MvvmCross.Binding.Touch.Views;
+using CoreGraphics;
 using Foundation;
-using UIKit;
+using SmartWalk.Client.iOS.Controls;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
-using SmartWalk.Client.iOS.Controls;
+using SmartWalk.Client.iOS.Views.Common.Base;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class ImageFullscreenView : UIViewController, IFullscreenView
+    public partial class ImageFullscreenView : UIViewController, IModalView
     {
         private string _imageUrl;
         private MvxImageViewLoader _imageHelper;
@@ -23,8 +24,7 @@ namespace SmartWalk.Client.iOS.Views.Common
             ModalTransitionStyle = UIModalTransitionStyle.CrossDissolve;
         }
 
-        public event EventHandler Shown;
-        public event EventHandler Hidden;
+        public event EventHandler ToHide;
 
         public string ImageURL
         {
@@ -44,6 +44,16 @@ namespace SmartWalk.Client.iOS.Views.Common
                     }
                 }
             }
+        }
+
+        ViewBase IModalView.PresentingViewController
+        {
+            get { return (ViewBase)PresentingViewController; }
+        }
+
+        public override bool PrefersStatusBarHidden()
+        {
+            return true;
         }
 
         public override void ViewDidLoad()
@@ -95,39 +105,13 @@ namespace SmartWalk.Client.iOS.Views.Common
             CloseButton.UpdateState();
         }
 
-        public override bool PrefersStatusBarHidden()
+        public override void DidMoveToParentViewController(UIViewController parent)
         {
-            return true;
-        }
+            base.DidMoveToParentViewController(parent);
 
-        public void Show()
-        {
-            if (PresentingViewController == null)
-            {
-                UIApplication.SharedApplication.KeyWindow
-                    .RootViewController
-                    .PresentViewController(this, true, null);
-
-                NavBarManager.Instance.SetHidden(true, true);
-
-                if (Shown != null)
-                {
-                    Shown(this, EventArgs.Empty);
-                }
-            }
-        }
-
-        public void Hide()
-        {
-            if (PresentingViewController != null)
+            if (parent == null)
             {
                 DisposeGestures();
-                DismissViewController(true, null);
-
-                if (Hidden != null)
-                {
-                    Hidden(this, EventArgs.Empty);
-                }
             }
         }
 
@@ -135,11 +119,13 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.Dispose(disposing);
             ConsoleUtil.LogDisposed(this);
+
+            DisposeGestures();
         }
 
         partial void OnCloseButtonTouchUpInside(UIButton sender, UIEvent @event)
         {
-            Hide();
+            RaiseToHide();
         }
 
         private new void UpdateViewConstraints()
@@ -162,7 +148,7 @@ namespace SmartWalk.Client.iOS.Views.Common
                 NumberOfTapsRequired = (uint)2
             };
 
-            _swipeRecognizer = new UISwipeGestureRecognizer(Hide) {
+            _swipeRecognizer = new UISwipeGestureRecognizer(RaiseToHide) {
                 Direction = UISwipeGestureRecognizerDirection.Down | 
                     UISwipeGestureRecognizerDirection.Up
             };
@@ -251,6 +237,14 @@ namespace SmartWalk.Client.iOS.Views.Common
 
             var result = new CGRect(location, size);
             return result;
+        }
+
+        private void RaiseToHide()
+        {
+            if (ToHide != null)
+            {
+                ToHide(this, EventArgs.Empty);
+            }
         }
     }
 

@@ -77,7 +77,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventInfoView
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
-                ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
+                ((EntityCell)cell).ShowHideModalViewCommand = _viewModel.ShowHideModalViewCommand;
                 ((EntityCell)cell).NavigateAddressesCommand = _viewModel.NavigateAddressesCommand;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }

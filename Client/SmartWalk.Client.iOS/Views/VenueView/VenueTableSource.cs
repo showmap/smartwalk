@@ -157,8 +157,7 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             {
                 cell = tableView.DequeueReusableCell(EntityCell.Key, indexPath);
                 ((EntityCell)cell).ExpandCollapseCommand = _viewModel.ExpandCollapseCommand;
-                ((EntityCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
-                ((EntityCell)cell).NavigateWebSiteCommand = _viewModel.NavigateWebLinkCommand;
+                ((EntityCell)cell).ShowHideModalViewCommand = _viewModel.ShowHideModalViewCommand;
                 ((EntityCell)cell).NavigateAddressesCommand = _viewModel.NavigateAddressesCommand;
                 ((EntityCell)cell).DataContext = entityCellContext;
             }
@@ -167,9 +166,8 @@ namespace SmartWalk.Client.iOS.Views.VenueView
             if (venueShow != null)
             {
                 cell = tableView.DequeueReusableCell(VenueShowCell.Key, indexPath);
-                ((VenueShowCell)cell).ShowImageFullscreenCommand = _viewModel.ShowHideFullscreenImageCommand;
+                ((VenueShowCell)cell).ShowHideModalViewCommand = _viewModel.ShowHideModalViewCommand;
                 ((VenueShowCell)cell).ExpandCollapseShowCommand = _viewModel.ExpandCollapseShowCommand;
-                ((VenueShowCell)cell).NavigateDetailsLinkCommand = _viewModel.NavigateWebLinkCommand;
                 ((VenueShowCell)cell).SetFavoriteCommand = _viewModel.FavoritesManager.SetFavoriteShowCommand;
                 ((VenueShowCell)cell).UnsetFavoriteCommand = _viewModel.FavoritesManager.UnsetFavoriteShowCommand;
                 ((VenueShowCell)cell).DataContext = new VenueShowDataContext(venueShow, 

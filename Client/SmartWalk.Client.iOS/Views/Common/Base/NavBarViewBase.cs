@@ -81,6 +81,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
             // replacing default iOS back button
             if (IsBackButtonVisible &&
+                NavigationController != null &&
                 NavigationController.ViewControllers.Length > 1)
             {
                 NavigationItem.HidesBackButton = true;

@@ -22,10 +22,10 @@ namespace SmartWalk.Client.iOS.Utils.MvvmCross
             if (MasterNavigationController.TopViewController != 
                 MasterNavigationController.VisibleViewController)
             {
-                var fullscreenView = MasterNavigationController.VisibleViewController as IFullscreenView;
-                if (fullscreenView != null)
+                var modalView = MasterNavigationController.VisibleViewController as IModalView;
+                if (modalView != null)
                 {
-                    fullscreenView.Hide();
+                    modalView.PresentingViewController.ShowHideModalView(null);
                 }
 
                 MasterNavigationController.VisibleViewController

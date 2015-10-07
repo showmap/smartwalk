@@ -170,6 +170,7 @@ namespace SmartWalk.Client.iOS.Controls
             VerticalSize = verticalSize ?? DefaultVerticalSize;
             LandscapeSize = landscapeSize ?? DefaultLandscapeSize;
             SemiTransparentType = semiTransparentType;
+            UpdateBackgroundState();
 
             TouchDown += (sender, e) => 
                 _background.FillColor = ThemeColors.ContentLightHighlight.ColorWithAlpha(0.58f);

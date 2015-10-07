@@ -58,7 +58,6 @@
     <Compile Include="Converters\ValueConverter.cs" />
     <Compile Include="ViewModels\BrowserViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IRefreshableViewModel.cs" />
-    <Compile Include="ViewModels\Interfaces\IFullscreenImageProvider.cs" />
     <Compile Include="ViewModels\Interfaces\IProgressViewModel.cs" />
     <Compile Include="ViewModels\Common\ProgressViewModel.cs" />
     <Compile Include="ViewModels\Common\RefreshableViewModel.cs" />
@@ -118,6 +117,8 @@
     <Compile Include="Services\FavoritesService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\IFileService.cs" />
+    <Compile Include="ViewModels\Common\ModalProviderViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IModalProviderViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SmartWalk.Shared\SmartWalk.Shared.csproj">

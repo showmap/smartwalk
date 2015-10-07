@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Cirrious.CrossCore;
 using Cirrious.CrossCore.Core;
-using UIKit;
 using SmartWalk.Client.Core.Resources;
+using SmartWalk.Client.Core.ViewModels;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
-using SmartWalk.Shared.Utils;
-using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.iOS.Utils;
+using SmartWalk.Shared.Utils;
+using UIKit;
 
 namespace SmartWalk.Client.iOS.Views.Common.Base
 {
     public abstract class ViewBase : ActiveAwareViewBase
     {
-        private ImageFullscreenView _imageFullscreenView;
-
         public override UIStatusBarAnimation PreferredStatusBarUpdateAnimation
         {
             get { return UIStatusBarAnimation.Slide; }
@@ -70,7 +70,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                     shareableViewModel.Share -= OnViewModelShare;
                 }
 
-                DisposeFullscreenView();
+                DisposeModalView();
             }
         }
 
@@ -95,6 +95,40 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             else
             {
                 SetNeedsStatusBarAppearanceUpdate();
+            }
+        }
+
+        public void ShowHideModalView(ModalViewContext context)
+        {
+            if (PresentedViewController != null)
+            {
+                DisposeModalView();
+            }
+
+            if (context != null)
+            {
+                var view = default(IModalView);
+
+                switch (context.ViewKind)
+                {
+                    case ModalViewKind.FullscreenImage:
+                        view = new ImageFullscreenView {
+                            ImageURL = context.DataContext as string
+                        };
+                        break;
+
+                    case ModalViewKind.Browser:
+                        var viewModel = Mvx.IocConstruct<BrowserViewModel>();
+                        viewModel.Init(new BrowserViewModel.Parameters { 
+                            URL = context.DataContext as string
+                        });
+                        view = new ModalNavView(new BrowserView { ViewModel = viewModel });
+                        break;
+                }
+
+                view.ToHide += OnModalViewToHide;
+
+                PresentViewController((UIViewController)view, true, null);
             }
         }
 
@@ -193,11 +227,11 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var fullscreenProvider = ViewModel as IFullscreenImageProvider;
-            if (fullscreenProvider != null &&
-                e.PropertyName == fullscreenProvider.GetPropertyName(p => p.CurrentFullscreenImage))
+            var modalProvider = ViewModel as IModalProviderViewModel;
+            if (modalProvider != null &&
+                e.PropertyName == modalProvider.GetPropertyName(p => p.ModalViewContext))
             {
-                ShowHideImageFullscreenView(fullscreenProvider.CurrentFullscreenImage);
+                ShowHideModalView(modalProvider.ModalViewContext);
             }
 
             OnViewModelPropertyChanged(e.PropertyName);
@@ -208,44 +242,24 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             ShareUtil.Share(this, e.Value);
         }
 
-        private void ShowHideImageFullscreenView(string url)
+        private void DisposeModalView()
         {
-            if (_imageFullscreenView != null)
+            if (PresentedViewController != null)
             {
-                DisposeFullscreenView();
-            }
-
-            if (url != null)
-            {
-                _imageFullscreenView = new ImageFullscreenView
-                    {
-                        ImageURL = url
-                    };
-                _imageFullscreenView.Hidden += OnFullscreenViewHidden;
-
-                _imageFullscreenView.Show();
+                PresentedViewController.DismissViewController(true, null);
+                ((IModalView)PresentedViewController).ToHide -= OnModalViewToHide;
+                ((IModalView)PresentedViewController).Dispose();
             }
         }
 
-        private void DisposeFullscreenView()
+        private void OnModalViewToHide(object sender, EventArgs e)
         {
-            if (_imageFullscreenView != null)
+            var modalProvider = ViewModel as IModalProviderViewModel;
+            if (modalProvider != null &&
+                modalProvider.ShowHideModalViewCommand.CanExecute(null))
             {
-                _imageFullscreenView.Hidden -= OnFullscreenViewHidden;
-                _imageFullscreenView.Hide();
-                _imageFullscreenView.Dispose();
-                _imageFullscreenView = null;
+                modalProvider.ShowHideModalViewCommand.Execute(null);
             }
-        }
-
-        private void OnFullscreenViewHidden(object sender, EventArgs e)
-        {
-            var fullscreenProvider = ViewModel as IFullscreenImageProvider;
-            if (fullscreenProvider != null &&
-                fullscreenProvider.ShowHideFullscreenImageCommand.CanExecute(null))
-            {
-                fullscreenProvider.ShowHideFullscreenImageCommand.Execute(null);
-            }   
         }
     }
 }

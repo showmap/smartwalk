@@ -28,6 +28,7 @@
         public const string Time = "Time";
         public const string Favorites = "Favorites";
         public const string Search = "Search";
+        public const string Refresh = "Refresh";
 
         public const string Error = "Error";
         public const string NetworkError = "Network Error";

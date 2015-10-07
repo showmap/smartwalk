@@ -13,42 +13,35 @@ using SmartWalk.Client.iOS.Controls;
 
 namespace SmartWalk.Client.iOS.Views.Common
 {
-    public partial class BrowserView : NavBarViewBase
+    public partial class BrowserView : ViewBase, IModalView
     {
         private const string DocTitle = "document.title";
 
-        private bool _toolbarsHidden;
         private UIActivityIndicatorView _indicatorView;
+        private ButtonBarButton _closeButton;
+        private ButtonBarButton _backButton;
+        private ButtonBarButton _forwardButton;
+        private ButtonBarButton _moreButton;
+        private UIBarButtonItem _backButtonItem;
+        private UIBarButtonItem _forwardButtonItem;
+        private UIBarButtonItem _progressButtonItem;
+
+        public event EventHandler ToHide;
 
         public new BrowserViewModel ViewModel
         {
             get { return (BrowserViewModel)base.ViewModel; }
+            set { base.ViewModel = value; }
         }
 
-        public bool ToolbarsHidden
+        public override bool PrefersStatusBarHidden()
         {
-            get
-            {
-                return _toolbarsHidden;
-            }
-            set
-            {
-                if (_toolbarsHidden != value)
-                {
-                    _toolbarsHidden = value;
+            return NavigationController.NavigationBarHidden;
+        }
 
-                    if (_toolbarsHidden)
-                    {
-                        SetNavBarHidden(true, true);
-                        BottomToolbar.SetHidden(true, true);
-                    }
-                    else
-                    {
-                        SetNavBarHidden(false, true);
-                        BottomToolbar.SetHidden(false, true);
-                    }
-                }
-            }
+        ViewBase IModalView.PresentingViewController
+        {
+            get { return (ViewBase)PresentingViewController; }
         }
 
         protected override string ViewTitle
@@ -67,15 +60,16 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.ViewDidLoad();
 
+            AutomaticallyAdjustsScrollViewInsets = true;
+            EdgesForExtendedLayout = UIRectEdge.All;
+
             InitializeStyle();
-            InitializeIndicator();
+            InitializeNavBarItems();
             UpdateViewTitle();
 
             WebView.LoadStarted += OnWebViewLoadStarted;
             WebView.LoadError += OnWebViewLoadFinished;
             WebView.LoadFinished += OnWebViewLoadFinished;
-
-            WebView.ScrollView.Delegate = new BrowserScrollViewDelegate(this, WebView);
 
             LoadURL();
             UpdateNavButtonsState();
@@ -85,8 +79,8 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.ViewWillAppear(animated);
 
-            UpdateViewConstraints();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
+            UpdateButtonsFrameOnRotation();
+            UpdateNavButtonsState();
         }
 
         public override void WillAnimateRotation(
@@ -95,18 +89,33 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.WillAnimateRotation(toInterfaceOrientation, duration);
 
-            UpdateViewConstraints();
-            ButtonBarUtil.UpdateButtonsFrameOnRotation(BottomToolbar.Items);
+            UpdateButtonsFrameOnRotation();
+            UpdateNavButtonsState();
         }
 
-        public override void UpdateViewConstraints()
+        public override void DidMoveToParentViewController(UIViewController parent)
         {
-            base.UpdateViewConstraints();
+            base.DidMoveToParentViewController(parent);
 
-            ToolBarHeightConstraint.Constant =
-                ScreenUtil.IsVerticalOrientation 
-                    ? UIConstants.ToolBarVerticalHeight 
-                    : UIConstants.ToolBarHorizontalHeight;
+            if (parent == null)
+            {
+                DisposeNavBarItems();
+                DisposeWebView();
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            ConsoleUtil.LogDisposed(this);
+
+            DisposeNavBarItems();
+            DisposeWebView();
+        }
+
+        protected override void UpdateViewTitle()
+        {
+            NavigationItem.Title = ViewTitle ?? string.Empty;
         }
 
         protected override void OnViewModelPropertyChanged(string propertyName)
@@ -125,6 +134,8 @@ namespace SmartWalk.Client.iOS.Views.Common
             {
                 titles.Add(Localization.OpenInSafari);
             }
+
+            titles.Add(Localization.Refresh);
 
             // TODO: To support Chrome some day
             //titles.Add(Localization.OpenInChrome);
@@ -151,6 +162,10 @@ namespace SmartWalk.Client.iOS.Views.Common
                     }
                     break;
 
+                case Localization.Refresh:
+                    WebView.Reload();
+                    break;
+
                 case Localization.CopyLink:
                     if (ViewModel.CopyLinkCommand.CanExecute(null))
                     {
@@ -167,14 +182,67 @@ namespace SmartWalk.Client.iOS.Views.Common
             }
         }
 
-        private void InitializeIndicator()
+        private void InitializeNavBarItems()
+        {   
+            var gap = ButtonBarUtil.CreateGapSpacer();
+
+            _closeButton = ButtonBarUtil.Create(
+                ThemeIcons.Close, 
+                ThemeIcons.CloseLandscape);
+            _closeButton.TouchUpInside += OnCloseButtonClick;
+            var closeButtonItem = new UIBarButtonItem(_closeButton);
+
+            _backButton = ButtonBarUtil.Create(
+                ThemeIcons.Back, 
+                ThemeIcons.BackLandscape);
+            _backButton.TouchUpInside += OnBackButtonClick;
+            _backButtonItem = new UIBarButtonItem(_backButton);
+
+            NavigationItem.SetLeftBarButtonItems(new [] { gap, closeButtonItem, _backButtonItem }, true);
+
+            _indicatorView = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White) 
+                {
+                    Frame = new CGRect(0, 0, 40, 40)
+                };
+            _progressButtonItem = new UIBarButtonItem(_indicatorView);
+
+            _forwardButton = ButtonBarUtil.Create(
+                ThemeIcons.Forward, 
+                ThemeIcons.ForwardLandscape);
+            _forwardButton.TouchUpInside += OnForwardButtonClick;
+            _forwardButtonItem = new UIBarButtonItem(_forwardButton);
+
+            _moreButton = ButtonBarUtil.Create(
+                ThemeIcons.More, 
+                ThemeIcons.MoreLandscape);
+            _moreButton.TouchUpInside += OnMoreButtonClicked;
+            var moreButtonItem = new UIBarButtonItem(_moreButton);
+
+            NavigationItem.SetRightBarButtonItems(
+                new [] { gap, moreButtonItem, _forwardButtonItem, _progressButtonItem }, true);
+        }
+
+        private void DisposeNavBarItems()
         {
-            _indicatorView = new UIActivityIndicatorView(
-                UIActivityIndicatorViewStyle.Gray) 
+            if (_closeButton != null)
             {
-                Frame = new CGRect(0, 0, 40, 40)
-            };
-            ProgressButton.CustomView = _indicatorView;
+                _closeButton.TouchUpInside -= OnCloseButtonClick;
+            }
+
+            if (_backButton != null)
+            {
+                _backButton.TouchUpInside -= OnBackButtonClick;
+            }
+
+            if (_forwardButton != null)
+            {
+                _forwardButton.TouchUpInside -= OnForwardButtonClick;
+            }
+
+            if (_moreButton != null)
+            {
+                _moreButton.TouchUpInside -= OnMoreButtonClicked;
+            }
         }
 
         private void LoadURL()
@@ -189,7 +257,6 @@ namespace SmartWalk.Client.iOS.Views.Common
         private void OnWebViewLoadStarted(object sender, EventArgs e)
         {
             _indicatorView.StartAnimating();
-            _indicatorView.Hidden = false;
 
             UpdateNavButtonsState();
             UpdateViewTitle();
@@ -198,10 +265,17 @@ namespace SmartWalk.Client.iOS.Views.Common
         private void OnWebViewLoadFinished(object sender, EventArgs e)
         {
             _indicatorView.StopAnimating();
-            _indicatorView.Hidden = true;
 
             UpdateNavButtonsState();
             UpdateViewTitle();
+        }
+
+        private void OnCloseButtonClick(object sender, EventArgs e)
+        {
+            if (ToHide != null)
+            {
+                ToHide(this, EventArgs.Empty);
+            }
         }
 
         private void OnBackButtonClick(object sender, EventArgs e)
@@ -214,106 +288,44 @@ namespace SmartWalk.Client.iOS.Views.Common
             WebView.GoForward();
         }
 
-        private void OnRefreshButtonClick(object sender, EventArgs e)
+        private void OnMoreButtonClicked(object sender, EventArgs e)
         {
-            WebView.Reload();
+            ShowActionSheet();
         }
 
         private void UpdateNavButtonsState()
         {
-            SetButtonEnabled(BackButton, WebView.CanGoBack);
-            SetButtonEnabled(ForwardButton, WebView.CanGoForward);
+            SetButtonEnabled(_backButtonItem, WebView.CanGoBack);
+            SetButtonEnabled(_forwardButtonItem, WebView.CanGoForward);
+            SetButtonEnabled(_progressButtonItem, _indicatorView.IsAnimating);
         }
 
         private static void SetButtonEnabled(UIBarButtonItem buttonItem, bool isEnabled)
         {
             buttonItem.Enabled = isEnabled;
-            buttonItem.CustomView.Alpha = isEnabled ? 1f : 0.5f;
+            buttonItem.CustomView.Hidden = !isEnabled;
+
+            var frame = buttonItem.CustomView.Frame;
+            buttonItem.CustomView.Frame = isEnabled
+                ? new CGRect(frame.Location, new CGSize(frame.Height, frame.Height))
+                : new CGRect(frame.Location, new CGSize(0, frame.Height)); 
         }
 
         private void InitializeStyle()
         {
             WebView.BackgroundColor = UIColor.White;
-            LeftSpacer.Width = Theme.NavBarPaddingCompensate;
-
-            BottomToolbar.Translucent = true;
-            BottomToolbar.SetBackgroundImage(new UIImage(), UIToolbarPosition.Any, UIBarMetrics.Default);
-            BottomToolbar.SetShadowImage(new UIImage(), UIToolbarPosition.Any);
-            BottomToolbar.BarTintColor = UIColor.Clear;
-
-            var button = ButtonBarUtil.Create(
-                ThemeIcons.Back, 
-                ThemeIcons.BackLandscape, 
-                SemiTransparentType.Light);
-            button.TouchUpInside += OnBackButtonClick;
-            BackButton.CustomView = button;
-
-            button = ButtonBarUtil.Create(
-                ThemeIcons.Forward, 
-                ThemeIcons.ForwardLandscape, 
-                SemiTransparentType.Light);
-            button.TouchUpInside += OnForwardButtonClick;
-            ForwardButton.CustomView = button;
-
-            button = ButtonBarUtil.Create(
-                ThemeIcons.Refresh, 
-                ThemeIcons.RefreshLandscape, 
-                SemiTransparentType.Light);
-            button.TouchUpInside += OnRefreshButtonClick;
-            RefreshButton.CustomView = button;
-        }
-    }
-
-    public class BrowserScrollViewDelegate : UIScrollViewDelegate
-    {
-        private readonly UIWebView _webView;
-        private readonly ScrollToHideUIManager _scrollToHideManager;
-
-        public BrowserScrollViewDelegate(BrowserView view, UIWebView webView)
-        {
-            _webView = webView;
-            _scrollToHideManager = new BrowserScrollToHideUIManager(view, _webView.ScrollView);
         }
 
-        public override void DraggingStarted(UIScrollView scrollView)
+        private void DisposeWebView()
         {
-            _scrollToHideManager.DraggingStarted();
+            WebView.LoadStarted -= OnWebViewLoadStarted;
+            WebView.LoadError -= OnWebViewLoadFinished;
+            WebView.LoadFinished -= OnWebViewLoadFinished;
         }
 
-        public override void DraggingEnded(UIScrollView scrollView, bool willDecelerate)
+        private void UpdateButtonsFrameOnRotation()
         {
-            _scrollToHideManager.DraggingEnded();
-        }
-
-        public override void Scrolled(UIScrollView scrollView)
-        {
-            _scrollToHideManager.Scrolled();
-        }
-
-        public override void ScrolledToTop(UIScrollView scrollView)
-        {
-            _scrollToHideManager.ScrolledToTop();
-        }
-    }
-
-    public class BrowserScrollToHideUIManager : ScrollToHideUIManager
-    {
-        private readonly BrowserView _view;
-
-        public BrowserScrollToHideUIManager(BrowserView view, UIScrollView scrollView) 
-            : base(scrollView)
-        {
-            _view = view;
-        }
-
-        protected override void OnHideUI()
-        {
-            _view.ToolbarsHidden = true;
-        }
-
-        protected override void OnShowUI()
-        {
-            _view.ToolbarsHidden = false;
+            ButtonBarUtil.UpdateButtonsFrameOnRotation(NavigationItem.GetNavItemBarItems());
         }
     }
 }

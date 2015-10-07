@@ -16,6 +16,7 @@ using SmartWalk.Client.iOS.Views.Common.Base.Cells;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 using UIKit;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -197,8 +198,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         public ICommand ExpandCollapseShowCommand { get; set; }
         public ICommand NavigateVenueOnMapCommand { get; set; }
-        public ICommand ShowImageFullscreenCommand { get; set; }
-        public ICommand NavigateDetailsLinkCommand { get; set; }
+        public ICommand ShowHideModalViewCommand { get; set; }
         public ICommand SetFavoriteCommand { get; set; }
         public ICommand UnsetFavoriteCommand { get; set; }
 
@@ -277,8 +277,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             {
                 DataContext = null;
                 ExpandCollapseShowCommand = null;
-                ShowImageFullscreenCommand = null;
-                NavigateDetailsLinkCommand = null;
+                ShowHideModalViewCommand = null;
 
                 DisposeGestures();
                 DisposeOrientationObserver();
@@ -471,10 +470,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                     if (IsExpanded && DataContext.Show.HasPictures() &&
                         rec.LocatedInView(ThumbImageView))
                     {
-                        if (ShowImageFullscreenCommand != null &&
-                            ShowImageFullscreenCommand.CanExecute(DataContext.Show.Pictures.Full))
+                        var context = new ModalViewContext(
+                            ModalViewKind.FullscreenImage, 
+                            DataContext.Show.Pictures.Full);
+
+                        if (ShowHideModalViewCommand != null &&
+                            ShowHideModalViewCommand.CanExecute(context))
                         {
-                            ShowImageFullscreenCommand.Execute(DataContext.Show.Pictures.Full);
+                            ShowHideModalViewCommand.Execute(context);
                         }
                     }
                     else if (IsExpanded && DataContext.Show.HasDetailsUrl() &&
@@ -731,14 +734,14 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
 
         private void NavigateDetails()
         {
-            var contact = new Contact {
-                Type = ContactType.Url,
-                ContactText = DataContext.Show.DetailsUrl
-            };
-            if (NavigateDetailsLinkCommand != null && 
-                NavigateDetailsLinkCommand.CanExecute(contact))
+            var context = new ModalViewContext(
+                ModalViewKind.Browser, 
+                DataContext.Show.DetailsUrl);
+
+            if (ShowHideModalViewCommand != null &&
+                ShowHideModalViewCommand.CanExecute(context))
             {
-                NavigateDetailsLinkCommand.Execute(contact);
+                ShowHideModalViewCommand.Execute(context);
             }
         }
     }

@@ -13,13 +13,11 @@ using SmartWalk.Client.Core.Services;
 using SmartWalk.Client.Core.Utils;
 using SmartWalk.Client.Core.ViewModels.Common;
 using SmartWalk.Client.Core.ViewModels.Interfaces;
-using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 
 namespace SmartWalk.Client.Core.ViewModels
 {
-    public class OrgEventViewModel : RefreshableViewModel, 
-        IFullscreenImageProvider, IShareableViewModel, IFavoritesAware
+    public class OrgEventViewModel : RefreshableViewModel, IShareableViewModel, IFavoritesAware
     {
         private readonly IEnvironmentService _environmentService;
         private readonly ISmartWalkApiService _apiService;
@@ -35,7 +33,6 @@ namespace SmartWalk.Client.Core.ViewModels
         private int _daysCount;
         private Show _expandedShow;
         private Venue _selectedVenueOnMap;
-        private string _currentFullscreenImage;
         private Parameters _parameters;
         private SortBy _sortBy = SortBy.Name;
         private Venue[] _searchResults;
@@ -58,9 +55,7 @@ namespace SmartWalk.Client.Core.ViewModels
         private MvxCommand<Venue> _navigateVenueCommand;
         private MvxCommand<Venue> _selectVenueOnMapCommand;
         private MvxCommand<Venue> _navigateVenueOnMapCommand;
-        private MvxCommand<Contact> _navigateWebLinkCommand;
         private MvxCommand<SortBy> _sortByCommand;
-        private MvxCommand<string> _showFullscreenImageCommand;
         private MvxCommand _switchMapTypeCommand;
         private MvxCommand _copyLinkCommand;
         private MvxCommand _shareCommand;
@@ -230,19 +225,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     _selectedVenueOnMap = value;
                     RaisePropertyChanged(() => SelectedVenueOnMap);
-                }
-            }
-        }
-
-        public string CurrentFullscreenImage
-        {
-            get { return _currentFullscreenImage; }
-            private set
-            {
-                if (_currentFullscreenImage != value)
-                {
-                    _currentFullscreenImage = value;
-                    RaisePropertyChanged(() => CurrentFullscreenImage);
                 }
             }
         }
@@ -735,48 +717,6 @@ namespace SmartWalk.Client.Core.ViewModels
                 }
 
                 return _navigateVenueOnMapCommand;
-            }
-        }
-
-        public ICommand NavigateWebLinkCommand
-        {
-            get
-            {
-                if (_navigateWebLinkCommand == null)
-                {
-                    _navigateWebLinkCommand = new MvxCommand<Contact>(
-                        contact => ShowViewModel<BrowserViewModel>(
-                            new BrowserViewModel.Parameters {  
-                                URL = contact.ContactText,
-                                Location = _parameters.Location
-                            }),
-                        contact => contact != null && contact.Type == ContactType.Url);
-                }
-
-                return _navigateWebLinkCommand;
-            }
-        }
-
-        public ICommand ShowHideFullscreenImageCommand
-        {
-            get
-            {
-                if (_showFullscreenImageCommand == null)
-                {
-                    _showFullscreenImageCommand = new MvxCommand<string>(
-                        image => { 
-                            _analyticsService.SendEvent(
-                                Analytics.CategoryUI,
-                                Analytics.ActionTouch,
-                                image != null
-                                    ? Analytics.ActionLabelShowFullscreenImage
-                                    : Analytics.ActionLabelHideFullscreenImage);
-
-                            CurrentFullscreenImage = image;
-                        });
-                }
-
-                return _showFullscreenImageCommand;
             }
         }
 

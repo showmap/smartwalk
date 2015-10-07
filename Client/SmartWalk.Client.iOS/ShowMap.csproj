@@ -379,7 +379,6 @@
     <Compile Include="Utils\MvvmCross\CacheConfiguration.cs" />
     <Compile Include="Utils\ConsoleUtil.cs" />
     <Compile Include="Utils\MvvmCross\MvxExtendedViewPresenter.cs" />
-    <Compile Include="Views\Common\IFullscreenView.cs" />
     <Compile Include="Utils\ScrollToHideUIManager.cs" />
     <Compile Include="Views\Common\Base\NavBarViewBase.cs" />
     <Compile Include="Controls\TransparentNavBar.cs" />
@@ -415,6 +414,8 @@
     <Compile Include="Services\ICloudService.cs" />
     <Compile Include="Controls\Gradient.cs" />
     <Compile Include="Utils\MvvmCross\ImageState.cs" />
+    <Compile Include="Views\Common\IModalView.cs" />
+    <Compile Include="Views\Common\Base\ModalNavView.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">

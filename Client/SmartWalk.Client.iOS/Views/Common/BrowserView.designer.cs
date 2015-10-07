@@ -13,69 +13,21 @@ namespace SmartWalk.Client.iOS.Views.Common
 	partial class BrowserView
 	{
 		[Outlet]
-		UIKit.UIBarButtonItem BackButton { get; set; }
-
-		[Outlet]
-        UIKit.UIToolbar BottomToolbar { get; set; }
-
-		[Outlet]
-		UIKit.UIBarButtonItem ForwardButton { get; set; }
-
-		[Outlet]
-		UIKit.UIBarButtonItem LeftSpacer { get; set; }
-
-		[Outlet]
-		UIKit.UIBarButtonItem ProgressButton { get; set; }
-
-		[Outlet]
-		UIKit.UIBarButtonItem RefreshButton { get; set; }
-
-		[Outlet]
-		UIKit.NSLayoutConstraint ToolBarHeightConstraint { get; set; }
+		UIKit.NSLayoutConstraint TopConstraint { get; set; }
 
 		[Outlet]
 		UIKit.UIWebView WebView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (BackButton != null) {
-				BackButton.Dispose ();
-				BackButton = null;
-			}
-
-			if (BottomToolbar != null) {
-				BottomToolbar.Dispose ();
-				BottomToolbar = null;
-			}
-
-			if (ForwardButton != null) {
-				ForwardButton.Dispose ();
-				ForwardButton = null;
-			}
-
-			if (LeftSpacer != null) {
-				LeftSpacer.Dispose ();
-				LeftSpacer = null;
-			}
-
-			if (ProgressButton != null) {
-				ProgressButton.Dispose ();
-				ProgressButton = null;
-			}
-
-			if (RefreshButton != null) {
-				RefreshButton.Dispose ();
-				RefreshButton = null;
+			if (TopConstraint != null) {
+				TopConstraint.Dispose ();
+				TopConstraint = null;
 			}
 
 			if (WebView != null) {
 				WebView.Dispose ();
 				WebView = null;
-			}
-
-			if (ToolBarHeightConstraint != null) {
-				ToolBarHeightConstraint.Dispose ();
-				ToolBarHeightConstraint = null;
 			}
 		}
 	}

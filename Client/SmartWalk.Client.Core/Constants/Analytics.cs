@@ -17,8 +17,8 @@ namespace SmartWalk.Client.Core.Constants
         public static readonly string ActionLabelExpandDescription = "expand-description";
         public static readonly string ActionLabelCollapseDescription = "collapsed-description";
         public static readonly string ActionLabelShowNextEntity = "show-next-entity";
-        public static readonly string ActionLabelShowFullscreenImage = "show-fullscreen-image";
-        public static readonly string ActionLabelHideFullscreenImage = "hide-fullscreen-image";
+        public static readonly string ActionLabelShowModalView = "show-modal-view";
+        public static readonly string ActionLabelHideModalView = "hide-modal-view";
         public static readonly string ActionLabelShowContacts = "show-contacts";
         public static readonly string ActionLabelHideContacts = "hide-contacts";
         public static readonly string ActionLabelExpandVenueShow = "expand-venueshow";

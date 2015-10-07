@@ -95,7 +95,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
             _contactsView.CloseCommand = contactsProvider.HideContactsCommand;
             _contactsView.CallPhoneCommand = contactsProvider.CallPhoneCommand;
             _contactsView.ComposeEmailCommand = contactsProvider.ComposeEmailCommand;
-            _contactsView.NavigateWebSiteCommand = contactsProvider.NavigateWebLinkCommand;
+            _contactsView.ShowHideModalViewCommand = contactsProvider.ShowHideModalViewCommand;
         }
 
         private void DisposeContactsView()
@@ -105,7 +105,7 @@ namespace SmartWalk.Client.iOS.Views.Common.Base
                 _contactsView.CloseCommand = null;
                 _contactsView.CallPhoneCommand = null;
                 _contactsView.ComposeEmailCommand = null;
-                _contactsView.NavigateWebSiteCommand = null;
+                _contactsView.ShowHideModalViewCommand = null;
                 _contactsView.Dispose();
                 _contactsView = null;
             }

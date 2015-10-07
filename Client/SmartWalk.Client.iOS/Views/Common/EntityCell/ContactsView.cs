@@ -20,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         private Entity _entity;
         private ICommand _callPhoneCommand;
         private ICommand _composeEmailCommand;
-        private ICommand _navigateWebSiteCommand;
+        private ICommand _showHideModalViewCommand;
 
         private NSObject _orientationObserver;
         private bool _updateScheduled;
@@ -70,20 +70,20 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             }
         }
 
-        public ICommand NavigateWebSiteCommand
+        public ICommand ShowHideModalViewCommand
         {
             get
             {
-                return _navigateWebSiteCommand;
+                return _showHideModalViewCommand;
             }
             set
             {
-                _navigateWebSiteCommand = value;
+                _showHideModalViewCommand = value;
 
                 var collectionDelegate = CollectionView.WeakDelegate as ContactCollectionDelegate;
                 if (collectionDelegate != null)
                 {
-                    collectionDelegate.NavigateSiteLinkCommand = _navigateWebSiteCommand;
+                    collectionDelegate.ShowHideModalViewCommand = _showHideModalViewCommand;
                 }
             }
         }
@@ -127,7 +127,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             {
                 CallPhoneCommand = null;
                 ComposeEmailCommand = null;
-                NavigateWebSiteCommand = null;
+                ShowHideModalViewCommand = null;
 
                 DisposeOrientationObserver();
             }
@@ -163,7 +163,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 CollectionView.Delegate = new ContactCollectionDelegate(collectionSource) {
                     CallPhoneCommand = CallPhoneCommand,
                     ComposeEmailCommand = ComposeEmailCommand,
-                    NavigateSiteLinkCommand = NavigateWebSiteCommand
+                    ShowHideModalViewCommand = ShowHideModalViewCommand
                 };
             }
         }

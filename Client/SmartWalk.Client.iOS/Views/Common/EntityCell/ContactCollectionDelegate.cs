@@ -5,6 +5,7 @@ using UIKit;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Shared.DataContracts;
 using SmartWalk.Client.iOS.Resources;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 {
@@ -19,7 +20,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         public ICommand CallPhoneCommand { get; set; }
         public ICommand ComposeEmailCommand { get; set; }
-        public ICommand NavigateSiteLinkCommand { get; set; }
+        public ICommand ShowHideModalViewCommand { get; set; }
 
         public override void ItemHighlighted(UICollectionView collectionView, NSIndexPath indexPath)
         {
@@ -60,10 +61,14 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
                 if (contact.Type == ContactType.Url)
                 {
-                    if (NavigateSiteLinkCommand != null &&
-                        NavigateSiteLinkCommand.CanExecute(contact))
+                    var context = new ModalViewContext(
+                        ModalViewKind.Browser, 
+                        contact.ContactText);
+                    
+                    if (ShowHideModalViewCommand != null &&
+                        ShowHideModalViewCommand.CanExecute(context))
                     {
-                        NavigateSiteLinkCommand.Execute(contact);
+                        ShowHideModalViewCommand.Execute(context);
                     }
                 }
             }
