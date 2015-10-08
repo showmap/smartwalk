@@ -12,9 +12,7 @@ namespace SmartWalk.Client.Core.ViewModels
     public class OrgEventInfoViewModel : EntityViewModel
     {
         private readonly ISmartWalkApiService _apiService;
-        private readonly IEnvironmentService _environmentService;
         private readonly IExceptionPolicyService _exceptionPolicy;
-        private readonly IAnalyticsService _analyticsService;
 
         private Parameters _parameters;
         private OrgEvent _orgEvent;
@@ -34,8 +32,6 @@ namespace SmartWalk.Client.Core.ViewModels
         {
             _apiService = apiService;
             _exceptionPolicy = exceptionPolicy;
-            _environmentService = environmentService;
-            _analyticsService = analyticsService;
         }
 
         public override string Title

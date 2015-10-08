@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
 using SmartWalk.Client.iOS.Resources;
@@ -98,12 +97,19 @@ namespace SmartWalk.Client.iOS.Views.Common
         {
             base.LayoutSubviews();
 
-            if (_updateImageScheduled)
+            if (_updateImageScheduled && Bounds.Size != CGSize.Empty)
             {
-                if (BackgroundImage.Image == null && _imageUrl != null)
+                if (BackgroundImage.Image == null)
                 {
-                    _animationDelay.Reset();
-                    _resizedImageHelper.ImageUrl = _imageUrl;
+                    if (_imageUrl != null)
+                    {
+                        _animationDelay.Reset();
+                        _resizedImageHelper.ImageUrl = _imageUrl;
+                    }
+                    else
+                    {
+                        Gradient.Hidden = false;
+                    }
                 }
 
                 _updateImageScheduled = false;
