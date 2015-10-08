@@ -110,7 +110,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 {
                     var previousMode = _mode;
                     _mode = value;
-                    _expandedShow = null;
+                    ExpandedShow = null;
 
                     if (ModeChanged != null)
                     {
@@ -263,7 +263,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_sortBy != value)
                 {
                     _sortBy = value;
-                    _expandedShow = null;
+                    ExpandedShow = null;
                     ResetAllShows();
                     RaisePropertyChanged(() => SortBy);
                     RaisePropertyChanged(() => ListItems);
@@ -280,7 +280,7 @@ namespace SmartWalk.Client.Core.ViewModels
                 if (_showOnlyFavorites != value)
                 {
                     _showOnlyFavorites = value;
-                    _expandedShow = null;
+                    ExpandedShow = null;
                     ResetAllShows();
                     RaisePropertyChanged(() => ShowOnlyFavorites);
                     RaisePropertyChanged(() => ListItems);
