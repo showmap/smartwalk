@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Binding.Touch.Views;
 using CoreGraphics;
@@ -9,14 +8,13 @@ using SmartWalk.Client.Core.Model;
 using SmartWalk.Client.Core.Model.DataContracts;
 using SmartWalk.Client.Core.Resources;
 using SmartWalk.Client.Core.Utils;
+using SmartWalk.Client.Core.ViewModels.Interfaces;
 using SmartWalk.Client.iOS.Resources;
 using SmartWalk.Client.iOS.Utils;
 using SmartWalk.Client.iOS.Utils.MvvmCross;
 using SmartWalk.Client.iOS.Views.Common.Base.Cells;
-using SmartWalk.Shared.DataContracts;
 using SmartWalk.Shared.Utils;
 using UIKit;
-using SmartWalk.Client.Core.ViewModels.Interfaces;
 
 namespace SmartWalk.Client.iOS.Views.OrgEventView
 {
@@ -58,8 +56,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         private readonly AnimationDelay _smallImageAnimationDelay = new AnimationDelay();
         private readonly AnimationDelay _largeImageAnimationDelay = new AnimationDelay();
 
-        private NSObject _orientationObserver;
-        private bool _updateConstraintsScheduled;
+        private CGSize _lastLayoutSize;
         private UITapGestureRecognizer _cellTapGesture;
         private UITapGestureRecognizer _starTapGesture;
         private bool _isBeforeExpanded;
@@ -280,7 +277,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 ShowHideModalViewCommand = null;
 
                 DisposeGestures();
-                DisposeOrientationObserver();
             }
         }
 
@@ -288,10 +284,10 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
         {
             base.LayoutSubviews();
 
-            if (_updateConstraintsScheduled)
+            if (_lastLayoutSize != Bounds.Size)
             {
                 UpdateConstraintConstants(false);
-                _updateConstraintsScheduled = false;
+                _lastLayoutSize = Bounds.Size;
             }
         }
 
@@ -300,7 +296,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             base.AwakeFromNib();
 
             InitializeGestures();
-            InitializeOrientationObserver();
             InitializeStyle();
         }
 
@@ -328,7 +323,7 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
             UpdateLargeImageState();
             UpdateFavoriteState();
             UpdateVisibility(false);
-            _updateConstraintsScheduled = true;
+            _lastLayoutSize = CGSize.Empty;
             SetNeedsLayout();
         }
 
@@ -558,34 +553,6 @@ namespace SmartWalk.Client.iOS.Views.OrgEventView
                 StarButton.RemoveGestureRecognizer(_starTapGesture);
                 _starTapGesture.Dispose();
                 _starTapGesture = null;
-            }
-        }
-
-        private void InitializeOrientationObserver()
-        {
-            _orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(
-                UIDevice.OrientationDidChangeNotification,
-                OnDeviceOrientationDidChange);
-
-            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
-        }
-
-        private void OnDeviceOrientationDidChange(NSNotification notification)
-        {
-            if (Window == null)
-            {
-                _updateConstraintsScheduled = true;
-                return;
-            }
-                
-            UpdateConstraintConstants(true);
-        }
-
-        private void DisposeOrientationObserver()
-        {
-            if (_orientationObserver != null)
-            {
-                NSNotificationCenter.DefaultCenter.RemoveObserver(_orientationObserver);
             }
         }
 

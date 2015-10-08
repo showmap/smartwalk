@@ -13,7 +13,8 @@ namespace SmartWalk.Client.iOS.Views.HomeView
 {
     public partial class HomeView : ListViewBase
     {
-        private nfloat? _cellProportionalHeight;
+        private float? _cellProportionalHeight;
+        private CGSize _lastLayoutSize;
 
         public HomeView()
         {
@@ -37,15 +38,14 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             {
                 if (_cellProportionalHeight == null)
                 {
-                    var frameWidth = ScreenUtil.IsVerticalOrientation
-                        ? View.Frame.Width : View.Frame.Height;
+                    var frameWidth = (float)Math.Min(View.Frame.Width, View.Frame.Height);
 
                     _cellProportionalHeight = ScreenUtil.GetProportionalHeight(
                         new CGSize(OrgCell.DefaultWidth, OrgCell.DefaultHeight), 
                         frameWidth);
                 }
 
-                return (float)_cellProportionalHeight;
+                return _cellProportionalHeight.Value;
             }
         }
 
@@ -57,18 +57,15 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             ProgressView.IndicatorStyle = UIActivityIndicatorViewStyle.White;
         }
 
-        public override void ViewWillAppear(bool animated)
+        public override void ViewWillLayoutSubviews()
         {
-            base.ViewWillAppear(animated);
+            base.ViewWillLayoutSubviews();
 
-            UpdateLayoutSizes(UIApplication.SharedApplication.StatusBarOrientation, View.Frame.Size.Width);
-        }
-
-        public override void WillRotate(UIInterfaceOrientation toInterfaceOrientation, double duration)
-        {
-            base.WillRotate(toInterfaceOrientation, duration);
-
-            UpdateLayoutSizes(toInterfaceOrientation, View.Frame.Height);
+            if (_lastLayoutSize != View.Bounds.Size)
+            {
+                UpdateLayoutSizes(View.Bounds.Size.ToOrientation(), View.Bounds.Width);
+                _lastLayoutSize = View.Bounds.Size;
+            }
         }
 
         protected override ListViewDecorator GetListView()
@@ -116,10 +113,10 @@ namespace SmartWalk.Client.iOS.Views.HomeView
             }
         }
 
-        private void UpdateLayoutSizes(UIInterfaceOrientation orientation, nfloat frameWidth)
+        private void UpdateLayoutSizes(Orientation orientation, nfloat frameWidth)
         {
             var flowLayout = (UICollectionViewFlowLayout)OrgCollectionView.CollectionViewLayout;
-            var itemsInRow = ScreenUtil.GetIsVerticalOrientation(orientation) ? 1 : 2;
+            var itemsInRow = orientation == Orientation.Portrait ? 1 : 2;
 
             var cellWidth = 
                 (frameWidth -

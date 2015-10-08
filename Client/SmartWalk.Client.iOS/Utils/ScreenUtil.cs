@@ -23,6 +23,11 @@ namespace SmartWalk.Client.iOS.Utils
                 orientation == UIInterfaceOrientation.PortraitUpsideDown;
         }
 
+        public static Orientation ToOrientation(this CGSize size)
+        {
+            return size.Width > size.Height ? Orientation.Landscape : Orientation.Portrait;
+        }
+
         // TODO: Maybe mandatory take Height from KeyWindow
         public static float GetGoldenRatio(nfloat frameHeight)
         {

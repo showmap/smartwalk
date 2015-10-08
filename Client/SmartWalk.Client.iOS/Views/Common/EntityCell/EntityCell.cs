@@ -30,9 +30,8 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
         private UITapGestureRecognizer _headerImageTapGesture;
         private UITapGestureRecognizer _descriptionTapGesture;
+        private CGSize _lastLayoutSize;
 
-        private NSObject _orientationObserver;
-        private bool _updateConstraintsScheduled;
         private ICommand _navigateAddressesCommand;
 
         public EntityCell(IntPtr handle) : base(handle)
@@ -122,7 +121,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
 
                 DisposeGestures();
                 DisposeMapCell();
-                DisposeOrientationObserver();
 
                 ImageBackground.Dispose();
             }
@@ -132,10 +130,10 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
         {
             base.LayoutSubviews();
 
-            if (_updateConstraintsScheduled)
+            if (_lastLayoutSize != Bounds.Size)
             {
                 UpdateConstraintConstants();
-                _updateConstraintsScheduled = false;
+                _lastLayoutSize = Bounds.Size;
             }
         }
 
@@ -146,7 +144,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             InitializeStyle();
             InitializeMapCell();
             InitializeGestures();
-            InitializeOrientationObserver();
         }
 
         protected override void OnDataContextChanged(object previousContext, object newContext)
@@ -171,7 +168,7 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
                 ? DataContext.Entity
                 : null;
 
-            _updateConstraintsScheduled = true;
+            _lastLayoutSize = CGSize.Empty;
             SetNeedsLayout();
         }
 
@@ -244,34 +241,6 @@ namespace SmartWalk.Client.iOS.Views.Common.EntityCell
             {
                 DescriptionTopConstraint.Constant = 0;
                 DescriptionBottomConstraint.Constant = 0;
-            }
-        }
-
-        private void InitializeOrientationObserver()
-        {
-            _orientationObserver = NSNotificationCenter.DefaultCenter.AddObserver(
-                UIDevice.OrientationDidChangeNotification,
-                OnDeviceOrientationDidChange);
-
-            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
-        }
-
-        private void OnDeviceOrientationDidChange(NSNotification notification)
-        {
-            if (Window == null)
-            {
-                _updateConstraintsScheduled = true;
-                return;
-            }
-
-            UpdateConstraintConstants();
-        }
-
-        private void DisposeOrientationObserver()
-        {
-            if (_orientationObserver != null)
-            {
-                NSNotificationCenter.DefaultCenter.RemoveObserver(_orientationObserver);
             }
         }
 

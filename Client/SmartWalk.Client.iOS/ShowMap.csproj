@@ -416,6 +416,7 @@
     <Compile Include="Views\Common\Base\ModalNavView.cs" />
     <Compile Include="Views\OrgEventView\OrgEventCalEditViewDelegate.cs" />
     <Compile Include="Views\OrgEventView\OrgEventEditViewController.cs" />
+    <Compile Include="Utils\Orientation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Client.Core\SmartWalk.Client.Core.csproj">
